@@ -11,14 +11,14 @@ struct API {
     static func appInfo(baseURL: String = AppSettings.shared.selectedServerBaseURL) async -> Result<AppInfo, APIError> {
         await apiRequest(path: "app_info", baseURL: baseURL)
     }
-    
+
     static func accountSession(merchantId: String? = nil, baseURL: String = AppSettings.shared.selectedServerBaseURL) async -> Result<AccountSessionResponse, APIError> {
-        await apiRequest(path: "account_session", 
+        await apiRequest(path: "account_session",
                          method: "POST",
                          headers: merchantId.map { ["account": $0] } ?? [:],
                          baseURL: baseURL)
     }
-    
+
     static func apiRequest<Response: Codable>(path: String,
                                               method: String = "GET",
                                               headers: [String: String] = [:],
@@ -26,7 +26,7 @@ struct API {
         guard let baseUrl = URL(string: baseURL) else {
             return .failure(.invalidURL)
         }
-        let url = baseUrl.appending(path: path)
+        let url = baseUrl.appendingPathComponent(path)
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.allHTTPHeaderFields = headers
@@ -47,8 +47,7 @@ struct API {
             } catch {
                 return .failure(.failedToParse(error: error))
             }
-        }
-        catch {
+        } catch {
             return .failure(.networkError(error: error))
         }
     }

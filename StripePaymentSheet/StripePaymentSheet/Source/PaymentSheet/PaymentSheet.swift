@@ -149,7 +149,7 @@ public class PaymentSheet {
             mode: mode,
             configuration: configuration,
             analyticsHelper: analyticsHelper,
-            isFlowController: false
+            integrationShape: .complete
         ) { result in
             switch result {
             case .success(let loadResult):
@@ -163,7 +163,7 @@ public class PaymentSheet {
                             analyticsHelper: self.analyticsHelper,
                             delegate: self
                         )
-                    case .vertical:
+                    case .vertical, .automatic:
                         let verticalVC = PaymentSheetVerticalViewController(
                             configuration: self.configuration,
                             loadResult: loadResult,

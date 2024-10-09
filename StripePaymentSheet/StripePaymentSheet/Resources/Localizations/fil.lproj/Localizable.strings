@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li walang interes na mga pagbabayad ng %2$@";
-
 "+ Add" = "+Magdagdag";
 
 "Add US bank account" = "Magdagdag ng account sa bangko ng US";
@@ -25,6 +23,12 @@
 "Bank" = "Bangko";
 
 "Bank account" = "Account sa bangko";
+
+"Buy now or pay later with <img/>" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang <img/>";
+
+"Buy now or pay later with Afterpay" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Afterpay";
+
+"Buy now or pay later with Clearpay" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Clearpay";
 
 "Buy now or pay later with Klarna" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Kumpirmahin ang iyong CVC";
 
-"Confirm your CVV" = "Kumpirmahin ang iyong CVV";
-
 "Contact information" = "Impormasyon sa pakikipag-ugnayan";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Magbayad nang mas mabilis sa %@ at sa libu-libong mga negosyo.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Magbayad ng <num_installments/> na walang interes na pagbabayad ng <installment_price/> gamit ang <img/>";
-
 "Pay over time with %@" = "Magbayad ng over time gamit ang %@";
+
+"Pay over time with Affirm" = "Magbayad ng over time gamit ang Affirm";
 
 "Pay with Link" = "Magbayad gamit ang Link";
 

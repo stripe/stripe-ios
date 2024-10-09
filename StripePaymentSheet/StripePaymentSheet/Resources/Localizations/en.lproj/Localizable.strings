@@ -118,9 +118,6 @@
 /* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Confirm your CVC";
 
-/* Title for prompting for a card's CVV on confirming the payment */
-"Confirm your CVV" = "Confirm your CVV";
-
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 

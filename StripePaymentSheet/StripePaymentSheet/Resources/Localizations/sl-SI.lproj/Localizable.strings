@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li plačil brez obresti v znesku %2$@";
-
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj bančni račun v ZDA";
@@ -25,6 +23,12 @@
 "Bank" = "Banka";
 
 "Bank account" = "Bančni račun";
+
+"Buy now or pay later with <img/>" = "Kupite zdaj ali pa plačajte pozneje s storitvijo <img/>";
+
+"Buy now or pay later with Afterpay" = "Kupite zdaj ali pa plačajte pozneje s storitvijo Afterpay";
+
+"Buy now or pay later with Clearpay" = "Kupite zdaj ali pa plačajte pozneje s storitvijo Clearpay";
 
 "Buy now or pay later with Klarna" = "Kupite zdaj ali pa za plačilo pozneje uporabite Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Potrdite svojo kodo CVC";
 
-"Confirm your CVV" = "Potrdite svojo kodo CVV";
-
 "Contact information" = "Podatki za stik";
 
 "EPS Bank" = "Banka EPS";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plačajte hitreje pri podjetju %@ in več tisoč podjetjih.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Plačajte v <num_installments/> obrokih po <installment_price/> brez obresti s storitvijo <img/>.";
-
 "Pay over time with %@" = "Uporabite %@ za poznejše plačilo";
+
+"Pay over time with Affirm" = "Uporabite Affirm za poznejše plačilo";
 
 "Pay with Link" = "Za plačilo uporabi Link";
 

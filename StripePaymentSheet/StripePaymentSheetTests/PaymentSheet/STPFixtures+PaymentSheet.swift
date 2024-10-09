@@ -37,6 +37,8 @@ extension STPElementsSession {
         customerSessionData: [String: Any]? = nil,
         cardBrandChoiceData: [String: Any]? = nil,
         isLinkPassthroughModeEnabled: Bool? = nil,
+        linkMode: LinkMode? = nil,
+        linkFundingSources: Set<LinkSettings.FundingSource> = [],
         disableLinkSignup: Bool? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
@@ -70,6 +72,12 @@ extension STPElementsSession {
             json[jsonDict: "link_settings"]!["link_passthrough_mode_enabled"] = isLinkPassthroughModeEnabled
         }
 
+        if let linkMode {
+            json[jsonDict: "link_settings"]!["link_mode"] = linkMode.rawValue
+        }
+
+        json[jsonDict: "link_settings"]!["link_funding_sources"] = linkFundingSources.map(\.rawValue)
+
         if let disableLinkSignup {
             json[jsonDict: "link_settings"]!["link_mobile_disable_signup"] = disableLinkSignup
         }
@@ -78,7 +86,11 @@ extension STPElementsSession {
         return elementsSession
     }
 
-    static func _testValue(intent: Intent) -> STPElementsSession {
+    static func _testValue(
+        intent: Intent,
+        linkMode: LinkMode? = nil,
+        linkFundingSources: Set<LinkSettings.FundingSource> = []
+    ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
             switch intent {
             case .paymentIntent(let paymentIntent):
@@ -89,7 +101,11 @@ extension STPElementsSession {
                 return intentConfig.paymentMethodTypes ?? []
             }
         }()
-        return STPElementsSession._testValue(paymentMethodTypes: paymentMethodTypes)
+        return STPElementsSession._testValue(
+            paymentMethodTypes: paymentMethodTypes,
+            linkMode: linkMode,
+            linkFundingSources: linkFundingSources
+        )
     }
 }
 
@@ -248,7 +264,7 @@ extension PaymentSheetLoader.LoadResult {
 
 extension PaymentSheetAnalyticsHelper {
     static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
-        return .init(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        return .init(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
     }
 }
 

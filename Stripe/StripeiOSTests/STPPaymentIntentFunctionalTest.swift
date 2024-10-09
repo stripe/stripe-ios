@@ -208,6 +208,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         cardParams.number = "4000000000003220"
         cardParams.expMonth = NSNumber(value: 7)
         cardParams.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        cardParams.cvc = "123"
 
         let billingDetails = STPPaymentMethodBillingDetails()
 
@@ -264,6 +265,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         cardParams.number = "4242424242424242"
         cardParams.expMonth = NSNumber(value: 7)
         cardParams.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        cardParams.cvc = "123"
 
         let billingDetails = STPPaymentMethodBillingDetails()
 
@@ -333,6 +335,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         cardParams.number = "4242424242424242"
         cardParams.expMonth = NSNumber(value: 7)
         cardParams.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        cardParams.cvc = "123"
 
         let billingDetails = STPPaymentMethodBillingDetails()
 
@@ -378,6 +381,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         cardParams.number = "4242424242424242"
         cardParams.expMonth = NSNumber(value: 7)
         cardParams.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        cardParams.cvc = "123"
 
         let billingDetails = STPPaymentMethodBillingDetails()
 
@@ -1523,6 +1527,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         card.expMonth = 7
         card.expYear = UInt(Calendar.current.component(.year, from: Date()) + 5)
         card.currency = "usd"
+        card.cvc = "123"
 
         return .cardParams(withCard: card)
     }

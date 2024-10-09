@@ -38,7 +38,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
-            isFlowController: true
+            integrationShape: .flowController
         ) { result in
             switch result {
             case .success(let loadResult):
@@ -75,7 +75,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
-            isFlowController: true
+            integrationShape: .flowController
         ) { result in
             switch result {
             case .success(let loadResult):
@@ -110,7 +110,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration),
-            isFlowController: true
+            integrationShape: .flowController
         ) { result in
             switch result {
             case .success(let loadResult):
@@ -142,7 +142,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration),
-            isFlowController: true
+            integrationShape: .flowController
         ) { result in
             switch result {
             case .success(let loadResult):
@@ -189,7 +189,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
             configuration: configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
-            isFlowController: false
+            integrationShape: .complete
         ) { result in
             loaded.fulfill()
             switch result {
@@ -251,7 +251,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .setupIntentClientSecret("seti_1234_secret_1234"),
             configuration: configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
-            isFlowController: false
+            integrationShape: .complete
         ) { result in
             loaded.fulfill()
             switch result {
@@ -311,7 +311,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
-            isFlowController: false
+            integrationShape: .complete
         ) { result in
             loaded.fulfill()
             switch result {
@@ -354,7 +354,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
             analyticsHelper: .init(isCustom: false, configuration: configuration, analyticsClient: analyticsClient),
-            isFlowController: false
+            integrationShape: .complete
         ) { result in
             loaded2.fulfill()
             switch result {
@@ -407,9 +407,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
-            configuration: ._testValue_MostPermissive(),
-            analyticsHelper: .init(isCustom: false, configuration: ._testValue_MostPermissive(), analyticsClient: analyticsClient),
-            isFlowController: false
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
+            analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration._testValue_MostPermissive(), analyticsClient: analyticsClient),
+            integrationShape: .complete
         ) { result in
             loadExpectation.fulfill()
             switch result {

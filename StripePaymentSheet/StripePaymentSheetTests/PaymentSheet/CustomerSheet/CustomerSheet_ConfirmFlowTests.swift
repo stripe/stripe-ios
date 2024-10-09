@@ -212,7 +212,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [
-                                                               "payment_sheet": [
+                                                               "mobile_payment_element": [
                                                                    "enabled": false,
                                                                ],
                                                                "customer_sheet": [
@@ -398,7 +398,7 @@ extension CustomerSheet_ConfirmFlowTests {
                 case .completed(let completedResult):
                     if case .financialConnections(let linkedBank) = completedResult {
                         if let usBankElement = paymentMethodForm as? USBankAccountPaymentMethodElement {
-                            usBankElement.setLinkedBank(linkedBank)
+                            usBankElement.linkedBank = linkedBank
                         }
                     } else {
                         XCTFail("no linked account")

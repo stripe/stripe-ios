@@ -38,6 +38,7 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-15: {}
+    - test-builds-xcode-16: {}
     - test-builds-vision: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
@@ -53,13 +54,14 @@ stages:
     workflows:
     - framework-tests-no-mocks: {}
     - test-builds-xcode-15: {}
+    - test-builds-xcode-16: {}
     - test-builds-xcode-15-release: {}
+    - test-builds-xcode-16-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
-    - basic-integration-tests: {}
     - ui-tests-1: {}
     - ui-tests-2: {}
     - ui-tests-3: {}
@@ -72,7 +74,7 @@ stages:
   stage-nightly-all:
     workflows:
     - test-builds-xcode-15-release: {}
-    - basic-integration-tests: {}
+    - test-builds-xcode-16-release: {}
     - framework-tests-no-mocks: {}
     - check-docs: {}
     - legacy-tests-15: {}
@@ -81,21 +83,6 @@ stages:
     - deploy-dry-run: {}
     - pod-lint-tests: {}
 workflows:
-  basic-integration-tests:
-    steps:
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: Basic Integration
-    - deploy-to-bitrise-io@2: {}
-    before_run:
-    - prep_all
-    after_run:
-    - notify_ci
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   carthage-install-test:
     steps:
     - fastlane@3:
@@ -365,6 +352,21 @@ workflows:
       bitrise.io:
         stack: osx-xcode-15.0.x
         machine_type_id: g2-m1.8core
+  test-builds-xcode-16:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: AllStripeFrameworks
+        - destination: generic/platform=iOS Simulator
+    - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=18.0
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-16.0.x
+        machine_type_id: g2-m1.8core
   test-builds-xcode-15-release:
     steps:
     - script@1:
@@ -376,6 +378,18 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
+        machine_type_id: g2-m1.8core
+  test-builds-xcode-16-release:
+    steps:
+    - script@1:
+        inputs:
+        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
+        title: Build release builds
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-16.0.x
         machine_type_id: g2-m1.8core
   test-builds-vision:
     steps:
@@ -603,14 +617,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-2:
     steps:
     - xcode-test@4:
@@ -621,14 +635,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-3:
     steps:
     - xcode-test@4:
@@ -639,14 +653,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard3
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-4:
     steps:
     - xcode-test@4:
@@ -657,14 +671,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard4
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-5:
     steps:
     - xcode-test@4:
@@ -675,14 +689,14 @@ workflows:
         - scheme: StripeConnect Example
         - test_plan: StripeConnectExample
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core                
+        machine_type_id: g2-m1.8core             
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:

@@ -112,6 +112,10 @@ import Foundation
     case mcOptionSelectCompleteApplePay = "mc_complete_paymentoption_applepay_select"
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
 
+    // MARK: - PaymentSheet Saved Payment Method Removed
+    case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
+    case mcOptionRemoveCompleteSavedPM = "mc_complete_paymentoption_removed"
+
     // MARK: - Link Signup
     case linkSignupCheckboxChecked = "link.signup.checkbox_checked"
     case linkSignupFlowPresented = "link.signup.flow_presented"
@@ -144,6 +148,8 @@ import Foundation
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
     // MARK: - CustomerSheet initialization
+    case customerSheetInitWithCustomerAdapter = "cs_init_with_customer_adapter"
+    case customerSheetInitWithCustomerSession = "cs_init_with_customer_session"
     case customerSheetLoadStarted = "cs_load_started"
     case customerSheetLoadSucceeded = "cs_load_succeeded"
     case customerSheetLoadFailed = "cs_load_failed"
@@ -193,7 +199,9 @@ import Foundation
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
     case paymentSheetFormShown = "mc_form_shown"
     case paymentSheetFormInteracted = "mc_form_interacted"
+    case paymentSheetFormCompleted = "mc_form_completed"
     case paymentSheetCardNumberCompleted = "mc_card_number_completed"
+    case paymentSheetDeferredIntentPaymentMethodIdMismatch = "mc_deferred_intent_payment_method_id_mismatch"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
@@ -266,4 +274,7 @@ import Foundation
     case refreshSetupIntentSuccess = "stripeios.refresh_setup_intent_success"
     case refreshPaymentIntentFailed = "stripeios.refresh_payment_intent_failed"
     case refreshSetupIntentFailed = "stripeios.refresh_setup_intent_failed"
+
+    // MARK: - Telemetry Client
+    case fraudDetectionApiFailure = "fraud_detection_data_repository.api_failure"
 }

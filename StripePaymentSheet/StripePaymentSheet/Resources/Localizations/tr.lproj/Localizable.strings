@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%2$@ tutarında %1$li faizsiz ödeme";
-
 "+ Add" = "+ Ekle";
 
 "Add US bank account" = "ABD banka hesabı ekleyin";
@@ -25,6 +23,12 @@
 "Bank" = "Banka";
 
 "Bank account" = "Banka hesabı";
+
+"Buy now or pay later with <img/>" = "Şimdi satın alın veya daha sonra <img/> ile ödeyin.";
+
+"Buy now or pay later with Afterpay" = "Şimdi satın alın veya daha sonra Afterpay ile ödeyin";
+
+"Buy now or pay later with Clearpay" = "Şimdi satın alın veya daha sonra Clearpay ile ödeyin";
 
 "Buy now or pay later with Klarna" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "CVC kodunuzu onaylayın";
 
-"Confirm your CVV" = "CVV kodunuzu onaylayın";
-
 "Contact information" = "İletişim bilgileri";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@ ve binlerce işletmede daha hızlı ödeme yapın.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/> ile <installment_price/> tutarında faizsiz <num_installments/> taksitle ödeyin";
-
 "Pay over time with %@" = "%@ ile zaman içinde ödeyin";
+
+"Pay over time with Affirm" = "Affirm ile zaman içinde ödeyin";
 
 "Pay with Link" = "Link ile öde";
 

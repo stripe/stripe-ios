@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li korotonta maksua %2$@";
-
 "+ Add" = "+ Lisää";
 
 "Add US bank account" = "Lisää yhdysvaltalainen pankkitili";
@@ -25,6 +23,12 @@
 "Bank" = "Pankki";
 
 "Bank account" = "Pankkitili";
+
+"Buy now or pay later with <img/>" = "Osta nyt tai maksa myöhemmin kohteella.<img/>";
+
+"Buy now or pay later with Afterpay" = "Osta nyt tai maksa myöhemmin Afterpaylla";
+
+"Buy now or pay later with Clearpay" = "Osta nyt tai maksa myöhemmin Clearpaylla";
 
 "Buy now or pay later with Klarna" = "Osta nyt tai maksa myöhemmin Klarnalla";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Vahvista CVC";
 
-"Confirm your CVV" = "Vahvista CVV";
-
 "Contact information" = "Yhteystiedot";
 
 "EPS Bank" = "EPS-pankki";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Maksa nopeammin kohteessa %@ ja tuhansissa muissa paikoissa.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksu <num_installments/> korottomassa <installment_price/> osassa maksutavalla <img/>";
-
 "Pay over time with %@" = "Maksa aikanaan kohteella %@";
+
+"Pay over time with Affirm" = "Maksa aikanaan Affirmilla";
 
 "Pay with Link" = "Maksa Link-palvelulla";
 

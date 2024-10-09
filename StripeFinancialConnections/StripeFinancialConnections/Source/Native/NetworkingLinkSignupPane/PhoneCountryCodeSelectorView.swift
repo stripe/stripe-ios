@@ -45,9 +45,9 @@ final class PhoneCountryCodeSelectorView: UIView {
         return textField
     }()
     private lazy var keyboardToolbar: DoneButtonToolbar = {
-        var theme: ElementsUITheme = .default
+        var theme: ElementsAppearance = .default
         theme.colors = {
-            var colors = ElementsUITheme.Color()
+            var colors = ElementsAppearance.Color()
             colors.primary = self.theme.primaryColor
             colors.secondaryText = .textSubdued
             return colors
@@ -76,6 +76,7 @@ final class PhoneCountryCodeSelectorView: UIView {
         backgroundColor = .backgroundOffset
         layer.cornerRadius = 8
         clipsToBounds = true
+        accessibilityIdentifier = "phone_country_code_selector"
 
         let horizontalStackView = UIStackView(
             arrangedSubviews: [

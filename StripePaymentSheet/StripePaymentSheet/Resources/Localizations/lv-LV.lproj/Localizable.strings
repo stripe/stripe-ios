@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li %2$@ bezprocentu maksājumi";
-
 "+ Add" = "+ Pievienot";
 
 "Add US bank account" = "Pievienot ASV bankas kontu";
@@ -25,6 +23,12 @@
 "Bank" = "Banka";
 
 "Bank account" = "Bankas konts";
+
+"Buy now or pay later with <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
+
+"Buy now or pay later with Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Afterpay";
+
+"Buy now or pay later with Clearpay" = "Pērciet tagad vai maksājiet vēlāk ar Clearpay";
 
 "Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Apstiprināt CVC";
 
-"Confirm your CVV" = "Apstiprināt CVV";
-
 "Contact information" = "Kontaktinformācija";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Maksājiet ātrāk %@ un tūkstošiem citos uzņēmumos.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksāt ar <num_installments/> bezprocentu maksājumiem <installment_price/> ar <img/>";
-
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
+
+"Pay over time with Affirm" = "Maksājiet pakāpeniski ar Affirm";
 
 "Pay with Link" = "Maksāt ar Link";
 

@@ -112,6 +112,15 @@ import Foundation
 
         return promise
     }
+
+    public func transformed<T>(
+        on queue: DispatchQueue = .main,
+        with closure: @escaping (Value) throws -> T
+    ) -> Future<T> {
+        chained(on: queue) { value in
+             try Promise(value: closure(value))
+        }
+    }
 }
 
 @_spi(STP) public class Promise<Value>: Future<Value> {

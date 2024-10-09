@@ -37,7 +37,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     return .new(confirmParams: params)
                 case .external(let type):
                     return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
-                case .instantDebits:
+                case .instantDebits, .linkCardBrand:
                     return .new(confirmParams: params)
                 }
             case .saved(paymentMethod: let paymentMethod):
@@ -257,35 +257,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateMandate(animated: Bool = true) {
-        let theme = configuration.appearance.asElementsTheme
-        let newMandateText: NSAttributedString? = {
-            guard let selectedPaymentMethodType else { return nil }
-            if selectedPaymentOption?.savedPaymentMethod != nil {
-                // 1. For saved PMs, manually build mandates
-                switch selectedPaymentMethodType {
-                case .stripe(.USBankAccount):
-                    return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(alignment: .natural, theme: theme)
-                case .stripe(.SEPADebit):
-                    return .init(string: String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
-                default:
-                    return nil
-                }
-            } else {
-                // 2. For new PMs, see if we have a bottomNoticeAttributedString
-                if let bottomNoticeAttributedString = paymentMethodFormViewController?.bottomNoticeAttributedString {
-                    return bottomNoticeAttributedString
-                }
-                // 3. If not, generate the form
-                let form = makeFormVC(paymentMethodType: selectedPaymentMethodType).form
-                guard !form.collectsUserInput else {
-                    // If it collects user input, the mandate will be displayed in the form and not here
-                    return nil
-                }
-                // Get the mandate from the form, if available
-                // 🙋‍♂️ Note: assumes mandates are SimpleMandateElement!
-                return form.getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first?.mandateTextView.attributedText
-            }
-        }()
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let newMandateText = mandateProvider.mandate(for: selectedPaymentOption?.paymentMethodType,
+                                                     savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
+                                                     bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString)
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
@@ -773,9 +748,6 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
             didCancel()
             return
         }
-        if !isRecollectingCVC {
-            paymentMethodListViewController.clearSelection()
-        }
         isRecollectingCVC = false
         switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView, contentOffsetPercentage: paymentMethodListContentOffsetPercentage)
         navigationBar.setStyle(.close(showAdditionalButton: false))
@@ -788,6 +760,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
         // Detach the payment method from the customer
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // Update savedPaymentMethods
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
@@ -816,6 +789,9 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         error = nil  // clear error
         updateUI()
+        if viewController.paymentOption != nil {
+            analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
+        }
     }
 
     func updateErrorLabel(for error: Swift.Error?) {

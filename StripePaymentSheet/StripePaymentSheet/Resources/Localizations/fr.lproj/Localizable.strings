@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li versements de %2$@, sans intérêts";
-
 "+ Add" = "+ Ajouter";
 
 "Add US bank account" = "Ajouter un compte bancaire américain";
@@ -25,6 +23,12 @@
 "Bank" = "Bancaire";
 
 "Bank account" = "Compte bancaire";
+
+"Buy now or pay later with <img/>" = "Paiement différé avec <img/>";
+
+"Buy now or pay later with Afterpay" = "Paiement différé avec Afterpay";
+
+"Buy now or pay later with Clearpay" = "Paiement différé avec Clearpay";
 
 "Buy now or pay later with Klarna" = "Paiement différé avec Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Confirmez votre CVC";
 
-"Confirm your CVV" = "Confirmez votre CVV";
-
 "Contact information" = "Coordonnées";
 
 "EPS Bank" = "Banque EPS";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Réglez plus rapidement après du marchand %@ et de milliers d'autres entreprises.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Payer en <num_installments/> versements sans intérêts de <installment_price/> avec <img/>";
-
 "Pay over time with %@" = "Payer par versements échelonnés avec %@";
+
+"Pay over time with Affirm" = "Payer par versements échelonnés avec Affirm";
 
 "Pay with Link" = "Payer avec Link";
 

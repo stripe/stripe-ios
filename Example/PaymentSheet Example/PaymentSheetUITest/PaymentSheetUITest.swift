@@ -73,18 +73,16 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         numberField.tap()
         numberField.typeText("378282246310005")
 
-        // Test that Amex card changes "CVC" -> "CVV" and allows 4 digits
-        let cvvField = app.textFields["CVV"]
-        XCTAssertTrue(cvvField.waitForExistence(timeout: 10.0))
+        // Test that Amex card allows 4 digits
+        let cvcField = app.textFields["CVC"]
+        XCTAssertTrue(cvcField.waitForExistence(timeout: 10.0))
 
         let expField = app.textFields["expiration date"]
         XCTAssertTrue((expField.value as? String)?.isEmpty ?? true)
         XCTAssertNoThrow(expField.typeText("1228"))
 
-        XCTAssertTrue((cvvField.value as? String)?.isEmpty ?? true)
-        XCTAssertNoThrow(cvvField.typeText("1234"))
-
-        app.toolbars.buttons["Done"].tap()  // Country picker toolbar's "Done" button
+        XCTAssertTrue((cvcField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(cvcField.typeText("1234"))
 
         let postalField = app.textFields["ZIP"]
         XCTAssertTrue((postalField.value as? String)?.isEmpty ?? true)
@@ -198,7 +196,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
         XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
         // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
         XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_form_shown")
@@ -219,8 +217,12 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Check analytics
         XCTAssertEqual(
-            analyticsLog.suffix(3).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped"]
+            analyticsLog.suffix(4).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
+        )
+        XCTAssertEqual(
+            analyticsLog.suffix(4).map({ $0[string: "selected_lpm"] }),
+            ["card", nil, "card", "card"]
         )
 
         app.buttons["Confirm"].tap()
@@ -236,7 +238,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         }
         // Make sure the appropriate events have "selected_lpm" = "card"
         for analytic in analyticsLog {
-            if ["mc_form_shown", "mc_form_interacted", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
+            if ["mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"].contains(analytic[string: "event"]) {
                XCTAssertEqual(analytic[string: "selected_lpm"], "card")
             }
         }
@@ -280,6 +282,18 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         confirmRemoval.tap()
 
         XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
+
+        // Give time for analyticsLog to receive mc_custom_paymentoption_removed
+        sleep(1)
+
+        XCTAssertEqual(
+            analyticsLog.suffix(1).map({ $0[string: "event"] }),
+            ["mc_custom_paymentoption_removed"]
+        )
+        XCTAssertEqual(
+            analyticsLog.suffix(1).map({ $0[string: "selected_lpm"] }),
+            ["card"]
+        )
     }
 
     func testPaymentSheetSwiftUI() throws {
@@ -512,8 +526,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
         XCTAssertEqual(
-            analyticsLog.suffix(8).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            analyticsLog.suffix(9).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         // Make sure they all have the same session id
@@ -2228,6 +2242,10 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         fillLinkAndPay(mode: .checkbox)
     }
 
+    func testLinkCardBrand() {
+        _testInstantDebits(mode: .payment, useLinkCardBrand: true)
+    }
+
     // MARK: Link test helpers
 
     private enum LinkMode {
@@ -2275,6 +2293,9 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         case .flowController:
             app.buttons["Continue"].tap()
             app.buttons["Confirm"].waitForExistenceAndTap()
+        case .embedded:
+            // TODO(porter) Fill in embedded UI test steps
+            break
         }
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         // Roundabout way to validate that signup completed successfully
@@ -2402,11 +2423,16 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
-    func _testInstantDebits(mode: PaymentSheetTestPlaygroundSettings.Mode, vertical: Bool = false) {
+    func _testInstantDebits(
+        mode: PaymentSheetTestPlaygroundSettings.Mode,
+        vertical: Bool = false,
+        useLinkCardBrand: Bool = false
+    ) {
+
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = mode
         settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = "card,link"
+        settings.supportedPaymentMethods = useLinkCardBrand ? "card" : "card,link"
         if vertical {
             settings.layout = .vertical
         }
@@ -2434,56 +2460,40 @@ extension PaymentSheetUITestCase {
         app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10)
 
         // "Sign Up" pane
-        app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
-            .firstMatch
-            .waitForExistenceAndTap(timeout: 10)
-        app.typeText(email + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Phone number"].tap()
-        // the `XCUIKeyboardKey.return.rawValue` will automatically
-        // press the "Continue with Link" button to proceed to next
-        // screen
-        app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
+        let emailTextField = app.textFields["email_text_field"]
+        XCTAssertTrue(emailTextField.waitForExistence(timeout: 10.0), "Failed to find email text field")
+        emailTextField.typeText("\(UUID().uuidString)@uitest.com")
 
-        // "Institution Picker" pane
-        let searchTextField = app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Search'"))
-            .firstMatch
-        searchTextField.waitForExistenceAndTap(timeout: 10)
-        app.typeText("Test Institution" + XCUIKeyboardKey.return.rawValue)
-        searchTextField
-            .coordinate(
-                withNormalizedOffset: CGVector(
-                    dx: 0.5,
-                    // bottom of search text field
-                    dy: 1.0
-                )
-            )
-        // at this point, we searched "Test Institution"
-        // and the only search result is "Test Institution,"
-        // so here we guess that 80 pixels below search bar
-        // there will be a "Test Institution"
-        //
-        // we do this "guess" because every other method of
-        // selecting the institution did not work on iOS 17
-            .withOffset(CGVector(dx: 0, dy: 80))
-            .tap()
+        let phoneTextField = app.textFields["phone_text_field"]
+        XCTAssertTrue(phoneTextField.waitForExistence(timeout: 10.0), "Failed to find phone text field")
 
-        // "Account Picker" pane
-        _ = app.staticTexts["Select account"].waitForExistence(timeout: 10)
-        // `swipeUp` is necessary to see the `High Balance` account
-        app.swipeUp()
-        sleep(1) // wait for swipe up to finish
-        app.webViews
-            .buttons
-            .containing(NSPredicate(format: "label CONTAINS 'High Balance'"))
-            .firstMatch
-            .tap()
-        app.buttons["Connect account"].tap()
+        let countryCodeSelector = app.otherElements["phone_country_code_selector"]
+        XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
+        countryCodeSelector.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
+        app.toolbars.buttons["Done"].tap()
+
+        phoneTextField.tap()
+        phoneTextField.typeText("4015006000")
+
+        let linkLoginCtaButton = app.buttons["link_login.primary_button"]
+        XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
+        linkLoginCtaButton.tap()
+
+        // "Institution picker" pane
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
+        XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
+        featuredLegacyTestInstitution.tap()
+
+        let accountPickerLinkAccountsButton = app.buttons["connect_accounts_button"]
+        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
+        XCTAssert(accountPickerLinkAccountsButton.isEnabled, "no account selected")
+        accountPickerLinkAccountsButton.tap()
 
         // "Success" pane
-        XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
-        app.buttons["Done"].forceTapWhenHittableInTestCase(self)
+        let successDoneButton = app.buttons["success_done_button"]
+        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
+        successDoneButton.tap()
 
         // Back to Payment Sheet
         app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
@@ -2593,7 +2603,6 @@ extension PaymentSheetUITestCase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled

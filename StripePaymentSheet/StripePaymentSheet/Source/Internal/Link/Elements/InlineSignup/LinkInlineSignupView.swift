@@ -22,13 +22,16 @@ final class LinkInlineSignupView: UIView {
 
     let viewModel: LinkInlineSignupViewModel
 
-    private var theme: ElementsUITheme {
+    private var theme: ElementsAppearance {
         return viewModel.configuration.appearance.asElementsTheme
     }
 
+    let borderColor: UIColor
+
     private(set) lazy var checkboxElement = CheckboxElement(
         merchantName: viewModel.configuration.merchantDisplayName,
-        appearance: viewModel.configuration.appearance
+        appearance: viewModel.configuration.appearance,
+        borderColor: borderColor
     )
 
     private(set) lazy var emailElement: LinkEmailElement = {
@@ -112,6 +115,17 @@ final class LinkInlineSignupView: UIView {
 
     init(viewModel: LinkInlineSignupViewModel) {
         self.viewModel = viewModel
+
+        if viewModel.configuration.appearance.colors.componentBorder.rgba.alpha != 0 {
+            // Link border color should match other component borders
+            borderColor = viewModel.configuration.appearance.colors.componentBorder
+        } else {
+            // If the borders are hidden, use a color that contrasts with the background color.
+            let backgroundColor = viewModel.configuration.appearance.colors.background
+            borderColor = UIColor(dynamicProvider: { traitCollection in
+                return backgroundColor.resolvedColor(with: traitCollection).contrastingColor.withAlphaComponent(0.2)
+            })
+        }
         super.init(frame: .zero)
         setupUI()
         setupDefaults()
@@ -185,8 +199,7 @@ final class LinkInlineSignupView: UIView {
         if viewModel.configuration.appearance.borderWidth == 0.0 ||
             viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0 {
             layer.borderWidth = 1.0
-            layer.borderColor = viewModel.configuration.appearance
-                .colors.background.contrastingColor.withAlphaComponent(0.2).cgColor
+            layer.borderColor = borderColor.cgColor
         }
     }
 
@@ -259,6 +272,7 @@ extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
         #if !canImport(CompositorServices)
         safariVC.dismissButtonStyle = .close
+        safariVC.preferredControlTintColor = window?.tintColor ?? viewModel.configuration.appearance.colors.primary
         #endif
         safariVC.modalPresentationStyle = .overFullScreen
 

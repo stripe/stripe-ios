@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%2$@ の無利息の %1$li 回払い";
-
 "+ Add" = "+ 追加";
 
 "Add US bank account" = "アメリカの銀行口座を追加";
@@ -25,6 +23,12 @@
 "Bank" = "銀行";
 
 "Bank account" = "銀行口座";
+
+"Buy now or pay later with <img/>" = "<img/> で後払い";
+
+"Buy now or pay later with Afterpay" = "Afterpay で後払い";
+
+"Buy now or pay later with Clearpay" = "Clearpay で後払い";
 
 "Buy now or pay later with Klarna" = "Klarna で後払い";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "セキュリティコードを確定";
 
-"Confirm your CVV" = "CVV を確定";
-
 "Contact information" = "連絡先情報";
 
 "EPS Bank" = "EPS 銀行";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@ やその他多数のサイトで、すばやく支払うことができます。";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/> で毎回 <installment_price/> ずつ、無利息の <num_installments/> 回の分割払いで支払う";
-
 "Pay over time with %@" = "%@ で時間をかけて支払う";
+
+"Pay over time with Affirm" = "Affirm で分割払い";
 
 "Pay with Link" = "Link で支払う";
 

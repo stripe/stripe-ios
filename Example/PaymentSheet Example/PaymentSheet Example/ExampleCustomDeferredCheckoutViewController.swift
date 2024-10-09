@@ -145,7 +145,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         // MARK: Update the payment method and buy buttons
         if let paymentOption = paymentSheetFlowController.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
+            paymentMethodButton.setTitleColor(.label, for: .normal)
             paymentMethodImage.image = paymentOption.image
             buyButton.isEnabled = true
         } else {

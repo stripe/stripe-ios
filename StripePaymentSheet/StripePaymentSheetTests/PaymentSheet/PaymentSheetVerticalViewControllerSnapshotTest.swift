@@ -7,7 +7,7 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @_spi(EarlyAccessCVCRecollectionFeature) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import XCTest
 
@@ -144,7 +144,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         )
         // ...and previous customer input is card...
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card)))
-        let sut = PaymentSheetVerticalViewController(configuration: .init(), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: previousPaymentOption)
+        let sut = PaymentSheetVerticalViewController(configuration: PaymentSheet.Configuration(), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: previousPaymentOption)
         // ...should display card form w/ fields filled out & *no back button*
         verify(sut)
     }

@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li rentevrije betalingen van %2$@";
-
 "+ Add" = "+ Toevoegen";
 
 "Add US bank account" = "Amerikaanse bankrekening toevoegen";
@@ -25,6 +23,12 @@
 "Bank" = "Bank";
 
 "Bank account" = "Bankrekening";
+
+"Buy now or pay later with <img/>" = "Koop nu of betaal later met <img/>";
+
+"Buy now or pay later with Afterpay" = "Koop nu of betaal later met Afterpay";
+
+"Buy now or pay later with Clearpay" = "Koop nu of betaal later met Clearpay";
 
 "Buy now or pay later with Klarna" = "Koop nu of betaal later met Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Je CVC bevestigen";
 
-"Confirm your CVV" = "Je CVV bevestigen";
-
 "Contact information" = "Contactgegevens";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Reken sneller af bij %@ en duizenden andere bedrijven.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betaal in <num_installments/> rentevrije termijnen van <installment_price/> met <img/>";
-
 "Pay over time with %@" = "Betalen in termijnen met %@";
+
+"Pay over time with Affirm" = "Betalen in termijnen met Affirm";
 
 "Pay with Link" = "Betalen met Link";
 

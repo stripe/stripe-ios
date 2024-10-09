@@ -96,6 +96,7 @@ final class LinkLoginViewController: UIViewController {
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
                 title: linkLoginPane.cta,
+                accessibilityIdentifier: "link_login.primary_button",
                 action: didSelectContinueWithLink
             ),
             topText: linkLoginPane.aboveCta,

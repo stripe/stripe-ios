@@ -26,7 +26,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let emailElement: TextFieldElement
     private let linkedBankInfoView: BankAccountInfoView
     private var linkedBank: InstantDebitsLinkedBank?
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
     var delegate: ElementDelegate?
@@ -65,7 +65,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var enableCTA: Bool {
-        return !email.isEmpty
+        return STPEmailAddressValidator.stringIsValidEmailAddress(email)
     }
     var email: String {
         return emailElement.text
@@ -75,7 +75,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         configuration: PaymentSheetFormFactoryConfig,
         titleElement: StaticElement?,
         emailElement: PaymentMethodElementWrapper<TextFieldElement>,
-        theme: ElementsUITheme = .default
+        theme: ElementsAppearance = .default
     ) {
         self.configuration = configuration
         self.linkedBankInfoView = BankAccountInfoView(frame: .zero, theme: theme)

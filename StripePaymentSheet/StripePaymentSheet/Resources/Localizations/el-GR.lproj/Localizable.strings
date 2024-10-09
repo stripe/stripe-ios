@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li άτοκες δόσεις των %2$@";
-
 "+ Add" = "+ Προσθήκη";
 
 "Add US bank account" = "Προσθήκη τραπεζικού λογαριασμού στις Ηνωμένες Πολιτείες";
@@ -25,6 +23,12 @@
 "Bank" = "Τράπεζα";
 
 "Bank account" = "Τραπεζικός λογαριασμός";
+
+"Buy now or pay later with <img/>" = "Αγορά τώρα ή πληρωμή αργότερα με <img/>";
+
+"Buy now or pay later with Afterpay" = "Αγορά τώρα ή πληρωμή αργότερα με Afterpay";
+
+"Buy now or pay later with Clearpay" = "Αγορά τώρα ή πληρωμή αργότερα με Clearpay";
 
 "Buy now or pay later with Klarna" = "Αγορά τώρα ή πληρωμή αργότερα με Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Επιβεβαιώστε τον κωδικό CVC";
 
-"Confirm your CVV" = "Επιβεβαιώστε τον κωδικό CVV";
-
 "Contact information" = "Στοιχεία επικοινωνίας";
 
 "EPS Bank" = "Τράπεζα με EPS";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Ταχύτερες πληρωμές στην %@ και σε χιλιάδες επιχειρήσεις.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Πληρώστε σε <num_installments/> άτοκες δόσεις των <installment_price/> με <img/>";
-
 "Pay over time with %@" = "Πληρωμή σταδιακά με %@";
+
+"Pay over time with Affirm" = "Πληρωμή σταδιακά με Affirm";
 
 "Pay with Link" = "Πληρωμή με το Link";
 

@@ -14,13 +14,14 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(EarlyAccessCVCRecollectionFeature) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(ExperimentalPaymentMethodLayoutAPI) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(ExperimentalPaymentMethodLayoutAPI) @_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
 class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
+    @Published var embeddedPlaygroundController: EmbeddedPlaygroundViewController?
     @Published var settings: PaymentSheetTestPlaygroundSettings
     @Published var currentlyRenderedSettings: PaymentSheetTestPlaygroundSettings
     @Published var addressDetails: AddressViewController.AddressDetails?
@@ -170,7 +171,87 @@ class PlaygroundController: ObservableObject {
             configuration.paymentMethodLayout = .horizontal
         case .vertical:
             configuration.paymentMethodLayout = .vertical
+        case .automatic:
+            configuration.paymentMethodLayout = .automatic
         }
+        return configuration
+    }
+
+    var embeddedConfiguration: EmbeddedPaymentElement.Configuration {
+        let formSheetAction: EmbeddedPaymentElement.Configuration.FormSheetAction = {
+            switch settings.formSheetAction {
+            case .confirm:
+                return .confirm { [weak self] result in
+                    self?.lastPaymentResult = result
+                }
+            case .continue:
+                return .continue
+            }
+        }()
+
+        var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: formSheetAction)
+        configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
+        configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
+        switch settings.externalPaymentMethods {
+        case .paypal:
+            configuration.paymentMethodOrder = ["card", "external_paypal"]
+        case .off, .all: // When using all EPMs, alphabetize the order by not setting `paymentMethodOrder`.
+            break
+        }
+        configuration.merchantDisplayName = "Example, Inc."
+        configuration.applePay = applePayConfiguration
+        configuration.customer = customerConfiguration
+        configuration.appearance = appearance
+        if settings.userOverrideCountry != .off {
+            configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
+        }
+        configuration.returnURL = "payments-example://stripe-redirect"
+
+        if settings.defaultBillingAddress != .off {
+            configuration.defaultBillingDetails.name = "Jane Doe"
+            configuration.defaultBillingDetails.address = .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            )
+        }
+        switch settings.defaultBillingAddress {
+        case .on:
+            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.phone = "+13105551234"
+        case .randomEmail:
+            configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"
+            configuration.defaultBillingDetails.phone = "+13105551234"
+        case .randomEmailNoPhone:
+            configuration.defaultBillingDetails.email = "test-\(UUID().uuidString)@stripe.com"
+        case .customEmail:
+            configuration.defaultBillingDetails.email = settings.customEmail
+        case .off:
+            break
+        }
+
+        if settings.allowsDelayedPMs == .on {
+            configuration.allowsDelayedPaymentMethods = true
+        }
+
+        if settings.shippingInfo != .off {
+            configuration.allowsPaymentMethodsRequiringShippingAddress = true
+            configuration.shippingDetails = { [weak self] in
+                return self?.addressDetails
+            }
+        }
+        configuration.primaryButtonLabel = settings.customCtaLabel
+
+        configuration.billingDetailsCollectionConfiguration.name = .init(rawValue: settings.collectName.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.phone = .init(rawValue: settings.collectPhone.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
+        configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
+        configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
+
         return configuration
     }
 
@@ -329,10 +410,25 @@ class PlaygroundController: ObservableObject {
             if newValue.autoreload == .on {
                 self.load()
             }
+            if newValue.shakeAmbiguousViews == .on {
+                self.ambiguousViewTimer?.invalidate()
+                self.ambiguousViewTimer = .scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { _ in
+                    self.checkForAmbiguousViews()
+                })
+            } else {
+                self.ambiguousViewTimer?.invalidate()
+            }
         }.store(in: &subscribers)
 
         // Listen for analytics
         STPAnalyticsClient.sharedClient.delegate = self
+    }
+
+    var ambiguousViewTimer: Timer?
+    func checkForAmbiguousViews() {
+        if let v = self.rootViewController.view.window!.ambiguousView() {
+            print(v)
+        }
     }
 
     func buildPaymentSheet() {
@@ -445,6 +541,7 @@ extension PlaygroundController {
         paymentSheetFlowController = nil
         addressViewController = nil
         paymentSheet = nil
+        embeddedPlaygroundController = nil
         lastPaymentResult = nil
         isLoading = true
         let settingsToLoad = self.settings
@@ -460,6 +557,7 @@ extension PlaygroundController {
             "use_link": settings.linkMode == .link_pm,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            "customer_session_component_name": "mobile_payment_element",
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
             "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
             "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
@@ -535,7 +633,7 @@ extension PlaygroundController {
                     self.buildPaymentSheet()
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
-                } else {
+                } else if self.settings.uiStyle == .flowController {
                     let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
                         self.currentlyRenderedSettings = self.settings
                         switch result {
@@ -578,6 +676,10 @@ extension PlaygroundController {
                             completion: completion
                         )
                     }
+                } else if self.settings.uiStyle == .embedded {
+                    self.makeEmbeddedPaymentElement()
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
                 }
             }
         }
@@ -780,4 +882,26 @@ class AnalyticsLogObserver: ObservableObject {
     static let shared: AnalyticsLogObserver = .init()
     /// All analytic events sent by the SDK since the playground was loaded.
     @Published var analyticsLog: [[String: Any]] = []
+}
+
+// MARK: Embedded helpers
+extension PlaygroundController {
+    func makeEmbeddedPaymentElement() {
+        embeddedPlaygroundController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
+                                                                        intentConfig: intentConfig,
+                                                                        appearance: appearance)
+    }
+
+    func presentEmbedded() {
+        guard let embeddedPlaygroundController else { return }
+        let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
+        embeddedPlaygroundController.navigationItem.leftBarButtonItem = closeButton
+
+        let navController = UINavigationController(rootViewController: embeddedPlaygroundController)
+        rootViewController.present(navController, animated: true)
+    }
+
+    @objc func dismissEmbedded() {
+        embeddedPlaygroundController?.dismiss(animated: true, completion: nil)
+    }
 }

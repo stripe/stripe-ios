@@ -63,6 +63,17 @@ final class FinancialConnectionsAPIClient {
             ephemeralKeySecret: possibleConsumerPublishableKey
         )
     }
+
+    private func updateAndApplyFraudDetection(to parameters: [String: Any]) -> Future<[String: Any]> {
+        let promise = Promise<[String: Any]>()
+        STPTelemetryClient.shared.updateFraudDetectionIfNecessary { _ in
+            // Fire and forget operation. Ignore any possible errors here.
+            var paramsWithTelemetry = parameters
+            paramsWithTelemetry = STPTelemetryClient.shared.paramsByAddingTelemetryFields(toParams: paramsWithTelemetry)
+            promise.fulfill { paramsWithTelemetry }
+        }
+        return promise
+    }
 }
 
 protocol FinancialConnectionsAPI {
@@ -219,6 +230,12 @@ protocol FinancialConnectionsAPI {
         bankAccountId: String
     ) -> Future<FinancialConnectionsPaymentDetails>
 
+    func sharePaymentDetails(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String,
+        expectedPaymentMethodType: String
+    ) -> Future<FinancialConnectionsSharePaymentDetails>
+
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String
@@ -307,7 +324,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.get(
             resource: APIEndpointSearchInstitutions,
             parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -334,7 +351,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsCancel,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -349,7 +366,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointAuthSessionsRetrieve,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -455,7 +472,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointLinkMoreAccounts,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: false
+            useConsumerPublishableKeyIfNeeded: true
         )
     }
 
@@ -944,6 +961,36 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         )
     }
 
+    func sharePaymentDetails(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String,
+        expectedPaymentMethodType: String
+    ) -> Future<FinancialConnectionsSharePaymentDetails> {
+        let parameters: [String: Any] = [
+            "request_surface": requestSurface,
+            "id": paymentDetailsId,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ],
+            "expected_payment_method_type": expectedPaymentMethodType,
+            "expand": ["payment_method"],
+        ]
+
+        return updateAndApplyFraudDetection(to: parameters)
+            .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsSharePaymentDetails> in
+                guard let self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated.")
+                    )
+                }
+                return self.post(
+                    resource: APIEndpointSharePaymentDetails,
+                    parameters: parametersWithTelemetry,
+                    useConsumerPublishableKeyIfNeeded: false
+                )
+            }
+    }
+
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String
@@ -957,11 +1004,20 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             ],
             "type": "link",
         ]
-        return post(
-            resource: APIEndpointPaymentMethods,
-            parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
-        )
+
+        return updateAndApplyFraudDetection(to: parameters)
+            .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsPaymentMethod> in
+                guard let self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated.")
+                    )
+                }
+                return self.post(
+                    resource: APIEndpointPaymentMethods,
+                    parameters: parametersWithTelemetry,
+                    useConsumerPublishableKeyIfNeeded: false
+                )
+            }
     }
 }
 
@@ -995,4 +1051,5 @@ private let APIEndpointPollAccountNumbers = "link_account_sessions/poll_account_
 private let APIEndpointLinkAccountsSignUp = "consumers/accounts/sign_up"
 private let APIEndpointAttachLinkConsumerToLinkAccountSession = "consumers/attach_link_consumer_to_link_account_session"
 private let APIEndpointPaymentDetails = "consumers/payment_details"
+private let APIEndpointSharePaymentDetails = "consumers/payment_details/share"
 private let APIEndpointPaymentMethods = "payment_methods"

@@ -13,55 +13,59 @@ class MainViewController: UITableViewController {
 
     let appInfo: AppInfo
     let merchant: MerchantInfo
-    
+
     init(appInfo: AppInfo, merchant: MerchantInfo) {
         self.appInfo = appInfo
         self.merchant = merchant
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
+        case onboarding = "Account onboarding"
         case payouts = "Payouts"
 
         var label: String { rawValue }
 
-        var accessoryType: UITableViewCell.AccessoryType {
-            .disclosureIndicator
+        var attributedLabel: NSAttributedString {
+            let attributeString = NSMutableAttributedString(
+                string: label,
+                attributes: [
+                    .font: UIFont.boldSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize),
+                ]
+            )
+            if isBeta {
+                attributeString.append(NSAttributedString(
+                    string: " Beta",
+                    attributes: [
+                        .font: UIFont.preferredFont(forTextStyle: .footnote),
+                        .foregroundColor: UIColor.secondaryLabel,
+                    ]
+                ))
+            }
+            return attributeString
         }
 
-        var labelColor: UIColor {
-            return .label
-        }
-    }
+        var isBeta: Bool { true }
 
-    /// Navbar button title view
-    lazy var navbarTitleButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle(title, for: .normal)
-        button.setImage(UIImage(systemName: "chevron.down",
-                                withConfiguration: UIImage.SymbolConfiguration(pointSize: 10)),
-                        for: .normal)
-        button.semanticContentAttribute = .forceRightToLeft
-        button.tintColor = .label
-        button.addTarget(self, action: #selector(presentServerSettings), for: .touchUpInside)
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.accessibilityLabel = "Configure server"
-        return button
-    }()
-
-    override var title: String? {
-        didSet {
-            navbarTitleButton.setTitle(title, for: .normal)
+        var detailText: String {
+            switch self {
+            case .onboarding:
+                return "Show a localized onboarding form that validates data."
+            case .payouts:
+                return "Show payout information and allow your users to perform payouts."
+            }
         }
     }
 
     lazy var embeddedComponentManager: EmbeddedComponentManager = {
-        .init(fetchClientSecret: { [weak self, merchant] in
+        return .init(appearance: AppSettings.shared.appearanceInfo.appearance,
+                     fonts: customFonts(),
+                     fetchClientSecret: { [weak self, merchant] in
             do {
                 return try await API.accountSession(merchantId: merchant.id).get().clientSecret
             } catch {
@@ -73,21 +77,90 @@ class MainViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = merchant.displayName ?? merchant.merchantId
-        navigationItem.titleView = navbarTitleButton
+        title = merchant.displayName.map { "Demo account: \($0)" } ?? merchant.merchantId
+        navigationController?.delegate = self
+        addChangeAppearanceButtonNavigationItem(to: self)
+
+        navigationItem.leftBarButtonItem = .init(
+            image: UIImage(systemName: "gearshape.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(presentServerSettings)
+        )
+    }
+
+    func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
+         // Add a button to change the appearance
+         let button = UIBarButtonItem(
+             image: UIImage(systemName: "paintpalette"),
+             style: .plain,
+             target: self,
+             action: #selector(selectAppearance)
+         )
+         button.accessibilityLabel = "Change appearance"
+         var buttonItems = viewController.navigationItem.rightBarButtonItems ?? []
+         buttonItems = [button] + buttonItems
+         viewController.navigationItem.rightBarButtonItems = buttonItems
+     }
+
+    @objc
+    func selectAppearance() {
+        self.navigationController?.present(AppearanceSettings(componentManager: embeddedComponentManager).containerViewController, animated: true)
     }
 
     /// Called when table row is selected
     func performAction(_ row: Row, cell: UITableViewCell) {
-        let viewControllerToPush: UIViewController
+        var viewControllerToPresent: UIViewController
 
+        // Create a view controller for the selected component
         switch row {
+        case .onboarding:
+            let savedOnboardingSettings = AppSettings.shared.onboardingSettings
+            viewControllerToPresent = embeddedComponentManager.createAccountOnboardingViewController(
+                fullTermsOfServiceUrl: savedOnboardingSettings.fullTermsOfServiceUrl,
+                recipientTermsOfServiceUrl: savedOnboardingSettings.recipientTermsOfServiceUrl,
+                privacyPolicyUrl: savedOnboardingSettings.privacyPolicyUrl,
+                skipTermsOfServiceCollection: savedOnboardingSettings.skipTermsOfService.boolValue,
+                collectionOptions: savedOnboardingSettings.accountCollectionOptions)
         case .payouts:
-            viewControllerToPush = embeddedComponentManager.createPayoutsViewController()
+            viewControllerToPresent = embeddedComponentManager.createPayoutsViewController()
         }
-        
-        viewControllerToPush.navigationItem.backButtonDisplayMode = .minimal
-        navigationController?.pushViewController(viewControllerToPush, animated: true)
+
+        // Fetch ViewController presentation settings
+        let presentationSettings = AppSettings.shared.presentationSettings
+
+        if presentationSettings.embedInTabBar {
+            // Embed in a tab bar
+            let tabBarController = UITabBarController()
+            viewControllerToPresent.tabBarItem = .init(title: row.label, image: UIImage(systemName: "star"), tag: 0)
+
+            tabBarController.viewControllers = [viewControllerToPresent]
+
+            viewControllerToPresent = tabBarController
+        }
+
+        // Configure the component VC's navbar
+        viewControllerToPresent.navigationItem.backButtonDisplayMode = .minimal
+        addChangeAppearanceButtonNavigationItem(to: viewControllerToPresent)
+        viewControllerToPresent.title = row.label
+
+        if presentationSettings.presentationStyleIsPush {
+            // Push to navigation stack
+            navigationController?.pushViewController(viewControllerToPresent, animated: true)
+        } else {
+            // Modally present
+
+            // Add a close button
+            viewControllerToPresent.navigationItem.leftBarButtonItem = .init(systemItem: .close, primaryAction: .init(handler: { [weak viewControllerToPresent] _ in
+                viewControllerToPresent?.dismiss(animated: true)
+            }))
+
+            if presentationSettings.embedInNavBar {
+                // Embed inside a navbar
+                viewControllerToPresent = UINavigationController(rootViewController: viewControllerToPresent)
+            }
+            present(viewControllerToPresent, animated: true)
+        }
     }
 
     // MARK: - UITableViewDataSource
@@ -98,10 +171,11 @@ class MainViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row.allCases[indexPath.row]
-        let cell = UITableViewCell()
-        cell.textLabel?.text = row.label
-        cell.textLabel?.textColor = row.labelColor
-        cell.accessoryType = row.accessoryType
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        cell.textLabel?.attributedText = row.attributedLabel
+        cell.detailTextLabel?.text = row.detailText
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
 
@@ -115,15 +189,83 @@ class MainViewController: UITableViewController {
 
         performAction(Row.allCases[indexPath.row], cell: cell)
     }
-    
+
     @objc
     func presentServerSettings() {
         self.present(AppSettingsView(appInfo: appInfo).containerViewController, animated: true)
     }
-    
+
     func presentAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
+    }
+
+    func customFonts() -> [EmbeddedComponentManager.CustomFontSource] {
+        // Note: The font name does not always match the file name,
+        // but it makes initialization of font source easier when it does.
+        let fonts: [String] = [
+            "Handjet-Regular",
+            "Handjet-Bold",
+        ]
+
+        let fontSources: [EmbeddedComponentManager.CustomFontSource] = fonts.map { fontName in
+            guard let fontFileURL = Bundle.main.url(forResource: fontName, withExtension: "ttf"),
+                    let font = UIFont(name: fontName, size: UIFont.systemFontSize) else {
+                print("Failed to load font with name \(fontName)")
+                return nil
+            }
+            do {
+                return try .init(font: font, fileUrl: fontFileURL)
+            } catch {
+                print("Failed to create font source \(error)")
+                return nil
+            }
+        }
+        .compactMap({ $0 })
+
+        if fontSources.count != fonts.count {
+            print("Failed to load some fonts. Below are the available fonts to choose from: ")
+            for family in UIFont.familyNames.sorted() {
+                print("Family: \(family)")
+                for name in UIFont.fontNames(forFamilyName: family) {
+                    print("- \(name)")
+                }
+            }
+        }
+
+        return fontSources
+    }
+}
+
+extension MainViewController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+
+        // Hide the navbar on the component VC if it's disabled in presentation settings
+
+        navigationController.isNavigationBarHidden = !AppSettings.shared.presentationSettings.embedInNavBar && viewController != self
+
+        if navigationController.isNavigationBarHidden {
+
+            // Add floating back button so we can still navigate back
+
+            let backButton = UIButton(
+                type: .system,
+                primaryAction: UIAction(
+                    title: "Back",
+                    image: UIImage(systemName: "chevron.backward"),
+                    handler: { _ in
+                        navigationController.popViewController(animated: true)
+                    }
+                ))
+            backButton.backgroundColor = .systemBackground.withAlphaComponent(0.5)
+            backButton.layer.cornerRadius = 4
+            backButton.translatesAutoresizingMaskIntoConstraints = false
+            viewController.view.addSubview(backButton)
+            NSLayoutConstraint.activate([
+                backButton.topAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+                backButton.leadingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            ])
+        }
     }
 }

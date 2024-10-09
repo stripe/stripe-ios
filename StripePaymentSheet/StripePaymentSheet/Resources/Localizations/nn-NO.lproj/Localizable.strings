@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li rentefrie betalingar på %2$@";
-
 "+ Add" = "+ Legg til";
 
 "Add US bank account" = "Legg til bankkonto i USA";
@@ -25,6 +23,12 @@
 "Bank" = "Bank";
 
 "Bank account" = "Bankkonto";
+
+"Buy now or pay later with <img/>" = "Kjøp no eller betal seinare med <img/>";
+
+"Buy now or pay later with Afterpay" = "Kjøp no eller betal seinare med Afterpay";
+
+"Buy now or pay later with Clearpay" = "Kjøp no eller betal seinare med Clearpay";
 
 "Buy now or pay later with Klarna" = "Kjøp no eller betal seinare med Klarna";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "Stadfest CVC-koden din";
 
-"Confirm your CVV" = "Stadfest CVV-koden din";
-
 "Contact information" = "Kontaktopplysningar";
 
 "EPS Bank" = "EPS Bank";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "Betal raskare hos %@ og tusenvis av verksemder.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal i <num_installments/> rentefrie betalingar på <installment_price/> med <img/>";
-
 "Pay over time with %@" = "Betal over tid med %@";
+
+"Pay over time with Affirm" = "Betal over tid med Affirm";
 
 "Pay with Link" = "Betal med Link";
 

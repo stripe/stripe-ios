@@ -1293,7 +1293,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], customerSessionData: [
-                "payment_sheet": [
+                "mobile_payment_element": [
                     "enabled": true,
                     "features": ["payment_method_save": "enabled",
                                  "payment_method_remove": "enabled",
@@ -1319,7 +1319,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                         setupFutureUsage: .offSession),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "payment_sheet": [
+                                            "mobile_payment_element": [
                                                 "enabled": true,
                                                 "features": ["payment_method_save": "enabled",
                                                              "payment_method_remove": "enabled",
@@ -1345,7 +1345,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                         setupFutureUsage: .offSession),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "payment_sheet": [
+                                            "mobile_payment_element": [
                                                 "enabled": true,
                                                 "features": ["payment_method_save": "disabled",
                                                              "payment_method_remove": "enabled",
@@ -1370,7 +1370,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             intent: ._testSetupIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "payment_sheet": [
+                                            "mobile_payment_element": [
                                                 "enabled": true,
                                                 "features": ["payment_method_save": "disabled",
                                                              "payment_method_remove": "enabled",
@@ -1395,7 +1395,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             intent: ._testSetupIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "payment_sheet": [
+                                            "mobile_payment_element": [
                                                 "enabled": true,
                                                 "features": ["payment_method_save": "enabled",
                                                              "payment_method_remove": "enabled",

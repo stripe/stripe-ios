@@ -100,7 +100,8 @@ extension PaymentSheetFormFactory {
 
         let mandate: SimpleMandateElement? = {
             if isSettingUp {
-                return .init(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
+                return makeMandate(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
+
             }
             return nil
         }()

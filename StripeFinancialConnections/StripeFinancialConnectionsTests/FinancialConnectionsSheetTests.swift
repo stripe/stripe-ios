@@ -50,6 +50,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
             apiClient: mockApiClient,
             analyticsClientV1: mockAnalyticsClient,
             clientSecret: "test",
+            elementsSessionContext: nil,
             returnURL: nil,
             publishableKey: "test",
             stripeAccount: nil

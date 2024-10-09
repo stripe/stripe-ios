@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li%2$@的无息付款";
-
 "+ Add" = "+ 添加";
 
 "Add US bank account" = "添加美国银行账户";
@@ -25,6 +23,12 @@
 "Bank" = "银行";
 
 "Bank account" = "银行账户";
+
+"Buy now or pay later with <img/>" = "用 <img/> 先买后付";
+
+"Buy now or pay later with Afterpay" = "用 Afterpay 先买后付";
+
+"Buy now or pay later with Clearpay" = "用 Clearpay 先买后付";
 
 "Buy now or pay later with Klarna" = "用 Klarna 先买后付";
 
@@ -74,8 +78,6 @@
 
 "Confirm your CVC" = "确认您的 CVC";
 
-"Confirm your CVV" = "确认您的 CVV";
-
 "Contact information" = "联系信息";
 
 "EPS Bank" = "EPS 银行";
@@ -118,9 +120,9 @@
 
 "Pay faster at %@ and thousands of businesses." = "在 %@ 及数千商家那里更快支付。";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "用 <img/> 分 <num_installments/> 支付，无利息，每期 <installment_price/>";
-
 "Pay over time with %@" = "用 %@ 慢慢支付";
+
+"Pay over time with Affirm" = "用 Affirm 慢慢支付";
 
 "Pay with Link" = "用 Link 支付";
 

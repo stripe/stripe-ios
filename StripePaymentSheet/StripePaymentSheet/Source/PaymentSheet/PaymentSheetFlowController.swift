@@ -70,9 +70,13 @@ extension PaymentSheet {
                 return "wallet"
             } else if
                 case .new(let confirmParams) = self,
-                confirmParams.instantDebitsLinkedBank != nil
+                let linkedBank = confirmParams.instantDebitsLinkedBank
             {
-                return "instant_debits"
+                if linkedBank.linkMode == .linkCardBrand {
+                    return "link_card_brand"
+                } else {
+                    return "instant_debits"
+                }
             } else {
                 return nil
             }
@@ -260,7 +264,7 @@ extension PaymentSheet {
                 mode: mode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
-                isFlowController: true
+                integrationShape: .flowController
             ) { result in
                 switch result {
                 case .success(let loadResult):
@@ -423,7 +427,7 @@ extension PaymentSheet {
                 mode: .deferredIntent(intentConfiguration),
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
-                isFlowController: true
+                integrationShape: .flowController
             ) { [weak self] result in
                 assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
@@ -492,7 +496,7 @@ extension PaymentSheet {
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
-            case .vertical:
+            case .vertical, .automatic:
                 return PaymentSheetVerticalViewController(
                     configuration: configuration,
                     loadResult: loadResult,

@@ -211,7 +211,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             paymentSheetConfiguration: configuration,
             intent: intent,
             appearance: configuration.appearance,
-            cbcEligible: elementsSession.isCardBrandChoiceEligible
+            cbcEligible: elementsSession.isCardBrandChoiceEligible,
+            analyticsHelper: analyticsHelper
         )
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
@@ -532,6 +533,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         }
 
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
@@ -565,6 +567,9 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()
+        if viewController.paymentOption != nil {
+            analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.selectedPaymentMethodType.identifier)
+        }
     }
 
     func updateErrorLabel(for error: Error?) {

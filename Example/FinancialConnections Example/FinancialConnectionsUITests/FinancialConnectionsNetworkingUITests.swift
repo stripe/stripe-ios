@@ -13,7 +13,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
     func testNativeNetworkingTestMode() throws {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
-        executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
+        // TODO(mats): Reenable once step up verification issues are resolved (BANKCON-14617).
+        // executeNativeNetworkingTestModeSignInFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeAutofillSignInFlowTest(emailAddress: emailAddresss)
         let bankAccountName = "Insufficient Funds"
         executeNativeNetworkingTestModeAddBankAccount(
@@ -402,14 +403,13 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         )
     }
 
-    // TODO: uncomment once we release an SDK version w/ backend changes
-//    func testNativeNetworkingManualEntryTestMode() throws {
-//        let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
-//        executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: emailAddresss)
-//        executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: emailAddresss)
-//        executeNativeNetworkingManualEntryTestModeConsentWithUpdateRequiredTest(emailAddress: emailAddresss)
-//        executeNativeNetworkingManualEntryTestModeNotNowFlowTest(emailAddress: emailAddresss)
-//    }
+    func testNativeNetworkingManualEntryTestMode() throws {
+        let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
+        executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: emailAddresss)
+        executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: emailAddresss)
+        executeNativeNetworkingManualEntryTestModeConsentWithUpdateRequiredTest(emailAddress: emailAddresss)
+        executeNativeNetworkingManualEntryTestModeNotNowFlowTest(emailAddress: emailAddresss)
+    }
 
     private func executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: String) {
         let app = XCUIApplication.fc_launch(
@@ -499,7 +499,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
             XCTAssertTrue(app.fc_nativeConnectAccountsButton.waitForExistence(timeout: 60.0))
             app.fc_scrollDown()
             app.staticTexts["High Balance"].waitForExistenceAndTap()
-            
+
             app.fc_nativeConnectAccountsButton.tap()
 
             app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()

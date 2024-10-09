@@ -72,9 +72,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         // Back out of card form
         app.buttons["Back"].tap()
-        // Link shouldn't be selected anymore
-        XCTAssertFalse(app.buttons["Link"].isSelected)
-        XCTAssertFalse(continueButton.isEnabled)
+        // Link (the previous selection) should be selected
+        XCTAssertTrue(app.buttons["Link"].isSelected)
+        XCTAssertTrue(continueButton.isEnabled)
 
         // Go back to card
         app.buttons["Card"].waitForExistenceAndTap()
@@ -106,8 +106,15 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         XCTAssertEqual(
             analyticsLog.map({ $0[string: "event"]! }).filter({ $0.starts(with: "mc") }),
-            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"]
+            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"]
         )
+
+        let eventsWithSelectedLPM = ["mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped"]
+        XCTAssertEqual(
+            analyticsLog.filter({ eventsWithSelectedLPM.contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
+            ["sepa_debit", "sepa_debit", "sepa_debit", "sepa_debit", "sepa_debit"]
+        )
+
         // Reload
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10))
@@ -122,6 +129,12 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             analyticsLog.map({ $0[string: "event"] }),
             ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
         )
+        XCTAssertEqual(
+            analyticsLog.filter({ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
+                .contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
+            ["card", "card"]
+        )
+
         // ...reload...
         reload(app, settings: settings)
         // ...and the saved card should be the default

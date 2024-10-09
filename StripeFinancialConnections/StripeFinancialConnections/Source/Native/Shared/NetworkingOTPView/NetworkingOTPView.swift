@@ -71,12 +71,12 @@ final class NetworkingOTPView: UIView {
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
         return otpTextField
     }()
-    private lazy var theme: ElementsUITheme = {
-        var theme: ElementsUITheme = .default
+    private lazy var theme: ElementsAppearance = {
+        var theme: ElementsAppearance = .default
         theme.colors = {
-            var colors = ElementsUITheme.Color()
+            var colors = ElementsAppearance.Color()
             colors.border = .borderDefault
-            colors.background = .customBackgroundColor
+            colors.componentBackground = .customBackgroundColor
             colors.textFieldText = .textDefault
             colors.danger = .textFeedbackCritical
             return colors

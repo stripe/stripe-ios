@@ -6,9 +6,8 @@
 //
 
 @_spi(PrivateBetaConnect) import StripeConnect
-import StripeCore
-import UIKit
 import SwiftUI
+import UIKit
 
 struct AppLoadingView: View {
     @Environment(\.viewControllerPresenter) var viewControllerPresenter
@@ -21,7 +20,7 @@ struct AppLoadingView: View {
         case failed(reason: String)
         case finished
     }
-    
+
     var body: some View {
         VStack(spacing: 10) {
             switch loadingState {
@@ -54,7 +53,7 @@ struct AppLoadingView: View {
             load()
         }
     }
-    
+
     func load() {
         loadingState = .loading
         let workItem = DispatchWorkItem {
@@ -65,19 +64,19 @@ struct AppLoadingView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: workItem)
         loadTimeReassuranceWorkItem = workItem
         Task { @MainActor in
-            defer {         
+            defer {
                 loadTimeReassuranceWorkItem?.cancel()
                 loadTimeReassuranceWorkItem = nil
                 displayLoadTimeReassurance = false
             }
-            
+
             let appInfoResult = await API.appInfo()
             guard let appInfo = try? appInfoResult.get() else {
                 var errorMessage = ""
                 if case let .failure(error) = appInfoResult {
                     errorMessage = error.debugDescription
                 }
-                                
+
                 loadingState = .failed(reason: "\(errorMessage)")
                 return
             }
@@ -85,11 +84,11 @@ struct AppLoadingView: View {
                 loadingState = .failed(reason: "No merchants returned from api")
                 return
             }
-            
+
             STPAPIClient.shared.publishableKey = appInfo.publishableKey
             let selectedMerchant = AppSettings.shared.selectedMerchant(appInfo: appInfo) ?? firstMerchant
             viewControllerPresenter?.setRootViewController(MainViewController(appInfo: appInfo, merchant: selectedMerchant).embedInNavigationController())
-            
+
         }
     }
 }

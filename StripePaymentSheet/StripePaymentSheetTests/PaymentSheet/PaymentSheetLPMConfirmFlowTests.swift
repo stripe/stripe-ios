@@ -423,6 +423,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .FR) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "EUR",
+                               paymentMethodType: .payPal,
+                               merchantCountry: .FR) { form in
+            XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
+        }
     }
 
     func testCashAppConfirmFlows() async throws {
@@ -431,6 +438,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .cashApp,
                                merchantCountry: .US) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "USD",
+                               paymentMethodType: .cashApp,
+                               merchantCountry: .US) { form in
+            XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
         }
     }
 
@@ -606,8 +620,12 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)
 
         for (description, intent) in intents {
+
+            func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+            }
             // Make the form
-            let formVC = PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+            let formVC = makeFormVC(previousCustomerInput: nil)
             let paymentMethodForm = formVC.form
 
             // Add to window to avoid layout errors due to zero size and presentation errors
@@ -621,9 +639,18 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
             // Generate params from the form
             guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .stripe(paymentMethodType))) else {
-                XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
+                XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState) \n Form: \(paymentMethodForm)")
                 return
             }
+
+            // Re-generate the form and validate that it carries over all previous customer input
+            let regeneratedFormVC = makeFormVC(previousCustomerInput: intentConfirmParams)
+            guard let regeneratedIntentConfirmParams = regeneratedFormVC.form.updateParams(params: IntentConfirmParams(type: .stripe(paymentMethodType))) else {
+                XCTFail("Regenerated form failed to create params. Validation state: \(regeneratedFormVC.form.validationState) \n Form: \(regeneratedFormVC.form)")
+                return
+            }
+            XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
+
             let e = expectation(description: "Confirm")
             let paymentHandler = STPPaymentHandler(apiClient: apiClient)
             var redirectShimCalled = false
@@ -896,5 +923,68 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDele
     }
 
     nonisolated func updateErrorLabel(for error: (any Error)?) {
+    }
+}
+
+// MARK: - IntentConfirmParams
+
+extension PaymentSheet_LPM_ConfirmFlowTests {
+    func testIntentConfirmParamsEquatable() {
+        let lhs = IntentConfirmParams(type: .stripe(.card))
+        let rhs = IntentConfirmParams(type: .stripe(.card))
+        // When lhs has an obscure difference w/ rhs...
+        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customer: .init(id: "", ephemeralKeySecret: ""))
+        // ...they should not be equal
+        XCTAssertNotEqual(lhs, rhs)
+    }
+}
+
+extension IntentConfirmParams: Equatable {
+    static public func == (lhs: StripePaymentSheet.IntentConfirmParams, rhs: StripePaymentSheet.IntentConfirmParams) -> Bool {
+        // Hack to compare `paymentMethodParams` objects; consider them equal if their serialized versions are the same
+        let lhsPaymentMethodParams = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: lhs.paymentMethodParams))
+        let rhsPaymentMethodParams = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: rhs.paymentMethodParams))
+        if lhsPaymentMethodParams != rhsPaymentMethodParams {
+            print("Params not equal: \(lhsPaymentMethodParams) vs \(rhsPaymentMethodParams)")
+            return false
+        }
+        if lhs.paymentMethodType != rhs.paymentMethodType {
+            print("Payment method types not equal: \(lhs.paymentMethodType) vs \(rhs.paymentMethodType)")
+            return false
+        }
+
+        let lhsConfirmPaymentMethodOptions = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: lhs.confirmPaymentMethodOptions))
+        let rhsConfirmPaymentMethodOptions = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: rhs.confirmPaymentMethodOptions))
+        if lhsConfirmPaymentMethodOptions != rhsConfirmPaymentMethodOptions {
+            print("Confirm payment method options not equal: \(lhs.confirmPaymentMethodOptions) vs \(rhs.confirmPaymentMethodOptions)")
+            return false
+        }
+
+        if lhs.saveForFutureUseCheckboxState != rhs.saveForFutureUseCheckboxState {
+            print("Save for future use checkbox states not equal: \(lhs.saveForFutureUseCheckboxState) vs \(rhs.saveForFutureUseCheckboxState)")
+            return false
+        }
+
+        if lhs.didDisplayMandate != rhs.didDisplayMandate {
+            print("Did display mandate states not equal: \(lhs.didDisplayMandate) vs \(rhs.didDisplayMandate)")
+            return false
+        }
+
+        if lhs.financialConnectionsLinkedBank != rhs.financialConnectionsLinkedBank {
+            print("Financial connections linked banks not equal: \(lhs.financialConnectionsLinkedBank.debugDescription) vs \(rhs.financialConnectionsLinkedBank.debugDescription)")
+            return false
+        }
+
+        if lhs.instantDebitsLinkedBank != rhs.instantDebitsLinkedBank {
+            print("Instant debits linked banks not equal: \(lhs.instantDebitsLinkedBank.debugDescription) vs \(rhs.instantDebitsLinkedBank.debugDescription)")
+            return false
+        }
+
+        // Sanity check to make sure when we add new properties, we check them here
+        let mirror = Mirror(reflecting: lhs)
+        let propertyCount = mirror.children.count
+        XCTAssertEqual(propertyCount, 7)
+
+        return true
     }
 }

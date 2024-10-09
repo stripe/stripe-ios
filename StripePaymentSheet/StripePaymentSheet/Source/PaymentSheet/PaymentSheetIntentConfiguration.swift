@@ -41,29 +41,7 @@ public extension PaymentSheet {
         ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
         ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
         ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
-        public init(mode: Mode,
-                    paymentMethodTypes: [String]? = nil,
-                    onBehalfOf: String? = nil,
-                    paymentMethodConfigurationId: String? = nil,
-                    confirmHandler: @escaping ConfirmHandler) {
-            self.mode = mode
-            self.paymentMethodTypes = paymentMethodTypes
-            self.onBehalfOf = onBehalfOf
-            self.paymentMethodConfigurationId = paymentMethodConfigurationId
-            self.confirmHandler = confirmHandler
-            self.requireCVCRecollection = false
-            validate()
-        }
-
-        /// Creates a `PaymentSheet.IntentConfiguration` with the given values
-        /// - Parameters:
-        ///   - mode: The mode of this intent, either payment or setup
-        ///   - paymentMethodTypes: The payment method types for the intent
-        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
-        ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
-        ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
-        @_spi(EarlyAccessCVCRecollectionFeature)
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,
@@ -102,7 +80,6 @@ public extension PaymentSheet {
         /// If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntents only)
         ///  - Seealso: https://docs.stripe.com/payments/accept-a-payment-deferred?platform=ios&type=payment#ios-cvc-recollection
         ///  - Note: Server-side confirmation is not supported.
-        @_spi(EarlyAccessCVCRecollectionFeature)
         public var requireCVCRecollection: Bool
 
         /// Controls when the funds will be captured. 

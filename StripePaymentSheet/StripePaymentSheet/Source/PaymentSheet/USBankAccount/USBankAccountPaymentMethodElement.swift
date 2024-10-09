@@ -23,8 +23,14 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     var view: UIView {
         return formElement.view
     }
-    var mandateString: NSMutableAttributedString?
+    var linkedBank: FinancialConnectionsLinkedBank? {
+        didSet {
+            updateLinkedBankUI()
+            self.delegate?.didUpdate(element: self)
+        }
+    }
 
+    private(set) var mandateString: NSMutableAttributedString?
     private let configuration: PaymentSheetFormFactoryConfig
     private let merchantName: String
     private let formElement: FormElement
@@ -32,19 +38,10 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let bankInfoView: BankAccountInfoView
     private let checkboxElement: PaymentMethodElement?
     private var savingAccount: BoolReference
-    private let theme: ElementsUITheme
-    private var linkedBank: FinancialConnectionsLinkedBank? {
-        didSet {
-            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value, configuration: configuration, theme: theme)
-        }
-    }
+    private let theme: ElementsAppearance
 
     private var linkedAccountElements: [Element] {
-        var elements: [Element] = [bankInfoSectionElement]
-        if let checkboxElement = checkboxElement {
-            elements.append(checkboxElement)
-        }
-        return elements
+        [bankInfoSectionElement, checkboxElement].compactMap { $0 }
     }
 
     private static let links: [String: URL] = [
@@ -93,7 +90,8 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         checkboxElement: PaymentMethodElement?,
         savingAccount: BoolReference,
         merchantName: String,
-        theme: ElementsUITheme = .default
+        initialLinkedBank: FinancialConnectionsLinkedBank?,
+        theme: ElementsAppearance = .default
     ) {
         let collectingName = configuration.billingDetailsCollectionConfiguration.name != .never
         let collectingEmail = configuration.billingDetailsCollectionConfiguration.email != .never
@@ -109,13 +107,13 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         )
 
         self.configuration = configuration
+        self.linkedBank = initialLinkedBank
         self.bankInfoView = BankAccountInfoView(frame: .zero, theme: theme)
         self.bankInfoSectionElement = SectionElement(title: String.Localized.bank_account_sentence_case,
                                                      elements: [StaticElement(view: bankInfoView)], theme: theme)
-        self.linkedBank = nil
         self.bankInfoSectionElement.view.isHidden = true
         self.checkboxElement = checkboxElement
-
+        checkboxElement?.view.isHidden = true
         self.merchantName = merchantName
         self.savingAccount = savingAccount
         self.theme = theme
@@ -126,12 +124,9 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             phoneElement,
             addressElement,
             bankInfoSectionElement,
+            checkboxElement,
         ]
-        var autoSectioningElements = allElements.compactMap { $0 }
-        if let checkboxElement = checkboxElement {
-            checkboxElement.view.isHidden = true
-            autoSectioningElements.append(checkboxElement)
-        }
+        let autoSectioningElements = allElements.compactMap { $0 }
         self.formElement = FormElement(autoSectioningElements: autoSectioningElements, theme: theme)
         self.formElement.delegate = self
         self.bankInfoView.delegate = self
@@ -143,28 +138,36 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value, configuration: configuration, theme: theme)
             self.delegate?.didUpdate(element: self)
         }
+        updateLinkedBankUI(animated: false)
     }
 
-    func setLinkedBank(_ linkedBank: FinancialConnectionsLinkedBank) {
-        self.linkedBank = linkedBank
-        if let last4ofBankAccount = linkedBank.last4,
-           let bankName = linkedBank.bankName {
-            self.bankInfoView.setBankName(text: bankName)
-            self.bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
-            formElement.toggleElements(linkedAccountElements, hidden: false, animated: true)
+    func updateLinkedBankUI(animated: Bool = true) {
+        // Why are last4 and bank name optional? What does it mean if we set `self.linkedBank` but we're not showing the linked bank to the customer?
+        if let last4ofBankAccount = linkedBank?.last4,
+           let bankName = linkedBank?.bankName {
+            bankInfoView.setBankName(text: bankName)
+            bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
+            formElement.toggleElements(linkedAccountElements, hidden: false, animated: animated)
+        } else {
+            formElement.toggleElements(linkedAccountElements, hidden: true, animated: animated)
         }
-        self.delegate?.didUpdate(element: self)
-    }
-    func getLinkedBank() -> FinancialConnectionsLinkedBank? {
-        return linkedBank
+        mandateString = Self.attributedMandateText(
+            for: linkedBank,
+            merchantName: merchantName,
+            isSaving: savingAccount.value,
+            configuration: configuration,
+            theme: theme
+        )
     }
 
-    class func attributedMandateText(for linkedBank: FinancialConnectionsLinkedBank?,
-                                     merchantName: String,
-                                     isSaving: Bool,
-                                     configuration: PaymentSheetFormFactoryConfig,
-                                     theme: ElementsUITheme = .default) -> NSMutableAttributedString? {
-        guard let linkedBank = linkedBank else {
+    static func attributedMandateText(
+        for linkedBank: FinancialConnectionsLinkedBank?,
+        merchantName: String,
+        isSaving: Bool,
+        configuration: PaymentSheetFormFactoryConfig,
+        theme: ElementsAppearance = .default
+    ) -> NSMutableAttributedString? {
+        guard let linkedBank else {
             return nil
         }
 
@@ -179,14 +182,14 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         return formattedString
     }
 
-    class func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsUITheme) -> NSMutableAttributedString {
+    static func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsAppearance) -> NSMutableAttributedString {
         let mandateText = Self.ContinueMandateText
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, alignment: alignment, theme: theme)
         return formattedString
     }
 
-    private class func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsUITheme = .default) {
+    private static func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsAppearance = .default) {
         let style = NSMutableParagraphStyle()
         style.alignment = alignment
         formattedString.addAttributes([.paragraphStyle: style,
@@ -200,9 +203,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
     func didTapXIcon() {
         let completionClosure = {
-            self.formElement.toggleElements(self.linkedAccountElements, hidden: true, animated: true)
             self.linkedBank = nil
-            self.delegate?.didUpdate(element: self)
         }
 
         guard let last4BankAccount = self.linkedBank?.last4,
