@@ -617,14 +617,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard1
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-2:
     steps:
     - xcode-test@4:
@@ -635,14 +635,14 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: PaymentSheet Example-Shard2
         - log_formatter: xcbeautify
-        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 6 -maximum-parallel-testing-workers 6
+        - xcodebuild_options: -maximum-concurrent-test-simulator-destinations 2 -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-3:
     steps:
     - xcode-test@4:
@@ -660,7 +660,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-4:
     steps:
     - xcode-test@4:
@@ -678,7 +678,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core
+        machine_type_id: g2-m1.8core
   ui-tests-5:
     steps:
     - xcode-test@4:
@@ -696,7 +696,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2-m1-max.5core                
+        machine_type_id: g2-m1.8core             
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
