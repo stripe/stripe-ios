@@ -566,9 +566,9 @@ extension PlaygroundController {
                 return oldModifiedWithNewMode == settings
             }()
             let isDeferred = settings.integrationType != .normal
-            return onlyDifferenceBetweenSettingsIsMode && isDeferred
+            return !reinitializeControllers && onlyDifferenceBetweenSettingsIsMode && isDeferred && paymentSheetFlowController == nil
         }()
-        if reinitializeControllers || !shouldUpdateFlowControllerInsteadOfRecreating {
+        if !shouldUpdateFlowControllerInsteadOfRecreating {
             paymentSheetFlowController = nil
         }
         addressViewController = nil
