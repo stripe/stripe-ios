@@ -103,6 +103,7 @@ final class LinkInstantDebitMandateView: UIView {
 
 extension LinkInstantDebitMandateView: UITextViewDelegate {
 
+    #if !os(visionOS)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,
@@ -115,5 +116,6 @@ extension LinkInstantDebitMandateView: UITextViewDelegate {
 
         return false
     }
+    #endif
 
 }
