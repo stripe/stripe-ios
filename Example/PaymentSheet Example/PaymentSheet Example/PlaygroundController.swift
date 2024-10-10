@@ -559,21 +559,22 @@ extension PlaygroundController {
             self.isLoading = false
             self.currentlyRenderedSettings = self.settings
         }
-        let shouldUpdateFlowControllerInsteadOfRecreating: Bool = {
-            let onlyDifferenceBetweenSettingsIsMode: Bool = {
-                var oldModifiedWithNewMode = currentlyRenderedSettings
-                oldModifiedWithNewMode.mode = settings.mode
-                return oldModifiedWithNewMode == settings
-            }()
-            let isDeferred = settings.integrationType != .normal
-            return !reinitializeControllers && onlyDifferenceBetweenSettingsIsMode && isDeferred && paymentSheetFlowController != nil
+        let onlyDifferenceBetweenSettingsIsMode: Bool = {
+            var oldModifiedWithNewMode = currentlyRenderedSettings
+            oldModifiedWithNewMode.mode = settings.mode
+            return oldModifiedWithNewMode == settings
         }()
+        let isDeferred = settings.integrationType != .normal
+        let shouldUpdateEmbeddedInsteadOfRecreating = !reinitializeControllers && onlyDifferenceBetweenSettingsIsMode && isDeferred && embeddedPlaygroundViewController != nil
+        if !shouldUpdateEmbeddedInsteadOfRecreating {
+            embeddedPlaygroundViewController = nil
+        }
+        let shouldUpdateFlowControllerInsteadOfRecreating = !reinitializeControllers && onlyDifferenceBetweenSettingsIsMode && isDeferred && paymentSheetFlowController != nil
         if !shouldUpdateFlowControllerInsteadOfRecreating {
             paymentSheetFlowController = nil
         }
         addressViewController = nil
         paymentSheet = nil
-        embeddedPlaygroundViewController = nil
         lastPaymentResult = nil
         isLoading = true
         let settingsToLoad = self.settings
@@ -653,11 +654,12 @@ extension PlaygroundController {
                 let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")// Avoid logging client secrets as a matter of best practice even though this is testmode
                 print("✅ Test playground finished loading with intent id: \(intentID ?? "")) and customer id: \(self.customerId ?? "") ")
 
-                if self.settings.uiStyle == .paymentSheet {
+                switch self.settings.uiStyle {
+                case .paymentSheet:
                     self.buildPaymentSheet()
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
-                } else if self.settings.uiStyle == .flowController {
+                case .flowController:
                     guard !shouldUpdateFlowControllerInsteadOfRecreating else {
                         // Update FC rather than re-creating it
                         self.updateFlowController()
@@ -707,7 +709,13 @@ extension PlaygroundController {
                             completion: completion
                         )
                     }
-                } else if self.settings.uiStyle == .embedded {
+                case .embedded:
+                    guard !shouldUpdateEmbeddedInsteadOfRecreating else {
+                       // Update embedded rather than re-creating it
+                        self.updateEmbedded()
+                        self.currentlyRenderedSettings = self.settings
+                        return
+                    }
                     self.makeEmbeddedPaymentElement()
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
@@ -918,18 +926,49 @@ class AnalyticsLogObserver: ObservableObject {
 // MARK: Embedded helpers
 extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
-        embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
-                                                                        intentConfig: intentConfig,
-                                                                        appearance: appearance)
+        embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
+            configuration: embeddedConfiguration,
+            intentConfig: intentConfig,
+            appearance: appearance
+        )
     }
 
-    func presentEmbedded() {
+    func presentEmbedded(settingsView: some View) {
         guard let embeddedPlaygroundViewController else { return }
+
+        // Include settings view
+        let hostingController = UIHostingController(rootView: settingsView)
+        embeddedPlaygroundViewController.addChild(hostingController)
+        hostingController.didMove(toParent: rootViewController)
+        embeddedPlaygroundViewController.setSettingsView(hostingController.view)
+
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
         embeddedPlaygroundViewController.navigationItem.leftBarButtonItem = closeButton
 
         let navController = UINavigationController(rootViewController: embeddedPlaygroundViewController)
         rootViewController.present(navController, animated: true)
+    }
+
+    func updateEmbedded() {
+        Task { @MainActor in
+            guard let embeddedPlaygroundViewController else { return }
+            let result = await embeddedPlaygroundViewController.embeddedPaymentElement?.update(intentConfiguration: intentConfig)
+            switch result {
+            case .canceled, nil:
+                // Do nothing; this happens when a subsequent `update` call cancels this one
+                break
+            case .failed(let error):
+                // Display error to user in an alert, let them retry
+                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(.init(title: "Retry", style: .default, handler: { _ in
+                    self.updateEmbedded()
+                }))
+                alert.addAction(.init(title: "Cancel", style: .cancel))
+                embeddedPlaygroundViewController.present(alert, animated: true)
+            case .succeeded:
+                self.isLoading = false
+            }
+        }
     }
 
     @objc func dismissEmbedded() {

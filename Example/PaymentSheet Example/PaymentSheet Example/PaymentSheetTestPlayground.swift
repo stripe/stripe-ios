@@ -170,7 +170,7 @@ struct PaymentSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }.animationUnlessTesting()
     }
-    
+
     var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
         Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
             return playgroundController.settings.paymentMethodSave
@@ -289,6 +289,13 @@ struct PaymentSheetButtons: View {
         playgroundController.load(reinitializeControllers: true)
     }
 
+    // This exists so that the embedded playground vc (EPVC) can call the `EmbeddedPaymentElement.update` API
+    // We build the settings view here, rather than in EPVC, so that it can easily update the PI/SI like all other settings and ensure the PI/SI is up to date when it's eventually used at confirm-time
+    @ViewBuilder
+    var embeddedSettingsView: some View {
+        SettingView(setting: $playgroundController.settings.mode)
+    }
+
     var titleAndReloadView: some View {
         HStack {
             Text(playgroundController.settings.uiStyle.rawValue)
@@ -391,7 +398,7 @@ struct PaymentSheetButtons: View {
                         HStack {
                             Button {
                                 embeddedIsPresented = true
-                                playgroundController.presentEmbedded()
+                                playgroundController.presentEmbedded(settingsView: embeddedSettingsView)
                             } label: {
                                 Text("Present embedded payment element")
                             }
