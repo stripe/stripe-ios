@@ -21,7 +21,7 @@ import UIKit
 class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
-    @Published var embeddedPlaygroundController: EmbeddedPlaygroundViewController?
+    @Published var embeddedPlaygroundViewController: EmbeddedPlaygroundViewController?
     @Published var settings: PaymentSheetTestPlaygroundSettings
     @Published var currentlyRenderedSettings: PaymentSheetTestPlaygroundSettings
     @Published var addressDetails: AddressViewController.AddressDetails?
@@ -541,7 +541,7 @@ extension PlaygroundController {
         paymentSheetFlowController = nil
         addressViewController = nil
         paymentSheet = nil
-        embeddedPlaygroundController = nil
+        embeddedPlaygroundViewController = nil
         lastPaymentResult = nil
         isLoading = true
         let settingsToLoad = self.settings
@@ -563,11 +563,7 @@ extension PlaygroundController {
             "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
-        if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
-            guard settingsToLoad.apmsEnabled == .off else {
-                fail(error: PlaygroundError(errorDescription: "supported payment methods is set but will have no effect while automatic payment methods are enabled"))
-                return
-            }
+        if settingsToLoad.apmsEnabled == .off, let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
             body["supported_payment_methods"] = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
@@ -887,21 +883,21 @@ class AnalyticsLogObserver: ObservableObject {
 // MARK: Embedded helpers
 extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
-        embeddedPlaygroundController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
+        embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
                                                                         intentConfig: intentConfig,
                                                                         appearance: appearance)
     }
 
     func presentEmbedded() {
-        guard let embeddedPlaygroundController else { return }
+        guard let embeddedPlaygroundViewController else { return }
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
-        embeddedPlaygroundController.navigationItem.leftBarButtonItem = closeButton
+        embeddedPlaygroundViewController.navigationItem.leftBarButtonItem = closeButton
 
-        let navController = UINavigationController(rootViewController: embeddedPlaygroundController)
+        let navController = UINavigationController(rootViewController: embeddedPlaygroundViewController)
         rootViewController.present(navController, animated: true)
     }
 
     @objc func dismissEmbedded() {
-        embeddedPlaygroundController?.dismiss(animated: true, completion: nil)
+        embeddedPlaygroundViewController?.dismiss(animated: true, completion: nil)
     }
 }
