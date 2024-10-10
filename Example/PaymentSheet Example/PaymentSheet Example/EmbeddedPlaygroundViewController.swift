@@ -92,6 +92,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
             configuration: configuration
         )
         embeddedPaymentElement.delegate = self
+        embeddedPaymentElement.presentingViewController = self
+
         self.embeddedPaymentElement = embeddedPaymentElement
 
         // Scroll view contains our content
