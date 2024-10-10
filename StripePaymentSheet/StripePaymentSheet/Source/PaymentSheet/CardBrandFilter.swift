@@ -28,20 +28,14 @@ struct CardBrandFilter {
         case .allowed(let allowedCardBrands):
             // If a merchant has specified a list of brands to allow, block unknown brands
             guard let brandCategory = cardBrand.asBrandCategory else {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDisallowedCardBrand,
-                                                                     params: ["brand": STPCardBrandUtilities.apiValue(from: cardBrand)])
                 return false
             }
 
             if !allowedCardBrands.contains(brandCategory) {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDisallowedCardBrand,
-                                                                     params: ["brand": STPCardBrandUtilities.apiValue(from: cardBrand)])
                 return false
             }
         case .disallowed(let disallowedBrands):
             if let brandCategory = cardBrand.asBrandCategory, disallowedBrands.contains(brandCategory) {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDisallowedCardBrand,
-                                                                     params: ["brand": STPCardBrandUtilities.apiValue(from: cardBrand)])
                 return false
             }
         }

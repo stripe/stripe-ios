@@ -175,6 +175,7 @@ final class CardSectionElement: ContainerElement {
 
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
     var lastPanElementValidationState: ElementValidationState
+    var lastDisallowedCardBrandLogged: STPCardBrand?
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
         let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
@@ -192,6 +193,20 @@ final class CardSectionElement: ContainerElement {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
             }
         }
+        
+        // Send an analytic if we are disallowing a card brand
+        if case .invalid(let error, _) = panElement.validationState,
+           let specificError = error as? TextFieldElement.PANConfiguration.Error,
+           case .disallowedBrand(let brand) = specificError,
+           lastDisallowedCardBrandLogged != brand {
+            
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                event: .paymentSheetDisallowedCardBrand,
+                params: ["brand": STPCardBrandUtilities.apiValue(from: brand)]
+            )
+            lastDisallowedCardBrandLogged = brand
+        }
+        
         delegate?.didUpdate(element: self)
     }
 

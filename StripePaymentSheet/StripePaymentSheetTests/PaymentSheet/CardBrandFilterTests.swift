@@ -75,15 +75,4 @@ class CardBrandFilterTests: XCTestCase {
             XCTAssertTrue(filter.isAccepted(cardBrand: brand), "Brand \(brand) without category should be accepted.")
         }
     }
-
-    func testIsAccepted_disallowedBrandsAnalytic() {
-        let disallowedBrands: [PaymentSheet.CardBrandAcceptance.BrandCategory] = [.amex]
-        let filter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: disallowedBrands))
-
-        XCTAssertFalse(filter.isAccepted(cardBrand: .amex))
-
-        XCTAssertEqual(STPAnalyticsClient.sharedClient._testLogHistory.count, 1)
-        XCTAssertEqual(STPAnalyticsClient.sharedClient._testLogHistory.first?["event"] as? String, "mc_disallowed_card_brand")
-        XCTAssertEqual(STPAnalyticsClient.sharedClient._testLogHistory.first?["brand"] as? String, "american_express")
-    }
 }
