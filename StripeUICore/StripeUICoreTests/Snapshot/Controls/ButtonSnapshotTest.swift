@@ -8,6 +8,7 @@
 
 import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
+import UIKit
 
 final class ButtonSnapshotTest: STPSnapshotTestCase {
 
