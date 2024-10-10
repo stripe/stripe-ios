@@ -46,7 +46,7 @@ public class EmbeddedPaymentElement {
     public var paymentOption: PaymentOptionDisplayData? {
         return embeddedPaymentMethodsView.displayData
     }
-    
+
     private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
 
     /// An asynchronous failable initializer
@@ -233,7 +233,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func heightDidChange() {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
-    
+
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }

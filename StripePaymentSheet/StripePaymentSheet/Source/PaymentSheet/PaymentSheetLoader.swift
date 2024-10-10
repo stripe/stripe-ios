@@ -119,7 +119,7 @@ final class PaymentSheetLoader {
                     showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
-                
+
                 // Ensure that there's at least 1 payment method type available for the intent and configuration.
                 guard !paymentMethodTypes.isEmpty else {
                     throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
