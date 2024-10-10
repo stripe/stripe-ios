@@ -423,6 +423,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case `continue`
     }
 
+    enum CardBrandAcceptance: String, PickerEnum {
+        static let enumName: String = "cardBrandAcceptance"
+        case all
+        case blockAmEx
+        case allowVisa
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -465,6 +472,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectAddress: BillingDetailsAddress
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
+    var cardBrandAcceptance: CardBrandAcceptance
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -506,7 +514,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectPhone: .automatic,
             collectAddress: .automatic,
             formSheetAction: .confirm,
-            embeddedViewDisplaysMandateText: .on)
+            embeddedViewDisplaysMandateText: .on,
+            cardBrandAcceptance: .all)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

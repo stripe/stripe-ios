@@ -36,6 +36,7 @@
         "LinkPaymentControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetCVCRecollectionUITests",
+        "PaymentSheetCardBrandFilteringUITests",
         "PaymentSheetCustomerSessionCBCUITests",
         "PaymentSheetCustomerSessionDedupeUITests",
         "PaymentSheetDeferredServerSideUITests",

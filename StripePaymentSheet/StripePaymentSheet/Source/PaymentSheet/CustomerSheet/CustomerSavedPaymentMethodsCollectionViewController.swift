@@ -436,7 +436,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                               appearance: appearance,
                                               hostedSurface: .customerSheet,
                                               canRemoveCard: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                              isTestMode: configuration.isTestMode)
+                                              isTestMode: configuration.isTestMode,
+                                              cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }

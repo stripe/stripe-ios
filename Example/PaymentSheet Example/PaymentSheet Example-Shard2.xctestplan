@@ -38,6 +38,7 @@
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
+        "PaymentSheetCardBrandFilteringUITests",
         "PaymentSheetDeferredUIBankAccountTests",
         "PaymentSheetDeferredUITests",
         "PaymentSheetGDPRUITests",
