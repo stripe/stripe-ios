@@ -22,10 +22,24 @@ extension TextFieldElement {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
         let cardBrandDropDown: DropdownFieldElement?
+        let cardFilter: CardBrandFilter
 
-        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil) {
+        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default) {
             self.defaultValue = defaultValue
             self.cardBrandDropDown = cardBrandDropDown
+            self.cardFilter = cardFilter
+        }
+
+        private func cardBrand(for text: String) -> STPCardBrand {
+            // Try to read the brands from the CBC dropdown
+            guard let cardBrandDropDown = cardBrandDropDown,
+                  let firstBrandString = cardBrandDropDown.nonPlacerholderItems.first?.rawData else {
+                return STPCardValidator.brand(forNumber: text)
+            }
+
+            let cardBrandFromDropDown = STPCard.brand(from: firstBrandString)
+            let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
+            return cardBrandFromDropDown == .unknown ? cardBrandFromBin : cardBrandFromDropDown
         }
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
@@ -40,14 +54,14 @@ extension TextFieldElement {
                 }
             }
 
-            let cardBrand = STPCardValidator.brand(forNumber: text)
+            let cardBrand = cardBrand(for: text)
             if cardBrand == .unknown {
                 if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
-                        RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases)
+                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter { cardFilter.isAccepted(cardBrand: $0) })
                     return rotatingCardBrandsView
                 }
             } else {
@@ -73,6 +87,7 @@ extension TextFieldElement {
             case incomplete
             case invalidBrand
             case invalidLuhn
+            case disallowedBrand(brand: STPCardBrand)
 
             func shouldDisplay(isUserEditing: Bool) -> Bool {
                 switch self {
@@ -80,7 +95,7 @@ extension TextFieldElement {
                     return false
                 case .incomplete, .invalidLuhn:
                     return !isUserEditing
-                case .invalidBrand:
+                case .invalidBrand, .disallowedBrand:
                     return true
                 }
             }
@@ -93,6 +108,9 @@ extension TextFieldElement {
                     return String.Localized.your_card_number_is_incomplete
                 case .invalidBrand, .invalidLuhn:
                     return String.Localized.your_card_number_is_invalid
+                case .disallowedBrand(let brand):
+                    let cardBrandDisplayName =  STPCardBrandUtilities.stringFrom(brand) ?? "This card brand"
+                    return .localizedStringWithFormat(.Localized.brand_not_allowed, cardBrandDisplayName)
                 }
             }
         }
@@ -108,6 +126,13 @@ extension TextFieldElement {
             let binRange = binController.mostSpecificBINRange(forNumber: text)
             if binRange.brand == .unknown {
                 return .invalid(Error.invalidBrand)
+            }
+
+            let cardBrand = cardBrand(for: text)
+            // If the merchant is CBC eligible, don't show the disallowed error until we have time to hit the card metadata service to determine brands (at 8 digits)
+            let shouldShowDisallowedError = cardBrandDropDown == nil || text.count > 8
+            if !cardFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
+                return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 
             // Is the PAN the correct length?
@@ -290,14 +315,16 @@ extension TextFieldElement {
         let lastFour: String
         let isEditable = false
         let cardBrandDropDown: DropdownFieldElement
+        let cardFilter: CardBrandFilter
 
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, cardBrandDropDown: DropdownFieldElement) {
+        init(lastFour: String, cardBrandDropDown: DropdownFieldElement, cardFilter: CardBrandFilter) {
             self.lastFour = lastFour
             self.cardBrandDropDown = cardBrandDropDown
+            self.cardFilter = cardFilter
         }
 
         func makeDisplayText(for text: String) -> NSAttributedString {
@@ -306,8 +333,8 @@ extension TextFieldElement {
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
-            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown)
-                                            .accessoryView(for: lastFourFormatted, theme: theme)
+            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown,
+                                                     cardFilter: cardFilter).accessoryView(for: lastFourFormatted, theme: theme)
         }
     }
 }

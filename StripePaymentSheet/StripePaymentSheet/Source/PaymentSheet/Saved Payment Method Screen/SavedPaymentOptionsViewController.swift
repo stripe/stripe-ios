@@ -560,7 +560,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
                                               canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                              isTestMode: configuration.isTestMode)
+                                              isTestMode: configuration.isTestMode,
+                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }

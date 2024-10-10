@@ -36,6 +36,7 @@ final class CardSectionElement: ContainerElement {
     }()
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper
+    let cardBrandFilter: CardBrandFilter
 
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
@@ -68,11 +69,13 @@ final class CardSectionElement: ContainerElement {
         cardBrandChoiceEligible: Bool = false,
         hostedSurface: HostedSurface,
         theme: ElementsAppearance = .default,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        cardBrandFilter: CardBrandFilter = .default
     ) {
         self.hostedSurface = hostedSurface
         self.theme = theme
         self.analyticsHelper = analyticsHelper
+        self.cardBrandFilter = cardBrandFilter
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
@@ -94,7 +97,7 @@ final class CardSectionElement: ContainerElement {
             }
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDown: cardBrandDropDown?.element), theme: theme) { field, params in
+                                                                                       cardBrandDropDown: cardBrandDropDown?.element, cardFilter: cardBrandFilter), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }

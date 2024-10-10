@@ -35,6 +35,7 @@
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
         "PaymentSheetCVCRecollectionUITests",
+        "PaymentSheetCardBrandFilteringUITests",
         "PaymentSheetCustomerSessionCBCUITests",
         "PaymentSheetCustomerSessionDedupeUITests",
         "PaymentSheetDeferredServerSideUITests",
