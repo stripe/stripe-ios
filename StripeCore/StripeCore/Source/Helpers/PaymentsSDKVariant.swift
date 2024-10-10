@@ -9,10 +9,6 @@ import Foundation
 
 @_spi(STP) public class PaymentsSDKVariant {
     @_spi(STP) public static let variant: String = {
-        if NSClassFromString("STPPaymentContext") != nil {
-            // This is the full legacy Payments SDK, including Basic Integration
-            return "legacy"
-        }
         if NSClassFromString("STP_Internal_PaymentSheetViewController") != nil {
             // This is the PaymentSheet SDK
             return "paymentsheet"
