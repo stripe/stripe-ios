@@ -49,7 +49,6 @@ final class InstantDebitsUITests: XCTestCase {
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
-        app.fc_nativePrepaneContinueButton.tap()
         app.fc_nativeConnectAccountsButton.tap()
         app.fc_nativeSuccessDoneButton.tap()
     }
