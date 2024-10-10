@@ -210,6 +210,11 @@ workflows:
         - webhook_url_on_error: $WEBHOOK_SLACK_CUX_BOTS
     - slack@3:
         is_always_run: true
+        inputs:
+        - webhook_url: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
+        - webhook_url_on_error: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
+    - slack@3:
+        is_always_run: true
         run_if: .IsBuildFailed
         inputs:
         - webhook_url: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
