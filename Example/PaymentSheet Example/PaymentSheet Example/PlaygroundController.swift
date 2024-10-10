@@ -21,7 +21,7 @@ import UIKit
 class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
-    @Published var embeddedPlaygroundController: EmbeddedPlaygroundViewController?
+    @Published var embeddedPlaygroundViewController: EmbeddedPlaygroundViewController?
     @Published var settings: PaymentSheetTestPlaygroundSettings
     @Published var currentlyRenderedSettings: PaymentSheetTestPlaygroundSettings
     @Published var addressDetails: AddressViewController.AddressDetails?
@@ -288,7 +288,7 @@ class PlaygroundController: ObservableObject {
         switch settings.mode {
         case .payment:
             return PaymentSheet.IntentConfiguration(
-                mode: .payment(amount: amount!, currency: settings.currency.rawValue, setupFutureUsage: nil),
+                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler,
@@ -296,7 +296,7 @@ class PlaygroundController: ObservableObject {
             )
         case .paymentWithSetup:
             return PaymentSheet.IntentConfiguration(
-                mode: .payment(amount: amount!, currency: settings.currency.rawValue, setupFutureUsage: .offSession),
+                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler,
@@ -361,7 +361,6 @@ class PlaygroundController: ObservableObject {
     var ephemeralKey: String?
     var customerSessionClientSecret: String?
     var paymentMethodTypes: [String]?
-    var amount: Int?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
     var currentDataTask: URLSessionDataTask?
@@ -406,9 +405,12 @@ class PlaygroundController: ObservableObject {
         self.settings = settings
         self.currentlyRenderedSettings = .defaultValues()
 
-        $settings.sink { newValue in
+        $settings.removeDuplicates().sink { newValue in
             if newValue.autoreload == .on {
-                self.load()
+                // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
+                DispatchQueue.main.async {
+                    self.load()
+                }
             }
             if newValue.shakeAmbiguousViews == .on {
                 self.ambiguousViewTimer?.invalidate()
@@ -503,10 +505,10 @@ class PlaygroundController: ObservableObject {
 
 extension PlaygroundController {
     @objc
-    func load() {
+    func load(reinitializeControllers: Bool = false) {
         loadLastSavedCustomer()
         serializeSettingsToNSUserDefaults()
-        loadBackend()
+        loadBackend(reinitializeControllers: reinitializeControllers)
     }
 
     func makeRequest(with url: String, body: [String: Any], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
@@ -532,16 +534,46 @@ extension PlaygroundController {
        let errorDescription: String?
     }
 
-    func loadBackend() {
+    func updateFlowController() {
+        paymentSheetFlowController!.update(intentConfiguration: intentConfig) { [weak self] error in
+            guard let self else { return }
+            isLoading = false
+            if let error {
+                let alertController = UIAlertController(title: "Update failed", message: "\(error)", preferredStyle: .alert)
+                let retryAction = UIAlertAction(title: "Retry", style: .default) { (_) in
+                    self.updateFlowController()
+                }
+                alertController.addAction(retryAction)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+                    alertController.dismiss(animated: true, completion: nil)
+                }
+                alertController.addAction(cancelAction)
+                rootViewController.present(alertController, animated: true)
+            }
+        }
+    }
+
+    func loadBackend(reinitializeControllers: Bool) {
         func fail(error: Error) {
             self.lastPaymentResult = .failed(error: error)
             self.isLoading = false
             self.currentlyRenderedSettings = self.settings
         }
-        paymentSheetFlowController = nil
+        let shouldUpdateFlowControllerInsteadOfRecreating: Bool = {
+            let onlyDifferenceBetweenSettingsIsMode: Bool = {
+                var oldModifiedWithNewMode = currentlyRenderedSettings
+                oldModifiedWithNewMode.mode = settings.mode
+                return oldModifiedWithNewMode == settings
+            }()
+            let isDeferred = settings.integrationType != .normal
+            return !reinitializeControllers && onlyDifferenceBetweenSettingsIsMode && isDeferred && paymentSheetFlowController != nil
+        }()
+        if !shouldUpdateFlowControllerInsteadOfRecreating {
+            paymentSheetFlowController = nil
+        }
         addressViewController = nil
         paymentSheet = nil
-        embeddedPlaygroundController = nil
+        embeddedPlaygroundViewController = nil
         lastPaymentResult = nil
         isLoading = true
         let settingsToLoad = self.settings
@@ -563,11 +595,7 @@ extension PlaygroundController {
             "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
-        if let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods {
-            guard settingsToLoad.apmsEnabled == .off else {
-                fail(error: PlaygroundError(errorDescription: "supported payment methods is set but will have no effect while automatic payment methods are enabled"))
-                return
-            }
+        if settingsToLoad.apmsEnabled == .off, let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
             body["supported_payment_methods"] = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
@@ -581,11 +609,8 @@ extension PlaygroundController {
         }
 
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
-            // If the completed load state doesn't represent the current state, reload again
+            // If the completed load state doesn't represent the current state, discard this result
             if settingsToLoad != self.settings {
-                DispatchQueue.main.async {
-                    self.load()
-                }
                 return
             }
             if let nserror = error as? NSError, nserror.code == NSURLErrorCancelled {
@@ -619,7 +644,6 @@ extension PlaygroundController {
                 self.customerId = json["customerId"]
                 self.customerSessionClientSecret = json["customerSessionClientSecret"]
                 self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
-                self.amount = Int(json["amount"] ?? "")
                 STPAPIClient.shared.publishableKey = json["publishableKey"]
 
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
@@ -634,6 +658,13 @@ extension PlaygroundController {
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
                 } else if self.settings.uiStyle == .flowController {
+                    guard !shouldUpdateFlowControllerInsteadOfRecreating else {
+                        // Update FC rather than re-creating it
+                        self.updateFlowController()
+                        self.currentlyRenderedSettings = self.settings
+                        return
+                    }
+
                     let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
                         self.currentlyRenderedSettings = self.settings
                         switch result {
@@ -699,7 +730,7 @@ extension PlaygroundController: EndpointSelectorViewControllerDelegate {
     func selected(endpoint: String) {
         checkoutEndpoint = endpoint
         serializeSettingsToNSUserDefaults()
-        loadBackend()
+        loadBackend(reinitializeControllers: true)
         rootViewController.dismiss(animated: true)
     }
     func cancelTapped() {
@@ -887,21 +918,21 @@ class AnalyticsLogObserver: ObservableObject {
 // MARK: Embedded helpers
 extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
-        embeddedPlaygroundController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
+        embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(configuration: embeddedConfiguration,
                                                                         intentConfig: intentConfig,
                                                                         appearance: appearance)
     }
 
     func presentEmbedded() {
-        guard let embeddedPlaygroundController else { return }
+        guard let embeddedPlaygroundViewController else { return }
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
-        embeddedPlaygroundController.navigationItem.leftBarButtonItem = closeButton
+        embeddedPlaygroundViewController.navigationItem.leftBarButtonItem = closeButton
 
-        let navController = UINavigationController(rootViewController: embeddedPlaygroundController)
+        let navController = UINavigationController(rootViewController: embeddedPlaygroundViewController)
         rootViewController.present(navController, animated: true)
     }
 
     @objc func dismissEmbedded() {
-        embeddedPlaygroundController?.dismiss(animated: true, completion: nil)
+        embeddedPlaygroundViewController?.dismiss(animated: true, completion: nil)
     }
 }
