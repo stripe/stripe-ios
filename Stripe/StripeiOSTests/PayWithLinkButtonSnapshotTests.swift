@@ -86,12 +86,16 @@ extension PayWithLinkButtonSnapshotTests {
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let isRegistered: Bool
+        var redactedPhoneNumber: String?
+        var isLoggedIn: Bool
     }
 
     fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
         return LinkAccountStub(
             email: email,
-            isRegistered: isRegistered
+            isRegistered: isRegistered,
+            redactedPhoneNumber: "+1********55",
+            isLoggedIn: true
         )
     }
 
