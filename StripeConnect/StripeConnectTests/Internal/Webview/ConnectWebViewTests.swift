@@ -7,7 +7,6 @@
 
 import Foundation
 
-import QuickLook
 import SafariServices
 @testable import StripeConnect
 @_spi(STP) import StripeCore
@@ -248,17 +247,45 @@ class ConnectWebViewTests: XCTestCase {
         XCTAssertEqual(alertController?.preferredStyle, .alert)
     }
 
-    func testDownloadFinishedShowsPreview() {
+    func testDownloadFinishedShowsShareSheet() {
         let mockFileURL = URL(string: "file:///temp/example.csv")!
 
-        var previewController: QLPreviewController?
+        var activityVC: UIActivityViewController?
         webView.presentPopup = { vc in
-            previewController = vc as? QLPreviewController
+            activityVC = vc as? UIActivityViewController
         }
         webView.downloadedFile = mockFileURL
 
         webView.downloadDidFinish()
-        XCTAssertNotNil(previewController)
+        XCTAssertNotNil(activityVC)
+
+        // Dismissing should cleanup downloaded file
+        activityVC?.completionWithItemsHandler?(nil, false, nil, nil)
+        XCTAssertNil(webView.downloadedFile)
+        wait(for: [mockFileManager.removeItemExpectation])
+        XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
+    }
+
+    func testNonExistentFileShowsError() {
+        let mockFileURL = URL(string: "file:///temp/example.csv")!
+
+        var alertController: UIAlertController?
+        webView.presentPopup = { vc in
+            alertController = vc as? UIAlertController
+        }
+        webView.downloadedFile = mockFileURL
+        mockFileManager.overrideFileExists = false
+
+        webView.downloadDidFinish()
+        XCTAssertNotNil(alertController)
+        XCTAssertEqual(alertController?.message,
+                       "There was an unexpected error -- try again in a few seconds")
+        XCTAssertEqual(alertController?.preferredStyle, .alert)
+
+        // Should cleanup downloaded file
+        XCTAssertNil(webView.downloadedFile)
+        wait(for: [mockFileManager.removeItemExpectation])
+        XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
     }
 }
 
@@ -319,9 +346,28 @@ private class MockFileManager: FileManager {
         URL(string: "file:///temp")!
     }
 
+    var overrideFileExists = true
+
+    var removedItems: [URL] = []
+
+    var removeItemExpectation = XCTestExpectation(description: "removeItem called")
+
     var overrideCreateDirectory: ((_ url: URL, _ createIntermediates: Bool, _ attributes: [FileAttributeKey: Any]?) throws -> Void)?
 
     override func createDirectory(at url: URL, withIntermediateDirectories createIntermediates: Bool, attributes: [FileAttributeKey: Any]? = nil) throws {
         try overrideCreateDirectory?(url, createIntermediates, attributes)
+    }
+
+    override func fileExists(atPath path: String) -> Bool {
+        overrideFileExists
+    }
+
+    override func removeItem(at url: URL) throws {
+        removedItems.append(url)
+        removeItemExpectation.fulfill()
+    }
+
+    override func removeItem(atPath path: String) throws {
+        try self.removeItem(at: URL(fileURLWithPath: path))
     }
 }

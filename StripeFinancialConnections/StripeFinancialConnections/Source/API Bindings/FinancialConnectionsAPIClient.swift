@@ -217,7 +217,10 @@ protocol FinancialConnectionsAPI {
     func linkAccountSignUp(
         emailAddress: String,
         phoneNumber: String,
-        country: String
+        country: String,
+        amount: Int?,
+        currency: String?,
+        intentId: ElementsSessionContext.IntentID?
     ) -> Future<LinkSignUpResponse>
 
     func attachLinkConsumerToLinkAccountSession(
@@ -902,9 +905,12 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func linkAccountSignUp(
         emailAddress: String,
         phoneNumber: String,
-        country: String
+        country: String,
+        amount: Int?,
+        currency: String?,
+        intentId: ElementsSessionContext.IntentID?
     ) -> Future<LinkSignUpResponse> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "email_address": emailAddress
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -915,6 +921,27 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "locale": Locale.current.toLanguageTag(),
             "consent_action": "entered_phone_number_clicked_save_to_link",
         ]
+
+        if let amount, let currency {
+            parameters["amount"] = amount
+            parameters["currency"] = currency
+        }
+
+        if let intentId {
+            switch intentId {
+            case .payment(let paymentIntentId):
+                parameters["financial_incentive"] = [
+                    "payment_intent": paymentIntentId,
+                ]
+            case .setup(let setupIntentId):
+                parameters["financial_incentive"] = [
+                    "setup_intent": setupIntentId,
+                ]
+            @unknown default:
+                break
+            }
+        }
+
         return post(
             resource: APIEndpointLinkAccountsSignUp,
             parameters: parameters,

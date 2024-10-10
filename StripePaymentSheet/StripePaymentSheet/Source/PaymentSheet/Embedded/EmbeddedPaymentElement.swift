@@ -47,7 +47,7 @@ public class EmbeddedPaymentElement {
     public var paymentOption: PaymentOptionDisplayData? {
         return embeddedPaymentMethodsView.displayData
     }
-    
+
     private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     private let loadResult: PaymentSheetLoader.LoadResult
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -246,7 +246,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func heightDidChange() {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
-    
+
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
         guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
