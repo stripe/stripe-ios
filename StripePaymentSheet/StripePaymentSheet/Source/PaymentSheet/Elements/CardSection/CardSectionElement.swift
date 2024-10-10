@@ -36,6 +36,7 @@ final class CardSectionElement: ContainerElement {
     }()
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper
+    let cardBrandFilter: CardBrandFilter
 
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
@@ -74,6 +75,7 @@ final class CardSectionElement: ContainerElement {
         self.hostedSurface = hostedSurface
         self.theme = theme
         self.analyticsHelper = analyticsHelper
+        self.cardBrandFilter = cardBrandFilter
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
