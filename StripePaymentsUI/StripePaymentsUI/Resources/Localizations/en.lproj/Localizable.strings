@@ -67,6 +67,9 @@
 /* Error string displayed to user when they enter in an invalid BSB number. */
 "The BSB you entered is invalid." = "The BSB you entered is invalid.";
 
+/* String to inform a user that specific card brands are not accepted. */
+"The selected brand is not allowed" = "The selected brand is not allowed";
+
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
