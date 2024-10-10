@@ -33,21 +33,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
-    lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
-            from: intent,
-            elementsSession: elementsSession,
-            configuration: configuration,
-            logAvailability: false
-        )
-        if paymentMethodTypes.isEmpty {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.paymentMethodTypesEmpty)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-        }
-        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
-        return paymentMethodTypes
-    }()
+    let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         paymentMethodTypesView.selected
     }
@@ -106,14 +92,22 @@ class AddPaymentMethodViewController: UIViewController {
         elementsSession: STPElementsSession,
         configuration: PaymentSheet.Configuration,
         previousCustomerInput: IntentConfirmParams? = nil,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         formCache: PaymentMethodFormCache,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: AddPaymentMethodViewControllerDelegate? = nil
     ) {
+        if paymentMethodTypes.isEmpty {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.paymentMethodTypesEmpty)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        }
+        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.configuration = configuration
         self.intent = intent
         self.elementsSession = elementsSession
         self.previousCustomerInput = previousCustomerInput
+        self.paymentMethodTypes = paymentMethodTypes
         self.delegate = delegate
         self.formCache = formCache
         self.analyticsHelper = analyticsHelper

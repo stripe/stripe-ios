@@ -38,7 +38,15 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         // ...and a "Save this card" checkbox...
         config.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
-        let sut = AddPaymentMethodViewController(intent: intent, elementsSession: ._testValue(intent: intent), configuration: config, previousCustomerInput: previousCustomerInput, formCache: .init(), analyticsHelper: ._testValue())
+        let sut = AddPaymentMethodViewController(
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            configuration: config,
+            previousCustomerInput: previousCustomerInput,
+            paymentMethodTypes: [.stripe(.payPal), .stripe(.card), .stripe(.cashApp)],
+            formCache: .init(),
+            analyticsHelper: ._testValue()
+        )
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375   )
     }
 }

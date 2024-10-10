@@ -17,7 +17,8 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         return .init(
             intent: ._testValue(),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
-            savedPaymentMethods: savedPaymentMethods
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: [.stripe(.card)]
         )
     }
 

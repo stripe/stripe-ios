@@ -26,7 +26,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             loadResult: .init(
                 intent: .paymentIntent(STPFixtures.paymentIntent()),
                 elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()),
-                savedPaymentMethods: []
+                savedPaymentMethods: [],
+                paymentMethodTypes: [.stripe(.card)]
             ), analyticsHelper: .init(isCustom: true, configuration: PaymentSheet.Configuration())
         )
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("PaymentSheet.FlowController"))

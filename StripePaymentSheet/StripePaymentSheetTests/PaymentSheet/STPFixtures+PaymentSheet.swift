@@ -257,7 +257,8 @@ extension PaymentSheetLoader.LoadResult {
         return PaymentSheetLoader.LoadResult(
             intent: intent,
             elementsSession: elementsSession,
-            savedPaymentMethods: savedPaymentMethods
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: paymentMethodTypes.map { .stripe(STPPaymentMethod.type(from: $0)) }
         )
     }
 }
