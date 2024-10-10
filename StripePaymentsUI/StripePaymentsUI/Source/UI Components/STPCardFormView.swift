@@ -319,7 +319,9 @@ public class STPCardFormView: STPFormView {
         postalCodeRequirement: STPPostalCodeRequirement = .standard,
         prefillDetails: PrefillDetails? = nil,
         inputMode: STPCardNumberInputTextField.InputMode = .standard,
-        cbcEnabledOverride: Bool? = nil
+        cbcEnabledOverride: Bool? = nil,
+        sectionTitle: String? = nil,
+        sectionAccessoryButton: UIButton? = nil
     ) {
         self.init(
             numberField: STPCardNumberInputTextField(
@@ -336,7 +338,9 @@ public class STPCardFormView: STPFormView {
             style: style,
             postalCodeRequirement: postalCodeRequirement,
             prefillDetails: prefillDetails,
-            inputMode: inputMode
+            inputMode: inputMode,
+            sectionTitle: sectionTitle,
+            sectionAccessoryButton: sectionAccessoryButton
         )
     }
 
@@ -348,7 +352,9 @@ public class STPCardFormView: STPFormView {
         style: STPCardFormViewStyle = .standard,
         postalCodeRequirement: STPPostalCodeRequirement = .standard,
         prefillDetails: PrefillDetails? = nil,
-        inputMode: STPCardNumberInputTextField.InputMode = .standard
+        inputMode: STPCardNumberInputTextField.InputMode = .standard,
+        sectionTitle: String? = nil,
+        sectionAccessoryButton: UIButton? = nil
     ) {
         self.numberField = numberField
         self.cvcField = cvcField
@@ -370,8 +376,8 @@ public class STPCardFormView: STPFormView {
 
         let cardParamsSection = STPFormView.Section(
             rows: rows,
-            title: nil,
-            accessoryButton: nil
+            title: sectionTitle,
+            accessoryButton: sectionAccessoryButton
         )
 
         super.init(
