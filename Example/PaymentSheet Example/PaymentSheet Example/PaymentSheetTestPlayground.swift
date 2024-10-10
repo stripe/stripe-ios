@@ -280,13 +280,13 @@ extension View {
 @available(iOS 14.0, *)
 struct PaymentSheetButtons: View {
     @EnvironmentObject var playgroundController: PlaygroundController
-    @State var psIsPresented: Bool = false
-    @State var embeddedIsPresented: Bool = false
-    @State var psFCOptionsIsPresented: Bool = false
-    @State var psFCIsConfirming: Bool = false
+    @State private var psIsPresented: Bool = false
+    @State private var embeddedIsPresented: Bool = false
+    @State private var psFCOptionsIsPresented: Bool = false
+    @State private var psFCIsConfirming: Bool = false
 
     func reloadPlaygroundController() {
-        playgroundController.load()
+        playgroundController.load(reinitializeControllers: true)
     }
 
     var titleAndReloadView: some View {
