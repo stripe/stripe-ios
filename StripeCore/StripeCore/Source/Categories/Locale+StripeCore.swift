@@ -66,17 +66,29 @@ import Foundation
     ///
     /// ```
     /// let locale = Locale(identifier: "en_GB@rg=uszzzz")
-    /// locale.toLanguageTag() // -> "en-GB-u-rg-uszzzz"
+    /// locale.toLanguageTag() // -> "en-GB"
     /// ```
     ///
     func toLanguageTag() -> String {
-        if #available(iOS 16, *) {
-            return Locale.identifier(.bcp47, from: self.identifier)
-        } else {
-            // `canonicalLanguageIdentifier` returns an invalid locale string
-            // with an '@' char on iOS 16+ when language region != device region.
-            // Ex: Language=English (UK) and Region=United States -> "en-GB@rg=uszzzz"
-            return Locale.canonicalLanguageIdentifier(from: self.identifier)
+        var tag = Locale.canonicalLanguageIdentifier(from: self.identifier)
+
+        // Drop sub-tags or extended variants like `en-US@calendar=gregorian`
+        // or `en-GB@rg=uszzzz`
+        if let unextended = tag.split(separator: "@").first {
+            tag = String(unextended)
         }
+
+        /*
+         iOS omits the language script when specifying:
+         language=Chinese, Traditional and region=Hong Kong (China)
+
+         Stripe's web and backend localization will default to Simplified Chinese
+         (zh-Hans) if no script is specified, so insert the `Hant` script to
+         ensure Traditional Chinese is returned.
+         */
+        if tag == "zh-HK" {
+            tag = "zh-Hant-HK"
+        }
+        return tag
     }
 }
