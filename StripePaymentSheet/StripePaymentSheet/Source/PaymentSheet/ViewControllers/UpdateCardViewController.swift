@@ -92,11 +92,11 @@ final class UpdateCardViewController: UIViewController {
 
     // MARK: Elements
     private lazy var panElement: TextFieldElement = {
-        return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown, cardFilter: cardBrandFilter).makeElement(theme: appearance.asElementsTheme)
+        return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown).makeElement(theme: appearance.asElementsTheme)
     }()
 
     private lazy var cardBrandDropDown: DropdownFieldElement = {
-        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
+        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter{cardBrandFilter.isAccepted(cardBrand: $0)} ?? []
         let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
                                                                            theme: appearance.asElementsTheme,
                                                                            includePlaceholder: false) { [weak self] in
