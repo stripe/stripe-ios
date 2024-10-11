@@ -96,7 +96,7 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     private lazy var cardBrandDropDown: DropdownFieldElement = {
-        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter{cardBrandFilter.isAccepted(cardBrand: $0)} ?? []
+        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
         let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
                                                                            theme: appearance.asElementsTheme,
                                                                            includePlaceholder: false) { [weak self] in
