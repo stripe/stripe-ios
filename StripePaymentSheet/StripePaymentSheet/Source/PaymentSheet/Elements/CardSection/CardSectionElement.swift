@@ -254,7 +254,7 @@ final class CardSectionElement: ContainerElement {
                    let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
                    let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
-                } else if cardBrands.count == 1 {
+                } else if cardBrands.count == 1 && self.cardBrandFilter != .default {
                     // If we only fetched one card brand auto select it, 1 index due to 0 index being the placeholder.
                     // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
                     cardBrandDropDown.select(index: 1, shouldAutoAdvance: false)
