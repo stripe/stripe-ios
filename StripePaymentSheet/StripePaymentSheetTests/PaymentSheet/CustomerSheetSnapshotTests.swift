@@ -64,6 +64,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     public override func tearDown() {
         super.tearDown()
         HTTPStubs.removeAllStubs()
+        StripeAPI.defaultPublishableKey = nil
     }
 
     private func stubbedAPIClient() -> STPAPIClient {

@@ -28,7 +28,7 @@ class CVCReconfirmationVerticalViewController: UIViewController {
         return nil
     }
     let paymentMethod: STPPaymentMethod
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
     let cardBrand: STPCardBrand
     let cvcRecollectionElement: CVCRecollectionElement
 
@@ -39,7 +39,7 @@ class CVCReconfirmationVerticalViewController: UIViewController {
     required init(
         paymentMethod: STPPaymentMethod,
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         elementDelegate: ElementDelegate
     ) {
         self.cvcRecollectionElement = CVCRecollectionElement(paymentMethod: paymentMethod,

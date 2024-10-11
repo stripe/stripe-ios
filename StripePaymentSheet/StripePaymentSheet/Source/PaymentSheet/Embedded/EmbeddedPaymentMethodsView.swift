@@ -12,7 +12,7 @@ import UIKit
 
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
-    func selectionDidUpdate()
+    func selectionTapped(didChange: Bool)
 }
 
 /// The view for an embedded payment element
@@ -29,9 +29,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private(set) var selection: Selection? {
         didSet {
             updateMandate()
-            if oldValue != selection {
-                delegate?.selectionDidUpdate()
-            }
+            delegate?.selectionTapped(didChange: oldValue != selection)
         }
     }
     private let mandateProvider: MandateTextProvider
@@ -191,6 +189,11 @@ class EmbeddedPaymentMethodsView: UIView {
 
     func didTapAccessoryButton() {
         // TODO(porter)
+    }
+    
+    // MARK: Internal functions
+    func resetSelection() {
+        selection = nil
     }
 
     // MARK: Mandate handling
