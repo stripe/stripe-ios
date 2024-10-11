@@ -47,7 +47,10 @@ class CustomerSheetDataSource {
                 // Override with specs from elementSession
                 _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
 
-                let savedPaymentMethods = elementSession.customer?.paymentMethods ?? []
+                let savedPaymentMethods = elementSession.customer?.paymentMethods.filter({ paymentMethod in
+                    guard let card = paymentMethod.card else { return true }
+                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
+                }) ?? []
                 return completion(.success((savedPaymentMethods, paymentOption, elementSession)))
             } catch {
                 return completion(.failure(error))
