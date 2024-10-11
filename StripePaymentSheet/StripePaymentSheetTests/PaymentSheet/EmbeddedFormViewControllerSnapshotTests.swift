@@ -36,7 +36,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             loadResult: loadResult,
             paymentMethodType: .stripe(paymentMethodType),
             previousPaymentOption: previousPaymentOption,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            formCache: .init()
         )
     }
 
