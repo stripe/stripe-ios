@@ -183,7 +183,7 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-        configuration.cardBrandAcceptance = .disallowed(brands: [.mastercard])
+
         return configuration
     }
 
