@@ -153,12 +153,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
         self.savedPaymentMethods = loadResult.savedPaymentMethods
-        self.paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
-            from: loadResult.intent,
-            elementsSession: elementsSession,
-            configuration: configuration,
-            logAvailability: false
-        )
+        self.paymentMethodTypes = loadResult.paymentMethodTypes
         self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && shouldShowApplePayInList

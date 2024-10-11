@@ -16,6 +16,8 @@ final class PaymentSheetLoader {
         let intent: Intent
         let elementsSession: STPElementsSession
         let savedPaymentMethods: [STPPaymentMethod]
+        /// The payment method types that should be shown (i.e. filtered)
+        let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     }
 
     enum IntegrationShape {
@@ -116,7 +118,12 @@ final class PaymentSheetLoader {
                     showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
                     showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false
                 )
-                let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: false)
+                let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+
+                // Ensure that there's at least 1 payment method type available for the intent and configuration.
+                guard !paymentMethodTypes.isEmpty else {
+                    throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
+                }
                 analyticsHelper.logLoadSucceeded(
                     intent: intent,
                     elementsSession: elementsSession,
@@ -131,7 +138,8 @@ final class PaymentSheetLoader {
                 let loadResult = LoadResult(
                     intent: intent,
                     elementsSession: elementsSession,
-                    savedPaymentMethods: filteredSavedPaymentMethods
+                    savedPaymentMethods: filteredSavedPaymentMethods,
+                    paymentMethodTypes: paymentMethodTypes
                 )
                 completion(.success(loadResult))
             } catch {
@@ -273,11 +281,7 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
         }
-        // Ensure that there's at least 1 payment method type available for the intent and configuration.
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
-        guard !paymentMethodTypes.isEmpty else {
-            throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
-        }
+
         // Warn the merchant if we see unactivated payment method types in the Intent
         if !elementsSession.unactivatedPaymentMethodTypes.isEmpty {
             let message = """

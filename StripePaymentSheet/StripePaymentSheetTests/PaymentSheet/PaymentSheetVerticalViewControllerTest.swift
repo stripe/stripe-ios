@@ -38,7 +38,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let savedPMsLoadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: savedPMsLoadResult).children.first is VerticalPaymentMethodListViewController)
 
@@ -46,7 +47,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let formDirectlyResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: formDirectlyResult).children.first is PaymentMethodFormViewController)
 
@@ -54,7 +56,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let onlyOnePM = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: onlyOnePM).children.first is VerticalPaymentMethodListViewController)
 
@@ -62,7 +65,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let multiplePMs = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: multiplePMs).children.first is VerticalPaymentMethodListViewController)
 
@@ -70,7 +74,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let onePMAndLink = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndLink).children.first is VerticalPaymentMethodListViewController)
 
@@ -78,7 +83,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let onePMAndApplePay = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndApplePay).children.first is VerticalPaymentMethodListViewController)
     }

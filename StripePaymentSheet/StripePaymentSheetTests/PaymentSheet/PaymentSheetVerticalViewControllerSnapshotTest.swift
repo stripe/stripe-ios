@@ -51,7 +51,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult1 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         verify(makeSUT(loadResult: loadResult1, isApplePayEnabled: false, isFlowController: false), identifier: "saved_pms")
 
@@ -59,7 +60,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult2 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.SEPADebit]),
             elementsSession: ._testValue(paymentMethodTypes: ["sepa_debit"]),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.SEPADebit)]
         )
         verify(makeSUT(loadResult: loadResult2, isApplePayEnabled: false, isFlowController: false), identifier: "one_non_card_pm")
 
@@ -67,7 +69,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult3 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit]),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "sepa_debit"]),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .stripe(.SEPADebit)]
         )
         verify(makeSUT(loadResult: loadResult3, isApplePayEnabled: false, isFlowController: false), identifier: "multiple_pms")
 
@@ -75,7 +78,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult4 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
         )
         verify(makeSUT(loadResult: loadResult4, isApplePayEnabled: true, isFlowController: true), identifier: "card_link_applepay_flowcontroller")
 
@@ -83,7 +87,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult5 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
         )
         verify(makeSUT(loadResult: loadResult5, isApplePayEnabled: true, isFlowController: true), identifier: "card_applepay_flowcontroller")
     }
@@ -100,7 +105,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             let loadResult = PaymentSheetLoader.LoadResult(
                 intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
                 elementsSession: elementsSession,
-                savedPaymentMethods: []
+                savedPaymentMethods: [],
+                paymentMethodTypes: [.stripe(.card)]
             )
             return PaymentSheetVerticalViewController(configuration: config, loadResult: loadResult, isFlowController: isFlowController, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         }
@@ -125,7 +131,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp]),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"]),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)]
         )
         // ...and previous customer input is card...
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card)))
@@ -140,7 +147,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
         )
         // ...and previous customer input is card...
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card)))
@@ -154,7 +162,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp]),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"], isLinkPassthroughModeEnabled: false),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)]
         )
         // ...and previous customer input is cash app - a PM without a form
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(type: .stripe(.cashApp)))
@@ -170,7 +179,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp]),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"]),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)]
         )
         // ...and previous customer input is SEPA - a PM that is not in the list
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(type: .stripe(.SEPADebit)))
@@ -184,7 +194,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp], setupFutureUsage: .offSession),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"], isLinkPassthroughModeEnabled: false),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)]
         )
         // ...and previous customer input is cash app - a PM without a form...
         let previousPaymentOption = PaymentOption.new(confirmParams: IntentConfirmParams(type: .stripe(.cashApp)))
@@ -198,7 +209,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit]),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "sepa_debit"], isLinkPassthroughModeEnabled: false),
-            savedPaymentMethods: [._testSEPA()]
+            savedPaymentMethods: [._testSEPA()],
+            paymentMethodTypes: [.stripe(.card), .stripe(.SEPADebit)]
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         // ...should display list with saved SEPA selected and mandate displayed
@@ -210,7 +222,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .USBankAccount]),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "us_bank_account"], isLinkPassthroughModeEnabled: false),
-            savedPaymentMethods: [._testUSBankAccount()]
+            savedPaymentMethods: [._testUSBankAccount()],
+            paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         // ...should display list with saved SEPA selected and mandate displayed
@@ -227,7 +240,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testDeferredIntent(paymentMethodTypes: [.USBankAccount, .cashApp], setupFutureUsage: .offSession),
             elementsSession: ._testValue(paymentMethodTypes: ["us_bank_account", "cashapp"], isLinkPassthroughModeEnabled: false),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.USBankAccount), .stripe(.cashApp)]
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         // ...and an error is set...
@@ -252,7 +266,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         _ = makeBottomSheetAndLayout(sut) // Laying out before calling `didTap` avoids breaking constraints due to zero size
@@ -269,7 +284,8 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
             elementsSession: elementsSession,
-            savedPaymentMethods: [savedCard]
+            savedPaymentMethods: [savedCard],
+            paymentMethodTypes: [.stripe(.card)]
         )
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         _ = makeBottomSheetAndLayout(sut) // Laying out before calling `didTap` avoids breaking constraints due to zero size
