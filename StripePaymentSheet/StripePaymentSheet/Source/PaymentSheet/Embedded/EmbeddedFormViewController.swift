@@ -13,7 +13,7 @@ import Foundation
 import UIKit
 
 class EmbeddedFormViewController: UIViewController {
-    
+
     var twoStep: Bool {
         switch configuration.formSheetAction {
         case .confirm:
@@ -22,7 +22,7 @@ class EmbeddedFormViewController: UIViewController {
             return true
         }
     }
-    
+
     var collectsUserInput: Bool {
         return paymentMethodFormViewController?.form.collectsUserInput ?? false
     }
@@ -95,7 +95,7 @@ class EmbeddedFormViewController: UIViewController {
     let stackView: UIStackView = UIStackView()
 
     weak var delegate: EmbeddedFormViewControllerDelegate?
-    
+
     // MARK: - Initializers
 
     init(configuration: EmbeddedPaymentElement.Configuration,
@@ -115,7 +115,7 @@ class EmbeddedFormViewController: UIViewController {
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
-        
+
         super.init(nibName: nil, bundle: nil)
 
         regenerateUI()
@@ -475,14 +475,14 @@ protocol EmbeddedFormViewControllerDelegate: AnyObject {
             _ embeddedFormViewController: EmbeddedFormViewController,
             with paymentOption: PaymentOption,
             completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
-    
+
     func embeddedFormViewControllerDidFinish(
         _ embeddedFormViewController: EmbeddedFormViewController,
         result: PaymentSheetResult
     )
-    
+
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController)
-    
+
     /// Called when the embedded form view controller closes with a payment option that can be confirmed
     /// - Parameter embeddedFormViewController: The `EmbeddedFormViewController`
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController)

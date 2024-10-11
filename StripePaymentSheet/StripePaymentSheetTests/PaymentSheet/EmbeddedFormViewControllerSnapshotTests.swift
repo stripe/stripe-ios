@@ -5,11 +5,11 @@
 //  Created by Nick Porter on 10/10/24.
 //
 
-import XCTest
 @_spi(STP) import StripeCoreTestUtils
+@_spi(STP) import StripePayments
 @_spi(STP)  @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripePayments
+import XCTest
 
 final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 
@@ -28,7 +28,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]),
             elementsSession: ._testValue(paymentMethodTypes: [paymentMethodType.identifier]),
-            savedPaymentMethods: savedPaymentMethods
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: [.stripe(paymentMethodType)]
         )
         let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: ._testValue_MostPermissive())
         return EmbeddedFormViewController(
@@ -145,7 +146,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         sut.isUserInteractionEnabled = false
         verify(sut)
     }
-    
+
     func testBillingCollectionConfiguration() {
         var configuration = EmbeddedPaymentElement.Configuration(
             formSheetAction: .confirm(completion: { _ in

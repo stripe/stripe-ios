@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 protocol EmbeddedPaymentElementControllerDelegate: AnyObject {
     func heightDidChange()
@@ -18,16 +18,16 @@ protocol EmbeddedPaymentElementControllerDelegate: AnyObject {
 class EmbeddedPaymentElementController {
     weak var presentingViewController: UIViewController?
     weak var delegate: EmbeddedPaymentElementControllerDelegate?
-    
+
     private let configuration: EmbeddedPaymentElement.Configuration
     private let loadResult: PaymentSheetLoader.LoadResult
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let formCache: PaymentMethodFormCache = .init()
     let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
-    
+
     // TODO(porter) Do we need this?
     private var lastSeenPaymentOption: PaymentOption?
-    
+
     var displayData: EmbeddedPaymentElement.PaymentOptionDisplayData? {
         embeddedPaymentMethodsView.displayData
     }
@@ -42,58 +42,54 @@ class EmbeddedPaymentElementController {
         self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
         self.embeddedPaymentMethodsView.delegate = self
     }
-    
+
     static func create(intentConfiguration: PaymentSheet.IntentConfiguration,
                        configuration: EmbeddedPaymentElement.Configuration) async throws -> EmbeddedPaymentElementController {
+        // TODO(porter) Should we create a new analytics helper specific to embedded? Figured this out when we do analytics.
         let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
         AnalyticsHelper.shared.generateSessionID()
 
         let loadResult = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfiguration),
-                                                           configuration: configuration,
-                                                           analyticsHelper: analyticsHelper,
-                                                           integrationShape: .embedded)
-
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: .deferredIntent(intentConfig: intentConfiguration),
-                                                                                           elementsSession: loadResult.elementsSession,
-                                                                                           configuration: configuration,
-                                                                                           logAvailability: true)
+                                                          configuration: configuration,
+                                                          analyticsHelper: analyticsHelper,
+                                                          integrationShape: .embedded)
         let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
         let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
         let savedPaymentMethodAccessoryType = await RowButton.RightAccessoryButton.getAccessoryButtonType(
-            savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
-            isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
-            isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
-            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+           savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
+           isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
+           isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
+           allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+           allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         )
 
         let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
-            // Default to the customer's default or the first saved payment method, if any
-            let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
-            switch customerDefault {
-            case .applePay:
-                return .applePay
-            case .link:
-                return .link
-            case .stripeId, nil:
-                return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
-            }
+           // Default to the customer's default or the first saved payment method, if any
+           let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+           switch customerDefault {
+           case .applePay:
+               return .applePay
+           case .link:
+               return .link
+           case .stripeId, nil:
+               return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
+           }
         }()
 
         let embeddedPaymentMethodsView = await EmbeddedPaymentMethodsView(
-            initialSelection: initialSelection,
-            paymentMethodTypes: paymentMethodTypes,
-            savedPaymentMethod: loadResult.savedPaymentMethods.first,
-            appearance: configuration.appearance,
-            shouldShowApplePay: shouldShowApplePay,
-            shouldShowLink: shouldShowLink,
-            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            mandateProvider: VerticalListMandateProvider(configuration: configuration,
-                                                         elementsSession: loadResult.elementsSession,
-                                                         intent: .deferredIntent(intentConfig: intentConfiguration)),
-            shouldShowMandate: configuration.embeddedViewDisplaysMandateText
+           initialSelection: initialSelection,
+           paymentMethodTypes: loadResult.paymentMethodTypes,
+           savedPaymentMethod: loadResult.savedPaymentMethods.first,
+           appearance: configuration.appearance,
+           shouldShowApplePay: shouldShowApplePay,
+           shouldShowLink: shouldShowLink,
+           savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
+           mandateProvider: VerticalListMandateProvider(configuration: configuration,
+                                                        elementsSession: loadResult.elementsSession,
+                                                        intent: .deferredIntent(intentConfig: intentConfiguration)),
+           shouldShowMandate: configuration.embeddedViewDisplaysMandateText
         )
-        
+
         return .init(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, embeddedPaymentMethodsView: embeddedPaymentMethodsView)
     }
 }
