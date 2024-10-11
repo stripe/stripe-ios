@@ -11,27 +11,27 @@ import XCTest
 
 class STPCardValidator_BrandFilteringTest: XCTestCase {
 
-    let testMastercardCoBrandedNumber = "5131301234"
+    let testVisaCoBrandedNumber = "49730197"
 
     func testPossibleBrands_allAllowed() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-        let expectation = expectation(description: "Mastercard/CBC")
+        let expectation = expectation(description: "Visa/CB")
 
-        STPCardValidator.possibleBrands(forNumber: testMastercardCoBrandedNumber, with: .default) { result in
+        STPCardValidator.possibleBrands(forNumber: testVisaCoBrandedNumber, with: .default) { result in
             let brands = try! result.get()
-            XCTAssertEqual(brands, [.cartesBancaires, .mastercard])
+            XCTAssertEqual(brands, [.cartesBancaires, .visa])
             expectation.fulfill()
         }
 
         wait(for: [expectation], timeout: 10.0)
     }
 
-    func testPossibleBrands_mastercardNotAllowed() {
+    func testPossibleBrands_visaNotAllowed() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-        let expectation = expectation(description: "Mastercard/CBC")
+        let expectation = expectation(description: "Visa/CB")
 
-        let filter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.mastercard]))
-        STPCardValidator.possibleBrands(forNumber: testMastercardCoBrandedNumber, with: filter) { result in
+        let filter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.visa]))
+        STPCardValidator.possibleBrands(forNumber: testVisaCoBrandedNumber, with: filter) { result in
             let brands = try! result.get()
             XCTAssertEqual(brands, [.cartesBancaires])
             expectation.fulfill()
@@ -40,15 +40,14 @@ class STPCardValidator_BrandFilteringTest: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
 
-    func testPossibleBrands_mastercardOnlyAllowed() {
+    func testPossibleBrands_visaOnlyAllowed() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-        let expectation = expectation(description: "Mastercard/CBC")
+        let expectation = expectation(description: "Visa/CB")
 
-        let filter = CardBrandFilter(cardBrandAcceptance: .allowed(brands: [.mastercard]))
-        STPCardValidator.possibleBrands(forNumber: testMastercardCoBrandedNumber, with: filter) { result in
+        let filter = CardBrandFilter(cardBrandAcceptance: .allowed(brands: [.visa]))
+        STPCardValidator.possibleBrands(forNumber: testVisaCoBrandedNumber, with: filter) { result in
             let brands = try! result.get()
-            // CB should not be filtered out.
-            XCTAssertEqual(brands, [.cartesBancaires, .mastercard])
+            XCTAssertEqual(brands, [.visa])
             expectation.fulfill()
         }
 
