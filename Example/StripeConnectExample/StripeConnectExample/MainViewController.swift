@@ -69,7 +69,7 @@ class MainViewController: UITableViewController {
             do {
                 return try await API.accountSession(merchantId: merchant.id).get().clientSecret
             } catch {
-                self?.presentAlert(title: "An error occurred", message: "Failed to retrieve client secret.")
+                self?.presentAlert(title: "An error occurred retrieving client secret", message: (error as CustomDebugStringConvertible).debugDescription)
                 return nil
             }
         })
@@ -116,14 +116,18 @@ class MainViewController: UITableViewController {
         switch row {
         case .onboarding:
             let savedOnboardingSettings = AppSettings.shared.onboardingSettings
-            viewControllerToPresent = embeddedComponentManager.createAccountOnboardingViewController(
+            let onboardingVC = embeddedComponentManager.createAccountOnboardingViewController(
                 fullTermsOfServiceUrl: savedOnboardingSettings.fullTermsOfServiceUrl,
                 recipientTermsOfServiceUrl: savedOnboardingSettings.recipientTermsOfServiceUrl,
                 privacyPolicyUrl: savedOnboardingSettings.privacyPolicyUrl,
                 skipTermsOfServiceCollection: savedOnboardingSettings.skipTermsOfService.boolValue,
                 collectionOptions: savedOnboardingSettings.accountCollectionOptions)
+            onboardingVC.delegate = self
+            viewControllerToPresent = onboardingVC
         case .payouts:
-            viewControllerToPresent = embeddedComponentManager.createPayoutsViewController()
+            let payoutsVC = embeddedComponentManager.createPayoutsViewController()
+            payoutsVC.delegate = self
+            viewControllerToPresent = payoutsVC
         }
 
         // Fetch ViewController presentation settings
@@ -198,7 +202,7 @@ class MainViewController: UITableViewController {
     func presentAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
-        self.present(alert, animated: true)
+        (presentedViewController ?? self).present(alert, animated: true)
     }
 
     func customFonts() -> [EmbeddedComponentManager.CustomFontSource] {
@@ -237,6 +241,24 @@ class MainViewController: UITableViewController {
         return fontSources
     }
 }
+
+// MARK: - AccountOnboardingViewControllerDelegate
+
+extension MainViewController: AccountOnboardingViewControllerDelegate {
+    func accountOnboarding(_ accountOnboarding: AccountOnboardingViewController, didFailLoadWithError error: any Error) {
+        presentAlert(title: "Error loading account onboarding", message: (error as NSError).debugDescription)
+    }
+}
+
+// MARK: - PayoutsViewControllerDelegate
+
+extension MainViewController: PayoutsViewControllerDelegate {
+    func payouts(_ payouts: PayoutsViewController, didFailLoadWithError error: any Error) {
+        presentAlert(title: "Error loading payouts", message: (error as NSError).debugDescription)
+    }
+}
+
+// MARK: - UINavigationControllerDelegate
 
 extension MainViewController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {

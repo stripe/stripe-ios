@@ -46,7 +46,7 @@ public class EmbeddedPaymentElement {
     public var paymentOption: PaymentOptionDisplayData? {
         return embeddedPaymentMethodsView.displayData
     }
-    
+
     private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
 
     /// An asynchronous failable initializer
@@ -67,11 +67,6 @@ public class EmbeddedPaymentElement {
                                                            configuration: configuration,
                                                            analyticsHelper: analyticsHelper,
                                                            integrationShape: .embedded)
-
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: .deferredIntent(intentConfig: intentConfiguration),
-                                                                                           elementsSession: loadResult.elementsSession,
-                                                                                           configuration: configuration,
-                                                                                           logAvailability: true)
         let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
         let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
         let savedPaymentMethodAccessoryType = await RowButton.RightAccessoryButton.getAccessoryButtonType(
@@ -97,7 +92,7 @@ public class EmbeddedPaymentElement {
 
         let embeddedPaymentMethodsView = await EmbeddedPaymentMethodsView(
             initialSelection: initialSelection,
-            paymentMethodTypes: paymentMethodTypes,
+            paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             appearance: configuration.appearance,
             shouldShowApplePay: shouldShowApplePay,
@@ -238,7 +233,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func heightDidChange() {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
-    
+
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
