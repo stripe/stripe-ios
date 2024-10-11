@@ -11,7 +11,7 @@ import Foundation
 @available(iOS 15, *)
 class FetchInitParamsMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchInitParamsMessageHandler.Reply> {
     struct Reply: Encodable {
-        let locale: String?
+        let locale: String
         var appearance: AppearanceWrapper
         var fonts: [CustomFontSourceWrapper] = []
     }

@@ -101,7 +101,7 @@ class ConnectComponentWebView: ConnectWebView {
                   loadContent: loadContent)
     }
     func updateAppearance(appearance: Appearance) {
-        sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: appearance, traitCollection: traitCollection))))
+        sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: appearance, traitCollection: traitCollection))))
         updateColors(appearance: appearance)
     }
 
@@ -162,7 +162,7 @@ private extension ConnectComponentWebView {
                 // If self no longer exists give default values
                 return .init(locale: "", appearance: .init(appearance: .default, traitCollection: .init()))
             }
-            return .init(locale: webLocale.webIdentifier,
+            return .init(locale: webLocale.toLanguageTag(),
                          appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection),
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
@@ -188,7 +188,7 @@ private extension ConnectComponentWebView {
         ) { [weak self] _ in
             // swiftlint:disable:previous unused_capture_list
             guard let self else { return }
-            sendMessage(UpdateConnectInstanceSender(payload: .init(locale: webLocale.webIdentifier, appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))))
+            sendMessage(UpdateConnectInstanceSender(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))))
         }
     }
 

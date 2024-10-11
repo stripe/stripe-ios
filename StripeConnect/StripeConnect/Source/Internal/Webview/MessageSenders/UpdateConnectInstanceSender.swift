@@ -11,7 +11,7 @@ import Foundation
 @available(iOS 15, *)
 struct UpdateConnectInstanceSender: MessageSender {
     struct Payload: Encodable {
-        let locale: String?
+        let locale: String
         private(set) var appearance: AppearanceWrapper
     }
     let name: String = "updateConnectInstance"
