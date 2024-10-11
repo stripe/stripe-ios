@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
     func selectionDidUpdate()
@@ -24,7 +25,7 @@ class EmbeddedPaymentMethodsView: UIView {
         guard let selection else { return nil }
         return .init(selection: selection, mandateText: mandateView.attributedText)
     }
-    
+
     private let appearance: PaymentSheet.Appearance
     private(set) var selection: Selection? {
         didSet {
@@ -199,7 +200,6 @@ class EmbeddedPaymentMethodsView: UIView {
                                                                   savedPaymentMethod: selection?.savedPaymentMethod,
                                                                   bottomNoticeAttributedString: nil)
 
-        
         guard animated else {
             self.mandateView.setHiddenIfNecessary(
                 (self.mandateView.attributedText?.string.isEmpty ?? true) ||
@@ -245,14 +245,13 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Style {
         }
     }
 }
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripePayments
-
+@_spi(STP) import StripePaymentsUI
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     init(selection: EmbeddedPaymentMethodsView.Selection, mandateText: NSAttributedString?) {
         self.mandateText = mandateText
-        
+
         switch selection {
         case .new(paymentMethodType: let paymentMethodType):
             image = paymentMethodType.makeImage(
