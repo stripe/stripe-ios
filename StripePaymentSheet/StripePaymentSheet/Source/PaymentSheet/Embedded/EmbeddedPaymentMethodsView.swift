@@ -49,19 +49,23 @@ class EmbeddedPaymentMethodsView: UIView {
 
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
 
-    init(initialSelection: Selection?,
-         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-         savedPaymentMethod: STPPaymentMethod?,
-         appearance: PaymentSheet.Appearance,
-         shouldShowApplePay: Bool,
-         shouldShowLink: Bool,
-         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
-         mandateProvider: MandateTextProvider,
-         shouldShowMandate: Bool = true) {
+    init(
+        initialSelection: Selection?,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        savedPaymentMethod: STPPaymentMethod?,
+        appearance: PaymentSheet.Appearance,
+        shouldShowApplePay: Bool,
+        shouldShowLink: Bool,
+        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
+        mandateProvider: MandateTextProvider,
+        shouldShowMandate: Bool = true,
+        delegate: EmbeddedPaymentMethodsViewDelegate? = nil
+    ) {
         self.appearance = appearance
         self.selection = initialSelection
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
+        self.delegate = delegate
         super.init(frame: .zero)
 
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)

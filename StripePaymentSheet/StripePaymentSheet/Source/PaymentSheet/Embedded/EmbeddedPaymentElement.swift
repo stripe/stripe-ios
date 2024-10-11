@@ -17,6 +17,7 @@ public class EmbeddedPaymentElement {
 
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: UIView {
+        // TODO: Make this a _container view_ so that we can swap out the inner `embeddedPaymentMethodsView` when `update` is called.
         return embeddedPaymentMethodsView
     }
 
@@ -29,7 +30,8 @@ public class EmbeddedPaymentElement {
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
 
-    public struct PaymentOptionDisplayData {
+    /// Contains details about a payment method that can be displayed to the customer
+    public struct PaymentOptionDisplayData: Equatable {
         /// An image representing a payment method; e.g. the Apple Pay logo or a VISA logo
         public let image: UIImage
         /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
@@ -90,12 +92,58 @@ public class EmbeddedPaymentElement {
     /// Call this method when the IntentConfiguration values you used to initialize `EmbeddedPaymentElement` (amount, currency, etc.) change.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
     /// - Parameter intentConfiguration: An updated IntentConfiguration.
-    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
+    /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
-        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2524)
+        self.updateCount += 1
+        let updateIndex = updateCount
+        let loadResult: PaymentSheetLoader.LoadResult
+        do {
+            // TODO: Change dummy analytics helper
+            let dummyAnalyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init())
+            // TODO: Make `load` vend a Task so that we can cancel it
+            loadResult = try await PaymentSheetLoader.load(
+                mode: .deferredIntent(intentConfiguration),
+                configuration: configuration,
+                analyticsHelper: dummyAnalyticsHelper,
+                integrationShape: .embedded
+            )
+        } catch {
+            return .failed(error: error)
+        }
+        // 1. Make sure we're still the latest update; otherwise, return `.canceled`
+        // Don't do any other async work below or you will introduce race conditions!
+        guard updateIndex == self.updateCount else {
+            return .canceled
+        }
+
+        // Hang on to old state to diff against later in this method
+        let oldViewHeight = embeddedPaymentMethodsView.frame.height
+        let oldPaymentOption = paymentOption
+
+        // 2. Update our variables. Re-initialize embedded view to update the UI to match the newly loaded data.
+        self.loadResult = loadResult
+        self.embeddedPaymentMethodsView = Self.makeView(
+            configuration: configuration,
+            loadResult: loadResult,
+            delegate: self
+            // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
+        )
+
+        // 3. Synchronously pre-load image into cache
+        // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (from the internet instead of disk) before we call the completion handler.
+        _ = self.paymentOption
+
+        // 4. Inform our delegate if anything updated
+        if oldViewHeight != view.frame.height {
+            delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+        }
+        if oldPaymentOption != paymentOption {
+            delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+        }
         return .succeeded
     }
 
@@ -109,18 +157,16 @@ public class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
-    private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
-
-    private let loadResult: PaymentSheetLoader.LoadResult
+    internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
+    internal private(set) var loadResult: PaymentSheetLoader.LoadResult
+    internal private(set) var updateCount: Int = 0
 
     private init(
         configuration: Configuration,
-        loadResult: PaymentSheetLoader.LoadResult,
-        delegate: EmbeddedPaymentElementDelegate? = nil
+        loadResult: PaymentSheetLoader.LoadResult
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
-        self.delegate = delegate
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult
