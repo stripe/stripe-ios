@@ -31,10 +31,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(paymentMethodType)]
         )
-        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: PaymentSheet.Configuration())
         
-        var configuration = configuration
-        configuration.apiClient = .init()
         return EmbeddedFormViewController(
             configuration: configuration,
             loadResult: loadResult,
