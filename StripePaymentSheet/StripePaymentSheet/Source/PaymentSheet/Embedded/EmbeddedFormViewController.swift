@@ -48,7 +48,7 @@ class EmbeddedFormViewController: UIViewController {
     let configuration: EmbeddedPaymentElement.Configuration
     let intent: Intent
     let elementsSession: STPElementsSession
-    let formCache: PaymentMethodFormCache = .init() // TODO(porter) Use this somehow
+    let formCache: PaymentMethodFormCache
     let analyticsHelper: PaymentSheetAnalyticsHelper // TOOD(porter) Figure out the analytic story for embedded
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
@@ -98,7 +98,12 @@ class EmbeddedFormViewController: UIViewController {
     
     // MARK: - Initializers
 
-    init(configuration: EmbeddedPaymentElement.Configuration, loadResult: PaymentSheetLoader.LoadResult, paymentMethodType: PaymentSheet.PaymentMethodType, previousPaymentOption: PaymentOption? = nil, analyticsHelper: PaymentSheetAnalyticsHelper) {
+    init(configuration: EmbeddedPaymentElement.Configuration,
+         loadResult: PaymentSheetLoader.LoadResult,
+         paymentMethodType: PaymentSheet.PaymentMethodType,
+         previousPaymentOption: PaymentOption? = nil,
+         analyticsHelper: PaymentSheetAnalyticsHelper,
+         formCache: PaymentMethodFormCache) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
         self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
 
@@ -109,7 +114,8 @@ class EmbeddedFormViewController: UIViewController {
         self.previousPaymentOption = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
-
+        self.formCache = formCache
+        
         super.init(nibName: nil, bundle: nil)
 
         regenerateUI()

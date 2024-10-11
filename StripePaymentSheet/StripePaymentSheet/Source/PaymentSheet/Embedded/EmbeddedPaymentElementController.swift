@@ -22,19 +22,26 @@ class EmbeddedPaymentElementController {
     private let configuration: EmbeddedPaymentElement.Configuration
     private let loadResult: PaymentSheetLoader.LoadResult
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let formCache: PaymentMethodFormCache = .init()
     let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
+    
+    // TODO(porter) Do we need this?
+    private var lastSeenPaymentOption: PaymentOption?
+    
+    var displayData: EmbeddedPaymentElement.PaymentOptionDisplayData? {
+        embeddedPaymentMethodsView.displayData
+    }
 
     private init(configuration: EmbeddedPaymentElement.Configuration,
-         loadResult: PaymentSheetLoader.LoadResult,
-         analyticsHelper: PaymentSheetAnalyticsHelper,
-         embeddedPaymentMethodsView: EmbeddedPaymentMethodsView) {
+                 loadResult: PaymentSheetLoader.LoadResult,
+                 analyticsHelper: PaymentSheetAnalyticsHelper,
+                 embeddedPaymentMethodsView: EmbeddedPaymentMethodsView) {
         self.configuration = configuration
         self.loadResult = loadResult
         self.analyticsHelper = analyticsHelper
         self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
         self.embeddedPaymentMethodsView.delegate = self
     }
-    
     
     static func create(intentConfiguration: PaymentSheet.IntentConfiguration,
                        configuration: EmbeddedPaymentElement.Configuration) async throws -> EmbeddedPaymentElementController {
@@ -114,7 +121,9 @@ extension EmbeddedPaymentElementController: EmbeddedPaymentMethodsViewDelegate {
             configuration: configuration,
             loadResult: loadResult,
             paymentMethodType: paymentMethodType,
-            analyticsHelper: analyticsHelper
+            previousPaymentOption: lastSeenPaymentOption,
+            analyticsHelper: analyticsHelper,
+            formCache: formCache
         )
         embeddedFormVC.delegate = self
 
@@ -155,11 +164,19 @@ extension EmbeddedPaymentElementController: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
+        self.lastSeenPaymentOption = embeddedFormViewController.selectedPaymentOption
+        if embeddedFormViewController.selectedPaymentOption == nil {
+            embeddedPaymentMethodsView.resetSelection()
+        }
         embeddedFormViewController.dismiss(animated: true)
         // Optionally notify the completion handler
     }
 
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
+        self.lastSeenPaymentOption = embeddedFormViewController.selectedPaymentOption
+        if embeddedFormViewController.selectedPaymentOption == nil {
+            embeddedPaymentMethodsView.resetSelection()
+        }
         embeddedFormViewController.dismiss(animated: true)
     }
 }

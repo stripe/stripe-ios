@@ -190,6 +190,11 @@ class EmbeddedPaymentMethodsView: UIView {
     func didTapAccessoryButton() {
         // TODO(porter)
     }
+    
+    // MARK: Internal functions
+    func resetSelection() {
+        selection = nil
+    }
 
     // MARK: Mandate handling
     private func updateMandate(animated: Bool = true) {

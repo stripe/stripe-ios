@@ -49,7 +49,7 @@ public class EmbeddedPaymentElement {
 
     /// The customer's currently selected payment option.
     public var paymentOption: PaymentOptionDisplayData? {
-        return embeddedController.embeddedPaymentMethodsView.displayData
+        return embeddedController.displayData
     }
     
     private let embeddedController: EmbeddedPaymentElementController
@@ -65,7 +65,9 @@ public class EmbeddedPaymentElement {
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
         let embeddedPaymentElementController: EmbeddedPaymentElementController = try await .create(intentConfiguration: intentConfiguration, configuration: configuration)
-        return .init(view: embeddedPaymentElementController.embeddedPaymentMethodsView, configuration: configuration, embeddedController: embeddedPaymentElementController)
+        return .init(view: embeddedPaymentElementController.embeddedPaymentMethodsView,
+                     configuration: configuration,
+                     embeddedController: embeddedPaymentElementController)
     }
 
     /// The result of an `update` call
