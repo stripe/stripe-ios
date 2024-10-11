@@ -15,6 +15,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() async throws {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
+        StripeAPI.defaultPublishableKey = nil
     }
 
     // MARK: - Helper Methods
@@ -32,11 +33,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             paymentMethodTypes: [.stripe(paymentMethodType)]
         )
         
-        var newConfig = configuration
-        newConfig.apiClient = STPAPIClient()
-        
         return EmbeddedFormViewController(
-            configuration: newConfig,
+            configuration: configuration,
             loadResult: loadResult,
             paymentMethodType: .stripe(paymentMethodType),
             previousPaymentOption: previousPaymentOption,

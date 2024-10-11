@@ -59,6 +59,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         super.tearDown()
         HTTPStubs.removeAllStubs()
         configuration = PaymentSheet.Configuration()
+        StripeAPI.defaultPublishableKey = nil
     }
 
     private func stubbedAPIClient() -> STPAPIClient {
