@@ -32,8 +32,11 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             paymentMethodTypes: [.stripe(paymentMethodType)]
         )
         
+        var newConfig = configuration
+        newConfig.apiClient = STPAPIClient()
+        
         return EmbeddedFormViewController(
-            configuration: configuration,
+            configuration: newConfig,
             loadResult: loadResult,
             paymentMethodType: .stripe(paymentMethodType),
             previousPaymentOption: previousPaymentOption,
