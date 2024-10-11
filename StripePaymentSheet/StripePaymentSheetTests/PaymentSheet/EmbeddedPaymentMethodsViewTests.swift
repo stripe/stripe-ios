@@ -8,6 +8,7 @@
 @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 import XCTest
 
+@MainActor
 final class EmbeddedPaymentMethodsViewTests: XCTestCase {
 
     // MARK: EmbeddedPaymentMethodsViewDelegate test
