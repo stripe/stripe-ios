@@ -34,35 +34,30 @@ public class AccountOnboardingViewController: UIViewController {
     /// Delegate that receives callbacks for this component
     public weak var delegate: AccountOnboardingViewControllerDelegate?
 
-    let webVC: ConnectComponentWebViewController
+    private(set) var webVC: ConnectComponentWebViewController!
 
     init(props: Props,
          componentManager: EmbeddedComponentManager,
-         // Test Only
-         loadContent: Bool = true
+         loadContent: Bool
     ) {
-        weak var weakSelf: AccountOnboardingViewController?
+        super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .onboarding,
-            fetchInitProps: { props },
-            didFailLoadWithError: { error in
-                guard let weakSelf else { return }
-                weakSelf.delegate?.accountOnboarding(weakSelf, didFailLoadWithError: error)
-            },
             loadContent: loadContent
-        )
-        super.init(nibName: nil, bundle: nil)
-        weakSelf = self
+        ) {
+            props
+        } didFailLoadWithError: { [weak self] error in
+            guard let self else { return }
+            delegate?.accountOnboarding(self, didFailLoadWithError: error)
+        }
 
         webVC.addMessageHandler(OnExitMessageHandler(didReceiveMessage: { [weak self] in
             guard let self else { return }
             self.delegate?.accountOnboardingDidExit(self)
         }))
 
-        view.addSubview(webVC.view)
-        webVC.view.frame = view.frame
-        addChild(webVC)
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {

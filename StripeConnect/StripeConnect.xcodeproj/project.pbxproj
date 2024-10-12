@@ -17,7 +17,7 @@
 		410D0FD92C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FD82C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift */; };
 		410D0FDB2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FDA2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift */; };
 		410D0FDD2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FDC2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift */; };
-		410D0FDF2C6D3176009B0E26 /* ConnectWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FDE2C6D3176009B0E26 /* ConnectWebView.swift */; };
+		410D0FDF2C6D3176009B0E26 /* ConnectWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FDE2C6D3176009B0E26 /* ConnectWebViewController.swift */; };
 		410D0FE12C6D31A3009B0E26 /* PopupWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FE02C6D31A3009B0E26 /* PopupWebViewController.swift */; };
 		410D0FE32C6D31C6009B0E26 /* StripeConnectConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FE22C6D31C6009B0E26 /* StripeConnectConstants.swift */; };
 		410D0FE52C6D32F0009B0E26 /* ApplicationURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FE42C6D32F0009B0E26 /* ApplicationURLOpener.swift */; };
@@ -95,6 +95,7 @@
 		E688AE002CADD8C400951D97 /* NotificationBannerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */; };
 		E688AE032CADE36C00951D97 /* OnNotificationsChangeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */; };
 		E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */; };
+		E6EF91C72CBA3BED0082DD1B /* UIViewController+StripeConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */; };
 		E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */; };
 		E6F485FC2C9E360A000D914F /* ConnectJSURLParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */; };
 		E6F485FE2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485FD2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift */; };
@@ -122,7 +123,7 @@
 		410D0FD82C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateConnectInstanceSenderTests.swift; sourceTree = "<group>"; };
 		410D0FDA2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallSetterWithSerializableValueSenderTests.swift; sourceTree = "<group>"; };
 		410D0FDC2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnedFromAuthenticatedWebViewSenderTests.swift; sourceTree = "<group>"; };
-		410D0FDE2C6D3176009B0E26 /* ConnectWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectWebView.swift; sourceTree = "<group>"; };
+		410D0FDE2C6D3176009B0E26 /* ConnectWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectWebViewController.swift; sourceTree = "<group>"; };
 		410D0FE02C6D31A3009B0E26 /* PopupWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupWebViewController.swift; sourceTree = "<group>"; };
 		410D0FE22C6D31C6009B0E26 /* StripeConnectConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StripeConnectConstants.swift; sourceTree = "<group>"; };
 		410D0FE42C6D32F0009B0E26 /* ApplicationURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationURLOpener.swift; sourceTree = "<group>"; };
@@ -201,6 +202,7 @@
 		E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewControllerTests.swift; sourceTree = "<group>"; };
 		E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandlerTests.swift; sourceTree = "<group>"; };
 		E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
+		E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+StripeConnect.swift"; sourceTree = "<group>"; };
 		E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewController.swift; sourceTree = "<group>"; };
 		E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectJSURLParams.swift; sourceTree = "<group>"; };
 		E6F485FD2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewControllerTests.swift; sourceTree = "<group>"; };
@@ -273,7 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				410D0FE42C6D32F0009B0E26 /* ApplicationURLOpener.swift */,
-				410D0FDE2C6D3176009B0E26 /* ConnectWebView.swift */,
+				410D0FDE2C6D3176009B0E26 /* ConnectWebViewController.swift */,
 				413987BD2C63F34B001D375E /* MessageHandlers */,
 				413987C02C63F34B001D375E /* MessageSenders */,
 				410D0FE02C6D31A3009B0E26 /* PopupWebViewController.swift */,
@@ -349,6 +351,7 @@
 		416E9ED02C77F6C100A0B917 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */,
 				416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */,
 				41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */,
 				41542A6A2C88B79E004E728E /* JSONSerialization+extension.swift */,
@@ -669,6 +672,7 @@
 				413987E12C641688001D375E /* PageDidLoadMessageHandler.swift in Sources */,
 				4171B1592C9A5EEC00547F7D /* AccountOnboardingViewController.swift in Sources */,
 				41054E432C989AAD00383C09 /* Font+Extension.swift in Sources */,
+				E6EF91C72CBA3BED0082DD1B /* UIViewController+StripeConnect.swift in Sources */,
 				41542A692C88B6F2004E728E /* JSONEncoder+extension.swift in Sources */,
 				416E9E842C76AE0A00A0B917 /* ComponentType.swift in Sources */,
 				410D0FCE2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift in Sources */,
@@ -706,7 +710,7 @@
 				E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */,
 				416E9E762C751B0500A0B917 /* EmbeddedComponentManager.swift in Sources */,
 				416E9ECF2C77EAA400A0B917 /* EmbeddedComponentError.swift in Sources */,
-				410D0FDF2C6D3176009B0E26 /* ConnectWebView.swift in Sources */,
+				410D0FDF2C6D3176009B0E26 /* ConnectWebViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

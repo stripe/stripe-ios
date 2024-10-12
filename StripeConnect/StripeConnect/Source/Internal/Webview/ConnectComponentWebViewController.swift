@@ -10,21 +10,12 @@
 import UIKit
 import WebKit
 
+struct HTTPStatusError: Error, CustomNSError {
+    let errorCode: Int
+}
+
 @available(iOS 15, *)
-class ConnectComponentWebViewController: UIViewController {
-    private(set) lazy var webView: ConnectWebView = {
-        let config = WKWebViewConfiguration()
-
-        // Allows for custom JS message handlers for JS -> Swift communication
-        config.userContentController = contentController
-
-        // Allows the identity verification flow to display the camera feed
-        // embedded in the web view instead of full screen. Also works for
-        // embedded YouTube videos.
-        config.allowsInlineMediaPlayback = true
-
-        return .init(frame: .zero, configuration: config)
-    }()
+class ConnectComponentWebViewController: ConnectWebViewController {
 
     /// The embedded component manager that will be used for requests.
     let componentManager: EmbeddedComponentManager
@@ -55,12 +46,12 @@ class ConnectComponentWebViewController: UIViewController {
     init<InitProps: Encodable>(
         componentManager: EmbeddedComponentManager,
         componentType: ComponentType,
+        loadContent: Bool,
         fetchInitProps: @escaping () -> InitProps,
         didFailLoadWithError: @escaping (Error) -> Void,
         // Should only be overridden for tests
         notificationCenter: NotificationCenter = NotificationCenter.default,
-        webLocale: Locale = Locale.autoupdatingCurrent,
-        loadContent: Bool = true
+        webLocale: Locale = Locale.autoupdatingCurrent
     ) {
         self.componentManager = componentManager
         self.componentType = componentType
@@ -68,7 +59,17 @@ class ConnectComponentWebViewController: UIViewController {
         self.webLocale = webLocale
         self.didFailLoadWithError = didFailLoadWithError
 
-        super.init(nibName: nil, bundle: nil)
+        let config = WKWebViewConfiguration()
+
+        // Allows for custom JS message handlers for JS -> Swift communication
+        config.userContentController = contentController
+
+        // Allows the identity verification flow to display the camera feed
+        // embedded in the web view instead of full screen. Also works for
+        // embedded YouTube videos.
+        config.allowsInlineMediaPlayback = true
+
+        super.init(configuration: config)
 
         // Setup views
         webView.addSubview(activityIndicator)
@@ -79,14 +80,6 @@ class ConnectComponentWebViewController: UIViewController {
 
         // Colors
         updateColors(appearance: componentManager.appearance)
-
-        // Register webView callbacks
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
-        }
-        webView.didLoadWithError = { [weak self] error in
-            self?.didFailLoad(error: error)
-        }
 
         // Register observers
         componentManager.registerChild(self)
@@ -104,19 +97,20 @@ class ConnectComponentWebViewController: UIViewController {
     /// Convenience init for empty init props
     convenience init(componentManager: EmbeddedComponentManager,
                      componentType: ComponentType,
+                     loadContent: Bool,
                      didFailLoadWithError: @escaping (Error) -> Void,
                      // Should only be overridden for tests
                      notificationCenter: NotificationCenter = NotificationCenter.default,
-                     webLocale: Locale = Locale.autoupdatingCurrent,
-                     loadContent: Bool = true) {
+                     webLocale: Locale = Locale.autoupdatingCurrent) {
         self.init(componentManager: componentManager,
                   componentType: componentType,
+                  loadContent: loadContent,
                   fetchInitProps: VoidPayload.init,
                   didFailLoadWithError: didFailLoadWithError,
                   notificationCenter: notificationCenter,
-                  webLocale: webLocale,
-                  loadContent: loadContent)
+                  webLocale: webLocale)
     }
+
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: appearance, traitCollection: traitCollection))))
         updateColors(appearance: appearance)
@@ -126,14 +120,29 @@ class ConnectComponentWebViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func loadView() {
-        view = webView
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         DispatchQueue.main.async {
             self.updateAppearance(appearance: self.componentManager.appearance)
         }
+    }
+
+    override func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
+        super.webView(webView, didFailProvisionalNavigation: navigation, withError: error)
+        didFailLoad(error: error)
+    }
+
+    override func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
+        super.webView(webView, didFail: navigation, withError: error)
+        didFailLoad(error: error)
+    }
+
+    override func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse) async -> WKNavigationResponsePolicy {
+        if let response = navigationResponse.response as? HTTPURLResponse,
+           !(200...299).contains(response.statusCode) {
+            didFailLoad(error: HTTPStatusError(errorCode: response.statusCode))
+        }
+
+        return await super.webView(webView, decidePolicyFor: navigationResponse)
     }
 }
 

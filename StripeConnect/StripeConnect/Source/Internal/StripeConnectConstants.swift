@@ -19,5 +19,5 @@ enum StripeConnectConstants {
         "connect.stripe.com",
     ]
 
-    static let connectJSBaseURL = URL(string: "https://stripe.com/asfdjkfdshjkfdsa")!
+    static let connectJSBaseURL = URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!
 }

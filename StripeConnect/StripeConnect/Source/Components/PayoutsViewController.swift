@@ -13,32 +13,27 @@ import UIKit
 @_spi(PrivateBetaConnect)
 @available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
-    let webVC: ConnectComponentWebViewController
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: PayoutsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
-         loadContent: Bool = true) {
-        weak var weakSelf: PayoutsViewController?
+         loadContent: Bool) {
+        super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .payouts,
-            didFailLoadWithError: { error in
-                guard let weakSelf else { return }
-                weakSelf.delegate?.payouts(weakSelf, didFailLoadWithError: error)
-            },
             loadContent: loadContent
-        )
-        super.init(nibName: nil, bundle: nil)
-        weakSelf = self
+        ) { [weak self] error in
+            guard let self else { return }
+            delegate?.payouts(self, didFailLoadWithError: error)
+        }
+
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    public override func loadView() {
-        view = webVC.view
     }
 }
 

@@ -13,31 +13,27 @@ import UIKit
 @_spi(DashboardOnly)
 @available(iOS 15, *)
 public class PaymentDetailsViewController: UIViewController {
-    let webVC: ConnectComponentWebViewController
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: PaymentDetailsViewControllerDelegate?
 
-    init(componentManager: EmbeddedComponentManager) {
-        weak var weakSelf: PaymentDetailsViewController?
+    init(componentManager: EmbeddedComponentManager,
+         loadContent: Bool) {
+        super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
-            componentType: .paymentDetails
-        ) { error in
-            guard let weakSelf else { return }
-            weakSelf.delegate?.paymentDetails(weakSelf, didFailLoadWithError: error)
+            componentType: .paymentDetails,
+            loadContent: loadContent
+        ) { [weak self] error in
+            guard let self else { return }
+            delegate?.paymentDetails(self, didFailLoadWithError: error)
         }
-        super.init(nibName: nil, bundle: nil)
-        weakSelf = self
 
-        addChild(webVC)
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    public override func loadView() {
-        view = webVC.view
     }
 
     public func setPayment(id: String) {

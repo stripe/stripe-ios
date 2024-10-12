@@ -22,34 +22,30 @@ public class AccountManagementViewController: UIViewController {
         }
     }
 
-    let webVC: ConnectComponentWebViewController
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: AccountManagementViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
-         collectionOptions: AccountCollectionOptions) {
-        weak var weakSelf: AccountManagementViewController?
+         collectionOptions: AccountCollectionOptions,
+         loadContent: Bool) {
+        super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
-            componentType: .accountManagement
+            componentType: .accountManagement,
+            loadContent: loadContent
         ) {
             Props(collectionOptions: collectionOptions)
-        } didFailLoadWithError: { error in
-            guard let weakSelf else { return }
-            weakSelf.delegate?.accountManagement(weakSelf, didFailLoadWithError: error)
+        } didFailLoadWithError: { [weak self] error in
+            guard let self else { return }
+            delegate?.accountManagement(self, didFailLoadWithError: error)
         }
-        super.init(nibName: nil, bundle: nil)
-        weakSelf = self
 
-        addChild(webVC)
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    public override func loadView() {
-        view = webVC.view
     }
 }
 
