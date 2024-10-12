@@ -22,30 +22,26 @@ public class AccountManagementViewController: UIViewController {
         }
     }
 
-    let webView: ConnectComponentWebView
+    let webVC: ConnectComponentWebViewController
 
     public weak var delegate: AccountManagementViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
          collectionOptions: AccountCollectionOptions) {
-        webView = ConnectComponentWebView(
+        weak var weakSelf: AccountManagementViewController?
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .accountManagement
         ) {
             Props(collectionOptions: collectionOptions)
+        } didFailLoadWithError: { error in
+            guard let weakSelf else { return }
+            weakSelf.delegate?.accountManagement(weakSelf, didFailLoadWithError: error)
         }
         super.init(nibName: nil, bundle: nil)
+        weakSelf = self
 
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
-            guard let self else { return }
-            self.delegate?.accountManagement(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-
-        // TODO(MXMOBILE-2796): Send collection options to web view
-
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
-        }
+        addChild(webVC)
     }
 
     required init?(coder: NSCoder) {
@@ -53,7 +49,7 @@ public class AccountManagementViewController: UIViewController {
     }
 
     public override func loadView() {
-        view = webView
+        view = webVC.view
     }
 }
 

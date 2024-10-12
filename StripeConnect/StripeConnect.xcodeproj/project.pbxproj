@@ -43,7 +43,7 @@
 		4161C2792C9DB1CE005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2782C9DB1CE005BD67C /* StripeUICore.framework */; };
 		4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */; };
 		4161C28C2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C28B2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift */; };
-		416E9E742C751A1A00A0B917 /* ConnectComponentWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E732C751A1A00A0B917 /* ConnectComponentWebView.swift */; };
+		416E9E742C751A1A00A0B917 /* ConnectComponentWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E732C751A1A00A0B917 /* ConnectComponentWebViewController.swift */; };
 		416E9E762C751B0500A0B917 /* EmbeddedComponentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E752C751B0500A0B917 /* EmbeddedComponentManager.swift */; };
 		416E9E782C753B7900A0B917 /* ConnectComponentWebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E772C753B7900A0B917 /* ConnectComponentWebViewTests.swift */; };
 		416E9E822C76994C00A0B917 /* WebView+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E812C76994C00A0B917 /* WebView+Tests.swift */; };
@@ -148,7 +148,7 @@
 		4161C2782C9DB1CE005BD67C /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCollectionOptions.swift; sourceTree = "<group>"; };
 		4161C28B2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSetterFunctionCalledMessageHandlerTests.swift; sourceTree = "<group>"; };
-		416E9E732C751A1A00A0B917 /* ConnectComponentWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectComponentWebView.swift; sourceTree = "<group>"; };
+		416E9E732C751A1A00A0B917 /* ConnectComponentWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectComponentWebViewController.swift; sourceTree = "<group>"; };
 		416E9E752C751B0500A0B917 /* EmbeddedComponentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedComponentManager.swift; sourceTree = "<group>"; };
 		416E9E772C753B7900A0B917 /* ConnectComponentWebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectComponentWebViewTests.swift; sourceTree = "<group>"; };
 		416E9E812C76994C00A0B917 /* WebView+Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebView+Tests.swift"; sourceTree = "<group>"; };
@@ -277,7 +277,7 @@
 				413987BD2C63F34B001D375E /* MessageHandlers */,
 				413987C02C63F34B001D375E /* MessageSenders */,
 				410D0FE02C6D31A3009B0E26 /* PopupWebViewController.swift */,
-				416E9E732C751A1A00A0B917 /* ConnectComponentWebView.swift */,
+				416E9E732C751A1A00A0B917 /* ConnectComponentWebViewController.swift */,
 				41BCCFEA2C8B348500797E01 /* AppearanceWrapper.swift */,
 				41BCCFF42C8B5A0A00797E01 /* CustomFontSourceWrapper.swift */,
 			);
@@ -687,7 +687,7 @@
 				E65691272CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift in Sources */,
 				413987DD2C640A29001D375E /* FetchInitParamsMessageHandler.swift in Sources */,
 				413987D42C640848001D375E /* CallSetterWithSerializableValueSender.swift in Sources */,
-				416E9E742C751A1A00A0B917 /* ConnectComponentWebView.swift in Sources */,
+				416E9E742C751A1A00A0B917 /* ConnectComponentWebViewController.swift in Sources */,
 				413D18462C7FB75B0051AA42 /* EmbeddedComponentManager+Appearance.swift in Sources */,
 				41810D6B2C88E71D00F10EB7 /* Appearance+Encoding.swift in Sources */,
 				E6F485FC2C9E360A000D914F /* ConnectJSURLParams.swift in Sources */,

@@ -18,7 +18,7 @@ public class EmbeddedComponentManager {
     let apiClient: STPAPIClient
 
     // Weakly held web views who get notified when appearance updates.
-    private(set) var childWebViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
+    private(set) var childWebViews: NSHashTable<ConnectComponentWebViewController> = .weakObjects()
 
     let fetchClientSecret: () async -> String?
     let fonts: [EmbeddedComponentManager.CustomFontSource]
@@ -119,7 +119,7 @@ public class EmbeddedComponentManager {
     /// Used to keep reference of all web views associated with this component manager.
     /// - Parameters:
     ///   - webView: The web view associated with this component manager
-    func registerChild(_ webView: ConnectComponentWebView) {
+    func registerChild(_ webView: ConnectComponentWebViewController) {
         childWebViews.add(webView)
     }
 }

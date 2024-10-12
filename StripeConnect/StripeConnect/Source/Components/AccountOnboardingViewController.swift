@@ -34,42 +34,39 @@ public class AccountOnboardingViewController: UIViewController {
     /// Delegate that receives callbacks for this component
     public weak var delegate: AccountOnboardingViewControllerDelegate?
 
-    let webView: ConnectComponentWebView
+    let webVC: ConnectComponentWebViewController
 
     init(props: Props,
          componentManager: EmbeddedComponentManager,
          // Test Only
          loadContent: Bool = true
     ) {
-        webView = ConnectComponentWebView(
+        weak var weakSelf: AccountOnboardingViewController?
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .onboarding,
             fetchInitProps: { props },
+            didFailLoadWithError: { error in
+                guard let weakSelf else { return }
+                weakSelf.delegate?.accountOnboarding(weakSelf, didFailLoadWithError: error)
+            },
             loadContent: loadContent
         )
         super.init(nibName: nil, bundle: nil)
+        weakSelf = self
 
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
-            guard let self else { return }
-            self.delegate?.accountOnboarding(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-
-        webView.addMessageHandler(OnExitMessageHandler(didReceiveMessage: { [weak self] in
+        webVC.addMessageHandler(OnExitMessageHandler(didReceiveMessage: { [weak self] in
             guard let self else { return }
             self.delegate?.accountOnboardingDidExit(self)
         }))
 
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
-        }
+        view.addSubview(webVC.view)
+        webVC.view.frame = view.frame
+        addChild(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    public override func loadView() {
-        view = webView
     }
 }
 

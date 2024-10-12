@@ -13,25 +13,24 @@ import UIKit
 @_spi(PrivateBetaConnect)
 @available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
-    let webView: ConnectComponentWebView
+    let webVC: ConnectComponentWebViewController
 
     public weak var delegate: PayoutsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
          loadContent: Bool = true) {
-        webView = ConnectComponentWebView(
+        weak var weakSelf: PayoutsViewController?
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .payouts,
+            didFailLoadWithError: { error in
+                guard let weakSelf else { return }
+                weakSelf.delegate?.payouts(weakSelf, didFailLoadWithError: error)
+            },
             loadContent: loadContent
         )
         super.init(nibName: nil, bundle: nil)
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
-            guard let self else { return }
-            self.delegate?.payouts(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
-        }
+        weakSelf = self
     }
 
     required init?(coder: NSCoder) {
@@ -39,7 +38,7 @@ public class PayoutsViewController: UIViewController {
     }
 
     public override func loadView() {
-        view = webView
+        view = webVC.view
     }
 }
 

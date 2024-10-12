@@ -9,6 +9,10 @@ import SafariServices
 @_spi(STP) import StripeCore
 import WebKit
 
+struct HTTPStatusError: Error, CustomNSError {
+    let errorCode: Int
+}
+
 /**
  Custom implementation of a web view that handles:
  - Camera access
@@ -39,6 +43,8 @@ class ConnectWebView: WKWebView {
 
     /// Closure that executes when `window.close()` is called in JS
     var didClose: ((ConnectWebView) -> Void)?
+
+    var didLoadWithError: ((Error) -> Void)?
 
     /// The instance that will handle opening external urls
     let urlOpener: ApplicationURLOpener
@@ -111,7 +117,7 @@ private extension ConnectWebView {
     }
 
     func showErrorAlert(for error: Error?) {
-        // TODO: MXMOBILE-2491 Log analytic when receiving an eror
+        // TODO: MXMOBILE-2491 Log analytic when receiving an error
         debugPrint(String(describing: error))
 
         let alert = UIAlertController(
@@ -188,6 +194,14 @@ extension ConnectWebView: WKUIDelegate {
 
 @available(iOS 15, *)
 extension ConnectWebView: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
+        didLoadWithError?(error)
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
+        didLoadWithError?(error)
+    }
+
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction
@@ -208,6 +222,10 @@ extension ConnectWebView: WKNavigationDelegate {
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse
     ) async -> WKNavigationResponsePolicy {
+        if let response = navigationResponse.response as? HTTPURLResponse,
+           !(200...299).contains(response.statusCode) {
+            didLoadWithError?(HTTPStatusError(errorCode: response.statusCode))
+        }
 
         // Downloads will typically originate from a non-allow-listed host (e.g. S3)
         // so first check if the response is a download before evaluating the host

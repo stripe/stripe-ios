@@ -1,5 +1,5 @@
 //
-//  ComponentWebView.swift
+//  ConnectComponentWebViewController.swift
 //  StripeConnect
 //
 //  Created by Mel Ludowise on 4/30/24.
@@ -11,7 +11,21 @@ import UIKit
 import WebKit
 
 @available(iOS 15, *)
-class ConnectComponentWebView: ConnectWebView {
+class ConnectComponentWebViewController: UIViewController {
+    private(set) lazy var webView: ConnectWebView = {
+        let config = WKWebViewConfiguration()
+
+        // Allows for custom JS message handlers for JS -> Swift communication
+        config.userContentController = contentController
+
+        // Allows the identity verification flow to display the camera feed
+        // embedded in the web view instead of full screen. Also works for
+        // embedded YouTube videos.
+        config.allowsInlineMediaPlayback = true
+
+        return .init(frame: .zero, configuration: config)
+    }()
+
     /// The embedded component manager that will be used for requests.
     let componentManager: EmbeddedComponentManager
 
@@ -19,7 +33,7 @@ class ConnectComponentWebView: ConnectWebView {
     private let componentType: ComponentType
 
     /// The content controller that registers JS -> Swift message handlers
-    private let contentController: WKUserContentController
+    private let contentController = WKUserContentController()
 
     /// Represents the current locale that should get sent to the webview
     private let webLocale: Locale
@@ -28,6 +42,8 @@ class ConnectComponentWebView: ConnectWebView {
     private let notificationCenter: NotificationCenter
 
     private let setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init()
+
+    private var didFailLoadWithError: (Error) -> Void
 
     let activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator()
@@ -40,6 +56,7 @@ class ConnectComponentWebView: ConnectWebView {
         componentManager: EmbeddedComponentManager,
         componentType: ComponentType,
         fetchInitProps: @escaping () -> InitProps,
+        didFailLoadWithError: @escaping (Error) -> Void,
         // Should only be overridden for tests
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
@@ -49,28 +66,27 @@ class ConnectComponentWebView: ConnectWebView {
         self.componentType = componentType
         self.notificationCenter = notificationCenter
         self.webLocale = webLocale
-        contentController = WKUserContentController()
-        let config = WKWebViewConfiguration()
+        self.didFailLoadWithError = didFailLoadWithError
 
-        // Allows for custom JS message handlers for JS -> Swift communication
-        config.userContentController = contentController
-
-        // Allows the identity verification flow to display the camera feed
-        // embedded in the web view instead of full screen. Also works for
-        // embedded YouTube videos.
-        config.allowsInlineMediaPlayback = true
-
-        super.init(frame: .zero, configuration: config)
+        super.init(nibName: nil, bundle: nil)
 
         // Setup views
-        self.addSubview(activityIndicator)
+        webView.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: webView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: webView.centerYAnchor),
         ])
 
         // Colors
         updateColors(appearance: componentManager.appearance)
+
+        // Register webView callbacks
+        webView.presentPopup = { [weak self] vc in
+            self?.present(vc, animated: true)
+        }
+        webView.didLoadWithError = { [weak self] error in
+            self?.didFailLoad(error: error)
+        }
 
         // Register observers
         componentManager.registerChild(self)
@@ -81,13 +97,14 @@ class ConnectComponentWebView: ConnectWebView {
         if loadContent {
             activityIndicator.startAnimating()
             let url = ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url
-            load(.init(url: url))
+            webView.load(.init(url: url))
         }
     }
 
     /// Convenience init for empty init props
     convenience init(componentManager: EmbeddedComponentManager,
                      componentType: ComponentType,
+                     didFailLoadWithError: @escaping (Error) -> Void,
                      // Should only be overridden for tests
                      notificationCenter: NotificationCenter = NotificationCenter.default,
                      webLocale: Locale = Locale.autoupdatingCurrent,
@@ -95,6 +112,7 @@ class ConnectComponentWebView: ConnectWebView {
         self.init(componentManager: componentManager,
                   componentType: componentType,
                   fetchInitProps: VoidPayload.init,
+                  didFailLoadWithError: didFailLoadWithError,
                   notificationCenter: notificationCenter,
                   webLocale: webLocale,
                   loadContent: loadContent)
@@ -108,6 +126,10 @@ class ConnectComponentWebView: ConnectWebView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    public override func loadView() {
+        view = webView
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         DispatchQueue.main.async {
             self.updateAppearance(appearance: self.componentManager.appearance)
@@ -118,7 +140,7 @@ class ConnectComponentWebView: ConnectWebView {
 // MARK: - Internal
 
 @available(iOS 15, *)
-extension ConnectComponentWebView {
+extension ConnectComponentWebViewController {
     /// Convenience method to add `ScriptMessageHandler`
     func addMessageHandler<Payload>(_ messageHandler: ScriptMessageHandler<Payload>,
                                     contentWorld: WKContentWorld = .page) {
@@ -138,7 +160,7 @@ extension ConnectComponentWebView {
     /// Convenience method to send messages to the webview.
     func sendMessage(_ sender: any MessageSender) {
         if let message = sender.javascriptMessage {
-            evaluateJavaScript(message)
+            webView.evaluateJavaScript(message)
         }
     }
 }
@@ -146,7 +168,7 @@ extension ConnectComponentWebView {
 // MARK: - Private
 
 @available(iOS 15, *)
-private extension ConnectComponentWebView {
+private extension ConnectComponentWebViewController {
     /// Registers JS -> Swift message handlers
     func addMessageHandlers<InitProps: Encodable>(
         fetchInitProps: @escaping () -> InitProps
@@ -166,6 +188,9 @@ private extension ConnectComponentWebView {
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
         addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps))
+        addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
+            self?.didFailLoad(error: value.error.connectEmbedError)
+        })
         addMessageHandler(DebugMessageHandler())
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
@@ -192,8 +217,13 @@ private extension ConnectComponentWebView {
     }
 
     func updateColors(appearance: Appearance) {
-        backgroundColor = appearance.colors.background
-        isOpaque = backgroundColor == nil
+        webView.backgroundColor = appearance.colors.background
+        webView.isOpaque = webView.backgroundColor == nil
         activityIndicator.tintColor = appearance.colors.loadingIndicatorColor
+    }
+
+    func didFailLoad(error: Error) {
+        didFailLoadWithError(error)
+        activityIndicator.stopAnimating()
     }
 }

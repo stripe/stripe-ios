@@ -19,31 +19,31 @@ public class NotificationBannerViewController: UIViewController {
         }
     }
 
-    let webView: ConnectComponentWebView
+    let webVC: ConnectComponentWebViewController
 
     public weak var delegate: NotificationBannerViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
          collectionOptions: AccountCollectionOptions) {
-        webView = ConnectComponentWebView(
+        weak var weakSelf: NotificationBannerViewController?
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .notificationBanner
         ) {
             Props(collectionOptions: collectionOptions)
+        } didFailLoadWithError: { error in
+            guard let weakSelf else { return }
+            weakSelf.delegate?.notificationBanner(weakSelf, didFailLoadWithError: error)
         }
         super.init(nibName: nil, bundle: nil)
+        weakSelf = self
 
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
-            guard let self else { return }
-            self.delegate?.notificationBanner(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-        webView.addMessageHandler(OnNotificationsChangeHandler { [weak self] value in
+        webVC.addMessageHandler(OnNotificationsChangeHandler { [weak self] value in
             guard let self else { return }
             self.delegate?.notificationBanner(self, didChangeWithTotal: value.total, andActionRequired: value.actionRequired)
         })
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
-        }
+
+        addChild(webVC)
     }
 
     required init?(coder: NSCoder) {
@@ -51,7 +51,7 @@ public class NotificationBannerViewController: UIViewController {
     }
 
     public override func loadView() {
-        view = webView
+        view = webVC.view
     }
 }
 

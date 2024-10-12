@@ -13,23 +13,23 @@ import UIKit
 @_spi(DashboardOnly)
 @available(iOS 15, *)
 public class PaymentDetailsViewController: UIViewController {
-    let webView: ConnectComponentWebView
+    let webVC: ConnectComponentWebViewController
 
     public weak var delegate: PaymentDetailsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager) {
-        webView = ConnectComponentWebView(
+        weak var weakSelf: PaymentDetailsViewController?
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .paymentDetails
-        )
-        super.init(nibName: nil, bundle: nil)
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
-            guard let self else { return }
-            self.delegate?.paymentDetails(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
+        ) { error in
+            guard let weakSelf else { return }
+            weakSelf.delegate?.paymentDetails(weakSelf, didFailLoadWithError: error)
         }
+        super.init(nibName: nil, bundle: nil)
+        weakSelf = self
+
+        addChild(webVC)
     }
 
     required init?(coder: NSCoder) {
@@ -37,11 +37,11 @@ public class PaymentDetailsViewController: UIViewController {
     }
 
     public override func loadView() {
-        view = webView
+        view = webVC.view
     }
 
     public func setPayment(id: String) {
-        webView.sendMessage(CallSetterWithSerializableValueSender(payload: .init(
+        webVC.sendMessage(CallSetterWithSerializableValueSender(payload: .init(
             setter: "setPayment",
             value: id
         )))
