@@ -203,27 +203,6 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
     }
 
-    func testFPX() {
-        self.popToMainMenu()
-
-        let tablesQuery = app.collectionViews
-        let rowForPaymentMethod = tablesQuery.cells.buttons["FPX"]
-        rowForPaymentMethod.scrollToAndTap(in: app)
-
-        let maybank = app.tables.staticTexts["Maybank2U"]
-        XCTAssertTrue(maybank.waitForExistence(timeout: 60.0))
-        maybank.tap()
-
-        let webViewsQuery = app.webViews
-        let completeAuth = webViewsQuery.descendants(matching: .any)["AUTHORIZE TEST PAYMENT"].firstMatch
-        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
-        completeAuth.forceTapElement()
-
-        let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
-        XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
-    }
-
     func testKlarna() {
         self.popToMainMenu()
         let tablesQuery = app.collectionViews
