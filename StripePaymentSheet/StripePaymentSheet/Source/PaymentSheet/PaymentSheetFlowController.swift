@@ -258,7 +258,7 @@ extension PaymentSheet {
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
             STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
-            let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: configuration)
+            let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .flowController, configuration: configuration)
             AnalyticsHelper.shared.generateSessionID()
             PaymentSheetLoader.load(
                 mode: mode,

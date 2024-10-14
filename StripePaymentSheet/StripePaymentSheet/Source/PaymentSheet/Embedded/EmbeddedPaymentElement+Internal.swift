@@ -10,6 +10,7 @@ extension EmbeddedPaymentElement {
     static func makeView(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
@@ -36,7 +37,8 @@ extension EmbeddedPaymentElement {
         let mandateProvider = VerticalListMandateProvider(
             configuration: configuration,
             elementsSession: loadResult.elementsSession,
-            intent: loadResult.intent
+            intent: loadResult.intent,
+            analyticsHelper: analyticsHelper
         )
         return EmbeddedPaymentMethodsView(
             initialSelection: initialSelection,

@@ -62,9 +62,9 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(porter) Should we create a new analytics helper specific to embedded? Figured this out when we do analytics.
-        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
         AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
 
         let loadResult = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
@@ -74,7 +74,8 @@ public final class EmbeddedPaymentElement {
         )
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: configuration,
-            loadResult: loadResult
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         return embeddedPaymentElement
     }
@@ -168,16 +169,20 @@ public final class EmbeddedPaymentElement {
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
     internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private init(
         configuration: Configuration,
-        loadResult: PaymentSheetLoader.LoadResult
+        loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        delegate: EmbeddedPaymentElementDelegate? = nil
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
-            loadResult: loadResult
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         self.containerView = EmbeddedPaymentElementContainerView(
             embeddedPaymentMethodsView: embeddedPaymentMethodsView
@@ -187,8 +192,16 @@ public final class EmbeddedPaymentElement {
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
-        self.embeddedPaymentMethodsView.delegate = self
+        self.analyticsHelper = analyticsHelper
+        analyticsHelper.logInitialized()
+        self.embeddedPaymentMethodsView.delegate = self
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
+    @_spi(STP) public static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
 }
 
 // MARK: - Completion-block based APIs
