@@ -88,10 +88,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let shouldShowLinkInList: Bool
     /// Whether or not we are in the special case where we don't show the list and show the form directly
     var shouldDisplayFormOnly: Bool {
-        return paymentMethodTypes.count == 1 &&
-               savedPaymentMethods.isEmpty &&
-               !shouldShowApplePayInList &&
-               !shouldShowLinkInList &&
+        return paymentMethodTypes.count == 1
+               && savedPaymentMethods.isEmpty
+               && !shouldShowApplePayInList
+               && !shouldShowLinkInList &&
                (paymentMethodTypes.first.map { shouldDisplayForm(for: $0) } ?? false)
     }
     /// The content offset % of the payment method list before we transitioned away from it
