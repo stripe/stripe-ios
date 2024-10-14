@@ -62,6 +62,10 @@ import UIKit
         _ = additionalInfoSet.insert(info)
     }
 
+    public func clearAdditionalInfo() {
+        additionalInfoSet.removeAll()
+    }
+
     public static var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
             return true
