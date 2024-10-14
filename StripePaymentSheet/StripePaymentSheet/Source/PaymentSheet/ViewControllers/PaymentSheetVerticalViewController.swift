@@ -174,7 +174,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if let paymentMethodFormViewController {
             remove(childViewController: paymentMethodFormViewController)
         }
-        
+
         // If we'd only show one PM in the vertical list, and it collects user input, display the form instead of the payment method list.
         if shouldDisplayFormOnly, let paymentMethodType = loadResult.paymentMethodTypes.first {
             let formVC = makeFormVC(paymentMethodType: paymentMethodType)
@@ -185,7 +185,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 return // Early return since we're displaying the form
             }
         }
-        
+
         // Otherwise, we're using the list
         let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
         self.paymentMethodListViewController = paymentMethodListViewController
@@ -202,7 +202,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             // Otherwise, show the list of PMs
             add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
         }
-        
+
         updateUI()
     }
 
@@ -328,7 +328,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 case .link:
                     return isFlowController ? .link : nil // Only default to Link in flow controller mode
                 case .stripeId, nil:
-                    return savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
+                    if let savedSelection = savedPaymentMethods.first {
+                        return .saved(paymentMethod: savedSelection)
+                    }
+                    // If we only have one PM in the list with no wallet options, select it
+                    if shouldDisplayFormOnly, makeWalletHeaderView() == nil, let paymentMethodType = loadResult.paymentMethodTypes.first {
+                        return .new(paymentMethodType: paymentMethodType)
+                    }
+
+                    return nil
                 }
             }
         }()
