@@ -88,10 +88,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let shouldShowLinkInList: Bool
     /// Whether or not we are in the special case where we don't show the list and show the form directly
     var shouldDisplayFormOnly: Bool {
-        return paymentMethodTypes.count == 1
-        && savedPaymentMethods.isEmpty
-        && !shouldShowApplePayInList
-        && !shouldShowLinkInList
+        return paymentMethodTypes.count == 1 &&
+               savedPaymentMethods.isEmpty &&
+               !shouldShowApplePayInList &&
+               !shouldShowLinkInList &&
+               (paymentMethodTypes.first.map { shouldDisplayForm(for: $0) } ?? false)
     }
     /// The content offset % of the payment method list before we transitioned away from it
     var paymentMethodListContentOffsetPercentage: CGFloat?
@@ -174,35 +175,29 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if let paymentMethodFormViewController {
             remove(childViewController: paymentMethodFormViewController)
         }
-
-        // If we'd only show one PM in the vertical list, and it collects user input, display the form instead of the payment method list.
         if shouldDisplayFormOnly, let paymentMethodType = loadResult.paymentMethodTypes.first {
+            // If we'd only show one PM in the vertical list, display the form instead of the payment method list.
             let formVC = makeFormVC(paymentMethodType: paymentMethodType)
-            if formVC.form.collectsUserInput {
-                self.paymentMethodFormViewController = formVC
-                add(childViewController: formVC, containerView: paymentContainerView)
-                updateUI()
-                return // Early return since we're displaying the form
-            }
-        }
-
-        // Otherwise, we're using the list
-        let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
-        self.paymentMethodListViewController = paymentMethodListViewController
-        if case let .new(confirmParams: confirmParams) = previousPaymentOption,
-           paymentMethodTypes.contains(confirmParams.paymentMethodType),
-           shouldDisplayForm(for: confirmParams.paymentMethodType)
-        {
-            // If the previous customer input was for a PM form and it collects user input, display the form on top of the list
-            let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
             self.paymentMethodFormViewController = formVC
             add(childViewController: formVC, containerView: paymentContainerView)
-            navigationBar.setStyle(.back(showAdditionalButton: false))
         } else {
-            // Otherwise, show the list of PMs
-            add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
+            // Otherwise, we're using the list
+            let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
+            self.paymentMethodListViewController = paymentMethodListViewController
+            if case let .new(confirmParams: confirmParams) = previousPaymentOption,
+               paymentMethodTypes.contains(confirmParams.paymentMethodType),
+               shouldDisplayForm(for: confirmParams.paymentMethodType)
+            {
+                // If the previous customer input was for a PM form and it collects user input, display the form on top of the list
+                let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
+                self.paymentMethodFormViewController = formVC
+                add(childViewController: formVC, containerView: paymentContainerView)
+                navigationBar.setStyle(.back(showAdditionalButton: false))
+            } else {
+                // Otherwise, show the list of PMs
+                add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
+            }
         }
-
         updateUI()
     }
 
@@ -331,8 +326,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     if let savedSelection = savedPaymentMethods.first {
                         return .saved(paymentMethod: savedSelection)
                     }
-                    // If we only have one PM in the list with no wallet options or saved payment methods then select it
-                    if shouldDisplayFormOnly, makeWalletHeaderView() == nil, let paymentMethodType = loadResult.paymentMethodTypes.first {
+                    // If we have only one payment method type, with no wallet options, no saved payment methods, and neither Link nor Apple Pay are in the list, auto-select the lone payment method type.
+                    if loadResult.paymentMethodTypes.count == 1,
+                       !shouldShowLinkInList,
+                       !shouldShowApplePayInList,
+                       makeWalletHeaderView() == nil,
+                       let paymentMethodType = loadResult.paymentMethodTypes.first {
                         return .new(paymentMethodType: paymentMethodType)
                     }
 
