@@ -91,8 +91,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         return paymentMethodTypes.count == 1
                && savedPaymentMethods.isEmpty
                && !shouldShowApplePayInList
-               && !shouldShowLinkInList &&
-               (paymentMethodTypes.first.map { shouldDisplayForm(for: $0) } ?? false)
+               && !shouldShowLinkInList
+               && (paymentMethodTypes.first.map { shouldDisplayForm(for: $0) } ?? false)
     }
     /// The content offset % of the payment method list before we transitioned away from it
     var paymentMethodListContentOffsetPercentage: CGFloat?
