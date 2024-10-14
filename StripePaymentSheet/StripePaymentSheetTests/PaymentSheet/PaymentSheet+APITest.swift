@@ -81,7 +81,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 PaymentSheetLoader.load(
                     mode: .paymentIntentClientSecret(clientSecret),
                     configuration: self.configuration,
-                    analyticsHelper: .init(isCustom: false, configuration: self.configuration),
+                    analyticsHelper: .init(integrationShape: .complete, configuration: self.configuration),
                     integrationShape: .complete
                 ) { result in
                     switch result {
@@ -165,7 +165,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
-            analyticsHelper: .init(isCustom: false, configuration: configuration),
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
             integrationShape: .complete
         ) { result in
             switch result {
@@ -232,7 +232,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
-            analyticsHelper: .init(isCustom: false, configuration: configuration),
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
             integrationShape: .complete
         ) { result in
             switch result {
@@ -290,7 +290,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             PaymentSheetLoader.load(
                 mode: .paymentIntentClientSecret(clientSecret),
                 configuration: self.configuration,
-                analyticsHelper: .init(isCustom: false, configuration: self.configuration),
+                analyticsHelper: .init(integrationShape: .complete, configuration: self.configuration),
                 integrationShape: .complete
             ) { result in
                 guard case .success(let loadResult) = result else {

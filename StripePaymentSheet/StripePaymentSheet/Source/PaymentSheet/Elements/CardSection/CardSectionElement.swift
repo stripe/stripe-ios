@@ -35,7 +35,7 @@ final class CardSectionElement: ContainerElement {
         #endif
     }()
     let cardSection: SectionElement
-    let analyticsHelper: PaymentSheetAnalyticsHelper
+    let analyticsHelper: PaymentSheetAnalyticsHelper?
 
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
@@ -68,7 +68,7 @@ final class CardSectionElement: ContainerElement {
         cardBrandChoiceEligible: Bool = false,
         hostedSurface: HostedSurface,
         theme: ElementsAppearance = .default,
-        analyticsHelper: PaymentSheetAnalyticsHelper,
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
         cardBrandFilter: CardBrandFilter = .default
     ) {
         self.hostedSurface = hostedSurface
@@ -193,20 +193,20 @@ final class CardSectionElement: ContainerElement {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
             }
         }
-        
+
         // Send an analytic if we are disallowing a card brand
         if case .invalid(let error, _) = panElement.validationState,
            let specificError = error as? TextFieldElement.PANConfiguration.Error,
            case .disallowedBrand(let brand) = specificError,
            lastDisallowedCardBrandLogged != brand {
-            
+
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
                 event: .paymentSheetDisallowedCardBrand,
                 params: ["brand": STPCardBrandUtilities.apiValue(from: brand)]
             )
             lastDisallowedCardBrandLogged = brand
         }
-        
+
         delegate?.didUpdate(element: self)
     }
 
