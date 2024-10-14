@@ -331,7 +331,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     if let savedSelection = savedPaymentMethods.first {
                         return .saved(paymentMethod: savedSelection)
                     }
-                    // If we only have one PM in the list with no wallet options, select it
+                    // If we only have one PM in the list with no wallet options or saved payment methods then select it
                     if shouldDisplayFormOnly, makeWalletHeaderView() == nil, let paymentMethodType = loadResult.paymentMethodTypes.first {
                         return .new(paymentMethodType: paymentMethodType)
                     }
