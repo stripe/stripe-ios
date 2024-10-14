@@ -65,32 +65,41 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         )
         verify(makeSUT(loadResult: loadResult2, isApplePayEnabled: false, isFlowController: false), identifier: "one_non_card_pm")
 
-        // 3. No saved payment methods and we have multiple PMs
+        // 3. No saved payment methods and we have only one payment method and it's not a card with Apple Pay enabled
         let loadResult3 = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.SEPADebit]),
+            elementsSession: ._testValue(paymentMethodTypes: ["sepa_debit"]),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.SEPADebit)]
+        )
+        verify(makeSUT(loadResult: loadResult3, isApplePayEnabled: true, isFlowController: false), identifier: "one_non_card_pm_apple_pay_enabled")
+
+        // 4. No saved payment methods and we have multiple PMs
+        let loadResult4 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit]),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "sepa_debit"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.SEPADebit)]
         )
-        verify(makeSUT(loadResult: loadResult3, isApplePayEnabled: false, isFlowController: false), identifier: "multiple_pms")
+        verify(makeSUT(loadResult: loadResult4, isApplePayEnabled: false, isFlowController: false), identifier: "multiple_pms")
 
-        // 4. No saved payment methods and we have one PM and Link and Apple Pay in FlowController, so they're in the list
-        let loadResult4 = PaymentSheetLoader.LoadResult(
+        // 5. No saved payment methods and we have one PM and Link and Apple Pay in FlowController, so they're in the list
+        let loadResult5 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)]
         )
-        verify(makeSUT(loadResult: loadResult4, isApplePayEnabled: true, isFlowController: true), identifier: "card_link_applepay_flowcontroller")
+        verify(makeSUT(loadResult: loadResult5, isApplePayEnabled: true, isFlowController: true), identifier: "card_link_applepay_flowcontroller")
 
-        // 5. No saved payment methods and we have one PM and Apple Pay in FlowController, so it's in the list
-        let loadResult5 = PaymentSheetLoader.LoadResult(
+        // 6. No saved payment methods and we have one PM and Apple Pay in FlowController, so it's in the list
+        let loadResult6 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)]
         )
-        verify(makeSUT(loadResult: loadResult5, isApplePayEnabled: true, isFlowController: true), identifier: "card_applepay_flowcontroller")
+        verify(makeSUT(loadResult: loadResult6, isApplePayEnabled: true, isFlowController: true), identifier: "card_applepay_flowcontroller")
     }
 
     // Test when we display the form directly upon initialization instead of the payment method list
