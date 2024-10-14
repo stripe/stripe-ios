@@ -174,29 +174,35 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if let paymentMethodFormViewController {
             remove(childViewController: paymentMethodFormViewController)
         }
+        
+        // If we'd only show one PM in the vertical list, and it collects user input, display the form instead of the payment method list.
         if shouldDisplayFormOnly, let paymentMethodType = loadResult.paymentMethodTypes.first {
-            // If we'd only show one PM in the vertical list, display the form instead of the payment method list.
             let formVC = makeFormVC(paymentMethodType: paymentMethodType)
-            self.paymentMethodFormViewController = formVC
-            add(childViewController: formVC, containerView: paymentContainerView)
-        } else {
-            // Otherwise, we're using the list
-            let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
-            self.paymentMethodListViewController = paymentMethodListViewController
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption,
-               paymentMethodTypes.contains(confirmParams.paymentMethodType),
-               shouldDisplayForm(for: confirmParams.paymentMethodType)
-            {
-                // If the previous customer input was for a PM form and it collects user input, display the form on top of the list
-                let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
+            if formVC.form.collectsUserInput {
                 self.paymentMethodFormViewController = formVC
                 add(childViewController: formVC, containerView: paymentContainerView)
-                navigationBar.setStyle(.back(showAdditionalButton: false))
-            } else {
-                // Otherwise, show the list of PMs
-                add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
+                updateUI()
+                return // Early return since we're displaying the form
             }
         }
+        
+        // Otherwise, we're using the list
+        let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
+        self.paymentMethodListViewController = paymentMethodListViewController
+        if case let .new(confirmParams: confirmParams) = previousPaymentOption,
+           paymentMethodTypes.contains(confirmParams.paymentMethodType),
+           shouldDisplayForm(for: confirmParams.paymentMethodType)
+        {
+            // If the previous customer input was for a PM form and it collects user input, display the form on top of the list
+            let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
+            self.paymentMethodFormViewController = formVC
+            add(childViewController: formVC, containerView: paymentContainerView)
+            navigationBar.setStyle(.back(showAdditionalButton: false))
+        } else {
+            // Otherwise, show the list of PMs
+            add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
+        }
+        
         updateUI()
     }
 
