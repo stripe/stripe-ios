@@ -44,7 +44,7 @@ import Foundation
 
     /// Returns the BCP 47(-ish) language tag representing the locale.
     ///
-    /// The language tag is expected to be well-formed as log as the locale identifier contains a
+    /// The language tag is expected to be well-formed as long as the locale identifier contains a
     /// valid language code. For example:
     ///
     /// ```
