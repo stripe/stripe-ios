@@ -176,7 +176,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             remove(childViewController: paymentMethodFormViewController)
         }
         if shouldDisplayFormOnly, let paymentMethodType = loadResult.paymentMethodTypes.first {
-            // If we'd only show one PM in the vertical list, display the form instead of the payment method list.
+            // If we'd only show one PM in the vertical list, and it collects user input, display the form instead of the payment method list.
             let formVC = makeFormVC(paymentMethodType: paymentMethodType)
             self.paymentMethodFormViewController = formVC
             add(childViewController: formVC, containerView: paymentContainerView)
