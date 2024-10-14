@@ -12,10 +12,13 @@ import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
 @_spi(EmbeddedPaymentElementPrivateBeta)
+@MainActor
 public class EmbeddedPaymentElement {
 
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
-    public let view: UIView
+    public var view: UIView {
+        return embeddedPaymentMethodsView
+    }
 
     /// A view controller to present on.
     public var presentingViewController: UIViewController?
@@ -47,8 +50,6 @@ public class EmbeddedPaymentElement {
         return embeddedPaymentMethodsView.displayData
     }
 
-    private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
-
     /// An asynchronous failable initializer
     /// This loads the Customer's payment methods, their default payment method, etc.
     /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the checkout.
@@ -63,52 +64,16 @@ public class EmbeddedPaymentElement {
         let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
         AnalyticsHelper.shared.generateSessionID()
 
-        let loadResult = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfiguration),
-                                                           configuration: configuration,
-                                                           analyticsHelper: analyticsHelper,
-                                                           integrationShape: .embedded)
-        let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
-        let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
-        let savedPaymentMethodAccessoryType = await RowButton.RightAccessoryButton.getAccessoryButtonType(
-            savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
-            isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
-            isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
-            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        let loadResult = try await PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfiguration),
+            configuration: configuration,
+            analyticsHelper: analyticsHelper,
+            integrationShape: .embedded
         )
-
-        let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
-            // Default to the customer's default or the first saved payment method, if any
-            let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
-            switch customerDefault {
-            case .applePay:
-                return .applePay
-            case .link:
-                return .link
-            case .stripeId, nil:
-                return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
-            }
-        }()
-
-        let embeddedPaymentMethodsView = await EmbeddedPaymentMethodsView(
-            initialSelection: initialSelection,
-            paymentMethodTypes: loadResult.paymentMethodTypes,
-            savedPaymentMethod: loadResult.savedPaymentMethods.first,
-            appearance: configuration.appearance,
-            shouldShowApplePay: shouldShowApplePay,
-            shouldShowLink: shouldShowLink,
-            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            mandateProvider: VerticalListMandateProvider(configuration: configuration,
-                                                         elementsSession: loadResult.elementsSession,
-                                                         intent: .deferredIntent(intentConfig: intentConfiguration)),
-            shouldShowMandate: configuration.embeddedViewDisplaysMandateText
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(
+            configuration: configuration,
+            loadResult: loadResult
         )
-
-        let embeddedPaymentElement: EmbeddedPaymentElement = .init(view: embeddedPaymentMethodsView, configuration: configuration)
-        await MainActor.run {
-            embeddedPaymentMethodsView.delegate = embeddedPaymentElement
-        }
-
         return embeddedPaymentElement
     }
 
@@ -144,11 +109,23 @@ public class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
-    private init(view: EmbeddedPaymentMethodsView, configuration: Configuration, delegate: EmbeddedPaymentElementDelegate? = nil) {
-        self.view = view
-        self.embeddedPaymentMethodsView = view
-        self.delegate = delegate
+    private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
+
+    private let loadResult: PaymentSheetLoader.LoadResult
+
+    private init(
+        configuration: Configuration,
+        loadResult: PaymentSheetLoader.LoadResult,
+        delegate: EmbeddedPaymentElementDelegate? = nil
+    ) {
         self.configuration = configuration
+        self.loadResult = loadResult
+        self.delegate = delegate
+        self.embeddedPaymentMethodsView = Self.makeView(
+            configuration: configuration,
+            loadResult: loadResult
+        )
+        self.embeddedPaymentMethodsView.delegate = self
     }
 }
 
@@ -227,14 +204,4 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
-}
-
-extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
-    func heightDidChange() {
-        delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
-    }
-
-    func selectionDidUpdate() {
-        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
-    }
 }
