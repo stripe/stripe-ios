@@ -33,7 +33,7 @@ class AccountOnboardingViewControllerTests: XCTestCase {
             XCTAssertEqual(vc, onboardingVC)
             expectationDidExit.fulfill()
         }
-        try await vc.webView.evaluateSetOnExit()
+        try await vc.webVC.webView.evaluateSetOnExit()
         await fulfillment(of: [expectationDidExit], timeout: TestHelpers.defaultTimeout)
 
         let expectationDidFail = XCTestExpectation(description: "didFail called")
@@ -43,7 +43,7 @@ class AccountOnboardingViewControllerTests: XCTestCase {
             XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
             expectationDidFail.fulfill()
         }
-        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         await fulfillment(of: [expectationDidFail], timeout: TestHelpers.defaultTimeout)
     }
 
@@ -62,9 +62,9 @@ class AccountOnboardingViewControllerTests: XCTestCase {
             }()
         )
 
-        try await vc.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
-                                                   json: "{}",
-                                                   expectedResponse: """
+        try await vc.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                            json: "{}",
+                                                            expectedResponse: """
             {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include"},"setFullTermsOfServiceUrl":"https:\\/\\/fullTermsOfServiceUrl.com","setPrivacyPolicyUrl":"https:\\/\\/privacyPolicyUrl.com","setRecipientTermsOfServiceUrl":"https:\\/\\/recipientTermsOfServiceUrl.com","setSkipTermsOfServiceCollection":true}
             """)
     }

@@ -29,7 +29,7 @@ class PaymentDetailsViewControllerTests: XCTestCase {
         }
         vc.delegate = paymentDetailsDelegate
 
-        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
 
         await fulfillment(of: [expectationDidFail], timeout: TestHelpers.defaultTimeout)
     }
@@ -40,7 +40,7 @@ class PaymentDetailsViewControllerTests: XCTestCase {
             return nil
         })
         let vc = componentManager.createPaymentDetailsViewController()
-        let expectation = try vc.webView.expectationForMessageReceived(sender: CallSetterWithSerializableValueSender(payload: .init(
+        let expectation = try vc.webVC.webView.expectationForMessageReceived(sender: CallSetterWithSerializableValueSender(payload: .init(
             setter: "setPayment",
             value: "pi_123"
         )))
