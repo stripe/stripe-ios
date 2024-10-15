@@ -10,10 +10,6 @@
 import UIKit
 import WebKit
 
-struct HTTPStatusError: Error, CustomNSError {
-    let errorCode: Int
-}
-
 @available(iOS 15, *)
 class ConnectComponentWebViewController: ConnectWebViewController {
 
@@ -111,14 +107,11 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                   webLocale: webLocale)
     }
 
-    func updateAppearance(appearance: Appearance) {
-        sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: appearance, traitCollection: traitCollection))))
-        updateColors(appearance: appearance)
-    }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - UIViewController
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         DispatchQueue.main.async {
@@ -126,20 +119,25 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         }
     }
 
+    // MARK: - ConnectWebViewController
+
     override func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
         super.webView(webView, didFailProvisionalNavigation: navigation, withError: error)
         didFailLoad(error: error)
+        // TODO: MXMOBILE-2491 log error
     }
 
     override func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
         super.webView(webView, didFail: navigation, withError: error)
         didFailLoad(error: error)
+        // TODO: MXMOBILE-2491 log error
     }
 
     override func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse) async -> WKNavigationResponsePolicy {
         if let response = navigationResponse.response as? HTTPURLResponse,
-           !(200...299).contains(response.statusCode) {
+           response.hasErrorStatus {
             didFailLoad(error: HTTPStatusError(errorCode: response.statusCode))
+            // TODO: MXMOBILE-2491 log error
         }
 
         return await super.webView(webView, decidePolicyFor: navigationResponse)
@@ -171,6 +169,11 @@ extension ConnectComponentWebViewController {
         if let message = sender.javascriptMessage {
             webView.evaluateJavaScript(message)
         }
+    }
+
+    func updateAppearance(appearance: Appearance) {
+        sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: appearance, traitCollection: traitCollection))))
+        updateColors(appearance: appearance)
     }
 }
 

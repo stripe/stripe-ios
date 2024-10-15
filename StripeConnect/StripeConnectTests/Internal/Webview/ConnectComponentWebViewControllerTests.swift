@@ -9,6 +9,7 @@ import Foundation
 import SafariServices
 @_spi(PrivateBetaConnect) @testable import StripeConnect
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import WebKit
 import XCTest
 
@@ -24,7 +25,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
-                                                      didFailLoadWithError: {_ in })
+                                                      didFailLoadWithError: { _ in })
 
         try await webVC.webView.evaluateMessageWithReply(name: "fetchClientSecret",
                                                          json: "{}",
@@ -38,7 +39,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
-                                                      didFailLoadWithError: {_ in },
+                                                      didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitParams",
@@ -52,7 +53,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
-                                                      didFailLoadWithError: {_ in },
+                                                      didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.spacingUnit = 5
@@ -78,7 +79,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                         componentType: .payouts,
                                                         loadContent: false,
-                                                        didFailLoadWithError: {_ in },
+                                                        didFailLoadWithError: { _ in },
                                                         webLocale: Locale(identifier: "fr_FR"))
 
         webVC.view.triggerTraitCollectionChange(style: .dark)
@@ -97,7 +98,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
-                                                      didFailLoadWithError: {_ in },
+                                                      didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
@@ -115,7 +116,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
-                                                      didFailLoadWithError: {_ in },
+                                                      didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
         let expectation = try webVC.webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(
@@ -136,7 +137,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
             componentManager: componentManager,
             componentType: .payouts,
             loadContent: false,
-            didFailLoadWithError: {_ in },
+            didFailLoadWithError: { _ in },
             notificationCenter: notificationCenter,
             webLocale: Locale(identifier: "fr_FR"))
 
@@ -145,16 +146,6 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
-    }
-
-    func componentManagerAssertingOnFetch(appearance: Appearance = .default, fonts: [EmbeddedComponentManager.CustomFontSource] = []) -> EmbeddedComponentManager {
-        EmbeddedComponentManager(apiClient: .init(publishableKey: "test"),
-                                 appearance: appearance,
-                                 fonts: fonts,
-                                 fetchClientSecret: {
-            XCTFail("Client secret should not be retrieved in this test")
-            return ""
-        })
     }
 
     @MainActor
@@ -166,7 +157,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
-                                                      didFailLoadWithError: {_ in },
+                                                      didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitParams",
@@ -177,6 +168,22 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testLoaderStart() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      didFailLoadWithError: { _ in })
+        // Mock that loading indicator is animating
+        webVC.activityIndicator.startAnimating()
+
+        try await webVC.webView.evaluateOnLoaderStart(elementTagName: "payouts")
+
+        // Loading indicator should stop
+        XCTAssertFalse(webVC.activityIndicator.isAnimating)
+    }
+
+    @MainActor
     func testJSOnLoadError() async throws {
         var error: Error?
         let componentManager = componentManagerAssertingOnFetch()
@@ -184,9 +191,13 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       componentType: .payouts,
                                                       loadContent: false,
                                                       didFailLoadWithError: { error = $0 })
+        // Mock that loading indicator is animating
+        webVC.activityIndicator.startAnimating()
         try await webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         XCTAssertEqual((error as? EmbeddedComponentError)?.type, .rateLimitError)
         XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
+        // Loading indicator should stop
+        XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
 
     func testDidFailProvisionalNavigationTriggersLoadError() {
@@ -196,6 +207,8 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       componentType: .payouts,
                                                       loadContent: false,
                                                       didFailLoadWithError: { error = $0 })
+        // Mock that loading indicator is animating
+        webVC.activityIndicator.startAnimating()
         webVC.webView.navigationDelegate?.webView?(webVC.webView, didFailProvisionalNavigation: nil, withError: NSError(domain: "test_domain", code: 111))
         XCTAssertEqual((error as NSError?)?.domain, "test_domain")
         XCTAssertEqual((error as NSError?)?.code, 111)
@@ -208,9 +221,13 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       componentType: .payouts,
                                                       loadContent: false,
                                                       didFailLoadWithError: { error = $0 })
+        // Mock that loading indicator is animating
+        webVC.activityIndicator.startAnimating()
         webVC.webView.navigationDelegate?.webView?(webVC.webView, didFail: nil, withError: NSError(domain: "test_domain", code: 111))
         XCTAssertEqual((error as NSError?)?.domain, "test_domain")
         XCTAssertEqual((error as NSError?)?.code, 111)
+        // Loading indicator should stop
+        XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
 
     @MainActor
@@ -221,7 +238,22 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       componentType: .payouts,
                                                       loadContent: false,
                                                       didFailLoadWithError: { error = $0 })
-        let _ = await webVC.webView(webVC.webView, decidePolicyFor: MockNavigationResponse(response: HTTPURLResponse(url: URL(string: "https://stripe.com")!, statusCode: 404, httpVersion: nil, headerFields: nil)!))
+        _ = await webVC.webView(webVC.webView, decidePolicyFor: MockNavigationResponse(response: HTTPURLResponse(url: URL(string: "https://stripe.com")!, statusCode: 404, httpVersion: nil, headerFields: nil)!))
         XCTAssertEqual((error as? HTTPStatusError)?.errorCode, 404)
+        // Loading indicator should stop
+        XCTAssertFalse(webVC.activityIndicator.isAnimating)
+    }
+}
+// MARK: - Helpers
+
+private extension ConnectComponentWebViewControllerTests {
+    func componentManagerAssertingOnFetch(appearance: Appearance = .default, fonts: [EmbeddedComponentManager.CustomFontSource] = []) -> EmbeddedComponentManager {
+        EmbeddedComponentManager(apiClient: .init(publishableKey: "test"),
+                                 appearance: appearance,
+                                 fonts: fonts,
+                                 fetchClientSecret: {
+            XCTFail("Client secret should not be retrieved in this test")
+            return ""
+        })
     }
 }

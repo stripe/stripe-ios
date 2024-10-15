@@ -8,6 +8,7 @@
 import UIKit
 
 extension UIViewController {
+    /// Helper that adds a child view controller and pins its view to this view controller's view
     func addChildAndPinView(_ child: UIViewController) {
         child.willMove(toParent: self)
         addChild(child)

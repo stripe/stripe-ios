@@ -95,6 +95,8 @@
 		E688AE002CADD8C400951D97 /* NotificationBannerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */; };
 		E688AE032CADE36C00951D97 /* OnNotificationsChangeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */; };
 		E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */; };
+		E6D3C8EE2CBE1404003CE967 /* HTTPStatusError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D3C8ED2CBE1404003CE967 /* HTTPStatusError.swift */; };
+		E6D3C8F02CBE1459003CE967 /* HTTPURLResponse+StripeConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */; };
 		E6EF91C72CBA3BED0082DD1B /* UIViewController+StripeConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */; };
 		E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */; };
 		E6F485FC2C9E360A000D914F /* ConnectJSURLParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */; };
@@ -202,6 +204,8 @@
 		E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewControllerTests.swift; sourceTree = "<group>"; };
 		E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandlerTests.swift; sourceTree = "<group>"; };
 		E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
+		E6D3C8ED2CBE1404003CE967 /* HTTPStatusError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPStatusError.swift; sourceTree = "<group>"; };
+		E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPURLResponse+StripeConnect.swift"; sourceTree = "<group>"; };
 		E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+StripeConnect.swift"; sourceTree = "<group>"; };
 		E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentDetailsViewController.swift; sourceTree = "<group>"; };
 		E6F485FB2C9E360A000D914F /* ConnectJSURLParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectJSURLParams.swift; sourceTree = "<group>"; };
@@ -276,6 +280,7 @@
 			children = (
 				410D0FE42C6D32F0009B0E26 /* ApplicationURLOpener.swift */,
 				410D0FDE2C6D3176009B0E26 /* ConnectWebViewController.swift */,
+				E6D3C8ED2CBE1404003CE967 /* HTTPStatusError.swift */,
 				413987BD2C63F34B001D375E /* MessageHandlers */,
 				413987C02C63F34B001D375E /* MessageSenders */,
 				410D0FE02C6D31A3009B0E26 /* PopupWebViewController.swift */,
@@ -353,9 +358,11 @@
 			children = (
 				E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */,
 				416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */,
+				E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */,
 				41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */,
 				41542A6A2C88B79E004E728E /* JSONSerialization+extension.swift */,
 				41054E422C989AAD00383C09 /* Font+Extension.swift */,
+				E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -687,6 +694,7 @@
 				E65691252CA52F9D00E0DB00 /* NotificationBannerViewController.swift in Sources */,
 				410D0FE32C6D31C6009B0E26 /* StripeConnectConstants.swift in Sources */,
 				4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */,
+				E6D3C8EE2CBE1404003CE967 /* HTTPStatusError.swift in Sources */,
 				413987CC2C63F34B001D375E /* VoidPayload.swift in Sources */,
 				E65691272CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift in Sources */,
 				413987DD2C640A29001D375E /* FetchInitParamsMessageHandler.swift in Sources */,
@@ -695,6 +703,7 @@
 				413D18462C7FB75B0051AA42 /* EmbeddedComponentManager+Appearance.swift in Sources */,
 				41810D6B2C88E71D00F10EB7 /* Appearance+Encoding.swift in Sources */,
 				E6F485FC2C9E360A000D914F /* ConnectJSURLParams.swift in Sources */,
+				E6D3C8F02CBE1459003CE967 /* HTTPURLResponse+StripeConnect.swift in Sources */,
 				410D0FE12C6D31A3009B0E26 /* PopupWebViewController.swift in Sources */,
 				413987CB2C63F34B001D375E /* ScriptMessageHandlerWithReply.swift in Sources */,
 				41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */,
