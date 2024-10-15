@@ -49,6 +49,9 @@ public class EmbeddedComponentManager {
         self.fetchClientSecret = fetchClientSecret
         self.fonts = fonts
         self.appearance = appearance
+
+        assert(Bundle.main.infoDictionary?["NSCameraUsageDescription"] != nil,
+               "Embedded components require camera access. Add `NSCameraUsageDescription` to your app's Info.plist file to enable camera access.")
     }
 
     /// Updates the appearance of components created from this EmbeddedComponentManager
