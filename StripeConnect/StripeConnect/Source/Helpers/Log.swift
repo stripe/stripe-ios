@@ -7,6 +7,7 @@
 
 import os
 
+/// Wraps `os_log` and prepends messages with "[StripeConnect]"
 struct Log {
     static let log = OSLog(subsystem: "StripeConnect", category: "general")
 
