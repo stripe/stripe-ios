@@ -119,6 +119,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
+            checkoutButton.heightAnchor.constraint(equalToConstant: 45)
         ])
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
@@ -189,6 +190,14 @@ private class EmbeddedPaymentOptionView: UIView {
         return mandateLabel
     }()
 
+    private let verticalStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 12
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -200,30 +209,24 @@ private class EmbeddedPaymentOptionView: UIView {
     }
 
     private func setupView() {
-        addSubview(titleLabel)
-        addSubview(imageView)
-        addSubview(label)
-        addSubview(mandateTextLabel)
+        let horizontalStackView = UIStackView(arrangedSubviews: [imageView, label])
+        horizontalStackView.axis = .horizontal
+        horizontalStackView.spacing = 12
+        horizontalStackView.alignment = .center
+
+        verticalStackView.addArrangedSubview(titleLabel)
+        verticalStackView.addArrangedSubview(horizontalStackView)
+        verticalStackView.addArrangedSubview(mandateTextLabel)
+
+        addSubview(verticalStackView)
 
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
-            titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
-            titleLabel.widthAnchor.constraint(equalTo: self.widthAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 25),
-
-            imageView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            imageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            verticalStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
+            verticalStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
+            verticalStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
+            verticalStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15),
             imageView.widthAnchor.constraint(equalToConstant: 25),
-            imageView.heightAnchor.constraint(equalToConstant: 25),
-
-            label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            label.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            label.topAnchor.constraint(equalTo: self.topAnchor),
-            label.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
-
-            mandateTextLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-            mandateTextLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
-            mandateTextLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 12),
+            imageView.heightAnchor.constraint(equalToConstant: 25)
         ])
     }
 
