@@ -9,7 +9,7 @@ import Foundation
 
 // Emitted when the SDK should print to the console in debug mode.
 class DebugMessageHandler: ScriptMessageHandler<String> {
-    init(didReceiveMessage: @escaping (String) -> Void = { Swift.debugPrint($0) }) {
+    init(didReceiveMessage: @escaping (String) -> Void = Log.debug) {
         super.init(name: "debug", didReceiveMessage: didReceiveMessage)
     }
 }
