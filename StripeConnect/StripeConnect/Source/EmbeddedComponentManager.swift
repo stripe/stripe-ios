@@ -50,7 +50,8 @@ public class EmbeddedComponentManager {
         self.fonts = fonts
         self.appearance = appearance
 
-        checkForCameraPermissions()
+        assert(Bundle.main.infoDictionary?["NSCameraUsageDescription"] != nil,
+               "Embedded components require camera access. Add `NSCameraUsageDescription` to your app's Info.plist file to enable camera access.")
     }
 
     /// Updates the appearance of components created from this EmbeddedComponentManager
@@ -123,12 +124,5 @@ public class EmbeddedComponentManager {
     ///   - webView: The web view associated with this component manager
     func registerChild(_ webView: ConnectComponentWebView) {
         childWebViews.add(webView)
-    }
-
-    /// Checks if the app can request camera permissions and prints a warning to the console if it cannot
-    func checkForCameraPermissions() {
-        if Bundle.main.infoDictionary?["NSCameraUsageDescription"] == nil {
-            Log.warn("This app does not have permission to access the camera and users will be unable to perform identity verification checks. Add `NSCameraUsageDescription` to your app's Info.plist file to enable camera access.")
-        }
     }
 }
