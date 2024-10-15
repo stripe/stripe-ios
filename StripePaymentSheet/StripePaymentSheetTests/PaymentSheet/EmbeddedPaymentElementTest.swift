@@ -84,7 +84,7 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
             break
         }
         XCTAssertNil(sut.paymentOption)
-        
+
         // Updating should succeed after failing to update...
         let secondUpdateExpectation = expectation(description: "Second update succeeds")
         intentConfig.mode = .setup(currency: "USD", setupFutureUsage: .offSession)
@@ -113,7 +113,7 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
     }
 }
 
-extension EmbeddedPaymentElement.UpdateResult: @retroactive Equatable {
+extension EmbeddedPaymentElement.UpdateResult: Equatable {
     public static func == (lhs: StripePaymentSheet.EmbeddedPaymentElement.UpdateResult, rhs: StripePaymentSheet.EmbeddedPaymentElement.UpdateResult) -> Bool {
         switch (lhs, rhs) {
         case (.succeeded, .succeeded): return true
