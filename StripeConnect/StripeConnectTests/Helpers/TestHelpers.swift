@@ -37,7 +37,7 @@ extension UIView {
     // the view also needs to be added to a window.
     func triggerTraitCollectionChange(style: UIUserInterfaceStyle) {
         let window = UIWindow()
-        window.overrideUserInterfaceStyle = .dark
+        window.overrideUserInterfaceStyle = style
         window.addSubview(self)
     }
 }
