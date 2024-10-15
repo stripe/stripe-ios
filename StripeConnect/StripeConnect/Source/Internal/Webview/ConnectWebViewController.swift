@@ -63,6 +63,11 @@ class ConnectWebViewController: UIViewController {
     override func loadView() {
         view = webView
     }
+
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        parent?.isModalInPresentation = true
+    }
 }
 
 // MARK: - Private
