@@ -66,6 +66,8 @@ class ConnectWebViewController: UIViewController {
 
     override func didMove(toParent parent: UIViewController?) {
         super.didMove(toParent: parent)
+
+        // Default disable swipe to dismiss
         parent?.isModalInPresentation = true
     }
 }
