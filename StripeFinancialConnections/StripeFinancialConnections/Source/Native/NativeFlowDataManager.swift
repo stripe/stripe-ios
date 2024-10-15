@@ -42,7 +42,8 @@ protocol NativeFlowDataManager: AnyObject {
     ) -> Future<FinancialConnectionsPaymentDetails>
     func createPaymentMethod(
         consumerSessionClientSecret: String,
-        paymentDetailsId: String
+        paymentDetailsId: String,
+        billingDetails: StripeAPI.BillingDetails?
     ) -> Future<FinancialConnectionsPaymentMethod>
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
@@ -150,11 +151,13 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     func createPaymentMethod(
         consumerSessionClientSecret: String,
-        paymentDetailsId: String
+        paymentDetailsId: String,
+        billingDetails: StripeAPI.BillingDetails?
     ) -> Future<FinancialConnectionsPaymentMethod> {
         apiClient.paymentMethods(
             consumerSessionClientSecret: consumerSessionClientSecret,
-            paymentDetailsId: paymentDetailsId
+            paymentDetailsId: paymentDetailsId,
+            billingDetails: billingDetails
         )
     }
 

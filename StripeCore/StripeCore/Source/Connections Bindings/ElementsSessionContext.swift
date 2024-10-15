@@ -18,16 +18,19 @@ import Foundation
     @_spi(STP) public let currency: String?
     @_spi(STP) public let intentId: IntentID?
     @_spi(STP) public let linkMode: LinkMode?
+    @_spi(STP) public let billingDetails: StripeAPI.BillingDetails?
 
     @_spi(STP) public init(
         amount: Int?,
         currency: String?,
         intentId: IntentID?,
-        linkMode: LinkMode?
+        linkMode: LinkMode?,
+        billingDetails: StripeAPI.BillingDetails?
     ) {
         self.amount = amount
         self.currency = currency
         self.intentId = intentId
         self.linkMode = linkMode
+        self.billingDetails = billingDetails
     }
 }

@@ -236,12 +236,14 @@ protocol FinancialConnectionsAPI {
     func sharePaymentDetails(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        expectedPaymentMethodType: String
+        expectedPaymentMethodType: String,
+        billingDetails: StripeAPI.BillingDetails?
     ) -> Future<FinancialConnectionsSharePaymentDetails>
 
     func paymentMethods(
         consumerSessionClientSecret: String,
-        paymentDetailsId: String
+        paymentDetailsId: String,
+        billingDetails: StripeAPI.BillingDetails?
     ) -> Future<FinancialConnectionsPaymentMethod>
 }
 
@@ -991,9 +993,10 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func sharePaymentDetails(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        expectedPaymentMethodType: String
+        expectedPaymentMethodType: String,
+        billingDetails: StripeAPI.BillingDetails?
     ) -> Future<FinancialConnectionsSharePaymentDetails> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "id": paymentDetailsId,
             "credentials": [
@@ -1002,6 +1005,19 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "expected_payment_method_type": expectedPaymentMethodType,
             "expand": ["payment_method"],
         ]
+
+        if let billingDetails {
+            do {
+                let encoder = JSONEncoder()
+                encoder.keyEncodingStrategy = .convertToSnakeCase
+                let encodedBillingDetails = try encoder.encode(billingDetails)
+                parameters["billing_details"] = encodedBillingDetails
+            } catch let error {
+                let promise = Promise<FinancialConnectionsSharePaymentDetails>()
+                promise.reject(with: error)
+                return promise
+            }
+        }
 
         return updateAndApplyFraudDetection(to: parameters)
             .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsSharePaymentDetails> in
@@ -1020,9 +1036,10 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func paymentMethods(
         consumerSessionClientSecret: String,
-        paymentDetailsId: String
+        paymentDetailsId: String,
+        billingDetails: StripeAPI.BillingDetails?
     ) -> Future<FinancialConnectionsPaymentMethod> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "link": [
                 "credentials": [
                     "consumer_session_client_secret": consumerSessionClientSecret
@@ -1031,6 +1048,19 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             ],
             "type": "link",
         ]
+
+        if let billingDetails {
+            do {
+                let encoder = JSONEncoder()
+                encoder.keyEncodingStrategy = .convertToSnakeCase
+                let encodedBillingDetails = try encoder.encode(billingDetails)
+                parameters["billing_details"] = encodedBillingDetails
+            } catch let error {
+                let promise = Promise<FinancialConnectionsPaymentMethod>()
+                promise.reject(with: error)
+                return promise
+            }
+        }
 
         return updateAndApplyFraudDetection(to: parameters)
             .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsPaymentMethod> in
