@@ -168,7 +168,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testLoaderStart() async throws {
+    func testLoaderStartShowsLoadingIndicator() async throws {
         let componentManager = componentManagerAssertingOnFetch()
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,

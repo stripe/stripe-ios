@@ -5,7 +5,6 @@
 //  Created by Mel Ludowise on 10/14/24.
 //
 
-import Foundation
 @_spi(STP) import StripeCore
 
 /// Error passed to the when the `ConnectComponentWebViewController.didFailLoadWithError`
