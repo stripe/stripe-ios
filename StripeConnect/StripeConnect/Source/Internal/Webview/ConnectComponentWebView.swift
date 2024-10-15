@@ -32,7 +32,6 @@ class ConnectComponentWebView: ConnectWebView {
     let activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator()
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.tintColor = .gray
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
@@ -195,5 +194,6 @@ private extension ConnectComponentWebView {
     func updateColors(appearance: Appearance) {
         backgroundColor = appearance.colors.background
         isOpaque = backgroundColor == nil
+        activityIndicator.tintColor = appearance.colors.loadingColor
     }
 }
