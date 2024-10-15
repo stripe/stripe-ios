@@ -19,39 +19,35 @@ public class NotificationBannerViewController: UIViewController {
         }
     }
 
-    let webView: ConnectComponentWebView
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: NotificationBannerViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
-         collectionOptions: AccountCollectionOptions) {
-        webView = ConnectComponentWebView(
+         collectionOptions: AccountCollectionOptions,
+         loadContent: Bool) {
+        super.init(nibName: nil, bundle: nil)
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
-            componentType: .notificationBanner
+            componentType: .notificationBanner,
+            loadContent: loadContent
         ) {
             Props(collectionOptions: collectionOptions)
-        }
-        super.init(nibName: nil, bundle: nil)
-
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
+        } didFailLoadWithError: { [weak self] error in
             guard let self else { return }
-            self.delegate?.notificationBanner(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-        webView.addMessageHandler(OnNotificationsChangeHandler { [weak self] value in
+            delegate?.notificationBanner(self, didFailLoadWithError: error)
+        }
+
+        webVC.addMessageHandler(OnNotificationsChangeHandler { [weak self] value in
             guard let self else { return }
             self.delegate?.notificationBanner(self, didChangeWithTotal: value.total, andActionRequired: value.actionRequired)
         })
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
-        }
+
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    public override func loadView() {
-        view = webView
     }
 }
 

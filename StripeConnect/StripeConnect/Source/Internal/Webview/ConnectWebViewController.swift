@@ -1,5 +1,5 @@
 //
-//  ConnectWebView.swift
+//  ConnectWebViewController.swift
 //  StripeConnect
 //
 //  Created by Mel Ludowise on 5/3/24.
@@ -17,28 +17,12 @@ import WebKit
  - Downloads 
  */
 @available(iOS 15, *)
-class ConnectWebView: WKWebView {
+class ConnectWebViewController: UIViewController {
+
+    let webView: WKWebView
 
     /// File URL for a downloaded file
     var downloadedFile: URL?
-
-    private var optionalPresentPopup: ((UIViewController) -> Void)?
-
-    /// Closure to present a popup web view controller.
-    /// This is required for any components that can open a popup, otherwise an assertionFailure will occur.
-    var presentPopup: (UIViewController) -> Void {
-        get {
-            assert(optionalPresentPopup != nil, "Cannot present popup")
-            // TODO: MXMOBILE-2491 Log as analytics when pop up is not set.
-            return optionalPresentPopup ?? { _ in }
-        }
-        set {
-            optionalPresentPopup = newValue
-        }
-    }
-
-    /// Closure that executes when `window.close()` is called in JS
-    var didClose: ((ConnectWebView) -> Void)?
 
     /// The instance that will handle opening external urls
     let urlOpener: ApplicationURLOpener
@@ -49,8 +33,7 @@ class ConnectWebView: WKWebView {
     /// The current version for the SDK
     let sdkVersion: String?
 
-    init(frame: CGRect,
-         configuration: WKWebViewConfiguration,
+    init(configuration: WKWebViewConfiguration,
          // Only override for tests
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          fileManager: FileManager = .default,
@@ -59,28 +42,40 @@ class ConnectWebView: WKWebView {
         self.fileManager = fileManager
         self.sdkVersion = sdkVersion
         configuration.applicationNameForUserAgent = "- stripe-ios/\(sdkVersion ?? "")"
-        super.init(frame: frame, configuration: configuration)
+        webView = .init(frame: .zero, configuration: configuration)
+        super.init(nibName: nil, bundle: nil)
 
         // Allow the web view to be inspected for debug builds on 16.4+
         #if DEBUG
         if #available(iOS 16.4, *) {
-            isInspectable = true
+            webView.isInspectable = true
         }
         #endif
 
-        uiDelegate = self
-        navigationDelegate = self
+        webView.uiDelegate = self
+        webView.navigationDelegate = self
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func loadView() {
+        view = webView
+    }
+
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+
+        // Default disable swipe to dismiss
+        parent?.isModalInPresentation = true
     }
 }
 
 // MARK: - Private
 
 @available(iOS 15, *)
-private extension ConnectWebView {
+private extension ConnectWebViewController {
     // Opens the given navigation in a PopupWebViewController
     func openInPopup(configuration: WKWebViewConfiguration,
                      navigationAction: WKNavigationAction) -> WKWebView? {
@@ -93,7 +88,7 @@ private extension ConnectWebView {
             popupVC?.dismiss(animated: true)
         }))
 
-        presentPopup(navController)
+        present(navController, animated: true)
         return popupVC.webView
     }
 
@@ -102,7 +97,7 @@ private extension ConnectWebView {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .done
         safariVC.modalPresentationStyle = .popover
-        presentPopup(safariVC)
+        present(safariVC, animated: true)
     }
 
     // Opens with UIApplication.open, if supported
@@ -111,14 +106,14 @@ private extension ConnectWebView {
     }
 
     func showErrorAlert(for error: Error?) {
-        // TODO: MXMOBILE-2491 Log analytic when receiving an eror
+        // TODO: MXMOBILE-2491 Log analytic when receiving an error
         debugPrint(String(describing: error))
 
         let alert = UIAlertController(
             title: nil,
             message: NSError.stp_unexpectedErrorMessage(),
             preferredStyle: .alert)
-        presentPopup(alert)
+        present(alert, animated: true)
     }
 
     func cleanupDownloadedFile() {
@@ -140,7 +135,7 @@ private extension ConnectWebView {
 // MARK: - WKUIDelegate
 
 @available(iOS 15, *)
-extension ConnectWebView: WKUIDelegate {
+extension ConnectWebViewController: WKUIDelegate {
     func webView(_ webView: WKWebView,
                  createWebViewWith configuration: WKWebViewConfiguration,
                  for navigationAction: WKNavigationAction,
@@ -179,15 +174,18 @@ extension ConnectWebView: WKUIDelegate {
     }
 
     func webViewDidClose(_ webView: WKWebView) {
-        // Call our custom handler when `window.close()` is called from JS
-        self.didClose?(self)
+        // Override from subclass
     }
 }
 
 // MARK: - WKNavigationDelegate
 
 @available(iOS 15, *)
-extension ConnectWebView: WKNavigationDelegate {
+extension ConnectWebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
+        // Override from subclass
+    }
+
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction
@@ -208,7 +206,6 @@ extension ConnectWebView: WKNavigationDelegate {
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse
     ) async -> WKNavigationResponsePolicy {
-
         // Downloads will typically originate from a non-allow-listed host (e.g. S3)
         // so first check if the response is a download before evaluating the host
 
@@ -243,7 +240,7 @@ extension ConnectWebView: WKNavigationDelegate {
 // MARK: - WKDownloadDelegate implementation
 
 @available(iOS 15, *)
-extension ConnectWebView {
+extension ConnectWebViewController {
     // This extension is an abstraction layer to implement `WKDownloadDelegate`
     // functionality and make it testable. There's no way to instantiate
     // `WKDownload` in tests without causing an EXC_BAD_ACCESS error.
@@ -295,14 +292,14 @@ extension ConnectWebView {
         activityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
             self?.cleanupDownloadedFile()
         }
-        presentPopup(activityViewController)
+        present(activityViewController, animated: true)
     }
 }
 
 // MARK: - WKDownloadDelegate
 
 @available(iOS 15, *)
-extension ConnectWebView: WKDownloadDelegate {
+extension ConnectWebViewController: WKDownloadDelegate {
     func download(_ download: WKDownload,
                   decideDestinationUsing response: URLResponse,
                   suggestedFilename: String) async -> URL? {
