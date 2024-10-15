@@ -155,11 +155,14 @@ extension EmbeddedComponentManager {
             /// Creates a `EmbeddedComponentManager.Appearance.Colors` with default values
             public init() {}
 
+            /// The computed background color
             var resolvedBackground: UIColor {
+                // Defaults to white if none is set
                 background ?? .white
             }
 
-            var loadingColor: UIColor {
+            /// The computed loading indicator color
+            var loadingIndicatorColor: UIColor {
                 .init { traitCollection in
                     let background = resolvedBackground.resolvedColor(with: traitCollection)
 

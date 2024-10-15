@@ -194,6 +194,6 @@ private extension ConnectComponentWebView {
     func updateColors(appearance: Appearance) {
         backgroundColor = appearance.colors.background
         isOpaque = backgroundColor == nil
-        activityIndicator.tintColor = appearance.colors.loadingColor
+        activityIndicator.tintColor = appearance.colors.loadingIndicatorColor
     }
 }
