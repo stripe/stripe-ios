@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1PiS2zFY0qyl6XeWlMKBbYVV&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&type=deferred_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
-request-id: req_U820vtTY6c6PEF
+request-id: req_nXLpWHF4As36y7
 Content-Length: 13002
 Vary: Origin
-Date: Tue, 15 Oct 2024 00:59:37 GMT
+Date: Tue, 15 Oct 2024 23:42:32 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -183,7 +183,7 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_mybank" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1ZOcEXG9H8i",
+  "session_id" : "elements_session_17HCI6kqVg4",
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_currency" : "usd",
@@ -210,7 +210,7 @@ x-content-type-options: nosniff
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "e69d3196-71d5-43a0-870d-e8c48b6653b1",
+    "arb_id" : "0c8131ca-ed27-4dcf-851a-fb148f73d944",
     "experiment_metadata" : {
       "seed" : "0e3faadbed858a1cdd80435934bf02a87e9a991479628a70ad1d8aa4f9c28763"
     },

@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1PiS2zFY0qyl6XeWlMKBbYVV&deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&type=deferred_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
-request-id: req_qvY408HJOF9F1s
+request-id: req_PpK1VM6G76Z9E0
 Content-Length: 13002
 Vary: Origin
-Date: Mon, 14 Oct 2024 23:56:13 GMT
+Date: Tue, 15 Oct 2024 23:42:31 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -183,7 +183,7 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_mybank" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1AtJTt3cpyi",
+  "session_id" : "elements_session_1vSZRgR3Qbc",
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_currency" : "usd",
@@ -210,9 +210,9 @@ x-content-type-options: nosniff
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "a1cf1fbc-970f-4142-9c1d-0901405ac1d1",
+    "arb_id" : "ffc9578c-e796-48d5-825a-435833c48ada",
     "experiment_metadata" : {
-      "seed" : "42cfef35296f5f9a45e9cd793663eab4d7de2a6f33f03998afaa86366007ff09"
+      "seed" : "0e3faadbed858a1cdd80435934bf02a87e9a991479628a70ad1d8aa4f9c28763"
     },
     "experiment_assignments" : {
       "elements_merchant_ui_api_srv" : "control",
