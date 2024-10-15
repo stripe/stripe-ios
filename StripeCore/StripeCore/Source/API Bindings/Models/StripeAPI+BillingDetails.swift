@@ -1,13 +1,11 @@
 //
 //  BillingDetails.swift
-//  StripeApplePay
+//  StripeCore
 //
-//  Created by David Estes on 7/15/21.
-//  Copyright © 2021 Stripe, Inc. All rights reserved.
+//  Created by Mat Schmid on 2024-10-15.
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 extension StripeAPI {
     /// Billing information associated with a `STPPaymentMethod` that may be used or required by particular types of payment methods.
@@ -38,6 +36,22 @@ extension StripeAPI {
 
             public var _additionalParametersStorage: NonEncodableParameters?
             public var _allResponseFieldsStorage: NonEncodableParameters?
+
+            public init(
+                line1: String? = nil,
+                line2: String? = nil,
+                city: String? = nil,
+                state: String? = nil,
+                postalCode: String? = nil,
+                country: String? = nil
+            ) {
+                self.line1 = line1
+                self.line2 = line2
+                self.city = city
+                self.state = state
+                self.postalCode = postalCode
+                self.country = country
+            }
         }
 
         /// Email address.
@@ -49,19 +63,17 @@ extension StripeAPI {
 
         public var _additionalParametersStorage: NonEncodableParameters?
         public var _allResponseFieldsStorage: NonEncodableParameters?
-    }
 
-}
-
-extension StripeAPI.BillingDetails.Address {
-    init(
-        contact: StripeContact
-    ) {
-        self.city = contact.city
-        self.country = contact.country
-        self.line1 = contact.line1
-        self.line2 = contact.line2
-        self.postalCode = contact.postalCode
-        self.state = contact.state
+        public init(
+            address: Address? = nil,
+            email: String? = nil,
+            name: String? = nil,
+            phone: String? = nil
+        ) {
+            self.address = address
+            self.email = email
+            self.name = name
+            self.phone = phone
+        }
     }
 }
