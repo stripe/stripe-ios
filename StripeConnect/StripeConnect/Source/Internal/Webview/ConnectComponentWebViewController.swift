@@ -16,9 +16,6 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     /// The embedded component manager that will be used for requests.
     let componentManager: EmbeddedComponentManager
 
-    /// The component type that should be loaded.
-    private let componentType: ComponentType
-
     /// The content controller that registers JS -> Swift message handlers
     private let contentController = WKUserContentController()
 
@@ -50,7 +47,6 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         webLocale: Locale = Locale.autoupdatingCurrent
     ) {
         self.componentManager = componentManager
-        self.componentType = componentType
         self.notificationCenter = notificationCenter
         self.webLocale = webLocale
         self.didFailLoadWithError = didFailLoadWithError
