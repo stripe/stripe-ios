@@ -64,10 +64,10 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
         closeButton.tap()
 
-        let paymentMethodButton = app.staticTexts["Success: ••••4242, selected"]  // The card should be saved now
+        let paymentMethodButton = app.staticTexts["Success: •••• 4242, selected"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: timeout))
 
-        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: •••• 4242, selected", alertTitle: "Complete", buttonToTap: "OK")
 
         // Piggy back on the original test to ensure we can dismiss the sheet if we have an unsupported payment method
         app.buttons["SetPMLink"].tap()
@@ -102,7 +102,7 @@ class CustomerSheetUITest: XCTestCase {
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
 
-        let cardPresence_beforeRemoval = app.staticTexts["••••4242"]
+        let cardPresence_beforeRemoval = app.staticTexts["•••• 4242"]
         XCTAssertTrue(cardPresence_beforeRemoval.waitForExistence(timeout: 60.0))
 
         let editButton = app.staticTexts["Edit"]
@@ -111,7 +111,7 @@ class CustomerSheetUITest: XCTestCase {
 
         removeFirstPaymentMethodInList()
 
-        let cardPresence_afterRemoval = app.staticTexts["••••4242"]
+        let cardPresence_afterRemoval = app.staticTexts["•••• 4242"]
         waitToDisappear(cardPresence_afterRemoval)
 
         let closeButton = app.buttons["Close"]
@@ -140,7 +140,7 @@ class CustomerSheetUITest: XCTestCase {
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Save"].tap()
 
-        let cardPresence = app.staticTexts["••••4242"]
+        let cardPresence = app.staticTexts["•••• 4242"]
         XCTAssertTrue(cardPresence.waitForExistence(timeout: timeout))
 
         app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
@@ -160,9 +160,9 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
         closeButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: •••• 4242, selected", alertTitle: "Complete", buttonToTap: "OK")
 
-        let selectButtonFinal = app.staticTexts["••••4242"]
+        let selectButtonFinal = app.staticTexts["•••• 4242"]
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: timeout))
     }
 
@@ -176,7 +176,7 @@ class CustomerSheetUITest: XCTestCase {
         )
 
         presentCSAndAddCardFrom(buttonLabel: "None")
-        presentCSAndAddCardFrom(buttonLabel: "••••4242", cardNumber: "5555555555554444")
+        presentCSAndAddCardFrom(buttonLabel: "•••• 4242", cardNumber: "5555555555554444")
 
         app.staticTexts["••••4444"].waitForExistenceAndTap(timeout: timeout)
 
@@ -192,7 +192,7 @@ class CustomerSheetUITest: XCTestCase {
         waitForNItemsExistence(elementQuery, count: 1)
 
         removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
-        let visa = app.staticTexts["••••4242"]
+        let visa = app.staticTexts["•••• 4242"]
         waitToDisappear(visa)
 
         let closeButton = app.buttons["Close"]
@@ -215,7 +215,7 @@ class CustomerSheetUITest: XCTestCase {
         )
 
         presentCSAndAddCardFrom(buttonLabel: "None")
-        let selectButton = app.staticTexts["••••4242"]
+        let selectButton = app.staticTexts["•••• 4242"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
         selectButton.tap()
 
@@ -233,7 +233,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
         closeButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: •••• 4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func testCustomerSheet_addUSBankAccount() throws {
@@ -642,9 +642,9 @@ class CustomerSheetUITest: XCTestCase {
         confirmButton.tap()
         if let cardNumber {
             let last4 = String(cardNumber.suffix(4))
-            dismissAlertView(alertBody: "Success: ••••\(last4), selected", alertTitle: "Complete", buttonToTap: "OK")
+            dismissAlertView(alertBody: "Success: •••• \(last4), selected", alertTitle: "Complete", buttonToTap: "OK")
         } else {
-            dismissAlertView(alertBody: "Success: ••••4242, selected", alertTitle: "Complete", buttonToTap: "OK")
+            dismissAlertView(alertBody: "Success: •••• 4242, selected", alertTitle: "Complete", buttonToTap: "OK")
         }
     }
 
