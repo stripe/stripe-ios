@@ -110,6 +110,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     // MARK: - UIViewController
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
         DispatchQueue.main.async {
             self.updateAppearance(appearance: self.componentManager.appearance)
         }

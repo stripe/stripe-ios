@@ -82,7 +82,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                         didFailLoadWithError: { _ in },
                                                         webLocale: Locale(identifier: "fr_FR"))
 
-        webVC.view.triggerTraitCollectionChange(style: .dark)
+        webVC.triggerTraitCollectionChange(style: .dark)
 
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                          json: "{}",
@@ -124,7 +124,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
             appearance: .init(appearance: appearance, traitCollection: UITraitCollection(userInterfaceStyle: .dark))
         )))
 
-        webVC.view.triggerTraitCollectionChange(style: .dark)
+        webVC.triggerTraitCollectionChange(style: .dark)
 
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
