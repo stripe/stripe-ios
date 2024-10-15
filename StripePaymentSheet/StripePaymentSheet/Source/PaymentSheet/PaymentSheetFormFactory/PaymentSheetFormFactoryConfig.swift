@@ -93,4 +93,13 @@ enum PaymentSheetFormFactoryConfig {
             return config.isUsingBillingAddressCollection()
         }
     }
+
+    var cardBrandFilter: CardBrandFilter {
+        switch self {
+        case .paymentSheet(let config):
+            return config.cardBrandFilter
+        case .customerSheet(let config):
+            return config.cardBrandFilter
+        }
+    }
 }

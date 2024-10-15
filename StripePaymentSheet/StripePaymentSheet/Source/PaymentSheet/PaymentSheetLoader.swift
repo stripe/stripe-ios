@@ -322,7 +322,11 @@ final class PaymentSheetLoader {
             }
         }
 
-        return savedPaymentMethods
+        // Hide any saved cards whose brands are not allowed
+        return savedPaymentMethods.filter {
+            guard let cardBrand = $0.card?.brand else { return true }
+            return configuration.cardBrandFilter.isAccepted(cardBrand: cardBrand)
+        }
     }
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
