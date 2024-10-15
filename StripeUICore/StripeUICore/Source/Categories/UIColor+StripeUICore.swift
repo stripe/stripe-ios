@@ -103,6 +103,36 @@ import UIKit
         return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
     }
 
+    /// Adjust color for minimum contrast with a given background color
+    ///
+    /// # Reference
+    ///
+    /// [WCAG 2.1 Contrast Minimum](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html#dfn-contrast-ratio)
+    /// - Parameters:
+    ///   - backgroundColor: The background color with which to get minimum contrast
+    ///   - minimumRatio: The minimum contrast ratio (defaults to WGAG minimum ratio of 4.5)
+    func adjustedForContrast(with backgroundColor: UIColor, minimumRatio: CGFloat = 4.5) -> UIColor {
+        var adjustedColor = self
+
+        let shouldLighten = backgroundColor.luminance < 0.5
+
+        // Adjust the brightness until we reach the minimum contrast ratio
+        // or as much contrast ratio as possible (black or white)
+        while adjustedColor.contrastRatio(to: backgroundColor) < minimumRatio
+                && ((shouldLighten && adjustedColor.brightness < 1)
+                    || (!shouldLighten && adjustedColor.brightness > 0)) {
+            if shouldLighten {
+                // If the background color dark, go lighter
+                adjustedColor = adjustedColor.lighten(by: 0.1)
+            } else {
+                // If the background color light, go darker
+                adjustedColor = adjustedColor.darken(by: 0.1)
+            }
+        }
+
+        return adjustedColor
+    }
+
     /// Returns this color in a "disabled" state by reducing the alpha by 60%
     var disabledColor: UIColor {
         let (_, _, _, alpha) = rgba
@@ -126,6 +156,12 @@ import UIKit
         getRed(&red, green: &green, blue: &blue, alpha: &alpha)
 
         return (red, green, blue, alpha)
+    }
+
+    var brightness: CGFloat {
+        var brightness: CGFloat = 0
+        getHue(nil, saturation: nil, brightness: &brightness, alpha: nil)
+        return brightness
     }
 
     var perceivedBrightness: CGFloat {

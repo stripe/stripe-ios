@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 @_spi(PrivateBetaConnect)
@@ -153,6 +154,29 @@ extension EmbeddedComponentManager {
 
             /// Creates a `EmbeddedComponentManager.Appearance.Colors` with default values
             public init() {}
+
+            /// The computed background color
+            var resolvedBackground: UIColor {
+                // Defaults to white if none is set
+                background ?? .white
+            }
+
+            /// The computed loading indicator color
+            var loadingIndicatorColor: UIColor {
+                .init { traitCollection in
+                    let background = resolvedBackground.resolvedColor(with: traitCollection)
+
+                    // Use the secondary text color if it was set
+                    if let secondaryText {
+                        return secondaryText
+                            .resolvedColor(with: traitCollection)
+                            .adjustedForContrast(with: background)
+                    }
+
+                    // Lighten or darken the background to get enough contrast
+                    return background.adjustedForContrast(with: background)
+                }
+            }
         }
 
         /// Describes the appearance of a button type used in embedded components
