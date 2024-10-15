@@ -200,20 +200,6 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
 
-    func testDidFailProvisionalNavigationTriggersLoadError() {
-        var error: Error?
-        let componentManager = componentManagerAssertingOnFetch()
-        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
-                                                      componentType: .payouts,
-                                                      loadContent: false,
-                                                      didFailLoadWithError: { error = $0 })
-        // Mock that loading indicator is animating
-        webVC.activityIndicator.startAnimating()
-        webVC.webView.navigationDelegate?.webView?(webVC.webView, didFailProvisionalNavigation: nil, withError: NSError(domain: "test_domain", code: 111))
-        XCTAssertEqual((error as NSError?)?.domain, "test_domain")
-        XCTAssertEqual((error as NSError?)?.code, 111)
-    }
-
     func testDidFailNavigationTriggersLoadError() {
         var error: Error?
         let componentManager = componentManagerAssertingOnFetch()

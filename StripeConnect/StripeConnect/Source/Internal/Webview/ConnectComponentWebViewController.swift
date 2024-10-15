@@ -121,12 +121,6 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     // MARK: - ConnectWebViewController
 
-    override func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
-        super.webView(webView, didFailProvisionalNavigation: navigation, withError: error)
-        didFailLoad(error: error)
-        // TODO: MXMOBILE-2491 log error
-    }
-
     override func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
         super.webView(webView, didFail: navigation, withError: error)
         didFailLoad(error: error)

@@ -182,10 +182,6 @@ extension ConnectWebViewController: WKUIDelegate {
 
 @available(iOS 15, *)
 extension ConnectWebViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
-        // Override from subclass
-    }
-
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
         // Override from subclass
     }
