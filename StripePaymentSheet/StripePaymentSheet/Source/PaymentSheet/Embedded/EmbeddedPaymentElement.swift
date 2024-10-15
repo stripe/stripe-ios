@@ -45,14 +45,15 @@ public class EmbeddedPaymentElement {
         public let mandateText: NSAttributedString?
     }
 
-    /// The customer's currently selected payment option.
+    /// Contains information about the customer's selected payment option.
+    /// Use this to display the payment option in your own UI
     public var paymentOption: PaymentOptionDisplayData? {
         return embeddedPaymentMethodsView.displayData
     }
 
     /// An asynchronous failable initializer
-    /// This loads the Customer's payment methods, their default payment method, etc.
-    /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the checkout.
+    /// Loads the Customer's payment methods, their default payment method, etc.
+    /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the confirmation.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
