@@ -86,12 +86,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
     let shouldShowApplePayInList: Bool
     let shouldShowLinkInList: Bool
-    /// Whether or not we are in the special case where we don't show the list and show the card form directly
-    var shouldDisplayCardFormOnly: Bool {
-        return paymentMethodTypes.count == 1 && paymentMethodTypes[0] == .stripe(.card)
-        && savedPaymentMethods.isEmpty
-        && !shouldShowApplePayInList
-        && !shouldShowLinkInList
+    /// Whether or not we are in the special case where we don't show the list and show the form directly
+    var shouldDisplayFormOnly: Bool {
+        return paymentMethodTypes.count == 1
+               && savedPaymentMethods.isEmpty
+               && !shouldShowApplePayInList
+               && !shouldShowLinkInList
+               && (paymentMethodTypes.first.map { shouldDisplayForm(for: $0) } ?? false)
     }
     /// The content offset % of the payment method list before we transitioned away from it
     var paymentMethodListContentOffsetPercentage: CGFloat?
@@ -174,9 +175,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if let paymentMethodFormViewController {
             remove(childViewController: paymentMethodFormViewController)
         }
-        if shouldDisplayCardFormOnly {
-            // If we'd only show one PM in the vertical list and it's `card`, display the form instead of the payment method list.
-            let formVC = makeFormVC(paymentMethodType: .stripe(.card))
+        if shouldDisplayFormOnly, let paymentMethodType = loadResult.paymentMethodTypes.first {
+            // If we'd only show one PM in the vertical list, and it collects user input, display the form instead of the payment method list.
+            let formVC = makeFormVC(paymentMethodType: paymentMethodType)
             self.paymentMethodFormViewController = formVC
             add(childViewController: formVC, containerView: paymentContainerView)
         } else {
@@ -322,7 +323,19 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 case .link:
                     return isFlowController ? .link : nil // Only default to Link in flow controller mode
                 case .stripeId, nil:
-                    return savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
+                    if let savedSelection = savedPaymentMethods.first {
+                        return .saved(paymentMethod: savedSelection)
+                    }
+                    // If we have only one payment method type, with no wallet options, no saved payment methods, and neither Link nor Apple Pay are in the list, auto-select the lone payment method type.
+                    if loadResult.paymentMethodTypes.count == 1,
+                       !shouldShowLinkInList,
+                       !shouldShowApplePayInList,
+                       makeWalletHeaderView() == nil,
+                       let paymentMethodType = loadResult.paymentMethodTypes.first {
+                        return .new(paymentMethodType: paymentMethodType)
+                    }
+
+                    return nil
                 }
             }
         }()
@@ -680,7 +693,24 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             }
         }()
         let headerView: UIView = {
-            if shouldDisplayCardFormOnly, let wallet = makeWalletHeaderView() {
+            if shouldDisplayFormOnly, let wallet = makeWalletHeaderView() {
+                // Special case: if there is only one payment method type and it's not a card and wallet options are available
+                // Display the wallet, then the FormHeaderView below it
+                if loadResult.paymentMethodTypes.first != .stripe(.card) {
+                     let containerView = UIStackView(arrangedSubviews: [
+                         wallet,
+                         FormHeaderView(
+                             paymentMethodType: paymentMethodType,
+                             shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
+                             appearance: configuration.appearance
+                         ),
+                     ])
+                    containerView.axis = .vertical
+                    containerView.spacing = PaymentSheetUI.defaultPadding
+
+                     return containerView
+                }
+
                 return wallet
             } else {
                 return FormHeaderView(
