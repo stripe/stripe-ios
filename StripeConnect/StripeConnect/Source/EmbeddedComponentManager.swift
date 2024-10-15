@@ -125,10 +125,9 @@ public class EmbeddedComponentManager {
         childWebViews.add(webView)
     }
 
-    ///
+    /// Checks if the app can request camera permissions and prints a warning to the console if it cannot
     func checkForCameraPermissions() {
         if Bundle.main.infoDictionary?["NSCameraUsageDescription"] == nil {
-
             Log.warn("This app does not have permission to access the camera and users will be unable to perform identity verification checks. Add `NSCameraUsageDescription` to your app's Info.plist file to enable camera access.")
         }
     }
