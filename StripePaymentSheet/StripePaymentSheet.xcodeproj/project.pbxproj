@@ -51,7 +51,6 @@
 		2CE83364A23B4E3BAFD447CA /* WalletHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32B3AC4CC1C4F2DEEC5F292 /* WalletHeaderView.swift */; };
 		2E4C37C73AD202C8A3DD2E4E /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FF291A25EA43D4D100983B /* LoadingViewController.swift */; };
 		2EC9C94DD8D62E4F4EFC8AB8 /* IntentStatusPollerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 990304EF35A0EE37DCE20D5B /* IntentStatusPollerTest.swift */; };
-		2EDF4115FDC40A5B0672CCFD /* Locale+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DCF73BEC0CC35D4CE30361 /* Locale+Link.swift */; };
 		311AC53D6C76953E9B70148A /* ConsumerSession+PublishableKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D61B52BFA201D25E8F6428 /* ConsumerSession+PublishableKey.swift */; };
 		313F5F832B0BE5FD00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F822B0BE5FD00BD98A9 /* Docs.docc */; };
 		31699A812BE183B30048677F /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31699A802BE183B30048677F /* DownloadManager.swift */; };
@@ -630,7 +629,6 @@
 		C3C1A5F36075EAEA5A413DC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C46CB5AB992F8EEFE4E5460A /* PaymentSheetConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetConfiguration.swift; sourceTree = "<group>"; };
 		C47D00B9DE812D0801B4E33F /* PaymentSheetLPMConfirmFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetLPMConfirmFlowTests.swift; sourceTree = "<group>"; };
-		C5DCF73BEC0CC35D4CE30361 /* Locale+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+Link.swift"; sourceTree = "<group>"; };
 		C684CBDA487CC3E78676F52E /* LinkEmailElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkEmailElement.swift; sourceTree = "<group>"; };
 		C784153FF2052C4CF240441C /* SeparatorLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorLabel.swift; sourceTree = "<group>"; };
 		C830FEC205E7162FF4D414BE /* PaymentMethodMessagingViewFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodMessagingViewFunctionalTest.swift; sourceTree = "<group>"; };
@@ -1037,7 +1035,6 @@
 			children = (
 				790527588C37B2E2CE0DE3CF /* LinkPopupURLParser.swift */,
 				F69E543E007B4361C7929FF5 /* LinkURLGenerator.swift */,
-				C5DCF73BEC0CC35D4CE30361 /* Locale+Link.swift */,
 				274491B25447ABB37EF29D93 /* OperationDebouncer.swift */,
 			);
 			path = Utils;
@@ -1840,7 +1837,6 @@
 				B626EE932BF2872200B05B05 /* PaymentMethodTypeImageView.swift in Sources */,
 				FA32A3732505CC037CDE64D7 /* LinkURLGenerator.swift in Sources */,
 				61D8688E2C06553E001FAD84 /* RightAccessoryButton.swift in Sources */,
-				2EDF4115FDC40A5B0672CCFD /* Locale+Link.swift in Sources */,
 				1ECC1086460E57AE75F18FBF /* OperationDebouncer.swift in Sources */,
 				E236FE31A51D130F93F9299B /* LinkAccountContext.swift in Sources */,
 				D0B9FBCB359A7D774B98D19E /* LinkCookieKey.swift in Sources */,
