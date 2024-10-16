@@ -59,14 +59,14 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     var collectsUserInput: Bool {
-        return paymentMethodFormViewController?.form.collectsUserInput ?? false
+        return paymentMethodFormViewController.form.collectsUserInput
     }
 
     enum Error: Swift.Error {
         case noPaymentOptionOnBuyButtonTap
     }
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        return paymentMethodFormViewController?.paymentOption
+        return paymentMethodFormViewController.paymentOption
     }
     
     let loadResult: PaymentSheetLoader.LoadResult
@@ -92,8 +92,6 @@ class EmbeddedFormViewController: UIViewController {
         return navBar
     }()
 
-    var paymentMethodFormViewController: PaymentMethodFormViewController?
-
     lazy var paymentContainerView: DynamicHeightContainerView = {
         DynamicHeightContainerView()
     }()
@@ -106,6 +104,35 @@ class EmbeddedFormViewController: UIViewController {
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
             }
+        )
+    }()
+    
+    private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
+        let previousCustomerInput: IntentConfirmParams? = {
+            if case let .new(confirmParams: confirmParams) = previousPaymentOption {
+                return confirmParams
+            } else {
+                return nil
+            }
+        }()
+        
+        let headerView = FormHeaderView(
+            paymentMethodType: paymentMethodType,
+            // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
+            shouldUseNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
+            appearance: configuration.appearance
+        )
+        
+        return PaymentMethodFormViewController(
+            type: paymentMethodType,
+            intent: intent,
+            elementsSession: elementsSession,
+            previousCustomerInput: previousCustomerInput,
+            formCache: formCache,
+            configuration: configuration,
+            headerView: headerView,
+            analyticsHelper: analyticsHelper,
+            delegate: self
         )
     }()
 
@@ -133,23 +160,10 @@ class EmbeddedFormViewController: UIViewController {
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
-
+        
         super.init(nibName: nil, bundle: nil)
 
-        regenerateUI()
-        // Only use the previous customer input for the first form shown
-        self.previousPaymentOption = nil
-    }
-
-    /// Regenerates the main content - the PM form and updates all UI elements (pay button, error, mandate)
-    func regenerateUI() {
-        if let paymentMethodFormViewController {
-            remove(childViewController: paymentMethodFormViewController)
-        }
-        
-        let formVC = makeFormVC(paymentMethodType: paymentMethodType)
-        self.paymentMethodFormViewController = formVC
-        add(childViewController: formVC, containerView: paymentContainerView)
+        add(childViewController: paymentMethodFormViewController, containerView: paymentContainerView)
         updateUI()
     }
 
@@ -162,7 +176,7 @@ class EmbeddedFormViewController: UIViewController {
 
     func updatePrimaryButton() {
         let callToAction: ConfirmButton.CallToActionType = {
-            if let override = paymentMethodFormViewController?.overridePrimaryButtonState {
+            if let override = paymentMethodFormViewController.overridePrimaryButtonState {
                 return override.ctaType
             }
             if let customCtaLabel = configuration.primaryButtonLabel {
@@ -178,7 +192,7 @@ class EmbeddedFormViewController: UIViewController {
             if isPaymentInFlight {
                 return .processing
             }
-            if let override = paymentMethodFormViewController?.overridePrimaryButtonState {
+            if let override = paymentMethodFormViewController.overridePrimaryButtonState {
                 return override.enabled ? .enabled : .disabled
             }
             return selectedPaymentOption == nil ? .disabled : .enabled
@@ -191,39 +205,11 @@ class EmbeddedFormViewController: UIViewController {
         )
     }
 
-    private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
-        let previousCustomerInput: IntentConfirmParams? = {
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption {
-                return confirmParams
-            } else {
-                return nil
-            }
-        }()
-        let headerView = FormHeaderView(
-            paymentMethodType: paymentMethodType,
-            // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
-            shouldUseNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
-            appearance: configuration.appearance
-        )
-        
-        return PaymentMethodFormViewController(
-            type: paymentMethodType,
-            intent: intent,
-            elementsSession: elementsSession,
-            previousCustomerInput: previousCustomerInput,
-            formCache: formCache,
-            configuration: configuration,
-            headerView: headerView,
-            analyticsHelper: analyticsHelper,
-            delegate: self
-        )
-    }
-
     func updateMandate() {
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
         let newMandateText = mandateProvider.mandate(for: selectedPaymentOption?.paymentMethodType,
                                                      savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
-                                                     bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString)
+                                                     bottomNoticeAttributedString: paymentMethodFormViewController.bottomNoticeAttributedString)
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
@@ -373,15 +359,16 @@ class EmbeddedFormViewController: UIViewController {
 
     @objc func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
-        guard paymentMethodFormViewController?.overridePrimaryButtonState == nil else {
-            paymentMethodFormViewController?.didTapCallToActionButton(from: self)
+        guard paymentMethodFormViewController.overridePrimaryButtonState == nil else {
+            paymentMethodFormViewController.didTapCallToActionButton(from: self)
             return
         }
 
         // Otherwise, grab the payment option
         guard let selectedPaymentOption else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError, error: Error.noPaymentOptionOnBuyButtonTap)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            // TODO(wooj) Log an error here that is not specific to PaymentSheetViewController
+            //let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError, error: Error.noPaymentOptionOnBuyButtonTap)
+            // STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure("Tapped buy button while adding without paymentOption")
             return
         }
