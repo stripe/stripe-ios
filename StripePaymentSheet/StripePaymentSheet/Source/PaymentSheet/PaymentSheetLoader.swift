@@ -177,14 +177,12 @@ final class PaymentSheetLoader {
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async {
         await withCheckedContinuation { continuation in
-            Task {
-                AddressSpecProvider.shared.loadAddressSpecs {
-                    // Load form specs
-                    FormSpecProvider.shared.load { _ in
-                        // Load BSB data
-                        BSBNumberProvider.shared.loadBSBData {
-                            continuation.resume()
-                        }
+            AddressSpecProvider.shared.loadAddressSpecs {
+                // Load form specs
+                FormSpecProvider.shared.load { _ in
+                    // Load BSB data
+                    BSBNumberProvider.shared.loadBSBData {
+                        continuation.resume()
                     }
                 }
             }
