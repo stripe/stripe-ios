@@ -237,6 +237,7 @@
 		B6B3481CBA798CF22EE8411A /* TextFieldElement+IBAN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570931B897DCCAC0F55FB6E3 /* TextFieldElement+IBAN.swift */; };
 		B6BF12392C2F2E790033601E /* PaymentSheetImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BF12382C2F2E780033601E /* PaymentSheetImageTests.swift */; };
 		B6CACC9E2CB8B90700682ECE /* EmbeddedPaymentElement+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CACC9D2CB8B8E800682ECE /* EmbeddedPaymentElement+Internal.swift */; };
+		B6CACCA02CBD9A3300682ECE /* EmbeddedPaymentElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CACC9F2CBD9A3300682ECE /* EmbeddedPaymentElementTest.swift */; };
 		B6D1B3662C5DFCE800A9E0D7 /* PaymentSheetAnalyticsHelperTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1B3652C5DFCE800A9E0D7 /* PaymentSheetAnalyticsHelperTest.swift */; };
 		B6E8C7FB2C184A0300B977B2 /* PaymentSheetFormFactory+Mandates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E8C7FA2C184A0300B977B2 /* PaymentSheetFormFactory+Mandates.swift */; };
 		B6F4C5F82CADB0CB00AF3767 /* USBankAccountPaymentMethodElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F4C5F72CADB0CB00AF3767 /* USBankAccountPaymentMethodElementTest.swift */; };
@@ -610,6 +611,7 @@
 		B68CB9622B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+PaymentSheetTest.swift"; sourceTree = "<group>"; };
 		B6BF12382C2F2E780033601E /* PaymentSheetImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetImageTests.swift; sourceTree = "<group>"; };
 		B6CACC9D2CB8B8E800682ECE /* EmbeddedPaymentElement+Internal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EmbeddedPaymentElement+Internal.swift"; sourceTree = "<group>"; };
+		B6CACC9F2CBD9A3300682ECE /* EmbeddedPaymentElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentElementTest.swift; sourceTree = "<group>"; };
 		B6D1B3652C5DFCE800A9E0D7 /* PaymentSheetAnalyticsHelperTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAnalyticsHelperTest.swift; sourceTree = "<group>"; };
 		B6E8C7FA2C184A0300B977B2 /* PaymentSheetFormFactory+Mandates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheetFormFactory+Mandates.swift"; sourceTree = "<group>"; };
 		B6F4C5F72CADB0CB00AF3767 /* USBankAccountPaymentMethodElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBankAccountPaymentMethodElementTest.swift; sourceTree = "<group>"; };
@@ -1427,11 +1429,12 @@
 				989C2E3E03E42DA64A2FAE0D /* CustomerSheetSnapshotTests.swift */,
 				31699A822BE183D40048677F /* DownloadManagerTest.swift */,
 				73FB30705EC36BD0868904A2 /* Elements+TestHelpers.swift */,
+				B6CACC9F2CBD9A3300682ECE /* EmbeddedPaymentElementTest.swift */,
 				61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */,
 				614068E12CB0BF10003D2F12 /* EmbeddedPaymentMethodsViewTests.swift */,
 				64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */,
-				6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */,
 				61D842902CB06047009D2D51 /* FormMandateProviderTests.swift */,
+				6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */,
 				990304EF35A0EE37DCE20D5B /* IntentStatusPollerTest.swift */,
 				FCA28FF8CD5BA829A44CDCE7 /* Link */,
 				33B8F21A22FA091BC9D2924B /* LinkStubs.swift */,
@@ -1722,6 +1725,7 @@
 				9C42A106FF30A22CFBB38AE8 /* Elements+TestHelpers.swift in Sources */,
 				D442C49095DDEC2C6ADAF392 /* FlowControllerStateTests.swift in Sources */,
 				619AF0852BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift in Sources */,
+				B6CACCA02CBD9A3300682ECE /* EmbeddedPaymentElementTest.swift in Sources */,
 				2EC9C94DD8D62E4F4EFC8AB8 /* IntentStatusPollerTest.swift in Sources */,
 				ABC3A7CF6D5B21D0C9684A09 /* LinkPopupURLParserTests.swift in Sources */,
 				F94F6A157CEB937896B682D4 /* LinkURLGeneratorTests.swift in Sources */,

@@ -228,7 +228,12 @@ final class PaymentSheetLoader {
     static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
         let intent: Intent
         let elementsSession: STPElementsSession
-        let clientDefaultPaymentMethod = defaultStripePaymentMethodId(forCustomerID: configuration.customer?.id)
+        let clientDefaultPaymentMethod: String? = {
+            guard let customer = configuration.customer else {
+                return nil
+            }
+            return defaultStripePaymentMethodId(forCustomerID: customer.id)
+        }()
 
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):

@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
@@ -16,6 +16,20 @@ public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
     static func _testValue_MostPermissive(isApplePayEnabled: Bool = true) -> Self {
         var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        if isApplePayEnabled {
+            configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
+        }
+        return configuration
+    }
+}
+
+public extension EmbeddedPaymentElement.Configuration {
+    /// Provides a Configuration that allows all pm types available
+    static func _testValue_MostPermissive(isApplePayEnabled: Bool = true) -> Self {
+        var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: .continue)
         configuration.returnURL = "https://foo.com"
         configuration.allowsDelayedPaymentMethods = true
         configuration.allowsPaymentMethodsRequiringShippingAddress = true

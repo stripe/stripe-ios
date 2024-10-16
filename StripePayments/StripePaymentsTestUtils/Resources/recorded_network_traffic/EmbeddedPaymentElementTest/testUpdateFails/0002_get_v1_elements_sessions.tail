@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_secret=seti_1QAb7DFY0qyl6XeWrlxYQA5I_secret_R2gUgnXj4w3TFUfDkaI9KerWI8LF9Fh&expand%5B0%5D=payment_method_preference\.setup_intent\.payment_method&locale=en-US&type=setup_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&type=deferred_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
-request-id: req_E9RgmKsPwYdG9N
-Content-Length: 19917
+request-id: req_pHUREqBlWmEkQg
+Content-Length: 13002
 Vary: Origin
-Date: Wed, 16 Oct 2024 17:34:32 GMT
+Date: Wed, 16 Oct 2024 16:08:40 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -29,34 +29,9 @@ x-content-type-options: nosniff
   "payment_method_preference" : {
     "country_code" : "US",
     "object" : "payment_method_preference",
-    "setup_intent" : {
-      "id" : "seti_1QAb7DFY0qyl6XeWrlxYQA5I",
-      "description" : null,
-      "next_action" : null,
-      "livemode" : false,
-      "payment_method" : null,
-      "payment_method_configuration_details" : null,
-      "usage" : "off_session",
-      "payment_method_types" : [
-        "ideal",
-        "card",
-        "bancontact",
-        "sofort"
-      ],
-      "object" : "setup_intent",
-      "last_setup_error" : null,
-      "created" : 1729100071,
-      "client_secret" : "seti_1QAb7DFY0qyl6XeWrlxYQA5I_secret_R2gUgnXj4w3TFUfDkaI9KerWI8LF9Fh",
-      "automatic_payment_methods" : null,
-      "cancellation_reason" : null,
-      "status" : "requires_payment_method"
-    },
-    "type" : "setup_intent",
+    "type" : "deferred_intent",
     "ordered_payment_method_types" : [
-      "card",
-      "sofort",
-      "bancontact",
-      "ideal"
+      "card"
     ]
   },
   "capability_enabled_card_networks" : [
@@ -208,7 +183,7 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_mybank" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_08OknHWmZZ0",
+  "session_id" : "elements_session_1fezwrXSzAw",
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_currency" : "usd",
@@ -218,7 +193,7 @@ x-content-type-options: nosniff
       "cartes_bancaires"
     ],
     "supported_cobranded_networks" : {
-      "cartes_bancaires" : true
+      "cartes_bancaires" : false
     }
   },
   "shipping_address_settings" : {
@@ -235,14 +210,13 @@ x-content-type-options: nosniff
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "2cf07b64-c5cb-46f8-83c8-4653439fc5a9",
+    "arb_id" : "90d10d9a-fa68-49a3-9915-045be137cdd5",
     "experiment_metadata" : {
       "seed" : "f141acec06c73601adc1c212d38a020b85a1cdd62a3e46835373aeaf676a9090"
     },
     "experiment_assignments" : {
       "elements_merchant_ui_api_srv" : "control",
-      "link_popup_webview_option_ios" : "control",
-      "ocs_buyer_xp_elements_lpm_holdback" : "control"
+      "link_popup_webview_option_ios" : "control"
     }
   },
   "legacy_customer" : null,
@@ -307,232 +281,10 @@ x-content-type-options: nosniff
   "payment_method_specs" : [
     {
       "async" : false,
-      "fields" : [
-        {
-          "type" : "name",
-          "api_path" : {
-            "v1" : "billing_details[name]"
-          }
-        },
-        {
-          "for" : "email",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "phone",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "billing_address",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "sepa_mandate",
-          "type" : "placeholder"
-        }
-      ],
-      "selector_icon" : {
-        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-bancontact@3x-5b31be92d86c437286200810aeaa49ce.png",
-        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-bancontact-c6d62da104212dacefee6ea12a070237.svg"
-      },
-      "type" : "bancontact",
-      "next_action_spec" : {
-        "confirm_response_status_specs" : {
-          "requires_action" : {
-            "type" : "redirect_to_url"
-          }
-        },
-        "post_confirm_handling_pi_status_specs" : {
-          "requires_action" : {
-            "type" : "canceled"
-          },
-          "succeeded" : {
-            "type" : "finished"
-          }
-        }
-      }
-    },
-    {
-      "async" : false,
       "type" : "card",
       "fields" : [
 
       ]
-    },
-    {
-      "async" : false,
-      "fields" : [
-        {
-          "type" : "name",
-          "api_path" : {
-            "v1" : "billing_details[name]"
-          }
-        },
-        {
-          "for" : "email",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "phone",
-          "type" : "placeholder"
-        },
-        {
-          "items" : [
-            {
-              "display_text" : "ABN Amro",
-              "api_value" : "abn_amro"
-            },
-            {
-              "display_text" : "ASN Bank",
-              "api_value" : "asn_bank"
-            },
-            {
-              "display_text" : "bunq B.V.",
-              "api_value" : "bunq"
-            },
-            {
-              "display_text" : "ING Bank",
-              "api_value" : "ing"
-            },
-            {
-              "display_text" : "Knab",
-              "api_value" : "knab"
-            },
-            {
-              "display_text" : "N26",
-              "api_value" : "n26"
-            },
-            {
-              "display_text" : "Nationale-Nederlanden",
-              "api_value" : "nn"
-            },
-            {
-              "display_text" : "Rabobank",
-              "api_value" : "rabobank"
-            },
-            {
-              "display_text" : "RegioBank",
-              "api_value" : "regiobank"
-            },
-            {
-              "display_text" : "Revolut",
-              "api_value" : "revolut"
-            },
-            {
-              "display_text" : "SNS Bank",
-              "api_value" : "sns_bank"
-            },
-            {
-              "display_text" : "Triodos Bank",
-              "api_value" : "triodos_bank"
-            },
-            {
-              "display_text" : "Van Lanschot",
-              "api_value" : "van_lanschot"
-            },
-            {
-              "display_text" : "Yoursafe",
-              "api_value" : "yoursafe"
-            }
-          ],
-          "type" : "selector",
-          "translation_id" : "upe.labels.ideal.bank",
-          "api_path" : {
-            "v1" : "ideal[bank]"
-          }
-        },
-        {
-          "for" : "billing_address",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "sepa_mandate",
-          "type" : "placeholder"
-        }
-      ],
-      "selector_icon" : {
-        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-ideal@3x-fc5387c2139f55b84777c646208df7ee.png",
-        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-ideal-608d5ba5730f82c25f122960ccaa9836.svg"
-      },
-      "type" : "ideal",
-      "next_action_spec" : {
-        "confirm_response_status_specs" : {
-          "requires_action" : {
-            "type" : "redirect_to_url"
-          }
-        },
-        "post_confirm_handling_pi_status_specs" : {
-          "requires_action" : {
-            "type" : "canceled"
-          },
-          "succeeded" : {
-            "type" : "finished"
-          }
-        }
-      }
-    },
-    {
-      "async" : true,
-      "fields" : [
-        {
-          "for" : "name",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "email",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "phone",
-          "type" : "placeholder"
-        },
-        {
-          "type" : "country",
-          "api_path" : {
-            "v1" : "sofort[country]"
-          },
-          "allowed_country_codes" : [
-            "AT",
-            "BE",
-            "DE",
-            "ES",
-            "NL"
-          ]
-        },
-        {
-          "for" : "billing_address_without_country",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "sepa_mandate",
-          "type" : "placeholder"
-        }
-      ],
-      "selector_icon" : {
-        "dark_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sofort_dark@3x-1b34ec3a7503b3e20be0a069f8046f29.png",
-        "dark_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sofort_dark-ded76aa1c92357f1b78dab85ed5b6347.svg",
-        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sofort@3x-8842e382bdf77386d547ff0ef56880c1.png",
-        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sofort-c12d29b37f06a2d05dfb22ea9736104b.svg"
-      },
-      "type" : "sofort",
-      "next_action_spec" : {
-        "confirm_response_status_specs" : {
-          "requires_action" : {
-            "type" : "redirect_to_url"
-          }
-        },
-        "post_confirm_handling_pi_status_specs" : {
-          "requires_action" : {
-            "type" : "canceled"
-          },
-          "succeeded" : {
-            "type" : "finished"
-          },
-          "processing" : {
-            "type" : "finished"
-          }
-        }
-      }
     }
   ],
   "prefill_selectors" : {
@@ -544,9 +296,7 @@ x-content-type-options: nosniff
     }
   },
   "unactivated_payment_method_types" : [
-    "sofort",
-    "bancontact",
-    "ideal"
+
   ],
   "unverified_payment_methods_on_domain" : [
     "apple_pay"
@@ -565,10 +315,7 @@ x-content-type-options: nosniff
   "ordered_payment_method_types_and_wallets" : [
     "card",
     "apple_pay",
-    "google_pay",
-    "sofort",
-    "bancontact",
-    "ideal"
+    "google_pay"
   ],
   "customer_error" : null
 }
