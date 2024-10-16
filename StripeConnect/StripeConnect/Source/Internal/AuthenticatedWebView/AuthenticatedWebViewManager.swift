@@ -15,10 +15,10 @@ class AuthenticatedWebViewManager: NSObject {
     private let sessionFactory: SessionFactory
 
     /// Window to present the session in
-    private weak var window: UIWindow?
+    weak var window: UIWindow?
 
     /// Pointer to the auth session
-    private weak var authSession: ASWebAuthenticationSession?
+    weak var authSession: ASWebAuthenticationSession?
 
     init(sessionFactory: @escaping SessionFactory = ASWebAuthenticationSession.init) {
         self.sessionFactory = sessionFactory
@@ -36,9 +36,20 @@ class AuthenticatedWebViewManager: NSObject {
 
         let returnUrl: URL? = try await withCheckedThrowingContinuation { continuation in
             let authSession = sessionFactory(url, StripeConnectConstants.authenticatedWebViewReturnUrlScheme) { returnUrl, error in
-                continuation.resume(with: Result(catching: {
-                    try AuthenticatedWebViewManager.completionHandler(returnUrl: returnUrl, error: error)
-                }))
+
+                if let authenticationSessionError = error as? ASWebAuthenticationSessionError,
+                   authenticationSessionError.code == .canceledLogin {
+                    // The user either selected "Cancel" in the initial modal
+                    // prompting them to "Sign In" or they hit the "Cancel"
+                    // button in presented browser view
+                    continuation.resume(returning: nil)
+                    return
+                } else if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                continuation.resume(returning: returnUrl)
             }
             authSession.presentationContextProvider = self
 
@@ -49,20 +60,6 @@ class AuthenticatedWebViewManager: NSObject {
                 continuation.resume(throwing: AuthenticatedWebViewError.cannotStartSession)
                 return
             }
-        }
-
-        return returnUrl
-    }
-
-    static func completionHandler(returnUrl: URL?, error: Error?) throws -> URL? {
-        if let authenticationSessionError = error as? ASWebAuthenticationSessionError,
-           authenticationSessionError.code == .canceledLogin {
-            // The user either selected "Cancel" in the initial modal
-            // prompting them to "Sign In" or they hit the "Cancel"
-            // button in presented browser view
-            return nil
-        } else if let error {
-            throw error
         }
 
         return returnUrl
