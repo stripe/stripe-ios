@@ -442,7 +442,7 @@ extension STPPaymentMethodParams {
     var paymentSheetLabel: String {
         switch type {
         case .card:
-            return "••••\(card?.last4 ?? "")"
+            return "•••• \(card?.last4 ?? "")"
         case .FPX:
             if let fpx = fpx {
                 return STPFPXBank.stringFrom(fpx.bank) ?? ""
