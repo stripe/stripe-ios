@@ -15,12 +15,13 @@ class OpenAuthenticatedWebViewMessageHandler: ScriptMessageHandlerWithReply<Open
         /// Unique identifier logged in analytics when the `ASWebAuthenticationSession` is opened or closed.
         let id: String
     }
+
     struct Response: Codable, Equatable {
         /// The return URL from the `ASWebAuthenticationSession` redirect.
         /// This value will be nil if the user canceled out of the view
         let url: URL?
-
     }
+
     init(didReceiveMessage: @escaping (Payload) async throws -> Response) {
         super.init(name: "openAuthenticatedWebView", didReceiveMessage: didReceiveMessage)
     }
