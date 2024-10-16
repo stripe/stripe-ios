@@ -9,15 +9,19 @@ import AuthenticationServices
 
 /// Singleton helper to manage
 class AuthenticatedWebViewManager: NSObject {
-    typealias SessionFactory = (_ url: URL, _ callbackURLScheme: String?, _ completionHandler: @escaping ASWebAuthenticationSession.CompletionHandler) -> ASWebAuthenticationSession
+    typealias SessionFactory = (
+        _ url: URL,
+        _ callbackURLScheme: String?,
+        _ completionHandler: @escaping ASWebAuthenticationSession.CompletionHandler
+    ) -> ASWebAuthenticationSession
 
     /// Used to dependency inject `ASWebAuthenticationSession.init` in tests
     private let sessionFactory: SessionFactory
 
     /// Window to present the session in
-    weak var window: UIWindow?
+    private weak var window: UIWindow?
 
-    /// Pointer to the auth session
+    /// The currently presented auth session, if there is one
     weak var authSession: ASWebAuthenticationSession?
 
     init(sessionFactory: @escaping SessionFactory = ASWebAuthenticationSession.init) {
