@@ -967,7 +967,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
         // Saved card should show the cartes bancaires logo
-        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
 
         let editButton = app.staticTexts["Edit"]
@@ -1007,7 +1007,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
         // Saved card should show the cartes bancaires logo
-        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
 
         // Remove this card
@@ -1019,7 +1019,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         confirmRemoval.tap()
 
         // Card should be removed
-        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertFalse(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
     }
 }
 

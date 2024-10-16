@@ -178,16 +178,16 @@ class CustomerSheetUITest: XCTestCase {
         presentCSAndAddCardFrom(buttonLabel: "None")
         presentCSAndAddCardFrom(buttonLabel: "•••• 4242", cardNumber: "5555555555554444")
 
-        app.staticTexts["••••4444"].waitForExistenceAndTap(timeout: timeout)
+        app.staticTexts["•••• 4444"].waitForExistenceAndTap(timeout: timeout)
 
         let editButton = app.staticTexts["Edit"]
         XCTAssertTrue(editButton.waitForExistence(timeout: timeout))
         editButton.tap()
 
         removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
-        // ••••4444 is rendered as the PM to remove, as well as the status on the playground
+        // •••• 4444 is rendered as the PM to remove, as well as the status on the playground
         // Check that it is removed by waiting for there only be one instance
-        let elementLabel = "••••4444"
+        let elementLabel = "•••• 4444"
         let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
         waitForNItemsExistence(elementQuery, count: 1)
 
@@ -283,7 +283,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: •••• 6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func testCustomerSheet_addUSBankAccount_MicroDeposit() throws {
@@ -382,7 +382,7 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Reload"].tap()
         app.buttons["Payment method"].waitForExistenceAndTap(timeout: timeout)
         // Saved card should show the cartes bancaires logo
-        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: timeout))
+        XCTAssertTrue(app.staticTexts["•••• 1001"].waitForExistence(timeout: timeout))
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: timeout))
 
         app.staticTexts["Edit"].waitForExistenceAndTap(timeout: timeout)
@@ -415,7 +415,7 @@ class CustomerSheetUITest: XCTestCase {
         // Card is no longer saved - Wait for ApplePay is a signal the view has loaded, then wait 0.5
         // up to 0.5 seconds to ensure card is not there
         XCTAssertTrue(app.collectionViews.staticTexts["Apple Pay"].waitForExistence(timeout: timeout))
-        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 0.5))
+        XCTAssertFalse(app.staticTexts["•••• 1001"].waitForExistence(timeout: 0.5))
     }
 
     func testCardBrandChoiceWithPreferredNetworks() throws {
