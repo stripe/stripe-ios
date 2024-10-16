@@ -60,8 +60,6 @@ class ConnectWebViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - UIViewController
-
     override func loadView() {
         view = webView
     }
@@ -71,16 +69,6 @@ class ConnectWebViewController: UIViewController {
 
         // Default disable swipe to dismiss
         parent?.isModalInPresentation = true
-    }
-
-    // MARK: - Internal
-
-    func showUnexpectedErrorAlert() {
-        let alert = UIAlertController(
-            title: nil,
-            message: NSError.stp_unexpectedErrorMessage(),
-            preferredStyle: .alert)
-        present(alert, animated: true)
     }
 }
 
@@ -117,11 +105,15 @@ private extension ConnectWebViewController {
         urlOpener.openIfPossible(url)
     }
 
-    func showAlertAndLogError(_ error: Error?) {
+    func showErrorAlert(for error: Error?) {
         // TODO: MXMOBILE-2491 Log analytic when receiving an error
         debugPrint(String(describing: error))
 
-        showUnexpectedErrorAlert()
+        let alert = UIAlertController(
+            title: nil,
+            message: NSError.stp_unexpectedErrorMessage(),
+            preferredStyle: .alert)
+        present(alert, animated: true)
     }
 
     func cleanupDownloadedFile() {
@@ -271,7 +263,7 @@ extension ConnectWebViewController {
         do {
             try fileManager.createDirectory(at: tempDir, withIntermediateDirectories: true)
         } catch {
-            showAlertAndLogError(error)
+            showErrorAlert(for: error)
             return nil
         }
 
@@ -281,7 +273,7 @@ extension ConnectWebViewController {
 
     func download(didFailWithError error: any Error,
                   resumeData: Data?) {
-        showAlertAndLogError(error)
+        showErrorAlert(for: error)
     }
 
     func downloadDidFinish() {
@@ -291,7 +283,7 @@ extension ConnectWebViewController {
             // If file doesn't exist, it indicates something went wrong creating
             // the temp file or the system deleted the temp file too quickly
             // TODO: MXMOBILE-2491 Log error analytic
-            showAlertAndLogError(nil)
+            showErrorAlert(for: nil)
             cleanupDownloadedFile()
             return
         }
