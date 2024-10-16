@@ -50,7 +50,7 @@ class PayoutsViewControllerTests: XCTestCase {
             XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
         }
 
-        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
 
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }

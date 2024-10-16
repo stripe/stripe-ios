@@ -32,13 +32,19 @@ enum TestHelpers {
     }
 }
 
-extension UIView {
+extension UIViewController {
     // Overriding the user interface style alone does not trigger a trait collection change
     // the view also needs to be added to a window.
     func triggerTraitCollectionChange(style: UIUserInterfaceStyle) {
         let window = UIWindow()
-        window.overrideUserInterfaceStyle = .dark
-        window.addSubview(self)
+        window.rootViewController = self
+        window.makeKeyAndVisible()
+        window.overrideUserInterfaceStyle = style
+
+        // NOTE: On iOS 16 and lower, we need to trigger a layout on the VC to
+        // trigger a trait collection change. This is not needed on 17+
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
     }
 }
 
