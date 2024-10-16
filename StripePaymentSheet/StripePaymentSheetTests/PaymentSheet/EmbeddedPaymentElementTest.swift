@@ -82,9 +82,9 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
         let updateResult = await sut.update(intentConfiguration: intentConfig)
         switch updateResult {
         case .failed(error: let error):
-            print(error.nonGenericDescription)
-        default:
             break
+        default:
+            XCTFail()
         }
 
         // Updating should succeed after failing to update...
@@ -102,9 +102,9 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         // ...updating...
-        async let _updateResult = await sut.update(intentConfiguration: paymentIntentConfig)
+        async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately updating again, before the 1st update finishes...
-        async let _updateResult2 = await sut.update(intentConfiguration: setupIntentConfig)
+        async let _updateResult2 = sut.update(intentConfiguration: setupIntentConfig)
         let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
         let updateResult2 = await _updateResult2
         // ...should cancel the 1st update
