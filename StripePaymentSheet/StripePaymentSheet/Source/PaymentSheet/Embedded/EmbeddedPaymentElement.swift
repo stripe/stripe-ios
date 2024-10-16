@@ -13,7 +13,7 @@ import UIKit
 /// An object that manages a view that displays payment methods and completes a checkout.
 @_spi(EmbeddedPaymentElementPrivateBeta)
 @MainActor
-public class EmbeddedPaymentElement {
+public final class EmbeddedPaymentElement {
 
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: UIView {
@@ -98,53 +98,59 @@ public class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
-        self.updateCount += 1
-        let updateIndex = updateCount
-        let loadResult: PaymentSheetLoader.LoadResult
-        do {
-            // TODO: Change dummy analytics helper
-            let dummyAnalyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init())
-            // TODO: Make `load` vend a Task so that we can cancel it
-            loadResult = try await PaymentSheetLoader.load(
-                mode: .deferredIntent(intentConfiguration),
+        // Cancel the old task and let it finish so that merchants receive update results in order
+        currentUpdateTask?.cancel()
+        _ = await currentUpdateTask?.value
+        // Start the new update task
+        let currentUpdateTask = Task { [weak self, configuration, paymentOption] in
+            // 1. Reload v1/elements/session.
+            let loadResult: PaymentSheetLoader.LoadResult
+            do {
+                // TODO: Change dummy analytics helper
+                let dummyAnalyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init())
+                // TODO(nice to have): Make `load` respect task cancellation to reduce network consumption
+                loadResult = try await PaymentSheetLoader.load(
+                    mode: .deferredIntent(intentConfiguration),
+                    configuration: configuration,
+                    analyticsHelper: dummyAnalyticsHelper,
+                    integrationShape: .embedded
+                )
+            } catch {
+                return UpdateResult.failed(error: error)
+            }
+            guard !Task.isCancelled else {
+                return UpdateResult.canceled
+            }
+
+            // 2. Re-initialize embedded view to update the UI to match the newly loaded data.
+            let embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
-                analyticsHelper: dummyAnalyticsHelper,
-                integrationShape: .embedded
+                loadResult: loadResult,
+                delegate: self
+                // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
             )
-        } catch {
-            return .failed(error: error)
-        }
-        // 1. Make sure we're still the latest update; otherwise, return `.canceled`
-        // Don't do any other async work below or you will introduce race conditions!
-        guard updateIndex == self.updateCount else {
-            return .canceled
-        }
 
-        // Hang on to old state to diff against later in this method
-        let oldViewHeight = embeddedPaymentMethodsView.frame.height
-        let oldPaymentOption = paymentOption
+            // 2. Pre-load image into cache
+            // Hack: Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (from the internet instead of disk) before we call the completion handler.
+            // Call this on a detached Task b/c this synchronously (!) loads the image from network and we don't want to block the main actor
+            let fetchPaymentOption = Task.detached(priority: .userInitiated) {
+                return await embeddedPaymentMethodsView.displayData
+            }
+            _ = await fetchPaymentOption.value
 
-        // 2. Update our variables. Re-initialize embedded view to update the UI to match the newly loaded data.
-        self.loadResult = loadResult
-        self.embeddedPaymentMethodsView = Self.makeView(
-            configuration: configuration,
-            loadResult: loadResult,
-            delegate: self
-            // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
-        )
-
-        // 3. Synchronously pre-load image into cache
-        // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (from the internet instead of disk) before we call the completion handler.
-        _ = self.paymentOption
-
-        // 4. Inform our delegate if anything updated
-        if oldViewHeight != view.frame.height {
-            delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+            guard let self, !Task.isCancelled else {
+                return .canceled
+            }
+            // At this point, we're the latest update - update self properties and inform our delegate.
+            self.loadResult = loadResult
+            self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
+            if paymentOption != embeddedPaymentMethodsView.displayData {
+                self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+            }
+            return .succeeded
         }
-        if oldPaymentOption != paymentOption {
-            delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
-        }
-        return .succeeded
+        self.currentUpdateTask = currentUpdateTask
+        return await currentUpdateTask.value
     }
 
     /// Completes the payment or setup.
@@ -159,7 +165,7 @@ public class EmbeddedPaymentElement {
 
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
-    internal private(set) var updateCount: Int = 0
+    internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
 
     private init(
         configuration: Configuration,

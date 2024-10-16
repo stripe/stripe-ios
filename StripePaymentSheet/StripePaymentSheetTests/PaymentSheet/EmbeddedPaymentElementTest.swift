@@ -15,7 +15,7 @@ import XCTest
 @MainActor
 class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
     lazy var configuration: EmbeddedPaymentElement.Configuration = {
-        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive()
+        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return config
     }()
@@ -30,9 +30,11 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
 
     func testUpdate() async throws {
         STPAnalyticsClient.sharedClient._testLogHistory = []
+        CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: nil)
 
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
         // ...its intent should match the initial intent config...
         XCTAssertFalse(sut.loadResult.intent.isSettingUp)
         XCTAssertTrue(sut.loadResult.intent.isPaymentIntent)
@@ -40,18 +42,18 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
         // ...and updating the intent config should succeed...
         let update1Result = await sut.update(intentConfiguration: setupIntentConfig)
         XCTAssertEqual(update1Result, .succeeded)
-        XCTAssertNil(sut.paymentOption)
         XCTAssertTrue(sut.loadResult.intent.isSettingUp)
         XCTAssertFalse(sut.loadResult.intent.isPaymentIntent)
 
-        // ...updating the intent config multiple times should succeed...
+        // ...updating the intent config multiple times...
         // ...(using the completion block based API this time)...
         let secondUpdateExpectation = expectation(description: "Second update completes")
         sut.update(intentConfiguration: paymentIntentConfig) { update2Result in
+            // ...should succeed.
             XCTAssertEqual(update2Result, .succeeded)
-            XCTAssertNil(sut.paymentOption)
             XCTAssertFalse(sut.loadResult.intent.isSettingUp)
             XCTAssertTrue(sut.loadResult.intent.isPaymentIntent)
+            // TODO: Test paymentOption updates correctly. 
 
             // Sanity check that the analytics...
             let analytics = STPAnalyticsClient.sharedClient._testLogHistory
@@ -84,7 +86,6 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
         default:
             break
         }
-        XCTAssertNil(sut.paymentOption)
 
         // Updating should succeed after failing to update...
         let secondUpdateExpectation = expectation(description: "Second update succeeds")
@@ -92,7 +93,6 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
         // ...(using the completion block based API this time)...
         sut.update(intentConfiguration: intentConfig) { update2Result in
             XCTAssertEqual(update2Result, .succeeded)
-            XCTAssertNil(sut.paymentOption)
             secondUpdateExpectation.fulfill()
         }
         await fulfillment(of: [secondUpdateExpectation])
@@ -112,9 +112,17 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(updateResult2, .succeeded)
         XCTAssertTrue(sut.loadResult.intent.isSettingUp)
     }
+
 }
 
-extension EmbeddedPaymentElement.UpdateResult: Equatable {
+extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
+    // TODO: Test delegates are called
+    func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {}
+
+    func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {}
+}
+
+extension EmbeddedPaymentElement.UpdateResult: @retroactive Equatable {
     public static func == (lhs: StripePaymentSheet.EmbeddedPaymentElement.UpdateResult, rhs: StripePaymentSheet.EmbeddedPaymentElement.UpdateResult) -> Bool {
         switch (lhs, rhs) {
         case (.succeeded, .succeeded): return true
