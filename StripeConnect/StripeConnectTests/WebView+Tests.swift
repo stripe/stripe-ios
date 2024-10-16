@@ -54,13 +54,6 @@ extension WKWebView {
                         """)
     }
 
-    func evaluateOpenAuthenticatedWebView(url: String, id: String) {
-        evaluateMessage(name: "openAuthenticatedWebView",
-                        json: """
-                        {"url": "\(url)", "id": "\(id)" }
-                        """)
-    }
-
     func evaluateOnLoadError(type: String, message: String) async throws {
         try await evaluateMessage(name: "onSetterFunctionCalled",
                         json:
