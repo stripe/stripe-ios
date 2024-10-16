@@ -28,8 +28,8 @@ extension WKWebView {
                         """)
     }
 
-    func evaluateOnLoaderStart(elementTagName: String) {
-        evaluateMessage(name: "onSetterFunctionCalled",
+    func evaluateOnLoaderStart(elementTagName: String) async throws {
+        try await evaluateMessage(name: "onSetterFunctionCalled",
                                 json: """
                         {
                             "setter": "setOnLoaderStart",

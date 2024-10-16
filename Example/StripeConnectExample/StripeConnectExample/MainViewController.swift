@@ -154,14 +154,25 @@ class MainViewController: UITableViewController {
         } else {
             // Modally present
 
-            // Add a close button
-            viewControllerToPresent.navigationItem.leftBarButtonItem = .init(systemItem: .close, primaryAction: .init(handler: { [weak viewControllerToPresent] _ in
+            let closeAction = UIAction { [weak viewControllerToPresent] _ in
                 viewControllerToPresent?.dismiss(animated: true)
-            }))
+            }
 
             if presentationSettings.embedInNavBar {
+                // Add a close button to navbar
+                viewControllerToPresent.navigationItem.leftBarButtonItem = .init(systemItem: .close, primaryAction: closeAction)
+
                 // Embed inside a navbar
                 viewControllerToPresent = UINavigationController(rootViewController: viewControllerToPresent)
+            } else {
+                // Add floating close button
+                let closeButton = UIButton(type: .close, primaryAction: closeAction)
+                closeButton.translatesAutoresizingMaskIntoConstraints = false
+                viewControllerToPresent.view.addSubview(closeButton)
+                NSLayoutConstraint.activate([
+                    closeButton.topAnchor.constraint(equalTo: viewControllerToPresent.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+                    closeButton.trailingAnchor.constraint(equalTo: viewControllerToPresent.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+                ])
             }
             present(viewControllerToPresent, animated: true)
         }
