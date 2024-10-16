@@ -22,38 +22,30 @@ public class AccountManagementViewController: UIViewController {
         }
     }
 
-    let webView: ConnectComponentWebView
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: AccountManagementViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
-         collectionOptions: AccountCollectionOptions) {
-        webView = ConnectComponentWebView(
+         collectionOptions: AccountCollectionOptions,
+         loadContent: Bool) {
+        super.init(nibName: nil, bundle: nil)
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
-            componentType: .accountManagement
+            componentType: .accountManagement,
+            loadContent: loadContent
         ) {
             Props(collectionOptions: collectionOptions)
-        }
-        super.init(nibName: nil, bundle: nil)
-
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
+        } didFailLoadWithError: { [weak self] error in
             guard let self else { return }
-            self.delegate?.accountManagement(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-
-        // TODO(MXMOBILE-2796): Send collection options to web view
-
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
+            delegate?.accountManagement(self, didFailLoadWithError: error)
         }
+
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    public override func loadView() {
-        view = webView
     }
 }
 

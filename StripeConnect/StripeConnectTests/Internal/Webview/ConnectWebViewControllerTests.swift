@@ -1,5 +1,5 @@
 //
-//  ConnectWebViewTests.swift
+//  ConnectWebViewControllerTests.swift
 //  StripeConnectTests
 //
 //  Created by Chris Mays on 8/14/24.
@@ -13,27 +13,26 @@ import SafariServices
 import WebKit
 import XCTest
 
-class ConnectWebViewTests: XCTestCase {
+class ConnectWebViewControllerTests: XCTestCase {
 
     private var mockURLOpener: MockURLOpener!
     private var mockFileManager: MockFileManager!
-    var webView: ConnectWebView!
+    private var webVC: ConnectWebViewControllerTestWrapper!
 
     override func setUp() {
         super.setUp()
         mockFileManager = .init()
         mockURLOpener = .init()
-        webView = ConnectWebView(frame: .zero,
-                                 configuration: .init(),
-                                 urlOpener: mockURLOpener,
-                                 fileManager: mockFileManager,
-                                 sdkVersion: "1.2.3")
+        webVC = .init(configuration: .init(),
+                      urlOpener: mockURLOpener,
+                      fileManager: mockFileManager,
+                      sdkVersion: "1.2.3")
     }
 
     func testUserAgent() {
         // Create an expectation for the asynchronous operation
         let expectation = XCTestExpectation(description: "User Agent Fetched")
-        webView.evaluateJavaScript("navigator.userAgent") { (result, error) in
+        webVC.webView.evaluateJavaScript("navigator.userAgent") { (result, error) in
             defer {
                 expectation.fulfill()
             }
@@ -56,11 +55,11 @@ class ConnectWebViewTests: XCTestCase {
     /// HTTP/HTTPS navigations with no target from a non-allowlisted host should open in a SafariVC
     func testOpenSafariVCIfNotInAllowedHosts() {
         var safariVC: SFSafariViewController?
-        webView.presentPopup = { vc in
+        webVC.presentPopup = { vc in
             safariVC = vc as? SFSafariViewController
         }
-        let webView = webView.webView(webView,
-                        createWebViewWith: webView.configuration,
+        let webView = webVC.webView(webVC.webView,
+                                    createWebViewWith: webVC.webView.configuration,
                         for: MockNavigationAction(request: .init(url: URL(string: "https://stripe.com")!)),
                         windowFeatures: .init())
 
@@ -81,18 +80,18 @@ class ConnectWebViewTests: XCTestCase {
             "http://connect.stripe.com/test",
         ] {
             var popUp: PopupWebViewController?
-            webView.presentPopup = { vc in
+            webVC.presentPopup = { vc in
                 popUp = (vc as? UINavigationController)?.viewControllers.first as? PopupWebViewController
 
             }
-            let webView = webView.webView(webView,
-                                          createWebViewWith: webView.configuration,
-                                          for: MockNavigationAction(request: .init(url: URL(string: url)!)),
-                                          windowFeatures: .init())
+            let webView = webVC.webView(webVC.webView,
+                                        createWebViewWith: webVC.webView.configuration,
+                                        for: MockNavigationAction(request: .init(url: URL(string: url)!)),
+                                        windowFeatures: .init())
 
             XCTAssertEqual(popUp?.webView, webView, url)
             XCTAssertNotNil(popUp?.navigationItem.rightBarButtonItem, url)
-            XCTAssertEqual(popUp?.webView.sdkVersion, "1.2.3", url)
+            XCTAssertEqual(popUp?.sdkVersion, "1.2.3", url)
         }
     }
 
@@ -110,13 +109,13 @@ class ConnectWebViewTests: XCTestCase {
             XCTAssertEqual(url, openURL)
             openURLExpectation.fulfill()
         }
-        webView.presentPopup = { _ in
+        webVC.presentPopup = { _ in
             XCTFail("Present pop up should not be called")
         }
-        let webView = webView.webView(webView,
-                                      createWebViewWith: webView.configuration,
-                                      for: MockNavigationAction(request: .init(url: url)),
-                                      windowFeatures: .init())
+        let webView = webVC.webView(webVC.webView,
+                                    createWebViewWith: webVC.webView.configuration,
+                                    for: MockNavigationAction(request: .init(url: url)),
+                                    windowFeatures: .init())
 
         XCTAssertNil(webView)
         wait(for: [canOpenURLExpectation, openURLExpectation], timeout: TestHelpers.defaultTimeout)
@@ -132,26 +131,15 @@ class ConnectWebViewTests: XCTestCase {
         mockURLOpener.openURLOverride = { _, _, _ in
             XCTFail("Open url should not be called")
         }
-        webView.presentPopup = { _ in
+        webVC.presentPopup = { _ in
             XCTFail("Present pop up should not be called")
         }
-        let webView = webView.webView(webView,
-                                      createWebViewWith: webView.configuration,
-                                      for: MockNavigationAction(request: .init(url: url), targetFrame: .init()),
-                                      windowFeatures: .init())
+        let webView = webVC.webView(webVC.webView,
+                                    createWebViewWith: webVC.webView.configuration,
+                                    for: MockNavigationAction(request: .init(url: url), targetFrame: .init()),
+                                    windowFeatures: .init())
 
         XCTAssertNil(webView)
-    }
-
-    /// `window.close()` should close the view
-    func testWindowCloseDismissesView() {
-        var didCloseCalled = false
-        webView.didClose = { wv in
-            XCTAssertEqual(wv, self.webView)
-            didCloseCalled = true
-        }
-        webView.uiDelegate?.webViewDidClose?(webView)
-        XCTAssertTrue(didCloseCalled)
     }
 
     /// Download if `Content-Disposition` header is an attachment
@@ -165,8 +153,8 @@ class ConnectWebViewTests: XCTestCase {
             headerFields: ["Content-Disposition": "attachment; filename=payouts.csv"]
         )!
 
-        let policy = await webView.webView(
-            webView,
+        let policy = await webVC.webView(
+            webVC.webView,
             decidePolicyFor: MockNavigationResponse(
                 response: response,
                 canShowMIMEType: true
@@ -177,7 +165,7 @@ class ConnectWebViewTests: XCTestCase {
 
     @MainActor
     func testDownloadDestination() async {
-        let destination = await webView.download(
+        let destination = await webVC.download(
             decideDestinationUsing: .init(),
             suggestedFilename: "example.csv"
         )
@@ -185,16 +173,16 @@ class ConnectWebViewTests: XCTestCase {
         XCTAssertEqual(destination?.lastPathComponent, "example.csv")
         XCTAssert(destination?.absoluteString.starts(with: "file:///temp/") == true, String(describing: destination ))
 
-        XCTAssertEqual(webView.downloadedFile, destination)
+        XCTAssertEqual(webVC.downloadedFile, destination)
     }
 
     @MainActor
     func testDownloadDestinationIsTempUniqueFolder() async {
-        let destination1 = await webView.download(
+        let destination1 = await webVC.download(
             decideDestinationUsing: .init(),
             suggestedFilename: "example.csv"
         )
-        let destination2 = await webView.download(
+        let destination2 = await webVC.download(
             decideDestinationUsing: .init(),
             suggestedFilename: "example.csv"
         )
@@ -214,14 +202,14 @@ class ConnectWebViewTests: XCTestCase {
     @MainActor
     func testErrorCreatingDownloadDestinationShowsAlert() async {
         var alertController: UIAlertController?
-        webView.presentPopup = { vc in
+        webVC.presentPopup = { vc in
             alertController = vc as? UIAlertController
         }
         mockFileManager.overrideCreateDirectory = { _, _, _ in
             throw NSError(domain: "Test", code: 0)
         }
 
-        let destination = await webView.download(
+        let destination = await webVC.download(
             decideDestinationUsing: .init(),
             suggestedFilename: "example.csv"
         )
@@ -234,10 +222,10 @@ class ConnectWebViewTests: XCTestCase {
 
     func testDownloadFailedShowsAlert() {
         var alertController: UIAlertController?
-        webView.presentPopup = { vc in
+        webVC.presentPopup = { vc in
             alertController = vc as? UIAlertController
         }
-        webView.download(
+        webVC.download(
             didFailWithError: NSError(domain: "Test", code: 0),
             resumeData: nil
         )
@@ -251,17 +239,17 @@ class ConnectWebViewTests: XCTestCase {
         let mockFileURL = URL(string: "file:///temp/example.csv")!
 
         var activityVC: UIActivityViewController?
-        webView.presentPopup = { vc in
+        webVC.presentPopup = { vc in
             activityVC = vc as? UIActivityViewController
         }
-        webView.downloadedFile = mockFileURL
+        webVC.downloadedFile = mockFileURL
 
-        webView.downloadDidFinish()
+        webVC.downloadDidFinish()
         XCTAssertNotNil(activityVC)
 
         // Dismissing should cleanup downloaded file
         activityVC?.completionWithItemsHandler?(nil, false, nil, nil)
-        XCTAssertNil(webView.downloadedFile)
+        XCTAssertNil(webVC.downloadedFile)
         wait(for: [mockFileManager.removeItemExpectation])
         XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
     }
@@ -270,20 +258,20 @@ class ConnectWebViewTests: XCTestCase {
         let mockFileURL = URL(string: "file:///temp/example.csv")!
 
         var alertController: UIAlertController?
-        webView.presentPopup = { vc in
+        webVC.presentPopup = { vc in
             alertController = vc as? UIAlertController
         }
-        webView.downloadedFile = mockFileURL
+        webVC.downloadedFile = mockFileURL
         mockFileManager.overrideFileExists = false
 
-        webView.downloadDidFinish()
+        webVC.downloadDidFinish()
         XCTAssertNotNil(alertController)
         XCTAssertEqual(alertController?.message,
                        "There was an unexpected error -- try again in a few seconds")
         XCTAssertEqual(alertController?.preferredStyle, .alert)
 
         // Should cleanup downloaded file
-        XCTAssertNil(webView.downloadedFile)
+        XCTAssertNil(webVC.downloadedFile)
         wait(for: [mockFileManager.removeItemExpectation])
         XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
     }
@@ -308,7 +296,7 @@ private class MockNavigationAction: WKNavigationAction {
     }
 }
 
-private class MockNavigationResponse: WKNavigationResponse {
+class MockNavigationResponse: WKNavigationResponse {
     let responseOverride: URLResponse
     let canShowMIMETypeOverride: Bool
 
@@ -321,7 +309,7 @@ private class MockNavigationResponse: WKNavigationResponse {
     }
 
     init(response: URLResponse,
-         canShowMIMEType: Bool) {
+         canShowMIMEType: Bool = false) {
         self.responseOverride = response
         self.canShowMIMETypeOverride = canShowMIMEType
         super.init()
@@ -369,5 +357,13 @@ private class MockFileManager: FileManager {
 
     override func removeItem(atPath path: String) throws {
         try self.removeItem(at: URL(fileURLWithPath: path))
+    }
+}
+
+private class ConnectWebViewControllerTestWrapper: ConnectWebViewController {
+    var presentPopup: (UIViewController) -> Void = {_ in }
+
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        presentPopup(viewControllerToPresent)
     }
 }

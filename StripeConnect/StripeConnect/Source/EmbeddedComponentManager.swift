@@ -18,7 +18,7 @@ public class EmbeddedComponentManager {
     let apiClient: STPAPIClient
 
     // Weakly held web views who get notified when appearance updates.
-    private(set) var childWebViews: NSHashTable<ConnectComponentWebView> = .weakObjects()
+    private(set) var childWebViews: NSHashTable<ConnectComponentWebViewController> = .weakObjects()
 
     let fetchClientSecret: () async -> String?
     let fonts: [EmbeddedComponentManager.CustomFontSource]
@@ -101,7 +101,7 @@ public class EmbeddedComponentManager {
 
     @_spi(DashboardOnly)
     public func createPaymentDetailsViewController() -> PaymentDetailsViewController {
-        .init(componentManager: self)
+        .init(componentManager: self, loadContent: shouldLoadContent)
     }
 
     @_spi(DashboardOnly)
@@ -109,20 +109,23 @@ public class EmbeddedComponentManager {
         collectionOptions: AccountCollectionOptions = .init()
     ) -> AccountManagementViewController {
         .init(componentManager: self,
-              collectionOptions: collectionOptions)
+              collectionOptions: collectionOptions,
+              loadContent: shouldLoadContent)
     }
 
     @_spi(DashboardOnly)
     public func createNotificationBannerViewController(
         collectionOptions: AccountCollectionOptions = .init()
     ) -> NotificationBannerViewController {
-        .init(componentManager: self, collectionOptions: collectionOptions)
+        .init(componentManager: self,
+              collectionOptions: collectionOptions,
+              loadContent: shouldLoadContent)
     }
 
     /// Used to keep reference of all web views associated with this component manager.
     /// - Parameters:
     ///   - webView: The web view associated with this component manager
-    func registerChild(_ webView: ConnectComponentWebView) {
+    func registerChild(_ webView: ConnectComponentWebViewController) {
         childWebViews.add(webView)
     }
 }
