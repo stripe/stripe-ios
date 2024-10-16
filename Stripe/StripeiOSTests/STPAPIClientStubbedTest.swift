@@ -93,7 +93,8 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             clientSecret: "si_client_secret_123",
             paymentMethodType: .USBankAccount,
             customerName: "Test Tester",
-            customerEmailAddress: "test@example.com"
+            customerEmailAddress: "test@example.com",
+            linkMode: nil
         ) { intent, _ in
             guard let intent = intent else {
                 XCTFail("Intent was null")
@@ -163,7 +164,8 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             clientSecret: "si_client_secret_123",
             paymentMethodType: .USBankAccount,
             customerName: "Test Tester",
-            customerEmailAddress: "test@example.com"
+            customerEmailAddress: "test@example.com",
+            linkMode: nil
         ) { intent, _ in
             guard let intent = intent else {
                 XCTFail("Intent was null")
