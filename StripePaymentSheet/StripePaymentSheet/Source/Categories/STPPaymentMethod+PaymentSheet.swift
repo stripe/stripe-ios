@@ -15,7 +15,7 @@ extension STPPaymentMethod {
     var paymentSheetLabel: String {
         switch type {
         case .card:
-            return "••••\(card?.last4 ?? "")"
+            return "•••• \(card?.last4 ?? "")"
         case .SEPADebit:
             return "••••\(sepaDebit?.last4 ?? "")"
         case .USBankAccount:

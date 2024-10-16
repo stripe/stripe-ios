@@ -84,17 +84,17 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Finish the card payment
         try! fillCardData(app, cardNumber: "4242424242424242")
         continueButton.tap()
-        XCTAssertEqual(paymentMethodButton.label, "••••4242, card, 12345, US")
+        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
         // Reload
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10))
-        XCTAssertEqual(paymentMethodButton.label, "••••4242, card, 12345, US")
+        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         paymentMethodButton.tap()
 
-        XCTAssertTrue(app.buttons["••••4242"].isSelected)
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
         XCTAssertTrue(continueButton.isEnabled)
 
         // Add a SEPA Debit PM
@@ -123,7 +123,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         // Switch to the saved card...
         app.buttons["View more"].waitForExistenceAndTap()
-        app.buttons["••••4242"].waitForExistenceAndTap()
+        app.buttons["•••• 4242"].waitForExistenceAndTap()
         app.buttons["Continue"].tap() // For some reason, waitForExistenceAndTap() does not tap this!
         XCTAssertEqual(
             analyticsLog.map({ $0[string: "event"] }),
@@ -138,7 +138,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // ...reload...
         reload(app, settings: settings)
         // ...and the saved card should be the default
-        XCTAssertEqual(paymentMethodButton.label, "••••4242, card, 12345, US")
+        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
     }
 
     func testUSBankAccount_verticalmode() {
