@@ -26,6 +26,7 @@ import UIKit
                 case line1Autocompletable(didTapAutocomplete: () -> Void)
             }
             let lineType: LineType
+            var isEditable: Bool
             var label: String {
                 switch lineType {
                 case .line1, .line1Autocompletable:
@@ -69,24 +70,56 @@ import UIKit
                 }
                 return nil
             }
+            
+            init(lineType: LineType, isEditable: Bool = true, defaultValue: String?) {
+                self.lineType = lineType
+                self.isEditable = isEditable
+                self.defaultValue = defaultValue
+            }
         }
 
-        public static func makeLine1(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
-            return TextFieldElement(
-                configuration: LineConfiguration(lineType: .line1, defaultValue: defaultValue), theme: theme
+        public static func makeLine1(
+            defaultValue: String?,
+            isEditable: Bool = true,
+            theme: ElementsAppearance
+        ) -> TextFieldElement {
+            TextFieldElement(
+                configuration: LineConfiguration(
+                    lineType: .line1,
+                    isEditable: isEditable,
+                    defaultValue: defaultValue
+                ),
+                theme: theme
             )
         }
 
-        static func makeLine2(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
-            let line2 = TextFieldElement(
-                configuration: LineConfiguration(lineType: .line2, defaultValue: defaultValue), theme: theme
+        static func makeLine2(
+            defaultValue: String?,
+            isEditable: Bool = true,
+            theme: ElementsAppearance
+        ) -> TextFieldElement {
+            TextFieldElement(
+                configuration: LineConfiguration(
+                    lineType: .line2,
+                    isEditable: isEditable,
+                    defaultValue: defaultValue
+                ),
+                theme: theme
             )
-            return line2
         }
 
-        public static func makeAutoCompleteLine(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
-            return TextFieldElement(
-                configuration: LineConfiguration(lineType: .autoComplete, defaultValue: defaultValue), theme: theme
+        public static func makeAutoCompleteLine(
+            defaultValue: String?,
+            isEditable: Bool = true,
+            theme: ElementsAppearance
+        ) -> TextFieldElement {
+            TextFieldElement(
+                configuration: LineConfiguration(
+                    lineType: .autoComplete,
+                    isEditable: isEditable,
+                    defaultValue: defaultValue
+                ),
+                theme: theme
             )
         }
 
@@ -96,6 +129,7 @@ import UIKit
             let label: String
             let defaultValue: String?
             let isOptional: Bool
+            var isEditable: Bool = true
 
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
@@ -108,6 +142,7 @@ import UIKit
             let label: String
             let defaultValue: String?
             let isOptional: Bool
+            var isEditable: Bool = true
 
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
@@ -121,6 +156,7 @@ import UIKit
             let label: String
             let defaultValue: String?
             let isOptional: Bool
+            var isEditable: Bool = true
             public var disallowedCharacters: CharacterSet {
                 return countryCode == "US" ? .decimalDigits.inverted : .newlines
             }

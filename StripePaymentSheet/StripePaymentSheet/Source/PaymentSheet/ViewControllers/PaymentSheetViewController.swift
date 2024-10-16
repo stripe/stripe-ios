@@ -353,6 +353,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 callToAction = overridePrimaryButtonState.ctaType
                 buyButtonStatus = overridePrimaryButtonState.enabled ? .enabled : .disabled
             } else {
+                print("**** buyButtonStatus: \(addPaymentMethodViewController.paymentOption == nil ? "disabled" : "enabled")")
                 buyButtonStatus = addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
             }
         }

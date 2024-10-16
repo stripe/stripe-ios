@@ -38,7 +38,8 @@ class AddPaymentMethodViewController: UIViewController {
         paymentMethodTypesView.selected
     }
     var paymentOption: PaymentOption? {
-        paymentMethodFormViewController.paymentOption
+        print("**** didGet paymentOption, \(paymentMethodFormViewController.paymentOption != nil)")
+        return paymentMethodFormViewController.paymentOption
     }
 
     var overridePrimaryButtonState: OverridePrimaryButtonState? {

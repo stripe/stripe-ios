@@ -245,9 +245,13 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeEmail(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
+    func makeEmail(apiPath: String? = nil, isOptional: Bool = false) -> PaymentMethodElementWrapper<TextFieldElement> {
         let defaultValue = defaultBillingDetails(emailAPIPath: apiPath).email
-        let element = TextFieldElement.makeEmail(defaultValue: defaultValue, theme: theme)
+        let element = TextFieldElement.makeEmail(
+            defaultValue: defaultValue,
+            isOptional: isOptional,
+            theme: theme
+        )
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
@@ -656,7 +660,7 @@ extension PaymentSheetFormFactory {
                     )
                 }
             }(),
-            emailElement: makeEmail(),
+            emailElement: makeEmail(isOptional: true),
             theme: theme
         )
     }

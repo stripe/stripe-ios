@@ -541,6 +541,7 @@ extension NativeFlowController {
             case .success(let paymentMethod):
                 let linkedBank = InstantDebitsLinkedBank(
                     paymentMethodId: paymentMethod.id,
+                    email: self.dataManager.consumerSession?.emailAddress,
                     bankName: bankAccountDetails?.bankName,
                     last4: bankAccountDetails?.last4,
                     linkMode: linkMode

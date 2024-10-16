@@ -22,6 +22,7 @@ import UIKit
         public let defaultValue: String?
         public let label: String
         public let isOptional: Bool
+        public var isEditable: Bool
         private var textContentType: UITextContentType {
             switch type {
             case .given:
@@ -34,7 +35,13 @@ import UIKit
         }
 
         /// - Parameter label: If `nil`, defaults to a string on the `type` e.g. "Name"
-        public init(type: NameType = .full, defaultValue: String?, label: String? = nil, isOptional: Bool = false) {
+        public init(
+            type: NameType = .full,
+            defaultValue: String?,
+            label: String? = nil,
+            isOptional: Bool = false,
+            isEditable: Bool = true
+        ) {
             self.type = type
             self.defaultValue = defaultValue
             if let label = label {
@@ -42,6 +49,7 @@ import UIKit
             } else {
                 self.label = Self.label(for: type)
             }
+            self.isEditable = isEditable
             self.isOptional = isOptional
         }
 
@@ -73,14 +81,16 @@ import UIKit
         public let label = String.Localized.email
         public let defaultValue: String?
         public let isOptional: Bool
+        public var isEditable: Bool
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
         let invalidError = Error.invalid(
             localizedDescription: String.Localized.invalid_email
         )
 
-        init(defaultValue: String? = nil, isOptional: Bool = false) {
+        init(defaultValue: String? = nil, isOptional: Bool = false, isEditable: Bool = true) {
             self.defaultValue = defaultValue
             self.isOptional = isOptional
+            self.isEditable = isEditable
         }
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
@@ -109,6 +119,7 @@ import UIKit
     struct VPAConfiguration: TextFieldElementConfiguration {
         public let label = String.Localized.upi_id
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
+        public var isEditable: Bool = true
         let invalidError = Error.invalid(
             localizedDescription: .Localized.invalid_upi_id
         )
@@ -136,6 +147,7 @@ import UIKit
         public let label = String.Localized.blik_code
         public let disallowedCharacters: CharacterSet = .decimalDigits.inverted
         public let defaultValue: String?
+        public var isEditable: Bool = true
         let invalidError = Error.invalid(
             localizedDescription: .Localized.invalid_blik_code
         )
@@ -167,6 +179,7 @@ import UIKit
         public let label = String.Localized.phoneNumber
         public let disallowedCharacters: CharacterSet = .decimalDigits.inverted
         public let isOptional: Bool = true
+        public var isEditable: Bool = true
         let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
@@ -201,11 +214,18 @@ import UIKit
         public let countryCodeProvider: () -> String
         public let defaultValue: String?
         public let isOptional: Bool
+        public var isEditable: Bool
 
-        public init(defaultValue: String? = nil, isOptional: Bool = false, countryCodeProvider: @escaping () -> String) {
+        public init(
+            defaultValue: String? = nil,
+            isOptional: Bool = false,
+            isEditable: Bool = true,
+            countryCodeProvider: @escaping () -> String
+        ) {
             self.countryCodeProvider = countryCodeProvider
             self.defaultValue = defaultValue
             self.isOptional = isOptional
+            self.isEditable = isEditable
         }
 
         public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {

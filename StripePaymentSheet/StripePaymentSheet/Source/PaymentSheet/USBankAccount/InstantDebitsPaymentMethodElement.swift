@@ -23,9 +23,14 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         return [linkedBankInfoSectionElement]
     }
     private let linkedBankInfoSectionElement: SectionElement
+    private var linkedBank: InstantDebitsLinkedBank? {
+        didSet {
+            // Disable email field if we have a linked bank
+            emailElement.isEnabled = linkedBank == nil
+        }
+    }
     private let emailElement: TextFieldElement
     private let linkedBankInfoView: BankAccountInfoView
-    private var linkedBank: InstantDebitsLinkedBank?
     private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
@@ -65,10 +70,16 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var enableCTA: Bool {
-        return STPEmailAddressValidator.stringIsValidEmailAddress(email)
+        true
     }
+
     var email: String {
-        return emailElement.text
+        get {
+            emailElement.text
+        }
+        set {
+            emailElement.setText(newValue)
+        }
     }
 
     init(
@@ -116,6 +127,9 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
                 hidden: false,
                 animated: true
             )
+        }
+        if let email = linkedBank.email {
+            self.email = email
         }
         self.delegate?.didUpdate(element: self)
     }

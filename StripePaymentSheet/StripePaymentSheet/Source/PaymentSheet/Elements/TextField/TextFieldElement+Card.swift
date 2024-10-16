@@ -23,6 +23,7 @@ extension TextFieldElement {
         let defaultValue: String?
         let cardBrandDropDown: DropdownFieldElement?
         let cardFilter: CardBrandFilter
+        var isEditable: Bool = true
 
         init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default) {
             self.defaultValue = defaultValue
@@ -197,6 +198,7 @@ extension TextFieldElement {
         let cardBrandProvider: () -> (STPCardBrand)
         var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+        var isEditable: Bool = true
 
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
@@ -235,6 +237,7 @@ extension TextFieldElement {
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let defaultValue: String?
+        var isEditable: Bool = true
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -316,7 +319,7 @@ extension TextFieldElement {
     struct LastFourConfiguration: TextFieldElementConfiguration {
         let label = String.Localized.card_brand
         let lastFour: String
-        let isEditable = false
+        var isEditable = false
         let cardBrandDropDown: DropdownFieldElement
         let cardFilter: CardBrandFilter
 
