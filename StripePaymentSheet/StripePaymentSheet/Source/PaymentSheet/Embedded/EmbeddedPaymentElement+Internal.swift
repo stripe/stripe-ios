@@ -51,36 +51,6 @@ extension EmbeddedPaymentElement {
             delegate: delegate
         )
     }
-
-    struct _UpdateResult {
-        let loadResult: PaymentSheetLoader.LoadResult
-        let view: EmbeddedPaymentMethodsView
-    }
-
-    nonisolated static func update(
-        configuration: Configuration,
-        intentConfiguration: IntentConfiguration
-    ) async throws -> _UpdateResult {
-        // TODO: Change dummy analytics helper
-        let dummyAnalyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init())
-        let loadResult = try await PaymentSheetLoader.load(
-            mode: .deferredIntent(intentConfiguration),
-            configuration: configuration,
-            analyticsHelper: dummyAnalyticsHelper,
-            integrationShape: .embedded
-        )
-        // 1. Update our variables. Re-initialize embedded view to update the UI to match the newly loaded data.
-        let embeddedPaymentMethodsView = await Self.makeView(
-            configuration: configuration,
-            loadResult: loadResult
-            // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
-        )
-
-        // 2. Pre-load image into cache
-        // Hack: Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (from the internet instead of disk) before we call the completion handler.
-        _ = await embeddedPaymentMethodsView.displayData
-        return .init(loadResult: loadResult, view: embeddedPaymentMethodsView)
-    }
 }
 
 // MARK: - EmbeddedPaymentMethodsViewDelegate
