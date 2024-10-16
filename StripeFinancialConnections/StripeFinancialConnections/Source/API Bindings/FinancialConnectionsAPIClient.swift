@@ -9,6 +9,10 @@ import Foundation
 @_spi(STP) import StripeCore
 
 final class FinancialConnectionsAPIClient {
+    private enum EncodingError: Error {
+        case cannotCastToDictionary
+    }
+
     let backingAPIClient: STPAPIClient
 
     var isLinkWithStripe: Bool = false
@@ -73,6 +77,17 @@ final class FinancialConnectionsAPIClient {
             promise.fulfill { paramsWithTelemetry }
         }
         return promise
+    }
+
+    static func encodeAsParameters(_ value: any Encodable) throws -> [String: Any] {
+        let jsonData = try JSONEncoder().encode(value)
+        let jsonObject = try JSONSerialization.jsonObject(with: jsonData)
+
+        if let dictionary = jsonObject as? [String: Any] {
+            return dictionary
+        } else {
+            throw EncodingError.cannotCastToDictionary
+        }
     }
 }
 
@@ -230,7 +245,9 @@ protocol FinancialConnectionsAPI {
 
     func paymentDetails(
         consumerSessionClientSecret: String,
-        bankAccountId: String
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?
     ) -> Future<FinancialConnectionsPaymentDetails>
 
     func sharePaymentDetails(
@@ -969,9 +986,11 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func paymentDetails(
         consumerSessionClientSecret: String,
-        bankAccountId: String
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?
     ) -> Future<FinancialConnectionsPaymentDetails> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
@@ -981,6 +1000,22 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             ],
             "type": "bank_account",
         ]
+
+        if let billingAddress {
+            do {
+                let encodedBillingAddress = try Self.encodeAsParameters(billingAddress)
+                parameters["billing_address"] = encodedBillingAddress
+            } catch let error {
+                let promise = Promise<FinancialConnectionsPaymentDetails>()
+                promise.reject(with: error)
+                return promise
+            }
+        }
+
+        if let billingEmail, !billingEmail.isEmpty {
+            parameters["billing_email_address"] = billingEmail
+        }
+
         return post(
             resource: APIEndpointPaymentDetails,
             parameters: parameters,

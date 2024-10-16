@@ -38,7 +38,9 @@ protocol NativeFlowDataManager: AnyObject {
 
     func createPaymentDetails(
         consumerSessionClientSecret: String,
-        bankAccountId: String
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?
     ) -> Future<FinancialConnectionsPaymentDetails>
     func createPaymentMethod(
         consumerSessionClientSecret: String,
@@ -140,11 +142,15 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     func createPaymentDetails(
         consumerSessionClientSecret: String,
-        bankAccountId: String
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?
     ) -> Future<FinancialConnectionsPaymentDetails> {
         apiClient.paymentDetails(
             consumerSessionClientSecret: consumerSessionClientSecret,
-            bankAccountId: bankAccountId
+            bankAccountId: bankAccountId,
+            billingAddress: billingAddress,
+            billingEmail: billingEmail
         )
     }
 
