@@ -25,6 +25,9 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     /// The current notification center instance
     private let notificationCenter: NotificationCenter
 
+    /// Manages authenticated web views
+    private let authenticatedWebViewManager: AuthenticatedWebViewManager
+
     private let setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init()
 
     private var didFailLoadWithError: (Error) -> Void
@@ -44,11 +47,13 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         didFailLoadWithError: @escaping (Error) -> Void,
         // Should only be overridden for tests
         notificationCenter: NotificationCenter = NotificationCenter.default,
-        webLocale: Locale = Locale.autoupdatingCurrent
+        webLocale: Locale = Locale.autoupdatingCurrent,
+        authenticatedWebViewManager: AuthenticatedWebViewManager = .init()
     ) {
         self.componentManager = componentManager
         self.notificationCenter = notificationCenter
         self.webLocale = webLocale
+        self.authenticatedWebViewManager = authenticatedWebViewManager
         self.didFailLoadWithError = didFailLoadWithError
 
         let config = WKWebViewConfiguration()
@@ -93,14 +98,16 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                      didFailLoadWithError: @escaping (Error) -> Void,
                      // Should only be overridden for tests
                      notificationCenter: NotificationCenter = NotificationCenter.default,
-                     webLocale: Locale = Locale.autoupdatingCurrent) {
+                     webLocale: Locale = Locale.autoupdatingCurrent,
+                     authenticatedWebViewManager: AuthenticatedWebViewManager = .init()) {
         self.init(componentManager: componentManager,
                   componentType: componentType,
                   loadContent: loadContent,
                   fetchInitProps: VoidPayload.init,
                   didFailLoadWithError: didFailLoadWithError,
                   notificationCenter: notificationCenter,
-                  webLocale: webLocale)
+                  webLocale: webLocale,
+                  authenticatedWebViewManager: authenticatedWebViewManager)
     }
 
     required init?(coder: NSCoder) {
@@ -204,6 +211,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
             // TODO: MXMOBILE-2491 Use this for analytics
         })
+        addMessageHandler(OpenAuthenticatedWebViewMessageHandler { [weak self] payload in
+            await .init(url: try self?.openAuthenticatedWebView(payload))
+        })
     }
 
     /// Adds NotificationCenter observers
@@ -228,5 +238,13 @@ private extension ConnectComponentWebViewController {
     func didFailLoad(error: Error) {
         didFailLoadWithError(error)
         activityIndicator.stopAnimating()
+    }
+
+    /// Opens the url in the given payload in an ASWebAuthenticationSession and sends the resulting redirect to
+    @MainActor
+    func openAuthenticatedWebView(_ payload: OpenAuthenticatedWebViewMessageHandler.Payload) async throws -> URL? {
+        let returnUrl = try await authenticatedWebViewManager.present(with: payload.url, in: view.window)
+        // TODO: MXMOBILE-2491 log `component.authenticated_web.*` analytics
+        return returnUrl
     }
 }
