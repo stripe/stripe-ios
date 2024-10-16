@@ -219,12 +219,24 @@ extension PaymentMethodFormViewController {
             }
         }()
 
+        let billingDetails = configuration.defaultBillingDetails
+        let billingAddress = BillingAddress(
+            name: billingDetails.name,
+            line1: billingDetails.address.line1,
+            line2: billingDetails.address.line2,
+            city: billingDetails.address.city,
+            state: billingDetails.address.state,
+            postalCode: billingDetails.address.postalCode,
+            countryCode: billingDetails.address.country
+        )
+
         let linkMode = elementsSession.linkSettings?.linkMode
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
             intentId: intentId,
-            linkMode: linkMode
+            linkMode: linkMode,
+            billingAddress: billingAddress
         )
     }
 
