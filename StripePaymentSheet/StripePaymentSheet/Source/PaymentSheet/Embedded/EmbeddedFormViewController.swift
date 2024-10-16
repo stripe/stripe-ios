@@ -13,26 +13,43 @@ import Foundation
 import UIKit
 
 protocol EmbeddedFormViewControllerDelegate: AnyObject {
+    
+    /// Notifies the delegate to confirm the payment or setup with the provided payment option.
+    /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm`.
+    /// - Parameters:
+    ///   - embeddedFormViewController: The view controller requesting the confirmation.
+    ///   - paymentOption: The `PaymentOption` to be confirmed.
+    ///   - completion: A completion handler to call with the `PaymentSheetResult` from the confirmation attempt.
     func embeddedFormViewControllerShouldConfirm(
-            _ embeddedFormViewController: EmbeddedFormViewController,
-            with paymentOption: PaymentOption,
-            completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
+        _ embeddedFormViewController: EmbeddedFormViewController,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    )
 
+    /// Informs the delegate that the embedded form view controller has finished and is dismissing with a result.
+    /// - Parameters:
+    ///   - embeddedFormViewController: The view controller that has finished.
+    ///   - result: The `PaymentSheetResult` of the payment or setup process.
     func embeddedFormViewControllerDidFinish(
         _ embeddedFormViewController: EmbeddedFormViewController,
         result: PaymentSheetResult
     )
 
+    /// Informs the delegate that the user has canceled the payment process.
+    /// This method is called when the user dismisses the view controller or taps the cancel button.
+    /// - Parameter embeddedFormViewController: The view controller that was canceled.
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController)
 
-    /// Called when the embedded form view controller closes with a payment option that can be confirmed
-    /// - Parameter embeddedFormViewController: The `EmbeddedFormViewController`
+    /// Notifies the delegate that the embedded form view controller should close.
+    /// This method is called when a payment option that can be confirmed later has been provided.
+    /// - Parameter embeddedFormViewController: The view controller requesting to close.
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController)
 }
 
 class EmbeddedFormViewController: UIViewController {
 
-    var twoStep: Bool {
+    /// Returns true if confirmation does not occur while the form is presented and instead is trigged by `EmbeddedPaymentElement.confirm` when the form is dismissed.
+    var shouldDeferConfirmation: Bool {
         switch configuration.formSheetAction {
         case .confirm:
             return false
@@ -46,36 +63,23 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     enum Error: Swift.Error {
-        case missingContentViewController
         case noPaymentOptionOnBuyButtonTap
     }
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        if let paymentMethodFormViewController {
-            return paymentMethodFormViewController.paymentOption
-        } else if isRecollectingCVC, let cvcRecollectionViewController {
-            return cvcRecollectionViewController.paymentOption
-        }
-
-        stpAssertionFailure()
-        let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: Error.missingContentViewController, additionalNonPIIParams: ["error_message": "Missing content! Expected list, form, or cvc", "first_child_vc": String(describing: children.first)])
-        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-        return nil
+        return paymentMethodFormViewController?.paymentOption
     }
+    
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: EmbeddedPaymentElement.Configuration
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache
-    let analyticsHelper: PaymentSheetAnalyticsHelper // TOOD(porter) Figure out the analytic story for embedded
+    let analyticsHelper: PaymentSheetAnalyticsHelper
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
-    /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
+    /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private var previousPaymentOption: PaymentOption?
-    /// True while we are showing the CVC recollection UI (`cvcRecollectionViewController`)
-    var isRecollectingCVC: Bool = false
-    /// Variable to decide we should collect CVC
-    var isCVCRecollectionEnabled: Bool
 
     // MARK: - UI properties
 
@@ -89,7 +93,6 @@ class EmbeddedFormViewController: UIViewController {
     }()
 
     var paymentMethodFormViewController: PaymentMethodFormViewController?
-    var cvcRecollectionViewController: CVCReconfirmationVerticalViewController?
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
         DynamicHeightContainerView()
@@ -122,9 +125,6 @@ class EmbeddedFormViewController: UIViewController {
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          formCache: PaymentMethodFormCache) {
-        // Only call loadResult.intent.cvcRecollectionEnabled once per load
-        self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
-
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
@@ -141,12 +141,12 @@ class EmbeddedFormViewController: UIViewController {
         self.previousPaymentOption = nil
     }
 
-    /// Regenerates the main content - either the PM list or the PM form and updates all UI elements (pay button, error, mandate)
+    /// Regenerates the main content - the PM form and updates all UI elements (pay button, error, mandate)
     func regenerateUI() {
         if let paymentMethodFormViewController {
             remove(childViewController: paymentMethodFormViewController)
         }
-        // If we'd only show one PM in the vertical list and it's `card`, display the form instead of the payment method list.
+        
         let formVC = makeFormVC(paymentMethodType: paymentMethodType)
         self.paymentMethodFormViewController = formVC
         add(childViewController: formVC, containerView: paymentContainerView)
@@ -165,14 +165,11 @@ class EmbeddedFormViewController: UIViewController {
             if let override = paymentMethodFormViewController?.overridePrimaryButtonState {
                 return override.ctaType
             }
-            if isRecollectingCVC {
-                return .custom(title: String.Localized.confirm)
-            }
             if let customCtaLabel = configuration.primaryButtonLabel {
-                return twoStep ? .custom(title: customCtaLabel) : .customWithLock(title: customCtaLabel)
+                return shouldDeferConfirmation ? .custom(title: customCtaLabel) : .customWithLock(title: customCtaLabel)
             }
 
-            if twoStep {
+            if shouldDeferConfirmation {
                 return .continue
             }
             return .makeDefaultTypeForPaymentSheet(intent: intent)
@@ -180,9 +177,6 @@ class EmbeddedFormViewController: UIViewController {
         let state: ConfirmButton.Status = {
             if isPaymentInFlight {
                 return .processing
-            }
-            if let cvcRecollectionViewController, isRecollectingCVC {
-                return cvcRecollectionViewController.paymentOptionIntentConfirmParams == nil ? .disabled : .enabled
             }
             if let override = paymentMethodFormViewController?.overridePrimaryButtonState {
                 return override.enabled ? .enabled : .disabled
@@ -205,14 +199,13 @@ class EmbeddedFormViewController: UIViewController {
                 return nil
             }
         }()
-        let headerView: UIView = {
-            return FormHeaderView(
-                paymentMethodType: paymentMethodType,
-                // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
-                shouldUseNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
-                appearance: configuration.appearance
-            )
-        }()
+        let headerView = FormHeaderView(
+            paymentMethodType: paymentMethodType,
+            // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
+            shouldUseNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
+            appearance: configuration.appearance
+        )
+        
         return PaymentMethodFormViewController(
             type: paymentMethodType,
             intent: intent,
@@ -353,15 +346,6 @@ class EmbeddedFormViewController: UIViewController {
 #if !canImport(CompositorServices)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
-
-                    let nsError = error as NSError
-                    let isCVCError = nsError.domain == STPError.stripeDomain && nsError.userInfo[STPError.errorParameterKey] as? String == "cvc"
-                    if isRecollectingCVC,
-                       !isCVCError {
-                        // If we're recollecting CVC, pop back to the main list unless the error is for the cvc field
-                        sheetNavigationBarDidBack(navigationBar)
-                    }
-
                     // Update state
                     self.isUserInteractionEnabled = true
                     self.error = error
@@ -405,26 +389,9 @@ class EmbeddedFormViewController: UIViewController {
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
-        // If FlowController, simply close the sheet
-        if twoStep {
+        // If we defer confirmation, simply close the sheet
+        if shouldDeferConfirmation {
             self.delegate?.embeddedFormViewControllerShouldClose(self)
-            return
-        }
-
-        // If the selected payment option is a saved card, CVC is enabled, and we are PS, handle CVC specially:
-        if case let .saved(paymentMethod, _) = selectedPaymentOption, paymentMethod.type == .card, isCVCRecollectionEnabled, !twoStep, !isRecollectingCVC {
-            let cvcRecollectionViewController = CVCReconfirmationVerticalViewController(
-                paymentMethod: paymentMethod,
-                intent: intent,
-                configuration: configuration,
-                elementDelegate: self
-            )
-            self.cvcRecollectionViewController = cvcRecollectionViewController
-            isRecollectingCVC = true
-            switchContentIfNecessary(to: cvcRecollectionViewController, containerView: paymentContainerView)
-            navigationBar.setStyle(.back(showAdditionalButton: false))
-            error = nil
-            updateUI()
             return
         }
 
@@ -450,6 +417,7 @@ extension EmbeddedFormViewController: BottomSheetContentViewController {
     }
 }
 
+// MARK: - SheetNavigationBarDelegate
 extension EmbeddedFormViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
         didCancel()
@@ -460,6 +428,7 @@ extension EmbeddedFormViewController: SheetNavigationBarDelegate {
     }
 }
 
+// MARK: - PaymentMethodFormViewControllerDelegate
 extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         error = nil  // clear error
@@ -472,18 +441,5 @@ extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
     func updateErrorLabel(for error: Swift.Error?) {
         self.error = error
         updateError()
-    }
-}
-
-// MARK: - ElementDelegate
-/// Used for CVC Recollection - we are the delegate of the CVC element
-extension EmbeddedFormViewController: ElementDelegate {
-    func continueToNextField(element: Element) {
-        updateUI()
-    }
-
-    func didUpdate(element: Element) {
-        self.error = nil
-        updateUI()
     }
 }
