@@ -42,8 +42,8 @@ class NotificationBannerViewControllerTests: XCTestCase {
         }
 
         vc.delegate = delegate
-        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
-        try await vc.webView.evaluateMessage(
+        try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webVC.webView.evaluateMessage(
             name: "onSetterFunctionCalled",
             json: """
             {
@@ -68,9 +68,9 @@ class NotificationBannerViewControllerTests: XCTestCase {
             }()
         )
 
-        try await vc.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
-                                                   json: "{}",
-                                                   expectedResponse: """
+        try await vc.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                            json: "{}",
+                                                            expectedResponse: """
             {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include"}}
             """)
     }

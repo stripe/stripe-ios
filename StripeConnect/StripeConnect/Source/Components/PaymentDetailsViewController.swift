@@ -13,35 +13,31 @@ import UIKit
 @_spi(DashboardOnly)
 @available(iOS 15, *)
 public class PaymentDetailsViewController: UIViewController {
-    let webView: ConnectComponentWebView
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: PaymentDetailsViewControllerDelegate?
 
-    init(componentManager: EmbeddedComponentManager) {
-        webView = ConnectComponentWebView(
-            componentManager: componentManager,
-            componentType: .paymentDetails
-        )
+    init(componentManager: EmbeddedComponentManager,
+         loadContent: Bool) {
         super.init(nibName: nil, bundle: nil)
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
+        webVC = ConnectComponentWebViewController(
+            componentManager: componentManager,
+            componentType: .paymentDetails,
+            loadContent: loadContent
+        ) { [weak self] error in
             guard let self else { return }
-            self.delegate?.paymentDetails(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
+            delegate?.paymentDetails(self, didFailLoadWithError: error)
         }
+
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func loadView() {
-        view = webView
-    }
-
     public func setPayment(id: String) {
-        webView.sendMessage(CallSetterWithSerializableValueSender(payload: .init(
+        webVC.sendMessage(CallSetterWithSerializableValueSender(payload: .init(
             setter: "setPayment",
             value: id
         )))
