@@ -194,7 +194,7 @@ extension PaymentSheet {
 
         /// The layout of payment methods in PaymentSheet. Defaults to `.horizontal`.
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
-        @_spi(ExperimentalPaymentMethodLayoutAPI) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
+        public var paymentMethodLayout: PaymentMethodLayout = .horizontal
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
@@ -205,7 +205,7 @@ extension PaymentSheet {
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
-    @_spi(ExperimentalPaymentMethodLayoutAPI) public enum PaymentMethodLayout {
+    public enum PaymentMethodLayout {
         /// Payment methods are arranged horizontally. Users can swipe left or right to navigate through different payment methods.
         case horizontal
 
