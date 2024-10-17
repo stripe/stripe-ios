@@ -28,9 +28,11 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         // Clear product usage prior to testing PaymentSheet.FlowController
         STPAnalyticsClient.sharedClient.productUsage = Set()
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.isEmpty)
-
-        PaymentSheet.FlowController.create(paymentIntentClientSecret: "", configuration: PaymentSheet.Configuration()) { _ in
+        let expectation = expectation(description: "create")
+        PaymentSheet.FlowController.create(paymentIntentClientSecret: "pi_123_secret_456", configuration: PaymentSheet.Configuration()) { _ in
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 2.0)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("PaymentSheet.FlowController"))
     }
 
