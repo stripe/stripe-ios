@@ -47,7 +47,7 @@ class RowButton: UIView {
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) {
         self.appearance = appearance
-        self.shouldAnimateOnPress = shouldAnimateOnPress
+        self.shouldAnimateOnPress = true
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.imageView = imageView
