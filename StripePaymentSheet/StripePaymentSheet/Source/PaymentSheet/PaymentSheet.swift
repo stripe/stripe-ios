@@ -103,9 +103,9 @@ public class PaymentSheet {
         )
     }
 
-    required init(mode: InitializationMode, configuration: Configuration) {
+    required init(mode: InitializationMode, configuration: Configuration, analyticsClient: STPAnalyticsClient = STPAnalyticsClient.sharedClient) {
         AnalyticsHelper.shared.generateSessionID()
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
+        analyticsClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
         self.configuration = configuration
         self.analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: configuration)

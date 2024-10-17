@@ -15,26 +15,27 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     let analyticsClient = STPTestingAnalyticsClient()
 
     func testPaymentSheetAddsUsage() {
-        // Clear product usage prior to testing PaymentSheet
-        STPAnalyticsClient.sharedClient.productUsage = Set()
-        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.isEmpty)
+        let analyticsClient = STPAnalyticsClient()
+        XCTAssertTrue(analyticsClient.productUsage.isEmpty)
 
         _ = PaymentSheet(
-            paymentIntentClientSecret: "",
-            configuration: PaymentSheet.Configuration()
+            mode: .paymentIntentClientSecret("pi_123_secret_456"),
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient
         )
-        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("PaymentSheet"))
+        XCTAssertTrue(analyticsClient.productUsage.contains("PaymentSheet"))
 
         // Clear product usage prior to testing PaymentSheet.FlowController
-        STPAnalyticsClient.sharedClient.productUsage = Set()
-        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.isEmpty)
-        let expectation = expectation(description: "create")
-        PaymentSheet.FlowController.create(paymentIntentClientSecret: "pi_123_secret_456", configuration: PaymentSheet.Configuration()) { _ in
-            expectation.fulfill()
+        analyticsClient.productUsage = Set()
+        XCTAssertTrue(analyticsClient.productUsage.isEmpty)
+
+        PaymentSheet.FlowController.create(
+            mode: .paymentIntentClientSecret("pi_123_secret_456"),
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient) { _ in
         }
-        wait(for: [expectation], timeout: 2.0)
-        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("PaymentSheet.FlowController"))
-    }
+        XCTAssertTrue(analyticsClient.productUsage.contains("PaymentSheet.FlowController"))
+   }
 
     func testPaymentSheetAnalyticPayload() throws {
         // Ensure there is a sessionID

@@ -255,9 +255,10 @@ extension PaymentSheet {
         static func create(
             mode: InitializationMode,
             configuration: PaymentSheet.Configuration,
+            analyticsClient: STPAnalyticsClient = STPAnalyticsClient.sharedClient,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
+            analyticsClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
             let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: configuration)
             AnalyticsHelper.shared.generateSessionID()
             PaymentSheetLoader.load(
