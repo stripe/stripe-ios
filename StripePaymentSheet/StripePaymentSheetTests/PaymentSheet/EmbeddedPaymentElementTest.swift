@@ -112,7 +112,6 @@ class EmbeddedPaymentElementTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(updateResult2, .succeeded)
         XCTAssertTrue(sut.loadResult.intent.isSettingUp)
     }
-
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
