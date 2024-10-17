@@ -117,7 +117,8 @@ extension IDNumberTextFieldConfiguration {
     ) {
         self.init(
             type: spec?.type,
-            label: spec?.label ?? String.Localized.personal_id_number
+            label: spec?.label ?? String.Localized.personal_id_number,
+            defaultValue: nil
         )
     }
 }

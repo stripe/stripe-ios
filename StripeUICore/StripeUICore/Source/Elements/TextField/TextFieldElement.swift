@@ -39,7 +39,7 @@ import UIKit
         )
     }
 
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
 #if !canImport(CompositorServices)
     public var inputAccessoryView: UIView? {
@@ -75,7 +75,7 @@ import UIKit
         let accessoryView: UIView?
         let shouldShowClearButton: Bool
         let isEditable: Bool
-        let theme: ElementsUITheme
+        let theme: ElementsAppearance
     }
 
     var viewModel: ViewModel {
@@ -102,7 +102,7 @@ import UIKit
 
     // MARK: - Initializer
 
-    public required init(configuration: TextFieldElementConfiguration, theme: ElementsUITheme = .default) {
+    public required init(configuration: TextFieldElementConfiguration, theme: ElementsAppearance = .default) {
         self.configuration = configuration
         self.theme = theme
     }

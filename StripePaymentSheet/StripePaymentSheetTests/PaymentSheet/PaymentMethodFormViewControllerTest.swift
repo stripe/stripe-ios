@@ -61,7 +61,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
             previousCustomerInput: nil,
             formCache: .init(),
-            configuration: ._testValue_MostPermissive(),
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
 
             headerView: nil,
             analyticsHelper: ._testValue(),
@@ -86,7 +86,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
             previousCustomerInput: nil,
             formCache: formCache,
-            configuration: ._testValue_MostPermissive(),
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
 
             headerView: nil,
             analyticsHelper: ._testValue(),
@@ -100,7 +100,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["cashapp"]),
             previousCustomerInput: nil,
             formCache: formCache,
-            configuration: ._testValue_MostPermissive(),
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
 
             headerView: nil,
             analyticsHelper: ._testValue(),

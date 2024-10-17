@@ -181,7 +181,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         guard let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
             return false
         }
-        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.getLinkedBank() != nil
+        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.linkedBank != nil
         return customerHasLinkedBankAccount
     }
 
@@ -244,7 +244,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             isSettingUp: true,
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
-            analyticsHelper: .init(isCustom: false, configuration: .init()) // Just use a dummy analytics helper; we don't look at these analytics.
+            analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration.init()) // TODO(MOBILESDK-2548) Just use a dummy analytics helper; we don't look at these analytics.
         ).make()
         formElement.delegate = self
         return formElement
@@ -305,7 +305,7 @@ extension CustomerAddPaymentMethodViewController {
                 break
             case .completed(let completedResult):
                 if case .financialConnections(let linkedBank) = completedResult {
-                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+                    usBankAccountPaymentMethodElement.linkedBank = linkedBank
                 } else {
                     self.delegate?.updateErrorLabel(for: genericError)
                 }

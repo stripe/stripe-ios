@@ -12,7 +12,6 @@ enum StripeConnectConstants {
     /**'
      Pages or navigation requests matching any of these hosts will...
      - Automatically grant camera permissions
-     - Accept downloads (TODO MXMOBILE-2485)
      - Open popups in PopupWebViewController (instead of Safari)
      */
     static let allowedHosts: Set<String> = [

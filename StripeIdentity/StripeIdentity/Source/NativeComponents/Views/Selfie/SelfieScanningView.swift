@@ -57,8 +57,8 @@ final class SelfieScanningView: UIView {
             )
         }
 
-        static func consentCheckboxTheme(tintColor: UIColor) -> ElementsUITheme {
-            var theme = ElementsUITheme.default
+        static func consentCheckboxTheme(tintColor: UIColor) -> ElementsAppearance {
+            var theme = ElementsAppearance.default
             theme.colors.bodyText = IdentityUI.textColor
             theme.colors.secondaryText = IdentityUI.textColor
             theme.fonts.caption = IdentityUI.preferredFont(forTextStyle: .caption1)

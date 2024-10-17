@@ -36,9 +36,9 @@ final class CardSectionWithScannerView: UIView {
         return scanningView
     }()
     weak var delegate: CardSectionWithScannerViewDelegate?
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsUITheme = .default, analyticsHelper: PaymentSheetAnalyticsHelper) {
+    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper) {
         self.cardSectionView = cardSectionView
         self.delegate = delegate
         self.theme = theme

@@ -22,9 +22,22 @@ for framework_name in GetFrameworks.framework_names("./modules.yaml")
   branch_interface_path = "#{framework_name}-new.xcframework/ios-arm64_x86_64-simulator/#{framework_name}.framework/Modules/#{framework_name}.swiftmodule/arm64-apple-ios-simulator.swiftinterface"
   module_diff = diff(master_interface_path, branch_interface_path)
 
+  processed_lines = module_diff.lines.map do |line|
+    if line.include?('public')
+      # Remove everything before 'public', including any leading characters
+      line.sub(/^.*?(public)/, '- \1')
+    else
+      # Keep the line as is
+      line
+    end
+  end
+  
+  # Join the processed lines back into a string
+  processed_string = processed_lines.join
+
 	# Add the framework headers and the diff to the final diff string
 	unless module_diff.empty?
-		final_diff_string += "\n### #{framework_name}\n```diff\n#{module_diff}\n```\n"
+		final_diff_string += "\n### #{framework_name}\n```diff\n#{processed_string}\n```\n"
 	end
 end
 

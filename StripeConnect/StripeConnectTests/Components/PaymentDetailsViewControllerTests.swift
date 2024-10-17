@@ -52,13 +52,13 @@ class PaymentDetailsViewControllerTests: XCTestCase {
 
 private class PaymentDetailsViewControllerDelegatePassThrough: PaymentDetailsViewControllerDelegate {
 
-    var loadDidFail: ((_ paymentDetails: PaymentDetailsViewController, _ error: any Error) -> Void)?
+    var didFailLoad: ((_ paymentDetails: PaymentDetailsViewController, _ error: any Error) -> Void)?
 
-    init(loadDidFail: ((PaymentDetailsViewController, any Error) -> Void)? = nil) {
-        self.loadDidFail = loadDidFail
+    init(didFailLoad: ((PaymentDetailsViewController, any Error) -> Void)? = nil) {
+        self.didFailLoad = didFailLoad
     }
 
-    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController, withError error: any Error) {
-        loadDidFail?(paymentDetails, error)
+    func paymentDetails(_ paymentDetails: PaymentDetailsViewController, didFailLoadWithError error: any Error) {
+        didFailLoad?(paymentDetails, error)
     }
 }
