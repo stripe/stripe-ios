@@ -15,21 +15,19 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     let analyticsClient = STPTestingAnalyticsClient()
 
     func testPaymentSheetAddsUsage() {
-        _ = PaymentSheet(
-            paymentIntentClientSecret: "",
-            configuration: PaymentSheet.Configuration()
-        )
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _, _ in })
+
+        // Clear product usage prior to testing PaymentSheet
+        STPAnalyticsClient.sharedClient.productUsage = Set()
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.isEmpty)
+        _ = PaymentSheet(intentConfiguration: intentConfig, configuration: PaymentSheet.Configuration())
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("PaymentSheet"))
 
-        _ = PaymentSheet.FlowController(
-            configuration: PaymentSheet.Configuration(),
-            loadResult: .init(
-                intent: .paymentIntent(STPFixtures.paymentIntent()),
-                elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()),
-                savedPaymentMethods: [],
-                paymentMethodTypes: [.stripe(.card)]
-            ), analyticsHelper: .init(isCustom: true, configuration: PaymentSheet.Configuration())
-        )
+        // Clear product usage prior to testing PaymentSheet.FlowController
+        STPAnalyticsClient.sharedClient.productUsage = Set()
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.isEmpty)
+        PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: PaymentSheet.Configuration()) { _ in
+        }
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("PaymentSheet.FlowController"))
     }
 
