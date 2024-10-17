@@ -1,3 +1,7 @@
+## X.Y.Z 2024-XX-YY
+### PaymentSheet
+* [Added] Added `PaymentSheet.Configuration.paymentMethodLayout`. Configure the layout of payment methods in the sheet using `paymentMethodLayout` to display them either horizontally, vertically, or let Stripe optimize the layout automatically.
+
 ## 23.31.1 2024-10-08
 ### PaymentSheet
 * [Fixed] Fixed an issue where ISK was not correctly formatted as a zero-decimal currency when using PaymentSheet or Apple Pay. (Thanks [@Thithip](https://github.com/Thithip)!)
