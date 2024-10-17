@@ -41,3 +41,16 @@ struct StripeContact {
     internal var givenName: String?
     internal var familyName: String?
 }
+
+extension StripeAPI.BillingDetails.Address {
+    init(contact: StripeContact) {
+        self.init(
+            line1: contact.line1,
+            line2: contact.line2,
+            city: contact.city,
+            state: contact.state,
+            postalCode: contact.postalCode,
+            country: contact.country
+        )
+    }
+}

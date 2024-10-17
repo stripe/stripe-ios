@@ -508,7 +508,7 @@ extension NativeFlowController {
 
         // Bank account details extraction for the linked bank
         var bankAccountDetails: BankAccountDetails?
-        let linkMode = dataManager.elementsSessionContext?.linkMode
+        let elementsSessionContext = dataManager.elementsSessionContext
         dataManager.createPaymentDetails(
             consumerSessionClientSecret: consumerSession.clientSecret,
             bankAccountId: bankAccountId
@@ -521,17 +521,19 @@ extension NativeFlowController {
             bankAccountDetails = paymentDetails.redactedPaymentDetails.bankAccountDetails
 
             // Decide which API to call based on the payment mode
-            if let linkMode, linkMode.isPantherPayment {
+            if let linkMode = elementsSessionContext?.linkMode, linkMode.isPantherPayment {
                 return self.dataManager.apiClient.sharePaymentDetails(
                     consumerSessionClientSecret: consumerSession.clientSecret,
                     paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
-                    expectedPaymentMethodType: linkMode.expectedPaymentMethodType
+                    expectedPaymentMethodType: linkMode.expectedPaymentMethodType,
+                    billingDetails: elementsSessionContext?.billingDetails
                 )
                 .transformed { $0 as PaymentMethodIDProvider }
             } else {
                 return self.dataManager.createPaymentMethod(
                     consumerSessionClientSecret: consumerSession.clientSecret,
-                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id
+                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
+                    billingDetails: elementsSessionContext?.billingDetails
                 )
                 .transformed { $0 as PaymentMethodIDProvider }
             }
@@ -543,7 +545,7 @@ extension NativeFlowController {
                     paymentMethodId: paymentMethod.id,
                     bankName: bankAccountDetails?.bankName,
                     last4: bankAccountDetails?.last4,
-                    linkMode: linkMode
+                    linkMode: elementsSessionContext?.linkMode
                 )
                 completion(.success(linkedBank))
             case .failure(let error):

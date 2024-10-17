@@ -218,13 +218,32 @@ extension PaymentMethodFormViewController {
                 return nil
             }
         }()
+        
+        let billingDetails: StripeAPI.BillingDetails = {
+            let details = configuration.defaultBillingDetails
+            let address = StripeAPI.BillingDetails.Address(
+                line1: details.address.line1,
+                line2: details.address.line2,
+                city: details.address.city,
+                state: details.address.state,
+                postalCode: details.address.postalCode,
+                country: details.address.country
+            )
+            return StripeAPI.BillingDetails(
+                address: address,
+                email: details.email,
+                name: details.name,
+                phone: details.phone
+            )
+        }()
 
         let linkMode = elementsSession.linkSettings?.linkMode
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
             intentId: intentId,
-            linkMode: linkMode
+            linkMode: linkMode,
+            billingDetails: billingDetails
         )
     }
 
