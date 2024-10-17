@@ -9,16 +9,20 @@ import Foundation
 
 @_spi(STP) public struct InstantDebitsLinkedBank: Equatable {
     public let paymentMethodId: String
+    public let email: String?
     public let bankName: String?
     public let last4: String?
     public let linkMode: LinkMode?
+
     public init(
         paymentMethodId: String,
+        email: String?,
         bankName: String?,
         last4: String?,
         linkMode: LinkMode?
     ) {
         self.paymentMethodId = paymentMethodId
+        self.email = email
         self.bankName = bankName
         self.last4 = last4
         self.linkMode = linkMode

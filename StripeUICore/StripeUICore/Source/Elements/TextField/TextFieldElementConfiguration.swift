@@ -38,7 +38,7 @@ import UIKit
     /**
       - Note: If false, this textfield is disabled, defaults to true.
      */
-    var isEditable: Bool { get }
+    var isEditable: Bool { get set }
 
     /**
      Validate the text.

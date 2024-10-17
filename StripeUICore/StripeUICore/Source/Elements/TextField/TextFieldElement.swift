@@ -31,6 +31,14 @@ import UIKit
         sanitize(text: configuration.defaultValue ?? "")
     }()
     public private(set) var isEditing: Bool = false
+    public var isEnabled: Bool {
+        get {
+            configuration.isEditable
+        }
+        set {
+            configuration.isEditable = newValue
+        }
+    }
     private(set) var didReceiveAutofill: Bool = false
     public var validationState: ElementValidationState {
         return .init(

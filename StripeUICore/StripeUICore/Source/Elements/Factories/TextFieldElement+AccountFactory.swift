@@ -21,6 +21,7 @@ import UIKit
             func maxLength(for text: String) -> Int {
                 return 6
             }
+            var isEditable: Bool = true
             let defaultValue: String?
             func subLabel(text: String) -> String? {
                 return BSBNumberProvider.shared.bsbName(for: text)
@@ -57,6 +58,7 @@ import UIKit
             let label = String.Localized.accountNumber
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             let numberOfDigitsRequired = 9
+            var isEditable: Bool = true
 
             func maxLength(for text: String) -> Int {
                 return numberOfDigitsRequired
@@ -85,6 +87,7 @@ import UIKit
 
             let label = STPLocalizedString("Sort code", "Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland)")
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+            var isEditable: Bool = true
             func maxLength(for text: String) -> Int {
                 return 6
             }
@@ -120,6 +123,7 @@ import UIKit
             let label = String.Localized.accountNumber
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             let numberOfDigitsRequired = 8
+            var isEditable: Bool = true
 
             func maxLength(for text: String) -> Int {
                 return numberOfDigitsRequired

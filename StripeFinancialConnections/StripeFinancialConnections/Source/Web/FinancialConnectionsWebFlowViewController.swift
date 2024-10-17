@@ -171,6 +171,7 @@ extension FinancialConnectionsWebFlowViewController {
                         {
                             let instantDebitsLinkedBank = InstantDebitsLinkedBank(
                                 paymentMethodId: paymentMethodId,
+                                email: Self.extractValue(from: returnUrl, key: "email"),
                                 bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
                                 // backend can return "+" instead of a more-common encoding of "%20" for spaces
                                     .replacingOccurrences(of: "+", with: " "),
