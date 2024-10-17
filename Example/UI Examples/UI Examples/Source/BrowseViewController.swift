@@ -29,38 +29,41 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         case STPCardFormViewController
         case STPCardFormViewControllerCBC
         case SwiftUICardFormViewController
+        case STPCardFormScannerViewController
         case PaymentMethodMessagingView
         case ChangeTheme
 
         var title: String {
             switch self {
-            case .STPPaymentCardTextField: return "Card Field"
-            case .STPPaymentCardTextFieldWithCBC: return "Card Field (CBC)"
-            case .STPPaymentOptionsViewController: return "Payment Option Picker"
-            case .STPPaymentOptionsFPXViewController: return "Payment Option Picker (With FPX)"
-            case .STPShippingInfoViewController: return "Shipping Info Form"
-            case .STPAUBECSFormViewController: return "AU BECS Form"
-            case .STPCardFormViewController: return "Card Form"
-            case .STPCardFormViewControllerCBC: return "Card Form (CBC)"
-            case .SwiftUICardFormViewController: return "Card Form (SwiftUI)"
-            case .PaymentMethodMessagingView: return "Payment Method Messaging View"
-            case .ChangeTheme: return "Change Theme"
+            case .STPPaymentCardTextField: "Card Field"
+            case .STPPaymentCardTextFieldWithCBC: "Card Field (CBC)"
+            case .STPPaymentOptionsViewController: "Payment Option Picker"
+            case .STPPaymentOptionsFPXViewController: "Payment Option Picker (With FPX)"
+            case .STPShippingInfoViewController: "Shipping Info Form"
+            case .STPAUBECSFormViewController: "AU BECS Form"
+            case .STPCardFormViewController: "Card Form"
+            case .STPCardFormViewControllerCBC: "Card Form (CBC)"
+            case .SwiftUICardFormViewController: "Card Form (SwiftUI)"
+            case .STPCardFormScannerViewController: "Card Form Scanner"
+            case .PaymentMethodMessagingView: "Payment Method Messaging View"
+            case .ChangeTheme: "Change Theme"
             }
         }
 
         var detail: String {
             switch self {
-            case .STPPaymentCardTextField: return "STPPaymentCardTextField"
-            case .STPPaymentCardTextFieldWithCBC: return "STPPaymentCardTextField"
-            case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
-            case .STPPaymentOptionsFPXViewController: return "STPPaymentOptionsViewController"
-            case .STPShippingInfoViewController: return "STPShippingInfoViewController"
-            case .STPAUBECSFormViewController: return "STPAUBECSFormViewController"
-            case .STPCardFormViewController: return "STPCardFormViewController"
-            case .STPCardFormViewControllerCBC: return "STPCardFormViewController (CBC)"
-            case .SwiftUICardFormViewController: return "STPCardFormView.Representable"
-            case .PaymentMethodMessagingView: return "PaymentMethodMessagingView"
-            case .ChangeTheme: return ""
+            case .STPPaymentCardTextField: "STPPaymentCardTextField"
+            case .STPPaymentCardTextFieldWithCBC: "STPPaymentCardTextField"
+            case .STPPaymentOptionsViewController: "STPPaymentOptionsViewController"
+            case .STPPaymentOptionsFPXViewController: "STPPaymentOptionsViewController"
+            case .STPShippingInfoViewController: "STPShippingInfoViewController"
+            case .STPAUBECSFormViewController: "STPAUBECSFormViewController"
+            case .STPCardFormViewController: "STPCardFormViewController"
+            case .STPCardFormViewControllerCBC: "STPCardFormViewController (CBC)"
+            case .SwiftUICardFormViewController: "STPCardFormView.Representable"
+            case .STPCardFormScannerViewController: "STPCardFormScannerViewController"
+            case .PaymentMethodMessagingView: "PaymentMethodMessagingView"
+            case .ChangeTheme: ""
             }
         }
     }
@@ -179,16 +182,21 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
-        case .ChangeTheme:
-            let navigationController = UINavigationController(
-                rootViewController: self.themeViewController)
-            present(navigationController, animated: true, completion: nil)
         case .SwiftUICardFormViewController:
             let controller = UIHostingController(rootView: SwiftUICardFormView())
             present(controller, animated: true, completion: nil)
+        case .STPCardFormScannerViewController:
+            let viewController = CardFormScannerViewController()
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
+            present(navigationController, animated: true, completion: nil)
         case .PaymentMethodMessagingView:
             let vc = PaymentMethodMessagingViewController()
             let navigationController = UINavigationController(rootViewController: vc)
+            present(navigationController, animated: true, completion: nil)
+        case .ChangeTheme:
+            let navigationController = UINavigationController(
+                rootViewController: self.themeViewController)
             present(navigationController, animated: true, completion: nil)
         }
     }
