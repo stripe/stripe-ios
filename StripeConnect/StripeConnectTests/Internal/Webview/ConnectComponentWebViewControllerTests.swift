@@ -229,6 +229,30 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         // Loading indicator should stop
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
+
+    @MainActor
+    func testOpenAuthenticatedWebView() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let authenticatedWebViewManager = MockAuthenticatedWebViewManager { url, _ in
+            XCTAssertEqual(url.absoluteString, "https://stripe.com/start")
+            return URL(string: "stripe-connect://return_url")!
+        }
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      didFailLoadWithError: { _ in },
+                                                      authenticatedWebViewManager: authenticatedWebViewManager)
+
+        try await webVC.webView.evaluateMessageWithReply(
+            name: "openAuthenticatedWebView",
+            json: """
+            {"url":"https://stripe.com/start","id":"1234"}
+            """,
+            expectedResponse: """
+            {"url":"stripe-connect:\\/\\/return_url"}
+            """
+        )
+    }
 }
 // MARK: - Helpers
 
@@ -241,5 +265,18 @@ private extension ConnectComponentWebViewControllerTests {
             XCTFail("Client secret should not be retrieved in this test")
             return ""
         })
+    }
+}
+
+private class MockAuthenticatedWebViewManager: AuthenticatedWebViewManager {
+    var overridePresent: (_ url: URL, _ window: UIWindow?) async throws -> URL?
+
+    init(overridePresent: @escaping (_: URL, _: UIWindow?) -> URL?) {
+        self.overridePresent = overridePresent
+        super.init()
+    }
+
+    override func present(with url: URL, in window: UIWindow?) async throws -> URL? {
+        try await overridePresent(url, window)
     }
 }
