@@ -31,11 +31,13 @@ final class PayWithLinkButton: UIControl {
 
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
+        let redactedPhoneNumber: String?
         let isRegistered: Bool
+        let isLoggedIn: Bool
     }
 
     /// Link account of the current user.
-    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "", isRegistered: false) {
+    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountContext.shared.account {
         didSet {
             updateUI()
         }
@@ -464,7 +466,9 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
 private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
     return PayWithLinkButton.LinkAccountStub(
         email: email,
-        isRegistered: isRegistered
+        redactedPhoneNumber: nil,
+        isRegistered: isRegistered,
+        isLoggedIn: false
     )
 }
 

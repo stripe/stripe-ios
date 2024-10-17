@@ -22,6 +22,10 @@ extension STPElementsSession {
         supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
+    var onlySupportsLinkBank: Bool {
+        return supportsLink && (linkFundingSources == [.bankAccount])
+    }
+
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
         linkSettings?.fundingSources
     }

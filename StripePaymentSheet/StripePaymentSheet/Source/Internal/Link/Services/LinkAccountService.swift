@@ -33,11 +33,17 @@ protocol LinkAccountServiceProtocol {
 final class LinkAccountService: LinkAccountServiceProtocol {
 
     let apiClient: STPAPIClient
+    let cookieStore: LinkCookieStore
+
+    /// The default cookie store used by new instances of the service.
+    static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
 
     init(
-        apiClient: STPAPIClient = .shared
+        apiClient: STPAPIClient = .shared,
+        cookieStore: LinkCookieStore = defaultCookieStore
     ) {
         self.apiClient = apiClient
+        self.cookieStore = cookieStore
     }
 
     func lookupAccount(
@@ -82,5 +88,17 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 completion(.failure(error))
             }
         }
+    }
+
+    func hasEmailLoggedOut(email: String) -> Bool {
+        guard let hashedEmail = email.lowercased().sha256 else {
+            return false
+        }
+
+        return cookieStore.read(key: .lastLogoutEmail) == hashedEmail
+    }
+
+    func getLastSignUpEmail() -> String? {
+        return cookieStore.read(key: .lastSignupEmail)
     }
 }

@@ -453,6 +453,12 @@ extension PaymentSheet {
                 }
             case .withPaymentMethod(let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod, nil, false)
+            case .withPaymentDetails(let linkAccount, let paymentDetails):
+//                TODO(link): Confirm the last two options should be "nil" and "false"
+                confirmWithPaymentDetails(linkAccount, paymentDetails, nil, false)
+            case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
+//                TODO(link): Confirm the last two options should be "nil" and "false"
+                createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams, false)
             }
         case let .external(paymentMethod, billingDetails):
             guard let confirmHandler = configuration.externalPaymentMethodConfiguration?.externalPaymentMethodConfirmHandler else {
