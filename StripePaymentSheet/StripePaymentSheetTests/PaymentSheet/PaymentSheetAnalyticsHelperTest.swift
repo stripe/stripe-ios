@@ -7,13 +7,14 @@
 
 @testable@_spi(STP) import StripeCore
 @_spi(STP)@testable import StripeCoreTestUtils
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 
 final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     let analyticsClient = STPTestingAnalyticsClient()
 
+    @MainActor
     func testPaymentSheetAddsUsage() {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _, _ in })
 
@@ -29,6 +30,16 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: PaymentSheet.Configuration()) { _ in
         }
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("PaymentSheet.FlowController"))
+
+        // Clear product usage prior to testing EmbeddedPaymentElement
+        STPAnalyticsClient.sharedClient.productUsage = Set()
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.isEmpty)
+        let e = expectation(description: "callback")
+        EmbeddedPaymentElement.create(intentConfiguration: intentConfig, configuration: EmbeddedPaymentElement.Configuration(formSheetAction: .continue)) { _ in
+            e.fulfill()
+        }
+        wait(for: [e], timeout: 1.0)
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("EmbeddedPaymentElement"))
     }
 
     func testPaymentSheetAnalyticPayload() throws {
@@ -69,6 +80,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (integrationShape: .complete, isApplePayEnabled: false, isCustomerProvided: true, expected: "mc_complete_init_customer"),
             (integrationShape: .complete, isApplePayEnabled: true, isCustomerProvided: false, expected: "mc_complete_init_applepay"),
             (integrationShape: .complete, isApplePayEnabled: true, isCustomerProvided: true, expected: "mc_complete_init_customer_applepay"),
+            (integrationShape: .embedded, isApplePayEnabled: true, isCustomerProvided: true, expected: "mc_embedded_init"),
         ]
         for (integrationShape, isApplePayEnabled, isCustomerProvided, expected) in testcases {
             let sut = PaymentSheetAnalyticsHelper(
@@ -80,7 +92,13 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 analyticsClient: analyticsClient
             )
             sut.logInitialized()
-            XCTAssertEqual(expected, analyticsClient.events.last?.event.rawValue)
+            guard let lastEvent = analyticsClient.events.last as? PaymentSheetAnalytic else {
+                XCTFail("Failed to get last event")
+                return
+            }
+            XCTAssertEqual(expected, lastEvent.event.rawValue)
+            XCTAssertEqual(isApplePayEnabled, lastEvent.additionalParams[jsonDict: "mpe_config"]?["apple_pay_config"] as? Bool)
+            XCTAssertEqual(isCustomerProvided, lastEvent.additionalParams[jsonDict: "mpe_config"]?["customer"] as? Bool)
         }
     }
 
@@ -142,6 +160,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (integrationShape: .flowController, option: .link, expectedEvent: "mc_custom_paymentoption_link_select", nil),
             (integrationShape: .flowController, option: .add, expectedEvent: "mc_custom_paymentoption_newpm_select", nil),
             (integrationShape: .flowController, option: .saved(paymentMethod: ._testCard()), expectedEvent: "mc_custom_paymentoption_savedpm_select", "card"),
+            (integrationShape: .embedded, option: .saved(paymentMethod: ._testCard()), expectedEvent: "mc_embedded_paymentoption_savedpm_select", "card"),
+
         ]
         for testcase in testcases {
             let sut = _createHelper(integrationShape: testcase.integrationShape)
@@ -152,17 +172,19 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             }
         }
     }
-    func testLogPaymentMethodRemoved_complete() {
-        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        sut.logSavedPaymentMethodRemoved(paymentMethod: ._testCard())
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_complete_paymentoption_removed")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
-    }
-    func testLogPaymentMethodRemoved_custom() {
-        let sut = PaymentSheetAnalyticsHelper(integrationShape: .flowController, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        sut.logSavedPaymentMethodRemoved(paymentMethod: ._testCard())
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_paymentoption_removed")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
+    func testLogPaymentMethodRemoved() {
+        let testcases: [(integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape, expectedEvent: String, expectedSelectedLPM: String)] = [
+            (integrationShape: .flowController, expectedEvent: "mc_custom_paymentoption_removed", "card"),
+            (integrationShape: .complete, expectedEvent: "mc_complete_paymentoption_removed", "card"),
+            (integrationShape: .embedded, expectedEvent: "mc_embedded_paymentoption_removed", "card"),
+        ]
+        for testcase in testcases {
+            let sut = PaymentSheetAnalyticsHelper(integrationShape: testcase.integrationShape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+            sut.logSavedPaymentMethodRemoved(paymentMethod: ._testCard())
+            XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, testcase.expectedEvent)
+            XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, testcase.expectedSelectedLPM)
+        }
+
     }
     func testLogNewPaymentMethodSelected() {
         let sut = PaymentSheetAnalyticsHelper(integrationShape: .flowController, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
@@ -215,6 +237,16 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (integrationShape: .complete, paymentOption: saved, result: .failed(error: error), expected: "mc_complete_payment_savedpm_failure"),
             (integrationShape: .complete, paymentOption: .applePay, result: .failed(error: error), expected: "mc_complete_payment_applepay_failure"),
             (integrationShape: .complete, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_complete_payment_link_failure"),
+
+            (integrationShape: .embedded, paymentOption: new, result: .completed, expected: "mc_embedded_payment_success"),
+            (integrationShape: .embedded, paymentOption: saved, result: .completed, expected: "mc_embedded_payment_success"),
+            (integrationShape: .embedded, paymentOption: .applePay, result: .completed, expected: "mc_embedded_payment_success"),
+            (integrationShape: .embedded, paymentOption: .link(option: .wallet), result: .completed, expected: "mc_embedded_payment_success"),
+
+            (integrationShape: .embedded, paymentOption: .new(confirmParams: .init(type: .stripe(.cashApp))), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
+            (integrationShape: .embedded, paymentOption: saved, result: .failed(error: error), expected: "mc_embedded_payment_failure"),
+            (integrationShape: .embedded, paymentOption: .applePay, result: .failed(error: error), expected: "mc_embedded_payment_failure"),
+            (integrationShape: .embedded, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
 
         ]
         for (integrationShape, paymentOption, result, expected) in testcases {
