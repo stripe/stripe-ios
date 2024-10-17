@@ -148,13 +148,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
         view.backgroundColor = appearance.colors.background
     }
 
-    func clearSelection() {
-        currentSelection = nil
-        for rowButton in rowButtons {
-            rowButton.isSelected = false
-        }
-    }
-
     // MARK: - Helpers
 
     func didTap(rowButton: RowButton, selection: VerticalPaymentMethodListSelection) {
@@ -249,6 +242,26 @@ enum VerticalPaymentMethodListSelection: Equatable {
             return "saved"
         case .new(paymentMethodType: let type):
             return type.identifier
+        }
+    }
+
+    var savedPaymentMethod: STPPaymentMethod? {
+        switch self {
+        case .applePay, .link, .new:
+            return nil
+        case .saved(let paymentMethod):
+            return paymentMethod
+        }
+    }
+
+    var paymentMethodType: PaymentSheet.PaymentMethodType? {
+        switch self {
+        case .new(let paymentMethodType):
+            return paymentMethodType
+        case .saved(let paymentMethod):
+            return .stripe(paymentMethod.type)
+        case .applePay, .link:
+            return nil
         }
     }
 }

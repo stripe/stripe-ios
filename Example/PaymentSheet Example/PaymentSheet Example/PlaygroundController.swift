@@ -178,10 +178,19 @@ class PlaygroundController: ObservableObject {
     }
 
     var embeddedConfiguration: EmbeddedPaymentElement.Configuration {
-        var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: .confirm(completion: { [weak self] result in
-            // TODO(porter) Handle two step confirm
-            self?.lastPaymentResult = result
-        }))
+        let formSheetAction: EmbeddedPaymentElement.Configuration.FormSheetAction = {
+            switch settings.formSheetAction {
+            case .confirm:
+                return .confirm { [weak self] result in
+                    self?.lastPaymentResult = result
+                }
+            case .continue:
+                return .continue
+            }
+        }()
+        
+        var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: formSheetAction)
+        configuration.hidesMandateText = settings.hidesMandateText == .on
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
         case .paypal:

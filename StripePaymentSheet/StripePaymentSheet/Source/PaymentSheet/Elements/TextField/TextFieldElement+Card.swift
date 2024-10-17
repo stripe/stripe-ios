@@ -28,7 +28,7 @@ extension TextFieldElement {
             self.cardBrandDropDown = cardBrandDropDown
         }
 
-        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // If CBC is enabled and the PAN is not empty...
             if let cardBrandDropDown = cardBrandDropDown, !text.isEmpty {
                 // Show unknown card brand if we have under 9 pan digits and no card brands
@@ -187,10 +187,10 @@ extension TextFieldElement {
 
             return .valid
         }
-        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             return DynamicImageView(
                 dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
-                pairedColor: theme.colors.background
+                pairedColor: theme.colors.componentBackground
             )
         }
     }
@@ -304,7 +304,7 @@ extension TextFieldElement {
             return NSAttributedString(string: lastFourFormatted)
         }
 
-        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
             return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown)
                                             .accessoryView(for: lastFourFormatted, theme: theme)

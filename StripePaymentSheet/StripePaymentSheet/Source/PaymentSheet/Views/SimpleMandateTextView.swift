@@ -12,7 +12,7 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_SimpleMandateTextView)
 class SimpleMandateTextView: UIView {
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
     var viewDidAppear: Bool = false
     let textView: UITextView = UITextView()
     var attributedText: NSAttributedString? {
@@ -26,17 +26,17 @@ class SimpleMandateTextView: UIView {
         }
     }
 
-    convenience init(mandateText: NSAttributedString, theme: ElementsUITheme) {
+    convenience init(mandateText: NSAttributedString, theme: ElementsAppearance) {
         self.init(theme: theme)
         textView.attributedText = mandateText
     }
 
-    convenience init(mandateText: String, theme: ElementsUITheme) {
+    convenience init(mandateText: String, theme: ElementsAppearance) {
         self.init(theme: theme)
         textView.text = mandateText
     }
 
-    required init(theme: ElementsUITheme) {
+    required init(theme: ElementsAppearance) {
         self.theme = theme
         super.init(frame: .zero)
         installConstraints()

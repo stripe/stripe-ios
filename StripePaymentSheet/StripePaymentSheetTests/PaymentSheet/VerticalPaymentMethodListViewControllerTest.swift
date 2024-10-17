@@ -124,6 +124,6 @@ extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodList
 
 extension VerticalPaymentMethodListViewController {
     func getRowButton(accessibilityIdentifier: String) -> RowButton {
-        return stackView.arrangedSubviews.compactMap { $0 as? RowButton }.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
+        return rowButtons.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
     }
 }

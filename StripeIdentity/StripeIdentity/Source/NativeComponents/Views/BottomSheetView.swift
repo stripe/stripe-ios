@@ -65,7 +65,7 @@ final class BottomSheetView: UIView {
         self.content = content
         self.didTapClose = didTapClose
         super.init(frame: .zero)
-        backgroundColor = IdentityUI.identityElementsUITheme.colors.background
+        backgroundColor = IdentityUI.identityElementsUITheme.colors.componentBackground
 
         closeButton.addTarget(self, action: #selector(tappedClose(button:)), for: .touchUpInside)
         closeButtonBackground.addAndPinSubviewToSafeArea(closeButton, insets: BottomSheetView.bottomSheetCloseButtonInsets)

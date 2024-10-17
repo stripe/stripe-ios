@@ -27,7 +27,7 @@ public class PayoutsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
             guard let self else { return }
-            self.delegate?.payoutsLoadDidFail(self, withError: value.error.connectEmbedError)
+            self.delegate?.payouts(self, didFailLoadWithError: value.error.connectEmbedError)
         })
         webView.presentPopup = { [weak self] vc in
             self?.present(vc, animated: true)
@@ -54,14 +54,14 @@ public protocol PayoutsViewControllerDelegate: AnyObject {
        - payouts: The payouts component that errored when loading
        - error: The error that occurred when loading the component
      */
-    func payoutsLoadDidFail(_ payouts: PayoutsViewController,
-                            withError error: Error)
+    func payouts(_ payouts: PayoutsViewController,
+                 didFailLoadWithError error: Error)
 
 }
 
 @available(iOS 15, *)
 public extension PayoutsViewControllerDelegate {
     // Default implementation to make optional
-    func payoutsLoadDidFail(_ payouts: PayoutsViewController,
-                            withError error: Error) { }
+    func payouts(_ payouts: PayoutsViewController,
+                 didFailLoadWithError error: Error) { }
 }

@@ -204,7 +204,7 @@ extension PaymentSheet {
 
         /// Payment methods are arranged vertically. Users can scroll up or down to navigate through different payment methods.
         case vertical
-        
+
         /// Stripe automatically chooses between `horizontal` and `vertical`.
         case automatic
     }
@@ -492,16 +492,6 @@ extension PaymentSheet {
         /// Your implementation should complete the payment and call the `completion` parameter with the result.
         /// - Note: This is always called on the main thread.
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
-    }
-}
-
-extension PaymentSheet.Configuration {
-    /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
-    func requiresBillingDetailCollection() -> Bool {
-        return billingDetailsCollectionConfiguration.name == .always
-        || billingDetailsCollectionConfiguration.phone == .always
-        || billingDetailsCollectionConfiguration.email == .always
-        || billingDetailsCollectionConfiguration.address == .full
     }
 }
 

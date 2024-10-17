@@ -72,9 +72,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         // Back out of card form
         app.buttons["Back"].tap()
-        // Link shouldn't be selected anymore
-        XCTAssertFalse(app.buttons["Link"].isSelected)
-        XCTAssertFalse(continueButton.isEnabled)
+        // Link (the previous selection) should be selected
+        XCTAssertTrue(app.buttons["Link"].isSelected)
+        XCTAssertTrue(continueButton.isEnabled)
 
         // Go back to card
         app.buttons["Card"].waitForExistenceAndTap()

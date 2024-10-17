@@ -71,10 +71,10 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }
 
     private func setupUI() async throws {
-        embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-             intentConfiguration: intentConfig,
-             configuration: configuration)
-             embeddedPaymentElement.view.translatesAutoresizingMaskIntoConstraints = false
+        embeddedPaymentElement = try await EmbeddedPaymentElement.create(intentConfiguration: intentConfig,
+                                                                         configuration: configuration)
+        embeddedPaymentElement.delegate = self
+        embeddedPaymentElement.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(embeddedPaymentElement.view)
         self.view.addSubview(checkoutButton)
 
@@ -106,5 +106,12 @@ class EmbeddedPlaygroundViewController: UIViewController {
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             self.present(alert, animated: true)
         }
+    }
+}
+
+extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
+    func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
     }
 }

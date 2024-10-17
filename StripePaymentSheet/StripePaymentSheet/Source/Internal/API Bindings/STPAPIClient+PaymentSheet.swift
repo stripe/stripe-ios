@@ -67,7 +67,7 @@ extension STPAPIClient {
     func retrieveElementsSession(
         paymentIntentClientSecret: String,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentSheet.Configuration
+        configuration: PaymentElementConfiguration
     ) async throws -> (STPPaymentIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
@@ -90,7 +90,7 @@ extension STPAPIClient {
     func retrieveElementsSession(
         setupIntentClientSecret: String,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentSheet.Configuration
+        configuration: PaymentElementConfiguration
     ) async throws -> (STPSetupIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
@@ -113,7 +113,7 @@ extension STPAPIClient {
     func retrieveDeferredElementsSession(
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentSheet.Configuration
+        configuration: PaymentElementConfiguration
     ) async throws -> STPElementsSession {
         let parameters = makeElementsSessionsParams(mode: .deferredIntent(intentConfig),
                                                     epmConfiguration: configuration.externalPaymentMethodConfiguration,

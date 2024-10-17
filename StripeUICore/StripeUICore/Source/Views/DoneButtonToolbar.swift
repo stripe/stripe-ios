@@ -27,7 +27,7 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(delegate: DoneButtonToolbarDelegate?, showCancelButton: Bool = false, theme: ElementsUITheme = .default) {
+    public init(delegate: DoneButtonToolbarDelegate?, showCancelButton: Bool = false, theme: ElementsAppearance = .default) {
         // Initializing w/ an arbitrary frame stops autolayout from complaining on the first layout pass
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
 

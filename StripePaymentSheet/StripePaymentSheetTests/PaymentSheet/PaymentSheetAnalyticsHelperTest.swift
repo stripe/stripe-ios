@@ -27,7 +27,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 intent: .paymentIntent(STPFixtures.paymentIntent()),
                 elementsSession: .makeBackupElementsSession(with: STPFixtures.paymentIntent()),
                 savedPaymentMethods: []
-            ), analyticsHelper: .init(isCustom: true, configuration: .init())
+            ), analyticsHelper: .init(isCustom: true, configuration: PaymentSheet.Configuration())
         )
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("PaymentSheet.FlowController"))
     }
@@ -86,7 +86,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     }
 
     func testLogLoadFailed() {
-        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         // Load started -> failed
         sut.logLoadStarted()
         sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
@@ -96,7 +96,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     }
 
     func testLogLoadSucceeded() {
-        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         // Load started -> succeeded
         sut.logLoadStarted()
         sut.logLoadSucceeded(
@@ -116,13 +116,13 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     }
 
     func testLogShow() {
-        let paymentSheetHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        let paymentSheetHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         paymentSheetHelper.logShow(showingSavedPMList: true)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_complete_sheet_savedpm_show")
         paymentSheetHelper.logShow(showingSavedPMList: false)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_complete_sheet_newpm_show")
 
-        let flowControllerSUT = PaymentSheetAnalyticsHelper(isCustom: true, configuration: .init(), analyticsClient: analyticsClient)
+        let flowControllerSUT = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         flowControllerSUT.logShow(showingSavedPMList: true)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_sheet_savedpm_show")
         flowControllerSUT.logShow(showingSavedPMList: false)
@@ -131,7 +131,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogSavedPMScreenOptionSelected() {
         func _createHelper(isCustom: Bool) -> PaymentSheetAnalyticsHelper {
-            let sut = PaymentSheetAnalyticsHelper(isCustom: isCustom, configuration: .init(), analyticsClient: analyticsClient)
+            let sut = PaymentSheetAnalyticsHelper(isCustom: isCustom, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
             return sut
         }
         let testcases: [(isCustom: Bool, option: SavedPaymentOptionsViewController.Selection, expectedEvent: String, expectedSelectedLPM: String?)] = [
@@ -154,25 +154,25 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         }
     }
     func testLogPaymentMethodRemoved_complete() {
-        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         sut.logSavedPaymentMethodRemoved(paymentMethod: ._testCard())
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_complete_paymentoption_removed")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
     }
     func testLogPaymentMethodRemoved_custom() {
-        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: .init(), analyticsClient: analyticsClient)
+        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         sut.logSavedPaymentMethodRemoved(paymentMethod: ._testCard())
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_paymentoption_removed")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
     }
     func testLogNewPaymentMethodSelected() {
-        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: .init(), analyticsClient: analyticsClient)
+        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         sut.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: "card")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_carousel_payment_method_tapped")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
     }
     func testLogFormCompleted() {
-        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: .init(), analyticsClient: analyticsClient)
+        let sut = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         sut.logFormShown(paymentMethodTypeIdentifier: "card")
         sut.logFormCompleted(paymentMethodTypeIdentifier: "card")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_form_completed")
@@ -180,7 +180,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     }
 
     func testLogFormShownAndInteracted() {
-        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         sut.logFormShown(paymentMethodTypeIdentifier: "card")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_form_shown")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "card")
@@ -221,7 +221,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         for (isCustom, paymentOption, result, expected) in testcases {
             let sut = PaymentSheetAnalyticsHelper(
                 isCustom: isCustom,
-                configuration: .init(),
+                configuration: PaymentSheet.Configuration(),
                 analyticsClient: analyticsClient
             )
             sut.intent = ._testValue()
@@ -245,7 +245,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         // Check deferred_intent_confirmation_type gets sent
         let sut = PaymentSheetAnalyticsHelper(
             isCustom: false,
-            configuration: .init(),
+            configuration: PaymentSheet.Configuration(),
             analyticsClient: analyticsClient
         )
         sut.logLoadStarted()
@@ -264,7 +264,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     }
 
     func testLogConfirmButtonTapped() {
-        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init(), analyticsClient: analyticsClient)
+        let sut = PaymentSheetAnalyticsHelper(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         sut.logFormShown(paymentMethodTypeIdentifier: "card")
         sut.logConfirmButtonTapped(paymentOption: .applePay)
 
@@ -277,6 +277,51 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertLessThan(analyticsClient._testLogHistory.last!["duration"] as! Double, 1.0)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "link")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "wallet")
+    }
+
+    func testLogPaymentLinkContextWithLinkedBank() {
+        let instantDebitsLinkedBank = InstantDebitsLinkedBank(
+            paymentMethodId: "paymentMethodId",
+            bankName: nil,
+            last4: nil,
+            linkMode: .linkPaymentMethod
+        )
+        let linkCardBrandLinkedBank = InstantDebitsLinkedBank(
+            paymentMethodId: "paymentMethodId",
+            bankName: nil,
+            last4: nil,
+            linkMode: .linkCardBrand
+        )
+
+        let instantDebitConfirmParams = IntentConfirmParams(type: .instantDebits)
+        instantDebitConfirmParams.instantDebitsLinkedBank = instantDebitsLinkedBank
+
+        let linkCardBrandConfirmParams = IntentConfirmParams(type: .linkCardBrand)
+        linkCardBrandConfirmParams.instantDebitsLinkedBank = linkCardBrandLinkedBank
+
+        let instantDebits = PaymentOption.new(confirmParams: instantDebitConfirmParams)
+        let linkCardBrand = PaymentOption.new(confirmParams: linkCardBrandConfirmParams)
+
+        let sut = PaymentSheetAnalyticsHelper(
+            isCustom: true,
+            configuration: .init(),
+            analyticsClient: analyticsClient
+        )
+        sut.intent = ._testValue()
+
+        sut.logPayment(
+            paymentOption: instantDebits,
+            result: .completed,
+            deferredIntentConfirmationType: nil
+        )
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "instant_debits")
+
+        sut.logPayment(
+            paymentOption: linkCardBrand,
+            result: .completed,
+            deferredIntentConfirmationType: nil
+        )
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "link_card_brand")
     }
 
     // MARK: - Helpers

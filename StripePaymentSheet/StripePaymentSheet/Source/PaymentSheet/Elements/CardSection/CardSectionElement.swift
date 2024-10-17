@@ -57,7 +57,7 @@ final class CardSectionElement: ContainerElement {
     let cardBrandDropDown: DropdownFieldElement?
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
-    let theme: ElementsUITheme
+    let theme: ElementsAppearance
     let preferredNetworks: [STPCardBrand]?
     let hostedSurface: HostedSurface
 
@@ -67,7 +67,7 @@ final class CardSectionElement: ContainerElement {
         preferredNetworks: [STPCardBrand]? = nil,
         cardBrandChoiceEligible: Bool = false,
         hostedSurface: HostedSurface,
-        theme: ElementsUITheme = .default,
+        theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.hostedSurface = hostedSurface
