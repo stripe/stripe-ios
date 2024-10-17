@@ -16,8 +16,6 @@ import Foundation
 
     @_spi(STP) public typealias STPPromiseCompletionBlock = (T?, Error?) -> Void
 
-    @_spi(STP) public typealias STPPromiseMapBlock = (T) -> Any?
-
     @_spi(STP) public typealias STPPromiseFlatMapBlock = (T) -> STPPromise
 
     @_spi(STP) public var completed: Bool {
@@ -109,16 +107,6 @@ import Foundation
         }).onFailure({ error in
             callback(nil, error)
         })
-    }
-
-    @discardableResult @_spi(STP) public func map(_ callback: @escaping STPPromiseMapBlock) -> STPPromise {
-        let wrapper = STPPromise.init()
-        onSuccess({ value in
-            wrapper.succeed(callback(value) as! T)
-        }).onFailure({ error in
-            wrapper.fail(error)
-        })
-        return wrapper
     }
 
     @discardableResult func flatMap(_ callback: @escaping STPPromiseFlatMapBlock) -> STPPromise {

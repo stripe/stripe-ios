@@ -40,40 +40,4 @@ extension FBSnapshotTestCase {
         return navController
     }
 
-    /// Returns a view for snapshot testing from the topViewController of the given
-    /// navigation controller, making necessary layout adjustments for
-    /// `STPCoreScrollViewController`.
-    @objc(stp_preparedAndSizedViewForSnapshotTestFromNavigationController:)
-    func stp_preparedAndSizedViewForSnapshotTest(
-        from navController: UINavigationController?
-    )
-        -> UIView?
-    {
-        let viewController = navController?.topViewController
-
-        // Test that views loaded properly + loads them on first call
-        XCTAssertNotNil(navController?.view)
-        XCTAssertNotNil(viewController?.view)
-
-        if viewController is STPCoreScrollViewController {
-            guard let scrollView = (viewController as? STPCoreScrollViewController)?.scrollView,
-                let navController = navController
-            else {
-                return nil
-            }
-            navController.view.layoutIfNeeded()
-
-            let topOffset = scrollView.convert(scrollView.frame.origin, to: navController.view).y
-            navController.view.frame = CGRect(
-                x: 0,
-                y: 0,
-                width: 320,
-                height: (topOffset) + (scrollView.contentSize.height)
-                    + (scrollView.contentInset.top)
-                    + (scrollView.contentInset.bottom)
-            )
-        }
-
-        return navController?.view
-    }
 }
