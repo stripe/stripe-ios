@@ -49,7 +49,10 @@ public final class EmbeddedPaymentElement {
     /// Contains information about the customer's selected payment option.
     /// Use this to display the payment option in your own UI
     public var paymentOption: PaymentOptionDisplayData? {
-        return embeddedPaymentMethodsView.displayData
+        guard let _paymentOption else {
+            return nil
+        }
+        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText)
     }
 
     /// An asynchronous failable initializer
@@ -103,7 +106,8 @@ public final class EmbeddedPaymentElement {
         currentUpdateTask?.cancel()
         _ = await currentUpdateTask?.value
         // Start the new update task
-        let currentUpdateTask = Task { [weak self, configuration, paymentOption, analyticsHelper] in
+        let currentUpdateTask = Task { @MainActor [weak self, configuration, analyticsHelper] in
+            // ⚠️ Don't modify `self` until the end to avoid being canceled halfway through and leaving self in a partially updated state.
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
             do {
@@ -126,26 +130,28 @@ public final class EmbeddedPaymentElement {
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
+                previousPaymentOption: self?._paymentOption,
                 delegate: self
-                // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
             )
 
-            // 2. Pre-load image into cache
-            // Hack: Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (from the internet instead of disk) before we call the completion handler.
+            // 3. Pre-load image into cache
             // Call this on a detached Task b/c this synchronously (!) loads the image from network and we don't want to block the main actor
             let fetchPaymentOption = Task.detached(priority: .userInitiated) {
-                return await embeddedPaymentMethodsView.displayData
+                // This has the nasty side effect of synchronously downloading the image (see https://jira.corp.stripe.com/browse/MOBILESDK-2604)
+                // This caches it so that DownloadManager doesn't block the main thread when the merchant tries to access the image
+                return await embeddedPaymentMethodsView.selection?.paymentMethodType?.makeImage(updateHandler: nil)
             }
             _ = await fetchPaymentOption.value
 
             guard let self, !Task.isCancelled else {
                 return .canceled
             }
-            // At this point, we're the latest update - update self properties and inform our delegate.
+            // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
+            let oldPaymentOption = self.paymentOption
             self.loadResult = loadResult
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
-            if paymentOption != embeddedPaymentMethodsView.displayData {
+            if oldPaymentOption != self.paymentOption {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
             return .succeeded
@@ -169,6 +175,31 @@ public final class EmbeddedPaymentElement {
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
     internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    internal var _paymentOption: PaymentOption? {
+        // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.
+        // TODO: Handle CVC recollection
+        switch embeddedPaymentMethodsView.selection {
+        case .applePay:
+            return .applePay
+        case .link:
+            return .link(option: .wallet)
+        case let .new(paymentMethodType: paymentMethodType):
+            let params = IntentConfirmParams(type: paymentMethodType)
+            params.setDefaultBillingDetailsIfNecessary(for: configuration)
+            switch paymentMethodType {
+            case .stripe:
+                return .new(confirmParams: params)
+            case .external(let type):
+                return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
+            case .instantDebits, .linkCardBrand:
+                return .new(confirmParams: params)
+            }
+        case .saved(paymentMethod: let paymentMethod):
+            return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+        case .none:
+            return nil
+        }
+    }
 
     private init(
         configuration: Configuration,

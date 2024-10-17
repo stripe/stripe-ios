@@ -11,8 +11,15 @@ extension EmbeddedPaymentElement {
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        previousPaymentOption: PaymentOption? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
+        // Restore the customer's previous payment method.
+        // Caveats:
+        // - Only payment method details (including checkbox state) and billing details are restored
+        // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
+        // TODO: Restore the form, if any
+
         let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
         let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
@@ -23,7 +30,23 @@ extension EmbeddedPaymentElement {
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         )
         let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
-            // Default to the customer's default or the first saved payment method, if any
+            // Select the previous payment option
+            switch previousPaymentOption {
+            case .applePay:
+                return .applePay
+            case .link:
+                return .link
+            case .external(paymentMethod: let paymentMethod, billingDetails: _):
+                return .new(paymentMethodType: .external(paymentMethod))
+            case .saved(paymentMethod: let paymentMethod, confirmParams: _):
+                return .saved(paymentMethod: paymentMethod)
+            case .new(confirmParams: let confirmParams):
+                return .new(paymentMethodType: confirmParams.paymentMethodType)
+            case nil:
+                break
+            }
+
+            // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
             let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
             switch customerDefault {
             case .applePay:
@@ -65,4 +88,68 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
+}
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
+import UIKit
+
+extension EmbeddedPaymentElement.PaymentOptionDisplayData {
+    init(paymentOption: PaymentOption, mandateText: NSAttributedString?) {
+        self.mandateText = mandateText
+        self.image = paymentOption.makeIcon(updateImageHandler: nil)
+        switch paymentOption {
+        case .applePay:
+            label = String.Localized.apple_pay
+            paymentMethodType = "apple_pay"
+            billingDetails = nil
+        case .saved(let paymentMethod, _):
+            label = paymentMethod.paymentSheetLabel
+            paymentMethodType = paymentMethod.type.identifier
+            billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
+        case .new(let confirmParams):
+            label = confirmParams.paymentSheetLabel
+            paymentMethodType = confirmParams.paymentMethodType.identifier
+            billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
+        case .link(let option):
+            label = option.paymentSheetLabel
+            paymentMethodType = STPPaymentMethodType.link.identifier
+            billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
+        case .external(let paymentMethod, let stpBillingDetails):
+            label = paymentMethod.label
+            paymentMethodType = paymentMethod.type
+            billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
+        }
+    }
+
+//    init(selection: EmbeddedPaymentMethodsView.Selection, mandateText: NSAttributedString?) {
+//        self.mandateText = mandateText
+//
+//        switch selection {
+//        case .new(paymentMethodType: let paymentMethodType):
+//            // TODO: Make image dynamic https://jira.corp.stripe.com/browse/MOBILESDK-2322
+//            image = paymentMethodType.makeImage(
+//                forDarkBackground: UITraitCollection.current.isDarkMode,
+//                updateHandler: nil
+//            )
+//            label = paymentMethodType.displayName
+//            self.paymentMethodType = paymentMethodType.identifier
+//            billingDetails = nil // TODO(porter) Handle billing details when we present forms (maybe set this to defaultBillingDetails) if billingDetailsConfiguration.attachDefaultsToPaymentMethod is true
+//        case .saved(paymentMethod: let paymentMethod):
+//            image = paymentMethod.makeIcon()
+//            label = paymentMethod.paymentSheetLabel
+//            paymentMethodType = paymentMethod.type.identifier
+//            billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
+//        case .applePay:
+//            image = Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
+//            label = .Localized.apple_pay
+//            paymentMethodType = "apple_pay"
+//            billingDetails = nil // TODO(porter) Handle billing details when we present forms
+//        case .link:
+//            image = Image.link_logo.makeImage()
+//            label = STPPaymentMethodType.link.displayName
+//            paymentMethodType = STPPaymentMethodType.link.identifier
+//            billingDetails = nil // TODO(porter) Handle billing details when we present forms
+//        }
+//    }
 }
