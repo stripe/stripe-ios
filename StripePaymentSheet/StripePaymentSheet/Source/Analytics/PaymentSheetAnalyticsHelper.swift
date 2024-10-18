@@ -348,7 +348,7 @@ final class PaymentSheetAnalyticsHelper {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
         }
 
-        for (param, param_value) in params { 
+        for (param, param_value) in params {
             additionalParams[param] = param_value
         }
         let analytic = PaymentSheetAnalytic(event: event, additionalParams: additionalParams)
