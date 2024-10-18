@@ -63,9 +63,9 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(porter) Should we create a new analytics helper specific to embedded? Figured this out when we do analytics.
-        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
         AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
 
         let loadResult = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
@@ -75,7 +75,8 @@ public final class EmbeddedPaymentElement {
         )
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: configuration,
-            loadResult: loadResult
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         return embeddedPaymentElement
     }
@@ -102,18 +103,17 @@ public final class EmbeddedPaymentElement {
         // Cancel the old task and let it finish so that merchants receive update results in order
         currentUpdateTask?.cancel()
         _ = await currentUpdateTask?.value
+        let strongAnalyticsHelper = analyticsHelper
         // Start the new update task
         let currentUpdateTask = Task { [weak self, configuration, paymentOption] in
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
             do {
-                // TODO: Change dummy analytics helper
-                let dummyAnalyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init())
                 // TODO(nice to have): Make `load` respect task cancellation to reduce network consumption
                 loadResult = try await PaymentSheetLoader.load(
                     mode: .deferredIntent(intentConfiguration),
                     configuration: configuration,
-                    analyticsHelper: dummyAnalyticsHelper,
+                    analyticsHelper: strongAnalyticsHelper,
                     integrationShape: .embedded
                 )
             } catch {
@@ -127,6 +127,7 @@ public final class EmbeddedPaymentElement {
             let embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
                 loadResult: loadResult,
+                analyticsHelper: strongAnalyticsHelper,
                 delegate: self
                 // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
             )
@@ -167,19 +168,30 @@ public final class EmbeddedPaymentElement {
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
     internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private init(
         configuration: Configuration,
-        loadResult: PaymentSheetLoader.LoadResult
+        loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
-            loadResult: loadResult
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
+        self.analyticsHelper = analyticsHelper
+        analyticsHelper.logInitialized()
         self.embeddedPaymentMethodsView.delegate = self
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
 }
 
 // MARK: - Completion-block based APIs
