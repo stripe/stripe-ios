@@ -51,7 +51,7 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
 
             XCTFail("Expected error to be thrown")
         } catch {
-            XCTAssertEqual(error as? AuthenticatedWebViewError, AuthenticatedWebViewError.noWindow)
+            XCTAssertEqual(error as? AuthenticatedWebViewError, AuthenticatedWebViewError.notInViewHierarchy)
         }
     }
 

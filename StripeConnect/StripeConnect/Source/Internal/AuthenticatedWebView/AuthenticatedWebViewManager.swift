@@ -32,7 +32,7 @@ class AuthenticatedWebViewManager: NSObject {
             throw AuthenticatedWebViewError.alreadyPresenting
         }
         guard let window = view.window else {
-            throw AuthenticatedWebViewError.noWindow
+            throw AuthenticatedWebViewError.notInViewHierarchy
         }
 
         let presentationContextProvider = AuthenticatedWebViewPresentationContextProvider(window: window)
