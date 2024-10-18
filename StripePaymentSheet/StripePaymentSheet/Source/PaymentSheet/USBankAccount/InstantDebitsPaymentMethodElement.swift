@@ -19,10 +19,10 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let configuration: PaymentSheetFormFactoryConfig
     private let formElement: FormElement
 
-    private let nameElement: TextFieldElement?
-    private let emailElement: TextFieldElement?
-    private let phoneElement: PhoneNumberElement?
-    private let addressElement: AddressSectionElement?
+    let nameElement: TextFieldElement?
+    let emailElement: TextFieldElement?
+    let phoneElement: PhoneNumberElement?
+    let addressElement: AddressSectionElement?
 
     private var linkedBankElements: [Element] {
         return [linkedBankInfoSectionElement]
@@ -101,6 +101,10 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             postalCode: addressElement?.postalCode?.text,
             state: addressElement?.state?.rawData
         )
+    }
+
+    var defaultAddress: PaymentSheet.Address? {
+        configuration.defaultBillingDetails.address
     }
 
     var enableCTA: Bool {
@@ -284,6 +288,7 @@ extension InstantDebitsPaymentMethodElement: ElementDelegate {
 }
 
 private extension PaymentSheet.Address {
+    /// An address is valid if all fields except `line2` are not empty.
     var isValid: Bool {
         city?.isEmpty == false &&
         country?.isEmpty == false &&
