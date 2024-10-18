@@ -17,8 +17,7 @@ public final class EmbeddedPaymentElement {
 
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: UIView {
-        // TODO: Make this a _container view_ so that we can swap out the inner `embeddedPaymentMethodsView` when `update` is called.
-        return embeddedPaymentMethodsView
+        return containerView
     }
 
     /// A view controller to present on.
@@ -145,6 +144,7 @@ public final class EmbeddedPaymentElement {
             // At this point, we're the latest update - update self properties and inform our delegate.
             self.loadResult = loadResult
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
+            self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
             if paymentOption != embeddedPaymentMethodsView.displayData {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
@@ -164,6 +164,7 @@ public final class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
+    internal private(set) var containerView: EmbeddedPaymentElementContainerView
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
     internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
@@ -178,6 +179,14 @@ public final class EmbeddedPaymentElement {
             configuration: configuration,
             loadResult: loadResult
         )
+        self.containerView = EmbeddedPaymentElementContainerView(
+            embeddedPaymentMethodsView: embeddedPaymentMethodsView
+        )
+
+        self.containerView.updateSuperviewHeight = { [weak self] in
+            guard let self else { return }
+            self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+        }
         self.embeddedPaymentMethodsView.delegate = self
     }
 }
