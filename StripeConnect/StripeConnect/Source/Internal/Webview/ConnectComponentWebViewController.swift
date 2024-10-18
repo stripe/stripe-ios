@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeFinancialConnections
 @_spi(STP) import StripeUICore
 import UIKit
 import WebKit
@@ -204,6 +205,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
             // TODO: MXMOBILE-2491 Use this for analytics
         })
+        addMessageHandler(OpenFinancialConnections(didReceiveMessage: { [weak self] payload in
+            self?.openFinancialConnections(payload)
+        }))
     }
 
     /// Adds NotificationCenter observers
@@ -228,5 +232,35 @@ private extension ConnectComponentWebViewController {
     func didFailLoad(error: Error) {
         didFailLoadWithError(error)
         activityIndicator.stopAnimating()
+    }
+
+    func openFinancialConnections(_ args: OpenFinancialConnections.Payload) {
+        let financialConnectionsSheet = FinancialConnectionsSheet(
+            financialConnectionsSessionClientSecret: args.clientSecret,
+            returnURL: componentManager.returnUrl
+        )
+        financialConnectionsSheet.apiClient = componentManager.apiClient
+        financialConnectionsSheet.present(from: self) { [weak self] (result: HostControllerResult) in
+            var token: String?
+
+            // TODO: MXMOBILE-2491 Log these as errors instead of printing to console
+
+            switch result {
+            case .completed(.financialConnections(let session)):
+                token = session.bankAccountToken?.id
+                if token == nil {
+                    debugPrint("Error using FinancialConnections: no bank token returned")
+                }
+            case .completed(.instantDebits):
+                debugPrint("Error using FinancialConnections: instantDebits not supported")
+            case .failed(let error):
+                debugPrint("Error using FinancialConnections: \(error)")
+            case .canceled:
+                // No-op
+                break
+            }
+
+            self?.sendMessage(ReturnedFromFinancialConnections(payload: .init(bankToken: token, id: args.id)))
+        }
     }
 }

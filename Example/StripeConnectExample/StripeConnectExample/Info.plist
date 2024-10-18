@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>We use the camera to scan your ID documents</string>
-	<key>NSCameraReactionEffectGesturesEnabledDefault</key>
-	<false/>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>bg_BG</string>
@@ -56,15 +52,28 @@
 		<string>tr_TR</string>
 		<string>vi_VN</string>
 	</array>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.stripe.StripeConnect-Example</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>stripe-connect-example</string>
+			</array>
+		</dict>
+	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSCameraReactionEffectGesturesEnabledDefault</key>
+	<false/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Handjet-Regular.ttf</string>
 		<string>Handjet-Bold.ttf</string>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

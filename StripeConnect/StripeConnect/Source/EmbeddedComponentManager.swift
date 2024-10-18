@@ -28,10 +28,14 @@ public class EmbeddedComponentManager {
     // content should load.
     var shouldLoadContent: Bool = true
 
+    /// Return URL used for FinancialConnections
+    let returnUrl: String
+
     /**
      Initializes a StripeConnect instance.
 
      - Parameters:
+       - returnUrl: A return URL that can be used to return to the embedded component
        - apiClient: The APIClient instance used to make requests to Stripe.
        - appearance: Customizes the look of Connect embedded components.
        - fonts: An array of custom fonts embedded in your app binary for use by any embedded
@@ -41,7 +45,8 @@ public class EmbeddedComponentManager {
      delegate access to. This function is also used to retrieve a client secret function to
      refresh the session when it expires.
      */
-    public init(apiClient: STPAPIClient = STPAPIClient.shared,
+    public init(returnUrl: String,
+                apiClient: STPAPIClient = STPAPIClient.shared,
                 appearance: EmbeddedComponentManager.Appearance = .default,
                 fonts: [EmbeddedComponentManager.CustomFontSource] = [],
                 fetchClientSecret: @escaping () async -> String?) {
@@ -49,6 +54,7 @@ public class EmbeddedComponentManager {
         self.fetchClientSecret = fetchClientSecret
         self.fonts = fonts
         self.appearance = appearance
+        self.returnUrl = returnUrl
 
         assert(Bundle.main.infoDictionary?["NSCameraUsageDescription"] != nil,
                "Embedded components require camera access. Add `NSCameraUsageDescription` to your app's Info.plist file to enable camera access.")

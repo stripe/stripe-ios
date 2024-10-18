@@ -63,7 +63,12 @@ class MainViewController: UITableViewController {
     }
 
     lazy var embeddedComponentManager: EmbeddedComponentManager = {
-        return .init(appearance: AppSettings.shared.appearanceInfo.appearance,
+        // NOTE: We are using a custom URL scheme in this example, but it is
+        // recommended to instead use an https URL registered to your domain
+        // as custom schemes are a potential attack vector. More documentation:
+        // https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app
+        return .init(returnUrl: "stripe-connect-example://stripe-connect-redirect",
+                     appearance: AppSettings.shared.appearanceInfo.appearance,
                      fonts: customFonts(),
                      fetchClientSecret: { [weak self, merchant] in
             do {

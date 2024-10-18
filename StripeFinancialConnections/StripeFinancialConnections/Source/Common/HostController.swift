@@ -10,12 +10,12 @@ import UIKit
 
 /// An internal result type that helps us handle both
 /// Financial Connections and Instant Debits
-@_spi(STP) public enum HostControllerResult {
+@_spi(STP) @frozen public enum HostControllerResult {
     case completed(Completed)
     case failed(error: Error)
     case canceled
 
-    @_spi(STP) public enum Completed {
+    @_spi(STP) @frozen public enum Completed {
         case financialConnections(StripeAPI.FinancialConnectionsSession)
         case instantDebits(InstantDebitsLinkedBank)
     }
