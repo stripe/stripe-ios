@@ -439,26 +439,25 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(blikCTAText.waitForExistence(timeout: 10.0))
     }
 
-//    TODO(RUN_MOBILESDK-3622) re-enable when 3DS2 test card is fixed
-//    func test3DS2Card_alwaysAuthenticate() throws {
-//        app.launch()
-//        app.staticTexts["PaymentSheet"].tap()
-//        let buyButton = app.staticTexts["Buy"]
-//        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
-//        buyButton.tap()
-//
-//        // Card number from https://docs.stripe.com/testing#regulatory-cards
-//        try! fillCardData(app, cardNumber: "4000002760003184")
-//        app.buttons["Pay €9.73"].tap()
-//        let challengeCodeTextField = app.textFields["STDSTextField"]
-//        XCTAssertTrue(challengeCodeTextField.waitForExistenceAndTap())
-//        challengeCodeTextField.typeText("424242" + XCUIKeyboardKey.return.rawValue)
-//        app.buttons["Submit"].waitForExistenceAndTap()
-//        let successText = app.alerts.staticTexts["Your order is confirmed!"]
-//        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-//        let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
-//        okButton.tap()
-//    }
+    func test3DS2Card_alwaysAuthenticate() throws {
+        app.launch()
+        app.staticTexts["PaymentSheet"].tap()
+        let buyButton = app.staticTexts["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.tap()
+
+        // Card number from https://docs.stripe.com/testing#regulatory-cards
+        try! fillCardData(app, cardNumber: "4000002760003184")
+        app.buttons["Pay €9.73"].tap()
+        let challengeCodeTextField = app.textFields["STDSTextField"]
+        XCTAssertTrue(challengeCodeTextField.waitForExistenceAndTap())
+        challengeCodeTextField.typeText("424242" + XCUIKeyboardKey.return.rawValue)
+        app.buttons["Submit"].waitForExistenceAndTap()
+        let successText = app.alerts.staticTexts["Your order is confirmed!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
+        okButton.tap()
+    }
 
     func testPreservesFormDetails() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()

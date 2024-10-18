@@ -54,10 +54,9 @@ class IntegrationTesterUICardEntryTests: IntegrationTesterUITests {
 }
 
 class IntegrationTesterUICardTests: IntegrationTesterUITests {
-//    TODO(RUN_MOBILESDK-3622) re-enable when 3DS2 test card is fixed
-//    func testStandardCustomCard3DS2() throws {
-//        testAuthentication(cardNumber: "4000000000003220", confirmationBehavior: .threeDS2)
-//    }
+    func testStandardCustomCard3DS2() throws {
+        testAuthentication(cardNumber: "4000000000003220", confirmationBehavior: .threeDS2)
+    }
 
     func testDeclinedCard() throws {
         testAuthentication(cardNumber: "4000000000000002", expectedResult: "declined")
