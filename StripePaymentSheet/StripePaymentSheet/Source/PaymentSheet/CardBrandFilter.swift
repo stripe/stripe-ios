@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CardBrandFilter {
+struct CardBrandFilter: Equatable {
 
     static let `default`: CardBrandFilter = .init(cardBrandAcceptance: .all)
 
