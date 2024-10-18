@@ -173,8 +173,7 @@ public final class EmbeddedPaymentElement {
     private init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
-        analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: EmbeddedPaymentElementDelegate? = nil
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
