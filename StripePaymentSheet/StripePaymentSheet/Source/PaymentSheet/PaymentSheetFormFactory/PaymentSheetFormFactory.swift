@@ -644,19 +644,30 @@ extension PaymentSheetFormFactory {
     }
 
     func makeInstantDebits() -> PaymentMethodElement {
+        let titleElement: StaticElement? = if case .paymentSheet = configuration {
+            makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
+        } else {
+            nil
+        }
+
+        let nameElement = configuration.billingDetailsCollectionConfiguration.name == .always ? makeName() : nil
+        let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
+        let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
+            ? makeBillingAddressSection(collectionMode: .all(), countries: nil)
+            : nil
+
+        // An email is required, so only hide the email field iff:
+        // The configuration specifies never collecting email, and a default (non-empty) email is provided.
+        let shouldHideEmailField = configuration.billingDetailsCollectionConfiguration.email == .never && configuration.defaultBillingDetails.email?.isEmpty == false
+        let emailElement = shouldHideEmailField ? nil : makeEmail()
+
         return InstantDebitsPaymentMethodElement(
             configuration: configuration,
-            titleElement: {
-                switch configuration {
-                case .customerSheet:
-                    return nil // customer sheet is not supported
-                case .paymentSheet:
-                    return makeSectionTitleLabelWith(
-                        text: Self.PayByBankDescriptionText
-                    )
-                }
-            }(),
-            emailElement: makeEmail(),
+            titleElement: titleElement,
+            nameElement: nameElement,
+            emailElement: emailElement,
+            phoneElement: phoneElement,
+            addressElement: addressElement,
             theme: theme
         )
     }
