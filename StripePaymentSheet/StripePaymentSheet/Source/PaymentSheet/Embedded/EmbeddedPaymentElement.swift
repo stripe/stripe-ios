@@ -201,7 +201,7 @@ public final class EmbeddedPaymentElement {
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
 @_spi(STP) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
 }
 
 // MARK: - Completion-block based APIs
