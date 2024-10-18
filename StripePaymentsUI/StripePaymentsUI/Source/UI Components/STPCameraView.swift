@@ -1,6 +1,6 @@
 //
 //  STPCameraView.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
@@ -10,7 +10,7 @@ import AVFoundation
 import UIKit
 
 @available(macCatalyst 14.0, *)
-class STPCameraView: UIView {
+public class STPCameraView: UIView {
     private var flashLayer: CALayer?
 
     var captureSession: AVCaptureSession? {
@@ -50,7 +50,7 @@ class STPCameraView: UIView {
         })
     }
 
-    override init(
+    public override init(
         frame: CGRect
     ) {
         super.init(frame: frame)
@@ -65,7 +65,7 @@ class STPCameraView: UIView {
         videoPreviewLayer.videoGravity = .resizeAspectFill
     }
 
-    override class var layerClass: AnyClass {
+    public override class var layerClass: AnyClass {
         return AVCaptureVideoPreviewLayer.self
     }
 
