@@ -49,7 +49,7 @@ protocol EmbeddedFormViewControllerDelegate: AnyObject {
 class EmbeddedFormViewController: UIViewController {
 
     /// Returns true if confirmation does not occur while the form is presented and instead is trigged by `EmbeddedPaymentElement.confirm` when the form is dismissed.
-    var shouldDeferConfirmation: Bool {
+    private var shouldDeferConfirmation: Bool {
         switch configuration.formSheetAction {
         case .confirm:
             return false
@@ -69,15 +69,15 @@ class EmbeddedFormViewController: UIViewController {
         return paymentMethodFormViewController.paymentOption
     }
     
-    let loadResult: PaymentSheetLoader.LoadResult
-    let paymentMethodType: PaymentSheet.PaymentMethodType
-    let configuration: EmbeddedPaymentElement.Configuration
-    let intent: Intent
-    let elementsSession: STPElementsSession
-    let formCache: PaymentMethodFormCache
-    let analyticsHelper: PaymentSheetAnalyticsHelper
-    var error: Swift.Error?
-    var isPaymentInFlight: Bool = false
+    private let loadResult: PaymentSheetLoader.LoadResult
+    private let paymentMethodType: PaymentSheet.PaymentMethodType
+    private let configuration: EmbeddedPaymentElement.Configuration
+    private let intent: Intent
+    private let elementsSession: STPElementsSession
+    private let formCache: PaymentMethodFormCache
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private var error: Swift.Error?
+    private var isPaymentInFlight: Bool = false
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private var previousPaymentOption: PaymentOption?
 
@@ -92,11 +92,11 @@ class EmbeddedFormViewController: UIViewController {
         return navBar
     }()
 
-    lazy var paymentContainerView: DynamicHeightContainerView = {
+    private lazy var paymentContainerView: DynamicHeightContainerView = {
         DynamicHeightContainerView()
     }()
 
-    lazy var primaryButton: ConfirmButton = {
+    private lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
@@ -136,11 +136,9 @@ class EmbeddedFormViewController: UIViewController {
         )
     }()
 
-    private lazy var mandateView = { SimpleMandateTextView(theme: configuration.appearance.asElementsTheme) }()
-    private lazy var errorLabel: UILabel = {
-        ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
-    }()
-    let stackView: UIStackView = UIStackView()
+    private lazy var mandateView = SimpleMandateTextView(theme: configuration.appearance.asElementsTheme)
+    private lazy var errorLabel = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
+    private let stackView: UIStackView = UIStackView()
 
     weak var delegate: EmbeddedFormViewControllerDelegate?
 
@@ -168,13 +166,13 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     /// Updates all UI elements (pay button, error, mandate)
-    func updateUI() {
+    private func updateUI() {
         updatePrimaryButton()
         updateMandate()
         updateError()
     }
 
-    func updatePrimaryButton() {
+    private func updatePrimaryButton() {
         let callToAction: ConfirmButton.CallToActionType = {
             if let override = paymentMethodFormViewController.overridePrimaryButtonState {
                 return override.ctaType
@@ -216,7 +214,7 @@ class EmbeddedFormViewController: UIViewController {
         }
     }
 
-    func updateError() {
+    private func updateError() {
         errorLabel.text = error?.nonGenericDescription
         animateHeightChange({ [self] in
             errorLabel.setHiddenIfNecessary(error == nil)
@@ -234,7 +232,7 @@ class EmbeddedFormViewController: UIViewController {
         })
     }
 
-    func didCancel() {
+    private func didCancel() {
         delegate?.embeddedFormViewControllerDidCancel(self)
     }
 
@@ -276,7 +274,7 @@ class EmbeddedFormViewController: UIViewController {
         ])
     }
 
-    var didSendLogShow: Bool = false
+    private var didSendLogShow: Bool = false
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if !didSendLogShow {
@@ -301,7 +299,7 @@ class EmbeddedFormViewController: UIViewController {
         }
     }
 
-    func pay(with paymentOption: PaymentOption) {
+    private func pay(with paymentOption: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
         error = nil
