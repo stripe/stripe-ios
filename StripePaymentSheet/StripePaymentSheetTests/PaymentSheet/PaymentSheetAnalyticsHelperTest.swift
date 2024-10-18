@@ -280,13 +280,13 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogPaymentLinkContextWithLinkedBank() {
         let instantDebitsLinkedBank = InstantDebitsLinkedBank(
-            paymentMethodId: "paymentMethodId",
+            paymentMethod: LinkBankPaymentMethod(id: "paymentMethodId"),
             bankName: nil,
             last4: nil,
             linkMode: .linkPaymentMethod
         )
         let linkCardBrandLinkedBank = InstantDebitsLinkedBank(
-            paymentMethodId: "paymentMethodId",
+            paymentMethod: LinkBankPaymentMethod(id: "paymentMethodId"),
             bankName: nil,
             last4: nil,
             linkMode: .linkCardBrand

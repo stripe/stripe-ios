@@ -173,7 +173,6 @@ extension PaymentSheet {
             var eligibleForInstantDebits: Bool {
                 elementsSession.orderedPaymentMethodTypes.contains(.link) &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
-                !intent.isDeferredIntent &&
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true
             }
 
@@ -185,7 +184,6 @@ extension PaymentSheet {
             var eligibleForLinkCardBrand: Bool {
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
-                !intent.isDeferredIntent &&
                 elementsSession.linkSettings?.linkMode == .linkCardBrand
             }
 
