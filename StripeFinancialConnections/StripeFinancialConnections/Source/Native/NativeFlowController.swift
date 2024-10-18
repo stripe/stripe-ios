@@ -508,10 +508,14 @@ extension NativeFlowController {
 
         // Bank account details extraction for the linked bank
         var bankAccountDetails: BankAccountDetails?
-        let linkMode = dataManager.elementsSessionContext?.linkMode
+        let elementsSessionContext = dataManager.elementsSessionContext
+        let linkMode = elementsSessionContext?.linkMode
+        let email = dataManager.consumerSession?.emailAddress
         dataManager.createPaymentDetails(
             consumerSessionClientSecret: consumerSession.clientSecret,
-            bankAccountId: bankAccountId
+            bankAccountId: bankAccountId,
+            billingAddress: elementsSessionContext?.billingAddress,
+            billingEmail: email
         )
         .chained { [weak self] paymentDetails -> Future<PaymentMethodIDProvider> in
             guard let self else {
