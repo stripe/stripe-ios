@@ -147,7 +147,8 @@ import UIKit
                                                    paymentMethodType: .link,
                                                    customerName: configuration.defaultBillingDetails.name,
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
-                                                   additionalParameteres: parameters) { [weak self] linkAccountSession, error in
+                                                   linkMode: nil,
+                                                   additionalParameters: parameters) { [weak self] linkAccountSession, error in
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .setupIntentClientSecret(let clientSecret):
@@ -160,7 +161,8 @@ import UIKit
                                                    paymentMethodType: .link,
                                                    customerName: configuration.defaultBillingDetails.name,
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
-                                                   additionalParameteres: parameters) { [weak self] linkAccountSession, error in
+                                                   linkMode: nil,
+                                                   additionalParameters: parameters) { [weak self] linkAccountSession, error in
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .deferredIntent(let intentConfiguration):
@@ -180,6 +182,7 @@ import UIKit
                         amount: amount,
                         currency: currency,
                         onBehalfOf: intentConfiguration.onBehalfOf,
+                        linkMode: nil,
                         additionalParameters: ["product": "instant_debits"]
                     ) { [weak self] linkAccountSession, error in
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
