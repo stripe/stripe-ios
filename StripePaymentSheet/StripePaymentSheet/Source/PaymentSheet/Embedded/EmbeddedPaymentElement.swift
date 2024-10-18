@@ -174,8 +174,7 @@ public final class EmbeddedPaymentElement {
     private init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
-        analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: EmbeddedPaymentElementDelegate? = nil
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
@@ -188,13 +187,13 @@ public final class EmbeddedPaymentElement {
             embeddedPaymentMethodsView: embeddedPaymentMethodsView
         )
 
+        self.analyticsHelper = analyticsHelper
+        analyticsHelper.logInitialized()
         self.containerView.updateSuperviewHeight = { [weak self] in
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
-        self.analyticsHelper = analyticsHelper
-        analyticsHelper.logInitialized()
-        self.embeddedPaymentMethodsView.delegate = self
+        self.embeddedPaymentMethodsView.delegate = self
     }
 }
 
