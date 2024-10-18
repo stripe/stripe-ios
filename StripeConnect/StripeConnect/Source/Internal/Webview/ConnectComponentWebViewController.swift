@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+import StripeFinancialConnections
 @_spi(STP) import StripeUICore
 import UIKit
 import WebKit
@@ -28,6 +29,9 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     /// Manages authenticated web views
     private let authenticatedWebViewManager: AuthenticatedWebViewManager
 
+    /// Presents the FinancialConnectionsSheet
+    private let financialConnectionsPresenter: FinancialConnectionsPresenter
+
     private let setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init()
 
     private var didFailLoadWithError: (Error) -> Void
@@ -48,13 +52,15 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         // Should only be overridden for tests
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
-        authenticatedWebViewManager: AuthenticatedWebViewManager = .init()
+        authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
+        financialConnectionsPresenter: FinancialConnectionsPresenter = .init()
     ) {
         self.componentManager = componentManager
         self.notificationCenter = notificationCenter
         self.webLocale = webLocale
         self.authenticatedWebViewManager = authenticatedWebViewManager
         self.didFailLoadWithError = didFailLoadWithError
+        self.financialConnectionsPresenter = financialConnectionsPresenter
 
         let config = WKWebViewConfiguration()
 
@@ -99,7 +105,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                      // Should only be overridden for tests
                      notificationCenter: NotificationCenter = NotificationCenter.default,
                      webLocale: Locale = Locale.autoupdatingCurrent,
-                     authenticatedWebViewManager: AuthenticatedWebViewManager = .init()) {
+                     authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
+                     financialConnectionsPresenter: FinancialConnectionsPresenter = .init()) {
         self.init(componentManager: componentManager,
                   componentType: componentType,
                   loadContent: loadContent,
@@ -107,7 +114,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                   didFailLoadWithError: didFailLoadWithError,
                   notificationCenter: notificationCenter,
                   webLocale: webLocale,
-                  authenticatedWebViewManager: authenticatedWebViewManager)
+                  authenticatedWebViewManager: authenticatedWebViewManager,
+                  financialConnectionsPresenter: financialConnectionsPresenter)
     }
 
     required init?(coder: NSCoder) {
@@ -214,6 +222,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(OpenAuthenticatedWebViewMessageHandler { [weak self] payload in
             self?.openAuthenticatedWebView(payload)
         })
+        addMessageHandler(OpenFinancialConnectionsMessageHandler(didReceiveMessage: { [weak self] payload in
+            self?.openFinancialConnections(payload)
+        }))
     }
 
     /// Adds NotificationCenter observers
@@ -252,6 +263,34 @@ private extension ConnectComponentWebViewController {
                 // TODO: MXMOBILE-2491 log `component.authenticated_web.error` analytic
                 debugPrint("Error returning from authenticated web view: \(error)")
             }
+        }
+    }
+
+    func openFinancialConnections(_ args: OpenFinancialConnectionsMessageHandler.Payload) {
+        Task { @MainActor in
+            let result = await financialConnectionsPresenter.presentForToken(
+                apiClient: componentManager.apiClient,
+                clientSecret: args.clientSecret,
+                from: self
+            )
+
+            var token: String?
+            // TODO: MXMOBILE-2491 Log these as errors instead of printing to console
+
+            switch result {
+            case .completed(result: (_, let returnedToken)):
+                token = returnedToken?.id
+                if returnedToken == nil {
+                    debugPrint("Error using FinancialConnections: no bank token returned")
+                }
+            case .failed(let error):
+                debugPrint("Error using FinancialConnections: \(error)")
+            case .canceled:
+                // No-op
+                break
+            }
+
+            sendMessage(ReturnedFromFinancialConnectionsSender(payload: .init(bankToken: token, id: args.id)))
         }
     }
 }

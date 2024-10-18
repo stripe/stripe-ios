@@ -61,6 +61,13 @@ extension WKWebView {
                         """)
     }
 
+    func evaluateOpenFinancialConnectionsWebView(clientSecret: String, id: String) {
+        evaluateMessage(name: "openFinancialConnections",
+                        json: """
+                        {"clientSecret": "\(clientSecret)", "id": "\(id)" }
+                        """)
+    }
+
     func evaluateOnLoadError(type: String, message: String) async throws {
         try await evaluateMessage(name: "onSetterFunctionCalled",
                         json:
