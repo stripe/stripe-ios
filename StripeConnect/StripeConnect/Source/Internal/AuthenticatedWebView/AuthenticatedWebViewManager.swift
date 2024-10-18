@@ -7,7 +7,7 @@
 
 import AuthenticationServices
 
-/// Manages
+/// Manages authenticated web views for a single component
 class AuthenticatedWebViewManager: NSObject {
     typealias SessionFactory = (
         _ url: URL,
@@ -15,7 +15,7 @@ class AuthenticatedWebViewManager: NSObject {
         _ completionHandler: @escaping ASWebAuthenticationSession.CompletionHandler
     ) -> ASWebAuthenticationSession
 
-    /// Used to dependency inject `ASWebAuthenticationSession.init` in tests
+    /// Used to dependency inject in tests and wrap `ASWebAuthenticationSession.init`
     private let sessionFactory: SessionFactory
 
     /// The currently presented auth session, if there is one
