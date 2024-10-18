@@ -212,7 +212,7 @@ private extension ConnectComponentWebViewController {
             // TODO: MXMOBILE-2491 Use this for analytics
         })
         addMessageHandler(OpenAuthenticatedWebViewMessageHandler { [weak self] payload in
-            await .init(url: try self?.openAuthenticatedWebView(payload))
+            self?.openAuthenticatedWebView(payload)
         })
     }
 
@@ -241,10 +241,17 @@ private extension ConnectComponentWebViewController {
     }
 
     /// Opens the url in the given payload in an ASWebAuthenticationSession and sends the resulting redirect to
-    @MainActor
-    func openAuthenticatedWebView(_ payload: OpenAuthenticatedWebViewMessageHandler.Payload) async throws -> URL? {
-        let returnUrl = try await authenticatedWebViewManager.present(with: payload.url, in: view.window)
-        // TODO: MXMOBILE-2491 log `component.authenticated_web.*` analytics
-        return returnUrl
+    func openAuthenticatedWebView(_ payload: OpenAuthenticatedWebViewMessageHandler.Payload) {
+        Task { @MainActor in
+            do {
+                // TODO: MXMOBILE-2491 log `component.authenticated_web.*` analytic
+                let returnUrl = try await authenticatedWebViewManager.present(with: payload.url, in: view.window)
+
+                sendMessage(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)))
+            } catch {
+                // TODO: MXMOBILE-2491 log `component.authenticated_web.error` analytic
+                debugPrint("Error returning from authenticated web view: \(error)")
+            }
+        }
     }
 }

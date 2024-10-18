@@ -230,8 +230,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
 
-    @MainActor
-    func testOpenAuthenticatedWebView() async throws {
+    func testOpenAuthenticatedWebView() throws {
         let componentManager = componentManagerAssertingOnFetch()
         let authenticatedWebViewManager = MockAuthenticatedWebViewManager { url, _ in
             XCTAssertEqual(url.absoluteString, "https://stripe.com/start")
@@ -243,15 +242,16 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       authenticatedWebViewManager: authenticatedWebViewManager)
 
-        try await webVC.webView.evaluateMessageWithReply(
-            name: "openAuthenticatedWebView",
-            json: """
-            {"url":"https://stripe.com/start","id":"1234"}
-            """,
-            expectedResponse: """
-            {"url":"stripe-connect:\\/\\/return_url"}
-            """
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: ReturnedFromAuthenticatedWebViewSender(payload: .init(
+                url: URL(string: "stripe-connect://return_url"),
+                id: "1234"
+            ))
         )
+
+        webVC.webView.evaluateOpenAuthenticatedWebView(url: "https://stripe.com/start", id: "1234")
+
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }
 // MARK: - Helpers

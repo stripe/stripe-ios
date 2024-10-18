@@ -8,21 +8,14 @@
 import Foundation
 
 /// Indicates to open the provided URL in an `ASWebAuthenticationSession`.
-class OpenAuthenticatedWebViewMessageHandler: ScriptMessageHandlerWithReply<OpenAuthenticatedWebViewMessageHandler.Payload, OpenAuthenticatedWebViewMessageHandler.Response> {
+class OpenAuthenticatedWebViewMessageHandler: ScriptMessageHandler<OpenAuthenticatedWebViewMessageHandler.Payload> {
     struct Payload: Codable, Equatable {
         /// URL that's opened in an `ASWebAuthenticationSession`
         let url: URL
         /// Unique identifier logged in analytics when the `ASWebAuthenticationSession` is opened or closed.
         let id: String
     }
-
-    struct Response: Codable, Equatable {
-        /// The return URL from the `ASWebAuthenticationSession` redirect.
-        /// This value will be nil if the user canceled out of the view
-        let url: URL?
-    }
-
-    init(didReceiveMessage: @escaping (Payload) async throws -> Response) {
+    init(didReceiveMessage: @escaping (Payload) -> Void) {
         super.init(name: "openAuthenticatedWebView", didReceiveMessage: didReceiveMessage)
     }
 }
