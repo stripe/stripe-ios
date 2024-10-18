@@ -147,7 +147,7 @@ import UIKit
                                                    paymentMethodType: .link,
                                                    customerName: configuration.defaultBillingDetails.name,
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
-                                                   linkMode: .linkPaymentMethod,
+                                                   linkMode: nil,
                                                    additionalParameters: parameters) { [weak self] linkAccountSession, error in
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
@@ -161,7 +161,7 @@ import UIKit
                                                    paymentMethodType: .link,
                                                    customerName: configuration.defaultBillingDetails.name,
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
-                                                   linkMode: .linkPaymentMethod,
+                                                   linkMode: nil,
                                                    additionalParameters: parameters) { [weak self] linkAccountSession, error in
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
@@ -182,7 +182,7 @@ import UIKit
                         amount: amount,
                         currency: currency,
                         onBehalfOf: intentConfiguration.onBehalfOf,
-                        linkMode: .linkPaymentMethod,
+                        linkMode: nil,
                         additionalParameters: ["product": "instant_debits"]
                     ) { [weak self] linkAccountSession, error in
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
