@@ -269,14 +269,15 @@ private extension ConnectComponentWebViewControllerTests {
 }
 
 private class MockAuthenticatedWebViewManager: AuthenticatedWebViewManager {
-    var overridePresent: (_ url: URL, _ window: UIWindow?) async throws -> URL?
+    var overridePresent: (_ url: URL, _ view: UIView) async throws -> URL?
 
-    init(overridePresent: @escaping (_: URL, _: UIWindow?) -> URL?) {
+    init(overridePresent: @escaping (_ url: URL, _ view: UIView) async throws -> URL?) {
         self.overridePresent = overridePresent
         super.init()
     }
 
-    override func present(with url: URL, in window: UIWindow?) async throws -> URL? {
-        try await overridePresent(url, window)
+    @MainActor
+    override func present(with url: URL, from view: UIView) async throws -> URL? {
+        try await overridePresent(url, view)
     }
 }

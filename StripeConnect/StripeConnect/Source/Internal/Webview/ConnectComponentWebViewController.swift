@@ -245,7 +245,7 @@ private extension ConnectComponentWebViewController {
         Task { @MainActor in
             do {
                 // TODO: MXMOBILE-2491 log `component.authenticated_web.*` analytic
-                let returnUrl = try await authenticatedWebViewManager.present(with: payload.url, in: view.window)
+                let returnUrl = try await authenticatedWebViewManager.present(with: payload.url, from: view)
 
                 sendMessage(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)))
             } catch {

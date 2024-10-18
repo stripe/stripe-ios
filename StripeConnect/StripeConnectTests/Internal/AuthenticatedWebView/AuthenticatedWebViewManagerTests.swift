@@ -11,6 +11,17 @@ import XCTest
 
 class AuthenticatedWebViewManagerTests: XCTestCase {
 
+    /// Hold onto reference to UIWindow
+    private let mockWindow = UIWindow()
+
+    /// A UIView embedded in a window
+    private let mockViewInWindow = UIView()
+
+    override func setUp() {
+        super.setUp()
+        mockWindow.addSubview(mockViewInWindow)
+    }
+
     @MainActor
     func testPresent_whileAlreadyPresentingThrowsError() async {
         do {
@@ -21,7 +32,7 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
             let alreadyPresentingSession = MockWebAuthenticationSession(url: URL(string: "https://already_presenting")!, callbackURLScheme: nil, completionHandler: { _, _ in })
             manager.authSession = alreadyPresentingSession
 
-            _ = try await manager.present(with: URL(string: "https://new_present")!, in: UIWindow())
+            _ = try await manager.present(with: URL(string: "https://new_present")!, from: mockViewInWindow)
 
             XCTFail("Expected error to be thrown")
         } catch {
@@ -36,7 +47,7 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
                 return MockWebAuthenticationSession(url: url, callbackURLScheme: scheme, completionHandler: handler)
             }
 
-            _ = try await manager.present(with: URL(string: "https://stripe.com")!, in: nil)
+            _ = try await manager.present(with: URL(string: "https://stripe.com")!, from: UIView())
 
             XCTFail("Expected error to be thrown")
         } catch {
@@ -55,7 +66,7 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
                 return mockAuthSession!
             }
 
-            _ = try await manager.present(with: URL(string: "https://stripe.com")!, in: UIWindow())
+            _ = try await manager.present(with: URL(string: "https://stripe.com")!, from: mockViewInWindow)
 
             XCTFail("Expected error to be thrown")
         } catch {
@@ -77,7 +88,7 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
             return mockAuthSession
         }
 
-        let result = try await manager.present(with: URL(string: "https://stripe.com")!, in: UIWindow())
+        let result = try await manager.present(with: URL(string: "https://stripe.com")!, from: mockViewInWindow)
 
         XCTAssertEqual(result?.absoluteString, "stripe-connect://success")
     }
@@ -99,7 +110,7 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
             return mockAuthSession
         }
 
-        let result = try await manager.present(with: URL(string: "https://stripe.com")!, in: UIWindow())
+        let result = try await manager.present(with: URL(string: "https://stripe.com")!, from: mockViewInWindow)
 
         XCTAssertEqual(result, nil)
     }
@@ -120,7 +131,7 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
         }
 
         do {
-            _ = try await manager.present(with: URL(string: "https://stripe.com")!, in: UIWindow())
+            _ = try await manager.present(with: URL(string: "https://stripe.com")!, from: mockViewInWindow)
             XCTFail("Expected error")
         } catch {
             XCTAssertEqual((error as NSError).domain, "custom_error")

@@ -7,7 +7,7 @@
 
 import AuthenticationServices
 
-/// Singleton helper to manage
+/// Manages
 class AuthenticatedWebViewManager: NSObject {
     typealias SessionFactory = (
         _ url: URL,
@@ -18,9 +18,6 @@ class AuthenticatedWebViewManager: NSObject {
     /// Used to dependency inject `ASWebAuthenticationSession.init` in tests
     private let sessionFactory: SessionFactory
 
-    /// Window to present the session in
-    private weak var window: UIWindow?
-
     /// The currently presented auth session, if there is one
     weak var authSession: ASWebAuthenticationSession?
 
@@ -29,14 +26,16 @@ class AuthenticatedWebViewManager: NSObject {
     }
 
     /// Returns the redirect URL or nil if the user cancelled the flow
-    func present(with url: URL, in window: UIWindow?) async throws -> URL? {
+    @MainActor
+    func present(with url: URL, from view: UIView) async throws -> URL? {
         guard authSession == nil else {
             throw AuthenticatedWebViewError.alreadyPresenting
         }
-        guard let window else {
+        guard let window = view.window else {
             throw AuthenticatedWebViewError.noWindow
         }
-        self.window = window
+
+        let presentationContextProvider = AuthenticatedWebViewPresentationContextProvider(window: window)
 
         let returnUrl: URL? = try await withCheckedThrowingContinuation { continuation in
             let authSession = sessionFactory(url, StripeConnectConstants.authenticatedWebViewReturnUrlScheme) { returnUrl, error in
@@ -55,8 +54,7 @@ class AuthenticatedWebViewManager: NSObject {
 
                 continuation.resume(returning: returnUrl)
             }
-            authSession.presentationContextProvider = self
-
+            authSession.presentationContextProvider = presentationContextProvider
             self.authSession = authSession
 
             guard authSession.canStart,
@@ -72,8 +70,14 @@ class AuthenticatedWebViewManager: NSObject {
 
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
-extension AuthenticatedWebViewManager: ASWebAuthenticationPresentationContextProviding {
+private class AuthenticatedWebViewPresentationContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
+    let window: UIWindow
+
+    init(window: UIWindow) {
+        self.window = window
+    }
+
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return window ?? .init()
+        return window
     }
 }
