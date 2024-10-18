@@ -9,10 +9,10 @@ import UIKit
 /// The view that's vended to the merchant, containing the embedded view.  We use this to be able to swap out the embedded view with an animation when `update` is called.
 class EmbeddedPaymentElementContainerView: UIView {
     var updateSuperviewHeight: () -> Void = {}
-    var view: UIView
-    var bottomAnchorConstraint: NSLayoutConstraint!
+    private var view: EmbeddedPaymentMethodsView
+    private var bottomAnchorConstraint: NSLayoutConstraint!
 
-    init(embeddedPaymentMethodsView: UIView) {
+    init(embeddedPaymentMethodsView: EmbeddedPaymentMethodsView) {
         self.view = embeddedPaymentMethodsView
         super.init(frame: .zero)
         addInitialView(view)
@@ -34,7 +34,7 @@ class EmbeddedPaymentElementContainerView: UIView {
         ])
     }
 
-    func updateEmbeddedPaymentMethodsView(_ embeddedPaymentMethodsView: UIView) {
+    func updateEmbeddedPaymentMethodsView(_ embeddedPaymentMethodsView: EmbeddedPaymentMethodsView) {
         guard frame.size != .zero else {
             // A zero frame means we haven't been laid out yet. Simply replace the old view to avoid laying out before the view is ready and breaking constraints.
             self.view.removeFromSuperview()
