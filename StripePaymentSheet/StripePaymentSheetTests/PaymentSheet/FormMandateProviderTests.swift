@@ -28,7 +28,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: embeddedConfiguration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: embeddedConfiguration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
 
         let result = formMandateProvider.mandate(for: .stripe(.card), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         XCTAssertNil(result)
@@ -42,7 +42,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
 
         let result = formMandateProvider.mandate(for: nil, savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         XCTAssertNil(result)
@@ -58,7 +58,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
         let paymentMethod: STPPaymentMethod = ._testUSBankAccount()
 
         let result = formMandateProvider.mandate(for: .stripe(.USBankAccount), savedPaymentMethod: paymentMethod, bottomNoticeAttributedString: nil)
@@ -76,7 +76,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
         let paymentMethod: STPPaymentMethod = ._testSEPA()
 
         let result = formMandateProvider.mandate(for: .stripe(.SEPADebit), savedPaymentMethod: paymentMethod, bottomNoticeAttributedString: nil)
@@ -94,7 +94,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
         let paymentMethod: STPPaymentMethod = ._testCard()
 
         let result = formMandateProvider.mandate(for: .stripe(.card), savedPaymentMethod: paymentMethod, bottomNoticeAttributedString: nil)
@@ -112,7 +112,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
         let bottomNoticeAttributedString = NSAttributedString(string: "Test Bottom Notice")
 
         let result = formMandateProvider.mandate(for: .stripe(.USBankAccount), savedPaymentMethod: nil, bottomNoticeAttributedString: bottomNoticeAttributedString)
@@ -129,7 +129,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
 
         let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         let expected = "By continuing, you authorize Test Merchant to debit your Cash App account for this payment and future payments in accordance with Test Merchant\'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings."
@@ -146,7 +146,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
 
         let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         let expected = "By continuing, you authorize Test Merchant to debit your Cash App account for this payment and future payments in accordance with Test Merchant\'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings."
@@ -163,7 +163,7 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
 
         let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         XCTAssertNil(result)

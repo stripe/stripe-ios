@@ -108,7 +108,7 @@ public class PaymentSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
         self.configuration = configuration
-        self.analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: configuration)
+        self.analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration)
         analyticsHelper.logInitialized()
     }
 

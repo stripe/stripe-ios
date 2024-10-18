@@ -18,11 +18,13 @@ class VerticalListMandateProvider: MandateTextProvider {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let intent: Intent
-    
-    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
+
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent, analyticsHelper: PaymentSheetAnalyticsHelper) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.intent = intent
+        self.analyticsHelper = analyticsHelper
     }
 
     /// Builds the attributed string for a given payment method type.
@@ -56,7 +58,7 @@ class VerticalListMandateProvider: MandateTextProvider {
                     paymentMethod: paymentMethodType,
                     previousCustomerInput: nil,
                     linkAccount: LinkAccountContext.shared.account,
-                    analyticsHelper: .init(isCustom: false, configuration: PaymentSheet.Configuration()) // Dummy, not used
+                    analyticsHelper: analyticsHelper
                 ).make()
 
                 guard !form.collectsUserInput else {

@@ -178,7 +178,7 @@ extension PaymentSheetFormFactory {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError,
                                               error: Error.missingV1FromSelectorSpec,
                                               additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-            analyticsHelper.analyticsClient.log(analytic: errorAnalytic)
+            analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
         }
         stpAssert(selectorSpec.apiPath?["v1"] != nil) // If there's no api path, the dropdown selection is unused!
         let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {
