@@ -237,6 +237,8 @@ public extension PaymentSheet {
     /// Describes the appearance of the Embedded Mobile Payment Element
     @_spi(EmbeddedPaymentElementPrivateBeta) struct EmbeddedPaymentElement: Equatable {
 
+        static let `default` = EmbeddedPaymentElement()
+
         /// The display style options for the Embedded Mobile Payment Element
         public enum Style: CaseIterable {
             /// A flat style with radio buttons
@@ -305,6 +307,19 @@ public extension PaymentSheet {
                 /// The spacing between payment method rows
                 public var spacing: CGFloat = 12.0
             }
+        }
+        var analyticPayload: [String: Any] {
+            var payload = [String: Any]()
+            payload["style"] = style != PaymentSheet.Appearance.EmbeddedPaymentElement.default.style
+            payload["row"] = row != PaymentSheet.Appearance.EmbeddedPaymentElement.default.row
+            // Convenience payload item to make querying high level appearance usage easier
+            payload["usage"] = payload.values.contains(where: { value in
+                if let boolValue = value as? Bool {
+                    return boolValue == true
+                }
+                return false
+            })
+            return payload
         }
     }
 }
