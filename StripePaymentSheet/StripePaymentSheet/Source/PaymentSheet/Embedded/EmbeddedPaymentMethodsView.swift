@@ -38,7 +38,7 @@ class EmbeddedPaymentMethodsView: UIView {
         mandateView.attributedText
     }
 
-    lazy var stackView: UIStackView = {
+    private(set) lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = appearance.embeddedPaymentElement.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0

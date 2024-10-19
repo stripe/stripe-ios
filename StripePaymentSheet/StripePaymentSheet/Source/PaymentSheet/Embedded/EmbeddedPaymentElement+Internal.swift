@@ -4,6 +4,9 @@
 //
 //  Created by Yuki Tokuhiro on 10/10/24.
 //
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 extension EmbeddedPaymentElement {
     @MainActor
@@ -89,15 +92,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
 }
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
-import UIKit
+
+// MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     init(paymentOption: PaymentOption, mandateText: NSAttributedString?) {
         self.mandateText = mandateText
-        self.image = paymentOption.makeIcon(updateImageHandler: nil)
+        self.image = paymentOption.makeIcon(updateImageHandler: nil) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:
             label = String.Localized.apple_pay
@@ -121,35 +122,4 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
         }
     }
-
-//    init(selection: EmbeddedPaymentMethodsView.Selection, mandateText: NSAttributedString?) {
-//        self.mandateText = mandateText
-//
-//        switch selection {
-//        case .new(paymentMethodType: let paymentMethodType):
-//            // TODO: Make image dynamic https://jira.corp.stripe.com/browse/MOBILESDK-2322
-//            image = paymentMethodType.makeImage(
-//                forDarkBackground: UITraitCollection.current.isDarkMode,
-//                updateHandler: nil
-//            )
-//            label = paymentMethodType.displayName
-//            self.paymentMethodType = paymentMethodType.identifier
-//            billingDetails = nil // TODO(porter) Handle billing details when we present forms (maybe set this to defaultBillingDetails) if billingDetailsConfiguration.attachDefaultsToPaymentMethod is true
-//        case .saved(paymentMethod: let paymentMethod):
-//            image = paymentMethod.makeIcon()
-//            label = paymentMethod.paymentSheetLabel
-//            paymentMethodType = paymentMethod.type.identifier
-//            billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
-//        case .applePay:
-//            image = Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
-//            label = .Localized.apple_pay
-//            paymentMethodType = "apple_pay"
-//            billingDetails = nil // TODO(porter) Handle billing details when we present forms
-//        case .link:
-//            image = Image.link_logo.makeImage()
-//            label = STPPaymentMethodType.link.displayName
-//            paymentMethodType = STPPaymentMethodType.link.identifier
-//            billingDetails = nil // TODO(porter) Handle billing details when we present forms
-//        }
-//    }
 }

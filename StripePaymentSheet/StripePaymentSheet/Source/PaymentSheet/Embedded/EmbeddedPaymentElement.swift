@@ -44,6 +44,7 @@ public final class EmbeddedPaymentElement {
         public let paymentMethodType: String
         /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
+
     }
 
     /// Contains information about the customer's selected payment option.
@@ -308,4 +309,13 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
+}
+
+// MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
+
+extension EmbeddedPaymentElement.PaymentOptionDisplayData {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        // Unfortunately, we need to manually define this because the implementation of Equatable on UIImage does not work
+        return lhs.image.pngData() == rhs.image.pngData() && rhs.label == lhs.label && lhs.billingDetails == rhs.billingDetails && lhs.paymentMethodType == rhs.paymentMethodType && lhs.mandateText == rhs.mandateText
+    }
 }
