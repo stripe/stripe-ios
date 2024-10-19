@@ -41,34 +41,28 @@ extension LinkStubs {
                 isDefault: true
             ),
             ConsumerPaymentDetails(
-                stripeID: "1",
+                stripeID: "2",
                 details: .card(card: .init(
                     expiryYear: 30,
                     expiryMonth: 10,
                     brand: "mastercard",
                     last4: "4321",
-                    checks: nil)
+                    checks: .init(cvcCheck: .fail))
                 ),
                 isDefault: false
             ),
             ConsumerPaymentDetails(
                 stripeID: "3",
-                details: .card(card: .init(
-                    expiryYear: 30,
-                    expiryMonth: 10,
-                    brand: "discover",
-                    last4: "1111",
-                    checks: nil)
-                ),
+                details: .bankAccount(bankAccount: .init(iconCode: nil, name: "test", last4: "1234")),
                 isDefault: false
             ),
             ConsumerPaymentDetails(
                 stripeID: "4",
                 details: .card(card: .init(
-                    expiryYear: 30,
+                    expiryYear: 20,
                     expiryMonth: 10,
-                    brand: "visa",
-                    last4: "9999",
+                    brand: "discover",
+                    last4: "1111",
                     checks: nil)
                 ),
                 isDefault: false
@@ -82,7 +76,7 @@ extension LinkStubs {
             emailAddress: "user@example.com",
             redactedPhoneNumber: "+1********55",
             verificationSessions: [],
-            supportedPaymentDetailsTypes: []
+            supportedPaymentDetailsTypes: [.card, .bankAccount]
         )
     }
 
