@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(ExperimentalPaymentMethodLayoutAPI) @_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -174,6 +174,15 @@ class PlaygroundController: ObservableObject {
         case .automatic:
             configuration.paymentMethodLayout = .automatic
         }
+
+        switch settings.cardBrandAcceptance {
+        case .all:
+            configuration.cardBrandAcceptance = .all
+        case .blockAmEx:
+            configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
+        case .allowVisa:
+            configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
         return configuration
     }
 
@@ -251,6 +260,15 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
+
+        switch settings.cardBrandAcceptance {
+        case .all:
+            configuration.cardBrandAcceptance = .all
+        case .blockAmEx:
+            configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
+        case .allowVisa:
+            configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
 
         return configuration
     }

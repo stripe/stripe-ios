@@ -266,7 +266,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
 
         // return to payment method selector
-        app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 30)  // The card should be saved now and selected as default instead of Apple Pay
+        app.staticTexts["•••• 4242"].waitForExistenceAndTap(timeout: 30)  // The card should be saved now and selected as default instead of Apple Pay
         XCTAssertEqual(app.cells.count, 4) // Should be "Add", "Apple Pay", "Link", and saved card
 
         let editButton = app.staticTexts["Edit"]
@@ -1103,7 +1103,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
 
         // return to payment method selector
-        paymentMethodButton = app.staticTexts["••••4242"]  // The card should be saved now
+        paymentMethodButton = app.staticTexts["•••• 4242"]  // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
 
@@ -1231,7 +1231,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
 
         // Assert there are two payment methods using legacy customer ephemeral key
-        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 2)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "•••• 4242").count, 2)
 
         // Close sheet
         app.buttons["Close"].waitForExistenceAndTap()
@@ -1249,7 +1249,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
         // Assert there is only a single payment method using CustomerSession
-        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "•••• 4242").count, 1)
         app.buttons["Close"].waitForExistenceAndTap()
     }
 
@@ -1278,7 +1278,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Reload w/ same customer
         reload(app, settings: settings)
-        app.staticTexts["••••4242"].waitForExistenceAndTap()  // The card should be saved now and selected as default instead of Apple Pay
+        app.staticTexts["•••• 4242"].waitForExistenceAndTap()  // The card should be saved now and selected as default instead of Apple Pay
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 5))
 
         // Add another PM
@@ -1290,7 +1290,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Should be able to edit two saved PMs
         reload(app, settings: settings)
-        app.staticTexts["••••4242"].waitForExistenceAndTap()
+        app.staticTexts["•••• 4242"].waitForExistenceAndTap()
 
         // Wait for the sheet to appear
         XCTAssertTrue(app.buttons["+ Add"].waitForExistence(timeout: 3))
@@ -1300,7 +1300,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Assert there are two payment methods using legacy customer ephemeral key
         // value == 2, 1 value on playground + 2 payment method
-        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 3)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "•••• 4242").count, 3)
 
         // Close sheet
         app.buttons["Close"].waitForExistenceAndTap()
@@ -1321,7 +1321,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 3))
 
         // Assert there is only a single payment method using CustomerSession
-        XCTAssertEqual(app.staticTexts.matching(identifier: "••••4242").count, 1)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "•••• 4242").count, 1)
         app.buttons["Close"].waitForExistenceAndTap()
     }
     // MARK: - Remove last saved PM
@@ -1403,7 +1403,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Reload w/ same customer
         reload(app, settings: settings)
-        app.staticTexts["••••4242"].waitForExistenceAndTap()  // The card should be saved now and selected as default instead of Apple Pay
+        app.staticTexts["•••• 4242"].waitForExistenceAndTap()  // The card should be saved now and selected as default instead of Apple Pay
 
         // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
@@ -1423,7 +1423,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Should be able to edit two saved PMs
         reload(app, settings: settings)
-        app.staticTexts["••••4242"].waitForExistenceAndTap()
+        app.staticTexts["•••• 4242"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
@@ -1561,7 +1561,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         // Give time for the dismiss animation and the payment option to update
         sleep(2)
 
-        XCTAssertTrue(app.staticTexts["••••4242"].waitForExistenceAndTap(timeout: 10))
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistenceAndTap(timeout: 10))
     }
 }
 
@@ -1847,6 +1847,58 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
      */
 }
 
+class PaymentSheetCardBrandFilteringUITests: PaymentSheetUITestCase {
+    func testPaymentSheet_disallowedBrands() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.cardBrandAcceptance = .blockAmEx
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        let numberField = app.textFields["Card number"]
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("3712")
+
+        // Text should show that we cannot process American Express
+        XCTAssertTrue(app.staticTexts["American Express is not accepted"].waitForExistence(timeout: 5.0))
+
+        numberField.clearText()
+
+        // Try and pay with a Visa
+        try fillCardData(app)
+
+        app.buttons["Pay $50.99"].tap()
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testPaymentSheet_allowedBrands() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.cardBrandAcceptance = .allowVisa
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        let numberField = app.textFields["Card number"]
+        numberField.forceTapWhenHittableInTestCase(self)
+        app.typeText("3712")
+
+        // Text should show that we cannot process American Express
+        XCTAssertTrue(app.staticTexts["American Express is not accepted"].waitForExistence(timeout: 5.0))
+
+        numberField.clearText()
+
+        // Try and pay with a Visa
+        try fillCardData(app)
+
+        app.buttons["Pay $50.99"].tap()
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+}
+
 // MARK: - Link
 class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // MARK: PaymentSheet Link inline signup
@@ -1956,8 +2008,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         // Ensure both PMs exist
-        XCTAssertTrue(app.staticTexts["••••4242"].waitForExistence(timeout: 5.0))
-        XCTAssertTrue(app.staticTexts["••••4444"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["•••• 4444"].waitForExistence(timeout: 5.0))
     }
 
     // Tests the #6 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and returning Link user

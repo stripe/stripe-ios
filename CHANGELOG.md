@@ -1,3 +1,7 @@
+## X.Y.Z 2024-XX-YY
+### PaymentSheet
+* [Added] Added `PaymentSheet.Configuration.paymentMethodLayout`. Configure the layout of payment methods in the sheet using `paymentMethodLayout` to display them either horizontally, vertically, or let Stripe optimize the layout automatically.
+
 ## 23.31.1 2024-10-08
 ### PaymentSheet
 * [Fixed] Fixed an issue where ISK was not correctly formatted as a zero-decimal currency when using PaymentSheet or Apple Pay. (Thanks [@Thithip](https://github.com/Thithip)!)
@@ -63,7 +67,7 @@ This release was made in error, and contains changes from 23.29.0, 23.29.1, and 
 * [Added] Adds coupon support to STPApplePayContext with a new `didChangeCouponCode` delegate method (h/t @JoeyLeeMEA).
 * [Fixed] Fixed an issue where successful TWINT payments were sometimes incorrectly considered 'canceled'.
 
-## PaymentSheet
+### PaymentSheet
 * [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
 * [Fixed] Fixed an issue where amounts with currency=IDR were displayed as-is, instead of dropping the last two digits.
 * [Fixed] Fixed an issue where some payment method images in the horizontal scrollview could briefly flash.
