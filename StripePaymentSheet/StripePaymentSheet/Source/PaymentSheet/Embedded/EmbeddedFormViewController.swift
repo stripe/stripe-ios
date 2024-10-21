@@ -26,11 +26,11 @@ protocol EmbeddedFormViewControllerDelegate: AnyObject {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
 
-    /// Informs the delegate that the embedded form view controller has finished and is dismissing with a result.
+    /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.continue`.
     /// - Parameters:
     ///   - embeddedFormViewController: The view controller that has finished.
     ///   - result: The `PaymentSheetResult` of the payment or setup process.
-    func embeddedFormViewControllerDidFinish(
+    func embeddedFormViewControllerShouldContinue(
         _ embeddedFormViewController: EmbeddedFormViewController,
         result: PaymentSheetResult
     )
@@ -56,10 +56,6 @@ class EmbeddedFormViewController: UIViewController {
         case .continue:
             return true
         }
-    }
-
-    var collectsUserInput: Bool {
-        return paymentMethodFormViewController.form.collectsUserInput
     }
 
     enum Error: Swift.Error {
@@ -347,7 +343,7 @@ class EmbeddedFormViewController: UIViewController {
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
                             // Wait a bit before closing the sheet
-                            self.delegate?.embeddedFormViewControllerDidFinish(self, result: .completed)
+                            self.delegate?.embeddedFormViewControllerShouldContinue(self, result: .completed)
                         }
                     }
                 }
