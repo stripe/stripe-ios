@@ -102,9 +102,8 @@ public final class EmbeddedPaymentElement {
         // Cancel the old task and let it finish so that merchants receive update results in order
         currentUpdateTask?.cancel()
         _ = await currentUpdateTask?.value
-        let strongAnalyticsHelper = analyticsHelper
         // Start the new update task
-        let currentUpdateTask = Task { [weak self, configuration, paymentOption] in
+        let currentUpdateTask = Task { [weak self, configuration, paymentOption, analyticsHelper] in
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
             do {
@@ -112,7 +111,7 @@ public final class EmbeddedPaymentElement {
                 loadResult = try await PaymentSheetLoader.load(
                     mode: .deferredIntent(intentConfiguration),
                     configuration: configuration,
-                    analyticsHelper: strongAnalyticsHelper,
+                    analyticsHelper: analyticsHelper,
                     integrationShape: .embedded
                 )
             } catch {
@@ -126,7 +125,7 @@ public final class EmbeddedPaymentElement {
             let embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
                 loadResult: loadResult,
-                analyticsHelper: strongAnalyticsHelper,
+                analyticsHelper: analyticsHelper,
                 delegate: self
                 // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
             )

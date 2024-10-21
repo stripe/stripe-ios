@@ -272,7 +272,6 @@ import Foundation
     case unexpectedPaymentSheetViewControllerError = "unexpected_error.paymentsheet.paymentsheetviewcontroller"
     case unexpectedFlowControllerViewControllerError = "unexpected_error.paymentsheet.flowcontrollerviewcontroller"
     case unexpectedPaymentHandlerError = "unexpected_error.paymenthandler"
-    case unexpectedErrorPaymentSheetAnalytics =  "unexpected_error.paymentsheetanalyticshelper"
 
     // MARK: - Misc. errors
     case stripePaymentSheetDownloadManagerError = "stripepaymentsheet.downloadmanager.error"

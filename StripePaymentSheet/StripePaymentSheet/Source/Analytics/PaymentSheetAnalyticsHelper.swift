@@ -152,7 +152,7 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
-        let (event, selectedLPM): (STPAnalyticEvent, String?) = {
+        let (event, selectedLPM): (STPAnalyticEvent?, String?) = {
             switch integrationShape {
             case .flowController:
                 switch option {
@@ -181,10 +181,13 @@ final class PaymentSheetAnalyticsHelper {
                     return (.mcOptionSelectEmbeddedSavedPM, paymentMethod.type.identifier)
                 } else {
                     stpAssertionFailure("Embedded should only use this function to record tapped saved payment methods")
-                    return (.unexpectedErrorPaymentSheetAnalytics, nil)
+                    return (nil, nil)
                 }
             }
         }()
+        guard let event else {
+            return
+        }
         log(event: event, selectedLPM: selectedLPM)
     }
 
