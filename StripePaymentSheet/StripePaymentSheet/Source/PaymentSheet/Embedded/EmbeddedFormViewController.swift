@@ -35,7 +35,7 @@ protocol EmbeddedFormViewControllerDelegate: AnyObject {
         result: PaymentSheetResult
     )
 
-    /// Informs the delegate that the user has canceled the payment process.
+    /// Informs the delegate that the user has canceled out of the form.
     /// This method is called when the user dismisses the view controller or taps the cancel button.
     /// - Parameter embeddedFormViewController: The view controller that was canceled.
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController)
