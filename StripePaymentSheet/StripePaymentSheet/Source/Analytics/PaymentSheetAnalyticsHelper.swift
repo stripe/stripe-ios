@@ -11,8 +11,8 @@ import Foundation
 
 final class PaymentSheetAnalyticsHelper {
     let analyticsClient: STPAnalyticsClient
-    let isCustom: Bool
-    let configuration: PaymentSheet.Configuration
+    let integrationShape: IntegrationShape
+    let configuration: PaymentElementConfiguration
 
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
@@ -20,27 +20,49 @@ final class PaymentSheetAnalyticsHelper {
     var loadingStartDate: Date?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
+    enum IntegrationShape {
+        case flowController
+        case complete
+        case embedded
+    }
+
     init(
-        isCustom: Bool,
-        configuration: PaymentSheet.Configuration,
+        integrationShape: IntegrationShape,
+        configuration: PaymentElementConfiguration,
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
-        self.isCustom = isCustom
+        self.integrationShape = integrationShape
         self.configuration = configuration
         self.analyticsClient = analyticsClient
     }
 
     func logInitialized() {
         let event: STPAnalyticEvent = {
-            switch (configuration.customer != nil, configuration.applePay != nil) {
-            case (false, false):
-                return isCustom ? .mcInitCustomDefault : .mcInitCompleteDefault
-            case (true, false):
-                return isCustom ? .mcInitCustomCustomer : .mcInitCompleteCustomer
-            case (false, true):
-                return isCustom ? .mcInitCustomApplePay : .mcInitCompleteApplePay
-            case (true, true):
-                return isCustom ? .mcInitCustomCustomerApplePay : .mcInitCompleteCustomerApplePay
+            switch integrationShape {
+            case .flowController:
+                switch (configuration.customer != nil, configuration.applePay != nil) {
+                case (false, false):
+                    return .mcInitCustomDefault
+                case (true, false):
+                    return .mcInitCustomCustomer
+                case (false, true):
+                    return .mcInitCustomApplePay
+                case (true, true):
+                    return .mcInitCustomCustomerApplePay
+                }
+            case .complete:
+                switch (configuration.customer != nil, configuration.applePay != nil) {
+                case (false, false):
+                    return .mcInitCompleteDefault
+                case (true, false):
+                    return .mcInitCompleteCustomer
+                case (false, true):
+                    return .mcInitCompleteApplePay
+                case (true, true):
+                    return .mcInitCompleteCustomerApplePay
+                }
+            case .embedded:
+                return .mcInitEmbedded
             }
         }()
         log(event: event)
@@ -110,6 +132,11 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logShow(showingSavedPMList: Bool) {
+        if case .embedded = integrationShape {
+            stpAssertionFailure("logShow() is not supported for embedded integration")
+            return
+        }
+        let isCustom = integrationShape == .flowController
         if !isCustom {
             startTimeMeasurement(.checkout)
         }
@@ -125,8 +152,9 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
-        let (event, selectedLPM): (STPAnalyticEvent, String?) = {
-            if isCustom {
+        let (event, selectedLPM): (STPAnalyticEvent?, String?) = {
+            switch integrationShape {
+            case .flowController:
                 switch option {
                 case .add:
                     return (.mcOptionSelectCustomNewPM, nil)
@@ -137,7 +165,7 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return (.mcOptionSelectCustomLink, nil)
                 }
-            } else {
+            case .complete:
                 switch option {
                 case .add:
                     return (.mcOptionSelectCompleteNewPM, nil)
@@ -148,8 +176,18 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return (.mcOptionSelectCompleteLink, nil)
                 }
+            case .embedded:
+                if case .saved(let paymentMethod) = option {
+                    return (.mcOptionSelectEmbeddedSavedPM, paymentMethod.type.identifier)
+                } else {
+                    stpAssertionFailure("Embedded should only use this function to record tapped saved payment methods")
+                    return (nil, nil)
+                }
             }
         }()
+        guard let event else {
+            return
+        }
         log(event: event, selectedLPM: selectedLPM)
     }
 
@@ -157,7 +195,16 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
-        let event: STPAnalyticEvent = isCustom ? .mcOptionRemoveCustomSavedPM : .mcOptionRemoveCompleteSavedPM
+        let event: STPAnalyticEvent = {
+            switch integrationShape {
+            case .flowController:
+                return .mcOptionRemoveCustomSavedPM
+            case .complete:
+                return .mcOptionRemoveCompleteSavedPM
+            case .embedded:
+                return .mcOptionRemoveEmbeddedSavedPM
+            }
+        }()
         log(event: event, selectedLPM: paymentMethod.type.identifier)
     }
 
@@ -233,7 +280,8 @@ final class PaymentSheetAnalyticsHelper {
         }
 
         let event: STPAnalyticEvent = {
-            if isCustom {
+            switch integrationShape {
+            case .flowController:
                 switch paymentOption {
                 case .new, .external:
                     return success ? .mcPaymentCustomNewPMSuccess : .mcPaymentCustomNewPMFailure
@@ -244,7 +292,7 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return success ? .mcPaymentCustomLinkSuccess : .mcPaymentCustomLinkFailure
                 }
-            } else {
+            case .complete:
                 switch paymentOption {
                 case .new, .external:
                     return success ? .mcPaymentCompleteNewPMSuccess : .mcPaymentCompleteNewPMFailure
@@ -255,6 +303,8 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return success ? .mcPaymentCompleteLinkSuccess : .mcPaymentCompleteLinkFailure
                 }
+            case .embedded:
+                return success ? .mcPaymentEmbeddedSuccess : .mcPaymentEmbeddedFailure
             }
         }()
 
@@ -338,6 +388,21 @@ extension STPAnalyticsClient {
 extension PaymentSheet.Configuration {
     /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
     var analyticPayload: [String: Any] {
+        var payload = commonAnalyticPayload
+        payload["payment_method_layout"] = paymentMethodLayout.description
+        return payload
+    }
+}
+
+extension EmbeddedPaymentElement.Configuration {
+    /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
+    var analyticPayload: [String: Any] {
+        return commonAnalyticPayload
+    }
+}
+
+extension PaymentElementConfiguration {
+    var commonAnalyticPayload: [String: Any] {
         var payload = [String: Any]()
         payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
         payload["apple_pay_config"] = applePay != nil
@@ -350,9 +415,7 @@ extension PaymentSheet.Configuration {
         payload["appearance"] = appearance.analyticPayload
         payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
-        payload["payment_method_layout"] = paymentMethodLayout.description
         payload["card_brand_acceptance"] = cardBrandAcceptance != .all
-
         return payload
     }
 }

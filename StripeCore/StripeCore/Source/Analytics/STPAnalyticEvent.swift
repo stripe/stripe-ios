@@ -75,6 +75,9 @@ import Foundation
     case mcInitCustomDefault = "mc_custom_init_default"
     case mcInitCompleteDefault = "mc_complete_init_default"
 
+    // MARK: - Embedded Payment Element init
+    case mcInitEmbedded = "mc_embedded_init"
+
     // MARK: - PaymentSheet Show
     case mcShowCustomNewPM = "mc_custom_sheet_newpm_show"
     case mcShowCustomSavedPM = "mc_custom_sheet_savedpm_show"
@@ -102,6 +105,9 @@ import Foundation
     case mcPaymentCompleteApplePayFailure = "mc_complete_payment_applepay_failure"
     case mcPaymentCompleteLinkFailure = "mc_complete_payment_link_failure"
 
+    case mcPaymentEmbeddedSuccess = "mc_embedded_payment_success"
+    case mcPaymentEmbeddedFailure = "mc_embedded_payment_failure"
+
     // MARK: - PaymentSheet Option Selected
     case mcOptionSelectCustomNewPM = "mc_custom_paymentoption_newpm_select"
     case mcOptionSelectCustomSavedPM = "mc_custom_paymentoption_savedpm_select"
@@ -111,10 +117,12 @@ import Foundation
     case mcOptionSelectCompleteSavedPM = "mc_complete_paymentoption_savedpm_select"
     case mcOptionSelectCompleteApplePay = "mc_complete_paymentoption_applepay_select"
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
+    case mcOptionSelectEmbeddedSavedPM = "mc_embedded_paymentoption_savedpm_select"
 
     // MARK: - PaymentSheet Saved Payment Method Removed
     case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
     case mcOptionRemoveCompleteSavedPM = "mc_complete_paymentoption_removed"
+    case mcOptionRemoveEmbeddedSavedPM = "mc_embedded_paymentoption_removed"
 
     // MARK: - Link Signup
     case linkSignupCheckboxChecked = "link.signup.checkbox_checked"
