@@ -445,7 +445,7 @@ extension STPPaymentMethodParams {
             assertionFailure()
             return rawTypeString ?? ""
         case .card:
-            return "••••\(card?.last4 ?? "")"
+            return "•••• \(card?.last4 ?? "")"
         default:
             return label
         }
