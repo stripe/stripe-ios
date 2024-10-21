@@ -365,8 +365,8 @@ class EmbeddedFormViewController: UIViewController {
         // Otherwise, grab the payment option
         guard let selectedPaymentOption else {
             // TODO(wooj) Log an error here that is not specific to PaymentSheetViewController
-            //let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError, error: Error.noPaymentOptionOnBuyButtonTap)
-            // STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetViewControllerError, error: Error.noPaymentOptionOnBuyButtonTap)
+             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure("Tapped buy button while adding without paymentOption")
             return
         }
