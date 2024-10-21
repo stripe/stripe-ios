@@ -370,7 +370,7 @@ final class PaymentSheetLoader {
                 // Remove cards that originated from Apple Pay, Google Pay, Link
                 paymentMethods = paymentMethods.filter { paymentMethod in
                     let isWalletCard = paymentMethod.type == .card && [.applePay, .googlePay, .link].contains(paymentMethod.card?.wallet?.type)
-                    return !isWalletCard
+                    return !isWalletCard || configuration.disableWalletPaymentMethodFiltering
                 }
                 // Add in our deduped Link PMs, if any
                 paymentMethods += dedupedLinkPaymentMethods
