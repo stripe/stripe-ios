@@ -8,6 +8,7 @@
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension EmbeddedPaymentElement {
     @MainActor
