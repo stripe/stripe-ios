@@ -177,14 +177,12 @@ final class PaymentSheetLoader {
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async {
         await withCheckedContinuation { continuation in
-            Task {
-                AddressSpecProvider.shared.loadAddressSpecs {
-                    // Load form specs
-                    FormSpecProvider.shared.load { _ in
-                        // Load BSB data
-                        BSBNumberProvider.shared.loadBSBData {
-                            continuation.resume()
-                        }
+            AddressSpecProvider.shared.loadAddressSpecs {
+                // Load form specs
+                FormSpecProvider.shared.load { _ in
+                    // Load BSB data
+                    BSBNumberProvider.shared.loadBSBData {
+                        continuation.resume()
                     }
                 }
             }
@@ -228,7 +226,12 @@ final class PaymentSheetLoader {
     static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
         let intent: Intent
         let elementsSession: STPElementsSession
-        let clientDefaultPaymentMethod = defaultStripePaymentMethodId(forCustomerID: configuration.customer?.id)
+        let clientDefaultPaymentMethod: String? = {
+            guard let customer = configuration.customer else {
+                return nil
+            }
+            return defaultStripePaymentMethodId(forCustomerID: customer.id)
+        }()
 
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):

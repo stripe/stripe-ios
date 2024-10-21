@@ -13,11 +13,11 @@ import UIKit
 /// An object that manages a view that displays payment methods and completes a checkout.
 @_spi(EmbeddedPaymentElementPrivateBeta)
 @MainActor
-public class EmbeddedPaymentElement {
+public final class EmbeddedPaymentElement {
 
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: UIView {
-        return embeddedPaymentMethodsView
+        return containerView
     }
 
     /// A view controller to present on.
@@ -29,7 +29,8 @@ public class EmbeddedPaymentElement {
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
 
-    public struct PaymentOptionDisplayData {
+    /// Contains details about a payment method that can be displayed to the customer
+    public struct PaymentOptionDisplayData: Equatable {
         /// An image representing a payment method; e.g. the Apple Pay logo or a VISA logo
         public let image: UIImage
         /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
@@ -61,9 +62,9 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(porter) Should we create a new analytics helper specific to embedded? Figured this out when we do analytics.
-        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
         AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
 
         let loadResult = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
@@ -73,7 +74,8 @@ public class EmbeddedPaymentElement {
         )
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: configuration,
-            loadResult: loadResult
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         return embeddedPaymentElement
     }
@@ -91,13 +93,65 @@ public class EmbeddedPaymentElement {
     /// Call this method when the IntentConfiguration values you used to initialize `EmbeddedPaymentElement` (amount, currency, etc.) change.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
     /// - Parameter intentConfiguration: An updated IntentConfiguration.
-    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
+    /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
-        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2524)
-        return .succeeded
+        // Cancel the old task and let it finish so that merchants receive update results in order
+        currentUpdateTask?.cancel()
+        _ = await currentUpdateTask?.value
+        // Start the new update task
+        let currentUpdateTask = Task { [weak self, configuration, paymentOption, analyticsHelper] in
+            // 1. Reload v1/elements/session.
+            let loadResult: PaymentSheetLoader.LoadResult
+            do {
+                // TODO(nice to have): Make `load` respect task cancellation to reduce network consumption
+                loadResult = try await PaymentSheetLoader.load(
+                    mode: .deferredIntent(intentConfiguration),
+                    configuration: configuration,
+                    analyticsHelper: analyticsHelper,
+                    integrationShape: .embedded
+                )
+            } catch {
+                return UpdateResult.failed(error: error)
+            }
+            guard !Task.isCancelled else {
+                return UpdateResult.canceled
+            }
+
+            // 2. Re-initialize embedded view to update the UI to match the newly loaded data.
+            let embeddedPaymentMethodsView = Self.makeView(
+                configuration: configuration,
+                loadResult: loadResult,
+                analyticsHelper: analyticsHelper,
+                delegate: self
+                // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
+            )
+
+            // 2. Pre-load image into cache
+            // Hack: Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (from the internet instead of disk) before we call the completion handler.
+            // Call this on a detached Task b/c this synchronously (!) loads the image from network and we don't want to block the main actor
+            let fetchPaymentOption = Task.detached(priority: .userInitiated) {
+                return await embeddedPaymentMethodsView.displayData
+            }
+            _ = await fetchPaymentOption.value
+
+            guard let self, !Task.isCancelled else {
+                return .canceled
+            }
+            // At this point, we're the latest update - update self properties and inform our delegate.
+            self.loadResult = loadResult
+            self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
+            self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
+            if paymentOption != embeddedPaymentMethodsView.displayData {
+                self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+            }
+            return .succeeded
+        }
+        self.currentUpdateTask = currentUpdateTask
+        return await currentUpdateTask.value
     }
 
     /// Completes the payment or setup.
@@ -110,24 +164,42 @@ public class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
-    private let embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
-
-    private let loadResult: PaymentSheetLoader.LoadResult
+    internal private(set) var containerView: EmbeddedPaymentElementContainerView
+    internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
+    internal private(set) var loadResult: PaymentSheetLoader.LoadResult
+    internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
-        delegate: EmbeddedPaymentElementDelegate? = nil
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
-        self.delegate = delegate
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
-            loadResult: loadResult
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
+        self.containerView = EmbeddedPaymentElementContainerView(
+            embeddedPaymentMethodsView: embeddedPaymentMethodsView
+        )
+
+        self.analyticsHelper = analyticsHelper
+        analyticsHelper.logInitialized()
+        self.containerView.updateSuperviewHeight = { [weak self] in
+            guard let self else { return }
+            self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+        }
         self.embeddedPaymentMethodsView.delegate = self
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
 }
 
 // MARK: - Completion-block based APIs

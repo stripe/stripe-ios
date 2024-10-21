@@ -11,8 +11,10 @@ extension UIStackView {
     func addSeparators(color: UIColor, backgroundColor: UIColor, thickness: CGFloat = 1, inset: UIEdgeInsets, addTopSeparator: Bool = true, addBottomSeparator: Bool = true) {
         let numberOfSeparators = arrangedSubviews.count - 1
 
-        for i in 1...numberOfSeparators {
-            addSeparator(color: color, backgroundColor: backgroundColor, thickness: thickness, inset: inset, at: i * 2 - 1)
+        if numberOfSeparators > 0 {
+            for i in 1...numberOfSeparators {
+                addSeparator(color: color, backgroundColor: backgroundColor, thickness: thickness, inset: inset, at: i * 2 - 1)
+            }
         }
 
         if addTopSeparator {

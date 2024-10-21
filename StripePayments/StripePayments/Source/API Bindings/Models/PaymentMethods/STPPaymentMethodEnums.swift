@@ -297,7 +297,7 @@ extension STPPaymentMethodType {
     var pollingRequirement: PollingRequirement? {
         switch self {
         // Note: Card only requires polling for 3DS2 web-based transactions
-        case .card, .amazonPay:
+        case .card, .amazonPay, .revolutPay:
             return PollingRequirement(timeBetweenPollingAttempts: 3)
         case .swish, .twint:
             // We are intentionally polling for Swish and Twint even though they use the redirect trampoline.

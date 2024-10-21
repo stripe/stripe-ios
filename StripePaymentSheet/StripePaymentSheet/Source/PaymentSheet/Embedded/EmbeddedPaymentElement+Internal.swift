@@ -9,7 +9,9 @@ extension EmbeddedPaymentElement {
     @MainActor
     static func makeView(
         configuration: Configuration,
-        loadResult: PaymentSheetLoader.LoadResult
+        loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
         let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
@@ -35,7 +37,8 @@ extension EmbeddedPaymentElement {
         let mandateProvider = VerticalListMandateProvider(
             configuration: configuration,
             elementsSession: loadResult.elementsSession,
-            intent: loadResult.intent
+            intent: loadResult.intent,
+            analyticsHelper: analyticsHelper
         )
         return EmbeddedPaymentMethodsView(
             initialSelection: initialSelection,
@@ -46,7 +49,8 @@ extension EmbeddedPaymentElement {
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
-            shouldShowMandate: configuration.embeddedViewDisplaysMandateText
+            shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
+            delegate: delegate
         )
     }
 }
