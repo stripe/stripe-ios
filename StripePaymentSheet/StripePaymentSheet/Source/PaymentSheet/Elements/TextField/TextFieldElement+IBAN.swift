@@ -58,6 +58,7 @@ extension TextFieldElement {
     struct IBANConfiguration: TextFieldElementConfiguration {
         let label: String = STPLocalizedString("IBAN", "Label for an IBAN field")
         let defaultValue: String?
+        var isEditable: Bool = true
         func maxLength(for text: String) -> Int {
             return 34
         }

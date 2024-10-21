@@ -317,6 +317,8 @@ extension PaymentMethodFormViewController {
             case .completed(let completedResult):
                 if case .financialConnections(let linkedBank) = completedResult {
                     usBankAccountFormElement.linkedBank = linkedBank
+                } else if case .instantDebits(let linkedBank) = completedResult {
+                    self.instantDebitsFormElement?.setLinkedBank(linkedBank)
                 } else {
                     self.delegate?.updateErrorLabel(for: genericError)
                 }
