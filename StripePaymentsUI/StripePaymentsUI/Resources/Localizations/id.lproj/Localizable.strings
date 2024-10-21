@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ berakhiran %2$@";
 
+"%1$@ is not accepted" = "%1$@ tidak diterima";
+
 "Address line 2 (optional)" = "Baris alamat ke-2 (opsional)";
 
 "Apple Pay" = "Apple Pay";
@@ -35,6 +37,8 @@
 "State / Province / Region" = "Negara Bagian / Provinsi / Wilayah";
 
 "The BSB you entered is invalid." = "BSB yang Anda masukkan tidak valid.";
+
+"The selected brand is not allowed" = "Brand yang dipilih tidak diizinkan";
 
 "To scan your card, allow camera access in Settings." = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
 

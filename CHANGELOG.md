@@ -1,4 +1,4 @@
-## X.Y.Z 2024-XX-YY
+## 23.32.0 2024-10-21
 ### PaymentSheet
 * [Added] Added `PaymentSheet.Configuration.paymentMethodLayout`. Configure the layout of payment methods in the sheet using `paymentMethodLayout` to display them either horizontally, vertically, or let Stripe optimize the layout automatically.
 
