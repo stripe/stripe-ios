@@ -332,7 +332,6 @@ class EmbeddedFormViewController: UIViewController {
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
-                            // Wait a bit before closing the sheet
                             self.delegate?.embeddedFormViewControllerShouldContinue(self, result: .completed)
                         }
                     }
