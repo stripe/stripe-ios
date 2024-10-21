@@ -270,16 +270,6 @@ class EmbeddedFormViewController: UIViewController {
         ])
     }
 
-    private var didSendLogShow: Bool = false
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if !didSendLogShow {
-            // Only send this once to match the behavior of horizontal mode
-            didSendLogShow = true
-            analyticsHelper.logShow(showingSavedPMList: false) // We never show the saved PM list first
-        }
-    }
-
     // MARK: - Helpers
 
     var isUserInteractionEnabled: Bool = true {
