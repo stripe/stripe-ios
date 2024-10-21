@@ -316,7 +316,10 @@ extension CustomerSheet {
             case .applePay:
                 return .applePay()
             case .stripeId(let paymentMethodId):
-                let paymentMethods = elementsSession.customer?.paymentMethods ?? []
+                let paymentMethods = elementsSession.customer?.paymentMethods.filter({ paymentMethod in
+                    guard let card = paymentMethod.card else { return true }
+                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
+                }) ?? []
                 guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                     return nil
                 }

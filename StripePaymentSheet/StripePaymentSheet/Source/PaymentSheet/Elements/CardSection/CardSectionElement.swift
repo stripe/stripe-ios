@@ -36,7 +36,8 @@ final class CardSectionElement: ContainerElement {
     }()
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
-
+    let cardBrandFilter: CardBrandFilter
+    
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
             self.name = name
@@ -74,6 +75,7 @@ final class CardSectionElement: ContainerElement {
         self.hostedSurface = hostedSurface
         self.theme = theme
         self.analyticsHelper = analyticsHelper
+        self.cardBrandFilter = cardBrandFilter
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
@@ -226,7 +228,7 @@ final class CardSectionElement: ContainerElement {
 
         var fetchedCardBrands = Set<STPCardBrand>()
         let hadBrands = !cardBrands.isEmpty
-        STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
+        STPCardValidator.possibleBrands(forNumber: panElement.text, with: cardBrandFilter) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let brands):
@@ -252,6 +254,10 @@ final class CardSectionElement: ContainerElement {
                    let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
                    let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+                } else if cardBrands.count == 1 && self.cardBrandFilter != .default {
+                    // If we only fetched one card brand auto select it, 1 index due to 0 index being the placeholder.
+                    // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
+                    cardBrandDropDown.select(index: 1, shouldAutoAdvance: false)
                 }
 
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
