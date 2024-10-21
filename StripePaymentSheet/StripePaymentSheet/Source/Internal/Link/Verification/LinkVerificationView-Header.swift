@@ -15,11 +15,11 @@ extension LinkVerificationView {
 
     final class Header: UIView {
         struct Constants {
-            static let logoHeight: CGFloat = 18
+            static let logoHeight: CGFloat = 20
         }
 
         private let logoView: UIImageView = {
-            let logoView = UIImageView(image: Image.link_logo.makeImage(template: true))
+            let logoView = UIImageView(image: Image.link_logo.makeImage(template: false))
             logoView.translatesAutoresizingMaskIntoConstraints = false
             logoView.isAccessibilityElement = true
             logoView.accessibilityTraits = .header
@@ -36,7 +36,7 @@ extension LinkVerificationView {
         }()
 
         override var intrinsicContentSize: CGSize {
-            return CGSize(width: UIView.noIntrinsicMetric, height: 24)
+            return CGSize(width: 60, height: 20)
         }
 
         init() {

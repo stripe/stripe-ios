@@ -77,7 +77,7 @@ final class LinkNavigationBar: UIView {
     }()
 
     private let logoView: UIImageView = {
-        let imageView = UIImageView(image: Image.link_logo.makeImage(template: true))
+        let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))
         imageView.tintColor = .linkNavLogo
         imageView.isAccessibilityElement = true
         imageView.accessibilityTraits = .header

@@ -153,28 +153,35 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
-                // Set the PaymentSheetViewController as the content of our bottom sheet
-                let paymentSheetVC: PaymentSheetViewControllerProtocol = {
-                    switch self.configuration.paymentMethodLayout {
-                    case .horizontal:
-                        return PaymentSheetViewController(
-                            configuration: self.configuration,
-                            loadResult: loadResult,
-                            analyticsHelper: self.analyticsHelper,
-                            delegate: self
-                        )
-                    case .vertical:
-                        let verticalVC = PaymentSheetVerticalViewController(
-                            configuration: self.configuration,
-                            loadResult: loadResult,
-                            isFlowController: false,
-                            analyticsHelper: self.analyticsHelper
-                        )
-                        verticalVC.paymentSheetDelegate = self
-                        return verticalVC
-                    }
-                }()
-                self.bottomSheetViewController.setViewControllers([paymentSheetVC])
+                let linkAccount = LinkAccountContext.shared.account
+                let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount!)
+                verificationController.present(from: self.bottomSheetViewController) { [weak self] result in
+//                    self?.bottomSheetViewController.dismiss(animated: true, completion: nil)
+                    // Set the PaymentSheetViewController as the content of our bottom sheet
+                    let paymentSheetVC: PaymentSheetViewControllerProtocol = {
+                        switch self!.configuration.paymentMethodLayout {
+                        case .horizontal:
+                            return PaymentSheetViewController(
+                                configuration: self!.configuration,
+                                loadResult: loadResult,
+                                analyticsHelper: self!.analyticsHelper,
+                                delegate: self!
+                            )
+                        case .vertical:
+                            let verticalVC = PaymentSheetVerticalViewController(
+                                configuration: self!.configuration,
+                                loadResult: loadResult,
+                                isFlowController: false,
+                                analyticsHelper: self!.analyticsHelper
+                            )
+                            verticalVC.paymentSheetDelegate = self
+                            return verticalVC
+                        }
+                    }()
+                    self!.bottomSheetViewController.setViewControllers([paymentSheetVC])
+                    self!.presentPayWithLinkController(from: paymentSheetVC, intent: paymentSheetVC.intent, elementsSession: paymentSheetVC.elementsSession, shouldOfferApplePay: true, shouldFinishOnClose: true)
+                }
+                
             case .failure(let error):
                 completion(.failed(error: error))
             }
