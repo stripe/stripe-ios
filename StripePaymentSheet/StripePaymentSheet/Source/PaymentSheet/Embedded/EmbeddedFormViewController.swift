@@ -57,6 +57,19 @@ class EmbeddedFormViewController: UIViewController {
             return true
         }
     }
+    
+    var isUserInteractionEnabled: Bool = true {
+        didSet {
+            if isUserInteractionEnabled != view.isUserInteractionEnabled {
+                sendEventToSubviews(
+                    isUserInteractionEnabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+                    from: view
+                )
+            }
+            view.isUserInteractionEnabled = isUserInteractionEnabled
+            navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
+        }
+    }
 
     enum Error: Swift.Error {
         case noPaymentOptionOnBuyButtonTap
@@ -270,21 +283,8 @@ class EmbeddedFormViewController: UIViewController {
         ])
     }
 
-    // MARK: - Helpers
-
-    var isUserInteractionEnabled: Bool = true {
-        didSet {
-            if isUserInteractionEnabled != view.isUserInteractionEnabled {
-                sendEventToSubviews(
-                    isUserInteractionEnabled ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
-                    from: view
-                )
-            }
-            view.isUserInteractionEnabled = isUserInteractionEnabled
-            navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
-        }
-    }
-
+    // MARK: - Confirmation handling
+    
     private func pay(with paymentOption: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
@@ -339,6 +339,8 @@ class EmbeddedFormViewController: UIViewController {
             }
         }
     }
+    
+    // MARK: - Tap handling
 
     @objc func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
