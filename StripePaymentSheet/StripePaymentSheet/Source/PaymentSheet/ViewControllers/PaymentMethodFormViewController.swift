@@ -220,11 +220,13 @@ extension PaymentMethodFormViewController {
         }()
 
         let linkMode = elementsSession.linkSettings?.linkMode
+        let billingAddress = instantDebitsFormElement?.billingAddress
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
             intentId: intentId,
-            linkMode: linkMode
+            linkMode: linkMode,
+            billingAddress: billingAddress
         )
     }
 
