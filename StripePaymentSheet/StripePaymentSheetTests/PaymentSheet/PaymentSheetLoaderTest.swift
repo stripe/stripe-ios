@@ -194,6 +194,52 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    func testPaymentSheetLoadDoesNotFilterSavedApplePayCardsWhenDisabled() async throws {
+        let apiClient = STPAPIClient(publishableKey: STPTestingJPPublishableKey)
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = apiClient
+        configuration.disableWalletPaymentMethodFiltering = true
+        // A hardcoded test Customer
+        let testCustomerID = "cus_OtOGvD0ZVacBoj"
+
+        // Create a new EK for the Customer
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
+        configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+        // This is a saved Apple Pay card:
+        let savedApplePayCard = "pm_1O5bTlIq2LmpyICoB8eZH4BJ"
+        // This is a normal saved card:
+        let savedNonApplePayCard = "card_1O5upWIq2LmpyICo9tQmU9xY"
+
+        // Check that the test Customer has the expected cards
+        let checkCustomerExpectation = expectation(description: "Check test customer")
+        apiClient.listPaymentMethods(forCustomer: testCustomerID, using: customerAndEphemeralKey.ephemeralKeySecret) { paymentMethods, _ in
+            XCTAssertEqual(paymentMethods?.first?.stripeId, savedApplePayCard)
+            XCTAssertEqual(paymentMethods?.last?.stripeId, savedNonApplePayCard)
+            checkCustomerExpectation.fulfill()
+        }
+        await fulfillment(of: [checkCustomerExpectation])
+
+        // Load PaymentSheet...
+        let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+            XCTFail("Confirm handler shouldn't be called.")
+        }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
+        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
+            loadExpectation.fulfill()
+            switch result {
+            case .success(let loadResult):
+                // ...check that it only loads the one normal saved card
+                XCTAssertEqual(loadResult.savedPaymentMethods.count, 2)
+                XCTAssertEqual(loadResult.savedPaymentMethods.map(\.stripeId), [savedApplePayCard, savedNonApplePayCard])
+            case .failure:
+                XCTFail()
+            }
+        }
+        await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+    
     func testPaymentSheetLoadFiltersSavedApplePayCards() async throws {
         let apiClient = STPAPIClient(publishableKey: STPTestingJPPublishableKey)
         var configuration = PaymentSheet.Configuration()
