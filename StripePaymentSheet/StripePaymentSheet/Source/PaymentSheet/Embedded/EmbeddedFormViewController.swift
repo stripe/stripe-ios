@@ -214,9 +214,11 @@ class EmbeddedFormViewController: UIViewController {
 
     func updateMandate() {
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
-        let newMandateText = mandateProvider.mandate(for: selectedPaymentOption?.paymentMethodType,
-                                                     savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
-                                                     bottomNoticeAttributedString: paymentMethodFormViewController.bottomNoticeAttributedString)
+        let newMandateText = mandateProvider.mandate(
+            for: selectedPaymentOption?.paymentMethodType,
+            savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
+            bottomNoticeAttributedString: paymentMethodFormViewController.bottomNoticeAttributedString
+        )
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
