@@ -13,7 +13,7 @@ import Foundation
 import UIKit
 
 protocol EmbeddedFormViewControllerDelegate: AnyObject {
-    
+
     /// Notifies the delegate to confirm the payment or setup with the provided payment option.
     /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm`.
     /// - Parameters:
@@ -57,7 +57,7 @@ class EmbeddedFormViewController: UIViewController {
             return true
         }
     }
-    
+
     var isUserInteractionEnabled: Bool = true {
         didSet {
             if isUserInteractionEnabled != view.isUserInteractionEnabled {
@@ -77,7 +77,7 @@ class EmbeddedFormViewController: UIViewController {
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
         return paymentMethodFormViewController.paymentOption
     }
-    
+
     private let loadResult: PaymentSheetLoader.LoadResult
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let configuration: EmbeddedPaymentElement.Configuration
@@ -115,7 +115,7 @@ class EmbeddedFormViewController: UIViewController {
             }
         )
     }()
-    
+
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
         let previousCustomerInput: IntentConfirmParams? = {
             if case let .new(confirmParams: confirmParams) = previousPaymentOption {
@@ -124,14 +124,14 @@ class EmbeddedFormViewController: UIViewController {
                 return nil
             }
         }()
-        
+
         let headerView = FormHeaderView(
             paymentMethodType: paymentMethodType,
             // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
             shouldUseNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
             appearance: configuration.appearance
         )
-        
+
         return PaymentMethodFormViewController(
             type: paymentMethodType,
             intent: intent,
@@ -167,7 +167,7 @@ class EmbeddedFormViewController: UIViewController {
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
-        
+
         super.init(nibName: nil, bundle: nil)
 
         add(childViewController: paymentMethodFormViewController, containerView: paymentContainerView)
@@ -213,7 +213,7 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     func updateMandate() {
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
@@ -286,7 +286,7 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     // MARK: - Confirmation handling
-    
+
     private func pay(with paymentOption: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
@@ -341,7 +341,7 @@ class EmbeddedFormViewController: UIViewController {
             }
         }
     }
-    
+
     // MARK: - Tap handling
 
     @objc func didTapPrimaryButton() {
