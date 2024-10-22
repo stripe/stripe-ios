@@ -127,6 +127,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately updating again, before the 1st update finishes...
         async let _updateResult2 = sut.update(intentConfiguration: setupIntentConfig)
+        // ...(test that the view is not inter-actable while loading)...
+        XCTAssertFalse(sut.embeddedPaymentMethodsView.isUserInteractionEnabled)
         let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
         let updateResult2 = await _updateResult2
         // ...should cancel the 1st update

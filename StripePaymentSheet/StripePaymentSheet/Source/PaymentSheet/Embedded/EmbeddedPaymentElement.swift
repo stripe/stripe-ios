@@ -103,6 +103,7 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        embeddedPaymentMethodsView.isUserInteractionEnabled = false
         // Cancel the old task and let it finish so that merchants receive update results in order
         currentUpdateTask?.cancel()
         _ = await currentUpdateTask?.value
@@ -158,7 +159,9 @@ public final class EmbeddedPaymentElement {
             return .succeeded
         }
         self.currentUpdateTask = currentUpdateTask
-        return await currentUpdateTask.value
+        let updateResult = await currentUpdateTask.value
+        embeddedPaymentMethodsView.isUserInteractionEnabled = true
+        return updateResult
     }
 
     /// Completes the payment or setup.

@@ -594,6 +594,7 @@ extension PlaygroundController {
         addressViewController = nil
         paymentSheet = nil
         lastPaymentResult = nil
+        embeddedPlaygroundViewController?.isLoading = true
         isLoading = true
         let settingsToLoad = self.settings
 
@@ -729,7 +730,8 @@ extension PlaygroundController {
                     }
                 case .embedded:
                     guard !shouldUpdateEmbeddedInsteadOfRecreating else {
-                       // Update embedded rather than re-creating it
+                        // Update embedded rather than re-creating it
+                        self.embeddedPlaygroundViewController?.isLoading = false
                         self.updateEmbedded()
                         self.currentlyRenderedSettings = self.settings
                         return
