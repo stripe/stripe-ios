@@ -17,8 +17,7 @@ public final class EmbeddedPaymentElement {
 
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: UIView {
-        // TODO: Make this a _container view_ so that we can swap out the inner `embeddedPaymentMethodsView` when `update` is called.
-        return embeddedPaymentMethodsView
+        return containerView
     }
 
     /// A view controller to present on.
@@ -45,12 +44,16 @@ public final class EmbeddedPaymentElement {
         public let paymentMethodType: String
         /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
+
     }
 
     /// Contains information about the customer's selected payment option.
     /// Use this to display the payment option in your own UI
     public var paymentOption: PaymentOptionDisplayData? {
-        return embeddedPaymentMethodsView.displayData
+        guard let _paymentOption else {
+            return nil
+        }
+        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText)
     }
 
     /// An asynchronous failable initializer
@@ -63,9 +66,9 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(porter) Should we create a new analytics helper specific to embedded? Figured this out when we do analytics.
-        let analyticsHelper = PaymentSheetAnalyticsHelper(isCustom: true, configuration: PaymentSheet.Configuration())
         AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
 
         let loadResult = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
@@ -75,7 +78,8 @@ public final class EmbeddedPaymentElement {
         )
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: configuration,
-            loadResult: loadResult
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         return embeddedPaymentElement
     }
@@ -103,17 +107,16 @@ public final class EmbeddedPaymentElement {
         currentUpdateTask?.cancel()
         _ = await currentUpdateTask?.value
         // Start the new update task
-        let currentUpdateTask = Task { [weak self, configuration, paymentOption] in
+        let currentUpdateTask = Task { @MainActor [weak self, configuration, analyticsHelper] in
+            // ⚠️ Don't modify `self` until the end to avoid being canceled halfway through and leaving self in a partially updated state.
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
             do {
-                // TODO: Change dummy analytics helper
-                let dummyAnalyticsHelper = PaymentSheetAnalyticsHelper(isCustom: false, configuration: .init())
                 // TODO(nice to have): Make `load` respect task cancellation to reduce network consumption
                 loadResult = try await PaymentSheetLoader.load(
                     mode: .deferredIntent(intentConfiguration),
                     configuration: configuration,
-                    analyticsHelper: dummyAnalyticsHelper,
+                    analyticsHelper: analyticsHelper,
                     integrationShape: .embedded
                 )
             } catch {
@@ -127,25 +130,29 @@ public final class EmbeddedPaymentElement {
             let embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
                 loadResult: loadResult,
+                analyticsHelper: analyticsHelper,
+                previousPaymentOption: self?._paymentOption,
                 delegate: self
-                // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2583 Restore previous payment option
             )
 
-            // 2. Pre-load image into cache
-            // Hack: Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (from the internet instead of disk) before we call the completion handler.
+            // 3. Pre-load image into cache
             // Call this on a detached Task b/c this synchronously (!) loads the image from network and we don't want to block the main actor
             let fetchPaymentOption = Task.detached(priority: .userInitiated) {
-                return await embeddedPaymentMethodsView.displayData
+                // This has the nasty side effect of synchronously downloading the image (see https://jira.corp.stripe.com/browse/MOBILESDK-2604)
+                // This caches it so that DownloadManager doesn't block the main thread when the merchant tries to access the image
+                return await embeddedPaymentMethodsView.selection?.paymentMethodType?.makeImage(updateHandler: nil)
             }
             _ = await fetchPaymentOption.value
 
             guard let self, !Task.isCancelled else {
                 return .canceled
             }
-            // At this point, we're the latest update - update self properties and inform our delegate.
+            // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
+            let oldPaymentOption = self.paymentOption
             self.loadResult = loadResult
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
-            if paymentOption != embeddedPaymentMethodsView.displayData {
+            self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
+            if oldPaymentOption != self.paymentOption {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
             return .succeeded
@@ -164,22 +171,67 @@ public final class EmbeddedPaymentElement {
 
     // MARK: - Internal
 
+    internal private(set) var containerView: EmbeddedPaymentElementContainerView
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
     internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    internal var _paymentOption: PaymentOption? {
+        // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.
+        // TODO: Handle CVC recollection
+        switch embeddedPaymentMethodsView.selection {
+        case .applePay:
+            return .applePay
+        case .link:
+            return .link(option: .wallet)
+        case let .new(paymentMethodType: paymentMethodType):
+            let params = IntentConfirmParams(type: paymentMethodType)
+            params.setDefaultBillingDetailsIfNecessary(for: configuration)
+            switch paymentMethodType {
+            case .stripe:
+                return .new(confirmParams: params)
+            case .external(let type):
+                return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
+            case .instantDebits, .linkCardBrand:
+                return .new(confirmParams: params)
+            }
+        case .saved(paymentMethod: let paymentMethod):
+            return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+        case .none:
+            return nil
+        }
+    }
 
     private init(
         configuration: Configuration,
-        loadResult: PaymentSheetLoader.LoadResult
+        loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
-            loadResult: loadResult
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
+        self.containerView = EmbeddedPaymentElementContainerView(
+            embeddedPaymentMethodsView: embeddedPaymentMethodsView
+        )
+
+        self.analyticsHelper = analyticsHelper
+        analyticsHelper.logInitialized()
+        self.containerView.updateSuperviewHeight = { [weak self] in
+            guard let self else { return }
+            self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+        }
         self.embeddedPaymentMethodsView.delegate = self
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
 }
 
 // MARK: - Completion-block based APIs
@@ -257,4 +309,13 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
+}
+
+// MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
+
+extension EmbeddedPaymentElement.PaymentOptionDisplayData {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        // Unfortunately, we need to manually define this because the implementation of Equatable on UIImage does not work
+        return lhs.image.pngData() == rhs.image.pngData() && rhs.label == lhs.label && lhs.billingDetails == rhs.billingDetails && lhs.paymentMethodType == rhs.paymentMethodType && lhs.mandateText == rhs.mandateText
+    }
 }

@@ -112,7 +112,7 @@ extension TextFieldElement {
                     if let cardBrandDisplayName = STPCardBrandUtilities.stringFrom(brand), brand != .unknown {
                         return .localizedStringWithFormat(.Localized.brand_not_allowed, cardBrandDisplayName)
                     }
-                    
+
                     return .Localized.generic_brand_not_allowed
                 }
             }
@@ -318,16 +318,14 @@ extension TextFieldElement {
         let lastFour: String
         let isEditable = false
         let cardBrandDropDown: DropdownFieldElement
-        let cardFilter: CardBrandFilter
 
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, cardBrandDropDown: DropdownFieldElement, cardFilter: CardBrandFilter) {
+        init(lastFour: String, cardBrandDropDown: DropdownFieldElement) {
             self.lastFour = lastFour
             self.cardBrandDropDown = cardBrandDropDown
-            self.cardFilter = cardFilter
         }
 
         func makeDisplayText(for text: String) -> NSAttributedString {
@@ -336,8 +334,7 @@ extension TextFieldElement {
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
-            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown,
-                                                     cardFilter: cardFilter).accessoryView(for: lastFourFormatted, theme: theme)
+            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown).accessoryView(for: lastFourFormatted, theme: theme)
         }
     }
 }

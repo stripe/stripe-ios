@@ -54,6 +54,7 @@ class IntegrationTesterUICardEntryTests: IntegrationTesterUITests {
 }
 
 class IntegrationTesterUICardTests: IntegrationTesterUITests {
+
     func testStandardCustomCard3DS2() throws {
         testAuthentication(cardNumber: "4000000000003220", confirmationBehavior: .threeDS2)
     }

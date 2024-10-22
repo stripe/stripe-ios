@@ -937,8 +937,6 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 parameters["financial_incentive"] = [
                     "setup_intent": setupIntentId,
                 ]
-            @unknown default:
-                break
             }
         }
 

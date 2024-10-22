@@ -253,7 +253,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateMandate(animated: Bool = true) {
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(for: selectedPaymentOption?.paymentMethodType,
                                                      savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
                                                      bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString)
@@ -511,7 +511,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
-                            // Wait a bit before closing the sheet
                             self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
                     }

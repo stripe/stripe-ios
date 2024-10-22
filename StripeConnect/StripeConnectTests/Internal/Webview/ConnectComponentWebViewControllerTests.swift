@@ -229,6 +229,30 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         // Loading indicator should stop
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
+
+    func testOpenAuthenticatedWebView() throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let authenticatedWebViewManager = MockAuthenticatedWebViewManager { url, _ in
+            XCTAssertEqual(url.absoluteString, "https://stripe.com/start")
+            return URL(string: "stripe-connect://return_url")!
+        }
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      didFailLoadWithError: { _ in },
+                                                      authenticatedWebViewManager: authenticatedWebViewManager)
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: ReturnedFromAuthenticatedWebViewSender(payload: .init(
+                url: URL(string: "stripe-connect://return_url"),
+                id: "1234"
+            ))
+        )
+
+        webVC.webView.evaluateOpenAuthenticatedWebView(url: "https://stripe.com/start", id: "1234")
+
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
 }
 // MARK: - Helpers
 
@@ -241,5 +265,19 @@ private extension ConnectComponentWebViewControllerTests {
             XCTFail("Client secret should not be retrieved in this test")
             return ""
         })
+    }
+}
+
+private class MockAuthenticatedWebViewManager: AuthenticatedWebViewManager {
+    var overridePresent: (_ url: URL, _ view: UIView) async throws -> URL?
+
+    init(overridePresent: @escaping (_ url: URL, _ view: UIView) async throws -> URL?) {
+        self.overridePresent = overridePresent
+        super.init()
+    }
+
+    @MainActor
+    override func present(with url: URL, from view: UIView) async throws -> URL? {
+        try await overridePresent(url, view)
     }
 }

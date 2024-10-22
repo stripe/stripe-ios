@@ -177,14 +177,12 @@ final class PaymentSheetLoader {
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async {
         await withCheckedContinuation { continuation in
-            Task {
-                AddressSpecProvider.shared.loadAddressSpecs {
-                    // Load form specs
-                    FormSpecProvider.shared.load { _ in
-                        // Load BSB data
-                        BSBNumberProvider.shared.loadBSBData {
-                            continuation.resume()
-                        }
+            AddressSpecProvider.shared.loadAddressSpecs {
+                // Load form specs
+                FormSpecProvider.shared.load { _ in
+                    // Load BSB data
+                    BSBNumberProvider.shared.loadBSBData {
+                        continuation.resume()
                     }
                 }
             }
@@ -329,7 +327,7 @@ final class PaymentSheetLoader {
 
         // Hide any saved cards whose brands are not allowed
         return savedPaymentMethods.filter {
-            guard let cardBrand = $0.card?.brand else { return true }
+            guard let cardBrand = $0.card?.preferredDisplayBrand else { return true }
             return configuration.cardBrandFilter.isAccepted(cardBrand: cardBrand)
         }
     }
