@@ -141,15 +141,6 @@ extension EmbeddedPaymentElement {
 
             /// The button says “Continue”. When tapped, the form sheet closes.
             case `continue`
-
-            var analyticValue: String {
-                switch self {
-                case .confirm:
-                    return "confirm"
-                case .`continue`:
-                    return "continue"
-                }
-            }
         }
 
         /// The view can display payment methods like “Card” that, when tapped, open a sheet where customers enter their payment method details. The sheet has a button at the bottom. `formSheetAction` controls the action the button performs.

@@ -92,6 +92,17 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement {
     }
 }
 
+extension EmbeddedPaymentElement.Configuration.FormSheetAction {
+    var analyticValue: String {
+        switch self {
+        case .confirm:
+            return "confirm"
+        case .`continue`:
+            return "continue"
+        }
+    }
+}
+
 extension PaymentSheet.BillingDetailsCollectionConfiguration {
     var analyticPayload: [String: Any] {
         return [
