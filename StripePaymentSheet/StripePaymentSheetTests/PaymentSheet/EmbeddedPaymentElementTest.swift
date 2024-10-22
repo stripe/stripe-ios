@@ -134,6 +134,39 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(updateResult2, .succeeded)
         XCTAssertTrue(sut.loadResult.intent.isSettingUp)
     }
+
+    func testConfirmHandlesInflightUpdateThatSucceeds() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        // ...updating...
+        async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
+        // ...and immediately calling confirm, before the 1st update finishes...
+        let confirmResult = await sut.confirm()
+        // ...should make the confirm call wait for the update and then
+        switch confirmResult {
+        case .canceled: // TODO: When confirm works, change this to .completed
+            break
+        default:
+            XCTFail("Expected confirm to succeed")
+        }
+    }
+
+    func testConfirmHandlesInflightUpdateThatFails() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        // ...updating w/ a broken config...
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
+        async let _ = sut.update(intentConfiguration: brokenConfig)
+        // ...and immediately calling confirm, before the 1st update finishes...
+        async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
+        // ...should make the confirm call wait for the update and then fail b/c the update failed
+        switch await confirmResult {
+        case let .failed(error: error):
+            XCTAssertEqual(error.nonGenericDescription.prefix(101), "An error occurred in PaymentSheet. The amount in `PaymentSheet.IntentConfiguration` must be non-zero!")
+        default:
+            XCTFail("Expected confirm to fail")
+        }
+    }
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
