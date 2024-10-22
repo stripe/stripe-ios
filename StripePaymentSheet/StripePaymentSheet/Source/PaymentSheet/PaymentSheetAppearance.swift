@@ -312,13 +312,6 @@ public extension PaymentSheet {
             var payload = [String: Any]()
             payload["style"] = style != PaymentSheet.Appearance.EmbeddedPaymentElement.default.style
             payload["row"] = row != PaymentSheet.Appearance.EmbeddedPaymentElement.default.row
-            // Convenience payload item to make querying high level appearance usage easier
-            payload["usage"] = payload.values.contains(where: { value in
-                if let boolValue = value as? Bool {
-                    return boolValue == true
-                }
-                return false
-            })
             return payload
         }
     }
