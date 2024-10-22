@@ -81,6 +81,17 @@ extension PaymentSheet.Appearance {
     }
 }
 
+extension PaymentSheet.Appearance.EmbeddedPaymentElement {
+    static let `default` = PaymentSheet.Appearance.EmbeddedPaymentElement()
+
+    var analyticPayload: [String: Any] {
+        var payload = [String: Any]()
+        payload["style"] = style != PaymentSheet.Appearance.EmbeddedPaymentElement.default.style
+        payload["row"] = row != PaymentSheet.Appearance.EmbeddedPaymentElement.default.row
+        return payload
+    }
+}
+
 extension PaymentSheet.BillingDetailsCollectionConfiguration {
     var analyticPayload: [String: Any] {
         return [
