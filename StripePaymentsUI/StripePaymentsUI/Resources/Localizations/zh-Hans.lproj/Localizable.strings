@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ - 尾号：%2$@";
 
+"%1$@ is not accepted" = "不接受 %1$@";
+
 "Address line 2 (optional)" = "地址第 2 行（可选）";
 
 "Apple Pay" = "Apple Pay";
@@ -35,6 +37,8 @@
 "State / Province / Region" = "州/省/地区";
 
 "The BSB you entered is invalid." = "您输入的 BSB 无效。";
+
+"The selected brand is not allowed" = "不允许使用选定的品牌";
 
 "To scan your card, allow camera access in Settings." = "要扫描您的银行卡，在“设置”中启用照相机。";
 

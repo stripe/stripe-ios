@@ -9,7 +9,7 @@ import Foundation
 
 /// Contains elements session context useful for the Financial Connections SDK.
 @_spi(STP) public struct ElementsSessionContext {
-    @_spi(STP) public enum IntentID {
+    @_spi(STP) @frozen public enum IntentID {
         case payment(String)
         case setup(String)
     }

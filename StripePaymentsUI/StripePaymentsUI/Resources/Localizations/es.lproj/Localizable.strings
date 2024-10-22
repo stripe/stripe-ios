@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ terminada en %2$@";
 
+"%1$@ is not accepted" = "No se acepta %1$@";
+
 "Address line 2 (optional)" = "Segunda línea de la dirección (opcional)";
 
 "Apple Pay" = "Apple Pay";
@@ -35,6 +37,8 @@
 "State / Province / Region" = "Estado, provincia o región";
 
 "The BSB you entered is invalid." = "El BSB introducido no es válido.";
+
+"The selected brand is not allowed" = "La marca seleccionada no está permitida";
 
 "To scan your card, allow camera access in Settings." = "Para escanear la tarjeta, autoriza el acceso a la cámara en Ajustes.";
 
