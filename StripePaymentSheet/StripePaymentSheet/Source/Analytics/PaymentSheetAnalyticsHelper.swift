@@ -397,7 +397,10 @@ extension PaymentSheet.Configuration {
 extension EmbeddedPaymentElement.Configuration {
     /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
     var analyticPayload: [String: Any] {
-        return commonAnalyticPayload
+        var payload = commonAnalyticPayload
+        payload["form_sheet_action"] = formSheetAction.analyticValue
+        payload["embedded_view_displays_mandate_text"] = embeddedViewDisplaysMandateText
+        return payload
     }
 }
 
