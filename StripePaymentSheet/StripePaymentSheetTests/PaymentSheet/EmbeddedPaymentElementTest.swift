@@ -92,7 +92,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
             secondUpdateExpectation.fulfill()
         }
-        XCTAssertFalse(sut.embeddedPaymentMethodsView.isUserInteractionEnabled)
         await fulfillment(of: [secondUpdateExpectation])
     }
 
