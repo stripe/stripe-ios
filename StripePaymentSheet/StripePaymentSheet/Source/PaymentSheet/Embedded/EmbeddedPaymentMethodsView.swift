@@ -61,7 +61,6 @@ class EmbeddedPaymentMethodsView: UIView {
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
         self.appearance = appearance
-        self.selection = initialSelection
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
         self.delegate = delegate
@@ -90,6 +89,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
             if initialSelection == selection {
                 savedPaymentMethodButton.isSelected = true
+                self.selection = initialSelection
             }
 
             stackView.addArrangedSubview(savedPaymentMethodButton)
@@ -97,14 +97,22 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Add card before Apple Pay and Link if present and before any other LPMs
         if paymentMethodTypes.contains(.stripe(.card)) {
-            stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card),
-                                                                            savedPaymentMethodType: savedPaymentMethod?.type,
-                                                                            appearance: rowButtonAppearance,
-                                                                            shouldAnimateOnPress: true,
-                                                                            isEmbedded: true,
-                                                                            didTap: { [weak self] rowButton in
-                self?.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: .stripe(.card)))
-            }))
+            let selection: Selection = .new(paymentMethodType: .stripe(.card))
+            let cardRowButton = RowButton.makeForPaymentMethodType(
+                paymentMethodType: .stripe(.card),
+                savedPaymentMethodType: savedPaymentMethod?.type,
+                appearance: rowButtonAppearance,
+                shouldAnimateOnPress: true,
+                isEmbedded: true,
+                didTap: { [weak self] rowButton in
+                    self?.didTap(selectedRowButton: rowButton, selection: selection)
+                }
+            )
+            if initialSelection == selection {
+                cardRowButton.isSelected = true
+                self.selection = initialSelection
+            }
+            stackView.addArrangedSubview(cardRowButton)
         }
 
         if shouldShowApplePay {
@@ -117,6 +125,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
             if initialSelection == selection {
                 applePayRowButton.isSelected = true
+                self.selection = initialSelection
             }
 
             stackView.addArrangedSubview(applePayRowButton)
@@ -130,6 +139,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
             if initialSelection == selection {
                 linkRowButton.isSelected = true
+                self.selection = initialSelection
             }
 
             stackView.addArrangedSubview(linkRowButton)
@@ -151,6 +161,7 @@ class EmbeddedPaymentMethodsView: UIView {
             )
             if initialSelection == selection {
                 rowButton.isSelected = true
+                self.selection = initialSelection
             }
             stackView.addArrangedSubview(rowButton)
         }
