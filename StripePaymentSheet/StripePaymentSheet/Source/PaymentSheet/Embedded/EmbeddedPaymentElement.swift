@@ -170,6 +170,7 @@ public final class EmbeddedPaymentElement {
         if let currentUpdateTask {
             switch await currentUpdateTask.value {
             case .succeeded:
+                // The view is in sync with the intent. Continue on with confirm!
                 break
             case .failed(error: let error):
                 return .failed(error: error)
@@ -182,7 +183,6 @@ public final class EmbeddedPaymentElement {
                 return .failed(error: error)
             }
         }
-        // The view is in sync with the intent. Continue on with confirm!
         return .canceled
     }
 
