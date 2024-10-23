@@ -164,8 +164,6 @@ extension PaymentSheet {
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
-            
-            let hasIneligibleConfiguration = configuration.billingDetailsCollectionConfiguration.email == .never && configuration.defaultBillingDetails.email?.isEmpty != false
 
             // We should manually add Instant Debits as a payment method when:
             // - Link is an available payment method.
