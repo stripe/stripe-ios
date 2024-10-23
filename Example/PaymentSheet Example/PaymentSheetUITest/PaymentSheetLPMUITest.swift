@@ -706,11 +706,10 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         app.typeText("Jane Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("foo@bar.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("108800")
-        app.typeText("00012345" + XCUIKeyboardKey.return.rawValue)
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("00012345")
         app.typeText("123 Main St" + XCUIKeyboardKey.return.rawValue + XCUIKeyboardKey.return.rawValue)
         app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.toolbars.buttons["Done"].tap() // State picker toolbar's "Done" button
         app.typeText("94010" + XCUIKeyboardKey.return.rawValue)
         let payButton = app.buttons["Pay £50.99"]
         XCTAssertFalse(payButton.isEnabled)
@@ -914,7 +913,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled and we should auto select Visa
@@ -944,7 +942,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled
@@ -970,7 +967,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
         // Saved card should show the cartes bancaires logo
-        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
 
         let editButton = app.staticTexts["Edit"]
@@ -1010,7 +1007,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
         // Saved card should show the cartes bancaires logo
-        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
 
         // Remove this card
@@ -1022,7 +1019,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         confirmRemoval.tap()
 
         // Card should be removed
-        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertFalse(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
     }
 }
 

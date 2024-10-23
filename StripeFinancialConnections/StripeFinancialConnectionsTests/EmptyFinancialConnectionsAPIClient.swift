@@ -200,7 +200,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func linkAccountSignUp(
         emailAddress: String,
         phoneNumber: String,
-        country: String
+        country: String,
+        amount: Int?,
+        currency: String?,
+        intentId: ElementsSessionContext.IntentID?
     ) -> Future<LinkSignUpResponse> {
         return Promise<StripeFinancialConnections.LinkSignUpResponse>()
     }
@@ -214,6 +217,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func paymentDetails(consumerSessionClientSecret: String, bankAccountId: String) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentDetails> {
         Promise<StripeFinancialConnections.FinancialConnectionsPaymentDetails>()
+    }
+
+    func sharePaymentDetails(consumerSessionClientSecret: String, paymentDetailsId: String, expectedPaymentMethodType: String) -> Future<FinancialConnectionsSharePaymentDetails> {
+        Promise<StripeFinancialConnections.FinancialConnectionsSharePaymentDetails>()
     }
 
     func paymentMethods(consumerSessionClientSecret: String, paymentDetailsId: String) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentMethod> {

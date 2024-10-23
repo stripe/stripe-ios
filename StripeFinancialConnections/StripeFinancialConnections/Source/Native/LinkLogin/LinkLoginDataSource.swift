@@ -33,19 +33,22 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     private let clientSecret: String
     private let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
+    private let elementsSessionContext: ElementsSessionContext?
 
     init(
         manifest: FinancialConnectionsSessionManifest,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient
+        apiClient: FinancialConnectionsAPIClient,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
         self.analyticsClient = analyticsClient
         self.clientSecret = clientSecret
         self.returnURL = returnURL
         self.apiClient = apiClient
+        self.elementsSessionContext = elementsSessionContext
     }
 
     func synchronize() -> Future<FinancialConnectionsLinkLoginPane> {
@@ -74,7 +77,10 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
-            country: country
+            country: country,
+            amount: elementsSessionContext?.amount,
+            currency: elementsSessionContext?.currency,
+            intentId: elementsSessionContext?.intentId
         )
     }
 

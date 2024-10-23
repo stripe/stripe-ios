@@ -158,6 +158,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     let configuration: Configuration
     private let intent: Intent
     private let paymentSheetConfiguration: PaymentSheet.Configuration
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
@@ -311,6 +312,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         intent: Intent,
         appearance: PaymentSheet.Appearance,
         cbcEligible: Bool = false,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
@@ -320,6 +322,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.appearance = appearance
         self.cbcEligible = cbcEligible
         self.delegate = delegate
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
         updateUI()
     }
@@ -557,7 +560,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
                                               canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                              isTestMode: configuration.isTestMode)
+                                              isTestMode: configuration.isTestMode,
+                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }

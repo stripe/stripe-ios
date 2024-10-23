@@ -24,6 +24,7 @@ class STPElementsSessionTest: XCTestCase {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["unactivated_payment_method_types"] = ["cashapp"]
         elementsSessionJson["card_brand_choice"] = ["eligible": true]
+        elementsSessionJson["flags"] = ["cbc_in_link_popup": true, "disable_cbc_in_link_popup": false]
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
         XCTAssertEqual(
@@ -50,6 +51,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.merchantCountryCode, "US")
         XCTAssertNotNil(elementsSession.paymentMethodSpecs)
         XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
+        XCTAssertEqual(elementsSession.flags, ["cbc_in_link_popup": true, "disable_cbc_in_link_popup": false])
         XCTAssertTrue(elementsSession.isApplePayEnabled)
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }

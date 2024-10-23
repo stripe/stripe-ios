@@ -205,7 +205,7 @@ extension LinkInlineSignupViewModelTests {
             : nil
 
         return LinkInlineSignupViewModel(
-            configuration: .init(),
+            configuration: PaymentSheet.Configuration(),
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
             linkAccount: linkAccount,

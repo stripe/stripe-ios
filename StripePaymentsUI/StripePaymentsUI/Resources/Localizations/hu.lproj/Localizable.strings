@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ végződése %2$@";
 
+"%1$@ is not accepted" = "%1$@ nem elfogadott";
+
 "Address line 2 (optional)" = "Cím 2. sora (nem kötelező)";
 
 "Apple Pay" = "Apple Pay";
@@ -15,8 +17,6 @@
 "Billing address" = "Számlázási cím";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Kártyaadatok";
 
@@ -37,6 +37,8 @@
 "State / Province / Region" = "Állam/tartomány/régió";
 
 "The BSB you entered is invalid." = "A beírt BSB-szám érvénytelen.";
+
+"The selected brand is not allowed" = "A kiválasztott kártyamárka nem engedélyezett";
 
 "To scan your card, allow camera access in Settings." = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
 

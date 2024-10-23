@@ -20,7 +20,7 @@ extension MessageSender {
     var javascriptMessage: String? {
         guard let jsonData = try? JSONEncoder.connectEncoder.encode(payload),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
-            //TODO: MXMOBILE-2491 Log failure to analytics
+            // TODO: MXMOBILE-2491 Log failure to analytics
             return nil
         }
         return "window.\(name)(\(jsonString));"

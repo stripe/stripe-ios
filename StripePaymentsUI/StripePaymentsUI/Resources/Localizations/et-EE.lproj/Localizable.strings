@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
 
+"%1$@ is not accepted" = "%1$@ pole aktsepteeritud";
+
 "Address line 2 (optional)" = "Aadressirida 2 (valikuline)";
 
 "Apple Pay" = "Apple Pay";
@@ -15,8 +17,6 @@
 "Billing address" = "Arveldusaadress";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Kaardi andmed";
 
@@ -37,6 +37,8 @@
 "State / Province / Region" = "Maakond";
 
 "The BSB you entered is invalid." = "Sisestatud BSB-number ei ole kehtiv.";
+
+"The selected brand is not allowed" = "Valitud tootemark pole lubatud";
 
 "To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
 

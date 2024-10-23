@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
 
+"%1$@ is not accepted" = "Kartica %1$@ ni sprejeta";
+
 "Address line 2 (optional)" = "Naslov 2 (izbirno)";
 
 "Apple Pay" = "Apple Pay";
@@ -15,8 +17,6 @@
 "Billing address" = "Naslov plačnika računa";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Podatki o kartici";
 
@@ -37,6 +37,8 @@
 "State / Province / Region" = "Zvezna država/provinca/regija";
 
 "The BSB you entered is invalid." = "Vneseni BSB ni veljaven.";
+
+"The selected brand is not allowed" = "Izbrana blagovna znamka ni dovoljena";
 
 "To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
 

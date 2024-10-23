@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -38,6 +38,11 @@ struct AppearancePlaygroundView: View {
         let componentBorderColorBinding = Binding(
             get: { Color(self.appearance.colors.componentBorder) },
             set: { self.appearance.colors.componentBorder = UIColor($0) }
+        )
+
+        let selectedComponentBorderColorBinding = Binding(
+            get: { Color(self.appearance.colors.selectedComponentBorder ?? self.appearance.colors.primary) },
+            set: { self.appearance.colors.selectedComponentBorder = UIColor($0) }
         )
 
         let componentDividerColorBinding = Binding(
@@ -80,9 +85,14 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.cornerRadius = $0 }
         )
 
-        let componentBorderWidthBinding = Binding(
+        let borderWidthBinding = Binding(
             get: { self.appearance.borderWidth },
             set: { self.appearance.borderWidth = $0 }
+        )
+
+        let selectedBorderWidthBinding = Binding(
+            get: { appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5 },
+            set: { self.appearance.selectedBorderWidth = $0 }
         )
 
         let componentShadowColorBinding = Binding(
@@ -126,12 +136,12 @@ struct AppearancePlaygroundView: View {
             get: { Color(self.appearance.primaryButton.backgroundColor ?? self.appearance.colors.primary) },
             set: { self.appearance.primaryButton.backgroundColor = UIColor($0) }
         )
-        
+
         let primaryButtonDisabledColorBinding = Binding(
             get: { Color(self.appearance.primaryButton.disabledBackgroundColor ?? self.appearance.primaryButton.backgroundColor ?? self.appearance.colors.primary) },
             set: { self.appearance.primaryButton.disabledBackgroundColor = UIColor($0) }
         )
-        
+
         let primaryButtonDisabledTextColorBinding = Binding(
             get: { Color(self.appearance.primaryButton.disabledTextColor ?? self.appearance.primaryButton.textColor?.withAlphaComponent(0.6) ?? .white.withAlphaComponent(0.6)) },
             set: { self.appearance.primaryButton.disabledTextColor = UIColor($0) }
@@ -212,6 +222,47 @@ struct AppearancePlaygroundView: View {
             }
         )
 
+        let embeddedPaymentElementFlatSeparatorColorBinding = Binding(
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder) },
+            set: {
+                if self.appearance.embeddedPaymentElement.row.flat.separatorColor == nil {
+                    self.appearance.embeddedPaymentElement.row.flat.separatorColor = appearance.colors.componentBorder
+                } else {
+                    self.appearance.embeddedPaymentElement.row.flat.separatorColor = UIColor($0)
+                }
+            }
+        )
+
+        let embeddedPaymentElementFlatRadioColorSelected = Binding(
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.radio.selectedColor ?? appearance.colors.primary) },
+            set: {
+                self.appearance.embeddedPaymentElement.row.flat.radio.selectedColor = UIColor($0)
+            }
+        )
+
+        let embeddedPaymentElementFlatRadioColorUnselected = Binding(
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.radio.unselectedColor ?? appearance.colors.componentBorder) },
+            set: {
+                self.appearance.embeddedPaymentElement.row.flat.radio.unselectedColor = UIColor($0)
+            }
+        )
+
+        let embeddedPaymentElementFlatLeftSeparatorInset = Binding(
+            get: { self.appearance.embeddedPaymentElement.row.flat.separatorInsets?.left ?? 0 },
+            set: {
+                let prevInsets = self.appearance.embeddedPaymentElement.row.flat.separatorInsets ?? .zero
+                self.appearance.embeddedPaymentElement.row.flat.separatorInsets = UIEdgeInsets(top: 0, left: $0, bottom: 0, right: prevInsets.right)
+            }
+        )
+
+        let embeddedPaymentElementFlatRightSeparatorInset = Binding(
+            get: { self.appearance.embeddedPaymentElement.row.flat.separatorInsets?.right ?? 0 },
+            set: {
+                let prevInsets = self.appearance.embeddedPaymentElement.row.flat.separatorInsets ?? .zero
+                self.appearance.embeddedPaymentElement.row.flat.separatorInsets = UIEdgeInsets(top: 0, left: prevInsets.left, bottom: 0, right: $0)
+            }
+        )
+
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
 
         NavigationView {
@@ -222,6 +273,7 @@ struct AppearancePlaygroundView: View {
                         ColorPicker("background", selection: backgroundColorBinding)
                         ColorPicker("componentBackground", selection: componentBackgroundColorBinding)
                         ColorPicker("componentBorder", selection: componentBorderColorBinding)
+                        ColorPicker("selectedComponentBorder", selection: selectedComponentBorderColorBinding)
                         ColorPicker("componentDivider", selection: componentDividerColorBinding)
                         ColorPicker("text", selection: textColorBinding)
                         ColorPicker("textSecondary", selection: textSecondaryColorBinding)
@@ -235,8 +287,9 @@ struct AppearancePlaygroundView: View {
                 }
 
                 Section(header: Text("Miscellaneous")) {
-                    Stepper("cornerRadius: \(Int(appearance.cornerRadius))", value: cornerRadiusBinding, in: 0...30)
-                    Stepper("componentBorderWidth: \(Int(appearance.borderWidth))", value: componentBorderWidthBinding, in: 0...30)
+                    Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
+                    Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
+                    Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: selectedBorderWidthBinding, in: 0.0...2.0, step: 0.5)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
@@ -307,6 +360,56 @@ struct AppearancePlaygroundView: View {
                         }
                     } label: {
                         Text("Primary Button")
+                    }
+                }
+
+                Section(header: Text("EmbeddedPaymentElement")) {
+                    DisclosureGroup {
+                        Picker("Style", selection: $appearance.embeddedPaymentElement.style) {
+                            ForEach(PaymentSheet.Appearance.EmbeddedPaymentElement.Style.allCases, id: \.self) {
+                                Text(String(describing: $0))
+                            }
+                        }
+
+                        DisclosureGroup {
+                            Stepper("additionalInsets: \(Int(appearance.embeddedPaymentElement.row.additionalInsets))",
+                                    value: $appearance.embeddedPaymentElement.row.additionalInsets, in: 0...40)
+
+                            DisclosureGroup {
+                                Stepper("separatorThickness: \(Int(appearance.embeddedPaymentElement.row.flat.separatorThickness))",
+                                        value: $appearance.embeddedPaymentElement.row.flat.separatorThickness, in: 0...10)
+                                ColorPicker("separatorColor", selection: embeddedPaymentElementFlatSeparatorColorBinding)
+                                Stepper("leftSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.left ?? 0))",
+                                        value: embeddedPaymentElementFlatLeftSeparatorInset, in: -40...40)
+                                Stepper("rightSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.right ?? 0))",
+                                        value: embeddedPaymentElementFlatRightSeparatorInset, in: -40...40)
+                                Toggle("topSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled)
+                                Toggle("bottomSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
+
+                                DisclosureGroup {
+                                    ColorPicker("selectedColor", selection: embeddedPaymentElementFlatRadioColorSelected)
+                                    ColorPicker("unselectedColor", selection: embeddedPaymentElementFlatRadioColorUnselected)
+                                } label: {
+                                    Text("Radio")
+                                }
+
+                            } label: {
+                                Text("FlatWithRadio")
+                            }
+
+                            DisclosureGroup {
+                                Stepper("Spacing: \(Int(appearance.embeddedPaymentElement.row.floating.spacing))",
+                                        value: $appearance.embeddedPaymentElement.row.floating.spacing, in: 0...40)
+
+                            } label: {
+                                Text("FloatingButton")
+                            }
+                        } label: {
+                            Text("Row")
+                        }
+
+                    } label: {
+                        Text("EmbeddedPaymentElement")
                     }
                 }
 

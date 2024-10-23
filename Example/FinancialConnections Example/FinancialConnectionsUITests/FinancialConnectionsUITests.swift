@@ -396,11 +396,12 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
 
-        let usesLinkText = app.webViews
-            .staticTexts
-            .containing(NSPredicate(format: "label CONTAINS 'uses Link to connect your account'"))
+        let authFlowWebViewUrl = app
+            .otherElements["TopBrowserBar"]
+            .otherElements
+            .containing(NSPredicate(format: "value CONTAINS 'auth.stripe.com'"))
             .firstMatch
-        XCTAssertTrue(usesLinkText.waitForExistence(timeout: 120.0))  // glitch app can take time to load
+        XCTAssertTrue(authFlowWebViewUrl.waitForExistence(timeout: 120.0)) // glitch app can take time to load
 
         app.fc_secureWebViewCancelButton.tap()
 
@@ -608,6 +609,41 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
+
+    // this tests going through "ResetFlowViewController"
+    func testNativeResetFlowWithErrorToSuccess() throws {
+        throw XCTSkip("Skipping this test case until we edit this institution's name")
+
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        app.fc_scrollDown()
+
+        app.fc_nativeFeaturedInstitution(name: "Down Bank (Unscheduled)").waitForExistenceAndTap()
+
+        // selecting another bank will activate "reset flow"
+        app.buttons["select_another_bank_button"].waitForExistenceAndTap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
         XCTAssert(
             app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
                 .exists

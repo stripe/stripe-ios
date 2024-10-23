@@ -31,7 +31,7 @@ public struct EmbeddedComponentError: Error, CustomDebugStringConvertible {
 
     /// A non localized description of the error.
     let description: String
-    
+
     public var debugDescription: String {
         String("\(type.rawValue): \(description)")
     }

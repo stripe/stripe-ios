@@ -13,7 +13,7 @@ import UIKit
 
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
 /// - Note: Assumes you're confirming with a new payment method, unless a payment method ID is provided
-class IntentConfirmParams {
+final class IntentConfirmParams {
     /// An enum for the three possible states of the e.g. "Save this card for future payments" checkbox
     enum SaveForFutureUseCheckboxState {
         /// The checkbox wasn't displayed
@@ -69,6 +69,9 @@ class IntentConfirmParams {
         case .instantDebits:
             let params = STPPaymentMethodParams(type: .link)
             self.init(params: params, type: type)
+        case .linkCardBrand:
+            let params = STPPaymentMethodParams(type: .card)
+            self.init(params: params, type: type)
         }
     }
 
@@ -80,7 +83,7 @@ class IntentConfirmParams {
 
     /// Applies the values of `Configuration.defaultBillingDetails` to this IntentConfirmParams if `attachDefaultsToPaymentMethod` is true.
     /// - Note: This overwrites `paymentMethodParams.billingDetails`.
-    func setDefaultBillingDetailsIfNecessary(for configuration: PaymentSheet.Configuration) {
+    func setDefaultBillingDetailsIfNecessary(for configuration: PaymentElementConfiguration) {
         setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
     }
 

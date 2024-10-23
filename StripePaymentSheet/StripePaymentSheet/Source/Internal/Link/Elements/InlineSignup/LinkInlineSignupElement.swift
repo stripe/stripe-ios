@@ -36,7 +36,7 @@ final class LinkInlineSignupElement: Element {
     }
 
     convenience init(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
         country: String?,
         showCheckbox: Bool

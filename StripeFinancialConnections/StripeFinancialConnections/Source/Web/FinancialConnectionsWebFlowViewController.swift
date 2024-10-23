@@ -69,6 +69,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
     private let returnURL: String?
+    private let elementsSessionContext: ElementsSessionContext?
 
     // MARK: - UI
 
@@ -94,13 +95,15 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         apiClient: FinancialConnectionsAPIClient,
         manifest: FinancialConnectionsSessionManifest,
         sessionFetcher: FinancialConnectionsSessionFetcher,
-        returnURL: String?
+        returnURL: String?,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
         self.manifest = manifest
         self.sessionFetcher = sessionFetcher
         self.returnURL = returnURL
+        self.elementsSessionContext = elementsSessionContext
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -150,10 +153,11 @@ extension FinancialConnectionsWebFlowViewController {
         guard authSessionManager == nil else { return }
         loadingView.showLoading(true)
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
-        var additionalQueryParameters = additionalQueryParameters
-        if manifest.isProductInstantDebits {
-            additionalQueryParameters = (additionalQueryParameters ?? "") + "&return_payment_method=true"
-        }
+        let additionalQueryParameters = Self.updateAdditionalParameters(
+            startingAdditionalParameters: additionalQueryParameters,
+            isInstantDebits: manifest.isProductInstantDebits,
+            linkMode: elementsSessionContext?.linkMode
+        )
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
             .observe(using: { [weak self] (result) in
@@ -165,12 +169,13 @@ extension FinancialConnectionsWebFlowViewController {
                         if
                             let paymentMethodId = Self.extractValue(from: returnUrl, key: "payment_method_id")
                         {
-                            let instantDebitsLinkedBank = InstantDebitsLinkedBankImplementation(
+                            let instantDebitsLinkedBank = InstantDebitsLinkedBank(
                                 paymentMethodId: paymentMethodId,
                                 bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
                                 // backend can return "+" instead of a more-common encoding of "%20" for spaces
                                     .replacingOccurrences(of: "+", with: " "),
-                                last4: Self.extractValue(from: returnUrl, key: "last4")
+                                last4: Self.extractValue(from: returnUrl, key: "last4"),
+                                linkMode: elementsSessionContext?.linkMode
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
                         } else {
@@ -414,5 +419,22 @@ private extension FinancialConnectionsWebFlowViewController {
             return startPollingParam
         }
         return startPollingParam + "&\(fragment)"
+    }
+}
+
+extension FinancialConnectionsWebFlowViewController {
+    static func updateAdditionalParameters(
+        startingAdditionalParameters: String?,
+        isInstantDebits: Bool,
+        linkMode: LinkMode?
+    ) -> String {
+        var additionalQueryParameters = startingAdditionalParameters ?? ""
+        if isInstantDebits {
+            additionalQueryParameters = additionalQueryParameters + "&return_payment_method=true"
+            if let linkMode {
+                additionalQueryParameters = additionalQueryParameters + "&link_mode=\(linkMode.rawValue)"
+            }
+        }
+        return additionalQueryParameters
     }
 }

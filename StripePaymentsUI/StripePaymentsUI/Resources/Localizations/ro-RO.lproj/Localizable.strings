@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ se termină în %2$@";
 
+"%1$@ is not accepted" = "%1$@ nu este acceptat";
+
 "Address line 2 (optional)" = "Rândul 2 pentru adresă (opțional)";
 
 "Apple Pay" = "Apple Pay";
@@ -15,8 +17,6 @@
 "Billing address" = "Adresă de facturare";
 
 "CVC" = "Cod CVC";
-
-"CVV" = "Cod CVC";
 
 "Card information" = "Informații privind cardul";
 
@@ -37,6 +37,8 @@
 "State / Province / Region" = "Stat";
 
 "The BSB you entered is invalid." = "Numărul BSB pe care l-ați introdus nu este valid.";
+
+"The selected brand is not allowed" = "Marca selectată nu este permisă";
 
 "To scan your card, allow camera access in Settings." = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
 

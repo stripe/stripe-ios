@@ -192,6 +192,9 @@ extension STPApplePayContext {
             }
 #endif
         }
+        
+        // Update list of `supportedNetworks` based on the merchant's configuration of cardBrandAcceptance
+        paymentRequest.supportedNetworks = paymentRequest.supportedNetworks.filter { configuration.cardBrandFilter.isAccepted(cardBrand: $0.asCardBrand) }
 
         return paymentRequest
     }
@@ -234,4 +237,27 @@ private func makeRequiredBillingDetails(from configuration: PaymentSheet.Configu
         requiredPKContactFields.insert(.name)
     }
     return requiredPKContactFields
+}
+
+extension PKPaymentNetwork {
+    var asCardBrand: STPCardBrand {
+        switch self {
+        case .amex:
+            return .amex
+        case .cartesBancaires:
+            return .cartesBancaires
+        case .chinaUnionPay:
+            return .unionPay
+        case .discover:
+            return .discover
+        case .masterCard:
+            return .mastercard
+        case .visa:
+            return .visa
+        case .JCB:
+            return .JCB
+        default:
+            return .unknown
+        }
+    }
 }

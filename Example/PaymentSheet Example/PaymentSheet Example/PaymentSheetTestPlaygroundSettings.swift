@@ -13,6 +13,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case paymentSheet
         case flowController
+        case embedded
     }
 
     enum Mode: String, PickerEnum {
@@ -38,6 +39,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Layout" }
         case horizontal
         case vertical
+        case automatic
     }
 
     enum IntegrationType: String, PickerEnum {
@@ -292,6 +294,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum ShakeAmbiguousViews: String, PickerEnum {
+        static var enumName: String { "Shake Ambiguous Views" }
+
+        case on
+        case off
+    }
     enum ExternalPaymentMethods: String, PickerEnum {
         static let enumName: String = "External PMs"
         // Based on https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/55d7fd10/src/externalPaymentMethods/constants.ts#L13
@@ -303,7 +311,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_azupay",
             "external_bank_pay",
             "external_benefit",
-            "external_billie",
             "external_bitcash",
             "external_bizum",
             "external_catch",
@@ -319,12 +326,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_iwocapay",
             "external_kbc",
             "external_knet",
-            "external_kriya",
             "external_laybuy",
             "external_line_pay",
             "external_merpay",
             "external_momo",
-            "external_mondu",
             "external_net_cash",
             "external_nexi_pay",
             "external_octopus",
@@ -343,9 +348,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_postfinance",
             "external_rakuten_pay",
             "external_samsung_pay",
-            "external_satispay",
             "external_scalapay",
-            "external_sequra",
             "external_sezzle",
             "external_shopback_paylater",
             "external_softbank_carrier_payment",
@@ -403,6 +406,25 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum DisplaysMandateTextEnabled: String, PickerEnum {
+        static let enumName: String = "displaysMandateText"
+        case on
+        case off
+    }
+
+    enum FormSheetAction: String, PickerEnum {
+        static let enumName: String = "formSheetAction"
+        case confirm
+        case `continue`
+    }
+
+    enum CardBrandAcceptance: String, PickerEnum {
+        static let enumName: String = "cardBrandAcceptance"
+        case all
+        case blockAmEx
+        case allowVisa
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -432,6 +454,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String
     var autoreload: Autoreload
+    var shakeAmbiguousViews: ShakeAmbiguousViews
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
@@ -442,6 +465,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectEmail: BillingDetailsEmail
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
+    var formSheetAction: FormSheetAction
+    var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
+    var cardBrandAcceptance: CardBrandAcceptance
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -472,6 +498,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
+            shakeAmbiguousViews: .off,
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
@@ -480,7 +507,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectName: .automatic,
             collectEmail: .automatic,
             collectPhone: .automatic,
-            collectAddress: .automatic)
+            collectAddress: .automatic,
+            formSheetAction: .confirm,
+            embeddedViewDisplaysMandateText: .on,
+            cardBrandAcceptance: .all)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

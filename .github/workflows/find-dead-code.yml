@@ -1,0 +1,91 @@
+name: Dead code detection
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+    paths:
+      - '**/*.swift'
+
+jobs:
+  dead-code-check:
+    runs-on: macos-13
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Periphery
+        run: brew install peripheryapp/periphery/periphery
+
+      - name: Build project and run Periphery scan
+        id: periphery-scan
+        run: |
+          periphery scan --config .periphery.yml --clean-build --retain-codable-properties 2>&1 > periphery_report_feature_formatted_sorted.txt
+          ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_feature_formatted_sorted.txt unused_code_feature.json
+          
+      - name: Copy .periphery.yml to temporary location
+        run: |
+            # Copy necessary files to /tmp/ before checking out master
+            cp .periphery.yml /tmp/
+            cp -r ci_scripts/dead_code/ /tmp/
+
+      - name: Compare Periphery output with master baseline
+        run: |
+          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
+          git checkout ${{ github.base_ref }}
+          cp /tmp/.periphery.yml .periphery.yml
+          mkdir -p ci_scripts/dead_code/
+          cp -r /tmp/ ci_scripts/dead_code/
+
+          periphery scan --config .periphery.yml --clean-build --retain-codable-properties 2>&1 > periphery_report_master_formatted_sorted.txt
+          ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
+
+      - name: Compare Unused Code JSON Files
+        id: compare-dead-code
+        run: |
+          ruby ci_scripts/dead_code/compare_unused_code.rb unused_code_master.json unused_code_feature.json
+          # Check if new_dead_code.txt exists and is not empty
+          if [ -s new_dead_code.txt ]; then
+            echo "New dead code detected."
+            echo "diff<<EOF" >> $GITHUB_ENV
+            cat new_dead_code.txt >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          else
+            echo "No new dead code detected."
+          fi
+
+      - uses: peter-evans/find-comment@v3
+        id: find_comment
+        if: env.diff != ''
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: '🚨 New dead code detected'
+
+      - uses: peter-evans/create-or-update-comment@v3
+        id: create_update_comment
+        if: env.diff != ''
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            🚨 New dead code detected in this PR:
+
+            ```diff
+            ${{ env.diff }}
+            ```
+
+            Please remove the dead code before merging.
+
+            If this is intentional, you can bypass this check by adding the label `skip dead code check` to this PR.
+
+            ℹ️ If this comment appears to be left in error, double check that the flagged code is actually used and/or make sure your branch is up-to-date with `master`.
+
+          edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fail if not acknowledged
+        if: env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'skip dead code check')
+        run: exit 1

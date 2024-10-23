@@ -8,9 +8,6 @@
          location = "group:AppClipExample/AppClipExample.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Basic Integration/Basic Integration.xcodeproj">
-      </FileRef>
-      <FileRef
          location = "group:CardImageVerification Example/CardImageVerification Example.xcodeproj">
       </FileRef>
       <FileRef
@@ -81,4 +78,7 @@
          location = "group:IntegrationTester/IntegrationTester.xcodeproj">
       </FileRef>
    </Group>
+   <FileRef
+      location = "group:HTTPStatusError.swift">
+   </FileRef>
 </Workspace>

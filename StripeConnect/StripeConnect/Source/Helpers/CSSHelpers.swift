@@ -14,7 +14,7 @@ extension CGFloat {
 }
 
 extension UIFont.Weight {
-    
+
     // https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#common_weight_name_mapping
     static var stringMappings: [UIFont.Weight: String] {
         [
@@ -26,10 +26,10 @@ extension UIFont.Weight {
             .semibold: "600",
             .bold: "700",
             .heavy: "800",
-            .black: "900"
+            .black: "900",
         ]
     }
-    
+
     var cssValue: String? {
         UIFont.Weight.stringMappings[self]
     }
@@ -42,9 +42,9 @@ extension UIColor {
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 1
-        
+
         getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        
+
         if includeAlpha {
             return String(
                 format: "rgba(%.0f, %.0f, %.0f, %f)",
@@ -62,12 +62,39 @@ extension UIColor {
             )
         }
     }
-    
+
     var cssRgbaValue: String {
         cssValue(includeAlpha: true)
     }
-    
+
     var cssRgbValue: String {
         cssValue(includeAlpha: false)
+    }
+}
+
+private extension Data {
+    func ranges() -> [ClosedRange<Int>] {
+        var ranges: [ClosedRange<Int>] = []
+        var start: Int?
+
+        for (index, byte) in self.enumerated() {
+            for bit in 0..<8 {
+                let isSet = (byte & (1 << bit)) != 0
+                let charCode = index * 8 + bit
+
+                if isSet && start == nil {
+                    start = charCode
+                } else if !isSet && start != nil {
+                    ranges.append(start!...(charCode - 1))
+                    start = nil
+                }
+            }
+        }
+
+        if let start = start {
+            ranges.append(start...((self.count * 8) - 1))
+        }
+
+        return ranges
     }
 }

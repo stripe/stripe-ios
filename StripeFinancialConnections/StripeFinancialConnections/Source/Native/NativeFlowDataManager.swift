@@ -14,9 +14,11 @@ protocol NativeFlowDataManager: AnyObject {
     var merchantLogo: [String]? { get }
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent? { get }
+    var accountPickerPane: FinancialConnectionsAccountPickerPane? { get }
     var apiClient: FinancialConnectionsAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var elementsSessionContext: ElementsSessionContext? { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
 
     var institution: FinancialConnectionsInstitution? { get set }
@@ -78,9 +80,11 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent?
+    let accountPickerPane: FinancialConnectionsAccountPickerPane?
     let apiClient: FinancialConnectionsAPIClient
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let elementsSessionContext: ElementsSessionContext?
 
     var institution: FinancialConnectionsInstitution?
     var authSession: FinancialConnectionsAuthSession?
@@ -112,17 +116,21 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent?,
+        accountPickerPane: FinancialConnectionsAccountPickerPane?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
         self.visualUpdate = visualUpdate
         self.returnURL = returnURL
         self.consentPaneModel = consentPaneModel
+        self.accountPickerPane = accountPickerPane
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.elementsSessionContext = elementsSessionContext
         // Use server provided active AuthSession.
         self.authSession = manifest.activeAuthSession
         // If the server returns active institution use that, otherwise resort to initial institution.

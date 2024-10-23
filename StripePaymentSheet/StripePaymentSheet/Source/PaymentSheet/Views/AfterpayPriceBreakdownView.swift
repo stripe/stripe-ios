@@ -17,7 +17,7 @@ import UIKit
 @objc(STP_Internal_AfterpayPriceBreakdownView)
 class AfterpayPriceBreakdownView: UIView {
     private let afterPayClearPayLabel = UILabel()
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
     private lazy var afterpayMarkImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -42,7 +42,7 @@ class AfterpayPriceBreakdownView: UIView {
 
     let locale: Locale
 
-    init(locale: Locale = Locale.autoupdatingCurrent, theme: ElementsUITheme = .default) {
+    init(locale: Locale = Locale.autoupdatingCurrent, theme: ElementsAppearance = .default) {
         self.locale = locale
         self.theme = theme
         super.init(frame: .zero)

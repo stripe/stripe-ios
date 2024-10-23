@@ -76,11 +76,8 @@ extension String.Localized {
     @_spi(STP) public static var cvc_section_title: String {
         STPLocalizedString(
             "Confirm your %@",
-            "Section title for entering your CVC/CVV. e.g. 'Confirm your CVC' or 'Confirm your CVV'"
+            "Section title for entering your CVC. e.g. 'Confirm your CVC'"
         )
-    }
-    @_spi(STP) public static var cvv: String {
-        STPLocalizedString("CVV", "Label for entering CVV in text field")
     }
 
     @_spi(STP) public static var cvc: String {
@@ -98,7 +95,7 @@ extension String.Localized {
     @_spi(STP) public static var your_cards_security_code_is_incomplete: String {
         STPLocalizedString(
             "Your card's security code is incomplete.",
-            "Error message for card entry form when CVC/CVV is incomplete."
+            "Error message for card entry form when CVC is incomplete."
         )
     }
 
@@ -127,6 +124,20 @@ extension String.Localized {
         STPLocalizedString(
             "Your card's expiration year is invalid.",
             "String to describe an invalid year in expiry date."
+        )
+    }
+
+    @_spi(STP) public static var brand_not_allowed: String {
+        STPLocalizedString(
+            "%1$@ is not accepted",
+            "String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted"
+        )
+    }
+    
+    @_spi(STP) public static var generic_brand_not_allowed: String {
+        STPLocalizedString(
+            "The selected brand is not allowed",
+            "String to inform a user that specific card brands are not accepted."
         )
     }
 }

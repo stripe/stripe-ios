@@ -32,7 +32,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             delegate: self
         )
         // ...the current selection should be the saved PM
-        let savedPMButton = sut.getRowButton(accessibilityIdentifier: "••••4242")
+        let savedPMButton = sut.getRowButton(accessibilityIdentifier: "•••• 4242")
         XCTAssertEqual(sut.currentSelection, .saved(paymentMethod: savedPaymentMethod))
         XCTAssertTrue(savedPMButton.isSelected)
 
@@ -124,6 +124,6 @@ extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodList
 
 extension VerticalPaymentMethodListViewController {
     func getRowButton(accessibilityIdentifier: String) -> RowButton {
-        return stackView.arrangedSubviews.compactMap { $0 as? RowButton }.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
+        return rowButtons.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
     }
 }

@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
 
+"%1$@ is not accepted" = "不接受 %1$@";
+
 "Address line 2 (optional)" = "地址第 2 行（可選）";
 
 "Apple Pay" = "Apple Pay";
@@ -15,8 +17,6 @@
 "Billing address" = "帳單地址";
 
 "CVC" = "安全碼";
-
-"CVV" = "CVV";
 
 "Card information" = "金融卡資訊";
 
@@ -37,6 +37,8 @@
 "State / Province / Region" = "州 / 省 / 地區";
 
 "The BSB you entered is invalid." = "您輸入的 BSB 無效。";
+
+"The selected brand is not allowed" = "不允許使用選定的品牌";
 
 "To scan your card, allow camera access in Settings." = "要掃描您的金融卡，在「設定」中啟用網路攝影機。";
 

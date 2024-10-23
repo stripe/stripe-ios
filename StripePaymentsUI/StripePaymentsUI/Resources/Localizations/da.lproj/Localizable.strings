@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ slutter på %2$@";
 
+"%1$@ is not accepted" = "%1$@ accepteres ikke";
+
 "Address line 2 (optional)" = "Adresselinje 2 (valgfrit)";
 
 "Apple Pay" = "Apple Pay";
@@ -15,8 +17,6 @@
 "Billing address" = "Faktureringsadresse";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Kortoplysninger";
 
@@ -37,6 +37,8 @@
 "State / Province / Region" = "Region";
 
 "The BSB you entered is invalid." = "Den BSB, du angav, er ugyldig.";
+
+"The selected brand is not allowed" = "Det valgte brand er ikke tilladt";
 
 "To scan your card, allow camera access in Settings." = "Tillad kameraadgang i Indstillinger for at scanne dit kort.";
 

@@ -13,7 +13,7 @@ import CloudKit
 import UIKit
 
 extension UIButton {
-    static func makeCardScanButton(theme: ElementsUITheme = .default) -> UIButton {
+    static func makeCardScanButton(theme: ElementsAppearance = .default) -> UIButton {
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         let iconConfig = UIImage.SymbolConfiguration(
             font: fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 9, weight: .semibold))

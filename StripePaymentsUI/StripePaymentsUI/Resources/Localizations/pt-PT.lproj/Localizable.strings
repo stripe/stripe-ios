@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ a terminar em %2$@";
 
+"%1$@ is not accepted" = "%1$@ não é aceite";
+
 "Address line 2 (optional)" = "Linha de endereço 2 (opcional)";
 
 "Apple Pay" = "Apple Pay";
@@ -15,8 +17,6 @@
 "Billing address" = "Endereço de faturação";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Informações do cartão";
 
@@ -37,6 +37,8 @@
 "State / Province / Region" = "Estado/Província/Região";
 
 "The BSB you entered is invalid." = "O BSB que introduziu é inválido.";
+
+"The selected brand is not allowed" = "A marca selecionada não é permitida";
 
 "To scan your card, allow camera access in Settings." = "Para ler o seu cartão, permita o acesso à câmara nas Definições.";
 

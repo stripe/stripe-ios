@@ -8,11 +8,12 @@
 import Foundation
 
 // This message is emitted when the SDK is requesting initialization info.
+@available(iOS 15, *)
 class FetchInitParamsMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchInitParamsMessageHandler.Reply> {
     struct Reply: Encodable {
         let locale: String
         var appearance: AppearanceWrapper
-        var fonts: [VoidPayload] = []
+        var fonts: [CustomFontSourceWrapper] = []
     }
     init(didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {
         super.init(name: "fetchInitParams", didReceiveMessage: didReceiveMessage)

@@ -214,6 +214,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
         // Detach the payment method from the customer
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // Remove the payment method row button
         paymentMethodRows.removeAll { $0.paymentMethod.stripeId == paymentMethod.stripeId }
@@ -309,7 +310,8 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                             appearance: configuration.appearance,
                                                             hostedSurface: .paymentSheet,
                                                             canRemoveCard: canRemovePaymentMethods,
-                                                            isTestMode: configuration.apiClient.isTestmode)
+                                                            isTestMode: configuration.apiClient.isTestmode,
+                                                            cardBrandFilter: configuration.cardBrandFilter)
 
         updateViewController.delegate = self
         self.updateViewController = updateViewController

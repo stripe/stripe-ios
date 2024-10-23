@@ -6,9 +6,11 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 @_spi(PrivateBetaConnect)
+@available(iOS 15, *)
 extension EmbeddedComponentManager {
     /// Describes the appearance of embedded components.
     /// - seealso: https://docs.stripe.com/connect/embedded-appearance-options
@@ -22,7 +24,7 @@ extension EmbeddedComponentManager {
             case lowercase
             /// Displays the text with the first character capitalized.
             case capitalize
-            
+
             // Since the public API does not call for TextTransform to be a string
             // we manually create a raw value here.
             var rawValue: String {
@@ -37,7 +39,7 @@ extension EmbeddedComponentManager {
                     return "capitalize"
                 }
             }
-            
+
             init?(rawValue: String) {
                 switch rawValue {
                 case "none":
@@ -53,13 +55,14 @@ extension EmbeddedComponentManager {
                 }
             }
         }
-        
+
         /// Describes the typography attributes used in embedded components
         public struct Typography {
             /// Describes the font attributes used for a
             /// typography style in embedded components.
             public struct Style {
-                /// The font size for this typography style.
+                /// The unscaled font size for this typography style.
+                /// The displayed fonts are automatically scaled when the component's size category is updated.
                 public var fontSize: CGFloat?
                 /// The font weight for this typography style.
                 public var weight: UIFont.Weight?
@@ -68,9 +71,9 @@ extension EmbeddedComponentManager {
 
                 /// Creates a `EmbeddedComponentManager.Appearance.Typography.Stylye` with default values
                 public init() {}
-                
+
             }
-            
+
             /// Determines the font family value used throughout embedded components.
             /// Only the family is used from the specified font. The size and weight can be
             /// configured from `fontSizeBase` or `fontSize` and `fontWeight`
@@ -80,9 +83,10 @@ extension EmbeddedComponentManager {
             ///   `CustomFontSource` when initializing the `EmbeddedComponentManager` before
             ///   referencing them in the appearance's `typography.font` property.
             public var font: UIFont?
-            /// The baseline font size set on the embedded component root.
-            /// This scales the value of other font size variables.
-            public var fontSizeBase: CGFloat?
+            /// The unscaled baseline font size set on the embedded component root.
+            /// This scales the value of other font size variables and is automatically scaled
+            /// when the component's size category is updated.
+            public var fontSizeBase: CGFloat? = 16
             /// Describes the font size and weight for the medium body typography.
             /// The `textTransform` property is ignored.
             public var bodyMd: Style = .init()
@@ -103,11 +107,11 @@ extension EmbeddedComponentManager {
             public var labelMd: Style = .init()
             /// Describes the font size and weight for the small label typography.
             public var labelSm: Style = .init()
-            
+
             /// Creates a `EmbeddedComponentManager.Appearance.Typography` with default values
             public init() { }
         }
-        
+
         /// Describes the colors used in embedded components.
         /// - Note: If UIColors using dynamicProviders are specified, the appearance will automatically
         ///   update when the component's UITraitCollection is updated (e.g. dark mode)
@@ -147,11 +151,34 @@ extension EmbeddedComponentManager {
             /// The color used for to fill in form items like checkboxes,
             /// radio buttons and switches. The alpha component is ignored.
             public var formAccent: UIColor?
-            
+
             /// Creates a `EmbeddedComponentManager.Appearance.Colors` with default values
             public init() {}
+
+            /// The computed background color
+            var resolvedBackground: UIColor {
+                // Defaults to white if none is set
+                background ?? .white
+            }
+
+            /// The computed loading indicator color
+            var loadingIndicatorColor: UIColor {
+                .init { traitCollection in
+                    let background = resolvedBackground.resolvedColor(with: traitCollection)
+
+                    // Use the secondary text color if it was set
+                    if let secondaryText {
+                        return secondaryText
+                            .resolvedColor(with: traitCollection)
+                            .adjustedForContrast(with: background)
+                    }
+
+                    // Lighten or darken the background to get enough contrast
+                    return background.adjustedForContrast(with: background)
+                }
+            }
         }
-        
+
         /// Describes the appearance of a button type used in embedded components
         public struct Button {
             /// The color used as a background for this button type.
@@ -163,11 +190,11 @@ extension EmbeddedComponentManager {
             /// The text color used for this button type.
             /// The alpha component is ignored.
             public var colorText: UIColor?
-            
+
             /// Creates a `EmbeddedComponentManager.Appearance.Button` with default values
             public init() { }
         }
-        
+
         /// Describes the appearance of a badge type usied in embedded components.
         public struct Badge {
             /// The background color for this badge type.
@@ -177,11 +204,11 @@ extension EmbeddedComponentManager {
             public var colorBorder: UIColor?
             /// The text color for this badge type. The alpha component is ignored.
             public var colorText: UIColor?
-            
+
             /// Creates a `EmbeddedComponentManager.Appearance.Badge` with default values
             public init() {}
         }
-        
+
         /// Describes the corner radius used in embedded components.
         public struct CornerRadius {
             /// The general border radius used in embedded components.
@@ -195,14 +222,14 @@ extension EmbeddedComponentManager {
             public var badge: CGFloat?
             /// The corner radius used for overlays.
             public var overlay: CGFloat?
-            
+
             /// Creates a `EmbeddedComponentManager.Appearance.CornerRadius` with default values
             public init() {}
         }
-        
+
         /// The default appearance
         public static let `default`: Appearance = .init()
-        
+
         /// Describes the appearance of typography used in embedded components.
         public var typography: Typography = .init()
         /// Describes the colors used in embedded components.
@@ -229,9 +256,8 @@ extension EmbeddedComponentManager {
         public var badgeDanger: Badge  = .init()
         /// Describes the corner radius used in embedded components.
         public var cornerRadius: CornerRadius = .init()
-        
+
         /// Creates a `EmbeddedComponentManager.Appearance` with default values
         public init() {}
     }
 }
-

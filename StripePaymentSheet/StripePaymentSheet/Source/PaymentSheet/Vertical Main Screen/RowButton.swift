@@ -11,9 +11,16 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// A selectable button used in vertical mode to display payment methods.
+/// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 class RowButton: UIView {
     private let shadowRoundedRect: ShadowedRoundedRectangle
+    private lazy var radioButton: RadioButton? = {
+        guard isEmbedded, appearance.embeddedPaymentElement.style == .flatWithRadio else { return nil }
+        return RadioButton(appearance: appearance) { [weak self] in
+            guard let self else { return }
+            self.didTap(self)
+        }
+    }()
     let imageView: UIImageView
     let label: UILabel
     let sublabel: UILabel?
@@ -21,9 +28,12 @@ class RowButton: UIView {
     let appearance: PaymentSheet.Appearance
     typealias DidTapClosure = (RowButton) -> Void
     let didTap: DidTapClosure
+    // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
+    let isEmbedded: Bool
     var isSelected: Bool = false {
         didSet {
             shadowRoundedRect.isSelected = isSelected
+            radioButton?.isOn = isSelected
             updateAccessibilityTraits()
         }
     }
@@ -35,13 +45,14 @@ class RowButton: UIView {
     }
     var heightConstraint: NSLayoutConstraint?
 
-    init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, didTap: @escaping DidTapClosure) {
+    init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) {
         self.appearance = appearance
-        self.shouldAnimateOnPress = shouldAnimateOnPress
+        self.shouldAnimateOnPress = true
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.imageView = imageView
         self.label = Self.makeVerticalRowButtonLabel(text: text, appearance: appearance)
+        self.isEmbedded = isEmbedded
         if let subtext {
             let sublabel = UILabel()
             sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
@@ -72,11 +83,11 @@ class RowButton: UIView {
             NSLayoutConstraint.activate([
                 rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
                 rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: isEmbedded ? 0 : -12),
             ])
         }
 
-        for view in [imageView, labelsStackView] {
+        for view in [radioButton, imageView, labelsStackView].compactMap({ $0 }) {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.isUserInteractionEnabled = false
             view.isAccessibilityElement = false
@@ -97,22 +108,27 @@ class RowButton: UIView {
         }
 
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            radioButton?.leadingAnchor.constraint(equalTo: leadingAnchor),
+            radioButton?.centerYAnchor.constraint(equalTo: centerYAnchor),
+            radioButton?.heightAnchor.constraint(equalToConstant: 18),
+            radioButton?.widthAnchor.constraint(equalToConstant: 18),
+
+            imageView.leadingAnchor.constraint(equalTo: radioButton?.trailingAnchor ?? leadingAnchor, constant: 12),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 14),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -14),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + appearance.embeddedPaymentElement.row.additionalInsets),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - appearance.embeddedPaymentElement.row.additionalInsets),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
 
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             labelsStackView.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 4),
-            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -4),
+            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: appearance.embeddedPaymentElement.row.additionalInsets),
+            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -appearance.embeddedPaymentElement.row.additionalInsets),
 
             imageViewBottomConstraint,
             imageViewTopConstraint,
-        ])
+        ].compactMap({ $0 }))
 
         // Add tap gesture
         shadowRoundedRect.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
@@ -239,7 +255,7 @@ extension RowButton {
         return label
     }
 
-    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, savedPaymentMethodType: STPPaymentMethodType?, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, savedPaymentMethodType: STPPaymentMethodType?, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
         // Special case "New card" vs "Card" title
@@ -249,29 +265,29 @@ extension RowButton {
             }
             return paymentMethodType.displayName
         }()
-        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtitle, shouldAnimateOnPress: shouldAnimateOnPress, didTap: didTap)
+        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtitle, shouldAnimateOnPress: shouldAnimateOnPress, isEmbedded: isEmbedded, didTap: didTap)
     }
 
-    static func makeForApplePay(appearance: PaymentSheet.Appearance, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         // Apple Pay logo has built-in padding and ends up looking too small; compensate with insets
         let applePayLogo = Image.apple_pay_mark.makeImage().withAlignmentRectInsets(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
         let imageView = UIImageView(image: applePayLogo)
         imageView.contentMode = .scaleAspectFit
-        return RowButton(appearance: appearance, imageView: imageView, text: String.Localized.apple_pay, didTap: didTap)
+        return RowButton(appearance: appearance, imageView: imageView, text: String.Localized.apple_pay, isEmbedded: isEmbedded, didTap: didTap)
     }
 
-    static func makeForLink(appearance: PaymentSheet.Appearance, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForLink(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, didTap: didTap)
+        let button = RowButton(appearance: appearance, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, isEmbedded: isEmbedded, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = String.Localized.pay_with_link
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, rightAccessoryView: UIView? = nil, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, rightAccessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, rightAccessoryView: rightAccessoryView, didTap: didTap)
+        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }
