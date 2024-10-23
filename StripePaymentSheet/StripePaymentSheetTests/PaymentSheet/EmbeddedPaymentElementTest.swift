@@ -92,6 +92,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
             secondUpdateExpectation.fulfill()
         }
+        XCTAssertFalse(sut.embeddedPaymentMethodsView.isUserInteractionEnabled)
         await fulfillment(of: [secondUpdateExpectation])
     }
 
@@ -127,16 +128,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately updating again, before the 1st update finishes...
         async let _updateResult2 = sut.update(intentConfiguration: setupIntentConfig)
-        let dumbExpectation = expectation(description: "Dispatch async block called")
-        DispatchQueue.main.async {
-            // ...(test that the view is not inter-actable while loading)...
-            // ...(we need to dispatch this so that it is queued up to run after the `async let`s above)...
-            XCTAssertFalse(sut.embeddedPaymentMethodsView.isUserInteractionEnabled)
-            dumbExpectation.fulfill()
-        }
         let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
         let updateResult2 = await _updateResult2
-        await fulfillment(of: [dumbExpectation])
         // ...should cancel the 1st update
         XCTAssertEqual(updateResult, .canceled)
         XCTAssertEqual(updateResult2, .succeeded)
