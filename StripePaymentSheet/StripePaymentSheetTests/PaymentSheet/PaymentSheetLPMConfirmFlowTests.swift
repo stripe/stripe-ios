@@ -979,11 +979,15 @@ extension IntentConfirmParams: Equatable {
             print("Instant debits linked banks not equal: \(lhs.instantDebitsLinkedBank.debugDescription) vs \(rhs.instantDebitsLinkedBank.debugDescription)")
             return false
         }
+        if lhs.linkInlineSignupCustomerInput != rhs.linkInlineSignupCustomerInput {
+            print("Link inline signup customer input not equal: \(lhs.linkInlineSignupCustomerInput.debugDescription) vs \(rhs.linkInlineSignupCustomerInput.debugDescription)")
+            return false
+        }
 
         // Sanity check to make sure when we add new properties, we check them here
         let mirror = Mirror(reflecting: lhs)
         let propertyCount = mirror.children.count
-        XCTAssertEqual(propertyCount, 7)
+        XCTAssertEqual(propertyCount, 8)
 
         return true
     }
