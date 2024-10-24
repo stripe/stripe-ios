@@ -1765,8 +1765,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(instantDebitsSection.defaultEmail, "foo@bar.com")
         XCTAssertEqual(instantDebitsSection.phone, "+12345678900")
         XCTAssertEqual(instantDebitsSection.defaultPhone, "+12345678900")
-        // Unlike the other fields, the `address` will not fallback to the default.
-        XCTAssertEqual(instantDebitsSection.address, PaymentSheet.Address())
+        XCTAssertEqual(instantDebitsSection.address, defaultAddress)
         XCTAssertEqual(instantDebitsSection.defaultAddress, defaultAddress)
     }
 
