@@ -47,6 +47,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "mockReturnUrl"
+        configuration.paymentMethodLayout = .horizontal
 
 //                self.runAgainstLiveService = true
         if !self.runAgainstLiveService {
@@ -1113,7 +1114,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
             }
             config.appearance = appearance
-            config.paymentMethodLayout = .horizontal
 
             if !applePayEnabled {
                 config.applePay = nil
