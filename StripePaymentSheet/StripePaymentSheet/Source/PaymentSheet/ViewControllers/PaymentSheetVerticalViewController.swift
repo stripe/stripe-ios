@@ -808,6 +808,10 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         regenerateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
+
+    func didDismiss(viewController: UpdateCardViewController) {
+        // No-op
+    }
 }
 
 extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDelegate {

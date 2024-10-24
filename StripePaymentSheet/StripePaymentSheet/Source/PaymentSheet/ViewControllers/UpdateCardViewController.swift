@@ -16,6 +16,7 @@ protocol UpdateCardViewControllerDelegate: AnyObject {
     func didUpdate(viewController: UpdateCardViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws
+    func didDismiss(viewController: UpdateCardViewController)
 }
 
 /// For internal SDK use only
@@ -172,6 +173,7 @@ final class UpdateCardViewController: UIViewController {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
+        delegate?.didDismiss(viewController: self)
     }
 
     @objc private func removeCard() {
@@ -207,7 +209,6 @@ final class UpdateCardViewController: UIViewController {
                                                                  error: error,
                                                                  params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         }
-
         view.isUserInteractionEnabled = true
     }
 

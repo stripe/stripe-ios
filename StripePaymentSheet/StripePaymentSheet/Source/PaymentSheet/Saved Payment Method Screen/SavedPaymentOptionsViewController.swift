@@ -669,6 +669,10 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
         collectionView.reloadData()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
+
+    func didDismiss(viewController: UpdateCardViewController) {
+        // No-op
+    }
 }
 
 extension STPPaymentMethod {

@@ -195,7 +195,9 @@ public final class EmbeddedPaymentElement {
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
-    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    internal let analyticsHelper: PaymentSheetAnalyticsHelper
+    internal lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
+    internal var savedPaymentMethods: [STPPaymentMethod]
     internal var _paymentOption: PaymentOption? {
         // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.
         // TODO: Handle CVC recollection
@@ -221,6 +223,9 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
+    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: loadResult.elementsSession)
+    }()
 
     private init(
         configuration: Configuration,
@@ -229,6 +234,7 @@ public final class EmbeddedPaymentElement {
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
+        self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,
