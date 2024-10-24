@@ -1598,6 +1598,354 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(cardForm_si.getMandateElement() != nil)
     }
 
+    // MARK: Instant Debits
+
+    func testMakeInstantDebits_configuration_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+        configuration.billingDetailsCollectionConfiguration.phone = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        // All form elements should be nil except for email.
+        XCTAssertNil(instantDebitsSection.nameElement)
+        XCTAssertNotNil(instantDebitsSection.emailElement)
+        XCTAssertNil(instantDebitsSection.phoneElement)
+        XCTAssertNil(instantDebitsSection.addressElement)
+    }
+
+    func testMakeInstantDebits_configuration_alwaysOrFull() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        // All form elements should not be nil.
+        XCTAssertNotNil(instantDebitsSection.nameElement)
+        XCTAssertNotNil(instantDebitsSection.emailElement)
+        XCTAssertNotNil(instantDebitsSection.phoneElement)
+        XCTAssertNotNil(instantDebitsSection.addressElement)
+    }
+
+    func testMakeInstantDebits_configuration_never() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        // All form elements should be nil except for email.
+        // This is because a default email was not provided.
+        XCTAssertNil(instantDebitsSection.nameElement)
+        XCTAssertNotNil(instantDebitsSection.emailElement)
+        XCTAssertNil(instantDebitsSection.phoneElement)
+        XCTAssertNil(instantDebitsSection.addressElement)
+    }
+
+    func testMakeInstantDebits_configuration_never_withDefaultEmail() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        // All form elements should be nil.
+        XCTAssertNil(instantDebitsSection.nameElement)
+        XCTAssertNil(instantDebitsSection.emailElement)
+        XCTAssertNil(instantDebitsSection.phoneElement)
+        XCTAssertNil(instantDebitsSection.addressElement)
+    }
+
+    func testMakeInstantDebits_defaultValues_attachDefaultsOff() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "CA",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.name = "Foo Bar"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+12345678900"
+        configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = false
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        XCTAssertNil(instantDebitsSection.defaultName)
+        XCTAssertNil(instantDebitsSection.defaultEmail)
+        XCTAssertNil(instantDebitsSection.defaultPhone)
+        XCTAssertNil(instantDebitsSection.defaultAddress)
+    }
+
+    func testMakeInstantDebits_defaultValues_attachDefaultsOn() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "CA",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.name = "Foo Bar"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+12345678900"
+        configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        XCTAssertEqual(instantDebitsSection.name, "Foo Bar")
+        XCTAssertEqual(instantDebitsSection.defaultName, "Foo Bar")
+        XCTAssertEqual(instantDebitsSection.email, "foo@bar.com")
+        XCTAssertEqual(instantDebitsSection.defaultEmail, "foo@bar.com")
+        XCTAssertEqual(instantDebitsSection.phone, "+12345678900")
+        XCTAssertEqual(instantDebitsSection.defaultPhone, "+12345678900")
+        // Unlike the other fields, the `address` will not fallback to the default.
+        XCTAssertEqual(instantDebitsSection.address, PaymentSheet.Address())
+        XCTAssertEqual(instantDebitsSection.defaultAddress, defaultAddress)
+    }
+
+    func testMakeInstantDebits_customValues() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+
+        configuration.defaultBillingDetails.name = "Foo Bar"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+12345678900"
+        configuration.defaultBillingDetails.address = defaultAddress
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        instantDebitsSection.nameElement?.setText("Bar Foo")
+        instantDebitsSection.emailElement?.setText("bar@foo.com")
+        instantDebitsSection.phoneElement?.textFieldElement.setText("+10987654321")
+
+        instantDebitsSection.addressElement?.city?.setText(defaultAddress.city!)
+        instantDebitsSection.addressElement?.country.select(index: 0) // "US"
+        instantDebitsSection.addressElement?.line1?.setText(defaultAddress.line1!)
+        instantDebitsSection.addressElement?.line2?.setText(defaultAddress.line2!)
+        instantDebitsSection.addressElement?.postalCode?.setText(defaultAddress.postalCode!)
+        instantDebitsSection.addressElement?.state?.setRawData(defaultAddress.state!)
+
+        XCTAssertEqual(instantDebitsSection.name, "Bar Foo")
+        XCTAssertEqual(instantDebitsSection.defaultName, "Foo Bar")
+        XCTAssertEqual(instantDebitsSection.email, "bar@foo.com")
+        XCTAssertEqual(instantDebitsSection.defaultEmail, "foo@bar.com")
+        XCTAssertEqual(instantDebitsSection.phone, "+110987654321")
+        XCTAssertEqual(instantDebitsSection.defaultPhone, "+12345678900")
+        XCTAssertEqual(instantDebitsSection.address, defaultAddress)
+        XCTAssertEqual(instantDebitsSection.defaultAddress, defaultAddress)
+    }
+
+    func testMakeInstantDebits_enableCta_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        // Only email is required here.
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+        configuration.billingDetailsCollectionConfiguration.phone = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        // No email
+        XCTAssertFalse(instantDebitsSection.enableCTA)
+
+        // Set an invalid email
+        instantDebitsSection.emailElement?.setText("gibberish")
+        XCTAssertFalse(instantDebitsSection.enableCTA)
+
+        // Set a valid email
+        instantDebitsSection.emailElement?.setText("foo@bar.com")
+        XCTAssertTrue(instantDebitsSection.enableCTA)
+    }
+
+    func testMakeInstantDebits_enableCta_alwaysOrFull() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        // No fields set
+        XCTAssertFalse(instantDebitsSection.enableCTA)
+
+        // Set a name
+        instantDebitsSection.nameElement?.setText("Foo Bar")
+        XCTAssertFalse(instantDebitsSection.enableCTA)
+
+        // Set a valid email
+        instantDebitsSection.emailElement?.setText("foo@bar.com")
+        XCTAssertFalse(instantDebitsSection.enableCTA)
+
+        // Set a phone number
+        instantDebitsSection.phoneElement?.textFieldElement.setText("+12345678900")
+        XCTAssertFalse(instantDebitsSection.enableCTA)
+
+        // Set a valid address
+        instantDebitsSection.addressElement?.city?.setText(defaultAddress.city!)
+        instantDebitsSection.addressElement?.country.select(index: 0) // "US"
+        instantDebitsSection.addressElement?.line1?.setText(defaultAddress.line1!)
+        instantDebitsSection.addressElement?.postalCode?.setText(defaultAddress.postalCode!)
+        instantDebitsSection.addressElement?.state?.setRawData(defaultAddress.state!)
+
+        // CTA will now be enabled
+        XCTAssertTrue(instantDebitsSection.enableCTA)
+    }
+
+    func testMakeInstantDebits_enableCta_never() {
+        var noDefaultsConfiguration = PaymentSheet.Configuration()
+        noDefaultsConfiguration.billingDetailsCollectionConfiguration.name = .never
+        noDefaultsConfiguration.billingDetailsCollectionConfiguration.email = .never
+        noDefaultsConfiguration.billingDetailsCollectionConfiguration.phone = .never
+        noDefaultsConfiguration.billingDetailsCollectionConfiguration.address = .never
+        noDefaultsConfiguration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+
+        let noDefaultsFacotry = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(noDefaultsConfiguration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let noDefaultsInstantDebitsSection = noDefaultsFacotry.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        XCTAssertFalse(noDefaultsInstantDebitsSection.enableCTA)
+
+        var defaultEmailConfiguration = PaymentSheet.Configuration()
+        defaultEmailConfiguration.billingDetailsCollectionConfiguration.name = .never
+        defaultEmailConfiguration.billingDetailsCollectionConfiguration.email = .never
+        defaultEmailConfiguration.billingDetailsCollectionConfiguration.phone = .never
+        defaultEmailConfiguration.billingDetailsCollectionConfiguration.address = .never
+        defaultEmailConfiguration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        defaultEmailConfiguration.defaultBillingDetails.email = "foo@bar.com"
+
+        let defaultEmailFacotry = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(defaultEmailConfiguration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let defaultEmailInstantDebitsSection = defaultEmailFacotry.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        XCTAssertTrue(defaultEmailInstantDebitsSection.enableCTA)
+    }
+
     // MARK: - Previous Customer Input tests
 
     // Covers:
