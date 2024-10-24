@@ -66,27 +66,9 @@ final class LinkInstantDebitMandateView: UIView {
     }
 
     private func formattedLegalText() -> NSAttributedString {
-        let string = STPLocalizedString(
-            "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>.",
-            "Mandate text displayed when paying via Link instant debit."
-        )
+        let string = String.Localized.bank_continue_mandate_text
 
-        let formattedString = NSMutableAttributedString()
-
-        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) { string, matches in
-            formattedString.append(NSAttributedString(string: string))
-
-            for (tag, range) in matches {
-                guard range.rangeValue.location != NSNotFound else {
-                    assertionFailure("Tag '<\(tag)>' not found")
-                    continue
-                }
-
-                if let url = links[tag] {
-                    formattedString.addAttributes([.link: url], range: range.rangeValue)
-                }
-            }
-        }
+        let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(

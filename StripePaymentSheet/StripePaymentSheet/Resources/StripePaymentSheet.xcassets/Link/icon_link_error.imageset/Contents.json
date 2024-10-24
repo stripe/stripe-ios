@@ -1,10 +1,12 @@
 {
   "images" : [
     {
+      "filename" : "icon_link_error.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "icon_link_error@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

@@ -36,7 +36,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     var mandateString: NSMutableAttributedString? {
         var string: String?
         if linkedBank != nil {
-            string = USBankAccountPaymentMethodElement.ContinueMandateText
+            string = String.Localized.bank_continue_mandate_text
         } else {
             string = nil
         }
