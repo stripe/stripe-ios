@@ -43,11 +43,6 @@ stages:
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
-    - ui-tests-1: {}
-    - ui-tests-2: {}
-    - ui-tests-3: {}
-    - ui-tests-4: {}
-    - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
   stage-releases-run-all:
@@ -79,6 +74,11 @@ stages:
     - check-docs: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
+    - integration-all: {}
     - carthage-install-test: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
@@ -453,6 +453,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -632,6 +634,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -650,6 +654,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -668,6 +674,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -686,6 +694,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
