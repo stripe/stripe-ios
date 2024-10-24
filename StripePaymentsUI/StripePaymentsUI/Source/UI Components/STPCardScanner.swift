@@ -1,6 +1,6 @@
 //
 //  STPCardScanner.swift
-//  StripeiOS
+//  StripePaymentsUI
 //
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
@@ -10,7 +10,6 @@ import AVFoundation
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 import UIKit
 import Vision
 
@@ -20,7 +19,7 @@ enum STPCardScannerError: Int {
 }
 
 @available(macCatalyst 14.0, *)
-@objc protocol STPCardScannerDelegate: NSObjectProtocol {
+@objc public protocol STPCardScannerDelegate: NSObjectProtocol {
     @objc(cardScanner:didFinishWithCardParams:error:) func cardScanner(
         _ scanner: STPCardScanner,
         didFinishWith cardParams:
@@ -30,7 +29,7 @@ enum STPCardScannerError: Int {
 
 @available(macCatalyst 14.0, *)
 @objc(STPCardScanner_legacy)
-class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+public class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     static let cardScanningAvailableCameraHasUsageDescription = {
         return
@@ -38,7 +37,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             || Bundle.main.localizedInfoDictionary?["NSCameraUsageDescription"] != nil)
     }()
 
-    static var cardScanningAvailable: Bool {
+    public static var cardScanningAvailable: Bool {
         // Always allow in tests:
         if NSClassFromString("XCTest") != nil {
             return true
@@ -46,7 +45,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         return cardScanningAvailableCameraHasUsageDescription
     }
 
-    weak var cameraView: STPCameraView?
+    public weak var cameraView: STPCameraView?
 
     var feedbackGenerator: UINotificationFeedbackGenerator?
 
@@ -87,17 +86,17 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     }
 
-    override init() {
+    public override init() {
     }
 
-    init(delegate: STPCardScannerDelegate?) {
+    public init(delegate: STPCardScannerDelegate?) {
         super.init()
         self.delegate = delegate
         captureSessionQueue = DispatchQueue(label: "com.stripe.CardScanning.CaptureSessionQueue")
         deviceOrientation = UIDevice.current.orientation
     }
 
-    func start() {
+    public func start() {
         if isScanning {
             return
         }
@@ -127,7 +126,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         })
     }
 
-    func stop() {
+    public func stop() {
         stopWithError(nil)
     }
 
@@ -256,7 +255,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     // MARK: Processing
-    func captureOutput(
+    public func captureOutput(
         _ output: AVCaptureOutput,
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
@@ -483,6 +482,6 @@ let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 
 /// :nodoc:
 @available(macCatalyst 14.0, *)
-extension STPCardScanner: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPCardScanner"
+@_spi(STP) extension STPCardScanner: STPAnalyticsProtocol {
+    public static var stp_analyticsIdentifier = "STPCardScanner"
 }
