@@ -1699,7 +1699,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(instantDebitsSection.addressElement)
     }
 
-    func testMakeInstantDebits_defaultValues() {
+    func testMakeInstantDebits_defaultValues_attachDefaultsOff() {
         let defaultAddress = PaymentSheet.Address(
             city: "San Francisco",
             country: "CA",
@@ -1714,6 +1714,40 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.email = "foo@bar.com"
         configuration.defaultBillingDetails.phone = "+12345678900"
         configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = false
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentSheet(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+            return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
+        }
+
+        XCTAssertNil(instantDebitsSection.defaultName)
+        XCTAssertNil(instantDebitsSection.defaultEmail)
+        XCTAssertNil(instantDebitsSection.defaultPhone)
+        XCTAssertNil(instantDebitsSection.defaultAddress)
+    }
+
+    func testMakeInstantDebits_defaultValues_attachDefaultsOn() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "CA",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.name = "Foo Bar"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+12345678900"
+        configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -1751,6 +1785,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
 
         configuration.defaultBillingDetails.name = "Foo Bar"
         configuration.defaultBillingDetails.email = "foo@bar.com"
@@ -1876,6 +1911,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         noDefaultsConfiguration.billingDetailsCollectionConfiguration.email = .never
         noDefaultsConfiguration.billingDetailsCollectionConfiguration.phone = .never
         noDefaultsConfiguration.billingDetailsCollectionConfiguration.address = .never
+        noDefaultsConfiguration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
 
         let noDefaultsFacotry = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -1894,6 +1930,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         defaultEmailConfiguration.billingDetailsCollectionConfiguration.email = .never
         defaultEmailConfiguration.billingDetailsCollectionConfiguration.phone = .never
         defaultEmailConfiguration.billingDetailsCollectionConfiguration.address = .never
+        defaultEmailConfiguration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
         defaultEmailConfiguration.defaultBillingDetails.email = "foo@bar.com"
 
         let defaultEmailFacotry = PaymentSheetFormFactory(

@@ -459,6 +459,6 @@ extension STPPaymentMethodParams {
 extension PaymentElementConfiguration {
     var isEligibleForBankTab: Bool {
         billingDetailsCollectionConfiguration.email != .never ||
-        defaultBillingDetails.email?.isEmpty == false
+        (defaultBillingDetails.email?.isEmpty == false && billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod)
     }
 }

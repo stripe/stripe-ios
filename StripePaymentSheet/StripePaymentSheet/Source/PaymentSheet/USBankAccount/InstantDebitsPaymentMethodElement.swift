@@ -73,7 +73,8 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var defaultName: String? {
-        configuration.defaultBillingDetails.name
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
+        return configuration.defaultBillingDetails.name
     }
 
     var email: String? {
@@ -81,7 +82,8 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var defaultEmail: String? {
-        configuration.defaultBillingDetails.email
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
+        return configuration.defaultBillingDetails.email
     }
 
     var phone: String? {
@@ -89,7 +91,8 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var defaultPhone: String? {
-        configuration.defaultBillingDetails.phone
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
+        return configuration.defaultBillingDetails.phone
     }
 
     var address: PaymentSheet.Address {
@@ -104,7 +107,8 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var defaultAddress: PaymentSheet.Address? {
-        configuration.defaultBillingDetails.address
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
+        return configuration.defaultBillingDetails.address
     }
 
     var enableCTA: Bool {

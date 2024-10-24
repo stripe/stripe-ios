@@ -424,6 +424,25 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types, [.stripe(.card), .linkCardBrand])
     }
 
+    func testPaymentMethodTypesLinkCardBrand_noDefaults() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = false
+        configuration.defaultBillingDetails.email = nil
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(
+                intent: intent,
+                linkMode: .linkCardBrand,
+                linkFundingSources: [.card, .bankAccount]
+            ),
+            configuration: configuration
+        )
+        // This configuration should not show the bank tab.
+        XCTAssertEqual(types, [.stripe(.card)])
+    }
+
     // MARK: Other
 
     func testUnknownPMTypeIsUnsupported() {
