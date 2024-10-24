@@ -150,6 +150,9 @@ extension EmbeddedPaymentElement {
         /// - Note: This doesn't affect mandates displayed in the form sheet.
         public var embeddedViewDisplaysMandateText: Bool = true
 
+        /// Controls whether to filter out wallet payment methods from the saved payment method list.
+        @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
+
         /// Initializes a Configuration with default values
         public init(formSheetAction: FormSheetAction) {
             self.formSheetAction = formSheetAction
