@@ -594,6 +594,7 @@ extension PlaygroundController {
         addressViewController = nil
         paymentSheet = nil
         lastPaymentResult = nil
+        embeddedPlaygroundViewController?.isLoading = true
         isLoading = true
         let settingsToLoad = self.settings
 
@@ -729,7 +730,8 @@ extension PlaygroundController {
                     }
                 case .embedded:
                     guard !shouldUpdateEmbeddedInsteadOfRecreating else {
-                       // Update embedded rather than re-creating it
+                        // Update embedded rather than re-creating it
+                        self.embeddedPlaygroundViewController?.isLoading = false
                         self.updateEmbedded()
                         self.currentlyRenderedSettings = self.settings
                         return
@@ -827,7 +829,7 @@ extension PlaygroundController {
             else {
                 if let data = data,
                    (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(decoding: data, as: UTF8.self)
+                    let errorMessage = String(data: data, encoding: .utf8)!
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {

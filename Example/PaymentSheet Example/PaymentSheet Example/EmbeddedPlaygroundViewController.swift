@@ -10,6 +10,18 @@ import Foundation
 import UIKit
 
 class EmbeddedPlaygroundViewController: UIViewController {
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                view.bringSubviewToFront(loadingIndicator)
+                loadingIndicator.startAnimating()
+                view.isUserInteractionEnabled = false
+            } else {
+                loadingIndicator.stopAnimating()
+                view.isUserInteractionEnabled = true
+            }
+        }
+    }
     private let appearance: PaymentSheet.Appearance
 
     private let configuration: EmbeddedPaymentElement.Configuration
@@ -119,7 +131,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
-            checkoutButton.heightAnchor.constraint(equalToConstant: 45)
+            checkoutButton.heightAnchor.constraint(equalToConstant: 45),
         ])
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
@@ -226,7 +238,7 @@ private class EmbeddedPaymentOptionView: UIView {
             verticalStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
             verticalStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15),
             imageView.widthAnchor.constraint(equalToConstant: 25),
-            imageView.heightAnchor.constraint(equalToConstant: 25)
+            imageView.heightAnchor.constraint(equalToConstant: 25),
         ])
     }
 
