@@ -35,7 +35,7 @@ class AccountManagementViewControllerTests: XCTestCase {
         }
 
         vc.delegate = delegate
-        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         await fulfillment(of: [expectationDidFail], timeout: TestHelpers.defaultTimeout)
     }
 
@@ -50,9 +50,9 @@ class AccountManagementViewControllerTests: XCTestCase {
             }()
         )
 
-        try await vc.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
-                                                   json: "{}",
-                                                   expectedResponse: """
+        try await vc.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                            json: "{}",
+                                                            expectedResponse: """
             {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include"}}
             """)
     }

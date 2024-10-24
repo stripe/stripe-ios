@@ -311,7 +311,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_azupay",
             "external_bank_pay",
             "external_benefit",
-            "external_billie",
             "external_bitcash",
             "external_bizum",
             "external_catch",
@@ -327,12 +326,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_iwocapay",
             "external_kbc",
             "external_knet",
-            "external_kriya",
             "external_laybuy",
             "external_line_pay",
             "external_merpay",
             "external_momo",
-            "external_mondu",
             "external_net_cash",
             "external_nexi_pay",
             "external_octopus",
@@ -351,9 +348,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_postfinance",
             "external_rakuten_pay",
             "external_samsung_pay",
-            "external_satispay",
             "external_scalapay",
-            "external_sequra",
             "external_sezzle",
             "external_shopback_paylater",
             "external_softbank_carrier_payment",
@@ -423,6 +418,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case `continue`
     }
 
+    enum CardBrandAcceptance: String, PickerEnum {
+        static let enumName: String = "cardBrandAcceptance"
+        case all
+        case blockAmEx
+        case allowVisa
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -465,6 +467,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectAddress: BillingDetailsAddress
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
+    var cardBrandAcceptance: CardBrandAcceptance
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -506,7 +509,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectPhone: .automatic,
             collectAddress: .automatic,
             formSheetAction: .confirm,
-            embeddedViewDisplaysMandateText: .on)
+            embeddedViewDisplaysMandateText: .on,
+            cardBrandAcceptance: .all)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

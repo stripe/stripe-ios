@@ -17,7 +17,7 @@ class SimpleMandateTextView: UIView {
     let textView: UITextView = UITextView()
     var attributedText: NSAttributedString? {
         get {
-            textView.attributedText
+            textView.attributedText.string.isEmpty ? nil : textView.attributedText
         }
         set {
             textView.attributedText = newValue

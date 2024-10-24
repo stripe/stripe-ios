@@ -61,8 +61,8 @@ extension PaymentSheet.SavePaymentMethodOptInBehavior {
 }
 
 extension PaymentSheet.Appearance {
-    var analyticPayload: [String: Bool] {
-        var payload = [String: Bool]()
+    var analyticPayload: [String: Any] {
+        var payload = [String: Any]()
         payload["corner_radius"] = cornerRadius != PaymentSheet.Appearance.default.cornerRadius
         payload["border_width"] = borderWidth != PaymentSheet.Appearance.default.borderWidth
         payload["shadow"] = shadow != PaymentSheet.Appearance.default.shadow
@@ -70,9 +70,36 @@ extension PaymentSheet.Appearance {
         payload["colors"] = colors != PaymentSheet.Appearance.default.colors
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
         // Convenience payload item to make querying high level appearance usage easier
-        payload["usage"] = payload.values.contains(true)
-
+        payload["usage"] = payload.values.contains(where: { value in
+            if let boolValue = value as? Bool {
+                return boolValue == true
+            }
+            return false
+        })
+        payload["embedded_payment_element"] = embeddedPaymentElement.analyticPayload
         return payload
+    }
+}
+
+extension PaymentSheet.Appearance.EmbeddedPaymentElement {
+    static let `default` = PaymentSheet.Appearance.EmbeddedPaymentElement()
+
+    var analyticPayload: [String: Any] {
+        var payload = [String: Any]()
+        payload["style"] = style != PaymentSheet.Appearance.EmbeddedPaymentElement.default.style
+        payload["row"] = row != PaymentSheet.Appearance.EmbeddedPaymentElement.default.row
+        return payload
+    }
+}
+
+extension EmbeddedPaymentElement.Configuration.FormSheetAction {
+    var analyticValue: String {
+        switch self {
+        case .confirm:
+            return "confirm"
+        case .`continue`:
+            return "continue"
+        }
     }
 }
 

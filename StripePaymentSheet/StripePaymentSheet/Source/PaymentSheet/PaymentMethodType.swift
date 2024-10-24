@@ -170,11 +170,13 @@ extension PaymentSheet {
             // - US Bank Account is *not* an available payment method.
             // - Not a deferred intent flow.
             // - Link Funding Sources contains Bank Account.
+            // - We collect an email, or a default non-empty email has been provided.
             var eligibleForInstantDebits: Bool {
                 elementsSession.orderedPaymentMethodTypes.contains(.link) &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
                 !intent.isDeferredIntent &&
-                elementsSession.linkFundingSources?.contains(.bankAccount) == true
+                elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
+                configuration.isEligibleForBankTab
             }
 
             // We should manually add Link Card Brand as a payment method when:
@@ -182,11 +184,13 @@ extension PaymentSheet {
             // - US Bank Account is *not* an available payment method.
             // - Not a deferred intent flow.
             // - Link Card Brand is the Link Mode
+            // - We collect an email, or a default non-empty email has been provided.
             var eligibleForLinkCardBrand: Bool {
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
                 !intent.isDeferredIntent &&
-                elementsSession.linkSettings?.linkMode == .linkCardBrand
+                elementsSession.linkSettings?.linkMode == .linkCardBrand &&
+                configuration.isEligibleForBankTab
             }
 
             if eligibleForInstantDebits {
@@ -445,9 +449,16 @@ extension STPPaymentMethodParams {
             assertionFailure()
             return rawTypeString ?? ""
         case .card:
-            return "••••\(card?.last4 ?? "")"
+            return "•••• \(card?.last4 ?? "")"
         default:
             return label
         }
+    }
+}
+
+extension PaymentElementConfiguration {
+    var isEligibleForBankTab: Bool {
+        billingDetailsCollectionConfiguration.email != .never ||
+        (defaultBillingDetails.email?.isEmpty == false && billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod)
     }
 }

@@ -25,7 +25,7 @@ public class CustomerSheet {
         case customerAdapter
         case customerSession
     }
-    
+
     internal enum InternalError: Error {
         case expectedSetupIntent
         case invalidStateOnConfirmation
@@ -34,7 +34,7 @@ public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
-    
+
     private var initEvent: STPAnalyticEvent {
         switch self.integrationType {
         case .customerAdapter:
@@ -316,7 +316,10 @@ extension CustomerSheet {
             case .applePay:
                 return .applePay()
             case .stripeId(let paymentMethodId):
-                let paymentMethods = elementsSession.customer?.paymentMethods ?? []
+                let paymentMethods = elementsSession.customer?.paymentMethods.filter({ paymentMethod in
+                    guard let card = paymentMethod.card else { return true }
+                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
+                }) ?? []
                 guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                     return nil
                 }

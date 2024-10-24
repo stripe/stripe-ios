@@ -207,9 +207,25 @@ extension PaymentMethodFormViewController {
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement? { form as? USBankAccountPaymentMethodElement }
     private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? { form as? InstantDebitsPaymentMethodElement }
 
-    private var elementsSessionContext: ElementsSessionContext? {
+    private var elementsSessionContext: ElementsSessionContext {
+        let intentId: ElementsSessionContext.IntentID? = {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                return .payment(paymentIntent.stripeId)
+            case .setupIntent(let setupIntent):
+                return .setup(setupIntent.stripeID)
+            case .deferredIntent:
+                return nil
+            }
+        }()
+
         let linkMode = elementsSession.linkSettings?.linkMode
-        return ElementsSessionContext(linkMode: linkMode)
+        return ElementsSessionContext(
+            amount: intent.amount,
+            currency: intent.currency,
+            intentId: intentId,
+            linkMode: linkMode
+        )
     }
 
     private var shouldOverridePrimaryButton: Bool {

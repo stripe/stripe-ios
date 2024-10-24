@@ -32,7 +32,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             delegate: self
         )
         // ...the current selection should be the saved PM
-        let savedPMButton = sut.getRowButton(accessibilityIdentifier: "••••4242")
+        let savedPMButton = sut.getRowButton(accessibilityIdentifier: "•••• 4242")
         XCTAssertEqual(sut.currentSelection, .saved(paymentMethod: savedPaymentMethod))
         XCTAssertTrue(savedPMButton.isSelected)
 

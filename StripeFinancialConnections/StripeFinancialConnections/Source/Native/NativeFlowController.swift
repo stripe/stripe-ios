@@ -1315,7 +1315,8 @@ private func CreatePaneViewController(
             analyticsClient: dataManager.analyticsClient,
             clientSecret: dataManager.clientSecret,
             returnURL: dataManager.returnURL,
-            apiClient: dataManager.apiClient
+            apiClient: dataManager.apiClient,
+            elementsSessionContext: dataManager.elementsSessionContext
         )
         let linkLoginViewController = LinkLoginViewController(dataSource: linkLoginDataSource)
         linkLoginViewController.delegate = nativeFlowController

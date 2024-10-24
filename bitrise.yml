@@ -43,11 +43,6 @@ stages:
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
-    - ui-tests-1: {}
-    - ui-tests-2: {}
-    - ui-tests-3: {}
-    - ui-tests-4: {}
-    - integration-all: {}
     - deploy-dry-run: {}
     - lokalise-upload: {}
   stage-releases-run-all:
@@ -79,6 +74,11 @@ stages:
     - check-docs: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
+    - ui-tests-1: {}
+    - ui-tests-2: {}
+    - ui-tests-3: {}
+    - ui-tests-4: {}
+    - integration-all: {}
     - carthage-install-test: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
@@ -202,6 +202,17 @@ workflows:
         inputs:
           - event_description: iOS E2E tests failing! $BITRISE_BUILD_URL.
           - integration_key: $AUX_PAGERDUTY_INTEGRATION_KEY
+    - slack@3:
+        is_always_run: true
+        run_if: .IsBuildFailed
+        inputs:
+        - webhook_url: $WEBHOOK_SLACK_CUX_BOTS
+        - webhook_url_on_error: $WEBHOOK_SLACK_CUX_BOTS
+    - slack@3:
+        is_always_run: true
+        inputs:
+        - webhook_url: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
+        - webhook_url_on_error: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
     - slack@3:
         is_always_run: true
         run_if: .IsBuildFailed
@@ -442,6 +453,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -621,6 +634,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -639,6 +654,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -657,6 +674,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -675,6 +694,8 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
+    after_run:
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x

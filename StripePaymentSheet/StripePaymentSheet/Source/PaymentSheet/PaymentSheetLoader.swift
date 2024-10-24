@@ -16,6 +16,8 @@ final class PaymentSheetLoader {
         let intent: Intent
         let elementsSession: STPElementsSession
         let savedPaymentMethods: [STPPaymentMethod]
+        /// The payment method types that should be shown (i.e. filtered)
+        let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     }
 
     enum IntegrationShape {
@@ -116,7 +118,12 @@ final class PaymentSheetLoader {
                     showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
                     showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false
                 )
-                let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: false)
+                let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+
+                // Ensure that there's at least 1 payment method type available for the intent and configuration.
+                guard !paymentMethodTypes.isEmpty else {
+                    throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
+                }
                 analyticsHelper.logLoadSucceeded(
                     intent: intent,
                     elementsSession: elementsSession,
@@ -131,7 +138,8 @@ final class PaymentSheetLoader {
                 let loadResult = LoadResult(
                     intent: intent,
                     elementsSession: elementsSession,
-                    savedPaymentMethods: filteredSavedPaymentMethods
+                    savedPaymentMethods: filteredSavedPaymentMethods,
+                    paymentMethodTypes: paymentMethodTypes
                 )
                 completion(.success(loadResult))
             } catch {
@@ -169,14 +177,12 @@ final class PaymentSheetLoader {
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async {
         await withCheckedContinuation { continuation in
-            Task {
-                AddressSpecProvider.shared.loadAddressSpecs {
-                    // Load form specs
-                    FormSpecProvider.shared.load { _ in
-                        // Load BSB data
-                        BSBNumberProvider.shared.loadBSBData {
-                            continuation.resume()
-                        }
+            AddressSpecProvider.shared.loadAddressSpecs {
+                // Load form specs
+                FormSpecProvider.shared.load { _ in
+                    // Load BSB data
+                    BSBNumberProvider.shared.loadBSBData {
+                        continuation.resume()
                     }
                 }
             }
@@ -220,7 +226,12 @@ final class PaymentSheetLoader {
     static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
         let intent: Intent
         let elementsSession: STPElementsSession
-        let clientDefaultPaymentMethod = defaultStripePaymentMethodId(forCustomerID: configuration.customer?.id)
+        let clientDefaultPaymentMethod: String? = {
+            guard let customer = configuration.customer else {
+                return nil
+            }
+            return defaultStripePaymentMethodId(forCustomerID: customer.id)
+        }()
 
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):
@@ -273,11 +284,7 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
         }
-        // Ensure that there's at least 1 payment method type available for the intent and configuration.
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
-        guard !paymentMethodTypes.isEmpty else {
-            throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
-        }
+
         // Warn the merchant if we see unactivated payment method types in the Intent
         if !elementsSession.unactivatedPaymentMethodTypes.isEmpty {
             let message = """
@@ -318,7 +325,11 @@ final class PaymentSheetLoader {
             }
         }
 
-        return savedPaymentMethods
+        // Hide any saved cards whose brands are not allowed
+        return savedPaymentMethods.filter {
+            guard let cardBrand = $0.card?.preferredDisplayBrand else { return true }
+            return configuration.cardBrandFilter.isAccepted(cardBrand: cardBrand)
+        }
     }
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
