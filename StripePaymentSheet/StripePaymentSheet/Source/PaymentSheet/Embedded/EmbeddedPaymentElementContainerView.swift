@@ -76,8 +76,6 @@ class EmbeddedPaymentElementContainerView: UIView {
             if heightWillChange {
                 oldContentView.alpha = 0
                 embeddedPaymentMethodsView.alpha = 1
-            }
-            if heightWillChange {
                 // Invoke EmbeddedPaymentElement delegate method so that height of our superview does not jump
                 self.needsUpdateSuperviewHeight()
             }
