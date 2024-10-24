@@ -11,6 +11,7 @@ import Foundation
 protocol LinkLoginDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var email: String? { get }
 
     func synchronize() -> Future<FinancialConnectionsLinkLoginPane>
     func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse>
@@ -29,6 +30,10 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    
+    var email: String? {
+        elementsSessionContext?.email
+    }
 
     private let clientSecret: String
     private let returnURL: String?

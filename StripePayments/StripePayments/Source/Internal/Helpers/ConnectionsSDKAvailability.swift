@@ -33,7 +33,7 @@ import UIKit
         return FinancialConnectionsSDKClass != nil
     }
 
-    static func financialConnections() -> FinancialConnectionsSDKInterface? {
+    @_spi(STP) public static func financialConnections() -> FinancialConnectionsSDKInterface? {
         if isUnitOrUITest {
             return StubbedConnectionsSDKInterface()
         }

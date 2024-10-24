@@ -126,10 +126,34 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
-        presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
-        defer {
-            bottomSheetViewController.dismiss(animated: true)
+        guard FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable else {
+            return try await presentViaFallback(from: presentingViewController)
         }
+        
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            payWithLinkContinuation = continuation
+            
+            let completionHandler: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, _, error in
+                guard let result else {
+                    self.paymentMethodId = nil
+                    self.payWithLinkContinuation?.resume(throwing: Error.canceled)
+                    return
+                }
+                
+                self.handleFinancialConnectionsResult(result)
+            }
+            
+            presentBankAccountCollection(
+                from: presentingViewController,
+                completionHandler: completionHandler
+            )
+        }
+    }
+    
+    @MainActor
+    private func presentViaFallback(from presentingViewController: UIViewController) async throws {
+        var linkAccountSessionClientSecret: String? = nil
+        
         let manifest: Manifest = try await withCheckedThrowingContinuation { [self] continuation in
             let apiClient = self.configuration.apiClient
             let parameters: [String: Any] = [
@@ -149,6 +173,7 @@ import UIKit
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
                                                    linkMode: nil,
                                                    additionalParameters: parameters) { [weak self] linkAccountSession, error in
+                    linkAccountSessionClientSecret = linkAccountSession?.clientSecret
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .setupIntentClientSecret(let clientSecret):
@@ -163,6 +188,7 @@ import UIKit
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
                                                    linkMode: nil,
                                                    additionalParameters: parameters) { [weak self] linkAccountSession, error in
+                    linkAccountSessionClientSecret = linkAccountSession?.clientSecret
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .deferredIntent(let intentConfiguration):
@@ -185,6 +211,7 @@ import UIKit
                         linkMode: nil,
                         additionalParameters: ["product": "instant_debits"]
                     ) { [weak self] linkAccountSession, error in
+                        linkAccountSessionClientSecret = linkAccountSession?.clientSecret
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
             }
@@ -213,6 +240,92 @@ import UIKit
                     }
                     self.payWithLinkContinuation = nil
                 }
+        }
+    }
+    
+    private func presentBankAccountCollection(
+        from presentingViewController: UIViewController,
+        completionHandler: @escaping (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void
+    ) {
+        let bankAccountCollector = STPBankAccountCollector()
+        
+        let additionalParameters: [String: Any] = [
+            "product": "instant_debits",
+        ]
+        
+        let params = STPCollectBankAccountParams.collectInstantDebitsParams(
+            email: configuration.defaultBillingDetails.email
+        )
+        
+        let elementsSessionContext = ElementsSessionContext(
+            email: configuration.defaultBillingDetails.email
+        )
+        
+        switch mode {
+        case .paymentIntentClientSecret(let string):
+            bankAccountCollector.collectBankAccountForPayment(
+                clientSecret: string,
+                returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                onEvent: nil,
+                params: params,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        case .setupIntentClientSecret(let string):
+            bankAccountCollector.collectBankAccountForSetup(
+                clientSecret: string,
+                returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                onEvent: nil,
+                params: params,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        case .deferredIntent(let intentConfiguration):
+            let amount: Int?
+            let currency: String?
+            switch intentConfiguration.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            bankAccountCollector.collectBankAccountForDeferredIntent(
+                sessionId: "ios_instant_debits_only_\(UUID().uuidString)",
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: nil,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        }
+    }
+    
+    private func handleFinancialConnectionsResult(_ result: FinancialConnectionsSDKResult) {
+        switch result {
+        case .completed(let result):
+            if case let .instantDebits(linkedBank) = result {
+                self.paymentMethodId = linkedBank.paymentMethodId
+                self.payWithLinkContinuation?.resume(returning: ())
+            } else {
+                self.paymentMethodId = nil
+                self.payWithLinkContinuation?.resume(throwing: Error.canceled)
+            }
+        case .failed(let error):
+            self.paymentMethodId = nil
+            self.payWithLinkContinuation?.resume(throwing: error)
+        case .cancelled:
+            self.paymentMethodId = nil
+            self.payWithLinkContinuation?.resume(throwing: Error.canceled)
         }
     }
 
@@ -363,5 +476,15 @@ extension LinkPaymentController: LoadingViewControllerDelegate {
         paymentMethodId = nil
         payWithLinkContinuation?.resume(throwing: Error.canceled)
         payWithLinkContinuation = nil
+    }
+}
+
+private extension NSError {
+    var isFinancialConnectionsAvailabilityError: Bool {
+        guard let stripeMessage = userInfo[STPError.errorMessageKey] as? String else {
+            return false
+        }
+        
+        return stripeMessage == "StripeFinancialConnections SDK has not been linked into your project"
     }
 }
