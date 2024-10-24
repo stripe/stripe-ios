@@ -118,7 +118,7 @@ final class LinkLoginViewController: UIViewController {
         paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif
 
-        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
+        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.email
         if let emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(emailAddress)
         } else {

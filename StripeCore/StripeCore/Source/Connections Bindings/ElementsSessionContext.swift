@@ -16,17 +16,20 @@ import Foundation
 
     @_spi(STP) public let amount: Int?
     @_spi(STP) public let currency: String?
+    @_spi(STP) public let email: String?
     @_spi(STP) public let intentId: IntentID?
     @_spi(STP) public let linkMode: LinkMode?
 
     @_spi(STP) public init(
         amount: Int?,
         currency: String?,
+        email: String?,
         intentId: IntentID?,
         linkMode: LinkMode?
     ) {
         self.amount = amount
         self.currency = currency
+        self.email = email
         self.intentId = intentId
         self.linkMode = linkMode
     }
