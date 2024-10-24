@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct STPDeviceUtils {
-    static var deviceType: String? {
+@_spi(STP) public struct STPDeviceUtils {
+    @_spi(STP) public static var deviceType: String? {
         var systemInfo: utsname = utsname()
         uname(&systemInfo)
         let machineMirror = Mirror(reflecting: systemInfo.machine)
