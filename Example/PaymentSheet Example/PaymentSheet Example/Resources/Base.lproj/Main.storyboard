@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1910,8 +1910,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-dc-2Dj">
-                                <rect key="frame" x="20" y="112" width="374" height="638.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-dc-2Dj">
+                                <rect key="frame" x="20" y="112" width="374" height="708.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="tav-0l-Zgd">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="26.5"/>
@@ -2221,14 +2221,21 @@
                                             <constraint firstItem="zc8-iL-Pqg" firstAttribute="centerY" secondItem="TP7-AP-s3P" secondAttribute="centerY" id="vIG-d1-q3Y"/>
                                         </constraints>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xbE-Qk-m0J" userLabel="Padding">
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u9v-JL-er0" userLabel="Padding">
                                         <rect key="frame" x="0.0" y="578.5" width="374" height="20"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="20" id="S6u-nJ-nC1"/>
+                                            <constraint firstAttribute="height" constant="20" id="2JM-jS-isr"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5wc-Gb-x36" userLabel="Buy Button">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="UkM-KF-waD" userLabel="Mandate text view">
                                         <rect key="frame" x="0.0" y="588.5" width="374" height="50"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <color key="textColor" systemColor="labelColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5wc-Gb-x36" userLabel="Buy Button">
+                                        <rect key="frame" x="0.0" y="658.5" width="374" height="50"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9bN-BK-U2p">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
@@ -2272,6 +2279,7 @@
                         <outlet property="buyButton" destination="9bN-BK-U2p" id="MD2-TL-5hm"/>
                         <outlet property="hotDogQuantityLabel" destination="5J3-N0-Zkw" id="KnP-wB-pbw"/>
                         <outlet property="hotDogStepper" destination="AYu-UN-XN4" id="zSa-0G-Afu"/>
+                        <outlet property="mandateTextView" destination="UkM-KF-waD" id="bdz-RU-XEX"/>
                         <outlet property="paymentMethodButton" destination="nlp-85-U0M" id="Al7-8f-EbZ"/>
                         <outlet property="paymentMethodImage" destination="6tV-xJ-AaB" id="2nV-ai-y4i"/>
                         <outlet property="saladQuantityLabel" destination="iOI-dl-OSA" id="mRq-hY-CBY"/>
@@ -2284,13 +2292,16 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wUC-BD-90v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="161" y="-514"/>
+            <point key="canvasLocation" x="160.86956521739131" y="-514.28571428571422"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="vLD-y3-kCJ"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
