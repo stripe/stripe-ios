@@ -10,6 +10,7 @@ import Foundation
 
 protocol LinkLoginDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
+    var elementsSessionContext: ElementsSessionContext? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func synchronize() -> Future<FinancialConnectionsLinkLoginPane>
@@ -28,12 +29,12 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     private static let deallocatedError = FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated")
 
     let manifest: FinancialConnectionsSessionManifest
+    let elementsSessionContext: ElementsSessionContext?
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
     private let clientSecret: String
     private let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
-    private let elementsSessionContext: ElementsSessionContext?
 
     init(
         manifest: FinancialConnectionsSessionManifest,
