@@ -97,6 +97,13 @@ final class LinkSignupFormView: UIView {
         emailTextField.text = emailAddress
     }
 
+    func prefillPhoneNumber(_ phoneNumber: String?) {
+        guard let phoneNumber, !phoneNumber.isEmpty else {
+            return
+        }
+        phoneTextField.text = phoneNumber
+    }
+
     func beginEditingEmailAddressField() {
         _ = emailTextField.becomeFirstResponder()
     }

@@ -17,6 +17,7 @@ import Foundation
     @_spi(STP) public let amount: Int?
     @_spi(STP) public let currency: String?
     @_spi(STP) public let email: String?
+    @_spi(STP) public let phoneNumber: String?
     @_spi(STP) public let intentId: IntentID?
     @_spi(STP) public let linkMode: LinkMode?
 
@@ -24,12 +25,14 @@ import Foundation
         amount: Int?,
         currency: String?,
         email: String?,
+        phoneNumber: String?,
         intentId: IntentID?,
         linkMode: LinkMode?
     ) {
         self.amount = amount
         self.currency = currency
         self.email = email
+        self.phoneNumber = phoneNumber
         self.intentId = intentId
         self.linkMode = linkMode
     }

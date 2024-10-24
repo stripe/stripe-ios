@@ -121,6 +121,9 @@ final class LinkLoginViewController: UIViewController {
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.email
         if let emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(emailAddress)
+
+            let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.phoneNumber
+            formView.prefillPhoneNumber(phoneNumber)
         } else {
             // Slightly delay opening the keyboard to avoid a janky animation.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
