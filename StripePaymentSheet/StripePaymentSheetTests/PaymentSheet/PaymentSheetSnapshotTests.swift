@@ -1113,6 +1113,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
             }
             config.appearance = appearance
+            config.paymentMethodLayout = .horizontal
 
             if !applePayEnabled {
                 config.applePay = nil
