@@ -16,9 +16,6 @@
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bank Account";
 
-/* Title for billing address entry section */
-"Billing Address" = "Billing Address";
-
 /* Billing address section title for card form entry. */
 "Billing address" = "Billing address";
 

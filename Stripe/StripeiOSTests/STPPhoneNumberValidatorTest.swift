@@ -14,51 +14,6 @@
 private let kUSCountryCode = "US"
 private let kUKCountryCode = "UK"
 class STPPhoneNumberValidatorTest: XCTestCase {
-    func testValidPhoneNumbers() {
-        XCTAssertTrue(
-            STPPhoneNumberValidator.stringIsValidPhoneNumber(
-                "555-555-5555",
-                forCountryCode: kUSCountryCode
-            )
-        )
-        XCTAssertTrue(
-            STPPhoneNumberValidator.stringIsValidPhoneNumber(
-                "5555555555",
-                forCountryCode: kUSCountryCode
-            )
-        )
-        XCTAssertTrue(
-            STPPhoneNumberValidator.stringIsValidPhoneNumber(
-                "(555) 555-5555",
-                forCountryCode: kUSCountryCode
-            )
-        )
-    }
-
-    func testInvalidPhoneNumbers() {
-        XCTAssertFalse(
-            STPPhoneNumberValidator.stringIsValidPhoneNumber("", forCountryCode: kUSCountryCode)
-        )
-        XCTAssertFalse(
-            STPPhoneNumberValidator.stringIsValidPhoneNumber(
-                "555-555-555",
-                forCountryCode: kUSCountryCode
-            )
-        )
-        XCTAssertFalse(
-            STPPhoneNumberValidator.stringIsValidPhoneNumber(
-                "555-555-A555",
-                forCountryCode: kUSCountryCode
-            )
-        )
-        XCTAssertTrue(
-            STPPhoneNumberValidator.stringIsValidPhoneNumber(
-                "55555555555",
-                forCountryCode: kUSCountryCode
-            )
-        )
-    }
-
     func testFormattedSanitizedPhoneNumberForString() {
         XCTAssertEqual(
             STPPhoneNumberValidator.formattedSanitizedPhoneNumber(

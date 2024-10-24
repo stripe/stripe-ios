@@ -15,8 +15,6 @@
 import UIKit
 
 class PaymentMethodMessagingViewController: UIViewController {
-    var theme = STPTheme.defaultTheme
-
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "PaymentMethodMessagingView Demo"
