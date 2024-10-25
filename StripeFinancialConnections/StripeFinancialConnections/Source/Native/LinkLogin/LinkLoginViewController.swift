@@ -118,11 +118,11 @@ final class LinkLoginViewController: UIViewController {
         paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif
 
-        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.email
+        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
         if let emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(emailAddress)
 
-            let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.phoneNumber
+            let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.prefillDetails?.phoneNumber
             formView.prefillPhoneNumber(phoneNumber)
         } else {
             // Slightly delay opening the keyboard to avoid a janky animation.
