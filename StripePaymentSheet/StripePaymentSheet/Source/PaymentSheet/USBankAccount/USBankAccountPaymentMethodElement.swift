@@ -48,7 +48,6 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         "terms": URL(string: "https://stripe.com/legal/ach-payments/authorization")!,
     ]
 
-    static let ContinueMandateText: String = STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
     static let SaveAccountMandateText: String = STPLocalizedString("By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@).")
     static let MicrodepositCopy: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
     static let MicrodepositCopy_CustomerSheet: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@.", "Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name")
@@ -171,7 +170,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             return nil
         }
 
-        var mandateText = isSaving ? String(format: Self.SaveAccountMandateText, merchantName) : Self.ContinueMandateText
+        var mandateText = isSaving ? String(format: Self.SaveAccountMandateText, merchantName) : String.Localized.bank_continue_mandate_text
         if case .customerSheet = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy_CustomerSheet, merchantName) + "\n" + mandateText
         } else if case .paymentSheet = configuration, !linkedBank.instantlyVerified {
@@ -183,7 +182,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     }
 
     static func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsAppearance) -> NSMutableAttributedString {
-        let mandateText = Self.ContinueMandateText
+        let mandateText = String.Localized.bank_continue_mandate_text
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, alignment: alignment, theme: theme)
         return formattedString
