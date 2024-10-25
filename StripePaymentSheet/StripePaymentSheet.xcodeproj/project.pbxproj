@@ -57,6 +57,22 @@
 		31699A832BE183D40048677F /* DownloadManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31699A822BE183D40048677F /* DownloadManagerTest.swift */; };
 		316B33122B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */; };
 		31AD3BE72B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */; };
+		31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */; };
+		31CC9B7D2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */; };
+		31CC9B7E2CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B722CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift */; };
+		31CC9B7F2CB5F69600E84A38 /* LinkPopupURLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B742CB5F69600E84A38 /* LinkPopupURLParserTests.swift */; };
+		31CC9B802CB5F69600E84A38 /* LinkToastSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B752CB5F69600E84A38 /* LinkToastSnapshotTests.swift */; };
+		31CC9B812CB5F69600E84A38 /* LinkInstantDebitMandateViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B702CB5F69600E84A38 /* LinkInstantDebitMandateViewSnapshotTests.swift */; };
+		31CC9B822CB5F69600E84A38 /* LinkURLGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B762CB5F69600E84A38 /* LinkURLGeneratorTests.swift */; };
+		31CC9B852CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */; };
+		31CC9B972CB5F74A00E84A38 /* LinkNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B882CB5F74A00E84A38 /* LinkNavigationBar.swift */; };
+		31CC9B982CB5F74A00E84A38 /* LinkNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B8A2CB5F74A00E84A38 /* LinkNoticeView.swift */; };
+		31CC9B9A2CB5F74A00E84A38 /* LinkToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B932CB5F74A00E84A38 /* LinkToast.swift */; };
+		31CC9B9C2CB5F74A00E84A38 /* LinkBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B862CB5F74A00E84A38 /* LinkBadgeView.swift */; };
+		31CC9BA12CB5F93100E84A38 /* Button+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA02CB5F93100E84A38 /* Button+Link.swift */; };
+		31CC9BA42CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA32CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift */; };
+		31CC9BA52CB5F9D400E84A38 /* LinkInstantDebitMandateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA22CB5F9D400E84A38 /* LinkInstantDebitMandateView.swift */; };
+		31CC9BA72CB610A300E84A38 /* ConfirmButton+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA62CB610A300E84A38 /* ConfirmButton+Link.swift */; };
 		31CDFC362BA8E66200B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */; };
 		335A19D93A5979557DB4CA4D /* PaymentMethodElementWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5012364ED0F2EEC6EC2AB52 /* PaymentMethodElementWrapper.swift */; };
 		34CF08CBC636F596B8BA4C12 /* TextFieldElement+CardTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00C7F5905759525C9BF8BD4 /* TextFieldElement+CardTest.swift */; };
@@ -418,6 +434,22 @@
 		31699A822BE183D40048677F /* DownloadManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerTest.swift; sourceTree = "<group>"; };
 		316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StripePaymentSheetTest.swift"; sourceTree = "<group>"; };
 		31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIApplication+StripePaymentSheet.swift"; path = "StripePaymentSheet/Source/Categories/UIApplication+StripePaymentSheet.swift"; sourceTree = "<group>"; };
+		31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLinkSnapshotTests.swift; sourceTree = "<group>"; };
+		31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeViewSnapshotTest.swift; sourceTree = "<group>"; };
+		31CC9B702CB5F69600E84A38 /* LinkInstantDebitMandateViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInstantDebitMandateViewSnapshotTests.swift; sourceTree = "<group>"; };
+		31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNavigationBarSnapshotTests.swift; sourceTree = "<group>"; };
+		31CC9B722CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNoticeViewSnapshotTests.swift; sourceTree = "<group>"; };
+		31CC9B742CB5F69600E84A38 /* LinkPopupURLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPopupURLParserTests.swift; sourceTree = "<group>"; };
+		31CC9B752CB5F69600E84A38 /* LinkToastSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToastSnapshotTests.swift; sourceTree = "<group>"; };
+		31CC9B762CB5F69600E84A38 /* LinkURLGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkURLGeneratorTests.swift; sourceTree = "<group>"; };
+		31CC9B862CB5F74A00E84A38 /* LinkBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeView.swift; sourceTree = "<group>"; };
+		31CC9B882CB5F74A00E84A38 /* LinkNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNavigationBar.swift; sourceTree = "<group>"; };
+		31CC9B8A2CB5F74A00E84A38 /* LinkNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNoticeView.swift; sourceTree = "<group>"; };
+		31CC9B932CB5F74A00E84A38 /* LinkToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToast.swift; sourceTree = "<group>"; };
+		31CC9BA02CB5F93100E84A38 /* Button+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Link.swift"; sourceTree = "<group>"; };
+		31CC9BA22CB5F9D400E84A38 /* LinkInstantDebitMandateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInstantDebitMandateView.swift; sourceTree = "<group>"; };
+		31CC9BA32CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkKeyboardAvoidingScrollView.swift; sourceTree = "<group>"; };
+		31CC9BA62CB610A300E84A38 /* ConfirmButton+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfirmButton+Link.swift"; sourceTree = "<group>"; };
 		31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		32332E0DB0AE12377EBDDEF1 /* PaymentSheetIntentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetIntentConfiguration.swift; sourceTree = "<group>"; };
 		32BDC53A88FB17F378C6B413 /* CardSectionWithScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSectionWithScannerView.swift; sourceTree = "<group>"; };
@@ -812,6 +844,49 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		31CC9B872CB5F74A00E84A38 /* Badge */ = {
+			isa = PBXGroup;
+			children = (
+				31CC9B862CB5F74A00E84A38 /* LinkBadgeView.swift */,
+			);
+			path = Badge;
+			sourceTree = "<group>";
+		};
+		31CC9B892CB5F74A00E84A38 /* NavigationBar */ = {
+			isa = PBXGroup;
+			children = (
+				31CC9B882CB5F74A00E84A38 /* LinkNavigationBar.swift */,
+			);
+			path = NavigationBar;
+			sourceTree = "<group>";
+		};
+		31CC9B8B2CB5F74A00E84A38 /* Notice */ = {
+			isa = PBXGroup;
+			children = (
+				31CC9B8A2CB5F74A00E84A38 /* LinkNoticeView.swift */,
+			);
+			path = Notice;
+			sourceTree = "<group>";
+		};
+		31CC9B942CB5F74A00E84A38 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				31CC9B932CB5F74A00E84A38 /* LinkToast.swift */,
+			);
+			path = Toast;
+			sourceTree = "<group>";
+		};
+		31CC9B952CB5F74A00E84A38 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				31CC9B872CB5F74A00E84A38 /* Badge */,
+				31CC9B892CB5F74A00E84A38 /* NavigationBar */,
+				31CC9B8B2CB5F74A00E84A38 /* Notice */,
+				31CC9B942CB5F74A00E84A38 /* Toast */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		35C0AFFBC393AF76586DAE4A /* Localizations */ = {
 			isa = PBXGroup;
 			children = (
@@ -1093,6 +1168,8 @@
 		843180340B5C7406A1117541 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				31CC9BA22CB5F9D400E84A38 /* LinkInstantDebitMandateView.swift */,
+				31CC9BA32CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift */,
 				13FB3274557B85BA4C9FA6C0 /* LinkLegalTermsView.swift */,
 				E5240ECFD40B8605939C4E09 /* LinkMoreInfoView.swift */,
 			);
@@ -1102,6 +1179,8 @@
 		86FB97D65ED6CB44B3E8B66C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				31CC9BA02CB5F93100E84A38 /* Button+Link.swift */,
+				31CC9BA62CB610A300E84A38 /* ConfirmButton+Link.swift */,
 				EFDE97D76542848E7821BA43 /* FormElement+Link.swift */,
 				04C8047FD8994D3FAA3D1A7A /* Intent+Link.swift */,
 				FD0EACE5F259BDE586A4A20C /* STPAnalyticsClient+Link.swift */,
@@ -1305,6 +1384,7 @@
 			isa = PBXGroup;
 			children = (
 				F8599012936F1A32FC191F06 /* ACH */,
+				31CC9B952CB5F74A00E84A38 /* Components */,
 				FD205A472E1B92651A0BB16F /* Controllers */,
 				E46EF43F3DC5F4348B844EE7 /* Elements */,
 				86FB97D65ED6CB44B3E8B66C /* Extensions */,
@@ -1525,6 +1605,14 @@
 		FCA28FF8CD5BA829A44CDCE7 /* Link */ = {
 			isa = PBXGroup;
 			children = (
+				31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */,
+				31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */,
+				31CC9B702CB5F69600E84A38 /* LinkInstantDebitMandateViewSnapshotTests.swift */,
+				31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */,
+				31CC9B722CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift */,
+				31CC9B742CB5F69600E84A38 /* LinkPopupURLParserTests.swift */,
+				31CC9B752CB5F69600E84A38 /* LinkToastSnapshotTests.swift */,
+				31CC9B762CB5F69600E84A38 /* LinkURLGeneratorTests.swift */,
 				22E4212F4A865B5AB5D72F99 /* LinkPopupURLParserTests.swift */,
 				9872CF28C8CA1D2C5499B8C5 /* LinkURLGeneratorTests.swift */,
 			);
@@ -1734,6 +1822,14 @@
 				B63B2CF12BF8313D003810F3 /* VerticalPaymentMethodListViewControllerTest.swift in Sources */,
 				61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */,
 				8180BC3615767F896E2F9355 /* AddressViewControllerSnapshotTests.swift in Sources */,
+				31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */,
+				31CC9B7D2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift in Sources */,
+				31CC9B7E2CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift in Sources */,
+				31CC9B7F2CB5F69600E84A38 /* LinkPopupURLParserTests.swift in Sources */,
+				31CC9B802CB5F69600E84A38 /* LinkToastSnapshotTests.swift in Sources */,
+				31CC9B812CB5F69600E84A38 /* LinkInstantDebitMandateViewSnapshotTests.swift in Sources */,
+				31CC9B822CB5F69600E84A38 /* LinkURLGeneratorTests.swift in Sources */,
+				31CC9B852CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift in Sources */,
 				B65FE7092BED33EA009A73FC /* VerticalPaymentMethodListViewControllerSnapshotTest.swift in Sources */,
 				37F750E1C99D6257E845A66E /* BacsDDMandateViewSnapshotTests.swift in Sources */,
 				694A3B36AC19FC1F87EF0CB1 /* CustomerSheetPaymentMethodAvailabilityTests.swift in Sources */,
@@ -1817,6 +1913,10 @@
 				06976DDC67A61176FC54AA76 /* Data+SHA256.swift in Sources */,
 				6180A5CB2C8249D2009D1536 /* UIStackView+Separator.swift in Sources */,
 				B63B2CF52BFBEEAD003810F3 /* PaymentMethodFormViewController.swift in Sources */,
+				31CC9B972CB5F74A00E84A38 /* LinkNavigationBar.swift in Sources */,
+				31CC9B982CB5F74A00E84A38 /* LinkNoticeView.swift in Sources */,
+				31CC9B9A2CB5F74A00E84A38 /* LinkToast.swift in Sources */,
+				31CC9B9C2CB5F74A00E84A38 /* LinkBadgeView.swift in Sources */,
 				108846A3D8EFD1D4DCC0DDBC /* NSAttributedString+Stripe.swift in Sources */,
 				B55EFA2557B5BE39CC12E357 /* STPPaymentMethod+PaymentSheet.swift in Sources */,
 				3CB64564D5B6F092A2A3A5BE /* STPPaymentMethodParams+PaymentSheet.swift in Sources */,
@@ -1847,6 +1947,7 @@
 				A4FF52567582E9774AE13348 /* PaymentDetails.swift in Sources */,
 				3E2279C28944A87EC6472101 /* STPAPIClient+Link.swift in Sources */,
 				B8A7575878C5124CF5482097 /* VerificationSession.swift in Sources */,
+				31CC9BA72CB610A300E84A38 /* ConfirmButton+Link.swift in Sources */,
 				9326393E775D29F8C661624B /* STPAPIClient+PaymentSheet.swift in Sources */,
 				AA3A96D74B1659CB5725E95F /* CardExpiryDate.swift in Sources */,
 				64DE5688E4FBE92E1F49810C /* ExternalPaymentMethod.swift in Sources */,
@@ -1902,6 +2003,8 @@
 				9E77F1E9F801AE970F1A5BE1 /* CustomerSheetConfiguration.swift in Sources */,
 				AB8E1556F008083257A99E91 /* CustomerSheetError.swift in Sources */,
 				B67D01B62C46FE9900ED8172 /* CVCReconfirmationVerticalViewController.swift in Sources */,
+				31CC9BA42CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift in Sources */,
+				31CC9BA52CB5F9D400E84A38 /* LinkInstantDebitMandateView.swift in Sources */,
 				47B19F96CCEA290541E3B988 /* CardSectionElement.swift in Sources */,
 				04FEA90F2D0CB9D1C2029D21 /* CardSectionWithScannerView.swift in Sources */,
 				6BA8D3342B0C1F79008C51FF /* CVCRecollectionElement.swift in Sources */,
@@ -1965,6 +2068,7 @@
 				F4EA474D60D0889E7D48E1CF /* BankAccountInfoView.swift in Sources */,
 				057A899F4123F3716F2AC0FA /* USBankAccountPaymentMethodElement.swift in Sources */,
 				985DAA770BC0289D24A5999C /* AddressSearchResult.swift in Sources */,
+				31CC9BA12CB5F93100E84A38 /* Button+Link.swift in Sources */,
 				9DEDA3E0FFF73F9275F5F8F0 /* AutoCompleteViewController.swift in Sources */,
 				A4CD99B2032CBFA7F957B1B8 /* String+AutoComplete.swift in Sources */,
 				190A1A5A871A82E5B6C09F41 /* BottomSheet3DS2ViewController.swift in Sources */,
