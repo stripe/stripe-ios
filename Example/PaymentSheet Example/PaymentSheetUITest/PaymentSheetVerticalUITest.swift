@@ -330,7 +330,6 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.uiStyle = .paymentSheet
         settings.layout = .vertical
         loadPlayground(app, settings)
-        // TODO: Include update flow - check that updating re-generates the form.
 
         // PaymentSheet + Vertical
         func _testVerticalPreservesFormDetails() {
@@ -358,5 +357,54 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["flowController"].waitForExistenceAndTap()
         app.buttons["Payment method"].waitForExistenceAndTap()
         _testVerticalPreservesFormDetails()
+    }
+
+    func testUpdate() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .flowController
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+
+        // 1. Test Card is preserved across updates
+        // Selecting Card w/ deferred PaymentIntent...
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.buttons["Done"].tap() // Tap done on keyboard, not sure why it doesn't auto dismiss
+        app.buttons["Continue"].waitForExistenceAndTap()
+        // ...and *updating* to a SetupIntent...
+        app.buttons["Setup"].waitForExistenceAndTap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should cause Card to no longer be the selected payment method, since the customer has not yet seen the mandate...
+        XCTAssertEqual(app.buttons["Payment method"].label, "None")
+        // ...and tapping back into FC should show the card form with the details preserved...
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        // ...and continuing should once again show the Card selected
+        app.buttons["Continue"].waitForExistenceAndTap() // This implicitly tests that the form is already filled out
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
+
+        // Going back to payment...
+        app.buttons["Payment"].waitForExistenceAndTap()
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should preserve the card
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
+
+        // 2. Now test Alipay, an example of *not* restoring due to Alipay not being valid for SetupIntent:
+        // Selecting Alipay w/ deferred PaymentIntent...
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["Back"].waitForExistenceAndTap()
+        app.buttons["Alipay"].waitForExistenceAndTap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertEqual(app.buttons["Payment method"].label, "Alipay, alipay")
+        // ...and *updating* to a SetupIntent...
+        app.buttons["Setup"].waitForExistenceAndTap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should cause Alipay to no longer be the selected payment method, since it is not valid for setup.
+        XCTAssertEqual(app.buttons["Payment method"].label, "None")
     }
 }
