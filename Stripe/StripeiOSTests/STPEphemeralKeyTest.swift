@@ -27,6 +27,5 @@ class STPEphemeralKeyTest: XCTestCase {
             Date(timeIntervalSince1970: TimeInterval((json["expires"] as! NSNumber).doubleValue))
         )
         XCTAssertEqual(key.livemode, (json["livemode"] as! NSNumber).boolValue)
-        XCTAssertEqual(key.customerID, "cus_123")
     }
 }

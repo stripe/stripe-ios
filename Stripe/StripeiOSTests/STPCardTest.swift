@@ -244,12 +244,6 @@ class STPCardTest: XCTestCase {
         XCTAssertEqual(card.stripeID, "card_103kbR2eZvKYlo2CDczLmw4K")
     }
 
-    // MARK: - STPPaymentOption Tests
-    func testLabel() {
-        let card = STPCard.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("Card"))!
-        XCTAssertEqual(card.label, "Visa 4242")
-    }
-
     // MARK: -
     func forEachBrand(_ block: @escaping (_ brand: STPCardBrand) -> Void) {
         let values: [STPCardBrand] = [

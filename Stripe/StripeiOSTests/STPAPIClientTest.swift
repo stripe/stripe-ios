@@ -90,22 +90,6 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(accountHeader, "acct_123")
     }
 
-    func testInitWithConfiguration() {
-        let config = STPPaymentConfiguration()
-        config.publishableKey = "pk_123"
-        config.stripeAccount = "acct_123"
-
-        let sut = STPAPIClient(configuration: config)
-        XCTAssertEqual(sut.publishableKey, config.publishableKey)
-        XCTAssertEqual(sut.stripeAccount, config.stripeAccount)
-
-        let accountHeader = sut.configuredRequest(
-            for: URL(string: "https://www.stripe.com")!,
-            additionalHeaders: [:]
-        ).allHTTPHeaderFields?["Stripe-Account"]
-        XCTAssertEqual(accountHeader, "acct_123")
-    }
-
     private struct MockUAUsageClass: STPAnalyticsProtocol {
         static let stp_analyticsIdentifier = "MockUAUsageClass"
     }
@@ -115,10 +99,10 @@ class STPAPIClientTest: XCTestCase {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: MockUAUsageClass.self)
         var params: [String: Any] = [:]
         params = STPAPIClient.paramsAddingPaymentUserAgent(params)
-        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.legacy; MockUAUsageClass")
+        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.paymentsheet; MockUAUsageClass")
 
         params = STPAPIClient.paramsAddingPaymentUserAgent(params, additionalValues: ["foo"])
-        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.legacy; MockUAUsageClass; foo")
+        XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.paymentsheet; MockUAUsageClass; foo")
     }
 
     func testSetAppInfo() {
