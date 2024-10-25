@@ -25,9 +25,21 @@ extension PaymentSheet {
             intentConfirmParams: IntentConfirmParams
         )
 
-        /// Confirm with Payment Method.
+        /// Confirm with Payment Method. (Web fallback)
         case withPaymentMethod(
             paymentMethod: STPPaymentMethod
+        )
+
+        /// Confirm intent with paymentDetails.
+        case withPaymentDetails(
+            account: PaymentSheetLinkAccount,
+            paymentDetails: ConsumerPaymentDetails
+        )
+
+        /// Confirm with Payment Method Params.
+        case withPaymentMethodParams(
+            account: PaymentSheetLinkAccount,
+            paymentMethodParams: STPPaymentMethodParams
         )
     }
 
@@ -45,6 +57,10 @@ extension PaymentSheet.LinkConfirmOption {
             return account
         case .withPaymentMethod:
             return nil
+        case .withPaymentDetails(let account, _):
+            return account
+        case .withPaymentMethodParams(let account, _):
+            return account
         }
     }
 
@@ -56,6 +72,10 @@ extension PaymentSheet.LinkConfirmOption {
             return intentConfirmParams.paymentMethodParams.paymentSheetLabel
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel
+        case .withPaymentDetails(_, let paymentDetails):
+            return paymentDetails.paymentSheetLabel
+        case .withPaymentMethodParams(_, let paymentMethodParams):
+            return paymentMethodParams.paymentSheetLabel
         }
     }
 
@@ -67,6 +87,12 @@ extension PaymentSheet.LinkConfirmOption {
             return intentConfirmParams.paymentMethodParams.billingDetails
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.billingDetails
+        case .withPaymentDetails:
+//            TODO(link): Implement .billingDetails
+//            return paymentDetails.billingDetails
+            return nil
+        case .withPaymentMethodParams(_, let paymentMethodParams):
+            return paymentMethodParams.billingDetails
         }
     }
 

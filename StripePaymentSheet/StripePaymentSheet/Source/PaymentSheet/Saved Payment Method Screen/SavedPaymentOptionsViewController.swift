@@ -463,6 +463,17 @@ class SavedPaymentOptionsViewController: UIViewController {
         let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod }) ?? defaultIndex
         return (defaultSelectedIndex, viewModels)
     }
+
+    func selectLink() {
+        guard configuration.showLink else {
+            stpAssertionFailure()
+            return
+        }
+
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link })
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
+    }
 }
 
 // MARK: - UICollectionView

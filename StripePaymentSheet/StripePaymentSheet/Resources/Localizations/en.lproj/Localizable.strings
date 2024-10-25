@@ -10,6 +10,9 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
 "Add a payment method" = "Add a payment method";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Add bank account";
+
 /* Title shown above a view allowing the customer to save their first card. */
 "Add card" = "Add card";
 
@@ -284,8 +287,21 @@ is not supported by the merchant */
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "The provided verification code has expired.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
+
 /* Title for a button that when tapped, updates a card brand. */
 "Update" = "Update";
+
+/* Title for a button that when tapped, presents a screen for updating a card. Also
+the heading the screen itself. */
+"Update card" = "Update card";
 
 /* Title for a screen for updating a card brand. */
 "Update card brand" = "Update card brand";
