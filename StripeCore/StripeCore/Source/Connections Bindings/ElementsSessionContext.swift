@@ -14,19 +14,33 @@ import Foundation
         case setup(String)
     }
 
+    /// These fields will be used to prefill the Financial Connections Link Login pane.
+    @_spi(STP) public struct PrefillDetails {
+        @_spi(STP) public let email: String?
+        @_spi(STP) public let phoneNumber: String?
+
+        @_spi(STP) public init(email: String?, phoneNumber: String?) {
+            self.email = email
+            self.phoneNumber = phoneNumber
+        }
+    }
+
     @_spi(STP) public let amount: Int?
     @_spi(STP) public let currency: String?
+    @_spi(STP) public let prefillDetails: PrefillDetails?
     @_spi(STP) public let intentId: IntentID?
     @_spi(STP) public let linkMode: LinkMode?
 
     @_spi(STP) public init(
         amount: Int?,
         currency: String?,
+        prefillDetails: PrefillDetails?,
         intentId: IntentID?,
         linkMode: LinkMode?
     ) {
         self.amount = amount
         self.currency = currency
+        self.prefillDetails = prefillDetails
         self.intentId = intentId
         self.linkMode = linkMode
     }
