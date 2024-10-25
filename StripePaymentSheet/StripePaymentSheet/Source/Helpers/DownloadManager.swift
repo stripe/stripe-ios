@@ -105,8 +105,11 @@ extension DownloadManager {
         }
     }
 
-    func resetDiskCache() {
+    func resetCache() {
         session.configuration.urlCache?.removeAllCachedResponses()
+        imageCacheLock.lock()
+        imageCache = [:]
+        imageCacheLock.unlock()
     }
 }
 
