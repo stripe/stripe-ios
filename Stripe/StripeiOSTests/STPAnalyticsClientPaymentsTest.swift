@@ -32,10 +32,6 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         client.addAdditionalInfo("how are you?")
 
         XCTAssertEqual(client.additionalInfo(), ["hello", "how are you?", "i'm additional info"])
-
-        // Clear it
-        client.clearAdditionalInfo()
-        XCTAssertEqual(client.additionalInfo(), [])
     }
 
     func testPayloadFromAnalytic() throws {
@@ -125,79 +121,9 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         )
     }
 
-    func testPaymentContextAddsUsage() {
-        let keyManager = STPEphemeralKeyManager(
-            keyProvider: MockKeyProvider(),
-            apiVersion: "1",
-            performsEagerFetching: false
-        )
-        let apiClient = STPAPIClient()
-        let customerContext = STPCustomerContext.init(keyManager: keyManager, apiClient: apiClient)
-        let paymentContext = STPPaymentContext(customerContext: customerContext)
-        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPCustomerContext"))
-        XCTAssertEqual(paymentContext.analyticsLogger.product, "STPPaymentContext")
-    }
-
     func testApplePayContextAddsUsage() {
         _ = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: nil)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPApplePayContext"))
-    }
-
-    func testCustomerContextAddsUsage() {
-        let keyManager = STPEphemeralKeyManager(
-            keyProvider: MockKeyProvider(),
-            apiVersion: "1",
-            performsEagerFetching: false
-        )
-        let apiClient = STPAPIClient()
-        _ = STPCustomerContext(keyManager: keyManager, apiClient: apiClient)
-        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPCustomerContext"))
-    }
-
-    func testAddCardVCAddsUsage() {
-        let addCardVC = STPAddCardViewController()
-        XCTAssertTrue(
-            STPAnalyticsClient.sharedClient.productUsage.contains("STPAddCardViewController")
-        )
-        XCTAssertEqual(addCardVC.analyticsLogger.product, "STPAddCardViewController")
-    }
-
-    func testPaymentOptionsVCAddsUsage() {
-        let customerContext = Testing_StaticCustomerContext.init(
-            customer: STPFixtures.customerWithCardTokenAndSourceSources(),
-            paymentMethods: []
-        )
-        let delegate = MockSTPPaymentOptionsViewControllerDelegate()
-        let paymentOptionsVC = STPPaymentOptionsViewController(configuration: .shared, theme: .defaultTheme, customerContext: customerContext, delegate: delegate)
-        XCTAssertTrue(
-            STPAnalyticsClient.sharedClient.productUsage.contains("STPPaymentOptionsViewController")
-        )
-        XCTAssertEqual(paymentOptionsVC.analyticsLogger.product, "STPPaymentOptionsViewController")
-    }
-
-    func testBankSelectionVCAddsUsage() {
-        _ = STPBankSelectionViewController()
-        XCTAssertTrue(
-            STPAnalyticsClient.sharedClient.productUsage.contains("STPBankSelectionViewController")
-        )
-    }
-
-    func testShippingVCAddsUsage() {
-        let config = STPPaymentConfiguration()
-        config.requiredShippingAddressFields = [STPContactField.postalAddress]
-        _ = STPShippingAddressViewController(
-            configuration: config,
-            theme: .defaultTheme,
-            currency: nil,
-            shippingAddress: nil,
-            selectedShippingMethod: nil,
-            prefilledInformation: nil
-        )
-        XCTAssertTrue(
-            STPAnalyticsClient.sharedClient.productUsage.contains(
-                "STPShippingAddressViewController"
-            )
-        )
     }
 }
 
@@ -233,15 +159,4 @@ private struct MockAnalyticsClass1: STPAnalyticsProtocol {
 
 private struct MockAnalyticsClass2: STPAnalyticsProtocol {
     static let stp_analyticsIdentifier = "MockAnalyticsClass2"
-}
-
-private class MockKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
-    func createCustomerKey(
-        withAPIVersion apiVersion: String,
-        completion: @escaping STPJSONResponseCompletionBlock
-    ) {
-        guard apiVersion == "1" else { return }
-
-        completion(nil, NSError.stp_genericConnectionError())
-    }
 }

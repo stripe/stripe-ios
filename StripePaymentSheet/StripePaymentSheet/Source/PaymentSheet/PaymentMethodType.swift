@@ -445,15 +445,25 @@ extension STPPaymentMethod {
 extension STPPaymentMethodParams {
     var paymentSheetLabel: String {
         switch type {
-        case .unknown:
-            assertionFailure()
-            return rawTypeString ?? ""
         case .card:
             return "•••• \(card?.last4 ?? "")"
+        case .FPX:
+            if let fpx = fpx {
+                return STPFPXBank.stringFrom(fpx.bank) ?? ""
+            } else {
+                return "FPX"
+            }
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .giropay, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .sofort, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent:
+            // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
+            return type.displayName
+        case .unknown:
+            fallthrough
         default:
-            return label
+            assertionFailure()
+            return rawTypeString ?? ""
         }
     }
+    
 }
 
 extension PaymentElementConfiguration {
