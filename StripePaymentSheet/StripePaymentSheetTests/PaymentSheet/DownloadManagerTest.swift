@@ -28,7 +28,7 @@ class DownloadManagerTest: APIStubbedTestCase {
         self.urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
         self.analyticsClient = STPAnalyticsClient()
         self.rm = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: analyticsClient)
-        self.rm.resetDiskCache()
+        self.rm.resetCache()
     }
 
     func testURLCacheConfiguration() {
@@ -39,27 +39,54 @@ class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertEqual(configurationUrlCache?.diskCapacity, 30_000_000)
     }
 
-    func testSynchronous_validImage() {
+    func testDownloadImageWithoutUpdateHandler_validImage() {
+        let imageData = validImageData()
         stub(condition: { request in
             return request.url?.path.contains("/validImage.png") ?? false
         }) { _ in
-            return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
+            return HTTPStubsResponse(data: imageData, statusCode: 200, headers: nil)
         }
+        // Downloading an image the first time...
+        let firstDownloadExpectation = expectation(description: "First download completed")
+        var image1_final: UIImage!
+        let image1_initial = rm.downloadImage(url: validURL, placeholder: nil) { _image in
+            image1_final = _image
+            firstDownloadExpectation.fulfill()
+        }
+        // ...should return a placeholder...
+        XCTAssertEqual(image1_initial.size, placeholderImageSize)
+        // ...and call the completion with the image.
+        waitForExpectations(timeout: 1)
+        XCTAssertEqual(image1_final.size, validImageSize)
 
-        let image = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
-        XCTAssertEqual(image.size, validImageSize)
+        // Calling `downloadImage` a second time...
+        let image2 = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
+        // ...should return the cached image
+        XCTAssertEqual(image2, image1_final)
     }
 
-    func testSynchronous_invalidImage() {
+    func testDownloadImageWithoutUpdateHandler_invalidImage() {
         stub(condition: { request in
             return request.url?.path.contains("/invalidImage.png") ?? false
         }) { _ in
             return HTTPStubsResponse(error: NotFoundError())
         }
 
-        let image = rm.downloadImage(url: invalidURL, placeholder: nil, updateHandler: nil)
+        // Downloading an invalid image the first time...
+        let firstDownloadExpectation = expectation(description: "First download completed")
+        firstDownloadExpectation.isInverted = true
+        let image1_initial = rm.downloadImage(url: invalidURL, placeholder: nil) { _ in
+            firstDownloadExpectation.fulfill()
+        }
+        // ...should return a placeholder...
+        XCTAssertEqual(image1_initial.size, placeholderImageSize)
+        // ...without calling the update handler.
+        waitForExpectations(timeout: 1)
 
-        XCTAssertEqual(image.size, placeholderImageSize)
+        // Calling `downloadImage` a second time...
+        let image2 = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
+        // ...should continue to return the placeholder
+        XCTAssertEqual(image2.size, placeholderImageSize)
     }
 
     func testAsync_validImage() {
@@ -177,10 +204,11 @@ class DownloadManagerTest: APIStubbedTestCase {
         }
 
         let placeholder = rm.imagePlaceHolder()
-        let image = rm.downloadImage(url: validURL, placeholder: placeholder, updateHandler: nil)
-
+        let image = rm.downloadImage(url: validURL, placeholder: placeholder, updateHandler: { _ in })
         XCTAssertEqual(image, placeholder)
 
+        // Wait a beat for the error analytic to get sent.
+        wait(seconds: 0.1)
         // Validate analytic
         let firstAnalytic = try XCTUnwrap(analyticsClient._testLogHistory.first)
         XCTAssertEqual("stripepaymentsheet.downloadmanager.error", firstAnalytic["event"] as? String)
@@ -193,13 +221,15 @@ class DownloadManagerTest: APIStubbedTestCase {
         stub(condition: { request in
             return request.url == self.validURL
         }) { _ in
-            return HTTPStubsResponse(data: "invalid image data".data(using: .utf8)!, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(data: Data("invalid image data".utf8), statusCode: 200, headers: nil)
         }
 
         let placeholder = rm.imagePlaceHolder()
-        let image = rm.downloadImage(url: validURL, placeholder: placeholder, updateHandler: nil)
+        let image = rm.downloadImage(url: validURL, placeholder: placeholder, updateHandler: { _ in })
 
         XCTAssertEqual(image, placeholder)
+        // Wait a beat for the error analytic to get sent.
+        wait(seconds: 0.1)
 
         // Validate analytic
         let firstAnalytic = try XCTUnwrap(analyticsClient._testLogHistory.first)
