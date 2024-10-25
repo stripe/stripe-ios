@@ -162,7 +162,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
 
         guard let session = currentSession else {
-            assertionFailure()
+            stpAssertionFailure()
             DispatchQueue.main.async {
                 completion(
                     .failure(
@@ -193,7 +193,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             hasStartedSMSVerification,
             let session = currentSession
         else {
-            assertionFailure()
+            stpAssertionFailure()
             DispatchQueue.main.async {
                 completion(
                     .failure(
@@ -224,7 +224,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
         guard let session = currentSession else {
-            assertionFailure()
+            stpAssertionFailure()
             completion(
                 .failure(
                     PaymentSheetError.unknown(
@@ -248,7 +248,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard let session = currentSession else {
-            assertionFailure()
+            stpAssertionFailure()
             completion(
                 .failure(PaymentSheetError.savingWithoutValidLinkSession)
             )
@@ -270,7 +270,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard let session = currentSession else {
-            assertionFailure()
+            stpAssertionFailure()
             completion(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
             return
         }
@@ -287,7 +287,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         guard let session = currentSession else {
-            assertionFailure()
+            stpAssertionFailure()
             completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
             return
         }
@@ -303,7 +303,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let session = currentSession else {
-            assertionFailure()
+            stpAssertionFailure()
             return completion(
                 .failure(
                     PaymentSheetError.unknown(
@@ -329,7 +329,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard let session = currentSession else {
-            assertionFailure()
+            stpAssertionFailure()
             return completion(
                 .failure(
                     PaymentSheetError.unknown(
@@ -352,7 +352,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
         guard let session = currentSession else {
-            assertionFailure()
+            stpAssertionFailure()
             return completion(
                 .failure(
                     PaymentSheetError.savingWithoutValidLinkSession
@@ -382,6 +382,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     func markEmailAsLoggedOut() {
         guard let hashedEmail = email.lowercased().sha256 else {
+            stpAssertionFailure()
             return
         }
 
@@ -508,7 +509,7 @@ extension PaymentSheetLinkAccount {
     /// - Parameter intent: The Intent that the user is trying to confirm.
     /// - Returns: A set containing the supported Payment Details types.
     func supportedPaymentDetailsTypes(for elementsSession: STPElementsSession) -> Set<ConsumerPaymentDetails.DetailsType> {
-        guard let currentSession = currentSession, let fundingSources = elementsSession.linkFundingSources else {
+        guard let currentSession, let fundingSources = elementsSession.linkFundingSources else {
             return []
         }
 

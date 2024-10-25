@@ -23,7 +23,7 @@ final class ConsumerPaymentDetails: Decodable {
     let details: Details
     var isDefault: Bool
 
-    // TODO(csabol) : Billing address
+    // TODO(link) : Billing address
 
     init(stripeID: String,
          details: Details,

@@ -8,6 +8,7 @@
 
 import Foundation
 import Security
+@_spi(STP) import StripeCore
 
 /// A secure cookie store backed by Keychain.
 final class LinkSecureCookieStore: LinkCookieStore {
@@ -28,7 +29,7 @@ final class LinkSecureCookieStore: LinkCookieStore {
 
         delete(key: key)
         let status = SecItemAdd(query as CFDictionary, nil)
-        assert(
+        stpAssert(
             status == noErr || status == errSecDuplicateItem,
             "Unexpected status code \(status)"
         )
@@ -37,7 +38,7 @@ final class LinkSecureCookieStore: LinkCookieStore {
             let updateQuery = queryForKey(key)
             let updatedValue: [String: Any] = [kSecValueData as String: data]
             let status = SecItemUpdate(updateQuery as CFDictionary, updatedValue as CFDictionary)
-            assert(status == noErr, "Unexpected status code \(status)")
+            stpAssert(status == noErr, "Unexpected status code \(status)")
         }
     }
 
@@ -53,7 +54,7 @@ final class LinkSecureCookieStore: LinkCookieStore {
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         // Disable this check for UI tests
 
-        assert(
+        stpAssert(
             status == noErr || status == errSecItemNotFound,
             "Unexpected status code \(status)"
         )
@@ -74,7 +75,7 @@ final class LinkSecureCookieStore: LinkCookieStore {
         ])
 
         let status = SecItemDelete(query as CFDictionary)
-        assert(
+        stpAssert(
             status == noErr || status == errSecItemNotFound,
             "Unexpected status code \(status)"
         )

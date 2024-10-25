@@ -466,6 +466,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     func selectLink() {
         guard configuration.showLink else {
+            stpAssertionFailure()
             return
         }
 

@@ -27,7 +27,7 @@ extension STPAPIClient {
         }
 
         guard parameters.keys.contains("email_address") else {
-            // no request to make if we don't have an email or cookies
+            // no request to make if we don't have an email
             DispatchQueue.main.async {
                 completion(.success(
                     ConsumerSession.LookupResponse(.noAvailableLookupParams)
