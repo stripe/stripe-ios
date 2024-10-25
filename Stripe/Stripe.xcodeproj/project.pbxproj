@@ -177,6 +177,7 @@
 		A08C2F0E7F642515B1D263ED /* STPPaymentMethodTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148C1D7D1BBBC6B74894A869 /* STPPaymentMethodTest.swift */; };
 		A12CFA90DAE8BBB39A8C7AA1 /* STPCardFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38184A7CD27B978DFA30E69 /* STPCardFunctionalTest.swift */; };
 		A22D548084E7DE1FE5ABE8E7 /* STPLabeledMultiFormTextFieldViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F68637E75142DCD46710796 /* STPLabeledMultiFormTextFieldViewSnapshotTests.swift */; };
+		A30CD9DA2CCC2DFE00EA22D3 /* STPAPIClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30CD9D92CCC2DFE00EA22D3 /* STPAPIClientTest.swift */; };
 		A66C279957B6AC8F72DE05C7 /* STPCardExpiryInputTextFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C75157665428685C7A4FD20 /* STPCardExpiryInputTextFieldSnapshotTests.swift */; };
 		A77C5769B20D7884FC8FC4FB /* STPNumericDigitInputTextFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6223E57D3A198F956A37ED89 /* STPNumericDigitInputTextFormatterTests.swift */; };
 		A781FB0F586B26655FAEC3C0 /* STPCertTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D51B04D83D4FEF7F90DF16A /* STPCertTest.swift */; };
@@ -554,6 +555,7 @@
 		A15BBFFA401852A8719E3DDD /* STPPaymentMethodCardChecksTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardChecksTest.swift; sourceTree = "<group>"; };
 		A1C67AC5D415615E9F27D3E3 /* STPPaymentMethodBoletoParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBoletoParamsTests.swift; sourceTree = "<group>"; };
 		A22E5B87755C1F05C3DB438C /* STPInputTextFieldFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPInputTextFieldFormatterTests.swift; sourceTree = "<group>"; };
+		A30CD9D92CCC2DFE00EA22D3 /* STPAPIClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAPIClientTest.swift; sourceTree = "<group>"; };
 		A39580123A4F1EA96F91768A /* STPAddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAddressTests.swift; sourceTree = "<group>"; };
 		A41F721AEBB942BB81408A59 /* STPPaymentMethodSEPADebitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSEPADebitTest.swift; sourceTree = "<group>"; };
 		A583966A33DCDCF04322A592 /* STPThreeDSTextFieldCustomizationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPThreeDSTextFieldCustomizationTest.swift; sourceTree = "<group>"; };
@@ -893,6 +895,7 @@
 				FDA32D0C9E8A7A69F4899EDC /* RotatingCardBrandsViewSnapshotTests.swift */,
 				12632E6710DE8861CAF1BAA4 /* RotatingCardBrandsViewTests.swift */,
 				20879436DCFB1F03BE1608B3 /* ServerErrorMapperTest.swift */,
+				A30CD9D92CCC2DFE00EA22D3 /* STPAPIClientTest.swift */,
 				A39580123A4F1EA96F91768A /* STPAddressTests.swift */,
 				E7ACB4FAFAD33296DE34D036 /* STPAnalyticsClientPaymentsTest.swift */,
 				E956CFA6317CAA8B41E217CA /* STPAPIClient+LinkAccountSessionTest.swift */,
@@ -1492,6 +1495,7 @@
 				86BAF121184D71F5F4FFAD7B /* STPPaymentCardTextFieldTestsSwift.swift in Sources */,
 				B4719234E4BBDAD260E31373 /* STPPaymentCardTextFieldViewModelTest.swift in Sources */,
 				CAC80EBF2C33339D001E3D0D /* STPPaymentMethodSatispayTests.swift in Sources */,
+				A30CD9DA2CCC2DFE00EA22D3 /* STPAPIClientTest.swift in Sources */,
 				FEF2E0DAC862FF42B814AFCA /* STPPaymentHandlerFunctionalTest.m in Sources */,
 				8F5AF9D3566B8DBCA5AB5188 /* STPPaymentHandlerFunctionalTest.swift in Sources */,
 				194154708E1A9E013DCE2C72 /* STPPaymentHandlerStubbedMockedFilesTests.swift in Sources */,
