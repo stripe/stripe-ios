@@ -185,7 +185,13 @@ final class AccountPickerViewController: UIViewController {
                     // AND `authSession.skipAccountSelection` is true
                     let skipAccountSelection = (accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false)
                     if skipAccountSelection {
-                        self.dataSource.updateSelectedAccounts(accounts)
+                        if self.dataSource.manifest.singleAccount {
+                            if let firstEnabledAccount = accounts.first(where: \.allowSelectionNonOptional) {
+                                self.dataSource.updateSelectedAccounts([firstEnabledAccount])
+                            }
+                        } else {
+                            self.dataSource.updateSelectedAccounts(accounts)
+                        }
                         self.didSelectLinkAccounts(isSkipAccountSelection: true)
                     } else if
                         self.dataSource.manifest.singleAccount,
