@@ -167,10 +167,26 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTFail("Expected confirm to fail")
         }
     }
+
+    func testConfirmHandlesCompletedUpdateThatFailed() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        // ...updating w/ a broken config...
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
+        _ = await sut.update(intentConfiguration: brokenConfig)
+        // ...and calling confirm, after the update finishes...
+        async let confirmResult = sut.confirm()
+        switch await confirmResult {
+        case let .failed(error: error):
+            // ...should make the confirm call fail b/c the update failed
+            XCTAssertEqual(error.nonGenericDescription.prefix(101), "An error occurred in PaymentSheet. The amount in `PaymentSheet.IntentConfiguration` must be non-zero!")
+        default:
+            XCTFail("Expected confirm to fail")
+        }
+    }
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
-    // TODO: Test delegates are called
     func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
         delegateDidUpdateHeightCalled = true
     }
