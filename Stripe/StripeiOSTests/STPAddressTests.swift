@@ -140,6 +140,53 @@ class STPAddressTests: XCTestCase {
         XCTAssertNil(address.country)
     }
 
+    func testPKContactValue() {
+        let address = STPAddress()
+        address.name = "John Smith Doe"
+        address.phone = "8885551212"
+        address.email = "foo@example.com"
+        address.line1 = "55 John St"
+        address.city = "New York"
+        address.state = "NY"
+        address.postalCode = "10002"
+        address.country = "US"
+
+        let contact = address.pkContactValue()
+        XCTAssertEqual(contact.name?.givenName, "John")
+        XCTAssertEqual(contact.name?.familyName, "Smith Doe")
+        XCTAssertEqual(contact.phoneNumber?.stringValue, "8885551212")
+        XCTAssertEqual(contact.emailAddress, "foo@example.com")
+        let postalAddress = contact.postalAddress
+        XCTAssertEqual(postalAddress?.street, "55 John St")
+        XCTAssertEqual(postalAddress?.city, "New York")
+        XCTAssertEqual(postalAddress?.state, "NY")
+        XCTAssertEqual(postalAddress?.postalCode, "10002")
+        XCTAssertEqual(postalAddress?.country, "US")
+    }
+
+    func testShippingInfoForCharge() {
+        let address = STPFixtures.address()
+        let method = PKShippingMethod()
+        method.label = "UPS Ground"
+        let info = STPAddress.shippingInfoForCharge(
+            with: address,
+            shippingMethod: method) as NSDictionary?
+        let expected: NSDictionary = [
+            "address": [
+            "city": address.city,
+            "country": address.country,
+            "line1": address.line1,
+            "line2": address.line2,
+            "postal_code": address.postalCode,
+            "state": address.state,
+        ],
+            "name": address.name as Any,
+            "phone": address.phone as Any,
+            "carrier": method.label,
+        ]
+        XCTAssertEqual(expected, info)
+    }
+
     // MARK: STPFormEncodable Tests
 
     func testRootObjectName() {
