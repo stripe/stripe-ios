@@ -219,10 +219,15 @@ extension PaymentMethodFormViewController {
             }
         }()
 
+        let prefillDetails = ElementsSessionContext.PrefillDetails(
+            email: instantDebitsFormElement?.email ?? configuration.defaultBillingDetails.name,
+            phoneNumber: instantDebitsFormElement?.phone ?? configuration.defaultBillingDetails.phone
+        )
         let linkMode = elementsSession.linkSettings?.linkMode
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
+            prefillDetails: prefillDetails,
             intentId: intentId,
             linkMode: linkMode
         )

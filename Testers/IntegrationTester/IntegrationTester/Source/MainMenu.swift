@@ -19,8 +19,6 @@ struct IntegrationView: View {
             CardSetupIntentsView()
         case .applePay:
             ApplePayView()
-        case .fpx:
-            FPXView()
         case .aubecsDebit:
             AUBECSDebitView()
         case .sepaDebit:
