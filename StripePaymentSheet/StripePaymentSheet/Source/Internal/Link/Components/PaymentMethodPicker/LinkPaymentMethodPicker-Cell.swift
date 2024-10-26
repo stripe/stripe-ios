@@ -193,7 +193,7 @@ extension LinkPaymentMethodPicker {
             contentView.paymentMethod = paymentMethod
             updateAccessibilityContent()
 
-            guard let paymentMethod = paymentMethod else {
+            guard let paymentMethod else {
                 return
             }
 
@@ -201,9 +201,7 @@ extension LinkPaymentMethodPicker {
                 switch paymentMethod.details {
                 case .card(let card):
                     return card.hasExpired
-                case .bankAccount:
-                    return false
-                case .unparsable:
+                case .bankAccount, .unparsable:
                     return false
                 }
             }
@@ -228,7 +226,7 @@ extension LinkPaymentMethodPicker {
         }
 
         private func updateAccessibilityContent() {
-            guard let paymentMethod = paymentMethod else {
+            guard let paymentMethod else {
                 return
             }
 

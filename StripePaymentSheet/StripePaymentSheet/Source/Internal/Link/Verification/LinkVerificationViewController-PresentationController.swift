@@ -28,7 +28,7 @@ extension LinkVerificationViewController {
         ///
         ///  This is always equals to the container view safe area minus `padding` on eat edge.
         private var safeFrame: CGRect {
-            guard let containerView = containerView else {
+            guard let containerView else {
                 return .zero
             }
 
@@ -52,7 +52,7 @@ extension LinkVerificationViewController {
         }
 
         override var frameOfPresentedViewInContainerView: CGRect {
-            guard let containerView = containerView else {
+            guard let containerView else {
                 return .zero
             }
 
@@ -95,7 +95,7 @@ extension LinkVerificationViewController {
         override func containerViewWillLayoutSubviews() {
             super.containerViewWillLayoutSubviews()
 
-            guard let containerView = containerView else {
+            guard let containerView else {
                 return
             }
 
@@ -106,7 +106,7 @@ extension LinkVerificationViewController {
         override func presentationTransitionWillBegin() {
             super.presentationTransitionWillBegin()
 
-            guard let containerView = containerView,
+            guard let containerView,
                   let transitionCoordinator = presentedViewController.transitionCoordinator else {
                 return
             }
@@ -188,7 +188,7 @@ extension LinkVerificationViewController.PresentationController {
         let userInfo = notification.userInfo
 
         guard let keyboardFrame = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-              let containerView = containerView else {
+              let containerView else {
             return
         }
 

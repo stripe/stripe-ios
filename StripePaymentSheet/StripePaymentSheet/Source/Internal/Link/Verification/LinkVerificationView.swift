@@ -80,8 +80,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private(set) lazy var codeField: OneTimeCodeTextField = {
-        let codeField = OneTimeCodeTextField(configuration:
-                .init(numberOfDigits: 6),
+        let codeField = OneTimeCodeTextField(configuration: .init(numberOfDigits: 6),
                                              theme: LinkUI.appearance.asElementsTheme)
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField

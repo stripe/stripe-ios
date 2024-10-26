@@ -12,7 +12,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-// TODO(ramont): Remove after migrating to modern bindings
+// TODO(link): Remove after migrating to modern bindings
 fileprivate extension ConsumerPaymentDetails {
     var cardDetails: Details.Card? {
         switch details {
@@ -58,7 +58,7 @@ final class LinkCardEditElement: Element {
             return nil
         }
 
-        // TODO(ramont): Replace `STPPaymentMethodBillingDetails` with a custom struct for Link.
+        // TODO(link): Replace `STPPaymentMethodBillingDetails` with a custom struct for Link.
         // This matches the object that was returned by CardDetailsEditView, but won't work
         // with `collectionMode: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()

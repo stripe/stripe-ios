@@ -8,6 +8,7 @@
 
 import UIKit
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol LinkPaymentMethodPickerDelegate: AnyObject {
@@ -55,6 +56,7 @@ final class LinkPaymentMethodPicker: UIView {
         let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0
 
         guard selectedIndex >= 0 && selectedIndex < count else {
+            stpAssertionFailure()
             return nil
         }
 
@@ -142,7 +144,7 @@ final class LinkPaymentMethodPicker: UIView {
 
         // Prevent double header animation
         if headerView.isExpanded {
-            // TODO(ramont): revise layout margin placement and remove conditional
+            // TODO(link): revise layout margin placement and remove conditional
             setNeedsLayout()
             layoutIfNeeded()
         } else {
@@ -199,11 +201,12 @@ extension LinkPaymentMethodPicker {
 
     func reloadCell(at index: Int) {
         guard let cell = listView.arrangedSubviews[index] as? Cell else {
-            preconditionFailure("Cell not found at index: \(index)")
+            stpAssertionFailure("Cell not found at index: \(index)")
+            return
         }
 
         guard let dataSource = dataSource else {
-            assertionFailure("Data source not configured.")
+            stpAssertionFailure("Data source not configured.")
             return
         }
 
@@ -216,7 +219,8 @@ extension LinkPaymentMethodPicker {
 
     func showLoader(at index: Int) {
         guard let cell = listView.arrangedSubviews[index] as? Cell else {
-            preconditionFailure("Cell not found at index: \(index)")
+            stpAssertionFailure("Cell not found at index: \(index)")
+            return
         }
 
         cell.isLoading = true
@@ -224,7 +228,8 @@ extension LinkPaymentMethodPicker {
 
     func hideLoader(at index: Int) {
         guard let cell = listView.arrangedSubviews[index] as? Cell else {
-            preconditionFailure("Cell not found at index: \(index)")
+            stpAssertionFailure("Cell not found at index: \(index)")
+            return
         }
 
         cell.isLoading = false
@@ -308,7 +313,7 @@ extension LinkPaymentMethodPicker: LinkPaymentMethodPickerCellDelegate {
 
     func savedPaymentPickerCell(_ cell: Cell, didTapMenuButton button: UIButton) {
         guard let index = index(for: cell) else {
-            assertionFailure("Index not found")
+            stpAssertionFailure("Index not found")
             return
         }
 

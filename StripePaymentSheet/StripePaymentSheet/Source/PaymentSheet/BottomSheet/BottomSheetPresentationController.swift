@@ -23,7 +23,7 @@ class BottomSheetPresentationController: UIPresentationController {
         return presentedViewController as? BottomSheetPresentable
     }
     private lazy var fullHeightConstraint: NSLayoutConstraint = {
-        guard let containerView = containerView else {
+        guard let containerView else {
             assertionFailure()
             return NSLayoutConstraint()
         }
@@ -135,7 +135,7 @@ class BottomSheetPresentationController: UIPresentationController {
 extension BottomSheetPresentationController {
 
     fileprivate func installConstraints() {
-        guard let containerView = containerView else { return }
+        guard let containerView else { return }
 
         // Add a dimmed view behind the view controller
         containerView.addAndPinSubview(backgroundView)
