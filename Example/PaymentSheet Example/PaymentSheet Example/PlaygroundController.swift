@@ -731,7 +731,6 @@ extension PlaygroundController {
                 case .embedded:
                     guard !shouldUpdateEmbeddedInsteadOfRecreating else {
                         // Update embedded rather than re-creating it
-                        self.embeddedPlaygroundViewController?.isLoading = false
                         self.updateEmbedded()
                         self.currentlyRenderedSettings = self.settings
                         return
@@ -979,6 +978,7 @@ extension PlaygroundController {
                 break
             case .failed(let error):
                 // Display error to user in an alert, let them retry
+                self.embeddedPlaygroundViewController?.isLoading = false
                 let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
                 alert.addAction(.init(title: "Retry", style: .default, handler: { _ in
                     self.updateEmbedded()
@@ -987,6 +987,7 @@ extension PlaygroundController {
                 embeddedPlaygroundViewController.present(alert, animated: true)
             case .succeeded:
                 self.isLoading = false
+                self.embeddedPlaygroundViewController?.isLoading = false
             }
         }
     }

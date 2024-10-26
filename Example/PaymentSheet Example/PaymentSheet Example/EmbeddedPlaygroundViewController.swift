@@ -189,6 +189,7 @@ private class EmbeddedPaymentOptionView: UIView {
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.accessibilityIdentifier = "Payment method"
         return label
     }()
 
