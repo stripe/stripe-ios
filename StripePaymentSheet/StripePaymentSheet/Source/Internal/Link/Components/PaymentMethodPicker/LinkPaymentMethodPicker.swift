@@ -56,7 +56,6 @@ final class LinkPaymentMethodPicker: UIView {
         let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0
 
         guard selectedIndex >= 0 && selectedIndex < count else {
-            stpAssertionFailure()
             return nil
         }
 
