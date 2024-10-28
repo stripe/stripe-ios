@@ -122,7 +122,7 @@ final class LinkLoginViewController: UIViewController {
         if let emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(emailAddress)
 
-            let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.prefillDetails?.phoneNumber
+            let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.prefillDetails?.formattedPhoneNumber
             formView.prefillPhoneNumber(phoneNumber)
         } else {
             // Slightly delay opening the keyboard to avoid a janky animation.
