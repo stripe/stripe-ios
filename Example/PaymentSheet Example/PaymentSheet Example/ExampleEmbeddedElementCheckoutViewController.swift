@@ -274,6 +274,8 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             configuration.returnURL = "payments-example://stripe-redirect"
             // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
             configuration.allowsDelayedPaymentMethods = true
+            configuration.appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled = false
+            configuration.appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled = false
             let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
                 intentConfiguration: self.intentConfig,
                 configuration: configuration
@@ -385,7 +387,7 @@ private class PaymentMethodsViewController: UIViewController {
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = 16
-        stackView.layoutMargins = .init(top: 0, left: 8, bottom: 0, right: 8)
+        stackView.layoutMargins = .init(top: 0, left: 16, bottom: 0, right: 16)
         stackView.isLayoutMarginsRelativeArrangement = true
 
         scrollView.addSubview(stackView)
