@@ -71,6 +71,7 @@ final class PayWithLinkViewController: UINavigationController {
         /// Creates a new Context object.
         /// - Parameters:
         ///   - intent: Intent.
+        ///   - elementsSession: elements/session response.
         ///   - configuration: PaymentSheet configuration.
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
@@ -214,8 +215,8 @@ private extension PayWithLinkViewController {
         let shouldAnimate = !(rootViewController is WalletViewController)
         setRootViewController(LoaderViewController(context: context), animated: shouldAnimate)
 
-        guard let linkAccount = linkAccount else {
-            assertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
+        guard let linkAccount else {
+            stpAssertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
             return
         }
 

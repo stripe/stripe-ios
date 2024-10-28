@@ -127,7 +127,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)!
 
         return PayWithLinkViewController.WalletViewModel(
-            // TODO(ramont): Fully mock `PaymentSheetLinkAccount and remove this.
+            // TODO(link): Fully mock `PaymentSheetLinkAccount and remove this.
             linkAccount: .init(
                 email: "user@example.com",
                 session: LinkStubs.consumerSession(),

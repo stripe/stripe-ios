@@ -219,7 +219,7 @@ extension PayWithLinkViewController {
 
         func confirm() {
             guard let paymentDetails = viewModel.selectedPaymentMethod else {
-                assertionFailure("`confirm()` called without a selected payment method")
+                stpAssertionFailure("`confirm()` called without a selected payment method")
                 return
             }
 

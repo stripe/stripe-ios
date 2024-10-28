@@ -105,10 +105,7 @@ extension PayWithLinkViewController {
         }
 
         var shouldShowApplePayButton: Bool {
-            return (
-                context.shouldOfferApplePay &&
-                context.configuration.isApplePayEnabled
-            )
+            return context.shouldOfferApplePay
         }
 
         var shouldUseCompactConfirmButton: Bool {
@@ -254,7 +251,7 @@ extension PayWithLinkViewController {
                 let id = selectedPaymentMethod?.stripeID,
                 let expiryDate = self.expiryDate
             else {
-                assertionFailure("Called with no selected payment method or expiry date provided.")
+                stpAssertionFailure("Called with no selected payment method or expiry date provided.")
                 return
             }
 

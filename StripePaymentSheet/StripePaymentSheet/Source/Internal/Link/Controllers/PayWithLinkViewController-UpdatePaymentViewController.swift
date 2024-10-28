@@ -129,7 +129,7 @@ extension PayWithLinkViewController {
             updateErrorLabel(for: nil)
 
             guard let params = cardEditElement.params else {
-                assertionFailure("Params are expected to be not `nil` when `updateCard()` is called.")
+                stpAssertionFailure("Params are expected to be not `nil` when `updateCard()` is called.")
                 return
             }
 

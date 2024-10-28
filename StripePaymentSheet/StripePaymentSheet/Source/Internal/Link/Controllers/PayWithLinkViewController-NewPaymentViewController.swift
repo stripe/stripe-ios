@@ -92,13 +92,13 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
-
+            // TODO(link): Update elementsSession, formCache, analyticsHelper, and paymentMethodTypes
+            assertionFailure("Not yet implemented")
             return AddPaymentMethodViewController(
                 intent: context.intent,
                 // TODO(link): Update elementsSession
                 elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: []),
                 configuration: configuration,
-                // TODO(link): Update formCache and analyticsHelper and paymentMethodTypes
                 paymentMethodTypes: [.stripe(.card)],
                 formCache: .init(),
                 analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
@@ -113,8 +113,7 @@ extension PayWithLinkViewController {
         private var shouldShowApplePayButton: Bool {
             return (
                 isAddingFirstPaymentMethod &&
-                context.shouldOfferApplePay &&
-                context.configuration.isApplePayEnabled
+                context.shouldOfferApplePay
             )
         }
 
