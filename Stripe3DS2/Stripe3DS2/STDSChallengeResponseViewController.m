@@ -157,6 +157,8 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         return;
     }
     
+    self.navigationItem.rightBarButtonItem.enabled = !isLoading;
+
     /* According to the specs [0], this should be set to NO during AReq/Ares and YES during CReq/CRes.
      However, according to UL test feedback [1], the AReq/ARes and initial CReq/CRes processing views should be identical.
 
