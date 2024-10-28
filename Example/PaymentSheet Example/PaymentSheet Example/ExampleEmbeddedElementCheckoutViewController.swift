@@ -92,6 +92,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     func didTapPaymentMethodButton() {
         let paymentMethodsViewController = PaymentMethodsViewController(embeddedPaymentElement: embeddedPaymentElement, needsDismissal: { [weak self] in
             self?.dismiss(animated: true)
+            self?.updateLabels()
             self?.updateButtons()
         })
         let navController = UINavigationController(rootViewController: paymentMethodsViewController)
