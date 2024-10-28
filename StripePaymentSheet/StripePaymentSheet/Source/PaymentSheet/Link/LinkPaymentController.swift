@@ -126,6 +126,35 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
+        guard FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable else {
+            return try await presentWebFlow(from: presentingViewController)
+        }
+        
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            payWithLinkContinuation = continuation
+            
+            let completionHandler: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { [weak self] result, _, error in
+                guard let self else {
+                    return
+                }
+                
+                guard let result else {
+                    self.continueWithFailure(error ?? Error.canceled)
+                    return
+                }
+                
+                self.handleSDKResult(result)
+            }
+            
+            presentWithSDK(
+                from: presentingViewController,
+                completionHandler: completionHandler
+            )
+        }
+    }
+    
+    @MainActor
+    private func presentWebFlow(from presentingViewController: UIViewController) async throws {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
         defer {
             bottomSheetViewController.dismiss(animated: true)
@@ -201,19 +230,152 @@ import UIKit
                     case .success(let successResult):
                         switch successResult {
                         case .success(let details):
-                            self.paymentMethodId = details.paymentMethodID
-                            self.payWithLinkContinuation?.resume(returning: ())
+                            self.continueWithPaymentMethod(details.paymentMethodID)
                         case.canceled:
-                            self.paymentMethodId = nil
-                            self.payWithLinkContinuation?.resume(throwing: Error.canceled)
+                            self.continueWithFailure(Error.canceled)
                         }
                     case .failure(let error):
-                        self.paymentMethodId = nil
-                        self.payWithLinkContinuation?.resume(throwing: error)
+                        self.continueWithFailure(error)
                     }
                     self.payWithLinkContinuation = nil
                 }
         }
+    }
+    
+    private func presentWithSDK(
+        from presentingViewController: UIViewController,
+        completionHandler: @escaping (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void
+    ) {
+        let bankAccountCollector = STPBankAccountCollector()
+        
+        let additionalParameters: [String: Any] = [
+            "product": "instant_debits",
+        ]
+        
+        let params = STPCollectBankAccountParams.collectInstantDebitsParams(
+            email: configuration.defaultBillingDetails.email
+        )
+        
+        let elementsSessionContext = makeElementsSessionContext()
+        
+        switch mode {
+        case .paymentIntentClientSecret(let string):
+            bankAccountCollector.collectBankAccountForPayment(
+                clientSecret: string,
+                returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                onEvent: nil,
+                params: params,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        case .setupIntentClientSecret(let string):
+            bankAccountCollector.collectBankAccountForSetup(
+                clientSecret: string,
+                returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                onEvent: nil,
+                params: params,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        case .deferredIntent(let intentConfiguration):
+            let amount: Int?
+            let currency: String?
+            switch intentConfiguration.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            bankAccountCollector.collectBankAccountForDeferredIntent(
+                sessionId: "ios_instant_debits_only_\(UUID().uuidString)",
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: nil,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        }
+    }
+    
+    private func makeElementsSessionContext() -> ElementsSessionContext {
+        let billingDetails = configuration.defaultBillingDetails
+        
+        let billingAddress = BillingAddress(
+            name: billingDetails.name,
+            line1: billingDetails.address.line1,
+            line2: billingDetails.address.line2,
+            city: billingDetails.address.city,
+            state: billingDetails.address.state,
+            postalCode: billingDetails.address.postalCode,
+            countryCode: billingDetails.address.country
+        )
+        
+        return ElementsSessionContext(
+            amount: nil,
+            currency: nil,
+            prefillDetails: makePrefillDetails(),
+            intentId: nil,
+            linkMode: nil,
+            billingAddress: billingAddress
+        )
+    }
+    
+    private func makePrefillDetails() -> ElementsSessionContext.PrefillDetails {
+        var billingPhone: PhoneNumber?
+
+        if let phone = configuration.defaultBillingDetails.phone {
+            billingPhone = PhoneNumber.fromE164(phone)
+            
+            if billingPhone == nil {
+                billingPhone = PhoneNumber(number: phone, countryCode: "US")
+            }
+        }
+        
+        let formattedPhoneNumber = billingPhone?.string(as: .e164)
+        let unformattedPhoneNumber = billingPhone?.number
+        let countryCode = billingPhone?.countryCode
+        
+        return .init(
+            email: configuration.defaultBillingDetails.email,
+            formattedPhoneNumber: formattedPhoneNumber,
+            unformattedPhoneNumber: unformattedPhoneNumber,
+            countryCode: countryCode
+        )
+    }
+    
+    private func handleSDKResult(_ result: FinancialConnectionsSDKResult) {
+        switch result {
+        case .completed(let result):
+            if case let .instantDebits(linkedBank) = result {
+                continueWithPaymentMethod(linkedBank.paymentMethodId)
+            } else {
+                continueWithFailure(Error.canceled)
+            }
+        case .failed(let error):
+            continueWithFailure(error)
+        case .cancelled:
+            continueWithFailure(Error.canceled)
+        }
+    }
+    
+    private func continueWithPaymentMethod(_ paymentMethodId: String) {
+        self.paymentMethodId = paymentMethodId
+        payWithLinkContinuation?.resume(returning: ())
+    }
+    
+    private func continueWithFailure(_ error: Swift.Error) {
+        paymentMethodId = nil
+        payWithLinkContinuation?.resume(throwing: error)
     }
 
     private func generateManifest(continuation: CheckedContinuation<Manifest, Swift.Error>,
