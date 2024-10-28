@@ -6,12 +6,13 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
+    func selectionDidUpdate()
 }
 
 /// The view for an embedded payment element
@@ -20,10 +21,23 @@ class EmbeddedPaymentMethodsView: UIView {
     typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
 
     private let appearance: PaymentSheet.Appearance
-    private(set) var selection: Selection?
+    private(set) var selection: Selection? {
+        didSet {
+            updateMandate()
+            if oldValue != selection {
+                delegate?.selectionDidUpdate()
+            }
+        }
+    }
     private let mandateProvider: MandateTextProvider
+    private let shouldShowMandate: Bool
+    /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
+    /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
+    var mandateText: NSAttributedString? {
+        mandateView.attributedText
+    }
 
-    lazy var stackView: UIStackView = {
+    private(set) lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = appearance.embeddedPaymentElement.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
@@ -34,17 +48,22 @@ class EmbeddedPaymentMethodsView: UIView {
 
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
 
-    init(initialSelection: Selection?,
-         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-         savedPaymentMethod: STPPaymentMethod?,
-         appearance: PaymentSheet.Appearance,
-         shouldShowApplePay: Bool,
-         shouldShowLink: Bool,
-         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
-         mandateProvider: MandateTextProvider) {
+    init(
+        initialSelection: Selection?,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        savedPaymentMethod: STPPaymentMethod?,
+        appearance: PaymentSheet.Appearance,
+        shouldShowApplePay: Bool,
+        shouldShowLink: Bool,
+        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
+        mandateProvider: MandateTextProvider,
+        shouldShowMandate: Bool = true,
+        delegate: EmbeddedPaymentMethodsViewDelegate? = nil
+    ) {
         self.appearance = appearance
-        self.selection = initialSelection
         self.mandateProvider = mandateProvider
+        self.shouldShowMandate = shouldShowMandate
+        self.delegate = delegate
         super.init(frame: .zero)
 
         let rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
@@ -70,6 +89,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
             if initialSelection == selection {
                 savedPaymentMethodButton.isSelected = true
+                self.selection = initialSelection
             }
 
             stackView.addArrangedSubview(savedPaymentMethodButton)
@@ -77,14 +97,22 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Add card before Apple Pay and Link if present and before any other LPMs
         if paymentMethodTypes.contains(.stripe(.card)) {
-            stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card),
-                                                                            savedPaymentMethodType: savedPaymentMethod?.type,
-                                                                            appearance: rowButtonAppearance,
-                                                                            shouldAnimateOnPress: true,
-                                                                            isEmbedded: true,
-                                                                            didTap: { [weak self] rowButton in
-                self?.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: .stripe(.card)))
-            }))
+            let selection: Selection = .new(paymentMethodType: .stripe(.card))
+            let cardRowButton = RowButton.makeForPaymentMethodType(
+                paymentMethodType: .stripe(.card),
+                savedPaymentMethodType: savedPaymentMethod?.type,
+                appearance: rowButtonAppearance,
+                shouldAnimateOnPress: true,
+                isEmbedded: true,
+                didTap: { [weak self] rowButton in
+                    self?.didTap(selectedRowButton: rowButton, selection: selection)
+                }
+            )
+            if initialSelection == selection {
+                cardRowButton.isSelected = true
+                self.selection = initialSelection
+            }
+            stackView.addArrangedSubview(cardRowButton)
         }
 
         if shouldShowApplePay {
@@ -97,6 +125,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
             if initialSelection == selection {
                 applePayRowButton.isSelected = true
+                self.selection = initialSelection
             }
 
             stackView.addArrangedSubview(applePayRowButton)
@@ -110,21 +139,31 @@ class EmbeddedPaymentMethodsView: UIView {
 
             if initialSelection == selection {
                 linkRowButton.isSelected = true
+                self.selection = initialSelection
             }
 
             stackView.addArrangedSubview(linkRowButton)
         }
 
+        // Add all non-card PMs (card is added above)
         for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) {
-            stackView.addArrangedSubview(RowButton.makeForPaymentMethodType(paymentMethodType: paymentMethodType,
-                                                                            subtitle: VerticalPaymentMethodListViewController.subtitleText(for: paymentMethodType),
-                                                                            savedPaymentMethodType: savedPaymentMethod?.type,
-                                                                            appearance: rowButtonAppearance,
-                                                                            shouldAnimateOnPress: true,
-                                                                            isEmbedded: true,
-                                                                            didTap: { [weak self] rowButton in
-                self?.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: paymentMethodType))
-            }))
+            let selection: Selection = .new(paymentMethodType: paymentMethodType)
+            let rowButton = RowButton.makeForPaymentMethodType(
+                paymentMethodType: paymentMethodType,
+                subtitle: VerticalPaymentMethodListViewController.subtitleText(for: paymentMethodType),
+                savedPaymentMethodType: savedPaymentMethod?.type,
+                appearance: rowButtonAppearance,
+                shouldAnimateOnPress: true,
+                isEmbedded: true,
+                didTap: { [weak self] rowButton in
+                    self?.didTap(selectedRowButton: rowButton, selection: selection)
+                }
+            )
+            if initialSelection == selection {
+                rowButton.isSelected = true
+                self.selection = initialSelection
+            }
+            stackView.addArrangedSubview(rowButton)
         }
 
         if appearance.embeddedPaymentElement.style != .floatingButton {
@@ -140,7 +179,9 @@ class EmbeddedPaymentMethodsView: UIView {
         stackView.setCustomSpacing(0, after: stackView.arrangedSubviews.last ?? UIView())
         updateMandate(animated: false)
         stackView.addArrangedSubview(mandateView)
-        addAndPinSubview(stackView)
+
+        // Our content should respect `directionalLayoutMargins`. The default margins is `.zero`.
+        addAndPinSubview(stackView, directionalLayoutMargins: .zero)
     }
 
     required init?(coder: NSCoder) {
@@ -169,7 +210,6 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         self.selection = selection
-        updateMandate()
     }
 
     func didTapAccessoryButton() {
@@ -183,12 +223,18 @@ class EmbeddedPaymentMethodsView: UIView {
                                                                   bottomNoticeAttributedString: nil)
 
         guard animated else {
-            self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+            self.mandateView.setHiddenIfNecessary(
+                (self.mandateView.attributedText?.string.isEmpty ?? true) ||
+                !shouldShowMandate
+            )
             return
         }
 
         UIView.animate(withDuration: 0.25, animations: {
-            self.mandateView.setHiddenIfNecessary(self.mandateView.attributedText?.string.isEmpty ?? true)
+            self.mandateView.setHiddenIfNecessary(
+                (self.mandateView.attributedText?.string.isEmpty ?? true) ||
+                !self.shouldShowMandate
+            )
             self.setNeedsLayout()
             self.layoutIfNeeded()
         })

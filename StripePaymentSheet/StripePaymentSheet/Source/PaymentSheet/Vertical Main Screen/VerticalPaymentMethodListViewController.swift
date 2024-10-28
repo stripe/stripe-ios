@@ -42,7 +42,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
         amount: Int?,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
-        self.currentSelection = initialSelection
         self.delegate = delegate
         self.appearance = appearance
         self.delegate = delegate

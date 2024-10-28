@@ -47,7 +47,7 @@ class RowButton: UIView {
 
     init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) {
         self.appearance = appearance
-        self.shouldAnimateOnPress = shouldAnimateOnPress
+        self.shouldAnimateOnPress = true
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.imageView = imageView
@@ -83,7 +83,7 @@ class RowButton: UIView {
             NSLayoutConstraint.activate([
                 rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
                 rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: isEmbedded ? 0 : -12),
             ])
         }
 
@@ -108,7 +108,7 @@ class RowButton: UIView {
         }
 
         NSLayoutConstraint.activate([
-            radioButton?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            radioButton?.leadingAnchor.constraint(equalTo: leadingAnchor),
             radioButton?.centerYAnchor.constraint(equalTo: centerYAnchor),
             radioButton?.heightAnchor.constraint(equalToConstant: 18),
             radioButton?.widthAnchor.constraint(equalToConstant: 18),

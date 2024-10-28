@@ -825,6 +825,10 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
         dataManager.accountNumberLast4 = accountNumberLast4
 
         if dataManager.manifest.manualEntryUsesMicrodeposits {
+            dataManager.customSuccessPaneCaption = STPLocalizedString(
+                "Almost there",
+                "The title of the success screen that appears when a user manually entered their bank account information."
+            )
             dataManager.customSuccessPaneSubCaption = String(
                 format: STPLocalizedString(
                     "You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions.",
@@ -1315,7 +1319,8 @@ private func CreatePaneViewController(
             analyticsClient: dataManager.analyticsClient,
             clientSecret: dataManager.clientSecret,
             returnURL: dataManager.returnURL,
-            apiClient: dataManager.apiClient
+            apiClient: dataManager.apiClient,
+            elementsSessionContext: dataManager.elementsSessionContext
         )
         let linkLoginViewController = LinkLoginViewController(dataSource: linkLoginDataSource)
         linkLoginViewController.delegate = nativeFlowController

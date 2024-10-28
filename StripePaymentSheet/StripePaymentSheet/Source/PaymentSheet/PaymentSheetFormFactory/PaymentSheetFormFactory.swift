@@ -35,7 +35,7 @@ class PaymentSheetFormFactory {
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
-    let analyticsHelper: PaymentSheetAnalyticsHelper
+    let analyticsHelper: PaymentSheetAnalyticsHelper?
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
@@ -67,7 +67,7 @@ class PaymentSheetFormFactory {
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper?
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -110,7 +110,7 @@ class PaymentSheetFormFactory {
         isSettingUp: Bool,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper?
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -182,7 +182,7 @@ class PaymentSheetFormFactory {
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
                 stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-                analyticsHelper.analyticsClient.log(analytic: errorAnalytic)
+                analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
             }
             if paymentMethod == .iDEAL {
@@ -643,20 +643,33 @@ extension PaymentSheetFormFactory {
         return StaticElement(view: label)
     }
 
-    func makeInstantDebits() -> PaymentMethodElement {
+    func makeInstantDebits(countries: [String]? = nil) -> PaymentMethodElement {
+        let titleElement: StaticElement? = if case .paymentSheet = configuration {
+            makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
+        } else {
+            nil
+        }
+
+        let billingConfiguration = configuration.billingDetailsCollectionConfiguration
+        let nameElement = billingConfiguration.name == .always ? makeName() : nil
+        let phoneElement = billingConfiguration.phone == .always ? makePhone() : nil
+        let addressElement = billingConfiguration.address == .full
+        ? makeBillingAddressSection(collectionMode: .all(), countries: countries)
+            : nil
+
+        // An email is required, so only hide the email field iff:
+        // The configuration specifies never collecting email, and a default (non-empty) email is provided.
+        let shouldHideEmailField = billingConfiguration.email == .never &&
+            configuration.defaultBillingDetails.email?.isEmpty == false
+        let emailElement = shouldHideEmailField ? nil : makeEmail()
+
         return InstantDebitsPaymentMethodElement(
             configuration: configuration,
-            titleElement: {
-                switch configuration {
-                case .customerSheet:
-                    return nil // customer sheet is not supported
-                case .paymentSheet:
-                    return makeSectionTitleLabelWith(
-                        text: Self.PayByBankDescriptionText
-                    )
-                }
-            }(),
-            emailElement: makeEmail(),
+            titleElement: titleElement,
+            nameElement: nameElement,
+            emailElement: emailElement,
+            phoneElement: phoneElement,
+            addressElement: addressElement,
             theme: theme
         )
     }

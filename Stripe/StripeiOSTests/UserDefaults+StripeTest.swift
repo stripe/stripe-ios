@@ -24,10 +24,4 @@ class UserDefaults_StripeTest: XCTestCase {
         UserDefaults.standard.fraudDetectionData = fraudDetectionData
         XCTAssertEqual(UserDefaults.standard.fraudDetectionData, fraudDetectionData)
     }
-
-    func testCustomerToLastSelectedPaymentMethod() throws {
-        let c = [UUID().uuidString: UUID().uuidString]
-        UserDefaults.standard.customerToLastSelectedPaymentMethod = c
-        XCTAssertEqual(UserDefaults.standard.customerToLastSelectedPaymentMethod, c)
-    }
 }

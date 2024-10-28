@@ -129,9 +129,6 @@ Label of an address field */
 /* Label of an address field */
 "Parish" = "Parish";
 
-/* Caption for Phone field on address form */
-"Phone" = "Phone";
-
 /* Caption for Phone number field on address form */
 "Phone number" = "Phone number";
 

@@ -200,7 +200,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func linkAccountSignUp(
         emailAddress: String,
         phoneNumber: String,
-        country: String
+        country: String,
+        amount: Int?,
+        currency: String?,
+        intentId: ElementsSessionContext.IntentID?
     ) -> Future<LinkSignUpResponse> {
         return Promise<StripeFinancialConnections.LinkSignUpResponse>()
     }

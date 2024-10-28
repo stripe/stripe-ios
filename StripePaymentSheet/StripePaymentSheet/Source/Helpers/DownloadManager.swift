@@ -10,7 +10,7 @@ import UIKit
 
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
-// TODO: Refactor this API shape! https://github.com/stripe/stripe-ios/pull/3487#discussion_r1561337866
+// TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
 @_spi(STP) public class DownloadManager: NSObject {
     public typealias UpdateImageHandler = (UIImage) -> Void
 
@@ -22,6 +22,8 @@ import UIKit
 
     private let session: URLSession
     private let analyticsClient: STPAnalyticsClient
+    private let imageCacheLock = NSLock()
+    private var imageCache: [URL: UIImage] = [:]
 
     public init(
         urlSessionConfiguration: URLSessionConfiguration = .default,
@@ -52,7 +54,7 @@ import UIKit
 extension DownloadManager {
 
     /// Downloads an image from a provided URL, using either a synchronous method or an asynchronous method.
-    /// If no `updateHandler` is provided, this function will block the current thread until the image is downloaded. If an `updateHandler` is provided, the function does not wait for the download to finish and returns a placeholder image immediately instead. When the image finishes downloading, the `updateHandler` will be called with the downloaded image.
+    /// If no `updateHandler` is provided, this function will block the current thread until the image is downloaded. If an `updateHandler` is provided, the function does not wait for the download to finish and returns the image if it was cached or a placeholder image instead. When the image finishes downloading, the `updateHandler` will be called with the downloaded image.
     /// - Parameters:
     ///   - url: The URL from which to download the image.
     ///   - placeholder: An optional parameter indicating a placeholder image to display while the download is in progress. If not provided, a default placeholder image will be used instead.
@@ -61,16 +63,17 @@ extension DownloadManager {
     /// - Returns: A `UIImage` instance. If `updateHandler` is `nil`, this would be the downloaded image, otherwise, this would be the placeholder image.
     public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
         let placeholder = placeholder ?? imagePlaceHolder()
-        // If no `updateHandler` is provided use a blocking method to fetch the image
-        guard let updateHandler else {
-            return downloadImageBlocking(url: url, placeholder: placeholder)
-        }
+        imageCacheLock.lock()
+        let cachedImage = imageCache[url]
+        imageCacheLock.unlock()
 
-        Task {
-           await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
+        if let updateHandler {
+            Task {
+                await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
+            }
         }
-        // Immediately return a placeholder, when the download operation completes `updateHandler` will be called with the downloaded image
-        return placeholder
+        // Immediately return the cached image or a placeholder. When the download operation completes `updateHandler` will be called with the downloaded image.
+        return cachedImage ?? placeholder
     }
 
     // Common download function
@@ -78,6 +81,12 @@ extension DownloadManager {
         do {
             let (data, _) = try await session.data(from: url)
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
+            DispatchQueue.global(qos: .userInteractive).async {
+                // Cache the image in memory
+                self.imageCacheLock.lock()
+                self.imageCache[url] = image
+                self.imageCacheLock.unlock()
+            }
             return image
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .stripePaymentSheetDownloadManagerError,
@@ -96,14 +105,11 @@ extension DownloadManager {
         }
     }
 
-    private func downloadImageBlocking(url: URL, placeholder: UIImage) -> UIImage {
-        return _unsafeWait({
-            return await self.downloadImage(url: url, placeholder: placeholder)
-        })
-    }
-
-    func resetDiskCache() {
+    func resetCache() {
         session.configuration.urlCache?.removeAllCachedResponses()
+        imageCacheLock.lock()
+        imageCache = [:]
+        imageCacheLock.unlock()
     }
 }
 
@@ -141,25 +147,5 @@ private extension UIImage {
         }
 
         return image
-    }
-}
-
-// MARK: Workarounds for using Swift async from a sync context
-// https://forums.swift.org/t/using-async-functions-from-synchronous-functions-and-breaking-all-the-rules/59782/4
-private class ImageBox {
-    var image: UIImage = DownloadManager.sharedManager.imagePlaceHolder()
-}
-
-private extension DownloadManager {
-    /// Unsafely awaits an async function from a synchronous context.
-    func _unsafeWait(_ downloadImage: @escaping () async -> UIImage) -> UIImage {
-        let imageBox = ImageBox()
-        let sema = DispatchSemaphore(value: 0)
-        Task {
-            imageBox.image = await downloadImage()
-            sema.signal()
-        }
-        sema.wait()
-        return imageBox.image
     }
 }

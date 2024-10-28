@@ -27,6 +27,7 @@ final class UpdateCardViewController: UIViewController {
     private let isTestMode: Bool
     private let hostedSurface: HostedSurface
     private let canRemoveCard: Bool
+    private let cardBrandFilter: CardBrandFilter
 
     private var latestError: Error? {
         didSet {
@@ -95,7 +96,7 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     private lazy var cardBrandDropDown: DropdownFieldElement = {
-        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
+        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
         let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
                                                                            theme: appearance.asElementsTheme,
                                                                            includePlaceholder: false) { [weak self] in
@@ -136,13 +137,15 @@ final class UpdateCardViewController: UIViewController {
          appearance: PaymentSheet.Appearance,
          hostedSurface: HostedSurface,
          canRemoveCard: Bool,
-         isTestMode: Bool) {
+         isTestMode: Bool,
+         cardBrandFilter: CardBrandFilter = .default) {
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
         self.hostedSurface = hostedSurface
         self.isTestMode = isTestMode
         self.canRemoveCard = canRemoveCard
+        self.cardBrandFilter = cardBrandFilter
 
         super.init(nibName: nil, bundle: nil)
     }

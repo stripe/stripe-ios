@@ -29,7 +29,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         FormSpecProvider.shared.load { _ in
             e.fulfill()
         }
-        DownloadManager.sharedManager.resetDiskCache()
+        DownloadManager.sharedManager.resetCache()
         waitForExpectations(timeout: 10)
         // A Payment methods with a client-side asset and a form spec image URL...
         let loadExpectation = expectation(description: "Load form spec image")
@@ -60,7 +60,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testMakeImage_without_client_asset() {
-        DownloadManager.sharedManager.resetDiskCache()
+        DownloadManager.sharedManager.resetCache()
         let e = expectation(description: "Load specs")
         FormSpecProvider.shared.load { _ in
             e.fulfill()
@@ -422,6 +422,25 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
         XCTAssertEqual(types, [.stripe(.card), .linkCardBrand])
+    }
+
+    func testPaymentMethodTypesLinkCardBrand_noDefaults() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = false
+        configuration.defaultBillingDetails.email = nil
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(
+                intent: intent,
+                linkMode: .linkCardBrand,
+                linkFundingSources: [.card, .bankAccount]
+            ),
+            configuration: configuration
+        )
+        // This configuration should not show the bank tab.
+        XCTAssertEqual(types, [.stripe(.card)])
     }
 
     // MARK: Other
