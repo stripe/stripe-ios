@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -231,8 +232,13 @@ class EmbeddedPaymentMethodsView: UIView {
         mandateView.attributedText = mandateText
         let updateMandateUI = {
             let spacing = shouldDisplayMandate ? 12.0 : 0
-            let mandateViewIndex = self.stackView.arrangedSubviews.firstIndex(of: self.mandateView)! - 1
-            let subviewBeforeMandateView = self.stackView.arrangedSubviews[mandateViewIndex]
+            guard
+                let mandateViewIndex = self.stackView.arrangedSubviews.firstIndex(of: self.mandateView),
+                let subviewBeforeMandateView = self.stackView.arrangedSubviews.stp_boundSafeObject(at: mandateViewIndex - 1)
+            else {
+                stpAssertionFailure()
+                return
+            }
             self.stackView.setCustomSpacing(spacing, after: subviewBeforeMandateView)
             self.mandateView.setHiddenIfNecessary(!shouldDisplayMandate)
         }
