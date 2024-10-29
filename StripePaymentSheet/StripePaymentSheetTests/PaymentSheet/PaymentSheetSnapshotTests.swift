@@ -47,6 +47,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "mockReturnUrl"
+        configuration.paymentMethodLayout = .horizontal
 
 //                self.runAgainstLiveService = true
         if !self.runAgainstLiveService {

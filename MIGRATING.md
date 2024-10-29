@@ -1,4 +1,17 @@
 ## Migration Guides
+### Migrating from versions < 24.0.0 
+
+#### PaymentSheet
+PaymentSheet displays payment methods in either a vertical or horizontal layout. Prior to this major version, PaymentSheet defaulted to a horizontal layout. Now, Stripe optimizes the layout automatically. To set a specific layout instead, set the `PaymentSheet.Configuration.paymentMethodLayout` property to either `.horizontal` or `.vertical`.
+
+```
+var configuration = PaymentSheet.Configuration()
+configuration.paymentMethodLayout = .horizontal, .vertical, or .automatic
+```
+
+![image](https://github.com/user-attachments/assets/d4592a2b-9af7-4fb5-813f-6a3afdb4ec28)
+
+
 ### Migrating from versions < 23.0.0
 * The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
 * [Changed] If you use PaymentSheet, you must now `import StripePaymentSheet`. PaymentSheet users no longer need to import the `Stripe` module.
