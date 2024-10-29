@@ -224,7 +224,15 @@ extension PaymentMethodFormViewController {
             phoneNumber: instantDebitsFormElement?.phone ?? configuration.defaultBillingDetails.phone
         )
         let linkMode = elementsSession.linkSettings?.linkMode
-        let billingAddress = instantDebitsFormElement?.billingAddress
+        let billingAddress: BillingAddress? = {
+            if configuration.billingDetailsCollectionConfiguration.address == .full {
+                return instantDebitsFormElement?.billingAddress
+            } else if configuration.billingDetailsCollectionConfiguration.name == .always {
+                return BillingAddress(name: instantDebitsFormElement?.name)
+            } else {
+                return nil
+            }
+        }()
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,

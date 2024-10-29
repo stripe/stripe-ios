@@ -17,13 +17,13 @@ import Foundation
     let countryCode: String?
 
     @_spi(STP) public init(
-        name: String?,
-        line1: String?,
-        line2: String?,
-        city: String?,
-        state: String?,
-        postalCode: String?,
-        countryCode: String?
+        name: String? = nil,
+        line1: String? = nil,
+        line2: String? = nil,
+        city: String? = nil,
+        state: String? = nil,
+        postalCode: String? = nil,
+        countryCode: String? = nil
     ) {
         self.name = name
         self.line1 = line1
