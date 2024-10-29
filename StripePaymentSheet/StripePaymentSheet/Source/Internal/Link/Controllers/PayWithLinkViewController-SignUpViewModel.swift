@@ -158,7 +158,7 @@ extension PayWithLinkViewController {
         func signUp(completion: @escaping (Result<PaymentSheetLinkAccount, Error>) -> Void) {
             guard let linkAccount = linkAccount,
                   let phoneNumber = phoneNumber else {
-                assertionFailure("`signUp()` called without a link account or phone number")
+                stpAssertionFailure("`signUp()` called without a link account or phone number")
                 return
             }
 

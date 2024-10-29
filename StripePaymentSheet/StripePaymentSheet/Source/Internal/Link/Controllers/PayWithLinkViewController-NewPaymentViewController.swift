@@ -203,7 +203,7 @@ extension PayWithLinkViewController {
 
             guard let newPaymentOption = addPaymentMethodVC.paymentOption,
                   case .new(let confirmParams) = newPaymentOption else {
-                assertionFailure()
+                stpAssertionFailure()
                 return
             }
 
