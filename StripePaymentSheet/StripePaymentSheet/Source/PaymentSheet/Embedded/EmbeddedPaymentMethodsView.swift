@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -44,7 +45,7 @@ class EmbeddedPaymentMethodsView: UIView {
         return stackView
     }()
 
-    private lazy var mandateView = EmbeddedMandateContainerView(appearance: appearance)
+    private lazy var mandateView = SimpleMandateTextView(theme: appearance.asElementsTheme)
 
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
 
@@ -176,9 +177,8 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         // Setup mandate
-        stackView.setCustomSpacing(0, after: stackView.arrangedSubviews.last ?? UIView())
-        updateMandate(animated: false)
         stackView.addArrangedSubview(mandateView)
+        updateMandate(animated: false)
 
         // Our content should respect `directionalLayoutMargins`. The default margins is `.zero`.
         addAndPinSubview(stackView, directionalLayoutMargins: .zero)
@@ -218,23 +218,36 @@ class EmbeddedPaymentMethodsView: UIView {
 
     // MARK: Mandate handling
     private func updateMandate(animated: Bool = true) {
-        self.mandateView.attributedText = mandateProvider.mandate(for: selection?.paymentMethodType,
-                                                                  savedPaymentMethod: selection?.savedPaymentMethod,
-                                                                  bottomNoticeAttributedString: nil)
-
+        let mandateText = mandateProvider.mandate(
+            for: selection?.paymentMethodType,
+            savedPaymentMethod: selection?.savedPaymentMethod,
+            bottomNoticeAttributedString: nil
+        )
+        let shouldDisplayMandate: Bool = {
+            guard let mandateText else {
+                return false
+            }
+            return shouldShowMandate && !mandateText.string.isEmpty
+        }()
+        mandateView.attributedText = mandateText
+        let updateMandateUI = {
+            let spacing = shouldDisplayMandate ? 12.0 : 0
+            guard
+                let mandateViewIndex = self.stackView.arrangedSubviews.firstIndex(of: self.mandateView),
+                let subviewBeforeMandateView = self.stackView.arrangedSubviews.stp_boundSafeObject(at: mandateViewIndex - 1)
+            else {
+                stpAssertionFailure()
+                return
+            }
+            self.stackView.setCustomSpacing(spacing, after: subviewBeforeMandateView)
+            self.mandateView.setHiddenIfNecessary(!shouldDisplayMandate)
+        }
         guard animated else {
-            self.mandateView.setHiddenIfNecessary(
-                (self.mandateView.attributedText?.string.isEmpty ?? true) ||
-                !shouldShowMandate
-            )
+            updateMandateUI()
             return
         }
-
         UIView.animate(withDuration: 0.25, animations: {
-            self.mandateView.setHiddenIfNecessary(
-                (self.mandateView.attributedText?.string.isEmpty ?? true) ||
-                !self.shouldShowMandate
-            )
+            updateMandateUI()
             self.setNeedsLayout()
             self.layoutIfNeeded()
         })
