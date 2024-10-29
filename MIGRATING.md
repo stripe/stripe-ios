@@ -2,7 +2,7 @@
 ### Migrating from versions < 24.0.0 
 
 #### PaymentSheet
-PaymentSheet displays payment methods in either a vertical or horizontal layout. By default, Stripe optimizes the layout automatically. To set a specific layout instead, set the `PaymentSheet.Configuration.paymentMethodLayout` property to either `.horizontal` or `.vertical`. 
+PaymentSheet displays payment methods in either a vertical or horizontal layout. Prior to this major version, PaymentSheet defaulted to a horizontal layout. Now, Stripe optimizes the layout automatically. To set a specific layout instead, set the `PaymentSheet.Configuration.paymentMethodLayout` property to either `.horizontal` or `.vertical`.
 
 ```
 var configuration = PaymentSheet.Configuration()
