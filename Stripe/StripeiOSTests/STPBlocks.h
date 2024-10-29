@@ -19,36 +19,6 @@
 @class STPSetupIntent;
 @class STPPaymentMethod;
 @class STPIssuingCardPin;
-@class STPFPXBankStatusResponse;
-
-/**
- These values control the labels used in the shipping info collection form.
- */
-typedef NS_ENUM(NSUInteger, STPShippingType) {
-    /**
-     Shipping the purchase to the provided address using a third-party
-     shipping company.
-     */
-    STPShippingTypeShipping,
-    /**
-     Delivering the purchase by the seller.
-     */
-    STPShippingTypeDelivery,
-};
-
-/**
- An enum representing the status of a shipping address validation.
- */
-typedef NS_ENUM(NSUInteger, STPShippingStatus) {
-    /**
-     The shipping address is valid.
-     */
-    STPShippingStatusValid,
-    /**
-     The shipping address is invalid.
-     */
-    STPShippingStatusInvalid,
-};
 
 /**
  An enum representing the status of a payment requested from the user.
@@ -153,17 +123,6 @@ typedef void (^STPPaymentMethodCompletionBlock)(STPPaymentMethod * __nullable pa
 typedef void (^STPPaymentMethodsCompletionBlock)(NSArray<STPPaymentMethod *> *__nullable paymentMethods, NSError * __nullable error);
 
 /**
- A callback to be run with a validation result and shipping methods for a 
- shipping address.
-
- @param status An enum representing whether the shipping address is valid.
- @param shippingValidationError If the shipping address is invalid, an error describing the issue with the address. If no error is given and the address is invalid, the default error message will be used.
- @param shippingMethods The shipping methods available for the address.
- @param selectedShippingMethod The default selected shipping method for the address.
- */
-typedef void (^STPShippingMethodsCompletionBlock)(STPShippingStatus status, NSError * __nullable shippingValidationError, NSArray<PKShippingMethod *>* __nullable shippingMethods, PKShippingMethod * __nullable selectedShippingMethod);
-
-/**
  A callback to be run with a file response from the Stripe API.
 
  @param file The Stripe file from the response. Will be nil if an error occurs. @see STPFile
@@ -229,14 +188,6 @@ typedef void (^STPPinCompletionBlock)(STPIssuingCardPin * __nullable cardPin, ST
  @param error                   The error returned from the response, or nil if none occurs.
  */
 typedef void (^STP3DS2AuthenticateCompletionBlock)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error);
-
-/**
- A callback to be run with a response from the Stripe API containing information about the online status of FPX banks.
-
- @param bankStatusResponse    The response from Stripe containing the status of the various banks. Will be nil if an error occurs. @see STPFPXBankStatusResponse
- @param error                   The error returned from the response, or nil if none occurs.
- */
-typedef void (^STPFPXBankStatusCompletionBlock)(STPFPXBankStatusResponse * _Nullable bankStatusResponse, NSError * _Nullable error);
 
 /**
  A block called with a payment status and an optional error.

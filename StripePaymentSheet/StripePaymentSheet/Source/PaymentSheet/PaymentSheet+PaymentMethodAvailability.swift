@@ -55,6 +55,12 @@ extension PaymentSheet {
         }
         return !configuration.requiresBillingDetailCollection()
     }
+
+    /// An unordered list of paymentMethodTypes that can be used with Link in PaymentSheet
+    /// - Note: This is a var because it depends on the authenticated Link user
+    ///
+    /// :nodoc:
+    internal static var supportedLinkPaymentMethods: [STPPaymentMethodType] = []
 }
 
 // MARK: - PaymentMethodRequirementProvider

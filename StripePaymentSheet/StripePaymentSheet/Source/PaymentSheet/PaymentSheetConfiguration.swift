@@ -162,6 +162,9 @@ extension PaymentSheet {
             }
         }
 
+        /// Controls whether to filter out wallet payment methods from the saved payment method list.
+        @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
+
         /// Initializes a Configuration with default values
         public init() {}
 
@@ -186,6 +189,9 @@ extension PaymentSheet {
         /// - Example: ["card", "external_paypal", "klarna"]
         /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
         public var paymentMethodOrder: [String]?
+
+        // MARK: Internal
+        internal var linkPaymentMethodsOnly: Bool = false
 
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.

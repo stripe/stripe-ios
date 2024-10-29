@@ -5,6 +5,8 @@
 ## X.X.X
 ### PaymentSheet
 * [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+* [Fixed] Fixed an issue with FlowController in vertical layout where the payment method could incorrectly be preserved across a call to `update` when it's no longer valid.
+* [Fixed] Fixed a potential deadlock when `paymentOption` is accessed from Swift concurrency.
 
 
 ## 23.32.0 2024-10-21

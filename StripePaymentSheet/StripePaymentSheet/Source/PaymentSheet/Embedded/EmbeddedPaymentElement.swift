@@ -42,7 +42,7 @@ public final class EmbeddedPaymentElement {
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
         /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
-        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed to the customer near your “Buy” button to comply with regulations.
+        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
 
     }
@@ -103,9 +103,10 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        embeddedPaymentMethodsView.isUserInteractionEnabled = false
         // Cancel the old task and let it finish so that merchants receive update results in order
-        currentUpdateTask?.cancel()
-        _ = await currentUpdateTask?.value
+        latestUpdateTask?.cancel()
+        _ = await latestUpdateTask?.value
         // Start the new update task
         let currentUpdateTask = Task { @MainActor [weak self, configuration, analyticsHelper] in
             // ⚠️ Don't modify `self` until the end to avoid being canceled halfway through and leaving self in a partially updated state.
@@ -157,8 +158,10 @@ public final class EmbeddedPaymentElement {
             }
             return .succeeded
         }
-        self.currentUpdateTask = currentUpdateTask
-        return await currentUpdateTask.value
+        self.latestUpdateTask = currentUpdateTask
+        let updateResult = await currentUpdateTask.value
+        embeddedPaymentMethodsView.isUserInteractionEnabled = true
+        return updateResult
     }
 
     /// Completes the payment or setup.
@@ -167,8 +170,8 @@ public final class EmbeddedPaymentElement {
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
         // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
-        if let currentUpdateTask {
-            switch await currentUpdateTask.value {
+        if let latestUpdateTask {
+            switch await latestUpdateTask.value {
             case .succeeded:
                 // The view is in sync with the intent. Continue on with confirm!
                 break
@@ -191,7 +194,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) var containerView: EmbeddedPaymentElementContainerView
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
-    internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
+    internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     internal var _paymentOption: PaymentOption? {
         // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.
@@ -237,7 +240,7 @@ public final class EmbeddedPaymentElement {
 
         self.analyticsHelper = analyticsHelper
         analyticsHelper.logInitialized()
-        self.containerView.updateSuperviewHeight = { [weak self] in
+        self.containerView.needsUpdateSuperviewHeight = { [weak self] in
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
