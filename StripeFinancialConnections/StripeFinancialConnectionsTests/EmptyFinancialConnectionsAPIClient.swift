@@ -215,7 +215,12 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return Promise<StripeFinancialConnections.AttachLinkConsumerToLinkAccountSessionResponse>()
     }
 
-    func paymentDetails(consumerSessionClientSecret: String, bankAccountId: String) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentDetails> {
+    func paymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentDetails> {
         Promise<StripeFinancialConnections.FinancialConnectionsPaymentDetails>()
     }
 
