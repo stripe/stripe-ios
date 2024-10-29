@@ -510,7 +510,8 @@ extension NativeFlowController {
         var bankAccountDetails: BankAccountDetails?
         let elementsSessionContext = dataManager.elementsSessionContext
         let linkMode = elementsSessionContext?.linkMode
-        let email = dataManager.consumerSession?.emailAddress
+        let email = elementsSessionContext?.prefillDetails?.email ?? dataManager.consumerSession?.emailAddress
+        let phone = elementsSessionContext?.prefillDetails?.formattedPhoneNumber
         dataManager.createPaymentDetails(
             consumerSessionClientSecret: consumerSession.clientSecret,
             bankAccountId: bankAccountId,
@@ -529,13 +530,16 @@ extension NativeFlowController {
                 return self.dataManager.apiClient.sharePaymentDetails(
                     consumerSessionClientSecret: consumerSession.clientSecret,
                     paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
-                    expectedPaymentMethodType: linkMode.expectedPaymentMethodType
+                    expectedPaymentMethodType: linkMode.expectedPaymentMethodType,
+                    billingEmail: email,
+                    billingPhone: phone
                 )
                 .transformed { $0 as PaymentMethodIDProvider }
             } else {
-                return self.dataManager.createPaymentMethod(
+                return self.dataManager.apiClient.paymentMethods(
                     consumerSessionClientSecret: consumerSession.clientSecret,
-                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id
+                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
+                    billingDetails: elementsSessionContext?.billingDetails
                 )
                 .transformed { $0 as PaymentMethodIDProvider }
             }

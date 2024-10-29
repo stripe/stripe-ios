@@ -253,12 +253,15 @@ protocol FinancialConnectionsAPI {
     func sharePaymentDetails(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        expectedPaymentMethodType: String
+        expectedPaymentMethodType: String,
+        billingEmail: String?,
+        billingPhone: String?
     ) -> Future<FinancialConnectionsSharePaymentDetails>
 
     func paymentMethods(
         consumerSessionClientSecret: String,
-        paymentDetailsId: String
+        paymentDetailsId: String,
+        billingDetails: ElementsSessionContext.BillingDetails?
     ) -> Future<FinancialConnectionsPaymentMethod>
 }
 
@@ -1024,9 +1027,11 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func sharePaymentDetails(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        expectedPaymentMethodType: String
+        expectedPaymentMethodType: String,
+        billingEmail: String?,
+        billingPhone: String?
     ) -> Future<FinancialConnectionsSharePaymentDetails> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "id": paymentDetailsId,
             "credentials": [
@@ -1035,6 +1040,14 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "expected_payment_method_type": expectedPaymentMethodType,
             "expand": ["payment_method"],
         ]
+
+        if let billingEmail {
+            parameters["billing_email"] = billingEmail
+        }
+
+        if let billingPhone {
+            parameters["billing_phone"] = billingPhone
+        }
 
         return updateAndApplyFraudDetection(to: parameters)
             .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsSharePaymentDetails> in
@@ -1053,9 +1066,10 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func paymentMethods(
         consumerSessionClientSecret: String,
-        paymentDetailsId: String
+        paymentDetailsId: String,
+        billingDetails: ElementsSessionContext.BillingDetails?
     ) -> Future<FinancialConnectionsPaymentMethod> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "link": [
                 "credentials": [
                     "consumer_session_client_secret": consumerSessionClientSecret
@@ -1064,6 +1078,17 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             ],
             "type": "link",
         ]
+
+        if let billingDetails {
+            do {
+                let encodedBillingDetails = try Self.encodeAsParameters(billingDetails)
+                parameters["billing_details"] = encodedBillingDetails
+            } catch let error {
+                let promise = Promise<FinancialConnectionsPaymentMethod>()
+                promise.reject(with: error)
+                return promise
+            }
+        }
 
         return updateAndApplyFraudDetection(to: parameters)
             .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsPaymentMethod> in

@@ -47,12 +47,12 @@ import Foundation
     // Custom encoder to only encode non-nil & non-empty properties.
     @_spi(STP) public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if let name, !name.isEmpty { try container.encode(name, forKey: .name) }
-        if let line1, !line1.isEmpty { try container.encode(line1, forKey: .line1) }
-        if let line2, !line2.isEmpty { try container.encode(line2, forKey: .line2) }
-        if let city, !city.isEmpty { try container.encode(city, forKey: .city) }
-        if let state, !state.isEmpty { try container.encode(state, forKey: .state) }
-        if let postalCode, !postalCode.isEmpty { try container.encode(postalCode, forKey: .postalCode) }
-        if let countryCode, !countryCode.isEmpty { try container.encode(countryCode, forKey: .countryCode) }
+        try container.encodeIfNotEmpty(name, forKey: .name)
+        try container.encodeIfNotEmpty(line1, forKey: .line1)
+        try container.encodeIfNotEmpty(line2, forKey: .line2)
+        try container.encodeIfNotEmpty(city, forKey: .city)
+        try container.encodeIfNotEmpty(state, forKey: .state)
+        try container.encodeIfNotEmpty(postalCode, forKey: .postalCode)
+        try container.encodeIfNotEmpty(countryCode, forKey: .countryCode)
     }
 }
