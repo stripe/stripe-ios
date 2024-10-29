@@ -136,7 +136,7 @@ import Foundation
         BillingDetails(
             name: billingAddress?.name,
             email: prefillDetails?.email,
-            phone: prefillDetails?.phoneNumber,
+            phone: prefillDetails?.formattedPhoneNumber,
             address: BillingDetails.Address(
                 city: billingAddress?.city,
                 country: billingAddress?.countryCode,
