@@ -31,6 +31,12 @@
 /* Text on a screen asking the user to approve a payment */
 "Approve payment" = "Approve payment";
 
+/* Title of confirmation prompt when removing a saved card. */
+"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
+
+/* Title of confirmation prompt when removing a linked bank account. */
+"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
+
 /* Text for back button */
 "Back" = "Back";
 
@@ -145,6 +151,10 @@
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
 
+/* A text notice shown when the user selects a card that requires
+re-entering the security code (CVV/CVC). */
+"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
+
 /* Select a bank dropdown for FPX */
 "FPX Bank" = "FPX Bank";
 
@@ -156,6 +166,12 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
+
+/* Title for a button that when tapped creates a Link account for the user. */
+"Join Link" = "Join Link";
+
+/* Title of the logout action. */
+"Log out of Link" = "Log out of Link";
 
 /* Title shown above a view containing the customer's payment method that they can delete or update */
 "Manage payment method" = "Manage payment method";
@@ -243,6 +259,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for confirmation alert to remove a card */
 "Remove card?" = "Remove card?";
 
+/* Title for a button that when tapped removes a linked bank account. */
+"Remove linked account" = "Remove linked account";
+
 /* Title shown above a view containing a customer's payment method that they can delete */
 "Remove payment method" = "Remove payment method";
 
@@ -277,6 +296,9 @@ to be saved and used in future checkout sessions. */
 /* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
 "Saved" = "Saved";
 
+/* Title for the Link signup screen */
+"Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
+
 /* Title shown above a view containing the customer's card payment methods */
 "Select card" = "Select card";
 
@@ -285,6 +307,9 @@ to be saved and used in future checkout sessions. */
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
+
+/* Label for a button or menu item that sets a payment method as default when tapped. */
+"Set as default" = "Set as default";
 
 /* Label of a checkbox that when checked makes a payment method as the default one. */
 "Set as default payment method" = "Set as default payment method";
@@ -331,6 +356,12 @@ is not supported by the merchant */
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
+
+/* Text of a label indicating that a payment method is the default. */
+"This is your default" = "This is your default";
 
 /* Error message shown when the user enters an incorrect verification code too many times. */
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
