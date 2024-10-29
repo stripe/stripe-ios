@@ -15,13 +15,24 @@ import Foundation
     }
 
     /// These fields will be used to prefill the Financial Connections Link Login pane.
+    /// An unformatted phone number + country code will be passed to the web flow,
+    /// and a formatted phone number will be passed to the native flow.
     @_spi(STP) public struct PrefillDetails {
         @_spi(STP) public let email: String?
-        @_spi(STP) public let phoneNumber: String?
+        @_spi(STP) public let formattedPhoneNumber: String?
+        @_spi(STP) public let unformattedPhoneNumber: String?
+        @_spi(STP) public let countryCode: String?
 
-        @_spi(STP) public init(email: String?, phoneNumber: String?) {
+        @_spi(STP) public init(
+            email: String?,
+            formattedPhoneNumber: String?,
+            unformattedPhoneNumber: String?,
+            countryCode: String?
+        ) {
             self.email = email
-            self.phoneNumber = phoneNumber
+            self.formattedPhoneNumber = formattedPhoneNumber
+            self.unformattedPhoneNumber = unformattedPhoneNumber
+            self.countryCode = countryCode
         }
     }
 
