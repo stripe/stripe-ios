@@ -453,10 +453,11 @@ extension FinancialConnectionsWebFlowViewController {
 
         if isInstantDebits {
             parameters.append("return_payment_method=true")
-            if let linkMode = linkMode {
+            parameters.append("expand_payment_method=true")
+            if let linkMode {
                 parameters.append("link_mode=\(linkMode.rawValue)")
             }
-
+            
             if let billingDetails = billingDetails {
                 if let name = billingDetails.name, !name.isEmpty {
                     parameters.append("billingDetails[name]=\(name)")
