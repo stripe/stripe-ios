@@ -8,6 +8,7 @@
 import Foundation
 import StripePayments
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 struct PaymentSheetDeferredValidator {
     /// Note: We don't validate amount (for any payment method) because there are use cases where the amount can change slightly between PM collection and confirmation.
@@ -36,7 +37,7 @@ struct PaymentSheetDeferredValidator {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent confirmationMethod (\(paymentIntent.confirmationMethod)) can only be used with PaymentSheet.FlowController.")
         }
     }
-    
+
     static func validate(setupIntent: STPSetupIntent,
                          intentConfiguration: PaymentSheet.IntentConfiguration,
                          paymentMethod: STPPaymentMethod) throws {
@@ -48,12 +49,41 @@ struct PaymentSheetDeferredValidator {
         }
         try validatePaymentMethodId(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
     }
-    
+
     static func validatePaymentMethodId(intentPaymentMethod: STPPaymentMethod?, paymentMethod: STPPaymentMethod) throws {
         guard let intentPaymentMethod = intentPaymentMethod else { return }
         guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
+            if intentPaymentMethod.type == paymentMethod.type {
+                switch paymentMethod.type.identifier {
+                case "card":
+                    try validateFingerprint(intentFingerprint: intentPaymentMethod.card?.fingerprint, fingerprint: paymentMethod.card?.fingerprint)
+                    return
+                case "us_bank_account":
+                    try validateFingerprint(intentFingerprint: intentPaymentMethod.usBankAccount?.fingerprint, fingerprint: paymentMethod.usBankAccount?.fingerprint)
+                    return
+                default:
+                    break
+                }
+            }
             let errorMessage = """
                 \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
+            
+                To resolve this issue, you can:
+                1. Create a new Intent each time before you call the `confirmHandler`, or
+                2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
+            """
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage))
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
+        }
+    }
+
+    static func validateFingerprint(intentFingerprint: String?, fingerprint: String?) throws {
+        guard let intentFingerprint = intentFingerprint else { return }
+        guard let fingerprint = fingerprint else { return }
+        guard intentFingerprint == fingerprint else {
+            let errorMessage = """
+                \nThere is a mismatch between the fingerprint of the payment method on your Intent: \(intentFingerprint) and the fingerprint of the payment method passed into the `confirmHandler`: \(fingerprint).
 
                 To resolve this issue, you can:
                 1. Create a new Intent each time before you call the `confirmHandler`, or
@@ -64,6 +94,7 @@ struct PaymentSheetDeferredValidator {
             throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
         }
     }
+
 }
 
 // MARK: - Validation helpers
