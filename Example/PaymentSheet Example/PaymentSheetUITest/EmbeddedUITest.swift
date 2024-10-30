@@ -57,27 +57,27 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Ensure card preference is cartes bancaires
         XCTAssertTrue(app.buttons["•••• 1001"].waitForExistence(timeout: 3))
         XCTAssertTrue(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
-        XCTAssertTrue(app.images["stp_card_visa"].waitForNonExistence(timeout: 1))
+        XCTAssertFalse(app.images["stp_card_visa"].waitForExistence(timeout: 3))
 
         app.buttons["Edit"].waitForExistenceAndTap()
         app.otherElements["Card Brand Dropdown"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.swipeUp()
         app.buttons["Done"].waitForExistenceAndTap()
         app.buttons["Update"].waitForExistenceAndTap()
-        app.staticTexts["Update card brand"].waitForNonExistence(timeout: 10)
+        XCTAssertFalse(app.staticTexts["Update card brand"].waitForExistence(timeout: 3))
 
         // Ensure card preference is switched to visa
         XCTAssertTrue(app.buttons["•••• 1001"].waitForExistence(timeout: 3))
         XCTAssertTrue(app.images["stp_card_visa"].waitForExistence(timeout: 3))
-        XCTAssertTrue(app.images["stp_card_cartes_bancaires"].waitForNonExistence(timeout: 1))
+        XCTAssertFalse(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
 
         // Now remove card
         app.buttons["Edit"].waitForExistenceAndTap()
         app.buttons["Remove card"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
-        XCTAssertTrue(app.images["stp_card_visa"].waitForNonExistence(timeout: 1))
-        XCTAssertTrue(app.images["stp_card_cartes_bancaires"].waitForNonExistence(timeout: 1))
+        XCTAssertFalse(app.images["stp_card_visa"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
     }
 
     func testMulipleCardWith_updateCBCWithinViewMore() {
@@ -113,7 +113,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertTrue(app.buttons["•••• 1001"].waitForNonExistence(timeout: 1.0))
+        XCTAssertFalse(app.buttons["•••• 1001"].waitForExistence(timeout: 3.0))
 
         // Switch from 4242 to 4444
         app.buttons["View more"].waitForExistenceAndTap()
@@ -129,7 +129,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["•••• 1001"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.buttons["•••• 1001"].waitForExistence(timeout: 3.0))
-        XCTAssertTrue(app.buttons["•••• 4242"].waitForNonExistence(timeout: 1.0))
+        XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
     }
 
     func testMulipleCard_update_and_remove() {
@@ -165,14 +165,14 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertTrue(app.buttons["•••• 4444"].waitForNonExistence(timeout: 1.0))
+        XCTAssertFalse(app.buttons["•••• 4444"].waitForExistence(timeout: 3.0))
 
         // Switch from 4242 to 4444
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["•••• 4444"].waitForExistenceAndTap()
 
-        XCTAssertTrue(app.buttons["•••• 4242"].waitForNonExistence(timeout: 3.0))
-        XCTAssertTrue(app.buttons["•••• 4444"].waitForExistence(timeout: 1.0))
+        XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
+        XCTAssertTrue(app.buttons["•••• 4444"].waitForExistence(timeout: 3.0))
 
         // Remove selected 4444 card
         app.buttons["View more"].waitForExistenceAndTap()
@@ -183,15 +183,15 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Since there is only one PM left (4242), sheet dismisses automatically on tapping Done. Verify that only 4242 exists
         XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertTrue(app.buttons["•••• 4444"].waitForNonExistence(timeout: 1.0))
+        XCTAssertFalse(app.buttons["•••• 4444"].waitForExistence(timeout: 3.0))
 
         // Remove 4242 & verify
         app.buttons["Edit"].waitForExistenceAndTap()
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
 
-        XCTAssertTrue(app.buttons["•••• 4242"].waitForNonExistence(timeout: 3.0))
-        XCTAssertTrue(app.buttons["•••• 4444"].waitForNonExistence(timeout: 1.0))
+        XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(app.buttons["•••• 4444"].waitForExistence(timeout: 3.0))
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
