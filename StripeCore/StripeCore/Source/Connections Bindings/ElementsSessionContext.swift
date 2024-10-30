@@ -42,6 +42,7 @@ import Foundation
     @_spi(STP) public let intentId: IntentID?
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let billingAddress: BillingAddress?
+    @_spi(STP) public let billingDetails: BillingDetails?
 
     @_spi(STP) public init(
         amount: Int?,
@@ -49,7 +50,8 @@ import Foundation
         prefillDetails: PrefillDetails?,
         intentId: IntentID?,
         linkMode: LinkMode?,
-        billingAddress: BillingAddress?
+        billingAddress: BillingAddress?,
+        billingDetails: BillingDetails?
     ) {
         self.amount = amount
         self.currency = currency
@@ -57,21 +59,22 @@ import Foundation
         self.intentId = intentId
         self.linkMode = linkMode
         self.billingAddress = billingAddress
+        self.billingDetails = billingDetails
     }
 }
 
 @_spi(STP) public extension ElementsSessionContext {
     /// https://docs.stripe.com/api/payment_methods/create#create_payment_method-billing_details
     struct BillingDetails: Encodable {
-        struct Address: Encodable {
-            let city: String?
-            let country: String?
-            let line1: String?
-            let line2: String?
-            let postalCode: String?
-            let state: String?
+        @_spi(STP) public struct Address: Encodable {
+            @_spi(STP) public let city: String?
+            @_spi(STP) public let country: String?
+            @_spi(STP) public let line1: String?
+            @_spi(STP) public let line2: String?
+            @_spi(STP) public let postalCode: String?
+            @_spi(STP) public let state: String?
 
-            init?(
+            @_spi(STP) public init?(
                 city: String?,
                 country: String?,
                 line1: String?,
@@ -91,6 +94,17 @@ import Foundation
                 self.state = state
             }
 
+            @_spi(STP) public init?(from billingAddress: BillingAddress?) {
+                self.init(
+                    city: billingAddress?.city,
+                    country: billingAddress?.countryCode,
+                    line1: billingAddress?.line1,
+                    line2: billingAddress?.line2,
+                    postalCode: billingAddress?.postalCode,
+                    state: billingAddress?.state
+                )
+            }
+
             enum CodingKeys: String, CodingKey {
                 case city
                 case country
@@ -100,7 +114,7 @@ import Foundation
                 case state
             }
 
-            func encode(to encoder: any Encoder) throws {
+            @_spi(STP) public func encode(to encoder: any Encoder) throws {
                 var container: KeyedEncodingContainer<CodingKeys> = encoder.container(keyedBy: CodingKeys.self)
                 try container.encodeIfNotEmpty(self.city, forKey: .city)
                 try container.encodeIfNotEmpty(self.country, forKey: .country)
@@ -111,10 +125,17 @@ import Foundation
             }
         }
 
-        let name: String?
-        let email: String?
-        let phone: String?
-        let address: Address?
+        @_spi(STP) public let name: String?
+        @_spi(STP) public let email: String?
+        @_spi(STP) public let phone: String?
+        @_spi(STP) public let address: Address?
+
+        @_spi(STP) public init(name: String?, email: String?, phone: String?, address: Address?) {
+            self.name = name
+            self.email = email
+            self.phone = phone
+            self.address = address
+        }
 
         enum CodingKeys: CodingKey {
             case name
@@ -130,21 +151,5 @@ import Foundation
             try container.encodeIfNotEmpty(self.phone, forKey: .phone)
             try container.encodeIfPresent(self.address, forKey: .address)
         }
-    }
-
-    var billingDetails: BillingDetails {
-        BillingDetails(
-            name: billingAddress?.name,
-            email: prefillDetails?.email,
-            phone: prefillDetails?.formattedPhoneNumber,
-            address: BillingDetails.Address(
-                city: billingAddress?.city,
-                country: billingAddress?.countryCode,
-                line1: billingAddress?.line1,
-                line2: billingAddress?.line2,
-                postalCode: billingAddress?.postalCode,
-                state: billingAddress?.state
-            )
-        )
     }
 }

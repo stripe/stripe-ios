@@ -153,11 +153,12 @@ extension FinancialConnectionsWebFlowViewController {
         guard authSessionManager == nil else { return }
         loadingView.showLoading(true)
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
-        let additionalQueryParameters = Self.updateAdditionalParameters(
+        let additionalQueryParameters = Self.buildEncodedUrlParameters(
             startingAdditionalParameters: additionalQueryParameters,
             isInstantDebits: manifest.isProductInstantDebits,
             linkMode: elementsSessionContext?.linkMode,
-            prefillDetails: elementsSessionContext?.prefillDetails
+            prefillDetails: elementsSessionContext?.prefillDetails,
+            billingDetails: elementsSessionContext?.billingDetails
         )
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
@@ -424,30 +425,75 @@ private extension FinancialConnectionsWebFlowViewController {
 }
 
 extension FinancialConnectionsWebFlowViewController {
-    static func updateAdditionalParameters(
+    static func buildEncodedUrlParameters(
         startingAdditionalParameters: String?,
         isInstantDebits: Bool,
         linkMode: LinkMode?,
-        prefillDetails: ElementsSessionContext.PrefillDetails?
-    ) -> String {
-        var additionalQueryParameters = startingAdditionalParameters ?? ""
+        prefillDetails: ElementsSessionContext.PrefillDetails?,
+        billingDetails: ElementsSessionContext.BillingDetails?
+    ) -> String? {
+        var parameters: [String] = []
+
+        if let startingAdditionalParameters {
+            parameters.append(startingAdditionalParameters)
+        }
+
         if isInstantDebits {
-            additionalQueryParameters = additionalQueryParameters + "&return_payment_method=true"
-            if let linkMode {
-                additionalQueryParameters = additionalQueryParameters + "&link_mode=\(linkMode.rawValue)"
+            parameters.append("return_payment_method=true")
+            if let linkMode = linkMode {
+                parameters.append("link_mode=\(linkMode.rawValue)")
             }
         }
-        if let prefillDetails {
-            if let email = prefillDetails.email {
-                additionalQueryParameters = additionalQueryParameters + "&email=\(email)"
+
+        if let prefillDetails = prefillDetails {
+            if let email = prefillDetails.email, !email.isEmpty {
+                parameters.append("email=\(email)")
             }
-            if let phoneNumber = prefillDetails.unformattedPhoneNumber {
-                additionalQueryParameters = additionalQueryParameters + "&linkMobilePhone=\(phoneNumber)"
+            if let phoneNumber = prefillDetails.unformattedPhoneNumber, !phoneNumber.isEmpty {
+                parameters.append("linkMobilePhone=\(phoneNumber)")
             }
-            if let countryCode = prefillDetails.countryCode {
-                additionalQueryParameters = additionalQueryParameters + "&linkMobilePhoneCountry=\(countryCode)"
+            if let countryCode = prefillDetails.countryCode, !countryCode.isEmpty {
+                parameters.append("linkMobilePhoneCountry=\(countryCode)")
             }
         }
-        return additionalQueryParameters
+
+        if let billingDetails = billingDetails {
+            if let name = billingDetails.name, !name.isEmpty {
+                parameters.append("billingDetails[name]=\(name)")
+            }
+            if let email = billingDetails.email, !email.isEmpty {
+                parameters.append("billingDetails[email]=\(email)")
+            }
+            if let phone = billingDetails.phone, !phone.isEmpty {
+                parameters.append("billingDetails[phone]=\(phone)")
+            }
+            if let address = billingDetails.address {
+                if let city = address.city, !city.isEmpty {
+                    parameters.append("billingDetails[address][city]=\(city)")
+                }
+                if let country = address.country, !country.isEmpty {
+                    parameters.append("billingDetails[address][country]=\(country)")
+                }
+                if let line1 = address.line1, !line1.isEmpty {
+                    parameters.append("billingDetails[address][line1]=\(line1)")
+                }
+                if let line2 = address.line2, !line2.isEmpty {
+                    parameters.append("billingDetails[address][line2]=\(line2)")
+                }
+                if let postalCode = address.postalCode, !postalCode.isEmpty {
+                    parameters.append("billingDetails[address][postal_code]=\(postalCode)")
+                }
+                if let state = address.state, !state.isEmpty {
+                    parameters.append("billingDetails[address][state]=\(state)")
+                }
+            }
+        }
+
+        // Join all values with an &, and URL encode.
+        guard let result = parameters.joined(separator: "&").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
+            return nil
+        }
+        // Start the result with a & if it is not empty and doesn't already start with one.
+        return result.isEmpty ? nil : result.hasPrefix("&") ? result : "&" + result
     }
 }
