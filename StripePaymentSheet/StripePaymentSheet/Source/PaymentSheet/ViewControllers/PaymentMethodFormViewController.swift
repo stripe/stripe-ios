@@ -429,11 +429,21 @@ extension PaymentMethodFormViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
-        let additionalParameters: [String: Any] = [
+
+        var additionalParameters: [String: Any] = [
             "product": "instant_debits",
-//            "attach_required": true,
             "hosted_surface": "payment_element",
         ]
+        
+        switch intent {
+        case .paymentIntent:
+            additionalParameters["attach_required"] = true
+        case .setupIntent:
+            additionalParameters["attach_required"] = true
+        case .deferredIntent:
+            break
+        }
+        
         switch intent {
         case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
