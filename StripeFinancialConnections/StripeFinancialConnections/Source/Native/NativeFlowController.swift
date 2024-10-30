@@ -510,8 +510,8 @@ extension NativeFlowController {
         var bankAccountDetails: BankAccountDetails?
         let elementsSessionContext = dataManager.elementsSessionContext
         let linkMode = elementsSessionContext?.linkMode
-        let email = elementsSessionContext?.prefillDetails?.email ?? dataManager.consumerSession?.emailAddress
-        let phone = elementsSessionContext?.prefillDetails?.formattedPhoneNumber
+        let email = elementsSessionContext?.billingDetails?.email ?? dataManager.consumerSession?.emailAddress
+        let phone = elementsSessionContext?.billingDetails?.phone
         dataManager.createPaymentDetails(
             consumerSessionClientSecret: consumerSession.clientSecret,
             bankAccountId: bankAccountId,
