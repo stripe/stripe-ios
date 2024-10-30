@@ -13,33 +13,27 @@ import UIKit
 @_spi(PrivateBetaConnect)
 @available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
-    let webView: ConnectComponentWebView
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: PayoutsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
-         loadContent: Bool = true) {
-        webView = ConnectComponentWebView(
+         loadContent: Bool) {
+        super.init(nibName: nil, bundle: nil)
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .payouts,
             loadContent: loadContent
-        )
-        super.init(nibName: nil, bundle: nil)
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
+        ) { [weak self] error in
             guard let self else { return }
-            self.delegate?.payouts(self, didFailLoadWithError: value.error.connectEmbedError)
-        })
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
+            delegate?.payouts(self, didFailLoadWithError: error)
         }
+
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    public override func loadView() {
-        view = webView
     }
 }
 

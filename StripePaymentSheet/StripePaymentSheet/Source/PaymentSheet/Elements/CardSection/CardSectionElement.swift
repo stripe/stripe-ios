@@ -35,8 +35,9 @@ final class CardSectionElement: ContainerElement {
         #endif
     }()
     let cardSection: SectionElement
-    let analyticsHelper: PaymentSheetAnalyticsHelper
-
+    let analyticsHelper: PaymentSheetAnalyticsHelper?
+    let cardBrandFilter: CardBrandFilter
+    
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
             self.name = name
@@ -57,7 +58,7 @@ final class CardSectionElement: ContainerElement {
     let cardBrandDropDown: DropdownFieldElement?
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
-    let theme: ElementsUITheme
+    let theme: ElementsAppearance
     let preferredNetworks: [STPCardBrand]?
     let hostedSurface: HostedSurface
 
@@ -67,12 +68,14 @@ final class CardSectionElement: ContainerElement {
         preferredNetworks: [STPCardBrand]? = nil,
         cardBrandChoiceEligible: Bool = false,
         hostedSurface: HostedSurface,
-        theme: ElementsUITheme = .default,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        theme: ElementsAppearance = .default,
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        cardBrandFilter: CardBrandFilter = .default
     ) {
         self.hostedSurface = hostedSurface
         self.theme = theme
         self.analyticsHelper = analyticsHelper
+        self.cardBrandFilter = cardBrandFilter
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
@@ -94,7 +97,7 @@ final class CardSectionElement: ContainerElement {
             }
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDown: cardBrandDropDown?.element), theme: theme) { field, params in
+                                                                                       cardBrandDropDown: cardBrandDropDown?.element, cardFilter: cardBrandFilter), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -174,6 +177,7 @@ final class CardSectionElement: ContainerElement {
 
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
     var lastPanElementValidationState: ElementValidationState
+    var lastDisallowedCardBrandLogged: STPCardBrand?
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
         let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
@@ -191,6 +195,20 @@ final class CardSectionElement: ContainerElement {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
             }
         }
+
+        // Send an analytic if we are disallowing a card brand
+        if case .invalid(let error, _) = panElement.validationState,
+           let specificError = error as? TextFieldElement.PANConfiguration.Error,
+           case .disallowedBrand(let brand) = specificError,
+           lastDisallowedCardBrandLogged != brand {
+
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                event: .paymentSheetDisallowedCardBrand,
+                params: ["brand": STPCardBrandUtilities.apiValue(from: brand)]
+            )
+            lastDisallowedCardBrandLogged = brand
+        }
+
         delegate?.didUpdate(element: self)
     }
 
@@ -210,7 +228,7 @@ final class CardSectionElement: ContainerElement {
 
         var fetchedCardBrands = Set<STPCardBrand>()
         let hadBrands = !cardBrands.isEmpty
-        STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
+        STPCardValidator.possibleBrands(forNumber: panElement.text, with: cardBrandFilter) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let brands):
@@ -236,6 +254,10 @@ final class CardSectionElement: ContainerElement {
                    let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
                    let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+                } else if cardBrands.count == 1 && self.cardBrandFilter != .default {
+                    // If we only fetched one card brand auto select it, 1 index due to 0 index being the placeholder.
+                    // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
+                    cardBrandDropDown.select(index: 1, shouldAutoAdvance: false)
                 }
 
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update

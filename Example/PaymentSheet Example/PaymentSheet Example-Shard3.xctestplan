@@ -33,9 +33,12 @@
       "skippedTests" : [
         "CustomerSheetSnapshotTests",
         "CustomerSheetUITest",
+        "EmbeddedUITests",
+        "EmbeddedUITests\/testUpdate()",
         "LinkPaymentControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetCVCRecollectionUITests",
+        "PaymentSheetCardBrandFilteringUITests",
         "PaymentSheetCustomerSessionCBCUITests",
         "PaymentSheetCustomerSessionDedupeUITests",
         "PaymentSheetDeferredServerSideUITests",

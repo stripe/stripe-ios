@@ -135,6 +135,13 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    enum CardBrandAcceptance: String, PickerEnum {
+        static let enumName: String = "cardBrandAcceptance"
+        case all
+        case blockAmEx
+        case allowVisa
+    }
+
     var customerMode: CustomerMode
     var customerId: String?
     var customerKeyType: CustomerKeyType
@@ -154,6 +161,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethod
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
+    var cardBrandAcceptance: CardBrandAcceptance
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -173,7 +181,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    preferredNetworksEnabled: .off,
                                                    allowsRemovalOfLastSavedPaymentMethod: .on,
                                                    paymentMethodRemove: .enabled,
-                                                   paymentMethodAllowRedisplayFilters: .always)
+                                                   paymentMethodAllowRedisplayFilters: .always,
+                                                   cardBrandAcceptance: .all)
     }
 
     var base64Data: String {

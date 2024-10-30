@@ -410,8 +410,6 @@ class STPSourceTest: XCTestCase {
         XCTAssertNotNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
     }
 
-    // MARK: - STPPaymentOption Tests
-
     func possibleAPIResponses() -> [[AnyHashable: Any]] {
         return [
             STPTestUtils.jsonNamed(STPTestJSONSourceCard),
@@ -428,68 +426,4 @@ class STPSourceTest: XCTestCase {
         ]
     }
 
-    func testPaymentOptionImage() {
-        for response in possibleAPIResponses() {
-            let source = STPSource.decodedObject(fromAPIResponse: response)
-
-            switch source!.type {
-            case STPSourceType.card:
-                STPAssertEqualImages(source?.image, STPImageLibrary.cardBrandImage(for: source?.cardDetails?.brand ?? .unknown))
-            default:
-                STPAssertEqualImages(source?.image, STPImageLibrary.cardBrandImage(for: STPCardBrand.unknown))
-            }
-        }
-    }
-
-    func testPaymentOptionTemplateImage() {
-        for response in possibleAPIResponses() {
-            let source = STPSource.decodedObject(fromAPIResponse: response)
-
-            switch source!.type {
-            case STPSourceType.card:
-                STPAssertEqualImages(source?.templateImage, STPImageLibrary.templatedBrandImage(for: source?.cardDetails?.brand ?? .unknown))
-            default:
-                STPAssertEqualImages(source?.templateImage, STPImageLibrary.templatedBrandImage(for: STPCardBrand.unknown))
-            }
-        }
-    }
-
-    func testPaymentOptionLabel() {
-        for response in possibleAPIResponses() {
-            let source = STPSource.decodedObject(fromAPIResponse: response)
-
-            switch source!.type {
-            case STPSourceType.bancontact:
-                XCTAssertEqual(source?.label, "Bancontact")
-            case STPSourceType.card:
-                XCTAssertEqual(source?.label, "Visa 5556")
-            case STPSourceType.giropay:
-                XCTAssertEqual(source?.label, "giropay")
-            case STPSourceType.iDEAL:
-                XCTAssertEqual(source?.label, "iDEAL")
-            case STPSourceType.SEPADebit:
-                XCTAssertEqual(source?.label, "SEPA Debit")
-            case STPSourceType.sofort:
-                XCTAssertEqual(source?.label, "Sofort")
-            case STPSourceType.threeDSecure:
-                XCTAssertEqual(source?.label, "3D Secure")
-            case STPSourceType.alipay:
-                XCTAssertEqual(source?.label, "Alipay")
-            case STPSourceType.P24:
-                XCTAssertEqual(source?.label, "Przelewy24")
-            case STPSourceType.EPS:
-                XCTAssertEqual(source?.label, "EPS")
-            case STPSourceType.multibanco:
-                XCTAssertEqual(source?.label, "Multibanco")
-            case STPSourceType.weChatPay:
-                XCTAssertEqual(source?.label, "WeChat Pay")
-            case STPSourceType.klarna:
-                XCTAssertEqual(source?.label, "Klarna")
-            case STPSourceType.unknown:
-                XCTAssertEqual(source?.label, STPCard.string(from: .unknown))
-            default:
-                break
-            }
-        }
-    }
 }

@@ -23,7 +23,7 @@ import UIKit
     public let elements: [Element]
     public let customSpacing: [(Element, CGFloat)]
     public let style: Style
-    public let theme: ElementsUITheme
+    public let theme: ElementsAppearance
 
     // MARK: - Style
     public enum Style {
@@ -37,9 +37,9 @@ import UIKit
     public struct ViewModel {
         let elements: [UIView]
         let bordered: Bool
-        let theme: ElementsUITheme
+        let theme: ElementsAppearance
         let customSpacing: [(UIView, CGFloat)]
-        public init(elements: [UIView], bordered: Bool, theme: ElementsUITheme = .default, customSpacing: [(UIView, CGFloat)] = []) {
+        public init(elements: [UIView], bordered: Bool, theme: ElementsAppearance = .default, customSpacing: [(UIView, CGFloat)] = []) {
             self.elements = elements
             self.bordered = bordered
             self.theme = theme
@@ -58,11 +58,11 @@ import UIKit
     ///   - elements: The list of elements
     ///   - theme: The ElementsUITheme
     ///   - customSpacing: A list of Elements and a CGFloat of custom spacing to use after the element
-    public convenience init(elements: [Element?], theme: ElementsUITheme = .default, customSpacing: [(Element, CGFloat)] = []) {
+    public convenience init(elements: [Element?], theme: ElementsAppearance = .default, customSpacing: [(Element, CGFloat)] = []) {
         self.init(elements: elements, style: .plain, theme: theme, customSpacing: customSpacing)
     }
 
-    public init(elements: [Element?], style: Style, theme: ElementsUITheme = .default, customSpacing: [(Element, CGFloat)] = []) {
+    public init(elements: [Element?], style: Style, theme: ElementsAppearance = .default, customSpacing: [(Element, CGFloat)] = []) {
         self.elements = elements.compactMap { $0 }
         self.style = style
         self.theme = theme

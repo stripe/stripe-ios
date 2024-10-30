@@ -34,6 +34,9 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? { get set }
     var paymentMethodOrder: [String]? { get set }
     var allowsRemovalOfLastSavedPaymentMethod: Bool { get set }
+    var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance { get set }
+    var analyticPayload: [String: Any] { get }
+    var disableWalletPaymentMethodFiltering: Bool { get set }
 }
 
 extension PaymentElementConfiguration {

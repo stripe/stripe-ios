@@ -156,7 +156,8 @@ extension FinancialConnectionsWebFlowViewController {
         let additionalQueryParameters = Self.updateAdditionalParameters(
             startingAdditionalParameters: additionalQueryParameters,
             isInstantDebits: manifest.isProductInstantDebits,
-            linkMode: elementsSessionContext?.linkMode
+            linkMode: elementsSessionContext?.linkMode,
+            prefillDetails: elementsSessionContext?.prefillDetails
         )
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
@@ -174,7 +175,8 @@ extension FinancialConnectionsWebFlowViewController {
                                 bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
                                 // backend can return "+" instead of a more-common encoding of "%20" for spaces
                                     .replacingOccurrences(of: "+", with: " "),
-                                last4: Self.extractValue(from: returnUrl, key: "last4")
+                                last4: Self.extractValue(from: returnUrl, key: "last4"),
+                                linkMode: elementsSessionContext?.linkMode
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
                         } else {
@@ -425,13 +427,25 @@ extension FinancialConnectionsWebFlowViewController {
     static func updateAdditionalParameters(
         startingAdditionalParameters: String?,
         isInstantDebits: Bool,
-        linkMode: LinkMode?
+        linkMode: LinkMode?,
+        prefillDetails: ElementsSessionContext.PrefillDetails?
     ) -> String {
         var additionalQueryParameters = startingAdditionalParameters ?? ""
         if isInstantDebits {
             additionalQueryParameters = additionalQueryParameters + "&return_payment_method=true"
             if let linkMode {
                 additionalQueryParameters = additionalQueryParameters + "&link_mode=\(linkMode.rawValue)"
+            }
+        }
+        if let prefillDetails {
+            if let email = prefillDetails.email {
+                additionalQueryParameters = additionalQueryParameters + "&email=\(email)"
+            }
+            if let phoneNumber = prefillDetails.unformattedPhoneNumber {
+                additionalQueryParameters = additionalQueryParameters + "&linkMobilePhone=\(phoneNumber)"
+            }
+            if let countryCode = prefillDetails.countryCode {
+                additionalQueryParameters = additionalQueryParameters + "&linkMobilePhoneCountry=\(countryCode)"
             }
         }
         return additionalQueryParameters

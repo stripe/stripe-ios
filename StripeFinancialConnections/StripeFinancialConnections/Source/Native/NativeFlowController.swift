@@ -508,9 +508,15 @@ extension NativeFlowController {
 
         // Bank account details extraction for the linked bank
         var bankAccountDetails: BankAccountDetails?
+        let elementsSessionContext = dataManager.elementsSessionContext
+        let linkMode = elementsSessionContext?.linkMode
+        let email = elementsSessionContext?.prefillDetails?.email ?? dataManager.consumerSession?.emailAddress
+        let phone = elementsSessionContext?.prefillDetails?.formattedPhoneNumber
         dataManager.createPaymentDetails(
             consumerSessionClientSecret: consumerSession.clientSecret,
-            bankAccountId: bankAccountId
+            bankAccountId: bankAccountId,
+            billingAddress: elementsSessionContext?.billingAddress,
+            billingEmail: email
         )
         .chained { [weak self] paymentDetails -> Future<PaymentMethodIDProvider> in
             guard let self else {
@@ -520,17 +526,20 @@ extension NativeFlowController {
             bankAccountDetails = paymentDetails.redactedPaymentDetails.bankAccountDetails
 
             // Decide which API to call based on the payment mode
-            if self.dataManager.elementsSessionContext?.linkMode?.isPantherPayment == true {
+            if let linkMode, linkMode.isPantherPayment {
                 return self.dataManager.apiClient.sharePaymentDetails(
                     consumerSessionClientSecret: consumerSession.clientSecret,
                     paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
-                    expectedPaymentMethodType: "card"
+                    expectedPaymentMethodType: linkMode.expectedPaymentMethodType,
+                    billingEmail: email,
+                    billingPhone: phone
                 )
                 .transformed { $0 as PaymentMethodIDProvider }
             } else {
-                return self.dataManager.createPaymentMethod(
+                return self.dataManager.apiClient.paymentMethods(
                     consumerSessionClientSecret: consumerSession.clientSecret,
-                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id
+                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
+                    billingDetails: elementsSessionContext?.billingDetails
                 )
                 .transformed { $0 as PaymentMethodIDProvider }
             }
@@ -541,7 +550,8 @@ extension NativeFlowController {
                 let linkedBank = InstantDebitsLinkedBank(
                     paymentMethodId: paymentMethod.id,
                     bankName: bankAccountDetails?.bankName,
-                    last4: bankAccountDetails?.last4
+                    last4: bankAccountDetails?.last4,
+                    linkMode: linkMode
                 )
                 completion(.success(linkedBank))
             case .failure(let error):
@@ -823,6 +833,10 @@ extension NativeFlowController: ManualEntryViewControllerDelegate {
         dataManager.accountNumberLast4 = accountNumberLast4
 
         if dataManager.manifest.manualEntryUsesMicrodeposits {
+            dataManager.customSuccessPaneCaption = STPLocalizedString(
+                "Almost there",
+                "The title of the success screen that appears when a user manually entered their bank account information."
+            )
             dataManager.customSuccessPaneSubCaption = String(
                 format: STPLocalizedString(
                     "You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions.",
@@ -1313,7 +1327,8 @@ private func CreatePaneViewController(
             analyticsClient: dataManager.analyticsClient,
             clientSecret: dataManager.clientSecret,
             returnURL: dataManager.returnURL,
-            apiClient: dataManager.apiClient
+            apiClient: dataManager.apiClient,
+            elementsSessionContext: dataManager.elementsSessionContext
         )
         let linkLoginViewController = LinkLoginViewController(dataSource: linkLoginDataSource)
         linkLoginViewController.delegate = nativeFlowController

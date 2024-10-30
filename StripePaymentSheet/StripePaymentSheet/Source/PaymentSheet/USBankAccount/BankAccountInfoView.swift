@@ -20,7 +20,7 @@ class BankAccountInfoView: UIView {
         static let spacing: CGFloat = 12
     }
 
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
     lazy var bankNameLabel: UILabel = {
         let label = UILabel()
@@ -69,7 +69,7 @@ class BankAccountInfoView: UIView {
         }
     }
 
-    init(frame: CGRect, theme: ElementsUITheme = .default) {
+    init(frame: CGRect, theme: ElementsAppearance = .default) {
         self.theme = theme
         super.init(frame: frame)
         addViewComponents()

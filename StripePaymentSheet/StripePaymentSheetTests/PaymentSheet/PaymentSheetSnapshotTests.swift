@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@_spi(STP) @_spi(ExperimentalPaymentMethodLayoutAPI) @testable import StripePaymentSheet
+@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
@@ -47,6 +47,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "mockReturnUrl"
+        configuration.paymentMethodLayout = .horizontal
 
 //                self.runAgainstLiveService = true
         if !self.runAgainstLiveService {
@@ -532,7 +533,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentMethodLayoutVertical() {
         configuration.paymentMethodLayout = .vertical
         stubNewCustomerResponse()
@@ -540,7 +541,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentMethodLayoutAutomatic() {
         configuration.paymentMethodLayout = .automatic
         stubNewCustomerResponse()

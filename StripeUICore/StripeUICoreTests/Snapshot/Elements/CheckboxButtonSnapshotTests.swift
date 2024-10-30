@@ -42,7 +42,7 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCustomFont() throws {
-        var theme = ElementsUITheme.default
+        var theme = ElementsAppearance.default
         theme.fonts.footnote = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))
         theme.fonts.footnoteEmphasis = try XCTUnwrap(UIFont(name: "AmericanTypewriter-Semibold", size: 13.0))
 
@@ -82,7 +82,7 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testAttributedTextCustomFont() throws {
-        var theme = ElementsUITheme.default
+        var theme = ElementsAppearance.default
         theme.fonts.footnote = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))
         theme.fonts.footnoteEmphasis = try XCTUnwrap(UIFont(name: "AmericanTypewriter-Semibold", size: 13.0))
         let checkbox = CheckboxButton(

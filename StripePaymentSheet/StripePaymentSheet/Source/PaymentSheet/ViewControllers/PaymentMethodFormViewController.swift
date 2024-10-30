@@ -20,7 +20,7 @@ class PaymentMethodFormViewController: UIViewController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let paymentMethodType: PaymentSheet.PaymentMethodType
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
@@ -81,7 +81,7 @@ class PaymentMethodFormViewController: UIViewController {
         elementsSession: STPElementsSession,
         previousCustomerInput: IntentConfirmParams?,
         formCache: PaymentMethodFormCache,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: PaymentMethodFormViewControllerDelegate
@@ -207,9 +207,47 @@ extension PaymentMethodFormViewController {
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement? { form as? USBankAccountPaymentMethodElement }
     private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? { form as? InstantDebitsPaymentMethodElement }
 
-    private var elementsSessionContext: ElementsSessionContext? {
+    private var elementsSessionContext: ElementsSessionContext {
+        let intentId: ElementsSessionContext.IntentID? = {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                return .payment(paymentIntent.stripeId)
+            case .setupIntent(let setupIntent):
+                return .setup(setupIntent.stripeID)
+            case .deferredIntent:
+                return nil
+            }
+        }()
+
+        let defaultPhoneNumber = configuration.defaultBillingDetails.phone
+        let defaultUnformattedPhoneNumber: String? = {
+            guard let defaultPhoneNumber else { return nil }
+            return PhoneNumber.fromE164(defaultPhoneNumber)?.number
+        }()
+        let prefillDetails = ElementsSessionContext.PrefillDetails(
+            email: instantDebitsFormElement?.email ?? configuration.defaultBillingDetails.name,
+            formattedPhoneNumber: instantDebitsFormElement?.phone ?? defaultPhoneNumber,
+            unformattedPhoneNumber: instantDebitsFormElement?.phoneElement?.phoneNumber?.number ?? defaultUnformattedPhoneNumber,
+            countryCode: instantDebitsFormElement?.phoneElement?.selectedCountryCode
+        )
         let linkMode = elementsSession.linkSettings?.linkMode
-        return ElementsSessionContext(linkMode: linkMode)
+        let billingAddress: BillingAddress? = {
+            if configuration.billingDetailsCollectionConfiguration.address == .full {
+                return instantDebitsFormElement?.billingAddress
+            } else if configuration.billingDetailsCollectionConfiguration.name == .always {
+                return BillingAddress(name: instantDebitsFormElement?.name)
+            } else {
+                return nil
+            }
+        }()
+        return ElementsSessionContext(
+            amount: intent.amount,
+            currency: intent.currency,
+            prefillDetails: prefillDetails,
+            intentId: intentId,
+            linkMode: linkMode,
+            billingAddress: billingAddress
+        )
     }
 
     private var shouldOverridePrimaryButton: Bool {

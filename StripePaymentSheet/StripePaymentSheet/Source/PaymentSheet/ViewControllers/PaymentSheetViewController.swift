@@ -46,6 +46,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     }
     let intent: Intent
     let elementsSession: STPElementsSession
+    let loadResult: PaymentSheetLoader.LoadResult
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
@@ -71,6 +72,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
+            paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
             analyticsHelper: analyticsHelper,
             delegate: self
@@ -153,6 +155,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
         let isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
 
+        self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
         self.configuration = configuration
@@ -192,6 +195,10 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.savedPaymentOptionsViewController.delegate = self
         // TODO: This self.view call should be moved to viewDidLoad
         self.view.backgroundColor = configuration.appearance.colors.background
+    }
+
+    func selectLink() {
+        savedPaymentOptionsViewController.selectLink()
     }
 
     // MARK: UIViewController Methods

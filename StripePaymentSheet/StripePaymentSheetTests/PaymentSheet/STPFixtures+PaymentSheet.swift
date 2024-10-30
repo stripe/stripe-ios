@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
@@ -16,6 +16,20 @@ public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
     static func _testValue_MostPermissive(isApplePayEnabled: Bool = true) -> Self {
         var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        if isApplePayEnabled {
+            configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
+        }
+        return configuration
+    }
+}
+
+public extension EmbeddedPaymentElement.Configuration {
+    /// Provides a Configuration that allows all pm types available
+    static func _testValue_MostPermissive(isApplePayEnabled: Bool = true) -> Self {
+        var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: .continue)
         configuration.returnURL = "https://foo.com"
         configuration.allowsDelayedPaymentMethods = true
         configuration.allowsPaymentMethodsRequiringShippingAddress = true
@@ -257,14 +271,15 @@ extension PaymentSheetLoader.LoadResult {
         return PaymentSheetLoader.LoadResult(
             intent: intent,
             elementsSession: elementsSession,
-            savedPaymentMethods: savedPaymentMethods
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: paymentMethodTypes.map { .stripe(STPPaymentMethod.type(from: $0)) }
         )
     }
 }
 
 extension PaymentSheetAnalyticsHelper {
     static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
-        return .init(isCustom: false, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        return .init(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
     }
 }
 

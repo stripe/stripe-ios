@@ -24,6 +24,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     @IBOutlet weak var salesTaxLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var subscribeSwitch: UISwitch!
+    @IBOutlet weak var mandateTextView: UITextView!
 
     var embeddedPaymentElement: EmbeddedPaymentElement!
 
@@ -48,7 +49,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             Task {
                 do {
                     // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret or an error.
-                    // TODO(yuki): Show client-side confirm, not server-side confirm.
+                    // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2577) Show client-side confirm, not server-side confirm.
                     guard let self else {
                         intentCreationCallback(.failure(ExampleError()))
                         return
@@ -89,7 +90,11 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
     @objc
     func didTapPaymentMethodButton() {
-        let paymentMethodsViewController = PaymentMethodsViewController(embeddedPaymentElement: embeddedPaymentElement)
+        let paymentMethodsViewController = PaymentMethodsViewController(embeddedPaymentElement: embeddedPaymentElement, needsDismissal: { [weak self] in
+            self?.dismiss(animated: true)
+            self?.updateLabels()
+            self?.updateButtons()
+        })
         let navController = UINavigationController(rootViewController: paymentMethodsViewController)
         present(navController, animated: true)
     }
@@ -144,6 +149,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                         present(alertController, animated: true, completion: nil)
                     case .succeeded:
                         self.updateButtons()
+                        self.updateLabels()
                     }
                 }
             }
@@ -168,10 +174,11 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     func updateLabels() {
         hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
         saladQuantityLabel.text = "\(Int(saladStepper.value))"
-
         subtotalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.subtotal / 100)) ?? "")"
         salesTaxLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.tax / 100)) ?? "")"
         totalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.total / 100)) ?? "")"
+        // MARK: Display mandate text ourselves, since we set `embeddedViewDisplaysMandateText` to false
+        mandateTextView.attributedText = embeddedPaymentElement.paymentOption?.mandateText
     }
 
     func displayAlert(_ message: String, shouldDismiss: Bool) {
@@ -253,6 +260,8 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                     self?.handlePaymentResult(result)
                 })
             )
+            // This example displays the buy button in a screen that is separate from screen that displays the embedded view, so we disable the mandate text in the embedded view and show it near our buy button.
+            configuration.embeddedViewDisplaysMandateText = false
             configuration.merchantDisplayName = "Example, Inc."
             // Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
             configuration.apiClient.publishableKey = publishableKey
@@ -265,6 +274,8 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             configuration.returnURL = "payments-example://stripe-redirect"
             // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
             configuration.allowsDelayedPaymentMethods = true
+            configuration.appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled = false
+            configuration.appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled = false
             let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
                 intentConfiguration: self.intentConfig,
                 configuration: configuration
@@ -334,20 +345,33 @@ private class PaymentMethodsViewController: UIViewController {
         let scrollView = UIScrollView()
        return UIScrollView()
     }()
+    lazy var continueButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor.systemBlue
+        button.layer.cornerRadius = 5.0
+        button.setTitle("Continue", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.lightGray, for: .disabled)
+        button.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    let needsDismissal: () -> Void
 
-    init(embeddedPaymentElement: EmbeddedPaymentElement) {
+    init(embeddedPaymentElement: EmbeddedPaymentElement, needsDismissal: @escaping () -> Void) {
         self.embeddedPaymentElement = embeddedPaymentElement
+        self.needsDismissal = needsDismissal
         super.init(nibName: nil, bundle: nil)
         // MARK: - Set Embedded Payment Element properties
         self.embeddedPaymentElement.presentingViewController = self
         self.embeddedPaymentElement.delegate = self
+        continueButton.isEnabled = embeddedPaymentElement.paymentOption != nil
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
+    override func viewDidLoad() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         view.addSubview(scrollView)
@@ -358,16 +382,23 @@ private class PaymentMethodsViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
-        embeddedPaymentElement.view.translatesAutoresizingMaskIntoConstraints = false
-        let embeddedPaymentElementView = embeddedPaymentElement.view
-        scrollView.addSubview(embeddedPaymentElementView)
+        embeddedPaymentElement.view.layoutMargins = .zero
+        let stackView = UIStackView(arrangedSubviews: [embeddedPaymentElement.view, continueButton])
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 16
+        stackView.layoutMargins = .init(top: 0, left: 16, bottom: 0, right: 16)
+        stackView.isLayoutMarginsRelativeArrangement = true
+
+        scrollView.addSubview(stackView)
         NSLayoutConstraint.activate([
-            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: embeddedPaymentElementView.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: embeddedPaymentElementView.bottomAnchor),
-            scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: embeddedPaymentElementView.leadingAnchor),
-            scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: embeddedPaymentElementView.trailingAnchor),
-            scrollView.frameLayoutGuide.leadingAnchor.constraint(equalTo: embeddedPaymentElementView.leadingAnchor),
-            scrollView.frameLayoutGuide.trailingAnchor.constraint(equalTo: embeddedPaymentElementView.trailingAnchor),
+            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: stackView.topAnchor),
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+            scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            scrollView.frameLayoutGuide.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            scrollView.frameLayoutGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            continueButton.heightAnchor.constraint(equalToConstant: 40),
         ])
 
         // Nav bar
@@ -377,15 +408,22 @@ private class PaymentMethodsViewController: UIViewController {
     }
 
     @objc private func closeButtonTapped() {
-        dismiss(animated: true, completion: nil)
+        needsDismissal()
+    }
+    @objc private func continueButtonTapped() {
+        needsDismissal()
     }
 }
 
 // MARK: - EmbeddedPaymentElementDelegate
 extension PaymentMethodsViewController: EmbeddedPaymentElementDelegate {
-  func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-    // Lay out the scroll view that contains the Embedded Payment Element view
-    scrollView.setNeedsLayout()
-    scrollView.layoutIfNeeded()
-  }
+    func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
+        // Lay out the scroll view that contains the Embedded Payment Element view
+        scrollView.setNeedsLayout()
+        scrollView.layoutIfNeeded()
+    }
+
+    func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
+        continueButton.isEnabled = embeddedPaymentElement.paymentOption != nil
+    }
 }

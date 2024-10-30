@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@, kuri baigiasi %2$@";
 
+"%1$@ is not accepted" = "„%1$@“ nepriimamas";
+
 "Address line 2 (optional)" = "2 adreso eilutė (pasirenkama)";
 
 "Apple Pay" = "„Apple Pay“";
@@ -35,6 +37,8 @@
 "State / Province / Region" = "Valstija / provincija / regionas";
 
 "The BSB you entered is invalid." = "Įvestas netinkamas BSB numeris.";
+
+"The selected brand is not allowed" = "Pasirinktas prekės ženklas neleidžiamas";
 
 "To scan your card, allow camera access in Settings." = "Kad nuskaitytumėte kortelę, nustatymuose suteikite prieigą fotoaparatui.";
 

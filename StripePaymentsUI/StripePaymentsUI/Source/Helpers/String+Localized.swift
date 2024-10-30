@@ -52,10 +52,6 @@ extension String.Localized {
         STPLocalizedString("Shipping Address", "Title for shipping address entry section")
     }
 
-    @_spi(STP) public static var billing_address: String {
-        STPLocalizedString("Billing Address", "Title for billing address entry section")
-    }
-
     @_spi(STP) public static var billing_address_lowercase: String {
         STPLocalizedString("Billing address", "Billing address section title for card form entry.")
     }
@@ -124,6 +120,20 @@ extension String.Localized {
         STPLocalizedString(
             "Your card's expiration year is invalid.",
             "String to describe an invalid year in expiry date."
+        )
+    }
+
+    @_spi(STP) public static var brand_not_allowed: String {
+        STPLocalizedString(
+            "%1$@ is not accepted",
+            "String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted"
+        )
+    }
+    
+    @_spi(STP) public static var generic_brand_not_allowed: String {
+        STPLocalizedString(
+            "The selected brand is not allowed",
+            "String to inform a user that specific card brands are not accepted."
         )
     }
 }

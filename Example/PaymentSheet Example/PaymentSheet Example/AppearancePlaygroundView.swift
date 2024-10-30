@@ -89,7 +89,7 @@ struct AppearancePlaygroundView: View {
             get: { self.appearance.borderWidth },
             set: { self.appearance.borderWidth = $0 }
         )
-        
+
         let selectedBorderWidthBinding = Binding(
             get: { appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5 },
             set: { self.appearance.selectedBorderWidth = $0 }
@@ -380,9 +380,9 @@ struct AppearancePlaygroundView: View {
                                         value: $appearance.embeddedPaymentElement.row.flat.separatorThickness, in: 0...10)
                                 ColorPicker("separatorColor", selection: embeddedPaymentElementFlatSeparatorColorBinding)
                                 Stepper("leftSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.left ?? 0))",
-                                        value: embeddedPaymentElementFlatLeftSeparatorInset, in: 0...20)
+                                        value: embeddedPaymentElementFlatLeftSeparatorInset, in: -40...40)
                                 Stepper("rightSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.right ?? 0))",
-                                        value: embeddedPaymentElementFlatRightSeparatorInset, in: 0...20)
+                                        value: embeddedPaymentElementFlatRightSeparatorInset, in: -40...40)
                                 Toggle("topSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled)
                                 Toggle("bottomSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
 

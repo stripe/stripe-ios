@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 extension TextFieldElement {
-    static func makeIBAN(defaultValue: String? = nil, theme: ElementsUITheme = .default) -> TextFieldElement {
+    static func makeIBAN(defaultValue: String? = nil, theme: ElementsAppearance = .default) -> TextFieldElement {
         return TextFieldElement(configuration: IBANConfiguration(defaultValue: defaultValue), theme: theme)
     }
 

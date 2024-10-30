@@ -39,7 +39,9 @@
 		4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */; };
 		492039932CA47A8600CE2072 /* ElementsSessionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492039922CA47A8600CE2072 /* ElementsSessionContext.swift */; };
 		493B33062CA3015600E3622F /* LinkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B33052CA3015600E3622F /* LinkMode.swift */; };
+		49E8CE2A2CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */; };
 		49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ECDA402CA340E100F647F0 /* AsyncTests.swift */; };
+		49F3828D2CC02D43001CE69A /* BillingAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F3828C2CC02D43001CE69A /* BillingAddress.swift */; };
 		4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7727AEEFD2FC880BADDA1872 /* Dictionary+Stripe.swift */; };
 		53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCE36551600C3E53BEAF8F0 /* StripeCodableTest.swift */; };
 		552DA7969984C443617DBC3E /* STPMultipartFormDataPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C72BA9C44FF60A0E7BEF76 /* STPMultipartFormDataPart.swift */; };
@@ -117,6 +119,7 @@
 		DFF3092E51B6C3ED81AB1448 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF688F66CD047D08B3AE0CB /* String+Localized.swift */; };
 		E2B25D45D457A76A782D9089 /* STPAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6C28853EF0316366FB8DC4 /* STPAnalyticEvent.swift */; };
 		E344C20A07D8B8F33B530974 /* TestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B2A342F16484705840F1B5 /* TestConstants.swift */; };
+		E6EF91C32CB9DC410082DD1B /* Locale+StripeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EF91C22CB9DC3C0082DD1B /* Locale+StripeTests.swift */; };
 		EFE476BA387E91BE1D5D3E1D /* URLRequest+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B75708617FB765AB211FD9A /* URLRequest+StripeTest.swift */; };
 		EFF90360C85642F7F2898186 /* URLEncoderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2E1D80D0342CF09CB05415 /* URLEncoderTest.swift */; };
 		F5DB5D52E2668136FF6D70D6 /* NSMutableURLRequest+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66CC52EF207F05E0EFAEACD8 /* NSMutableURLRequest+StripeTest.swift */; };
@@ -233,7 +236,9 @@
 		493B33052CA3015600E3622F /* LinkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMode.swift; sourceTree = "<group>"; };
 		49424775D3233411D9C2473B /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
 		49538DBF8457D96707A2DA56 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedEncodingContainer+Extensions.swift"; sourceTree = "<group>"; };
 		49ECDA402CA340E100F647F0 /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
+		49F3828C2CC02D43001CE69A /* BillingAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingAddress.swift; sourceTree = "<group>"; };
 		4A8030BF88608CA86E295F18 /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		4C51E3FA5EE3587BB7BBC634 /* STPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPError.swift; sourceTree = "<group>"; };
 		4EC3BCEEECB3E1485B18F0C4 /* FinancialConnectionsSDKInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSDKInterface.swift; sourceTree = "<group>"; };
@@ -332,6 +337,7 @@
 		E1C72BA9C44FF60A0E7BEF76 /* STPMultipartFormDataPart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPMultipartFormDataPart.swift; sourceTree = "<group>"; };
 		E4B2A342F16484705840F1B5 /* TestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestConstants.swift; sourceTree = "<group>"; };
 		E60F4A38EEF5EA11568B3A64 /* StripeCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCore.h; sourceTree = "<group>"; };
+		E6EF91C22CB9DC3C0082DD1B /* Locale+StripeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeTests.swift"; sourceTree = "<group>"; };
 		E919FBEB852CFEA9517FCBDC /* FraudDetectionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudDetectionData.swift; sourceTree = "<group>"; };
 		EA55726A0FE74A4D90A10C01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		ECF3D265DCDD0D64F6D7E6B2 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -427,6 +433,7 @@
 		3A3F265C90373C3EF2F61523 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E6EF91C22CB9DC3C0082DD1B /* Locale+StripeTests.swift */,
 				34895253739089BC125D2625 /* Dictionary+StripeTests.swift */,
 				8F2949BE5129DC4BBCD69B05 /* NSArray+StripeCoreTest.swift */,
 				66CC52EF207F05E0EFAEACD8 /* NSMutableURLRequest+StripeTest.swift */,
@@ -453,6 +460,7 @@
 				6A05FB4A2BCF245C0001D128 /* FinancialConnectionsEvent.swift */,
 				493B33052CA3015600E3622F /* LinkMode.swift */,
 				492039922CA47A8600CE2072 /* ElementsSessionContext.swift */,
+				49F3828C2CC02D43001CE69A /* BillingAddress.swift */,
 			);
 			path = "Connections Bindings";
 			sourceTree = "<group>";
@@ -621,6 +629,7 @@
 				C51179DB520568C246BF3AF0 /* URLEncoder.swift */,
 				B8B76840742D2CAF2931355A /* URLSession+Retry.swift */,
 				4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */,
+				49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -950,6 +959,7 @@
 				84487D8E9B08106C89753536 /* Error_SerializeForLoggingTest.swift in Sources */,
 				0A78AD04075C43A4059C344E /* STPAnalyticsClientTest.swift in Sources */,
 				934CCB00769674F13192A126 /* Dictionary+StripeTests.swift in Sources */,
+				E6EF91C32CB9DC410082DD1B /* Locale+StripeTests.swift in Sources */,
 				49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */,
 				A50CB2ACAC1DCF9539D76F25 /* NSArray+StripeCoreTest.swift in Sources */,
 				F5DB5D52E2668136FF6D70D6 /* NSMutableURLRequest+StripeTest.swift in Sources */,
@@ -1013,6 +1023,7 @@
 				59CA874015261241AC255907 /* FileDownloader.swift in Sources */,
 				45DAE581F74EF7E11C64212B /* InstallMethod.swift in Sources */,
 				096274D0729AA8849FAD103C /* PaymentsSDKVariant.swift in Sources */,
+				49E8CE2A2CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift in Sources */,
 				DA5A05459309B9B77ACDD736 /* STPDeviceUtils.swift in Sources */,
 				4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */,
 				83790210FFC2DD764C042C8E /* STPDispatchFunctions.swift in Sources */,
@@ -1022,6 +1033,7 @@
 				A62AEDF871AC89489FE19A13 /* ServerErrorMapper.swift in Sources */,
 				B6DBB2BF2BA8C4E400783D15 /* STPAnalyticsClient+Error.swift in Sources */,
 				6A05FB452BCF24100001D128 /* FinancialConnectionsSDKResult.swift in Sources */,
+				49F3828D2CC02D43001CE69A /* BillingAddress.swift in Sources */,
 				62FD088E003BE06F5413FB4F /* StripeCoreBundleLocator.swift in Sources */,
 				17CE96B50813CF626293CBF9 /* URLEncoder.swift in Sources */,
 				0709F5D265CC641E6DE1011D /* URLSession+Retry.swift in Sources */,

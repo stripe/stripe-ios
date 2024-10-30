@@ -285,23 +285,30 @@ extension XCTestCase {
     }
 
     func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        if settings.uiStyle == .paymentSheet {
+        switch settings.uiStyle {
+        case .paymentSheet:
             let presentButton = app.buttons["Present PaymentSheet"]
             expectation(
                 for: NSPredicate(format: "enabled == true"),
                 evaluatedWith: presentButton,
                 handler: nil
             )
-            waitForExpectations(timeout: 10, handler: nil)
-        } else {
+        case .flowController:
             let confirm = app.buttons["Confirm"]
             expectation(
                 for: NSPredicate(format: "enabled == true"),
                 evaluatedWith: confirm,
                 handler: nil
             )
-            waitForExpectations(timeout: 10, handler: nil)
+        case .embedded:
+            let confirm = app.buttons["Present embedded payment element"]
+            expectation(
+                for: NSPredicate(format: "enabled == true"),
+                evaluatedWith: confirm,
+                handler: nil
+            )
         }
+        waitForExpectations(timeout: 10, handler: nil)
     }
     func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
         if #available(iOS 15.0, *) {

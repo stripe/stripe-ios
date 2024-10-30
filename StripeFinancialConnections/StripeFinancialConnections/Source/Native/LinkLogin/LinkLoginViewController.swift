@@ -118,9 +118,12 @@ final class LinkLoginViewController: UIViewController {
         paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif
 
-        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
+        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
         if let emailAddress, !emailAddress.isEmpty {
             formView.prefillEmailAddress(emailAddress)
+
+            let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.prefillDetails?.formattedPhoneNumber
+            formView.prefillPhoneNumber(phoneNumber)
         } else {
             // Slightly delay opening the keyboard to avoid a janky animation.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in

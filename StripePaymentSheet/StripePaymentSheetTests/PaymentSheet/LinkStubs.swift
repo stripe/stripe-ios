@@ -30,16 +30,42 @@ extension LinkStubs {
     static func paymentMethods() -> [ConsumerPaymentDetails] {
         return [
             ConsumerPaymentDetails(
-                stripeID: "1"
+                stripeID: "1",
+                details: .card(card: .init(
+                    expiryYear: 30,
+                    expiryMonth: 10,
+                    brand: "visa",
+                    last4: "1234",
+                    checks: nil)
+                ),
+                isDefault: true
             ),
             ConsumerPaymentDetails(
-                stripeID: "2"
+                stripeID: "2",
+                details: .card(card: .init(
+                    expiryYear: 30,
+                    expiryMonth: 10,
+                    brand: "mastercard",
+                    last4: "4321",
+                    checks: .init(cvcCheck: .fail))
+                ),
+                isDefault: false
             ),
             ConsumerPaymentDetails(
-                stripeID: "3"
+                stripeID: "3",
+                details: .bankAccount(bankAccount: .init(iconCode: nil, name: "test", last4: "1234")),
+                isDefault: false
             ),
             ConsumerPaymentDetails(
-                stripeID: "4"
+                stripeID: "4",
+                details: .card(card: .init(
+                    expiryYear: 20,
+                    expiryMonth: 10,
+                    brand: "discover",
+                    last4: "1111",
+                    checks: nil)
+                ),
+                isDefault: false
             ),
         ]
     }
@@ -48,7 +74,9 @@ extension LinkStubs {
         return ConsumerSession(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
-            verificationSessions: []
+            redactedPhoneNumber: "+1********55",
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [.card, .bankAccount]
         )
     }
 

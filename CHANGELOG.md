@@ -1,4 +1,19 @@
-## X.Y.Z X-Y-Z
+## 24.0.0 2024-11-04
+### PaymentSheet
+* [Changed] The default value of `PaymentSheet.Configuration.paymentMethodLayout` has changed from `.horizontal` to `.automatic`. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) for more details.
+
+## X.X.X
+### PaymentSheet
+* [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+* [Fixed] Fixed an issue with FlowController in vertical layout where the payment method could incorrectly be preserved across a call to `update` when it's no longer valid.
+* [Fixed] Fixed a potential deadlock when `paymentOption` is accessed from Swift concurrency.
+
+
+## 23.32.0 2024-10-21
+### PaymentSheet
+* [Added] Added `PaymentSheet.Configuration.paymentMethodLayout`. Configure the layout of payment methods in the sheet using `paymentMethodLayout` to display them either horizontally, vertically, or let Stripe optimize the layout automatically.
+
+## 23.31.1 2024-10-08
 ### PaymentSheet
 * [Fixed] Fixed an issue where ISK was not correctly formatted as a zero-decimal currency when using PaymentSheet or Apple Pay. (Thanks [@Thithip](https://github.com/Thithip)!)
 * [Fixed] Fixed an issue where US Bank Account forms would drop form field input when `FlowController.update` is called.
@@ -63,7 +78,7 @@ This release was made in error, and contains changes from 23.29.0, 23.29.1, and 
 * [Added] Adds coupon support to STPApplePayContext with a new `didChangeCouponCode` delegate method (h/t @JoeyLeeMEA).
 * [Fixed] Fixed an issue where successful TWINT payments were sometimes incorrectly considered 'canceled'.
 
-## PaymentSheet
+### PaymentSheet
 * [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
 * [Fixed] Fixed an issue where amounts with currency=IDR were displayed as-is, instead of dropping the last two digits.
 * [Fixed] Fixed an issue where some payment method images in the horizontal scrollview could briefly flash.
