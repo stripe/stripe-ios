@@ -28,7 +28,7 @@ struct PaymentSheetDeferredValidator {
         guard paymentIntent.captureMethod == captureMethod else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent captureMethod (\(paymentIntent.captureMethod)) does not match the PaymentSheet.IntentConfiguration amount (\(captureMethod)).")
         }
-        try validatePaymentMethodId(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
+        try validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
         /*
          Manual confirmation is only available using FlowController because merchants own the final step of confirmation.
          Showing a successful payment in the complete flow may be misleading when merchants still need to do a final confirmation which could fail e.g., bad network
@@ -47,13 +47,14 @@ struct PaymentSheetDeferredValidator {
         guard setupIntent.usage == setupFutureUsage else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your SetupIntent usage (\(setupIntent.usage)) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (\(String(describing: setupFutureUsage))).")
         }
-        try validatePaymentMethodId(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
+        try validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
     }
 
-    static func validatePaymentMethodId(intentPaymentMethod: STPPaymentMethod?, paymentMethod: STPPaymentMethod) throws {
+    static func validatePaymentMethod(intentPaymentMethod: STPPaymentMethod?, paymentMethod: STPPaymentMethod) throws {
         guard let intentPaymentMethod = intentPaymentMethod else { return }
         guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
             if intentPaymentMethod.type == paymentMethod.type {
+                // Payment methods of type card and us_bank_account can be cloned, leading to mismatched pm ids, but their fingerprints should still match
                 switch paymentMethod.type.identifier {
                 case "card":
                     try validateFingerprint(intentFingerprint: intentPaymentMethod.card?.fingerprint, fingerprint: paymentMethod.card?.fingerprint)
@@ -89,7 +90,7 @@ struct PaymentSheetDeferredValidator {
                 1. Create a new Intent each time before you call the `confirmHandler`, or
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
             """
-            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage))
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodFingerprintMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage))
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
         }

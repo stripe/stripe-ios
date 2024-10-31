@@ -79,7 +79,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         paymentMethodJson["id"] = testCard.stripeId
         let testCardPi = STPFixtures.makePaymentIntent(paymentMethodJson: paymentMethodJson)
         
-        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: testCardPi.paymentMethod,
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: testCardPi.paymentMethod,
                                                                                    paymentMethod: testCard))
     }
     
@@ -92,7 +92,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         guard let intentPaymentMethod = testCardPi.paymentMethod else {
             return
         }
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: testCardPi.paymentMethod,
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: testCardPi.paymentMethod,
                                                                                        paymentMethod: testUSBankAccount)) { error in
             XCTAssertEqual("\(error)", """
             An error occurred in PaymentSheet.     \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(testUSBankAccount.stripeId).
@@ -110,7 +110,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
     func testPaymentIntentNilPaymentMethod() throws {
         let testCard = STPPaymentMethod._testCard()
         let nilPaymentMethodPi = STPFixtures.makePaymentIntent()
-        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: nilPaymentMethodPi.paymentMethod,
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: nilPaymentMethodPi.paymentMethod,
                                                                                    paymentMethod: testCard))
     }
     
@@ -120,7 +120,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         paymentMethodJson["id"] = testCard.stripeId
         let testCardSi = STPFixtures.makeSetupIntent(paymentMethodJson: paymentMethodJson)
         
-        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: testCardSi.paymentMethod,
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: testCardSi.paymentMethod,
                                                                                    paymentMethod: testCard))
     }
     
@@ -133,7 +133,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         guard let intentPaymentMethod = testCardSi.paymentMethod else {
             return
         }
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: testCardSi.paymentMethod,
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: testCardSi.paymentMethod,
                                                                                        paymentMethod: testUSBankAccount)) { error in
             XCTAssertEqual("\(error)", """
             An error occurred in PaymentSheet.     \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(testUSBankAccount.stripeId).
@@ -151,7 +151,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
     func testSetupIntentNilPaymentMethod() throws {
         let testCard = STPPaymentMethod._testCard()
         let nilPaymentMethodSi = STPFixtures.makeSetupIntent()
-        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: nilPaymentMethodSi.paymentMethod,
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: nilPaymentMethodSi.paymentMethod,
                                                                                    paymentMethod: testCard))
     }
     
