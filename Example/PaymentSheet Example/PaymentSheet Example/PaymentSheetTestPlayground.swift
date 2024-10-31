@@ -36,6 +36,7 @@ struct PaymentSheetTestPlayground: View {
                 .textInputAutocapitalization(.never)
         }
         SettingView(setting: $playgroundController.settings.linkMode)
+        SettingView(setting: $playgroundController.settings.useNativeLink)
         SettingView(setting: $playgroundController.settings.userOverrideCountry)
         SettingView(setting: $playgroundController.settings.externalPaymentMethods)
         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)

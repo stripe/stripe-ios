@@ -17,6 +17,7 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
     func payWithLinkViewControllerDidConfirm(
         _ payWithLinkViewController: PayWithLinkViewController,
         intent: Intent,
+        elementsSession: STPElementsSession,
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
@@ -292,6 +293,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
             self,
             intent: context.intent,
+            elementsSession: context.elementsSession,
             with: PaymentOption.link(
                 option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
             )
@@ -306,6 +308,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
             self,
             intent: context.intent,
+            elementsSession: context.elementsSession,
             with: .applePay
         ) { [weak self] result, _ in
             //            TODO(link): Log confirmation type here

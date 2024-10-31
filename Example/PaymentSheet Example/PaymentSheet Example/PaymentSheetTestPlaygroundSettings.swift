@@ -246,6 +246,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case passthrough
     }
 
+    enum LinkNativeMode: String, PickerEnum {
+        static var enumName: String { "Native Link" }
+
+        case on
+        case off
+    }
+
     enum UserOverrideCountry: String, PickerEnum {
         static var enumName: String { "UserOverrideCountry (debug only)" }
 
@@ -449,6 +456,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
     var linkMode: LinkMode
+    var useNativeLink: LinkNativeMode
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -493,6 +501,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             defaultBillingAddress: .off,
             customEmail: nil,
             linkMode: .passthrough,
+            useNativeLink: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
