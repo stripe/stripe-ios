@@ -34,7 +34,7 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: nil,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.klarna), .stripe(.payPal)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: .default,
             shouldShowApplePay: true,
             shouldShowLink: true,

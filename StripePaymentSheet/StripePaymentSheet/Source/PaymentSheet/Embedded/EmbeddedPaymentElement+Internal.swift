@@ -71,7 +71,7 @@ extension EmbeddedPaymentElement {
         return EmbeddedPaymentMethodsView(
             initialSelection: initialSelection,
             paymentMethodTypes: loadResult.paymentMethodTypes,
-            savedPaymentMethods: loadResult.savedPaymentMethods,
+            savedPaymentMethod: loadResult.savedPaymentMethods.first,
             appearance: configuration.appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
@@ -94,6 +94,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
+        // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
@@ -135,21 +136,19 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
 // MARK: UpdateCardViewControllerDelegate
 extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
-    nonisolated func didRemove(viewController: UpdateCardViewController, paymentMethod: StripePayments.STPPaymentMethod) {
-        Task { @MainActor in
-            // Detach the payment method from the customer
-            savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
-            analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
+    func didRemove(viewController: UpdateCardViewController, paymentMethod: StripePayments.STPPaymentMethod) {
+        // Detach the payment method from the customer
+        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
-            // Update savedPaymentMethods
-            self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
+        // Update savedPaymentMethods
+        self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 
-            let savedPaymentMethodAccessoryType = accessoryButton(savedPaymentMethods: savedPaymentMethods)
-            embeddedPaymentMethodsView.updateSavedPaymentMethods(savedPaymentMethods,
-                                                                 userSelectedPaymentMethod: nil,
-                                                                 savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
-            presentingViewController?.dismiss(animated: true)
-        }
+        let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+                                                               isSelected: false,
+                                                               accessoryType: accessoryType)
+        presentingViewController?.dismiss(animated: true)
     }
 
     func didUpdate(viewController: UpdateCardViewController,
@@ -162,21 +161,17 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
 
-        let savedPaymentMethodAccessoryType = accessoryButton(savedPaymentMethods: savedPaymentMethods)
-        embeddedPaymentMethodsView.updateSavedPaymentMethods(savedPaymentMethods,
-                                                             userSelectedPaymentMethod: nil,
-                                                             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
-        Task { @MainActor in
-            presentingViewController?.dismiss(animated: true)
-        }
+        let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+                                                               isSelected: false,
+                                                               accessoryType: accessoryType)
+        presentingViewController?.dismiss(animated: true)
     }
-    nonisolated func didDismiss(viewController: UpdateCardViewController) {
-        Task { @MainActor in
-            presentingViewController?.dismiss(animated: true)
-        }
+    func didDismiss(viewController: UpdateCardViewController) {
+        presentingViewController?.dismiss(animated: true)
     }
 
-    private func accessoryButton(savedPaymentMethods: [STPPaymentMethod]) -> RowButton.RightAccessoryButton.AccessoryType? {
+    private func getAccessoryButton(savedPaymentMethods: [STPPaymentMethod]) -> RowButton.RightAccessoryButton.AccessoryType? {
         return RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
@@ -188,23 +183,19 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
 }
 
 extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDelegate {
-    nonisolated func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
-                                 with selectedPaymentMethod: StripePayments.STPPaymentMethod?,
-                                 latestPaymentMethods: [StripePayments.STPPaymentMethod]) {
-        Task { @MainActor in
-            self.savedPaymentMethods = latestPaymentMethods
-            let savedPaymentMethodAccessoryType = accessoryButton(savedPaymentMethods: latestPaymentMethods)
-            embeddedPaymentMethodsView.updateSavedPaymentMethods(savedPaymentMethods,
-                                                                 userSelectedPaymentMethod: selectedPaymentMethod,
-                                                                 savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
-            presentingViewController?.dismiss(animated: true)
-        }
+    func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
+                     with selectedPaymentMethod: StripePayments.STPPaymentMethod?,
+                     latestPaymentMethods: [StripePayments.STPPaymentMethod]) {
+        self.savedPaymentMethods = latestPaymentMethods
+        let accessoryType = getAccessoryButton(savedPaymentMethods: latestPaymentMethods)
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+                                                               isSelected: selectedPaymentMethod != nil,
+                                                               accessoryType: accessoryType)
+        presentingViewController?.dismiss(animated: true)
     }
 
-    nonisolated func shouldClose() {
-        Task { @MainActor in
-            presentingViewController?.dismiss(animated: true)
-        }
+    func shouldClose() {
+        presentingViewController?.dismiss(animated: true)
     }
 }
 

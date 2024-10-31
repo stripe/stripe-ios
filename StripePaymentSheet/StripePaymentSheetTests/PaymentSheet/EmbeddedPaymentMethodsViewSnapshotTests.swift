@@ -19,7 +19,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     func testEmbeddedPaymentMethodsView_flatRadio() {
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -32,7 +32,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     func testEmbeddedPaymentMethodsView_flatRadio_savedPaymentMethod() {
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .saved(paymentMethod: STPPaymentMethod._testCard()),
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [STPPaymentMethod._testCard()],
+                                                      savedPaymentMethod: STPPaymentMethod._testCard(),
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -45,7 +45,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     func testEmbeddedPaymentMethodsView_flatRadio_noApplePay() {
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: false,
                                                       shouldShowLink: true,
@@ -58,7 +58,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     func testEmbeddedPaymentMethodsView_flatRadio_noLink() {
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: false,
@@ -74,7 +74,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.klarna)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -96,7 +96,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: false,
@@ -120,7 +120,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -136,7 +136,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -152,7 +152,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -168,7 +168,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -184,7 +184,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -200,7 +200,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -221,7 +221,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -237,7 +237,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -254,7 +254,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -271,7 +271,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -289,7 +289,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -305,7 +305,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .saved(paymentMethod: STPPaymentMethod._testCard()),
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [STPPaymentMethod._testCard()],
+                                                      savedPaymentMethod: STPPaymentMethod._testCard(),
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -321,7 +321,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: false,
                                                       shouldShowLink: true,
@@ -337,7 +337,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: false,
@@ -354,7 +354,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -379,7 +379,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: false,
@@ -404,7 +404,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -422,7 +422,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -445,7 +445,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -467,7 +467,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -484,7 +484,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -502,7 +502,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -520,7 +520,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -537,7 +537,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -552,7 +552,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let initialSelection: EmbeddedPaymentMethodsView.Selection = .link
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [],
+                                                      savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -568,7 +568,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethods: [._testCard()],
+                                                      savedPaymentMethod: ._testCard(),
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
@@ -588,7 +588,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: nil,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: .default,
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -606,7 +606,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .applePay,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: .default,
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -628,7 +628,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .link,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: appearance,
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -647,7 +647,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .saved(paymentMethod: savedPaymentMethod),
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [savedPaymentMethod],
+            savedPaymentMethod: savedPaymentMethod,
             appearance: .default,
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -667,7 +667,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: nil,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: appearance,
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -685,7 +685,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: nil,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: .default,
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -704,7 +704,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: nil,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: .default,
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -721,7 +721,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .applePay,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: .default,
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -739,7 +739,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .applePay,
             paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethods: [],
+            savedPaymentMethod: nil,
             appearance: .default,
             shouldShowApplePay: true,
             shouldShowLink: true,

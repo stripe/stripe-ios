@@ -11,6 +11,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     /// Handles the selection of a payment method from the list or the modification of the list such as the removal or update of payment methods.
     ///

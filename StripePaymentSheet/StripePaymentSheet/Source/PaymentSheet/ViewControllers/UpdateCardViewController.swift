@@ -11,6 +11,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol UpdateCardViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdateCardViewController,

@@ -152,6 +152,7 @@ public final class EmbeddedPaymentElement {
             let oldPaymentOption = self.paymentOption
             self.savedPaymentMethods = loadResult.savedPaymentMethods
             self.elementsSession = loadResult.elementsSession
+            self.intent = loadResult.intent
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
             if oldPaymentOption != self.paymentOption {
@@ -195,6 +196,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) var containerView: EmbeddedPaymentElementContainerView
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var elementsSession: STPElementsSession
+    internal private(set) var intent: Intent
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal let analyticsHelper: PaymentSheetAnalyticsHelper
     internal var savedPaymentMethods: [STPPaymentMethod]
@@ -235,6 +237,7 @@ public final class EmbeddedPaymentElement {
         self.configuration = configuration
         self.elementsSession = loadResult.elementsSession
         self.savedPaymentMethods = loadResult.savedPaymentMethods
+        self.intent = loadResult.intent
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,
