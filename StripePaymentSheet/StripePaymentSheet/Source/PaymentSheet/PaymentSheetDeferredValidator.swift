@@ -73,7 +73,7 @@ struct PaymentSheetDeferredValidator {
                 1. Create a new Intent each time before you call the `confirmHandler`, or
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
             """
-            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodIdMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage))
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage), additionalNonPIIParams: ["field": "payment method ID"])
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
         }
@@ -90,7 +90,7 @@ struct PaymentSheetDeferredValidator {
                 1. Create a new Intent each time before you call the `confirmHandler`, or
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
             """
-            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodFingerprintMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage))
+            let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage), additionalNonPIIParams: ["field": "fingerprint"])
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
         }
