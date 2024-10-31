@@ -1014,7 +1014,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         }
 
         if let billingEmail, !billingEmail.isEmpty {
-            parameters["billing_email_address"] = billingEmail
+            parameters["billing_email_address"] = billingEmail.lowercased()
         }
 
         return post(
