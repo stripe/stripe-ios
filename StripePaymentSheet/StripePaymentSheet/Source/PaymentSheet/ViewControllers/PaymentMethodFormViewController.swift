@@ -231,7 +231,13 @@ extension PaymentMethodFormViewController {
             countryCode: instantDebitsFormElement?.phoneElement?.selectedCountryCode
         )
         let linkMode = elementsSession.linkSettings?.linkMode
-        let billingDetails = instantDebitsFormElement?.billingDetails
+        let billingDetails: ElementsSessionContext.BillingDetails? = {
+            // Only attach billing details to bank payment if the feature flag is enabled.
+            guard UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_ATTACH_BILLING_DETAILS_TO_BANK_PAYMENT") else {
+                return nil
+            }
+            return instantDebitsFormElement?.billingDetails
+        }()
 
         return ElementsSessionContext(
             amount: intent.amount,

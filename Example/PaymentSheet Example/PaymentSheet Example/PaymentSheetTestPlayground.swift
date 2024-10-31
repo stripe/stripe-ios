@@ -143,6 +143,7 @@ struct PaymentSheetTestPlayground: View {
                                 .font(.headline)
                             Spacer()
                         }
+                        SettingView(setting: $playgroundController.settings.attachBillingDetailsToBankPayment)
                         SettingView(setting: $playgroundController.settings.attachDefaults)
                         SettingView(setting: $playgroundController.settings.collectName)
                         SettingView(setting: $playgroundController.settings.collectEmail)

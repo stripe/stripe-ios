@@ -253,6 +253,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case GB
     }
 
+    enum AttachBillingDetailsToBankPayment: String, PickerEnum {
+        static var enumName: String { "Attach to bank payment" }
+
+        case on
+        case off
+    }
+
     enum BillingDetailsAttachDefaults: String, PickerEnum {
         static var enumName: String { "Attach defaults" }
 
@@ -460,6 +467,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
+    var attachBillingDetailsToBankPayment: AttachBillingDetailsToBankPayment
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
     var collectEmail: BillingDetailsEmail
@@ -503,6 +511,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
+            attachBillingDetailsToBankPayment: .off,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,

@@ -438,6 +438,10 @@ class PlaygroundController: ObservableObject {
             } else {
                 self.ambiguousViewTimer?.invalidate()
             }
+
+            // Hack to access playground setting value via UserDefaults from the Financial Connections SDK.
+            let attachBillingDetailsToBankPayment = newValue.attachBillingDetailsToBankPayment == .on
+            UserDefaults.standard.set(attachBillingDetailsToBankPayment, forKey: "FINANCIAL_CONNECTIONS_ATTACH_BILLING_DETAILS_TO_BANK_PAYMENT")
         }.store(in: &subscribers)
 
         // Listen for analytics
