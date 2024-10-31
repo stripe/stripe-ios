@@ -41,8 +41,11 @@ import Foundation
     @_spi(STP) public let prefillDetails: PrefillDetails?
     @_spi(STP) public let intentId: IntentID?
     @_spi(STP) public let linkMode: LinkMode?
-    @_spi(STP) public let billingAddress: BillingAddress?
     @_spi(STP) public let billingDetails: BillingDetails?
+
+    @_spi(STP) public var billingAddress: BillingAddress? {
+        BillingAddress(from: billingDetails)
+    }
 
     @_spi(STP) public init(
         amount: Int?,
@@ -50,7 +53,6 @@ import Foundation
         prefillDetails: PrefillDetails?,
         intentId: IntentID?,
         linkMode: LinkMode?,
-        billingAddress: BillingAddress?,
         billingDetails: BillingDetails?
     ) {
         self.amount = amount
@@ -58,7 +60,6 @@ import Foundation
         self.prefillDetails = prefillDetails
         self.intentId = intentId
         self.linkMode = linkMode
-        self.billingAddress = billingAddress
         self.billingDetails = billingDetails
     }
 }
@@ -92,17 +93,6 @@ import Foundation
                 self.line2 = line2
                 self.postalCode = postalCode
                 self.state = state
-            }
-
-            @_spi(STP) public init?(from billingAddress: BillingAddress?) {
-                self.init(
-                    city: billingAddress?.city,
-                    country: billingAddress?.countryCode,
-                    line1: billingAddress?.line1,
-                    line2: billingAddress?.line2,
-                    postalCode: billingAddress?.postalCode,
-                    state: billingAddress?.state
-                )
             }
 
             enum CodingKeys: String, CodingKey {
