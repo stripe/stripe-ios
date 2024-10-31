@@ -58,7 +58,7 @@ class PaymentMethodFormViewController: UIViewController {
             if case .instantDebits = paymentMethodType {
                 // We create the final payment method in the bank auth flow, therefore treating the Instant Debits
                 // result like a saved payment option.
-                guard let paymentMethod = instantDebitsFormElement?.getLinkedBank()?.paymentMethod.decode() else {
+                guard let paymentMethod = params.instantDebitsLinkedBank?.paymentMethod.decode() else {
                     return nil
                 }
                 return .saved(paymentMethod: paymentMethod, confirmParams: nil)
