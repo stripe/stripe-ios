@@ -22,7 +22,6 @@ class EmbeddedPaymentMethodsView: UIView {
 
     typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
 
-    private var savedPaymentMethod: STPPaymentMethod?
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
     private(set) var selection: Selection? {
@@ -65,7 +64,6 @@ class EmbeddedPaymentMethodsView: UIView {
         shouldShowMandate: Bool = true,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
-        self.savedPaymentMethod = savedPaymentMethod
         self.appearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
@@ -210,7 +208,10 @@ class EmbeddedPaymentMethodsView: UIView {
                                      accessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
         guard let previousSavedPaymentMethodButton = self.savedPaymentMethodButton,
               let viewIndex = stackView.arrangedSubviews.firstIndex(of: previousSavedPaymentMethodButton) else {
-            stpAssertionFailure("Function supports only when there is an existing savedPaymentMethodButton")
+            stpAssertionFailure("""
+            Function supports only when there is an existing savedPaymentMethodButton because this function is only used
+            for updating the view after selecting from a larger list of saved payment methods or updating a saved payment method.
+            """)
             return
         }
 
@@ -231,7 +232,6 @@ class EmbeddedPaymentMethodsView: UIView {
             self.stackView.insertArrangedSubview(updatedSavedPaymentMethodButton, at: viewIndex)
 
             // Update instance states
-            self.savedPaymentMethod = savedPaymentMethod
             self.savedPaymentMethodButton = updatedSavedPaymentMethodButton
         } else {
             // No more saved payment methods
@@ -244,7 +244,6 @@ class EmbeddedPaymentMethodsView: UIView {
             }
 
             // Update instance states
-            self.savedPaymentMethod = nil
             self.savedPaymentMethodButton = nil
         }
     }

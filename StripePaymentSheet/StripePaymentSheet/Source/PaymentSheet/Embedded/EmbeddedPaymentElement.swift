@@ -198,7 +198,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) var elementsSession: STPElementsSession
     internal private(set) var intent: Intent
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
-    internal let analyticsHelper: PaymentSheetAnalyticsHelper
+    internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
     internal var savedPaymentMethods: [STPPaymentMethod]
     internal var _paymentOption: PaymentOption? {
         // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.
