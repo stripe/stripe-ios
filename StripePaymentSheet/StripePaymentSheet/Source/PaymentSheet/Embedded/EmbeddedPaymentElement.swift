@@ -150,7 +150,8 @@ public final class EmbeddedPaymentElement {
             }
             // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             let oldPaymentOption = self.paymentOption
-            self.loadResult = loadResult
+            self.savedPaymentMethods = loadResult.savedPaymentMethods
+            self.elementsSession = loadResult.elementsSession
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
             if oldPaymentOption != self.paymentOption {
@@ -193,7 +194,7 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) var containerView: EmbeddedPaymentElementContainerView
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
-    internal private(set) var loadResult: PaymentSheetLoader.LoadResult
+    internal private(set) var elementsSession: STPElementsSession
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal let analyticsHelper: PaymentSheetAnalyticsHelper
     internal var savedPaymentMethods: [STPPaymentMethod]
@@ -223,7 +224,7 @@ public final class EmbeddedPaymentElement {
         }
     }
     internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: loadResult.elementsSession)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
     private init(
@@ -232,7 +233,7 @@ public final class EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
-        self.loadResult = loadResult
+        self.elementsSession = loadResult.elementsSession
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
