@@ -92,16 +92,13 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
-            // TODO(link): Update elementsSession, formCache, analyticsHelper, and paymentMethodTypes
-            assertionFailure("Not yet implemented")
             return AddPaymentMethodViewController(
                 intent: context.intent,
-                // TODO(link): Update elementsSession
-                elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: []),
+                elementsSession: context.elementsSession,
                 configuration: configuration,
                 paymentMethodTypes: [.stripe(.card)],
-                formCache: .init(),
-                analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                formCache: .init(), // We don't want to share a form cache with the containing PaymentSheet
+                analyticsHelper: context.analyticsHelper,
                 delegate: self
             )
         }()

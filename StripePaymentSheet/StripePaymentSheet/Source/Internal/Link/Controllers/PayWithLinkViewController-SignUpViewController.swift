@@ -222,9 +222,8 @@ extension PayWithLinkViewController {
                 case .success(let account):
                     self?.coordinator?.accountUpdated(account)
                     STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-                case .failure: break
-//                    TODO(link): Fix signup failure logging
-//                    STPAnalyticsClient.sharedClient.logLinkSignupFailure()
+                case .failure(let error):
+                    STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                 }
 
                 self?.signUpButton.isLoading = false

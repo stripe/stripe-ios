@@ -488,6 +488,7 @@ extension PaymentSheetLinkAccount {
         }
 
         let params = STPPaymentMethodParams(type: .link)
+        params.billingDetails = STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
         params.link?.paymentDetailsID = paymentDetails.stripeID
         params.link?.credentials = ["consumer_session_client_secret": currentSession.clientSecret]
 

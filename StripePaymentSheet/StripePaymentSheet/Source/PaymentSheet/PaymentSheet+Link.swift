@@ -4,8 +4,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 // MARK: - Webview Link
 
@@ -68,7 +68,8 @@ extension PaymentSheet {
             elementsSession: elementsSession,
             configuration: configuration,
             shouldOfferApplePay: shouldOfferApplePay,
-            shouldFinishOnClose: shouldFinishOnClose
+            shouldFinishOnClose: shouldFinishOnClose,
+            analyticsHelper: self.analyticsHelper
         )
 
         payWithLinkVC.payWithLinkDelegate = self
