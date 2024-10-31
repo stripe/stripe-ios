@@ -443,6 +443,38 @@ extension FinancialConnectionsWebFlowViewController {
             if let linkMode = linkMode {
                 parameters.append("link_mode=\(linkMode.rawValue)")
             }
+
+            if let billingDetails = billingDetails {
+                if let name = billingDetails.name, !name.isEmpty {
+                    parameters.append("billingDetails[name]=\(name)")
+                }
+                if let email = billingDetails.email, !email.isEmpty {
+                    parameters.append("billingDetails[email]=\(email)")
+                }
+                if let phone = billingDetails.phone, !phone.isEmpty {
+                    parameters.append("billingDetails[phone]=\(phone)")
+                }
+                if let address = billingDetails.address {
+                    if let city = address.city, !city.isEmpty {
+                        parameters.append("billingDetails[address][city]=\(city)")
+                    }
+                    if let country = address.country, !country.isEmpty {
+                        parameters.append("billingDetails[address][country]=\(country)")
+                    }
+                    if let line1 = address.line1, !line1.isEmpty {
+                        parameters.append("billingDetails[address][line1]=\(line1)")
+                    }
+                    if let line2 = address.line2, !line2.isEmpty {
+                        parameters.append("billingDetails[address][line2]=\(line2)")
+                    }
+                    if let postalCode = address.postalCode, !postalCode.isEmpty {
+                        parameters.append("billingDetails[address][postal_code]=\(postalCode)")
+                    }
+                    if let state = address.state, !state.isEmpty {
+                        parameters.append("billingDetails[address][state]=\(state)")
+                    }
+                }
+            }
         }
 
         if let prefillDetails = prefillDetails {
@@ -457,39 +489,8 @@ extension FinancialConnectionsWebFlowViewController {
             }
         }
 
-        if let billingDetails = billingDetails {
-            if let name = billingDetails.name, !name.isEmpty {
-                parameters.append("billingDetails[name]=\(name)")
-            }
-            if let email = billingDetails.email, !email.isEmpty {
-                parameters.append("billingDetails[email]=\(email)")
-            }
-            if let phone = billingDetails.phone, !phone.isEmpty {
-                parameters.append("billingDetails[phone]=\(phone)")
-            }
-            if let address = billingDetails.address {
-                if let city = address.city, !city.isEmpty {
-                    parameters.append("billingDetails[address][city]=\(city)")
-                }
-                if let country = address.country, !country.isEmpty {
-                    parameters.append("billingDetails[address][country]=\(country)")
-                }
-                if let line1 = address.line1, !line1.isEmpty {
-                    parameters.append("billingDetails[address][line1]=\(line1)")
-                }
-                if let line2 = address.line2, !line2.isEmpty {
-                    parameters.append("billingDetails[address][line2]=\(line2)")
-                }
-                if let postalCode = address.postalCode, !postalCode.isEmpty {
-                    parameters.append("billingDetails[address][postal_code]=\(postalCode)")
-                }
-                if let state = address.state, !state.isEmpty {
-                    parameters.append("billingDetails[address][state]=\(state)")
-                }
-            }
-        }
-
         // Join all values with an &, and URL encode.
+        // We encode these parameters since they will be appended to the auth flow URL.
         guard let result = parameters.joined(separator: "&").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
             return nil
         }
