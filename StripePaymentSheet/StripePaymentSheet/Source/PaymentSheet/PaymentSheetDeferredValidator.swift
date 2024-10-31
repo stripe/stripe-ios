@@ -55,11 +55,11 @@ struct PaymentSheetDeferredValidator {
         guard intentPaymentMethod.stripeId == paymentMethod.stripeId else {
             if intentPaymentMethod.type == paymentMethod.type {
                 // Payment methods of type card and us_bank_account can be cloned, leading to mismatched pm ids, but their fingerprints should still match
-                switch paymentMethod.type.identifier {
-                case "card":
+                switch paymentMethod.type {
+                case .card:
                     try validateFingerprint(intentFingerprint: intentPaymentMethod.card?.fingerprint, fingerprint: paymentMethod.card?.fingerprint)
                     return
-                case "us_bank_account":
+                case .USBankAccount:
                     try validateFingerprint(intentFingerprint: intentPaymentMethod.usBankAccount?.fingerprint, fingerprint: paymentMethod.usBankAccount?.fingerprint)
                     return
                 default:
