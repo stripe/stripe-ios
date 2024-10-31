@@ -195,21 +195,11 @@ import UIKit
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .deferredIntent(let intentConfiguration):
-                let amount: Int?
-                let currency: String?
-                switch intentConfiguration.mode {
-                case let .payment(amount: _amount, currency: _currency, _, _):
-                    amount = _amount
-                    currency = _currency
-                case let .setup(currency: _currency, _):
-                    amount = nil
-                    currency = _currency
-                }
                 apiClient
                     .createLinkAccountSessionForDeferredIntent(
                         sessionId: "ios_instant_debits_only_\(UUID().uuidString)",
-                        amount: amount,
-                        currency: currency,
+                        amount: mode.amount,
+                        currency: mode.currency,
                         onBehalfOf: intentConfiguration.onBehalfOf,
                         linkMode: nil,
                         additionalParameters: ["product": "instant_debits"]
@@ -321,8 +311,8 @@ import UIKit
         )
         
         return ElementsSessionContext(
-            amount: nil,
-            currency: nil,
+            amount: mode.amount,
+            currency: mode.currency,
             prefillDetails: makePrefillDetails(),
             intentId: nil,
             linkMode: nil,
@@ -525,5 +515,40 @@ extension LinkPaymentController: LoadingViewControllerDelegate {
         paymentMethodId = nil
         payWithLinkContinuation?.resume(throwing: Error.canceled)
         payWithLinkContinuation = nil
+    }
+}
+
+private extension PaymentSheet.InitializationMode {
+    
+    var amount: Int? {
+        switch self {
+        case .paymentIntentClientSecret:
+            return nil
+        case .setupIntentClientSecret:
+            return nil
+        case .deferredIntent(let intentConfiguration):
+            switch intentConfiguration.mode {
+            case .payment(let amount, _, _, _):
+                return amount
+            case .setup:
+                return nil
+            }
+        }
+    }
+    
+    var currency: String? {
+        switch self {
+        case .paymentIntentClientSecret:
+            return nil
+        case .setupIntentClientSecret:
+            return nil
+        case .deferredIntent(let intentConfiguration):
+            switch intentConfiguration.mode {
+            case .payment(_, let currency, _, _):
+                return currency
+            case .setup(let currency, _):
+                return currency
+            }
+        }
     }
 }
