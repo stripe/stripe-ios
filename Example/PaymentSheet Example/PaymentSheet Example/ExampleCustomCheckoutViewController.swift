@@ -57,6 +57,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
+                configuration.paymentMethodLayout = .horizontal
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
                 configuration.allowsDelayedPaymentMethods = true
                 PaymentSheet.FlowController.create(
