@@ -6,7 +6,6 @@
 //
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
@@ -197,7 +196,6 @@ public final class EmbeddedPaymentElement {
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal let analyticsHelper: PaymentSheetAnalyticsHelper
-    internal lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
     internal var savedPaymentMethods: [STPPaymentMethod]
     internal var _paymentOption: PaymentOption? {
         // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.

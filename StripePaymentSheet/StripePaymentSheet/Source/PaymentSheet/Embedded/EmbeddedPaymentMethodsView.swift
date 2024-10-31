@@ -78,8 +78,8 @@ class EmbeddedPaymentMethodsView: UIView {
         let savedPaymentMethod = savedPaymentMethods.first
         if let savedPaymentMethod {
             let selection: Selection = .saved(paymentMethod: savedPaymentMethod)
-            let savedPaymentMethodButton = createSavedPaymentMethodButton(savedPaymentMethod: savedPaymentMethod,
-                                                                          savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
+            let savedPaymentMethodButton = makeSavedPaymentMethodButton(savedPaymentMethod: savedPaymentMethod,
+                                                                        savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
             if initialSelection == selection {
                 savedPaymentMethodButton.isSelected = true
                 self.selection = initialSelection
@@ -222,8 +222,8 @@ class EmbeddedPaymentMethodsView: UIView {
 
         if let savedPaymentMethod = savedPaymentMethods.first {
             // Replace saved payment method button at same index
-            let updatedSavedPaymentMethodButton = createSavedPaymentMethodButton(savedPaymentMethod: savedPaymentMethod,
-                                                                                 savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
+            let updatedSavedPaymentMethodButton = makeSavedPaymentMethodButton(savedPaymentMethod: savedPaymentMethod,
+                                                                               savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
             // If the previous item was as selected spm or the user explicitly selected a spm, then auto-select saved pm
             if selection?.isSaved ?? false || userSelectedPaymentMethod != nil {
                 self.stackView.arrangedSubviews.forEach { view in
@@ -263,8 +263,8 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
 
-    func createSavedPaymentMethodButton(savedPaymentMethod: STPPaymentMethod,
-                                        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) -> RowButton {
+    func makeSavedPaymentMethodButton(savedPaymentMethod: STPPaymentMethod,
+                                      savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) -> RowButton {
         let accessoryButton: RowButton.RightAccessoryButton? = {
             if let savedPaymentMethodAccessoryType {
                 return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance) { [weak self] in

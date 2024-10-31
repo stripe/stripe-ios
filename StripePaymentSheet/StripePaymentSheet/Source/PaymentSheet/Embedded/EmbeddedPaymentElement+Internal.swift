@@ -110,7 +110,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             let bottomSheetVC = BottomSheetViewController(contentViewController: updateViewController,
                                                           appearance: configuration.appearance,
                                                           isTestMode: configuration.apiClient.isTestmode, didCancelNative3DS2: {
-                self.paymentHandler.cancel3DS2ChallengeFlow()
+                stpAssertionFailure("3DS2 was triggered unexpectedly")
             })
             presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
             return
@@ -128,7 +128,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                       appearance: configuration.appearance,
                                                       isTestMode: configuration.apiClient.isTestmode,
                                                       didCancelNative3DS2: {
-            self.paymentHandler.cancel3DS2ChallengeFlow()
+            stpAssertionFailure("3DS2 was triggered unexpectedly")
         })
         presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
@@ -165,7 +165,7 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
 
         let savedPaymentMethodAccessoryType = accessoryButton(savedPaymentMethods: savedPaymentMethods)
         embeddedPaymentMethodsView.updateSavedPaymentMethods(savedPaymentMethods,
-                                                             userSelectedPaymentMethod: updatedPaymentMethod,
+                                                             userSelectedPaymentMethod: nil,
                                                              savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
         Task { @MainActor in
             presentingViewController?.dismiss(animated: true)
