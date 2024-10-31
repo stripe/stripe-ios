@@ -41,7 +41,6 @@ public enum PaymentSheetError: Error, LocalizedError {
     // MARK: Deferred intent errors
     case intentConfigurationValidationFailed(message: String)
     case deferredIntentValidationFailed(message: String)
-    case invalidLinkBankPaymentMethod
 
     // MARK: - Link errors
     case linkSignUpNotRequired

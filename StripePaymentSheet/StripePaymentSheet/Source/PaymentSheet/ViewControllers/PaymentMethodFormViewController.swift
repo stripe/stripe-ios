@@ -54,6 +54,16 @@ class PaymentMethodFormViewController: UIViewController {
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
+            
+            if case .instantDebits = paymentMethodType {
+                // We create the final payment method in the bank auth flow, therefore treating the Instant Debits
+                // result like a saved payment option.
+                guard let paymentMethod = instantDebitsFormElement?.getLinkedBank()?.paymentMethod.decode() else {
+                    return nil
+                }
+                return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+            }
+            
             return .new(confirmParams: params)
         }
         return nil
@@ -436,9 +446,7 @@ extension PaymentMethodFormViewController {
         ]
         
         switch intent {
-        case .paymentIntent:
-            additionalParameters["attach_required"] = true
-        case .setupIntent:
+        case .paymentIntent, .setupIntent:
             additionalParameters["attach_required"] = true
         case .deferredIntent:
             break
@@ -491,5 +499,12 @@ extension PaymentMethodFormViewController {
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
         }
+    }
+}
+
+private extension LinkBankPaymentMethod {
+
+    func decode() -> STPPaymentMethod? {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: allResponseFields)
     }
 }

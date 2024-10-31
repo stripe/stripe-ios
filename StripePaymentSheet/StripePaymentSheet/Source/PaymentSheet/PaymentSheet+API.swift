@@ -198,27 +198,12 @@ extension PaymentSheet {
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(let intentConfig):
-                let confirmType: ConfirmPaymentMethodType? = if let bank = confirmParams.instantDebitsLinkedBank {
-                    if let paymentMethod = bank.paymentMethod.decode() {
-                        .saved(paymentMethod, paymentOptions: confirmParams.confirmPaymentMethodOptions)
-                    } else {
-                        nil
-                    }
-                } else {
-                    .new(
+                handleDeferredIntentConfirmation(
+                    confirmType: .new(
                         params: confirmParams.paymentMethodParams,
                         paymentOptions: confirmParams.confirmPaymentMethodOptions,
                         shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
-                    )
-                }
-                
-                guard let confirmType else {
-                    completion(.failed(error: PaymentSheetError.invalidLinkBankPaymentMethod), nil)
-                    return
-                }
-                
-                handleDeferredIntentConfirmation(
-                    confirmType: confirmType,
+                    ),
                     configuration: configuration,
                     intentConfig: intentConfig,
                     authenticationContext: authenticationContext,
@@ -674,11 +659,4 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
     lhsConverted.phone = lhs.phone
 
     return rhs == lhsConverted
-}
-
-private extension LinkBankPaymentMethod {
-    
-    func decode() -> STPPaymentMethod? {
-        return STPPaymentMethod.decodedObject(fromAPIResponse: allResponseFields)
-    }
 }
