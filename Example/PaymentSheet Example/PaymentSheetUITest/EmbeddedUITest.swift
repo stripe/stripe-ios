@@ -73,9 +73,14 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Now remove card
         app.buttons["Edit"].waitForExistenceAndTap()
+
+        // Ensure Popup is presented
+        XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
         app.buttons["Remove card"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
+        // Ensure popup is implicitly dismissed
+        XCTAssertFalse(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
         XCTAssertFalse(app.images["stp_card_visa"].waitForExistence(timeout: 3))
         XCTAssertFalse(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
     }
@@ -83,39 +88,21 @@ class EmbeddedUITests: PaymentSheetUITestCase {
     func testMulipleCardWith_updateCBCWithinViewMore() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
-        settings.uiStyle = .paymentSheet
+        settings.uiStyle = .embedded
         settings.customerKeyType = .legacy
-        settings.customerMode = .new
+        settings.customerMode = .returning
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
 
         loadPlayground(app, settings)
-
-        // Add CBC eligible card
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
-        app.buttons["Pay €50.99"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-
-        reload(app, settings: settings)
-
-        // Add Visa
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app, postalEnabled: true)
-        app.buttons["Pay €50.99"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-
-        // Switch to embedded mode kicks off a reload
-        app.buttons["embedded"].waitForExistenceAndTap(timeout: 5.0)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
-        XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertFalse(app.buttons["•••• 1001"].waitForExistence(timeout: 3.0))
+        XCTAssertTrue(app.buttons["•••• 1001"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
 
-        // Switch from 4242 to 4444
+        // Switch from 1001 to 4242
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
         app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
@@ -124,74 +111,59 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Done"].waitForExistenceAndTap()
         app.buttons["Update"].waitForExistenceAndTap()
 
-        // Tap done on manage payment methods screen, then select 1010 card
+        // Tap done on manage payment methods screen, then select 4242 card
         app.buttons["Done"].waitForExistenceAndTap()
-        app.buttons["•••• 1001"].waitForExistenceAndTap()
+        app.buttons["•••• 4242"].waitForExistenceAndTap()
 
-        XCTAssertTrue(app.buttons["•••• 1001"].waitForExistence(timeout: 3.0))
-        XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
+        XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(app.buttons["•••• 1001"].waitForExistence(timeout: 3.0))
     }
 
     func testMulipleCard_update_and_remove() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
-        settings.uiStyle = .paymentSheet
+        settings.uiStyle = .embedded
         settings.customerKeyType = .legacy
-        settings.customerMode = .new
+        settings.customerMode = .returning
         settings.merchantCountryCode = .US
         settings.currency = .usd
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
 
         loadPlayground(app, settings)
-
-        // Add MasterCard
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
-        app.buttons["Pay $50.99"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-
-        reload(app, settings: settings)
-
-        // Add visa
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app, postalEnabled: true)
-        app.buttons["Pay $50.99"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-
-        // Switch to embedded mode kicks off a reload
-        app.buttons["embedded"].waitForExistenceAndTap(timeout: 5.0)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
-        XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertFalse(app.buttons["•••• 4444"].waitForExistence(timeout: 3.0))
-
-        // Switch from 4242 to 4444
-        app.buttons["View more"].waitForExistenceAndTap()
-        app.buttons["•••• 4444"].waitForExistenceAndTap()
-
+        XCTAssertTrue(app.buttons["••••6789"].waitForExistence(timeout: 3.0))
         XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertTrue(app.buttons["•••• 4444"].waitForExistence(timeout: 3.0))
 
-        // Remove selected 4444 card
+        // Switch from 6789 (Bank account) to 4242
         app.buttons["View more"].waitForExistenceAndTap()
-        app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
-        dismissAlertView(alertBody: "Mastercard •••• 4444", alertTitle: "Remove card?", buttonToTap: "Remove")
-        app.buttons["Done"].waitForExistenceAndTap()
+        app.buttons["•••• 4242"].waitForExistenceAndTap()
 
-        // Since there is only one PM left (4242), sheet dismisses automatically on tapping Done. Verify that only 4242 exists
+        XCTAssertFalse(app.buttons["••••6789"].waitForExistence(timeout: 3.0))
         XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertFalse(app.buttons["•••• 4444"].waitForExistence(timeout: 3.0))
 
-        // Remove 4242 & verify
+        // Remove selected 4242 card
+        app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
+        app.buttons["Done"].waitForExistenceAndTap()
+
+        // Since there is only one PM left, sheet dismisses automatically on tapping Done.
+        XCTAssertTrue(app.buttons["••••6789"].waitForExistence(timeout: 3.0))
+        XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
+
+        // Remove 6789 & verify
+        app.buttons["Edit"].waitForExistenceAndTap()
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        dismissAlertView(alertBody: "Bank account •••• 6789", alertTitle: "Remove bank account?", buttonToTap: "Remove")
 
         XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertFalse(app.buttons["•••• 4444"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(app.buttons["••••6789"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
+
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
