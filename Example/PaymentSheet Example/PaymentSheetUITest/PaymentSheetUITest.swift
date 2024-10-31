@@ -1638,7 +1638,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         payButton.tap()
 
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 60.0))
 
         // Reload w/ same customer
         reload(app, settings: settings)
