@@ -231,7 +231,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         paymentMethodRows.removeAll { $0.paymentMethod.stripeId == paymentMethod.stripeId }
         stackView.removeArrangedSubview(button, animated: true)
 
-        // Select the next payment method if nothing is selected anymore
+        // Select the first payment method if nothing is selected anymore
         // Note: this isn't necessarily the desired behavior, but the next payment method *will* be selected if you cancel out of the sheet at this point, so it's better to be consistent until we change that.
         if selectedPaymentMethod == nil {
             paymentMethodRows.first?.state = .selected
