@@ -179,7 +179,6 @@ final class UpdateCardViewController: UIViewController {
 
     private func navigationBarStyle() -> SheetNavigationBar.Style {
         if let bottomSheet = self.bottomSheetController,
-           bottomSheet.contentStack.first is UpdateCardViewController,
            bottomSheet.contentStack.count > 1 {
             return .back(showAdditionalButton: false)
         } else {

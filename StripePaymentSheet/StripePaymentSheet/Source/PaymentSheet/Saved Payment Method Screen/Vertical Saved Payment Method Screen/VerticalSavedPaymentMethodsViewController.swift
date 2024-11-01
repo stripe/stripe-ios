@@ -208,7 +208,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private func navigationBarStyle() -> SheetNavigationBar.Style {
         if let bottomSheet = self.bottomSheetController,
-           bottomSheet.contentStack.first is VerticalSavedPaymentMethodsViewController,
            bottomSheet.contentStack.count > 1 {
             return .back(showAdditionalButton: canEdit)
         } else {
