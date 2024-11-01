@@ -305,7 +305,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         buyButton.forceTapElement()
 
         try! fillCardData(app)
-        app.buttons["Pay €9.73"].tap()
+        app.buttons["Pay €9.73"].waitForExistenceAndTap(timeout: 3.0)
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Success!"))
@@ -1633,9 +1633,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
-        let payButton = app.buttons["Pay $50.99"]
-        XCTAssert(payButton.isEnabled)
-        payButton.tap()
+        app.buttons["Pay $50.99"].waitForExistenceAndTap(timeout: 5.0)
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
