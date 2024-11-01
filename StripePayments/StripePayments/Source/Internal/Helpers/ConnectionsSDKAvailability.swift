@@ -26,9 +26,10 @@ import UIKit
     }()
 
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
-        // return true for tests
+        // return true for tests, unless overridden by `FinancialConnectionsSDKAvailable`.
         if isUnitOrUITest {
-            return true
+            let financialConnectionsSDKAvailable = ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
+            return financialConnectionsSDKAvailable
         }
         return FinancialConnectionsSDKClass != nil
     }
