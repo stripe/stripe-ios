@@ -52,7 +52,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             } else if oldValue {
                 // If we are exiting edit mode restore previous selected states
                 paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
-                navigationBar.setStyle(.back(showAdditionalButton: canEdit)) // Hide edit button if needed
+                navigationBar.setStyle(navigationBarStyle())
 
                 // If we are exiting edit mode and there is only one payment method left which can't be removed, select it and dismiss
                 if paymentMethodRows.count == 1, let firstButton = paymentMethodRows.first {
@@ -116,7 +116,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
-        navBar.setStyle(.back(showAdditionalButton: canEdit))
+        navBar.setStyle(navigationBarStyle())
         navBar.delegate = self
         navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
         // TODO(porter) Read color from new secondary action color from appearance
@@ -206,6 +206,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         minHeightConstraint.isActive = true
     }
 
+    private func navigationBarStyle() -> SheetNavigationBar.Style {
+        if let bottomSheet = self.bottomSheetController,
+           bottomSheet.contentStack.count > 1 {
+            return .back(showAdditionalButton: canEdit)
+        } else {
+            return .close(showAdditionalButton: canEdit)
+        }
+    }
+
     @objc func didSelectEditSavedPaymentMethodsButton() {
         isEditingPaymentMethods = !isEditingPaymentMethods
     }
@@ -266,10 +275,15 @@ extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewContr
 // MARK: - SheetNavigationBarDelegate
 extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        // no-op we are in 'back' style mode
+        // 'back' closed used in:
+        //  Embedded
+        completeSelection()
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        // 'back' style used in:
+        //  PS.Complete & Vertical
+        //  PS.FC & Vertical
         completeSelection()
     }
 }
