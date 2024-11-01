@@ -36,8 +36,9 @@ class PaymentSheetUITestCase: XCTestCase {
         app = XCUIApplication()
         app.launchEnvironment = [
             "UITesting": "true",
-            // This makes the Financial Connections SDK trigger the (testmode) production flow instead of a stub. See FinancialConnectionsSDKAvailability.isUnitTestOrUITest.
-            "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true",
+            // This makes the Financial Connections SDK trigger the (testmode) production flow instead of a stub. See `FinancialConnectionsSDKAvailability`.
+            "FinancialConnectionsSDKAvailable": "true",
+            "FinancialConnectionsStubbedResult": "false",
         ]
     }
 }

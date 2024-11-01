@@ -18,27 +18,24 @@ import UIKit
 
     static let isUnitOrUITest: Bool = {
         #if targetEnvironment(simulator)
-        let useProductionSDK = ProcessInfo.processInfo.environment["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK"] == "true"
-        return !useProductionSDK && (NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil)
+        return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
         #else
             return false
         #endif
     }()
 
-    static let financialConnectionsSDKAvailableOverride: Bool = {
-        ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
-    }()
-
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
         // return true for tests, unless overridden by `FinancialConnectionsSDKAvailable`.
         if isUnitOrUITest {
-            return financialConnectionsSDKAvailableOverride
+            let financialConnectionsSDKAvailable = ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
+            return financialConnectionsSDKAvailable
         }
         return FinancialConnectionsSDKClass != nil
     }
 
     static func financialConnections() -> FinancialConnectionsSDKInterface? {
-        if isUnitOrUITest, !financialConnectionsSDKAvailableOverride {
+        let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
+        if isUnitOrUITest, financialConnectionsStubbedResult {
             return StubbedConnectionsSDKInterface()
         }
 
