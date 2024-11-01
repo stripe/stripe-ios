@@ -45,7 +45,7 @@ final class UpdateCardViewController: UIViewController {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: appearance)
         navBar.delegate = self
-        navBar.setStyle(.back(showAdditionalButton: false))
+        navBar.setStyle(navigationBarStyle())
         return navBar
     }()
 
@@ -175,6 +175,15 @@ final class UpdateCardViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
         delegate?.didDismiss(viewController: self)
+    }
+
+    private func navigationBarStyle() -> SheetNavigationBar.Style {
+        if let bottomSheet = self.bottomSheetController,
+           bottomSheet.contentStack.count > 1 {
+            return .back(showAdditionalButton: false)
+        } else {
+            return .close(showAdditionalButton: false)
+        }
     }
 
     @objc private func removeCard() {
