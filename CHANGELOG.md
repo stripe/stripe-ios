@@ -5,7 +5,7 @@
 * [Fixed] Fixed an issue with FlowController in vertical layout where the payment method could incorrectly be preserved across a call to `update` when it's no longer valid.
 * [Fixed] Fixed a potential deadlock when `paymentOption` is accessed from Swift concurrency.
 * [Fixed] Fixed deferred intent validation to handle cloned payment methods ([#4195](https://github.com/stripe/stripe-ios/issues/4195)
-* [Fixed] Fixed an issue with the vertical list of saved payment methods where tapping outside the screen would drop any changes that were made (e.g. removal or update of PMs).
+* [Fixed] Fixed an issue with the vertical list with 3 or more saved payment methods where tapping outside the screen sometimes drops changes that were made (e.g. removal or update of PMs).
 
 ## 23.32.0 2024-10-21
 ### PaymentSheet
