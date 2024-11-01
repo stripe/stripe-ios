@@ -219,8 +219,7 @@ class EmbeddedPaymentMethodsView: UIView {
             // Replace saved payment method button at same index
             let updatedSavedPaymentMethodButton = makeSavedPaymentMethodButton(savedPaymentMethod: savedPaymentMethod,
                                                                                savedPaymentMethodAccessoryType: accessoryType)
-            // If the previous item was as selected spm or the user explicitly selected a spm, then auto-select saved pm
-            if selection?.isSaved ?? false || isSelected {
+            if isSelected {
                 self.stackView.arrangedSubviews.forEach { view in
                     (view as? RowButton)?.isSelected = false
                 }

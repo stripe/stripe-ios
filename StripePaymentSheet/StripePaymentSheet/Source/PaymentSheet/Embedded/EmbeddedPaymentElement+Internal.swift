@@ -162,8 +162,9 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
         }
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
+        let isSelected = embeddedPaymentMethodsView.selection?.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
-                                                               isSelected: false,
+                                                               isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }
