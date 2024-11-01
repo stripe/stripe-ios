@@ -169,7 +169,29 @@ extension STPPaymentMethod {
             "card": [
                 "last4": "4242",
                 "brand": "visa",
+                "fingerprint": "B8XXs2y2JsVBtB9f",
             ],
+        ]
+    }
+    
+    static var usBankAccountJson: [String: Any] {
+        return [
+            "id": "pm_123",
+            "type": "us_bank_account",
+            "us_bank_account": [
+                "account_holder_type": "individual",
+                "account_type": "checking",
+                "bank_name": "STRIPE TEST BANK",
+                "fingerprint": "ickfX9sbxIyAlbuh",
+                "last4": "6789",
+                "networks": [
+                  "preferred": "ach",
+                  "supported": [
+                    "ach",
+                  ],
+                ] as [String: Any],
+                "routing_number": "110000000",
+            ] as [String: Any],
         ]
     }
 
