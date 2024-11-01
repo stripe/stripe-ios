@@ -184,18 +184,19 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
 }
 
 extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDelegate {
-    func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
-                     with selectedPaymentMethod: StripePayments.STPPaymentMethod?,
-                     latestPaymentMethods: [StripePayments.STPPaymentMethod]) {
+    func didComplete(
+        viewController: VerticalSavedPaymentMethodsViewController,
+        with selectedPaymentMethod: STPPaymentMethod?,
+        latestPaymentMethods: [STPPaymentMethod],
+        didTapToDismiss: Bool
+    ) {
         self.savedPaymentMethods = latestPaymentMethods
-        let accessoryType = getAccessoryButton(savedPaymentMethods: latestPaymentMethods)
+        let accessoryType = getAccessoryButton(
+            savedPaymentMethods: latestPaymentMethods
+        )
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
                                                                isSelected: selectedPaymentMethod != nil,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
-    }
-
-    func shouldClose() {
         presentingViewController?.dismiss(animated: true)
     }
 }
