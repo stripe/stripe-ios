@@ -225,28 +225,21 @@ extension PaymentMethodFormViewController {
             return PhoneNumber.fromE164(defaultPhoneNumber)?.number
         }()
         let prefillDetails = ElementsSessionContext.PrefillDetails(
-            email: instantDebitsFormElement?.email ?? configuration.defaultBillingDetails.name,
+            email: instantDebitsFormElement?.email ?? configuration.defaultBillingDetails.email,
             formattedPhoneNumber: instantDebitsFormElement?.phone ?? defaultPhoneNumber,
             unformattedPhoneNumber: instantDebitsFormElement?.phoneElement?.phoneNumber?.number ?? defaultUnformattedPhoneNumber,
             countryCode: instantDebitsFormElement?.phoneElement?.selectedCountryCode
         )
         let linkMode = elementsSession.linkSettings?.linkMode
-        let billingAddress: BillingAddress? = {
-            if configuration.billingDetailsCollectionConfiguration.address == .full {
-                return instantDebitsFormElement?.billingAddress
-            } else if configuration.billingDetailsCollectionConfiguration.name == .always {
-                return BillingAddress(name: instantDebitsFormElement?.name)
-            } else {
-                return nil
-            }
-        }()
+        let billingDetails = instantDebitsFormElement?.billingDetails
+
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
             prefillDetails: prefillDetails,
             intentId: intentId,
             linkMode: linkMode,
-            billingAddress: billingAddress
+            billingDetails: billingDetails
         )
     }
 

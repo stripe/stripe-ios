@@ -111,15 +111,21 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         return configuration.defaultBillingDetails.address
     }
 
-    var billingAddress: BillingAddress {
-        BillingAddress(
-            name: name,
+    var billingDetails: ElementsSessionContext.BillingDetails {
+        let billingAddress = ElementsSessionContext.BillingDetails.Address(
+            city: address.city,
+            country: address.country,
             line1: address.line1,
             line2: address.line2,
-            city: address.city,
-            state: address.state,
             postalCode: address.postalCode,
-            countryCode: address.country
+            state: address.state
+        )
+
+        return ElementsSessionContext.BillingDetails(
+            name: name,
+            email: email,
+            phone: phone,
+            address: billingAddress
         )
     }
 

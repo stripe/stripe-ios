@@ -129,30 +129,30 @@ import UIKit
         guard FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable else {
             return try await presentWebFlow(from: presentingViewController)
         }
-        
+
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             payWithLinkContinuation = continuation
-            
+
             let completionHandler: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { [weak self] result, _, error in
                 guard let self else {
                     return
                 }
-                
+
                 guard let result else {
                     self.continueWithFailure(error ?? Error.canceled)
                     return
                 }
-                
+
                 self.handleSDKResult(result)
             }
-            
+
             presentWithSDK(
                 from: presentingViewController,
                 completionHandler: completionHandler
             )
         }
     }
-    
+
     @MainActor
     private func presentWebFlow(from presentingViewController: UIViewController) async throws {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
@@ -231,23 +231,23 @@ import UIKit
                 }
         }
     }
-    
+
     private func presentWithSDK(
         from presentingViewController: UIViewController,
         completionHandler: @escaping (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void
     ) {
         let bankAccountCollector = STPBankAccountCollector()
-        
+
         let additionalParameters: [String: Any] = [
             "product": "instant_debits",
         ]
-        
+
         let params = STPCollectBankAccountParams.collectInstantDebitsParams(
             email: configuration.defaultBillingDetails.email
         )
-        
+
         let elementsSessionContext = makeElementsSessionContext()
-        
+
         switch mode {
         case .paymentIntentClientSecret(let string):
             bankAccountCollector.collectBankAccountForPayment(
@@ -296,45 +296,49 @@ import UIKit
             )
         }
     }
-    
+
     private func makeElementsSessionContext() -> ElementsSessionContext {
-        let billingDetails = configuration.defaultBillingDetails
-        
-        let billingAddress = BillingAddress(
-            name: billingDetails.name,
-            line1: billingDetails.address.line1,
-            line2: billingDetails.address.line2,
-            city: billingDetails.address.city,
-            state: billingDetails.address.state,
-            postalCode: billingDetails.address.postalCode,
-            countryCode: billingDetails.address.country
+        let defaultBillingDetails = configuration.defaultBillingDetails
+
+        let billingDetails = ElementsSessionContext.BillingDetails(
+            name: defaultBillingDetails.name,
+            email: defaultBillingDetails.email,
+            phone: defaultBillingDetails.phone,
+            address: .init(
+                city: defaultBillingDetails.address.city,
+                country: defaultBillingDetails.address.country,
+                line1: defaultBillingDetails.address.line1,
+                line2: defaultBillingDetails.address.line2,
+                postalCode: defaultBillingDetails.address.postalCode,
+                state: defaultBillingDetails.address.state
+            )
         )
-        
+
         return ElementsSessionContext(
             amount: mode.amount,
             currency: mode.currency,
             prefillDetails: makePrefillDetails(),
             intentId: nil,
             linkMode: nil,
-            billingAddress: billingAddress
+            billingDetails: billingDetails
         )
     }
-    
+
     private func makePrefillDetails() -> ElementsSessionContext.PrefillDetails {
         var billingPhone: PhoneNumber?
 
         if let phone = configuration.defaultBillingDetails.phone {
             billingPhone = PhoneNumber.fromE164(phone)
-            
+
             if billingPhone == nil {
                 billingPhone = PhoneNumber(number: phone, countryCode: "US")
             }
         }
-        
+
         let formattedPhoneNumber = billingPhone?.string(as: .e164)
         let unformattedPhoneNumber = billingPhone?.number
         let countryCode = billingPhone?.countryCode
-        
+
         return .init(
             email: configuration.defaultBillingDetails.email,
             formattedPhoneNumber: formattedPhoneNumber,
@@ -342,7 +346,7 @@ import UIKit
             countryCode: countryCode
         )
     }
-    
+
     private func handleSDKResult(_ result: FinancialConnectionsSDKResult) {
         switch result {
         case .completed(let result):
@@ -357,12 +361,12 @@ import UIKit
             continueWithFailure(Error.canceled)
         }
     }
-    
+
     private func continueWithPaymentMethod(_ paymentMethodId: String) {
         self.paymentMethodId = paymentMethodId
         payWithLinkContinuation?.resume(returning: ())
     }
-    
+
     private func continueWithFailure(_ error: Swift.Error) {
         paymentMethodId = nil
         payWithLinkContinuation?.resume(throwing: error)
@@ -519,7 +523,7 @@ extension LinkPaymentController: LoadingViewControllerDelegate {
 }
 
 private extension PaymentSheet.InitializationMode {
-    
+
     var amount: Int? {
         switch self {
         case .paymentIntentClientSecret:
@@ -535,7 +539,7 @@ private extension PaymentSheet.InitializationMode {
             }
         }
     }
-    
+
     var currency: String? {
         switch self {
         case .paymentIntentClientSecret:
