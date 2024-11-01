@@ -209,8 +209,8 @@ class EmbeddedPaymentMethodsView: UIView {
         guard let previousSavedPaymentMethodButton = self.savedPaymentMethodButton,
               let viewIndex = stackView.arrangedSubviews.firstIndex(of: previousSavedPaymentMethodButton) else {
             stpAssertionFailure("""
-            Function supports only when there is an existing savedPaymentMethodButton because this function is only used
-            for updating the view after selecting from a larger list of saved payment methods or updating a saved payment method.
+            This function should never be called when there isn't already a saved PM row because there's no way for Embedded
+            to add a saved payment method today; you can only update or remove them.
             """)
             return
         }
