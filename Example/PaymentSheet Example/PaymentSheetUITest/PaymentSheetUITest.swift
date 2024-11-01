@@ -305,7 +305,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         buyButton.forceTapElement()
 
         try! fillCardData(app)
-        app.buttons["Pay €9.73"].tap()
+        app.buttons["Done"].waitForExistenceAndTap(timeout: 3.0)
+        app.buttons["Pay €9.73"].waitForExistenceAndTap(timeout: 3.0)
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Success!"))
