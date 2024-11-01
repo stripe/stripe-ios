@@ -120,42 +120,12 @@ class LinkPaymentControllerUITest: XCTestCase {
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
-        // "Consent" pane
-        app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: timeout)
+        PaymentSheetUITestCase.stepThroughNativeInstantDebitsFlow(app: app, emailPrefilled: false)
 
-        // "Sign Up" pane
-        app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
-            .firstMatch
-            .waitForExistenceAndTap(timeout: 10)
-        let email = "linkpaymentcontrolleruitest-\(UUID().uuidString)@example.com"
-        app.typeText(email + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Phone number"].tap()
-        // the `XCUIKeyboardKey.return.rawValue` will automatically
-        // press the "Continue with Link" button to proceed to next
-        // screen
-        app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
-
-        app.buttons["link_login.primary_button"].waitForExistenceAndTap(timeout: timeout)
-
-        // "Institution picker" pane
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
-        XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
-        featuredLegacyTestInstitution.tap()
-
-        let accountPickerLinkAccountsButton = app.buttons["connect_accounts_button"]
-        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
-        XCTAssert(accountPickerLinkAccountsButton.isEnabled, "no account selected")
-        accountPickerLinkAccountsButton.tap()
-
-        // "Success" pane
-        app.buttons["success_done_button"].waitForExistenceAndTap(timeout: timeout)
+        sleep(3) // wait for modal to disappear before pressing Buy
 
         // Back to "LinkPaymentController"
-        let linkPaymentBuyButton = app.buttons["LinkPaymentBuyButton"]
-        XCTAssertTrue(linkPaymentBuyButton.waitForExistence(timeout: timeout))
-        linkPaymentBuyButton.tap()
-
+        app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)
         XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
     }
 }

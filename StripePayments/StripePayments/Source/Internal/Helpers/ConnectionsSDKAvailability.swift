@@ -25,17 +25,20 @@ import UIKit
         #endif
     }()
 
+    static let financialConnectionsSDKAvailableOverride: Bool = {
+        ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
+    }()
+
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
         // return true for tests, unless overridden by `FinancialConnectionsSDKAvailable`.
         if isUnitOrUITest {
-            let financialConnectionsSDKAvailable = ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
-            return financialConnectionsSDKAvailable
+            return financialConnectionsSDKAvailableOverride
         }
         return FinancialConnectionsSDKClass != nil
     }
 
     static func financialConnections() -> FinancialConnectionsSDKInterface? {
-        if isUnitOrUITest {
+        if isUnitOrUITest, !financialConnectionsSDKAvailableOverride {
             return StubbedConnectionsSDKInterface()
         }
 
