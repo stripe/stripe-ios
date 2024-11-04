@@ -486,7 +486,6 @@ extension PaymentSheet {
                     linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentDetails.cvc) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
-                            // shouldSave is false, as we don't show a save checkbox in the Link VC
                             confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
                         case .failure(let error):
                             STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
@@ -494,7 +493,6 @@ extension PaymentSheet {
                         }
                     }
                 } else {
-                    // shouldSave is false, as we don't show a save checkbox in the Link VC
                     confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, shouldSave)
                 }
             case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
