@@ -466,7 +466,6 @@ extension STPPaymentMethodParams {
             return rawTypeString ?? ""
         }
     }
-    
 }
 
 extension PaymentElementConfiguration {

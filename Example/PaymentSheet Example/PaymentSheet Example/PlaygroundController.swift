@@ -274,7 +274,7 @@ class PlaygroundController: ObservableObject {
     }
 
     var addressConfiguration: AddressViewController.Configuration {
-        var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
+        var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: appearance)
         if case .onWithDefaults = settings.shippingInfo {
             configuration.defaultValues = .init(
                 address: .init(
@@ -497,7 +497,7 @@ class PlaygroundController: ObservableObject {
             let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
                 self.appearance = updatedAppearance
                 self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load()
+                self.load(reinitializeControllers: true)
             }))
 
             rootViewController.present(vc, animated: true, completion: nil)
@@ -951,8 +951,7 @@ extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
-            intentConfig: intentConfig,
-            appearance: appearance
+            intentConfig: intentConfig
         )
     }
 
