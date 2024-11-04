@@ -8,6 +8,8 @@
 
 "Add a payment method" = "添加支付方式";
 
+"Add bank account" = "添加銀行賬戶";
+
 "Add card" = "添加卡";
 
 "Add new card" = "添加新卡";
@@ -17,6 +19,10 @@
 "Add your payment information" = "添加您的支付資訊";
 
 "Approve payment" = "批准付款";
+
+"Are you sure you want to remove this card?" = "您確定要移除此卡嗎？";
+
+"Are you sure you want to remove this linked account?" = "您確定要移除這個關聯的賬戶嗎？";
 
 "Back" = "上一步";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "取消並用另一方式支付";
 
+"Change email" = "更改電郵地址";
+
 "Choose a payment method" = "選擇一個支付方式";
 
 "Close card scanner" = "關閉銀行卡掃描器";
+
+"Code sent" = "驗證碼已發送";
 
 "Confirm" = "確定";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "聯絡資訊";
 
+"Default" = "預設";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "手動輸入地址";
 
+"Enter the code sent to %@ to use Link to pay by default." = "輸入發送到 %@ 的驗證碼，以預設用 Link 支付。";
+
+"Enter your verification code" = "輸入您的驗證碼";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您的銀行卡的安全碼。";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 將代表 %@ 收取直接扣款，且確認我是該賬戶持有人，且是唯一一個需要授權該賬戶扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "加入 Link";
+
+"Log out of Link" = "退出 Link";
 
 "Manage payment method" = "管理支付方式";
 
@@ -101,6 +123,8 @@
 "New card" = "添加新卡";
 
 "New payment method" = "新支付方式";
+
+"Not %@?" = "不是 %@？";
 
 "Open your UPI app to approve your payment within %@" = "請在 %@ 內打開您的 UPI 應用程式來批准付款";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "只需少許幾步，即可用您的銀行賬戶付款。";
 
+"Payment" = "支付方式";
+
 "Payment failed" = "付款失敗";
+
+"Payment methods" = "支付方式";
 
 "Please go back and select another payment method" = "請返回並選擇另一個支付方式。";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "移除卡？";
 
+"Remove linked account" = "移除關聯賬戶";
+
 "Remove payment method" = "移除支付方式";
+
+"Resend code" = "重新發送驗證碼";
 
 "Save" = "保存";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "已保存";
 
+"Secure 1⁠-⁠click checkout" = "安全地一鍵結賬";
+
 "Select card" = "選擇銀行卡";
 
 "Select payment method" = "選擇支付方式";
 
 "Select your payment method" = "選擇您的支付方式";
 
+"Set as default" = "設置為預設支付方式";
+
+"Set as default payment method" = "設置為預設支付方式";
+
 "Set up" = "設置";
 
 "Shipping to %@ is not supported." = "不支援向 %@ 配送。";
 
 "Show menu" = "顯示選單";
+
+"Sign in to your Link account" = "登入您的 Link 賬戶";
 
 "Simple, secure one-click payments" = "簡單、安全地一鍵支付";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 會在 1-2 個工作日向您的賬戶存入 0.01 美元。然後您會收到一封郵件，指導您完成向 %@ 的付款。";
 
+"Tap to close" = "點擊以關閉";
+
+"Tap to expand" = "點擊以展開";
+
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您輸入的 IBAN 無效，「%@」是不支援的國家代碼。";
 
+"The provided verification code has expired." = "提供的驗證碼已過期。";
+
+"The provided verification code is incorrect." = "提供的驗證碼不正確。";
+
+"This card has expired. Update your card info or choose a different payment method." = "該卡已過期。更新您的銀行卡資訊或選擇另一支付方式。";
+
+"This is your default" = "這是您的預設支付方式";
+
+"Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
+
+"Unavailable for this purchase" = "無法完成這筆訂單";
+
 "Update" = "更新";
 
+"Update card" = "更新銀行卡";
+
 "Update card brand" = "更新銀行卡品牌";
+
+"Use your saved info to check out faster" = "用您保存的資訊，更快結賬";
 
 "View more" = "查看更多";
 

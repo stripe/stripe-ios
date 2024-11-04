@@ -8,6 +8,8 @@
 
 "Add a payment method" = "결제 방식 추가";
 
+"Add bank account" = "은행 계좌 추가";
+
 "Add card" = "카드 추가";
 
 "Add new card" = "새 카드 추가";
@@ -17,6 +19,10 @@
 "Add your payment information" = "결제 정보를 추가하세요.";
 
 "Approve payment" = "결제 승인";
+
+"Are you sure you want to remove this card?" = "이 카드를 삭제하시겠습니까?";
+
+"Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
 
 "Back" = "뒤로";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "취소 및 다른 방법으로 결제";
 
+"Change email" = "이메일 변경";
+
 "Choose a payment method" = "결제 방식 선택";
 
 "Close card scanner" = "카드 스캐너 닫기";
+
+"Code sent" = "코드 전송 완료";
 
 "Confirm" = "확인";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "연락처 정보";
 
+"Default" = "기본값";
+
 "EPS Bank" = "EPS 은행";
 
 "Enter address manually" = "주소 직접 입력";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Link를 기본값으로 결제하려면 %@에 전송된 코드를 입력해 주십시오.";
+
+"Enter your verification code" = "확인 코드 입력";
+
 "FPX Bank" = "FPX 은행";
+
+"For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Link 가입";
+
+"Log out of Link" = "Link 로그아웃";
 
 "Manage payment method" = "결제 방식 관리";
 
@@ -101,6 +123,8 @@
 "New card" = "새 카드";
 
 "New payment method" = "새 결제 방식";
+
+"Not %@?" = "%@ 님이 아니십니까?";
 
 "Open your UPI app to approve your payment within %@" = "결제를 승인하려면 %@ 안에 UPI 앱을 여십시오.";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌로 결제하십시오.";
 
+"Payment" = "결제";
+
 "Payment failed" = "결제 실패";
+
+"Payment methods" = "결제 방식";
 
 "Please go back and select another payment method" = "뒤로 돌아가서 다른 결제 방식을 선택해 주십시오.";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "카드를 삭제하시겠습니까?";
 
+"Remove linked account" = "연결된 계좌 제거";
+
 "Remove payment method" = "결제 방식 삭제";
+
+"Resend code" = "코드 재전송";
 
 "Save" = "저장";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "저장함";
 
+"Secure 1⁠-⁠click checkout" = "보안 원클릭 체크아웃";
+
 "Select card" = "카드 선택";
 
 "Select payment method" = "결제 방식 선택";
 
 "Select your payment method" = "결제 수단을 선택하세요.";
 
+"Set as default" = "기본값으로 설정";
+
+"Set as default payment method" = "결제 방식 기본값으로 설정";
+
 "Set up" = "설정";
 
 "Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
 
 "Show menu" = "메뉴 표시";
+
+"Sign in to your Link account" = "Link 계정에 로그인";
 
 "Simple, secure one-click payments" = "간단하고 안전한 원클릭 결제";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
 
+"Tap to close" = "탭하여 닫기";
+
+"Tap to expand" = "탭하여 확장";
+
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력한 IBAN이 잘못되었습니다. \"%@\"은(는) 지원되는 국가 코드가 아닙니다.";
 
+"The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
+
+"The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
+
+"This card has expired. Update your card info or choose a different payment method." = "이 카드의 유효기간이 만료되었습니다. 카드 정보를 업데이트하거나 다른 결제 방식을 선택하십시오.";
+
+"This is your default" = "기본값입니다";
+
+"Too many attempts. Please try again in a few minutes." = "너무 많이 시도했습니다. 몇 분 후에 다시 시도해 주십시오.";
+
+"Unavailable for this purchase" = "해당 구매에는 사용 불가능";
+
 "Update" = "업데이트";
 
+"Update card" = "카드 업데이트";
+
 "Update card brand" = "카드 브랜드 업데이트";
+
+"Use your saved info to check out faster" = "저장된 정보를 사용하여 더 빠르게 체크아웃";
 
 "View more" = "자세히 보기";
 

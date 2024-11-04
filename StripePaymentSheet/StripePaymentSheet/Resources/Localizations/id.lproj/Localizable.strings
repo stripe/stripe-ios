@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Tambahkan metode pembayaran";
 
+"Add bank account" = "Tambahkan rekening bank";
+
 "Add card" = "Tambahkan kartu";
 
 "Add new card" = "Tambahkan kartu baru";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Tambahkan informasi pembayaran Anda";
 
 "Approve payment" = "Setujui pembayaran";
+
+"Are you sure you want to remove this card?" = "Anda yakin ingin menghapus kartu ini?";
+
+"Are you sure you want to remove this linked account?" = "Anda yakin ingin menghapus rekening tertaut ini?";
 
 "Back" = "Kembali";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
 
+"Change email" = "Ubah email";
+
 "Choose a payment method" = "Pilih metode pembayaran";
 
 "Close card scanner" = "Tutup pemindai kartu";
+
+"Code sent" = "Kode dikirim";
 
 "Confirm" = "Konfirmasikan";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Informasi kontak";
 
+"Default" = "Default";
+
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Masukkan kode yang dikirim ke %@ untuk menggunakan Link untuk membayar secara default.";
+
+"Enter your verification code" = "Masukkan kode verifikasi Anda";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Untuk keamanan, masukkan lagi kode keamanan kartu Anda.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya memahami bahwa Stripe akan menagih Debit Langsung atas nama %@ serta mengonfirmasikan bahwa sayalah pemilik akun dan satu-satunya orang yang diperlukan untuk mengotorisasi debit dari akun ini.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Bergabunglah dengan Link";
+
+"Log out of Link" = "Keluar dari Link";
 
 "Manage payment method" = "Kelola metode pembayaran";
 
@@ -101,6 +123,8 @@
 "New card" = "Kartu baru";
 
 "New payment method" = "Metode pembayaran baru";
+
+"Not %@?" = "Bukan %@?";
 
 "Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI Anda untuk menyetujui pembayaran di dalam %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Bayar dengan rekening bank Anda hanya dalam beberapa langkah.";
 
+"Payment" = "Pembayaran";
+
 "Payment failed" = "Pembayaran gagal";
+
+"Payment methods" = "Metode pembayaran";
 
 "Please go back and select another payment method" = "Harap kembali dan pilih metode pembayaran lain";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Hapus kartu?";
 
+"Remove linked account" = "Hapus rekening tertaut";
+
 "Remove payment method" = "Hapus metode pembayaran";
+
+"Resend code" = "Kirim ulang kode";
 
 "Save" = "Simpan";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Disimpan";
 
+"Secure 1⁠-⁠click checkout" = "Checkout 1-klik dengan aman";
+
 "Select card" = "Pilih kartu";
 
 "Select payment method" = "Pilih metode pembayaran";
 
 "Select your payment method" = "Pilih metode pembayaran Anda";
 
+"Set as default" = "Atur sebagai default";
+
+"Set as default payment method" = "Atur sebagai metode pembayaran default";
+
 "Set up" = "Siapkan";
 
 "Shipping to %@ is not supported." = "Pengiriman ke %@ tidak didukung.";
 
 "Show menu" = "Tampilkan menu";
+
+"Sign in to your Link account" = "Masuk ke akun Link Anda";
 
 "Simple, secure one-click payments" = "Pembayaran sekali klik yang mudah dan aman";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan menyetorkan $0,01 ke rekening Anda dalam waktu 1–2 hari kerja. Kemudian Anda akan mendapatkan email yang berisi petunjuk untuk menyelesaikan pembayaran kepada %@.";
 
+"Tap to close" = "Sentuh untuk menutup";
+
+"Tap to expand" = "Sentuh untuk memperluas";
+
 "The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang Anda masukkan tidak valid. \"%@\" bukan kode negara yang didukung.";
 
+"The provided verification code has expired." = "Kode verifikasi yang diberikan telah kedaluwarsa.";
+
+"The provided verification code is incorrect." = "Kode verifikasi yang diberikan salah.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Kartu ini telah kedaluwarsa. Perbarui info kartu Anda atau pilih metode pembayaran yang lain.";
+
+"This is your default" = "Ini default Anda";
+
+"Too many attempts. Please try again in a few minutes." = "Terlalu banyak percobaan. Cobalah lagi sebentar lagi.";
+
+"Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
+
 "Update" = "Perbarui";
 
+"Update card" = "Perbarui kartu";
+
 "Update card brand" = "Perbarui brand kartu";
+
+"Use your saved info to check out faster" = "Gunakan info yang tersimpan untuk memproses pembayaran dengan lebih cepat";
 
 "View more" = "Lihat selengkapnya";
 
