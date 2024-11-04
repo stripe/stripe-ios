@@ -203,6 +203,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
     internal var savedPaymentMethods: [STPPaymentMethod]
     internal private(set) var formCache: PaymentMethodFormCache = .init()
+    internal var formViewController: EmbeddedFormViewController?
     internal var _paymentOption: PaymentOption? {
         // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.
         // TODO: Handle CVC recollection

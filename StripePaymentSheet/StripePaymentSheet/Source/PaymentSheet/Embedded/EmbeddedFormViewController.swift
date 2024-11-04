@@ -82,11 +82,11 @@ class EmbeddedFormViewController: UIViewController {
         return paymentMethodFormViewController.paymentOption
     }
 
-    private let loadResult: PaymentSheetLoader.LoadResult
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let configuration: EmbeddedPaymentElement.Configuration
     private let intent: Intent
     private let elementsSession: STPElementsSession
+    private let savedPaymentMethods: [STPPaymentMethod]?
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var error: Swift.Error?
@@ -132,7 +132,7 @@ class EmbeddedFormViewController: UIViewController {
         let headerView = FormHeaderView(
             paymentMethodType: paymentMethodType,
             // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
-            shouldUseNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
+            shouldUseNewCardHeader: savedPaymentMethods?.first?.type == .card,
             appearance: configuration.appearance
         )
 
@@ -158,14 +158,16 @@ class EmbeddedFormViewController: UIViewController {
     // MARK: - Initializers
 
     init(configuration: EmbeddedPaymentElement.Configuration,
-         loadResult: PaymentSheetLoader.LoadResult,
+         intent: Intent,
+         elementsSession: STPElementsSession,
+         savedPaymentMethods: [STPPaymentMethod]?,
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          formCache: PaymentMethodFormCache) {
-        self.loadResult = loadResult
-        self.intent = loadResult.intent
-        self.elementsSession = loadResult.elementsSession
+        self.intent = intent
+        self.elementsSession = elementsSession
+        self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.analyticsHelper = analyticsHelper

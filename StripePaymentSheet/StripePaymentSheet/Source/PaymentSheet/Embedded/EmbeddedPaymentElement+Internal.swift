@@ -105,9 +105,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
         let embeddedFormVC = EmbeddedFormViewController(
             configuration: configuration,
-            loadResult: loadResult,
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: savedPaymentMethods,
             paymentMethodType: paymentMethodType,
-            previousPaymentOption: lastSeenPaymentOption,
+            previousPaymentOption: nil,
             analyticsHelper: analyticsHelper,
             formCache: formCache
         )
@@ -280,7 +282,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
     
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
-        self.lastSeenPaymentOption = embeddedFormViewController.selectedPaymentOption
+//        self.lastSeenPaymentOption = embeddedFormViewController.selectedPaymentOption
         if embeddedFormViewController.selectedPaymentOption == nil {
             embeddedPaymentMethodsView.resetSelection()
         }
