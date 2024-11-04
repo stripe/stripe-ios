@@ -5,9 +5,9 @@
 //  Created by Eduardo Urias on 2/27/23.
 //
 
-@testable import StripePaymentSheet
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@testable import StripePaymentSheet
 import XCTest
 
 // Link mapping tests
@@ -40,7 +40,7 @@ final class STPPaymentMethodBillingDetailsTests: XCTestCase {
         XCTAssertNil(params["state"])
         XCTAssertNil(params["country"])
     }
-    
+
     func testCreateLinkBillingAddress() {
         let billingAddress = BillingAddress(
             name: "Name",

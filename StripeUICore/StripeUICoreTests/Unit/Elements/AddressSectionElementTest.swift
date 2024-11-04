@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) @testable import StripeUICore
 @_spi(STP) @testable import StripeCore
+@_spi(STP) @testable import StripeUICore
 import XCTest
 
 class AddressSectionElementTest: XCTestCase {
@@ -231,14 +231,14 @@ class AddressSectionElementTest: XCTestCase {
         sut.country.select(index: 0)
         XCTAssertNotEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
     }
-    
+
     func testConvertLinkBillingAddressToAddressDetails() {
         let linkBillingDetails = BillingAddress(
             name: "Test Testerson",
             line1: "123 Main St",
             line2: "Apt 4",
             city: "San Francisco",
-            state: "CA", 
+            state: "CA",
             postalCode: "94102",
             countryCode: "US"
             )
