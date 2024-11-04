@@ -7,6 +7,7 @@
 //
 
 @_spi(STP) @testable import StripeUICore
+@_spi(STP) @testable import StripeCore
 import XCTest
 
 class AddressSectionElementTest: XCTestCase {
@@ -229,5 +230,26 @@ class AddressSectionElementTest: XCTestCase {
         sut.phone?.textFieldElement.setText("555")
         sut.country.select(index: 0)
         XCTAssertNotEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
+    }
+    
+    func testConvertLinkBillingAddressToAddressDetails() {
+        let linkBillingDetails = BillingAddress(
+            name: "Test Testerson",
+            line1: "123 Main St",
+            line2: "Apt 4",
+            city: "San Francisco",
+            state: "CA", 
+            postalCode: "94102",
+            countryCode: "US"
+            )
+        let addressDetails = AddressSectionElement.AddressDetails(billingAddress: linkBillingDetails, phone: "+1231231234")
+        XCTAssertEqual(addressDetails.name, linkBillingDetails.name)
+        XCTAssertEqual(addressDetails.phone, "+1231231234")
+        XCTAssertEqual(addressDetails.address.city, linkBillingDetails.city)
+        XCTAssertEqual(addressDetails.address.country, linkBillingDetails.countryCode)
+        XCTAssertEqual(addressDetails.address.line1, linkBillingDetails.line1)
+        XCTAssertEqual(addressDetails.address.line2, linkBillingDetails.line2)
+        XCTAssertEqual(addressDetails.address.postalCode, linkBillingDetails.postalCode)
+        XCTAssertEqual(addressDetails.address.state, linkBillingDetails.state)
     }
 }
