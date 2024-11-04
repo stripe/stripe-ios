@@ -148,6 +148,8 @@ public final class EmbeddedPaymentElement {
             if paymentOption != embeddedPaymentMethodsView.displayData {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
+            // Clear the form cache after an update
+            formCache = .init()
             return .succeeded
         }
         self.currentUpdateTask = currentUpdateTask
@@ -168,7 +170,10 @@ public final class EmbeddedPaymentElement {
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
     internal private(set) var loadResult: PaymentSheetLoader.LoadResult
     internal private(set) var currentUpdateTask: Task<UpdateResult, Never>?
-    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    let analyticsHelper: PaymentSheetAnalyticsHelper
+    internal private(set) var formCache: PaymentMethodFormCache = .init()
+    var lastSeenPaymentOption: PaymentOption?
+    var formViewController: EmbeddedFormViewController?
 
     private init(
         configuration: Configuration,

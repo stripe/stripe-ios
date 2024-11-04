@@ -12,7 +12,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol EmbeddedFormViewControllerDelegate: AnyObject {
+@MainActor protocol EmbeddedFormViewControllerDelegate: AnyObject {
 
     /// Notifies the delegate to confirm the payment or setup with the provided payment option.
     /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm`.
@@ -69,6 +69,10 @@ class EmbeddedFormViewController: UIViewController {
             view.isUserInteractionEnabled = isUserInteractionEnabled
             navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
         }
+    }
+    
+    var collectsUserInput: Bool {
+        return paymentMethodFormViewController.form.collectsUserInput
     }
 
     enum Error: Swift.Error {

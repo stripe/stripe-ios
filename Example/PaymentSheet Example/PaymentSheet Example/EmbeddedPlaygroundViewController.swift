@@ -93,7 +93,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
         )
         embeddedPaymentElement.delegate = self
         self.embeddedPaymentElement = embeddedPaymentElement
-
+        self.embeddedPaymentElement?.presentingViewController = self
+        
         // Scroll view contains our content
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false

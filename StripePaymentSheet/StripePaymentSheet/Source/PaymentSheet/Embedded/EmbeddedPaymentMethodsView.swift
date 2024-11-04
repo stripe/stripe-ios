@@ -184,6 +184,16 @@ class EmbeddedPaymentMethodsView: UIView {
             delegate?.heightDidChange()
         }
     }
+    
+    // MARK: Internal functions
+    func resetSelection() {
+        for case let rowButton as RowButton in stackView.arrangedSubviews {
+            rowButton.isSelected = false
+        }
+        
+        selection = nil
+        
+    }
 
     // MARK: Tap handling
     func didTap(selectedRowButton: RowButton, selection: Selection) {

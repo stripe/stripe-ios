@@ -5,6 +5,8 @@
 //  Created by Yuki Tokuhiro on 10/10/24.
 //
 
+@_spi(STP) import StripeCore
+
 extension EmbeddedPaymentElement {
     @MainActor
     static func makeView(
@@ -64,5 +66,61 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
     func selectionDidUpdate() {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+        guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
+            return
+        }
+
+        guard let presentingVC = presentingViewController else {
+            assertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+            return
+        }
+
+        let embeddedFormVC = EmbeddedFormViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            paymentMethodType: paymentMethodType,
+            previousPaymentOption: lastSeenPaymentOption,
+            analyticsHelper: analyticsHelper,
+            formCache: formCache
+        )
+        embeddedFormVC.delegate = self
+
+        // Only show forms that require user input
+        guard embeddedFormVC.collectsUserInput else { return }
+
+        let bottomSheet = BottomSheetViewController(
+            contentViewController: embeddedFormVC,
+            appearance: configuration.appearance,
+            isTestMode: configuration.apiClient.isTestmode,
+            didCancelNative3DS2: {}
+        )
+
+        delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
+        presentingVC.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+        self.formViewController = embeddedFormVC
     }
+}
+
+extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
+    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: EmbeddedFormViewController, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+        // TODO(porter)
+    }
+    
+    func embeddedFormViewControllerShouldContinue(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
+        // TODO(porter)
+    }
+    
+    func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
+        embeddedPaymentMethodsView.resetSelection()
+        embeddedFormViewController.dismiss(animated: true)
+    }
+    
+    func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
+        self.lastSeenPaymentOption = embeddedFormViewController.selectedPaymentOption
+        if embeddedFormViewController.selectedPaymentOption == nil {
+            embeddedPaymentMethodsView.resetSelection()
+        }
+        embeddedFormViewController.dismiss(animated: true)
+    }
+    
 }
