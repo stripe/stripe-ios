@@ -25,7 +25,7 @@ public class CustomerSheet {
         case customerAdapter
         case customerSession
     }
-    
+
     internal enum InternalError: Error {
         case expectedSetupIntent
         case invalidStateOnConfirmation
@@ -34,7 +34,7 @@ public class CustomerSheet {
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
-    
+
     private var initEvent: STPAnalyticEvent {
         switch self.integrationType {
         case .customerAdapter:

@@ -594,6 +594,7 @@ extension PlaygroundController {
         addressViewController = nil
         paymentSheet = nil
         lastPaymentResult = nil
+        embeddedPlaygroundViewController?.isLoading = true
         isLoading = true
         let settingsToLoad = self.settings
 
@@ -729,7 +730,7 @@ extension PlaygroundController {
                     }
                 case .embedded:
                     guard !shouldUpdateEmbeddedInsteadOfRecreating else {
-                       // Update embedded rather than re-creating it
+                        // Update embedded rather than re-creating it
                         self.updateEmbedded()
                         self.currentlyRenderedSettings = self.settings
                         return
@@ -827,7 +828,7 @@ extension PlaygroundController {
             else {
                 if let data = data,
                    (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(decoding: data, as: UTF8.self)
+                    let errorMessage = String(data: data, encoding: .utf8)!
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
@@ -977,6 +978,7 @@ extension PlaygroundController {
                 break
             case .failed(let error):
                 // Display error to user in an alert, let them retry
+                self.embeddedPlaygroundViewController?.isLoading = false
                 let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
                 alert.addAction(.init(title: "Retry", style: .default, handler: { _ in
                     self.updateEmbedded()
@@ -985,6 +987,7 @@ extension PlaygroundController {
                 embeddedPlaygroundViewController.present(alert, animated: true)
             case .succeeded:
                 self.isLoading = false
+                self.embeddedPlaygroundViewController?.isLoading = false
             }
         }
     }

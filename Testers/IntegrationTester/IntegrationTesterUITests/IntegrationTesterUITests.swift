@@ -127,7 +127,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
                 break
             case .bacsDebit, .sepaDebit:
                 testNoInputIntegrationMethod(integrationMethod, shouldConfirm: false)
-            case .card, .cardSetupIntents, .aubecsDebit, .applePay, .klarna, .fpx:
+            case .card, .cardSetupIntents, .aubecsDebit, .applePay, .klarna:
                 // Tested in method-specific functions.
                 break
             case .grabpay:
@@ -198,27 +198,6 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         let closeButton = app.buttons["Close"]
         XCTAssert(closeButton.waitForExistence(timeout: 10))
         closeButton.forceTapElement()
-
-        let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
-        XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
-    }
-
-    func testFPX() {
-        self.popToMainMenu()
-
-        let tablesQuery = app.collectionViews
-        let rowForPaymentMethod = tablesQuery.cells.buttons["FPX"]
-        rowForPaymentMethod.scrollToAndTap(in: app)
-
-        let maybank = app.tables.staticTexts["Maybank2U"]
-        XCTAssertTrue(maybank.waitForExistence(timeout: 60.0))
-        maybank.tap()
-
-        let webViewsQuery = app.webViews
-        let completeAuth = webViewsQuery.descendants(matching: .any)["AUTHORIZE TEST PAYMENT"].firstMatch
-        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
-        completeAuth.forceTapElement()
 
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
@@ -310,7 +289,7 @@ class IntegrationTesterUITests: XCTestCase {
         try! fillCardData(app, number: cardNumber)
 
         let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.forceTapElement()
 
         switch confirmationBehavior {

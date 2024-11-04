@@ -11,65 +11,218 @@ import XCTest
 
 final class FinancialConnectionsWebFlowTests: XCTestCase {
     func test_noAdditionalParameters_empty() {
-        let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: nil,
             isInstantDebits: false,
-            linkMode: nil
+            linkMode: nil,
+            prefillDetails: nil,
+            billingDetails: nil
         )
-        XCTAssertEqual(additionalParamers, "")
+        XCTAssertNil(additionalParameters)
     }
 
     func test_someAdditionalParameters_notInstantDebits_noLinkMode() {
-        let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: "",
             isInstantDebits: false,
-            linkMode: nil
+            linkMode: nil,
+            prefillDetails: nil,
+            billingDetails: nil
         )
-        XCTAssertEqual(additionalParamers, "")
+        XCTAssertNil(additionalParameters)
     }
 
     func test_someAdditionalParameters_instantDebits_noLinkMode() {
-        let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: "&testmode=true",
             isInstantDebits: true,
-            linkMode: nil
+            linkMode: nil,
+            prefillDetails: nil,
+            billingDetails: nil
         )
-        XCTAssertEqual(additionalParamers, "&testmode=true&return_payment_method=true")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true")
     }
 
     func test_additionalParameters_instantDebits_noLinkMode() {
-        let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: "",
             isInstantDebits: true,
-            linkMode: nil
+            linkMode: nil,
+            prefillDetails: nil,
+            billingDetails: nil
         )
-        XCTAssertEqual(additionalParamers, "&return_payment_method=true")
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true")
     }
 
     func test_additionalParameters_notInstantDebits_someLinkMode() {
-        let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: "",
             isInstantDebits: false,
-            linkMode: .passthrough
+            linkMode: .passthrough,
+            prefillDetails: nil,
+            billingDetails: nil
         )
-        XCTAssertEqual(additionalParamers, "")
+        XCTAssertNil(additionalParameters)
     }
 
     func test_someAdditionalParameters_instantDebits_passthroughLinkMode() {
-        let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: "&testmode=true",
             isInstantDebits: true,
-            linkMode: .passthrough
+            linkMode: .passthrough,
+            prefillDetails: nil,
+            billingDetails: nil
         )
-        XCTAssertEqual(additionalParamers, "&testmode=true&return_payment_method=true&link_mode=PASSTHROUGH")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&link_mode=PASSTHROUGH")
     }
 
     func test_additionalParameters_instantDebits_linkCardBrandLinkMode() {
-        let additionalParamers = FinancialConnectionsWebFlowViewController.updateAdditionalParameters(
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: "",
             isInstantDebits: true,
-            linkMode: .linkCardBrand
+            linkMode: .linkCardBrand,
+            prefillDetails: nil,
+            billingDetails: nil
         )
-        XCTAssertEqual(additionalParamers, "&return_payment_method=true&link_mode=LINK_CARD_BRAND")
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true&link_mode=LINK_CARD_BRAND")
+    }
+
+    func test_additionalParameters_emptyPrefillDetails() {
+        let prefillDetails = ElementsSessionContext.PrefillDetails(
+            email: nil,
+            formattedPhoneNumber: nil,
+            unformattedPhoneNumber: nil,
+            countryCode: nil
+        )
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
+            startingAdditionalParameters: nil,
+            isInstantDebits: false,
+            linkMode: nil,
+            prefillDetails: prefillDetails,
+            billingDetails: nil
+        )
+        XCTAssertNil(additionalParameters)
+    }
+
+    func test_additionalParameters_prefilledEmail() {
+        let prefillDetails = ElementsSessionContext.PrefillDetails(
+            email: "test@example.com",
+            formattedPhoneNumber: nil,
+            unformattedPhoneNumber: nil,
+            countryCode: nil
+        )
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
+            startingAdditionalParameters: nil,
+            isInstantDebits: false,
+            linkMode: nil,
+            prefillDetails: prefillDetails,
+            billingDetails: nil
+        )
+        XCTAssertEqual(additionalParameters, "&email=test%40example.com")
+    }
+
+    func test_additionalParameters_fullPrefillDetails() {
+        let prefillDetails = ElementsSessionContext.PrefillDetails(
+            email: "test@example.com",
+            formattedPhoneNumber: "+1 (123) 456-7890",
+            unformattedPhoneNumber: "1234567890",
+            countryCode: "US"
+        )
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
+            startingAdditionalParameters: nil,
+            isInstantDebits: false,
+            linkMode: nil,
+            prefillDetails: prefillDetails,
+            billingDetails: nil
+        )
+        XCTAssertEqual(additionalParameters, "&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
+    }
+
+    func test_additionalParameters_fullPrefillDetails_instantDebits_passthroughLinkMode() {
+        let prefillDetails = ElementsSessionContext.PrefillDetails(
+            email: "test@example.com",
+            formattedPhoneNumber: "+1 (123) 456-7890",
+            unformattedPhoneNumber: "1234567890",
+            countryCode: "US"
+        )
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
+            startingAdditionalParameters: "&testmode=true",
+            isInstantDebits: true,
+            linkMode: .passthrough,
+            prefillDetails: prefillDetails,
+            billingDetails: nil
+        )
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&link_mode=PASSTHROUGH&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
+    }
+
+    func test_additionalParameters_emptyBillingDetails() {
+        let billingDetails = ElementsSessionContext.BillingDetails(
+            name: nil,
+            email: nil,
+            phone: nil,
+            address: nil
+        )
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
+            startingAdditionalParameters: nil,
+            isInstantDebits: false,
+            linkMode: nil,
+            prefillDetails: nil,
+            billingDetails: billingDetails
+        )
+        XCTAssertNil(additionalParameters)
+    }
+
+    func test_additionalParameters_billingDetails() {
+        let billingDetails = ElementsSessionContext.BillingDetails(
+            name: "Foo Bar",
+            email: "foo@bar.com",
+            phone: "+1 (123) 456-7890",
+            address: ElementsSessionContext.BillingDetails.Address(
+                city: "Toronto",
+                country: "CA",
+                line1: "123 Main St",
+                line2: "",
+                postalCode: "A0B 1C2",
+                state: "ON"
+            )
+        )
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
+            startingAdditionalParameters: nil,
+            isInstantDebits: true,
+            linkMode: nil,
+            prefillDetails: nil,
+            billingDetails: billingDetails
+        )
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON")
+    }
+
+    func test_additionalParameters_fullBillingDetails_fullPrefillDetails_instantDebits_passthroughLinkMode() {
+        let prefillDetails = ElementsSessionContext.PrefillDetails(
+            email: "test@example.com",
+            formattedPhoneNumber: "+1 (123) 456-7890",
+            unformattedPhoneNumber: "1234567890",
+            countryCode: "US"
+        )
+        let billingDetails = ElementsSessionContext.BillingDetails(
+            name: "Foo Bar",
+            email: "foo@bar.com",
+            phone: "+1 (123) 456-7890",
+            address: ElementsSessionContext.BillingDetails.Address(
+                city: "Toronto",
+                country: "CA",
+                line1: "123 Main St",
+                line2: nil,
+                postalCode: "A0B 1C2",
+                state: "ON"
+            )
+        )
+        let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
+            startingAdditionalParameters: "&testmode=true",
+            isInstantDebits: true,
+            linkMode: .passthrough,
+            prefillDetails: prefillDetails,
+            billingDetails: billingDetails
+        )
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&link_mode=PASSTHROUGH&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
     }
 }

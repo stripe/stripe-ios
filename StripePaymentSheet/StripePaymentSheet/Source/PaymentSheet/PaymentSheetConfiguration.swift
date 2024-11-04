@@ -162,6 +162,9 @@ extension PaymentSheet {
             }
         }
 
+        /// Controls whether to filter out wallet payment methods from the saved payment method list.
+        @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
+
         /// Initializes a Configuration with default values
         public init() {}
 
@@ -187,14 +190,17 @@ extension PaymentSheet {
         /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
         public var paymentMethodOrder: [String]?
 
+        // MARK: Internal
+        internal var linkPaymentMethodsOnly: Bool = false
+
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.
         /// If false, the customer can't delete if they only have one saved payment method remaining.
         @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
 
-        /// The layout of payment methods in PaymentSheet. Defaults to `.horizontal`.
+        /// The layout of payment methods in PaymentSheet. Defaults to `.automatic`.
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
-        public var paymentMethodLayout: PaymentMethodLayout = .horizontal
+        public var paymentMethodLayout: PaymentMethodLayout = .automatic
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.

@@ -70,6 +70,7 @@ class MyBackendModel: ObservableObject {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
                 configuration.allowsDelayedPaymentMethods = true
+                configuration.paymentMethodLayout = .horizontal
                 DispatchQueue.main.async {
                     self.paymentSheet = PaymentSheet(
                         paymentIntentClientSecret: paymentIntentClientSecret,

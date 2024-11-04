@@ -37,4 +37,10 @@ extension STPAPIClient {
             completion(details, error)
         }
     }
+    // MARK: Helpers
+
+    /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
+    func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
+        return authorizationHeader(using: ephemeralKey?.secret)
+    }
 }

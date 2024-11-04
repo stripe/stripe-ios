@@ -13,7 +13,6 @@ public enum IntegrationMethod: String, CaseIterable {
     case cardSetupIntents = "Card (SetupIntents)"
     case applePay = "Apple Pay"
     case sofort = "Sofort"
-    case fpx = "FPX"
     case sepaDebit = "SEPA Debit"
     case iDEAL
     case alipay = "Alipay"
@@ -35,10 +34,6 @@ public enum IntegrationMethod: String, CaseIterable {
 extension IntegrationMethod {
   public var defaultPaymentMethodParams: STPPaymentMethodParams {
       switch self {
-      case .fpx:
-          let fpx = STPPaymentMethodFPXParams()
-          fpx.bank = .HSBC
-          return STPPaymentMethodParams(fpx: fpx, billingDetails: nil, metadata: nil)
       case .iDEAL:
           let ideal = STPPaymentMethodiDEALParams()
           return STPPaymentMethodParams(iDEAL: ideal, billingDetails: nil, metadata: nil)

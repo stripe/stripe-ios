@@ -69,19 +69,18 @@ class BottomSheetPresentationAnimator: NSObject {
 
     private func animateDismissal(transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let toVC = transitionContext.viewController(forKey: .to),
             let fromVC = transitionContext.viewController(forKey: .from)
         else { return }
 
         // Calls viewWillAppear and viewWillDisappear
-        toVC.beginAppearanceTransition(true, animated: true)
+        fromVC.beginAppearanceTransition(false, animated: true)
 
         Self.animate({
             fromVC.view.frame.origin.y = transitionContext.containerView.frame.height
         }) { didComplete in
             fromVC.view.removeFromSuperview()
             // Calls viewDidAppear and viewDidDisappear
-            toVC.endAppearanceTransition()
+            fromVC.endAppearanceTransition()
             transitionContext.completeTransition(didComplete)
         }
     }

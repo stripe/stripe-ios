@@ -87,7 +87,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 integrationShape: integrationShape,
                 configuration: makeConfig(
                     applePay: isApplePayEnabled ? .init(merchantId: "", merchantCountryCode: "") : nil,
-                    customer: isCustomerProvided ? .init(id: "", ephemeralKeySecret: "") : nil
+                    customer: isCustomerProvided ? .init(id: "", ephemeralKeySecret: "") : nil,
+                    integrationShape: integrationShape
                 ),
                 analyticsClient: analyticsClient
             )
@@ -99,6 +100,13 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(expected, lastEvent.event.rawValue)
             XCTAssertEqual(isApplePayEnabled, lastEvent.additionalParams[jsonDict: "mpe_config"]?["apple_pay_config"] as? Bool)
             XCTAssertEqual(isCustomerProvided, lastEvent.additionalParams[jsonDict: "mpe_config"]?["customer"] as? Bool)
+            switch integrationShape {
+            case .complete, .flowController:
+                XCTAssertEqual("automatic", lastEvent.additionalParams[jsonDict: "mpe_config"]?["payment_method_layout"] as? String)
+            case .embedded:
+                XCTAssertEqual("continue", lastEvent.additionalParams[jsonDict: "mpe_config"]?["form_sheet_action"] as? String)
+                XCTAssertEqual(true, lastEvent.additionalParams[jsonDict: "mpe_config"]?["embedded_view_displays_mandate_text"] as? Bool)
+            }
         }
     }
 
@@ -359,12 +367,21 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func makeConfig(
         applePay: PaymentSheet.ApplePayConfiguration?,
-        customer: PaymentSheet.CustomerConfiguration?
-    ) -> PaymentSheet.Configuration {
-        var config = PaymentSheet.Configuration()
-        config.applePay = applePay
-        config.customer = customer
-        return config
+        customer: PaymentSheet.CustomerConfiguration?,
+        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
+    ) -> PaymentElementConfiguration {
+        switch integrationShape {
+        case .flowController, .complete:
+            var config = PaymentSheet.Configuration()
+            config.applePay = applePay
+            config.customer = customer
+            return config
+        case .embedded:
+            var config = EmbeddedPaymentElement.Configuration(formSheetAction: .continue)
+            config.applePay = applePay
+            config.customer = customer
+            return config
+        }
     }
 }
 

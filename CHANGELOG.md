@@ -1,4 +1,15 @@
-## X.Y.Z 2024-XX-YY
+## 24.0.0 2024-11-04
+### PaymentSheet
+* [Changed] The default value of `PaymentSheet.Configuration.paymentMethodLayout` has changed from `.horizontal` to `.automatic`. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) for more details.
+
+## X.X.X
+### PaymentSheet
+* [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+* [Fixed] Fixed an issue with FlowController in vertical layout where the payment method could incorrectly be preserved across a call to `update` when it's no longer valid.
+* [Fixed] Fixed a potential deadlock when `paymentOption` is accessed from Swift concurrency.
+* [Fixed] Fixed deferred intent validation to handle cloned payment methods ([#4195](https://github.com/stripe/stripe-ios/issues/4195)
+
+## 23.32.0 2024-10-21
 ### PaymentSheet
 * [Added] Added `PaymentSheet.Configuration.paymentMethodLayout`. Configure the layout of payment methods in the sheet using `paymentMethodLayout` to display them either horizontally, vertically, or let Stripe optimize the layout automatically.
 

@@ -170,11 +170,13 @@ extension PaymentSheet {
             // - US Bank Account is *not* an available payment method.
             // - Not a deferred intent flow.
             // - Link Funding Sources contains Bank Account.
+            // - We collect an email, or a default non-empty email has been provided.
             var eligibleForInstantDebits: Bool {
                 elementsSession.orderedPaymentMethodTypes.contains(.link) &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
                 !intent.isDeferredIntent &&
-                elementsSession.linkFundingSources?.contains(.bankAccount) == true
+                elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
+                configuration.isEligibleForBankTab
             }
 
             // We should manually add Link Card Brand as a payment method when:
@@ -182,11 +184,13 @@ extension PaymentSheet {
             // - US Bank Account is *not* an available payment method.
             // - Not a deferred intent flow.
             // - Link Card Brand is the Link Mode
+            // - We collect an email, or a default non-empty email has been provided.
             var eligibleForLinkCardBrand: Bool {
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
                 !intent.isDeferredIntent &&
-                elementsSession.linkSettings?.linkMode == .linkCardBrand
+                elementsSession.linkSettings?.linkMode == .linkCardBrand &&
+                configuration.isEligibleForBankTab
             }
 
             if eligibleForInstantDebits {
@@ -441,13 +445,30 @@ extension STPPaymentMethod {
 extension STPPaymentMethodParams {
     var paymentSheetLabel: String {
         switch type {
-        case .unknown:
-            assertionFailure()
-            return rawTypeString ?? ""
         case .card:
             return "•••• \(card?.last4 ?? "")"
+        case .FPX:
+            if let fpx = fpx {
+                return STPFPXBank.stringFrom(fpx.bank) ?? ""
+            } else {
+                return "FPX"
+            }
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .giropay, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .sofort, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent:
+            // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
+            return type.displayName
+        case .unknown:
+            fallthrough
         default:
-            return label
+            assertionFailure()
+            return rawTypeString ?? ""
         }
+    }
+    
+}
+
+extension PaymentElementConfiguration {
+    var isEligibleForBankTab: Bool {
+        billingDetailsCollectionConfiguration.email != .never ||
+        (defaultBillingDetails.email?.isEmpty == false && billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod)
     }
 }

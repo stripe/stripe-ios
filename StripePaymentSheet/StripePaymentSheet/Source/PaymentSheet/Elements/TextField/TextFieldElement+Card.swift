@@ -112,7 +112,7 @@ extension TextFieldElement {
                     if let cardBrandDisplayName = STPCardBrandUtilities.stringFrom(brand), brand != .unknown {
                         return .localizedStringWithFormat(.Localized.brand_not_allowed, cardBrandDisplayName)
                     }
-                    
+
                     return .Localized.generic_brand_not_allowed
                 }
             }

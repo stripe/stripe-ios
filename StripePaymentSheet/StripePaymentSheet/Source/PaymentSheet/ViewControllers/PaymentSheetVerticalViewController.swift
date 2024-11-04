@@ -566,7 +566,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     @objc func presentManageScreen() {
         error = nil
-        // Special case, only 1 card remaining but is co-branded, show update view controller
+        // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
@@ -807,6 +807,10 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         // Update UI
         regenerateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didDismiss(viewController: UpdateCardViewController) {
+        // No-op
     }
 }
 

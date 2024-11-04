@@ -215,15 +215,30 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return Promise<StripeFinancialConnections.AttachLinkConsumerToLinkAccountSessionResponse>()
     }
 
-    func paymentDetails(consumerSessionClientSecret: String, bankAccountId: String) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentDetails> {
+    func paymentDetails(
+        consumerSessionClientSecret: String,
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentDetails> {
         Promise<StripeFinancialConnections.FinancialConnectionsPaymentDetails>()
     }
 
-    func sharePaymentDetails(consumerSessionClientSecret: String, paymentDetailsId: String, expectedPaymentMethodType: String) -> Future<FinancialConnectionsSharePaymentDetails> {
+    func sharePaymentDetails(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String,
+        expectedPaymentMethodType: String,
+        billingEmail: String?,
+        billingPhone: String?
+    ) -> Future<FinancialConnectionsSharePaymentDetails> {
         Promise<StripeFinancialConnections.FinancialConnectionsSharePaymentDetails>()
     }
 
-    func paymentMethods(consumerSessionClientSecret: String, paymentDetailsId: String) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentMethod> {
+    func paymentMethods(
+        consumerSessionClientSecret: String,
+        paymentDetailsId: String,
+        billingDetails: ElementsSessionContext.BillingDetails?
+    ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentMethod> {
         Promise<StripeFinancialConnections.FinancialConnectionsPaymentMethod>()
     }
 }

@@ -341,12 +341,12 @@ extension PaymentSheet {
 
             switch latestUpdateContext?.status {
             case .inProgress:
-                assertionFailure("`confirmPayment` should only be called when the last update has completed.")
+                assertionFailure("`confirm` should only be called when the last update has completed.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: "confirmPayment was called with an update API call in progress.")
                 completion(.failed(error: error))
                 return
             case .failed:
-                assertionFailure("`confirmPayment` should only be called when the last update has completed without error.")
+                assertionFailure("`confirm` should only be called when the last update has completed without error.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: "confirmPayment was called when the last update API call failed.")
                 completion(.failed(error: error))
                 return
@@ -355,7 +355,7 @@ extension PaymentSheet {
             }
 
             guard let paymentOption = _paymentOption else {
-                assertionFailure("`confirmPayment` should only be called when `paymentOption` is not nil")
+                assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: "confirmPayment was called with a nil paymentOption")
                 completion(.failed(error: error))
                 return

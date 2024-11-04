@@ -42,7 +42,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
         amount: Int?,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
-        self.currentSelection = initialSelection
         self.delegate = delegate
         self.appearance = appearance
         self.delegate = delegate
@@ -226,7 +225,16 @@ enum VerticalPaymentMethodListSelection: Equatable {
         case let (.new(lhsPMType), .new(rhsPMType)):
             return lhsPMType == rhsPMType
         case let (.saved(lhsPM), .saved(rhsPM)):
-            return lhsPM.stripeId == rhsPM.stripeId
+            return lhsPM.stripeId == rhsPM.stripeId && lhsPM.calculateCardBrandToDisplay() == rhsPM.calculateCardBrandToDisplay()
+        default:
+            return false
+        }
+    }
+
+    var isSaved: Bool {
+        switch self {
+        case .saved:
+            return true
         default:
             return false
         }

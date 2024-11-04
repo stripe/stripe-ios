@@ -31,6 +31,8 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
+        "EmbeddedUITests",
+        "EmbeddedUITests\/testUpdate()",
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",

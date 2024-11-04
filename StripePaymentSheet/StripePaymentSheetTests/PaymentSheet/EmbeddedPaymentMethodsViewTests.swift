@@ -45,7 +45,7 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         embeddedView.autosizeHeight(width: 300)
 
         let rowButtons = embeddedView.stackView.arrangedSubviews.compactMap { $0 as? RowButton }
-        
+
         // Delegate methods should not be called upon initialization
         XCTAssertFalse(mockDelegate.didCallHeightDidChange, "heightDidChange should not be called on init")
         XCTAssertFalse(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should not be called on init")
@@ -84,15 +84,18 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
 private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsViewDelegate {
     private(set) var didCallHeightDidChange = false
     private(set) var didCallSelectionDidUpdate = false
-    
+
     func heightDidChange() {
         didCallHeightDidChange = true
     }
-    
+
     func selectionDidUpdate() {
         didCallSelectionDidUpdate = true
     }
-    
+
+    func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
+    }
+
     func reset() {
         didCallHeightDidChange = false
         didCallSelectionDidUpdate = false

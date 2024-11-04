@@ -52,10 +52,6 @@ extension String.Localized {
         STPLocalizedString("Shipping Address", "Title for shipping address entry section")
     }
 
-    @_spi(STP) public static var billing_address: String {
-        STPLocalizedString("Billing Address", "Title for billing address entry section")
-    }
-
     @_spi(STP) public static var billing_address_lowercase: String {
         STPLocalizedString("Billing address", "Billing address section title for card form entry.")
     }

@@ -69,8 +69,22 @@ extension String.Localized {
         STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
 
+    static var bank_continue_mandate_text: String {
+        STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
+    }
+
     static var back: String {
         STPLocalizedString("Back", "Text for back button")
+    }
+
+    static var update_card: String {
+        STPLocalizedString(
+            "Update card",
+            """
+            Title for a button that when tapped, presents a screen for updating a card. Also
+            the heading the screen itself.
+            """
+        )
     }
 
     static var update_card_brand: String {
