@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Přidat způsob platby";
 
+"Add bank account" = "Přidat bankovní účet";
+
 "Add card" = "Přidat kartu";
 
 "Add new card" = "Přidat novou kartu";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Přidejte své platební údaje";
 
 "Approve payment" = "Schválit platbu";
+
+"Are you sure you want to remove this card?" = "Opravdu chcete tuto kartu odebrat?";
+
+"Are you sure you want to remove this linked account?" = "Opravdu chcete tento propojený účet odebrat?";
 
 "Back" = "Zpět";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Zrušit a zaplatit jiným způsobem";
 
+"Change email" = "Změnit e-mail";
+
 "Choose a payment method" = "Zvolte platební metodu";
 
 "Close card scanner" = "Zavřít skener karty";
+
+"Code sent" = "Kód odeslán";
 
 "Confirm" = "Potvrdit";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Kontaktní údaje";
 
+"Default" = "Výchozí";
+
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Zadejte adresu ručně";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Zadejte kód zaslaný na %@, abyste mohli používat Link k výchozí platbě.";
+
+"Enter your verification code" = "Zadejte svůj ověřovací kód";
+
 "FPX Bank" = "Banka FPX";
+
+"For security, please re-enter your card’s security code." = "Z bezpečnostních důvodů zadejte znovu bezpečnostní kód své karty.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumím tomu, že Stripe bude vybírat přímé debety jménem %@, a potvrzuji, že jsem držitelem účtu a jedinou osobou, která je nezbytná k autorizování debetů z tohoto účtu.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Připojit se k Link";
+
+"Log out of Link" = "Odhlásit ze služby Link";
 
 "Manage payment method" = "Spravovat způsob platby";
 
@@ -101,6 +123,8 @@
 "New card" = "Nová karta";
 
 "New payment method" = "Nová platební metoda";
+
+"Not %@?" = "Ne %@?";
 
 "Open your UPI app to approve your payment within %@" = "Otevřete aplikaci UPI, abyste mohli platbu schválit do %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Zaplaťte pomocí bankovního účtu v několika málo krocích.";
 
+"Payment" = "Platba";
+
 "Payment failed" = "Platba se nezdařila.";
+
+"Payment methods" = "Způsoby platby";
 
 "Please go back and select another payment method" = "Vraťte se prosím zpět a vyberte jiný způsob platby";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Odebrat kartu?";
 
+"Remove linked account" = "Odebrat propojený účet";
+
 "Remove payment method" = "Odebrat způsob platby";
+
+"Resend code" = "Znovu zaslat kód";
 
 "Save" = "Uložit";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Uloženo";
 
+"Secure 1⁠-⁠click checkout" = "Bezpečné odbavení 1 kliknutím";
+
 "Select card" = "Vybrat kartu";
 
 "Select payment method" = "Vybrat způsob platby";
 
 "Select your payment method" = "Vyberte svou platební metodu";
 
+"Set as default" = "Nastavit jako výchozí";
+
+"Set as default payment method" = "Nastavit jako výchozí způsob platby";
+
 "Set up" = "Nastavit";
 
 "Shipping to %@ is not supported." = "Dodání do zemí jako %@ není podporováno.";
 
 "Show menu" = "Zobrazit nabídku";
+
+"Sign in to your Link account" = "Přihlaste se ke svému účtu Link";
 
 "Simple, secure one-click payments" = "Jednoduché a bezpečné platby jedním kliknutím";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V průběhu 1 až 2 pracovních dnů vloží Stripe na váš účet vklad ve výšce 0,01 USD. Potom dostanete e-mail s instrukcemi k dokončení platby společnosti %@.";
 
+"Tap to close" = "Klepnutím zavřete";
+
+"Tap to expand" = "Klepnutím rozbalte";
+
 "The IBAN you entered is incomplete." = "Číslo IBAN, které jste zadali, je neúplné.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadané číslo IBAN je neplatné, \"%@\" není podporovaný kód země.";
 
+"The provided verification code has expired." = "Platnost zadaného ověřovacího kódu vypršela.";
+
+"The provided verification code is incorrect." = "Zadaný ověřovací kód není správný.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Platnost této karty vypršela. Aktualizujte údaje o kartě nebo zvolte jiný způsob platby.";
+
+"This is your default" = "Toto je výchozí nastavení";
+
+"Too many attempts. Please try again in a few minutes." = "Příliš mnoho pokusů. Zkuste to prosím za pár minut znovu.";
+
+"Unavailable for this purchase" = "Není k dispozici pro tento nákup";
+
 "Update" = "Aktualizovat";
 
+"Update card" = "Aktualizovat kartu";
+
 "Update card brand" = "Aktualizovat značku karty";
+
+"Use your saved info to check out faster" = "Použijte uložené informace k rychlejšímu odbavení";
 
 "View more" = "Zobrazit více";
 

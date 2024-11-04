@@ -8,6 +8,8 @@
 
 "Add a payment method" = "決済手段を追加";
 
+"Add bank account" = "銀行口座を追加する";
+
 "Add card" = "カードを追加";
 
 "Add new card" = "新しいカードを追加";
@@ -17,6 +19,10 @@
 "Add your payment information" = "支払い情報を追加";
 
 "Approve payment" = "支払いを承認する";
+
+"Are you sure you want to remove this card?" = "このカードを削除しますか？";
+
+"Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
 
 "Back" = "戻る";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "キャンセルして別の方法で支払う";
 
+"Change email" = "メールアドレスを変更";
+
 "Choose a payment method" = "支払い方法を選択";
 
 "Close card scanner" = "カードスキャナを閉じる";
+
+"Code sent" = "コードが送信されました";
 
 "Confirm" = "確定する";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "連絡先情報";
 
+"Default" = "デフォルト";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "住所を手動で入力";
 
+"Enter the code sent to %@ to use Link to pay by default." = "デフォルトで Link を使用して支払うには %@ に送信されたコードを入力してください。";
+
+"Enter your verification code" = "確認コードを入力してください";
+
 "FPX Bank" = "FPX 銀行";
+
+"For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "私は、Stripe が %@ の代理として口座引き落としによる回収を行うことを理解しています。また、私が当該口座を保有しており、この口座からの引き落としを承認すべき唯一の人間であることを認めます。";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Link に申し込む";
+
+"Log out of Link" = "Link からログアウト";
 
 "Manage payment method" = "支払い方法の管理";
 
@@ -101,6 +123,8 @@
 "New card" = "新しいカード";
 
 "New payment method" = "新しい決済手段";
+
+"Not %@?" = "%@ ではありませんか？";
 
 "Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "銀行口座を使用して簡単に支払えます。";
 
+"Payment" = "決済";
+
 "Payment failed" = "支払いに失敗しました";
+
+"Payment methods" = "決済手段";
 
 "Please go back and select another payment method" = "前に戻って別の決済手段を選択してください";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "カードを削除しますか？";
 
+"Remove linked account" = "関連付けられた口座を削除";
+
 "Remove payment method" = "決済手段の削除";
+
+"Resend code" = "コードを再送信";
 
 "Save" = "保存";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "保存済み";
 
+"Secure 1⁠-⁠click checkout" = "安全なワンクリックでの購入";
+
 "Select card" = "カードを選択する";
 
 "Select payment method" = "決済手段を選択する";
 
 "Select your payment method" = "支払い方法を選択してください";
 
+"Set as default" = "デフォルトとして設定";
+
+"Set as default payment method" = "デフォルトの決済手段として設定する";
+
 "Set up" = "設定";
 
 "Shipping to %@ is not supported." = "%@ への配送には対応していません。";
 
 "Show menu" = "メニューを表示";
+
+"Sign in to your Link account" = "Link アカウントにサインイン";
 
 "Simple, secure one-click payments" = "シンプルで安全なワンクリック決済";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
 
+"Tap to close" = "タップして閉じます";
+
+"Tap to expand" = "タップして展開します";
+
 "The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。「%@」はサポートされている国コードではありません。";
 
+"The provided verification code has expired." = "入力された確認コードは期限が切れています。";
+
+"The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
+
+"This card has expired. Update your card info or choose a different payment method." = "このカードは有効期限が切れています。カード情報を更新するか、別の決済手段を選択してください。";
+
+"This is your default" = "これはデフォルトです";
+
+"Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
+
+"Unavailable for this purchase" = "この購入には利用できません";
+
 "Update" = "更新する";
 
+"Update card" = "カードを更新";
+
 "Update card brand" = "カードブランドを更新する";
+
+"Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
 
 "View more" = "さらに表示";
 
