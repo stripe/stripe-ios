@@ -44,6 +44,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.requireCVCRecollection)
         SettingView(setting: $playgroundController.settings.autoreload)
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
+        SettingView(setting: $playgroundController.settings.instantDebitsInDeferredIntents)
     }
 
     var body: some View {

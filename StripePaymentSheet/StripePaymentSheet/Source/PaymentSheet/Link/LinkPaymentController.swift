@@ -351,7 +351,7 @@ import UIKit
         switch result {
         case .completed(let result):
             if case let .instantDebits(linkedBank) = result {
-                continueWithPaymentMethod(linkedBank.paymentMethodId)
+                continueWithPaymentMethod(linkedBank.paymentMethod.id)
             } else {
                 continueWithFailure(Error.canceled)
             }
