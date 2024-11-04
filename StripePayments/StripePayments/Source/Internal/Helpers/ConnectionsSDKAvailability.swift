@@ -32,10 +32,6 @@ import UIKit
         #endif
     }()
 
-    static let isUnitOrUITest: Bool = {
-        isUnitTest || isUITest
-    }()
-
     // Return true for unit tests, the value of `FinancialConnectionsSDKAvailable` for UI tests,
     // and whether or not the Financial Connections SDK is available otherwise.
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
@@ -51,7 +47,7 @@ import UIKit
 
     static func financialConnections() -> FinancialConnectionsSDKInterface? {
         let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
-        if isUnitOrUITest, financialConnectionsStubbedResult {
+        if isUnitTest || (isUITest && financialConnectionsStubbedResult) {
             return StubbedConnectionsSDKInterface()
         }
 
