@@ -480,8 +480,23 @@ extension PaymentSheet {
             case .withPaymentMethod(let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod, nil, false)
             case .withPaymentDetails(let linkAccount, let paymentDetails):
-                // shouldSave is false, as we don't show a save checkbox in the Link VC
-                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, false)
+                let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
+
+                if elementsSession.linkPassthroughModeEnabled {
+                    linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentDetails.cvc) { result in
+                        switch result {
+                        case .success(let paymentDetailsShareResponse):
+                            // shouldSave is false, as we don't show a save checkbox in the Link VC
+                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
+                        case .failure(let error):
+                            STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
+                            paymentHandlerCompletion(.failed, error as NSError)
+                        }
+                    }
+                } else {
+                    // shouldSave is false, as we don't show a save checkbox in the Link VC
+                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, shouldSave)
+                }
             case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
                 // shouldSave is false, as we don't show a save checkbox in the Link VC
                 createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams, false)
