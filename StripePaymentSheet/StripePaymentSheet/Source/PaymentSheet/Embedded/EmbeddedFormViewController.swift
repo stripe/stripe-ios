@@ -340,7 +340,7 @@ class EmbeddedFormViewController: UIViewController {
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
-                            self.delegate?.embeddedFormViewControllerShouldContinue(self, result: .completed)
+                            self.delegate?.embeddedFormViewControllerShouldContinue(self, result: result)
                         }
                     }
                 }

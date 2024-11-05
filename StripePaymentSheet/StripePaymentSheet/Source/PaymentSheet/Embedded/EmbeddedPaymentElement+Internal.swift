@@ -122,7 +122,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             contentViewController: embeddedFormVC,
             appearance: configuration.appearance,
             isTestMode: configuration.apiClient.isTestmode,
-            didCancelNative3DS2: {}
+            didCancelNative3DS2: {
+                stpAssertionFailure("3DS2 was triggered unexpectedly")
+            }
         )
 
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
