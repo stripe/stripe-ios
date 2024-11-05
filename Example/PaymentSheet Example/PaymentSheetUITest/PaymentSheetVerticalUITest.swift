@@ -206,23 +206,44 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
     func testRemovalOfSavedPaymentMethods_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new // new customer
+        settings.customerMode = .returning
         settings.currency = .eur
+        settings.layout = .vertical
         settings.merchantCountryCode = .FR
         settings.mode = .setup
         loadPlayground(app, settings)
 
-        // Save some test cards to the customer
-        setupCards(cards: ["4000002500001001", "4242424242424242"], settings: settings)
+        // Add one more test card
+        // TODO(porter) Use the vertical mode to save cards when ready
+        setupCards(cards: ["5555555555554444"], settings: settings)
 
-        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
+        // Exercise edge case w/ FC and 3+ PMs. Delete the selected card and tap out of the screen
+        app.buttons["flowController"].waitForExistenceAndTap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        let firstPaymentMethod = app.buttons["•••• 4444"]
+        XCTAssertTrue(firstPaymentMethod.isSelected)
+        app.buttons["View more"].waitForExistenceAndTap()
+        XCTAssertTrue(firstPaymentMethod.isSelected)
+        app.buttons["Edit"].waitForExistenceAndTap()
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        app.alerts.buttons["Remove"].waitForExistenceAndTap()
+        XCTAssertFalse(firstPaymentMethod.exists)
+        app.buttons["Done"].waitForExistenceAndTap()
+        // Tap out of FlowController
+        app.tapCoordinate(at: .init(x: 200, y: 100))
+
+        // The next card should be selected now
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card")
+
+        // Switch to PaymentSheet
+        app.buttons["paymentSheet"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
 
-        // Remove one of the payment methods just added
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        // Remove the 4242 card
+        app.otherElements["•••• 4242"].buttons["CircularButton.Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Exit edit mode, remove button should be hidden
@@ -270,7 +291,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         for cardNumber in cards {
             reload(app, settings: settings)
             app.buttons["Present PaymentSheet"].tap()
-            let addCardButton = app.buttons["+ Add"]
+            let addCardButton = app.buttons["New card"]
             addCardButton.waitForExistenceAndTap()
             try! fillCardData(app, cardNumber: cardNumber)
             app.buttons["Set up"].tap()

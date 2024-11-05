@@ -117,7 +117,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.buttons["•••• 1001"].waitForExistence(timeout: 3.0))
     }
 
-    func testMulipleCard_update_and_remove() {
+    func testMultipleCard_update_and_remove() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .embedded
