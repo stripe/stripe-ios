@@ -951,18 +951,16 @@ extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
-            intentConfig: intentConfig
+            intentConfig: intentConfig,
+            playgroundController: self
         )
     }
 
-    func presentEmbedded(settingsView: some View) {
+    func presentEmbedded<SettingsView: View>(settingsView: @escaping () -> SettingsView) {
         guard let embeddedPlaygroundViewController else { return }
 
         // Include settings view
-        let hostingController = UIHostingController(rootView: settingsView)
-        embeddedPlaygroundViewController.addChild(hostingController)
-        hostingController.didMove(toParent: rootViewController)
-        embeddedPlaygroundViewController.setSettingsView(hostingController.view)
+        embeddedPlaygroundViewController.setSettingsView(settingsView)
 
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
         embeddedPlaygroundViewController.navigationItem.leftBarButtonItem = closeButton
