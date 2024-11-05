@@ -1355,7 +1355,8 @@ private func CreatePaneViewController(
             returnURL: dataManager.returnURL,
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
-            analyticsClient: dataManager.analyticsClient
+            analyticsClient: dataManager.analyticsClient,
+            elementsSessionContext: dataManager.elementsSessionContext
         )
         let networkingLinkSignupViewController = NetworkingLinkSignupViewController(
             dataSource: networkingLinkSignupDataSource
