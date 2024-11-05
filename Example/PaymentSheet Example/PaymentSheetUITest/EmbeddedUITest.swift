@@ -117,7 +117,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.buttons["•••• 1001"].waitForExistence(timeout: 3.0))
     }
 
-    func testMultipleCard_update_and_remove() {
+    func testMultipleCard_remove_selectSavedCard() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .embedded
@@ -132,12 +132,15 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
         ensureSPMSelection("••••6789", insteadOf: "•••• 4242")
 
+        let card4242Button = app.buttons["•••• 4242"]
+        let bank6789Button = app.buttons["••••6789"]
+
         // Switch from 6789 (Bank account) to 4242
         app.buttons["View more"].waitForExistenceAndTap()
-        app.buttons["•••• 4242"].waitForExistenceAndTap()
+        card4242Button.waitForExistenceAndTap()
 
-        XCTAssertFalse(app.buttons["••••6789"].waitForExistence(timeout: 3.0))
-        XCTAssertTrue(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(bank6789Button.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(card4242Button.waitForExistence(timeout: 3.0))
 
         // Remove selected 4242 card
         app.buttons["View more"].waitForExistenceAndTap()
@@ -147,19 +150,78 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Done"].waitForExistenceAndTap()
 
         // Since there is only one PM left, sheet dismisses automatically on tapping Done.
-        XCTAssertTrue(app.buttons["••••6789"].waitForExistence(timeout: 3.0))
+        XCTAssertTrue(bank6789Button.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(bank6789Button.isSelected)
         XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
-        XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(card4242Button.waitForExistence(timeout: 3.0))
 
         // Remove 6789 & verify
         app.buttons["Edit"].waitForExistenceAndTap()
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
         dismissAlertView(alertBody: "Bank account •••• 6789", alertTitle: "Remove bank account?", buttonToTap: "Remove")
 
-        XCTAssertFalse(app.buttons["•••• 4242"].waitForExistence(timeout: 3.0))
-        XCTAssertFalse(app.buttons["••••6789"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(card4242Button.waitForExistence(timeout: 3.0))
+        XCTAssertFalse(bank6789Button.waitForExistence(timeout: 3.0))
         XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
+    }
 
+    func testMultipleCard_remove_selectNonSavedCard() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .embedded
+        settings.customerKeyType = .legacy
+        settings.customerMode = .returning
+        settings.merchantCountryCode = .US
+        settings.currency = .usd
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        ensureSPMSelection("••••6789", insteadOf: "•••• 4242")
+
+        let bank6789Button = app.buttons["••••6789"]
+        let applePayButton = app.buttons["Apple Pay"]
+
+        // Ensure card bankacct is selected, and apple pay is not.
+        XCTAssertTrue(bank6789Button.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(bank6789Button.isSelected)
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 3.0))
+        XCTAssertFalse(applePayButton.isSelected)
+
+        // Ensure apple pay is still selected after tapping view more and dismissing
+        app.buttons["Apple Pay"].tap()
+        XCTAssertTrue(applePayButton.isSelected)
+        XCTAssertFalse(bank6789Button.isSelected)
+        app.buttons["View more"].waitForExistenceAndTap()
+        app.buttons["UIButton.Close"].waitForExistenceAndTap()
+
+        // Ensure no state is changed
+        XCTAssertTrue(applePayButton.isSelected)
+        XCTAssertFalse(bank6789Button.isSelected)
+
+        // Remove bankacct while it isn't selected
+        app.buttons["View more"].waitForExistenceAndTap()
+        app.buttons["Edit"].waitForExistenceAndTap()
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        dismissAlertView(alertBody: "Bank account •••• 6789", alertTitle: "Remove bank account?", buttonToTap: "Remove")
+        app.buttons["Done"].waitForExistenceAndTap()
+
+        let card4242Button = app.buttons["•••• 4242"]
+        XCTAssertFalse(bank6789Button.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(card4242Button.waitForExistence(timeout: 3.0))
+        XCTAssertFalse(card4242Button.isSelected)
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(applePayButton.isSelected)
+
+        // Remove 4242
+        app.buttons["Edit"].waitForExistenceAndTap()
+        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
+
+        XCTAssertFalse(card4242Button.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(applePayButton.isSelected)
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
