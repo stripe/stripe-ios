@@ -14,7 +14,7 @@ import SwiftUI
 class EmbeddedPlaygroundViewController: UIViewController {
     private var hostingController: UIHostingController<AnyView>?
     private var cancellables = Set<AnyCancellable>()
-    private var playgroundController: PlaygroundController
+    private weak var playgroundController: PlaygroundController?
     
     var isLoading: Bool = false {
         didSet {
@@ -156,6 +156,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }
 
     func setSettingsView<SettingsView: View>(_ settingsView: @escaping () -> SettingsView) {
+        guard let playgroundController else { return }
         // Remove existing hosting controller if any
         hostingController?.willMove(toParent: nil)
         hostingController?.view.removeFromSuperview()
@@ -174,11 +175,13 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }
     
     private func observePlaygroundController() {
+        guard let playgroundController else { return }
         playgroundController.objectWillChange
             .sink { [weak self] _ in
                 DispatchQueue.main.async {
-                    self?.hostingController?.rootView = AnyView(
-                        EmbeddedSettingsView().environmentObject(self?.playgroundController ?? PlaygroundController(settings: PaymentSheetTestPlaygroundSettings.defaultValues()))
+                    guard let self, let playgroundController = self.playgroundController else { return }
+                    self.hostingController?.rootView = AnyView(
+                        EmbeddedSettingsView().environmentObject(playgroundController)
                     )
                 }
             }
