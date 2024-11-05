@@ -238,7 +238,7 @@ class EmbeddedPaymentMethodsView: UIView {
             stackView.removeArrangedSubview(at: separatorIndex, animated: false)
             stackView.removeArrangedSubview(previousSavedPaymentMethodButton, animated: false)
 
-            if selection?.isSaved ?? false {
+            if case .saved = selection {
                 selection = nil
             }
 
