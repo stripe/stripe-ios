@@ -40,7 +40,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             prefillDetails: nil,
             billingDetails: nil
         )
-        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true")
     }
 
     func test_additionalParameters_instantDebits_noLinkMode() {
@@ -51,7 +51,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             prefillDetails: nil,
             billingDetails: nil
         )
-        XCTAssertEqual(additionalParameters, "&return_payment_method=true")
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true")
     }
 
     func test_additionalParameters_notInstantDebits_someLinkMode() {
@@ -73,7 +73,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             prefillDetails: nil,
             billingDetails: nil
         )
-        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&link_mode=PASSTHROUGH")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH")
     }
 
     func test_additionalParameters_instantDebits_linkCardBrandLinkMode() {
@@ -84,7 +84,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             prefillDetails: nil,
             billingDetails: nil
         )
-        XCTAssertEqual(additionalParameters, "&return_payment_method=true&link_mode=LINK_CARD_BRAND")
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true&link_mode=LINK_CARD_BRAND")
     }
 
     func test_additionalParameters_emptyPrefillDetails() {
@@ -152,7 +152,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             prefillDetails: prefillDetails,
             billingDetails: nil
         )
-        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&link_mode=PASSTHROUGH&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
     }
 
     func test_additionalParameters_emptyBillingDetails() {
@@ -193,7 +193,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             prefillDetails: nil,
             billingDetails: billingDetails
         )
-        XCTAssertEqual(additionalParameters, "&return_payment_method=true&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON")
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON")
     }
 
     func test_additionalParameters_fullBillingDetails_fullPrefillDetails_instantDebits_passthroughLinkMode() {
@@ -223,6 +223,6 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             prefillDetails: prefillDetails,
             billingDetails: billingDetails
         )
-        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&link_mode=PASSTHROUGH&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
     }
 }

@@ -1,6 +1,9 @@
 ## Migration Guides
 ### Migrating from versions < 24.0.0 
 
+#### Basic integration
+- Basic Integration has been removed. [Please use Mobile Payment Element instead](https://docs.stripe.com/payments/mobile/migrating-to-mobile-payment-element-from-basic-integration).
+
 #### PaymentSheet
 PaymentSheet displays payment methods in either a vertical or horizontal layout. Prior to this major version, PaymentSheet defaulted to a horizontal layout. Now, Stripe optimizes the layout automatically. To set a specific layout instead, set the `PaymentSheet.Configuration.paymentMethodLayout` property to either `.horizontal` or `.vertical`.
 

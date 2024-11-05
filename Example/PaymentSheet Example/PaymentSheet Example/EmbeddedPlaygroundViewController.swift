@@ -22,7 +22,9 @@ class EmbeddedPlaygroundViewController: UIViewController {
             }
         }
     }
-    private let appearance: PaymentSheet.Appearance
+    private lazy var appearance: PaymentSheet.Appearance = {
+        return configuration.appearance
+    }()
 
     private let configuration: EmbeddedPaymentElement.Configuration
 
@@ -54,10 +56,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     init(
         configuration: EmbeddedPaymentElement.Configuration,
-        intentConfig: EmbeddedPaymentElement.IntentConfiguration,
-        appearance: PaymentSheet.Appearance
+        intentConfig: EmbeddedPaymentElement.IntentConfiguration
     ) {
-        self.appearance = appearance
         self.configuration = configuration
         self.intentConfig = intentConfig
 

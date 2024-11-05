@@ -168,22 +168,20 @@ extension FinancialConnectionsWebFlowViewController {
                 switch result {
                 case .success(.success(let returnUrl)):
                     if manifest.isProductInstantDebits {
-                        if
-                            let paymentMethodId = Self.extractValue(from: returnUrl, key: "payment_method_id")
-                        {
+                        if let paymentMethod = returnUrl.extractLinkBankPaymentMethod() {
                             let instantDebitsLinkedBank = InstantDebitsLinkedBank(
-                                paymentMethodId: paymentMethodId,
-                                bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
+                                paymentMethod: paymentMethod,
+                                bankName: returnUrl.extractValue(forKey: "bank_name")?
                                 // backend can return "+" instead of a more-common encoding of "%20" for spaces
                                     .replacingOccurrences(of: "+", with: " "),
-                                last4: Self.extractValue(from: returnUrl, key: "last4"),
+                                last4: returnUrl.extractValue(forKey: "last4"),
                                 linkMode: elementsSessionContext?.linkMode
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
                         } else {
                             self.notifyDelegateOfFailure(
                                 error: FinancialConnectionsSheetError.unknown(
-                                    debugDescription: "payment_method_id was not returned"
+                                    debugDescription: "Invalid payment_method returned"
                                 )
                             )
                         }
@@ -294,9 +292,26 @@ extension FinancialConnectionsWebFlowViewController {
 
         notifyDelegate(result: .failed(error: error))
     }
+}
 
-    private static func extractValue(from url: URL, key: String) -> String? {
-        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+private extension URL {
+    
+    /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
+    /// we can parse it back in StripeCore.
+    func extractLinkBankPaymentMethod() -> LinkBankPaymentMethod? {
+        guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
+            return nil
+        }
+        
+        guard let data = Data(base64Encoded: encodedPaymentMethod) else {
+            return nil
+        }
+        
+        return try? JSONDecoder().decode(LinkBankPaymentMethod.self, from: data)
+    }
+    
+    func extractValue(forKey key: String) -> String? {
+        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
             assertionFailure("Invalid URL")
             return nil
         }
@@ -440,7 +455,8 @@ extension FinancialConnectionsWebFlowViewController {
 
         if isInstantDebits {
             parameters.append("return_payment_method=true")
-            if let linkMode = linkMode {
+            parameters.append("expand_payment_method=true")
+            if let linkMode {
                 parameters.append("link_mode=\(linkMode.rawValue)")
             }
 

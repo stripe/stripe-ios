@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Add a payment method";
 
+"Add bank account" = "Add bank account";
+
 "Add card" = "Add card";
 
 "Add new card" = "Add new card";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Add your payment information";
 
 "Approve payment" = "Approve payment";
+
+"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
+
+"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
 
 "Back" = "Back";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Cancel and pay another way";
 
+"Change email" = "Change email";
+
 "Choose a payment method" = "Choose a payment method";
 
 "Close card scanner" = "Close card scanner";
+
+"Code sent" = "Code sent";
 
 "Confirm" = "Confirm";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Contact information";
 
+"Default" = "Default";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Enter address manually";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
+
+"Enter your verification code" = "Enter your verification code";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Join Link";
+
+"Log out of Link" = "Log out of Link";
 
 "Manage payment method" = "Manage payment method";
 
@@ -101,6 +123,8 @@
 "New card" = "New card";
 
 "New payment method" = "New payment method";
+
+"Not %@?" = "Not %@?";
 
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
+"Payment" = "Payment";
+
 "Payment failed" = "Payment failed";
+
+"Payment methods" = "Payment methods";
 
 "Please go back and select another payment method" = "Please go back and select another payment method";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Remove card?";
 
+"Remove linked account" = "Remove linked account";
+
 "Remove payment method" = "Remove payment method";
+
+"Resend code" = "Resend code";
 
 "Save" = "Save";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Saved";
 
+"Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
+
 "Select card" = "Select card";
 
 "Select payment method" = "Select payment method";
 
 "Select your payment method" = "Select your payment method";
 
+"Set as default" = "Set as default";
+
+"Set as default payment method" = "Set as default payment method";
+
 "Set up" = "Set up";
 
 "Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
 
 "Show menu" = "Show menu";
+
+"Sign in to your Link account" = "Sign in to your Link account";
 
 "Simple, secure one-click payments" = "Simple, secure one-click payments";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
 
+"Tap to close" = "Tap to close";
+
+"Tap to expand" = "Tap to expand";
+
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid. \"%@\" is not a supported country code.";
 
+"The provided verification code has expired." = "The provided verification code has expired.";
+
+"The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
+
+"This is your default" = "This is your default";
+
+"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
+
+"Unavailable for this purchase" = "Unavailable for this purchase";
+
 "Update" = "Update";
 
+"Update card" = "Update card";
+
 "Update card brand" = "Update card brand";
+
+"Use your saved info to check out faster" = "Use your saved info to check out faster";
 
 "View more" = "View more";
 

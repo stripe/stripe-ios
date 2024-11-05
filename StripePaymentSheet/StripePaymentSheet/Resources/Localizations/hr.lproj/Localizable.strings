@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Dodaj način plaćanja";
 
+"Add bank account" = "Dodajte bankovni račun";
+
 "Add card" = "Dodaj karticu";
 
 "Add new card" = "Dodajte novu karticu";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Dodavanje informacija o plaćanju";
 
 "Approve payment" = "Odobri plaćanje";
+
+"Are you sure you want to remove this card?" = "Jeste li sigurni da želite ukloniti ovu karticu?";
+
+"Are you sure you want to remove this linked account?" = "Jeste li sigurni da želite ukloniti ovaj povezani račun?";
 
 "Back" = "Natrag";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Otkaži i plati na drugi način";
 
+"Change email" = "Izmijeni e-poštu";
+
 "Choose a payment method" = "Odaberite način plaćanja";
 
 "Close card scanner" = "Zatvori skener kartice";
+
+"Code sent" = "Kod je poslan";
 
 "Confirm" = "Potvrdi";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Podaci za kontakt";
 
+"Default" = "Zadano";
+
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Unesite adresu ručno";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Unesite kod poslan na %@ kako biste koristili Link za plaćanje kao zadanu opciju.";
+
+"Enter your verification code" = "Unesite verifikacijski kod";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Radi sigurnosti, ponovno unesite sigurnosni kod vaše kartice.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Razumijem da će Stripe naplaćivati izravna terećenja u ime %@ i potvrđujem da sam vlasnik računa i jedina osoba koja mora autorizirati terećenja s ovog računa.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Pridružite se na Link";
+
+"Log out of Link" = "Odjavite se s Linka";
 
 "Manage payment method" = "Upravljajte načinom plaćanja";
 
@@ -101,6 +123,8 @@
 "New card" = "Nova kartica";
 
 "New payment method" = "Novi način plaćanja";
+
+"Not %@?" = "Niste %@?";
 
 "Open your UPI app to approve your payment within %@" = "Otvorite svoju aplikaciju UPI da biste odobrili svoje plaćanje unutar %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Platite svojim bankovnim računom u samo par koraka.";
 
+"Payment" = "Plaćanje";
+
 "Payment failed" = "Plaćanje nije uspjelo";
+
+"Payment methods" = "Načini plaćanja";
 
 "Please go back and select another payment method" = "Molimo vratite se i odaberite drugi način plaćanja";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Ukloniti karticu?";
 
+"Remove linked account" = "Ukloni povezani račun";
+
 "Remove payment method" = "Ukloni način plaćanja";
+
+"Resend code" = "Ponovo pošalji kod";
 
 "Save" = "Spremi";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Spremljeno";
 
+"Secure 1⁠-⁠click checkout" = "Sigurno plaćanje pomoću 1 klika";
+
 "Select card" = "Odaberite karticu";
 
 "Select payment method" = "Odaberite način plaćanja";
 
 "Select your payment method" = "Odaberite način plaćanja";
 
+"Set as default" = "Postavi kao zadano";
+
+"Set as default payment method" = "Postavi kao zadani način plaćanja";
+
 "Set up" = "Postavi";
 
 "Shipping to %@ is not supported." = "Dostava do %@ nije podržana.";
 
 "Show menu" = "Prikaži izbornik";
+
+"Sign in to your Link account" = "Prijavite se na svoj Link račun";
 
 "Simple, secure one-click payments" = "Jednostavna sigurna plaćanja jednim klikom";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe će uplatiti polog u iznosu od 0,01 USD na vaš račun u roku od 1-2 radna dana. Zatim ćete zaprimiti poruku e-pošte s uputama za dovršetak plaćanja za %@.";
 
+"Tap to close" = "Dodirnite za zatvaranje";
+
+"Tap to expand" = "Dodirnite za proširivanje";
+
 "The IBAN you entered is incomplete." = "Uneseni IBAN nije potpun.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN koji ste unijeli nije važeći, \"%@\" nije podržani kod zemlje.";
 
+"The provided verification code has expired." = "Navedeni kontrolni kôd je istekao.";
+
+"The provided verification code is incorrect." = "Navedeni kontrolni kôd nije točan.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Ova kartica je istekla. Ažurirajte svoje podatke o kartici ili odaberite drugi način plaćanja.";
+
+"This is your default" = "Ovo je vaša zadana vrijednost";
+
+"Too many attempts. Please try again in a few minutes." = "Previše pokušaja. Pokušajte ponovno za nekoliko minuta.";
+
+"Unavailable for this purchase" = "Nije dostupno za ovu kupnju";
+
 "Update" = "Ažuriraj";
 
+"Update card" = "Ažuriraj karticu";
+
 "Update card brand" = "Ažurirajte robnu marku kartice";
+
+"Use your saved info to check out faster" = "Upotrijebite svoje spremljene podatke za brže plaćanje";
 
 "View more" = "Vidi više";
 
