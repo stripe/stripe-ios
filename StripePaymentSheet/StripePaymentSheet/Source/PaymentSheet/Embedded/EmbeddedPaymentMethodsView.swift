@@ -245,13 +245,6 @@ class EmbeddedPaymentMethodsView: UIView {
             // Update instance states
             self.savedPaymentMethodButton = nil
         }
-
-        // If there is nothing selected, then update the selection to nil
-        let allRows = stackView.arrangedSubviews.compactMap({ $0 as? RowButton })
-        let allSelectedRows = allRows.filter({ !$0.isHidden && $0.isSelected })
-        if allSelectedRows.first == nil {
-            selection = nil
-        }
     }
 
     func makeSavedPaymentMethodButton(savedPaymentMethod: STPPaymentMethod,
