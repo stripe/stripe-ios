@@ -228,7 +228,7 @@ class EmbeddedPaymentMethodsView: UIView {
             }
             // Remove old button & insert new button
             stackView.removeArrangedSubview(previousSavedPaymentMethodButton, animated: false)
-            self.stackView.insertArrangedSubview(updatedSavedPaymentMethodButton, at: viewIndex)
+            stackView.insertArrangedSubview(updatedSavedPaymentMethodButton, at: viewIndex)
 
             // Update instance states
             self.savedPaymentMethodButton = updatedSavedPaymentMethodButton
@@ -238,12 +238,19 @@ class EmbeddedPaymentMethodsView: UIView {
             stackView.removeArrangedSubview(at: separatorIndex, animated: false)
             stackView.removeArrangedSubview(previousSavedPaymentMethodButton, animated: false)
 
-            if case .saved = selection {
+            if selection?.isSaved ?? false {
                 selection = nil
             }
 
             // Update instance states
             self.savedPaymentMethodButton = nil
+        }
+
+        // If there is nothing selected, then update the selection to nil
+        let allRows = stackView.arrangedSubviews.compactMap({ $0 as? RowButton })
+        let allSelectedRows = allRows.filter({ !$0.isHidden && $0.isSelected })
+        if allSelectedRows.first == nil {
+            selection = nil
         }
     }
 

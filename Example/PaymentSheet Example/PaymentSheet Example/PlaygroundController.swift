@@ -337,7 +337,7 @@ class PlaygroundController: ObservableObject {
         case .new:
             return customerId ?? "new"
         case .returning:
-            return "returning"
+            return customerId ?? "returning"
         }
     }
 
