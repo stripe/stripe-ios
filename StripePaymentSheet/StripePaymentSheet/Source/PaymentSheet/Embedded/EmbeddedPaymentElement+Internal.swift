@@ -194,8 +194,12 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         let accessoryType = getAccessoryButton(
             savedPaymentMethods: latestPaymentMethods
         )
+
+        // If there are still saved payment methods & the saved payment method was previously selected to presenting
+        // the list of saved payment methods, then the embedded view should continue to show it is selected, otherwise unselected.
+        let isSelected: Bool = latestPaymentMethods.count > 0 && embeddedPaymentMethodsView.selection?.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
-                                                               isSelected: selectedPaymentMethod != nil,
+                                                               isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }
