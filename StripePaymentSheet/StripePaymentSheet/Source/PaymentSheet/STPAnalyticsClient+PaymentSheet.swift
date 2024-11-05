@@ -86,7 +86,7 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement {
 
     var analyticPayload: [String: Any] {
         var payload = [String: Any]()
-        payload["style"] = style != PaymentSheet.Appearance.EmbeddedPaymentElement.default.style
+        payload["style"] = row.style != PaymentSheet.Appearance.EmbeddedPaymentElement.default.row.style
         payload["row"] = row != PaymentSheet.Appearance.EmbeddedPaymentElement.default.row
         return payload
     }

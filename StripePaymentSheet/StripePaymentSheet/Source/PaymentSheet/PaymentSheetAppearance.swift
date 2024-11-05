@@ -237,25 +237,25 @@ public extension PaymentSheet {
     /// Describes the appearance of the Embedded Mobile Payment Element
     @_spi(EmbeddedPaymentElementPrivateBeta) struct EmbeddedPaymentElement: Equatable {
 
-        /// The display style options for the Embedded Mobile Payment Element
-        public enum Style: CaseIterable {
-            /// A flat style with radio buttons
-            case flatWithRadio
-            /// A floating button style
-            case floatingButton
-        }
-
         /// Creates a `PaymentSheet.Appearance.EmbeddedPaymentElement` with default values
         public init() {}
 
         /// Describes the appearance of the row in the Embedded Mobile Payment Element
         public var row: Row = Row()
 
-        /// The display style of the Embedded Mobile Payment Element
-        public var style: Style = .flatWithRadio
-
         /// Describes the appearance of the row in the Embedded Mobile Payment Element
         public struct Row: Equatable {
+            /// The display style options for the Embedded Mobile Payment Element
+            public enum Style: CaseIterable {
+                /// A flat style with radio buttons
+                case flatWithRadio
+                /// A floating button style
+                case floatingButton
+            }
+            
+            /// The display style of the Embedded Mobile Payment Element
+            public var style: Style = .flatWithRadio
+            
             /// Additional vertical insets applied to a payment method row
             /// - Note: Increasing this value increases the height of each row
             public var additionalInsets: CGFloat = 4.0
