@@ -461,9 +461,14 @@ extension PaymentSheet {
 
             switch confirmOption {
             case .wallet:
-                let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration)
-                linkController.present(from: authenticationContext.authenticationPresentingViewController(),
-                                       completion: completion)
+                if configuration.forceEnableNativeLink {
+//                    let linkController = PayWithNativeLinkController(intent: intent, configuration: configuration)
+//                    linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
+                } else {
+                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration)
+                    linkController.present(from: authenticationContext.authenticationPresentingViewController(),
+                                           completion: completion)
+                }
             case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let intentConfirmParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in
                     UserDefaults.standard.markLinkAsUsed()

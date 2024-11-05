@@ -327,7 +327,21 @@ extension PaymentSheet {
                 self.isPresented = true
             }
 
-            showPaymentOptions()
+            if let linkAccount = LinkAccountContext.shared.account,
+               elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount, configuration: self.configuration) {
+                let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+                verificationController.present(from: presentingViewController) { [weak self] result in
+                    switch result {
+                    case .completed:
+                        self?.viewController.selectLink()
+                        completion?()
+                    case .canceled, .failed(_):
+                        showPaymentOptions()
+                    }
+                }
+            } else {
+                showPaymentOptions()
+            }
         }
 
         /// Completes the payment or setup.
@@ -581,4 +595,5 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
+    func selectLink()
 }

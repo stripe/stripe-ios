@@ -86,6 +86,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private let isLinkEnabled: Bool
     private var isHackyLinkButtonSelected: Bool = false
 
+    func selectLink() {
+        savedPaymentOptionsViewController.selectLink()
+    }
+    
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()

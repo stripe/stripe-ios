@@ -153,28 +153,49 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
-                // Set the PaymentSheetViewController as the content of our bottom sheet
-                let paymentSheetVC: PaymentSheetViewControllerProtocol = {
-                    switch self.configuration.paymentMethodLayout {
-                    case .horizontal:
-                        return PaymentSheetViewController(
-                            configuration: self.configuration,
-                            loadResult: loadResult,
-                            analyticsHelper: self.analyticsHelper,
-                            delegate: self
-                        )
-                    case .vertical, .automatic:
-                        let verticalVC = PaymentSheetVerticalViewController(
-                            configuration: self.configuration,
-                            loadResult: loadResult,
-                            isFlowController: false,
-                            analyticsHelper: self.analyticsHelper
-                        )
-                        verticalVC.paymentSheetDelegate = self
-                        return verticalVC
+                let presentPaymentSheet: () -> Void = {
+                    // Set the PaymentSheetViewController as the content of our bottom sheet
+                    let paymentSheetVC: PaymentSheetViewControllerProtocol = {
+                        switch self.configuration.paymentMethodLayout {
+                        case .horizontal:
+                            return PaymentSheetViewController(
+                                configuration: self.configuration,
+                                loadResult: loadResult,
+                                analyticsHelper: self.analyticsHelper,
+                                delegate: self
+                            )
+                        case .vertical, .automatic:
+                            let verticalVC = PaymentSheetVerticalViewController(
+                                configuration: self.configuration,
+                                loadResult: loadResult,
+                                isFlowController: false,
+                                analyticsHelper: self.analyticsHelper
+                            )
+                            verticalVC.paymentSheetDelegate = self
+                            return verticalVC
+                        }
+                    }()
+                    self.bottomSheetViewController.setViewControllers([paymentSheetVC])
+                }
+                if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount, configuration: self.configuration) {
+                    let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+                    verificationController.present(from: self.bottomSheetViewController) { result in
+                        switch result {
+                        case .completed:
+                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: true, shouldFinishOnClose: false) {
+                                // To prevent a flash of PaymentSheet content, don't present it until after the LinkController presentation animation has completed
+                                presentPaymentSheet()
+                            }
+                        case .canceled:
+                            presentPaymentSheet()
+                        case .failed(_):
+                            // Error is logged within LinkVerificationViewController
+                            presentPaymentSheet()
+                        }
                     }
-                }()
-                self.bottomSheetViewController.setViewControllers([paymentSheetVC])
+                } else {
+                    presentPaymentSheet()
+                }
             case .failure(let error):
                 completion(.failed(error: error))
             }
@@ -321,7 +342,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 intent: paymentSheetViewController.intent,
                 elementsSession: paymentSheetViewController.elementsSession,
                 shouldOfferApplePay: false,
-                shouldFinishOnClose: true,
+                shouldFinishOnClose: false,
                 completion: nil
             )
         } else {
