@@ -144,7 +144,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Edit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
         app.buttons["Remove card"].waitForExistenceAndTap()
-        dismissAlertView(alertBody: "Visa •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
+        dismissAlertView(alertBody: "Cartes Bancaires •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
         // Nothing should be selected
         let newCardButton = app.buttons["New card"]
