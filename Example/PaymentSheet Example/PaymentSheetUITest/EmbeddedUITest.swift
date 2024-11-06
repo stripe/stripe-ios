@@ -29,7 +29,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Payment method"].exists)
     }
 
-    func testSingleCardCBC_update_and_remove() {
+    func testSingleCardCBC_update_and_remove_selectStateApplePay() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
@@ -54,8 +54,11 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["embedded"].waitForExistenceAndTap(timeout: 5)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
+        let card1001Button = app.buttons["•••• 1001"]
+
         // Ensure card preference is cartes bancaires
-        XCTAssertTrue(app.buttons["•••• 1001"].waitForExistence(timeout: 3))
+        XCTAssertTrue(card1001Button.waitForExistence(timeout: 3))
+        XCTAssertTrue(card1001Button.isSelected)
         XCTAssertTrue(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
         XCTAssertFalse(app.images["stp_card_visa"].waitForExistence(timeout: 3))
 
@@ -67,22 +70,89 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Update card brand"].waitForExistence(timeout: 3))
 
         // Ensure card preference is switched to visa
-        XCTAssertTrue(app.buttons["•••• 1001"].waitForExistence(timeout: 3))
+        XCTAssertTrue(card1001Button.waitForExistence(timeout: 3))
+        XCTAssertTrue(card1001Button.isSelected)
         XCTAssertTrue(app.images["stp_card_visa"].waitForExistence(timeout: 3))
         XCTAssertFalse(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
 
-        // Now remove card
+        // Ensure select state preserved on cancel (w/ saved card)
         app.buttons["Edit"].waitForExistenceAndTap()
+        app.buttons["UIButton.Close"].waitForExistenceAndTap()
+        XCTAssertTrue(card1001Button.waitForExistence(timeout: 3))
+        XCTAssertTrue(card1001Button.isSelected)
+        let applePayButton = app.buttons["Apple Pay"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 3))
+        XCTAssertFalse(applePayButton.isSelected)
 
-        // Ensure Popup is presented
+        // Ensure select state preserved on cancel (w/ Apple pay)
+        applePayButton.tap()
+        XCTAssertTrue(applePayButton.isSelected)
+        XCTAssertFalse(card1001Button.isSelected)
+        app.buttons["Edit"].waitForExistenceAndTap()
+        app.buttons["UIButton.Close"].waitForExistenceAndTap()
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 3))
+        XCTAssertTrue(applePayButton.isSelected)
+        XCTAssertFalse(card1001Button.isSelected)
+
+        // Remove last card while selected state is NOT on the card
+        app.buttons["Edit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
         app.buttons["Remove card"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
-        // Ensure popup is implicitly dismissed
+        // Apple pay should be continued to be selected
         XCTAssertFalse(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
         XCTAssertFalse(app.images["stp_card_visa"].waitForExistence(timeout: 3))
         XCTAssertFalse(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
+        XCTAssertTrue(applePayButton.isSelected)
+    }
+
+    func testSingleCardCBC_onRemove_selectStateNone() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .paymentSheet
+        settings.customerKeyType = .legacy
+        settings.customerMode = .new
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+
+        // Complete payment
+        app.buttons["Pay €50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+
+        // Switch to embedded mode kicks off a reload
+        app.buttons["embedded"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        let card1001Button = app.buttons["•••• 1001"]
+
+        // Ensure card preference is cartes bancaires
+        XCTAssertTrue(card1001Button.waitForExistence(timeout: 3))
+        XCTAssertTrue(card1001Button.isSelected)
+        XCTAssertTrue(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.images["stp_card_visa"].waitForExistence(timeout: 3))
+
+        // Remove last card while selected state is on the card
+        app.buttons["Edit"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
+        app.buttons["Remove card"].waitForExistenceAndTap()
+        dismissAlertView(alertBody: "Visa •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
+
+        // Nothing should be selected
+        let newCardButton = app.buttons["New card"]
+        let applePayButton = app.buttons["Apple Pay"]
+        XCTAssertTrue(newCardButton.waitForExistence(timeout: 3.0))
+        XCTAssertFalse(newCardButton.isSelected)
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 3.0))
+        XCTAssertFalse(applePayButton.isSelected)
     }
 
     func testMulipleCardWith_updateCBCWithinViewMore() {
