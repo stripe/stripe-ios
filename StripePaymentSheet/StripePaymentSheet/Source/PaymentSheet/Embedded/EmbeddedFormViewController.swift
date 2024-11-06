@@ -81,6 +81,10 @@ class EmbeddedFormViewController: UIViewController {
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
         return paymentMethodFormViewController.paymentOption
     }
+    
+    var allSubElements: [Element] {
+        paymentMethodFormViewController.form.getAllUnwrappedSubElements()
+    }
 
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let configuration: EmbeddedPaymentElement.Configuration
@@ -380,6 +384,24 @@ class EmbeddedFormViewController: UIViewController {
 
         pay(with: selectedPaymentOption)
     }
+    
+    // MARK: - Helpers
+    
+    /// Compares the current form's elements to another list of form elements to determine if they are equal.
+    /// Forms are considered equal if:
+    /// 1. They have the same number of elements.
+    /// 2. The elements are in the same order.
+    /// 3. Each element is of the same type as its counterpart in the other list.
+    ///
+    /// Note: This method does not compare the input values of the forms, only the structure and types of elements.
+    /// It is primarily used to check for structural changes, such as the presence or absence of mandates.
+    ///
+    /// - Parameter other: The list of form elements to compare against.
+    /// - Returns: `true` if the forms have the same structure and element types in the same order; `false` otherwise.
+    func formsAreEqual(other: [Element]?) -> Bool {
+        guard let other else { return false }
+        return paymentMethodFormViewController.form.getAllUnwrappedSubElements().isEqualInOrder(to: other)
+    }
 }
 
 // MARK: - BottomSheetContentViewController
@@ -424,5 +446,17 @@ extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
     func updateErrorLabel(for error: Swift.Error?) {
         self.error = error
         updateError()
+    }
+}
+
+extension Array where Element == Element {
+    func isEqualInOrder(to other: [Element]) -> Bool {
+        guard self.count == other.count else { return false }
+        for (item1, item2) in zip(self, other) {
+            if !(type(of: item1) == type(of: item2)) {
+                return false
+            }
+        }
+        return true
     }
 }

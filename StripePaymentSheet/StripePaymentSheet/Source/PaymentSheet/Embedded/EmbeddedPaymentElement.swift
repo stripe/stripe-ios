@@ -127,36 +127,42 @@ public final class EmbeddedPaymentElement {
                 return UpdateResult.canceled
             }
 
-            // 2. Re-initialize embedded view to update the UI to match the newly loaded data.
-            let embeddedPaymentMethodsView = Self.makeView(
-                configuration: configuration,
-                loadResult: loadResult,
-                analyticsHelper: analyticsHelper,
-                previousPaymentOption: self?._paymentOption,
-                delegate: self
-            )
             
-            // 2.1. Re-initialize embedded view to update the UI to match the newly loaded data.
+            // 2.1. Re-initialize embedded form view controller to update the UI to match the newly loaded data.
             var formViewController: EmbeddedFormViewController?
-            
+            var clearedFormPaymentOption = false
             if self?.formViewController != nil {
                 formViewController = EmbeddedFormViewController(configuration: configuration,
-                                             intent: loadResult.intent,
-                                             elementsSession: loadResult.elementsSession,
-                                             savedPaymentMethods: loadResult.savedPaymentMethods,
-                                             paymentMethodType: self?.formViewController?.selectedPaymentOption?.paymentMethodType ?? .stripe(.unknown),
-                                             previousPaymentOption: self?.formViewController?.selectedPaymentOption,
-                                             analyticsHelper: analyticsHelper,
-                                             formCache: .init())
+                                                                intent: loadResult.intent,
+                                                                elementsSession: loadResult.elementsSession,
+                                                                savedPaymentMethods: loadResult.savedPaymentMethods,
+                                                                paymentMethodType: self?.formViewController?.selectedPaymentOption?.paymentMethodType ?? .stripe(.unknown),
+                                                                previousPaymentOption: self?.formViewController?.selectedPaymentOption,
+                                                                analyticsHelper: analyticsHelper,
+                                                                formCache: .init()) // Always use a fresh cache after an update
                 
                 // 2.2 If the form has a selected payment method type that is no longer available, invalidate
                 if let formPaymentMethodType = self?.formViewController?.selectedPaymentOption?.paymentMethodType,
                    !loadResult.paymentMethodTypes.contains(formPaymentMethodType) {
                     formViewController = nil
+                    clearedFormPaymentOption = true
                 }
                 
-                
+                // 2.3 If the form differs after the update, invalidate the current selection
+                if !(formViewController?.formsAreEqual(other: self?.formViewController?.allSubElements) ?? true) {
+                    formViewController = nil
+                    clearedFormPaymentOption = true
+                }
             }
+            
+            // 2.4 Re-initialize embedded view to update the UI to match the newly loaded data.
+            let embeddedPaymentMethodsView = Self.makeView(
+                configuration: configuration,
+                loadResult: loadResult,
+                analyticsHelper: analyticsHelper,
+                previousPaymentOption: clearedFormPaymentOption ? nil : self?._paymentOption,
+                delegate: self
+            )
             
             // 3. Pre-load image into cache
             // Call this on a detached Task b/c this synchronously (!) loads the image from network and we don't want to block the main actor
@@ -178,12 +184,11 @@ public final class EmbeddedPaymentElement {
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
             self.formViewController = formViewController
+            self.formCache = .init()
             if oldPaymentOption != self.paymentOption {
                 self.formViewController = nil
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
-            // Clear the form cache after an update
-            formCache = .init()
             return .succeeded
         }
         self.latestUpdateTask = currentUpdateTask
