@@ -24,7 +24,17 @@ class EmbeddedPaymentMethodsView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
+    private var previousSelection: Selection?
+    private var previousSelectedRowButton: RowButton?
+    private var selectedRowButton: RowButton? {
+        willSet {
+            previousSelectedRowButton = selectedRowButton
+        }
+    }
     private(set) var selection: Selection? {
+        willSet {
+            previousSelection = selection
+        }
         didSet {
             updateMandate()
             if oldValue != selection {
@@ -191,17 +201,18 @@ class EmbeddedPaymentMethodsView: UIView {
     }
     
     // MARK: Internal functions
-    func resetSelection() {
+    func resetSelectionToLastSelection() {
+        self.selection = previousSelection
+        self.selectedRowButton = previousSelectedRowButton
+        
         for case let rowButton as RowButton in stackView.arrangedSubviews {
-            rowButton.isSelected = false
+            rowButton.isSelected = rowButton === selectedRowButton
         }
-        
-        selection = nil
-        
     }
 
     // MARK: Tap handling
     func didTap(selectedRowButton: RowButton, selection: Selection) {
+        self.selectedRowButton = selectedRowButton
         for case let rowButton as RowButton in stackView.arrangedSubviews {
             rowButton.isSelected = rowButton === selectedRowButton
         }

@@ -284,15 +284,15 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
     
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        embeddedPaymentMethodsView.resetSelection()
+        embeddedPaymentMethodsView.resetSelectionToLastSelection()
         embeddedFormViewController.dismiss(animated: true)
     }
     
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
 //        self.lastSeenPaymentOption = embeddedFormViewController.selectedPaymentOption
-        if embeddedFormViewController.selectedPaymentOption == nil {
-            embeddedPaymentMethodsView.resetSelection()
-        }
+//        if embeddedFormViewController.selectedPaymentOption == nil {
+//            embeddedPaymentMethodsView.resetSelection()
+//        }
         embeddedFormViewController.dismiss(animated: true)
     }
     
