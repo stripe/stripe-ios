@@ -161,6 +161,88 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
 
     }
+    
+    func testSelection() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        loadPlayground(app, settings)
+        
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        // Open card and cancel, should not be selected
+        app.buttons["Card"].waitForExistenceAndTap()
+        app.buttons["Close"].waitForExistenceAndTap()
+        XCTAssertFalse(app.buttons["Checkout"].isEnabled)
+        
+        // Select Cash App Pay
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
+        // Open card and cancel, should reset back to Cash App Pay
+        app.buttons["Card"].waitForExistenceAndTap()
+        app.buttons["Close"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
+        // Try to fill a card
+        app.buttons["Card"].waitForExistenceAndTap()
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
+        // Tapping on card again should present the form filled out
+        app.buttons["Card"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 5.0))
+        let cardNumberField = app.textFields["Card number"]
+        XCTAssertEqual(cardNumberField.value as? String, "4242424242424242", "Card number field should contain the entered card number.")
+        app.buttons["Close"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+
+        // Select and cancel out a form PM to ensure that 4242 card is still selected
+        app.buttons["Klarna"].waitForExistenceAndTap()
+        app.buttons["Close"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
+        // Select a no-form PM such as Cash App Pay
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
+        // FIll out US Bank Acct.
+        app.buttons["US bank account"].waitForExistenceAndTap()
+        // Fill out name and email fields
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.isEnabled)
+        app.textFields["Full name"].tap()
+        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test-\(UUID().uuidString)@example.com" + XCUIKeyboardKey.return.rawValue)
+        XCTAssertTrue(continueButton.isEnabled)
+        continueButton.tap()
+
+        // Go through connections flow
+        app.buttons["Agree and continue"].tap()
+        app.staticTexts["Test Institution"].forceTapElement()
+        // "Success" institution is automatically selected because its the first
+        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
+
+        let notNowButton = app.buttons["Not now"]
+        if notNowButton.waitForExistence(timeout: 10.0) {
+            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
+            notNowButton.tap()
+        }
+
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["••••6789"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+    }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
         let alertText = app.staticTexts[alertBody]
