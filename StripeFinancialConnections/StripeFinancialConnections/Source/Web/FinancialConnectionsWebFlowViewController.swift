@@ -307,7 +307,13 @@ private extension URL {
             return nil
         }
         
-        return try? JSONDecoder().decode(LinkBankPaymentMethod.self, from: data)
+        let result: Result<LinkBankPaymentMethod, Error> = STPAPIClient.decodeResponse(
+            data: data,
+            error: nil,
+            response: nil
+        )
+        
+        return try? result.get()
     }
     
     func extractValue(forKey key: String) -> String? {
