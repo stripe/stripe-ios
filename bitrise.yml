@@ -43,7 +43,6 @@ stages:
     - install-tests-non-carthage: {}
     - lint-tests: {}
     - size-report: {}
-    - deploy-dry-run: {}
     - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
