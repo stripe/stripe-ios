@@ -474,3 +474,32 @@ extension PaymentElementConfiguration {
         (defaultBillingDetails.email?.isEmpty == false && billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod)
     }
 }
+
+extension PaymentSheet.PaymentMethodType {
+    
+    var isLinkBankPayment: Bool {
+        switch self {
+        case .stripe:
+            return false
+        case .external:
+            return false
+        case .instantDebits:
+            return true
+        case .linkCardBrand:
+            return true
+        }
+    }
+    
+    var isBankPayment: Bool {
+        switch self {
+        case .stripe(let type):
+            return type == .USBankAccount
+        case .external:
+            return false
+        case .instantDebits:
+            return true
+        case .linkCardBrand:
+            return true
+        }
+    }
+}
