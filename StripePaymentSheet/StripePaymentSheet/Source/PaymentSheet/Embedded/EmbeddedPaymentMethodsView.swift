@@ -13,7 +13,7 @@ import UIKit
 @MainActor
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
-    func selectionDidUpdate()
+    func selectionWasTapped(didUpdate: Bool)
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
 }
 
@@ -37,9 +37,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
         didSet {
             updateMandate()
-            if oldValue != selection {
-                delegate?.selectionDidUpdate()
-            }
+            delegate?.selectionWasTapped(didUpdate: oldValue != selection)
         }
     }
     private let mandateProvider: MandateTextProvider

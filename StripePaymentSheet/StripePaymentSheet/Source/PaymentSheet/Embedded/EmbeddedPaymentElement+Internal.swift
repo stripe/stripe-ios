@@ -92,8 +92,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
 
-    func selectionDidUpdate() {
-        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+    func selectionWasTapped(didUpdate: Bool) {
+        defer {
+            if didUpdate {
+                delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+            }
+        }
+        
         guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
             return
         }
@@ -111,12 +116,16 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodType: paymentMethodType,
             previousPaymentOption: nil,
             analyticsHelper: analyticsHelper,
-            formCache: formCache
+            formCache: formCache,
+            previousFormViewController: self.formViewController
         )
         embeddedFormVC.delegate = self
 
         // Only show forms that require user input
-        guard embeddedFormVC.collectsUserInput else { return }
+        guard embeddedFormVC.collectsUserInput else {
+            self.formViewController = nil
+            return
+        }
 
         let bottomSheet = BottomSheetViewController(
             contentViewController: embeddedFormVC,
@@ -206,6 +215,7 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }
+    
     func didDismiss(viewController: UpdateCardViewController) {
         presentingViewController?.dismiss(animated: true)
     }
@@ -284,16 +294,20 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
     
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        embeddedPaymentMethodsView.resetSelectionToLastSelection()
+        if formViewController?.selectedPaymentOption == nil {
+            embeddedPaymentMethodsView.resetSelectionToLastSelection()
+            // If we were previously presenting a form with a valid payment option, reset back to it
+            if embeddedFormViewController.previousFormViewController?.selectedPaymentOption != nil {
+                self.formViewController = embeddedFormViewController.previousFormViewController
+                delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+            }
+        }
         embeddedFormViewController.dismiss(animated: true)
     }
     
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
-//        self.lastSeenPaymentOption = embeddedFormViewController.selectedPaymentOption
-//        if embeddedFormViewController.selectedPaymentOption == nil {
-//            embeddedPaymentMethodsView.resetSelection()
-//        }
         embeddedFormViewController.dismiss(animated: true)
+        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
     
 }

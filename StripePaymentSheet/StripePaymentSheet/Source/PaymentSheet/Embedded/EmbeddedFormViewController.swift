@@ -89,6 +89,7 @@ class EmbeddedFormViewController: UIViewController {
     private let savedPaymentMethods: [STPPaymentMethod]?
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    let previousFormViewController: EmbeddedFormViewController?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
@@ -164,7 +165,8 @@ class EmbeddedFormViewController: UIViewController {
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
-         formCache: PaymentMethodFormCache) {
+         formCache: PaymentMethodFormCache,
+         previousFormViewController: EmbeddedFormViewController? = nil) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.savedPaymentMethods = savedPaymentMethods
@@ -173,7 +175,8 @@ class EmbeddedFormViewController: UIViewController {
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
-
+        self.previousFormViewController = previousFormViewController
+        
         super.init(nibName: nil, bundle: nil)
 
         add(childViewController: paymentMethodFormViewController, containerView: paymentContainerView)
