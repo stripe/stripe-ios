@@ -363,7 +363,6 @@
 		416E9ED02C77F6C100A0B917 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */,
 				416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */,
 				E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */,
 				41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */,

@@ -238,7 +238,7 @@ class EmbeddedPaymentMethodsView: UIView {
             }
             // Remove old button & insert new button
             stackView.removeArrangedSubview(previousSavedPaymentMethodButton, animated: false)
-            self.stackView.insertArrangedSubview(updatedSavedPaymentMethodButton, at: viewIndex)
+            stackView.insertArrangedSubview(updatedSavedPaymentMethodButton, at: viewIndex)
 
             // Update instance states
             self.savedPaymentMethodButton = updatedSavedPaymentMethodButton

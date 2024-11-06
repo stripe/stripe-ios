@@ -8,8 +8,14 @@
 import Foundation
 @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import UIKit
+import Combine
+import SwiftUI
 
 class EmbeddedPlaygroundViewController: UIViewController {
+    private var hostingController: UIHostingController<AnyView>?
+    private var cancellables = Set<AnyCancellable>()
+    private weak var playgroundController: PlaygroundController?
+    
     var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -56,11 +62,13 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     init(
         configuration: EmbeddedPaymentElement.Configuration,
-        intentConfig: EmbeddedPaymentElement.IntentConfiguration
+        intentConfig: EmbeddedPaymentElement.IntentConfiguration,
+        playgroundController: PlaygroundController
     ) {
         self.configuration = configuration
         self.intentConfig = intentConfig
-
+        self.playgroundController = playgroundController
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -70,6 +78,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        observePlaygroundController()
         self.view.backgroundColor = UIColor(dynamicProvider: { traitCollection in
             if traitCollection.userInterfaceStyle == .dark {
                 return .secondarySystemBackground
@@ -147,9 +156,37 @@ class EmbeddedPlaygroundViewController: UIViewController {
         ])
     }
 
-    func setSettingsView(_ settingsView: UIView) {
-        settingsViewContainer.arrangedSubviews.forEach { settingsViewContainer.removeArrangedSubview($0) }
-        settingsViewContainer.addArrangedSubview(settingsView)
+    func setSettingsView<SettingsView: View>(_ settingsView: @escaping () -> SettingsView) {
+        guard let playgroundController else { return }
+        // Remove existing hosting controller if any
+        hostingController?.willMove(toParent: nil)
+        hostingController?.view.removeFromSuperview()
+        hostingController?.removeFromParent()
+
+        // Create new hosting controller
+        let rootView = settingsView().environmentObject(playgroundController)
+        hostingController = UIHostingController(rootView: AnyView(rootView))
+
+        guard let hostingController = hostingController else { return }
+
+        // Add as child view controller
+        addChild(hostingController)
+        settingsViewContainer.addArrangedSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+    }
+    
+    private func observePlaygroundController() {
+        guard let playgroundController else { return }
+        playgroundController.objectWillChange
+            .sink { [weak self] _ in
+                DispatchQueue.main.async {
+                    guard let self, let playgroundController = self.playgroundController else { return }
+                    self.hostingController?.rootView = AnyView(
+                        EmbeddedSettingsView().environmentObject(playgroundController)
+                    )
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
