@@ -245,7 +245,7 @@ public extension PaymentSheet {
 
         /// Describes the appearance of the row in the Embedded Mobile Payment Element
         public struct Row: Equatable {
-            /// The display style options for the Embedded Mobile Payment Element
+            /// The display styles of rows
             public enum Style: CaseIterable {
                 /// A flat style with radio buttons
                 case flatWithRadio
@@ -253,7 +253,7 @@ public extension PaymentSheet {
                 case floatingButton
             }
             
-            /// The display style of the Embedded Mobile Payment Element
+            /// The display style of the row
             public var style: Style = .flatWithRadio
             
             /// Additional vertical insets applied to a payment method row
