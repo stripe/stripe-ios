@@ -616,9 +616,12 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
 // MARK: - VerticalSavedPaymentMethodsViewControllerDelegate
 
 extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewControllerDelegate {
-    func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
-                     with selectedPaymentMethod: STPPaymentMethod?,
-                     latestPaymentMethods: [STPPaymentMethod]) {
+    func didComplete(
+        viewController: VerticalSavedPaymentMethodsViewController,
+        with selectedPaymentMethod: STPPaymentMethod?,
+        latestPaymentMethods: [STPPaymentMethod],
+        didTapToDismiss: Bool
+    ) {
         // Update our list of saved payment methods to be the latest from the manage screen in case of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
         var selection: VerticalPaymentMethodListSelection?
@@ -627,11 +630,12 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         }
         regenerateUI(updatedListSelection: selection)
 
-        _ = viewController.bottomSheetController?.popContentViewController()
-    }
-
-    func shouldClose() {
-        didTapOrSwipeToDismiss()
+        if didTapToDismiss {
+            // Dismiss the entire sheet
+            didCancel()
+        } else {
+            _ = viewController.bottomSheetController?.popContentViewController()
+        }
     }
 }
 
