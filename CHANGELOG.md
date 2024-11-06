@@ -1,5 +1,4 @@
-
-	## x.x.x yyyy-yy-yy
+## x.x.x yyyy-yy-yy
 ### PaymentSheet
 * [Fixed] Fixed an issue with the vertical list with 3 or more saved payment methods where tapping outside the screen sometimes drops changes that were made (e.g. removal or update of PMs).
 * [Fixed] Fixed an issue where the dialog when removing a co-branded card may show the incorrect card brand.
