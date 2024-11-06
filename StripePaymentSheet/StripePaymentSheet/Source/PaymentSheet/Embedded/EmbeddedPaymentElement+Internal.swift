@@ -114,7 +114,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodType: paymentMethodType,
-            previousPaymentOption: nil,
+            previousPaymentOption: self.formViewController?.previousPaymentOption,
             analyticsHelper: analyticsHelper,
             formCache: formCache,
             previousFormViewController: self.formViewController

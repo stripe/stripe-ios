@@ -35,7 +35,9 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 
         return EmbeddedFormViewController(
             configuration: configuration,
-            loadResult: loadResult,
+            intent: loadResult.intent,
+            elementsSession: loadResult.elementsSession,
+            savedPaymentMethods: loadResult.savedPaymentMethods,
             paymentMethodType: .stripe(paymentMethodType),
             previousPaymentOption: previousPaymentOption,
             analyticsHelper: ._testValue(),
@@ -175,6 +177,21 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 
         sut.updateMandate()
         verify(sut)
+    }
+    
+    func testPrevOption() {
+        let configuration = EmbeddedPaymentElement.Configuration(
+            formSheetAction: .confirm(completion: { _ in
+                // no-op
+            })
+        )
+        let sut = makeEmbeddedFormViewController(
+            configuration: configuration,
+            paymentMethodType: .card,
+            previousPaymentOption: .new(confirmParams: .init(params: ._testCardValue(), type: .stripe(.card)))
+        )
+
+        XCTAssertNotNil(sut.selectedPaymentOption)
     }
     
     func testDisplaysErrorAndMandate() {
