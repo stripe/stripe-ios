@@ -262,7 +262,7 @@ protocol FinancialConnectionsAPI {
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
         billingDetails: ElementsSessionContext.BillingDetails?
-    ) -> Future<FinancialConnectionsPaymentMethod>
+    ) -> Future<LinkBankPaymentMethod>
 }
 
 extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
@@ -1014,7 +1014,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         }
 
         if let billingEmail, !billingEmail.isEmpty {
-            parameters["billing_email_address"] = billingEmail
+            parameters["billing_email_address"] = billingEmail.lowercased()
         }
 
         return post(
@@ -1068,7 +1068,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
         billingDetails: ElementsSessionContext.BillingDetails?
-    ) -> Future<FinancialConnectionsPaymentMethod> {
+    ) -> Future<LinkBankPaymentMethod> {
         var parameters: [String: Any] = [
             "link": [
                 "credentials": [
@@ -1084,14 +1084,14 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 let encodedBillingDetails = try Self.encodeAsParameters(billingDetails)
                 parameters["billing_details"] = encodedBillingDetails
             } catch let error {
-                let promise = Promise<FinancialConnectionsPaymentMethod>()
+                let promise = Promise<LinkBankPaymentMethod>()
                 promise.reject(with: error)
                 return promise
             }
         }
 
         return updateAndApplyFraudDetection(to: parameters)
-            .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsPaymentMethod> in
+            .chained { [weak self] parametersWithTelemetry -> Future<LinkBankPaymentMethod> in
                 guard let self else {
                     return Promise(
                         error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated.")

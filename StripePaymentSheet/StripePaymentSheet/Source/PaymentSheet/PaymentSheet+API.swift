@@ -148,16 +148,6 @@ extension PaymentSheet {
                     paymentIntent: paymentIntent,
                     configuration: configuration
                 )
-                if case .new(let confirmParams) = paymentOption {
-                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
-                        params.paymentMethodId = paymentMethodId
-                        params.paymentMethodParams = nil
-
-                        if paymentIntent.isSetupFutureUsageSet {
-                            params.mandateData = STPMandateDataParams.makeWithInferredValues()
-                        }
-                    }
-                }
                 paymentHandler.confirmPayment(
                     params,
                     with: authenticationContext,
@@ -179,13 +169,6 @@ extension PaymentSheet {
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
-                if case .new(let confirmParams) = paymentOption {
-                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
-                        setupIntentParams.paymentMethodID = paymentMethodId
-                        setupIntentParams.paymentMethodParams = nil
-                        setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
-                    }
-                }
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,

@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Legg til betalingsmetode";
 
+"Add bank account" = "Legg til bankkonto";
+
 "Add card" = "Legg til kort";
 
 "Add new card" = "Legg til nytt kort";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Legg til betalingsinformasjon";
 
 "Approve payment" = "Godkjenn betaling";
+
+"Are you sure you want to remove this card?" = "Er du sikker på at du vil fjerne dette kortet?";
+
+"Are you sure you want to remove this linked account?" = "Er du sikker på at du vil fjerne denne tilkoblede kontoen?";
 
 "Back" = "Tilbake";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Avbryt og betal på en annen måte";
 
+"Change email" = "Endre e-post";
+
 "Choose a payment method" = "Velg en betalingsmetode";
 
 "Close card scanner" = "Lukk kortskanner";
+
+"Code sent" = "Kode sendt";
 
 "Confirm" = "Bekreft";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Kontaktinformasjon";
 
+"Default" = "Standard";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Skriv inn koden sendt til %@ for å bruke Link til å betale som standard.";
+
+"Enter your verification code" = "Skriv inn verifiseringskoden";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "For sikkerhets skyld må du skrive inn sikkerhetskoden for kortet ditt på nytt.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg forstår at Stripe vil direktedebitere på vegne av %@ og bekrefter at jeg er kontoinnehaver og den eneste personen som må godkjenne debiteringer fra denne kontoen.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Bli med i Link";
+
+"Log out of Link" = "Logg ut av Link";
 
 "Manage payment method" = "Administrer betalingsmetode";
 
@@ -101,6 +123,8 @@
 "New card" = "Nytt kort";
 
 "New payment method" = "Ny betalingsmetode";
+
+"Not %@?" = "Er du ikke %@?";
 
 "Open your UPI app to approve your payment within %@" = "Åpne UPI-appen for å godkjenne betalingen innen %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Betal med bankkontoen din med noen få trinn.";
 
+"Payment" = "Betaling";
+
 "Payment failed" = "Betaling mislyktes";
+
+"Payment methods" = "Betalingsmetoder";
 
 "Please go back and select another payment method" = "Gå tilbake og velg en annen betalingsmetode";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Vil du fjerne kortet?";
 
+"Remove linked account" = "Fjern tilkoblet konto";
+
 "Remove payment method" = "Fjern betalingsmetode";
+
+"Resend code" = "Send koden på nytt";
 
 "Save" = "Lagre";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Lagret";
 
+"Secure 1⁠-⁠click checkout" = "Sikker 1-klikk-utsjekking";
+
 "Select card" = "Velg kort";
 
 "Select payment method" = "Velg betalingsmetode";
 
 "Select your payment method" = "Velg betalingsmetode";
 
+"Set as default" = "Angi som standard";
+
+"Set as default payment method" = "Angi som standard betalingsmetode";
+
 "Set up" = "Konfigurer";
 
 "Shipping to %@ is not supported." = "Levering til %@ støttes ikke.";
 
 "Show menu" = "Vis meny";
+
+"Sign in to your Link account" = "Logg inn på Link-kontoen din";
 
 "Simple, secure one-click payments" = "Enkle, trygge betalinger med ett klikk";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sette inn et innskudd på USD 0,01 på kontoen din innen 1–2 virkedager. Deretter vil du få en e-post med instruksjoner for å fullføre betalingen til %@.";
 
+"Tap to close" = "Trykk for å lukke";
+
+"Tap to expand" = "Trykk for å utvide";
+
 "The IBAN you entered is incomplete." = "IBAN-nummeret du la inn er ufullstendig.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN-nummeret du la inn er ugyldig, «%@» er ikke en gyldig landskode.";
 
+"The provided verification code has expired." = "Den oppgitte verifiseringskoden er utløpt.";
+
+"The provided verification code is incorrect." = "Den oppgitte verifiseringskoden er ikke korrekt.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Dette kortet er utløpt. Oppdater kortinformasjonen eller velg en annen betalingsmetode.";
+
+"This is your default" = "Dette er standarden din";
+
+"Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om noen få minutter.";
+
+"Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";
+
 "Update" = "Oppdater";
 
+"Update card" = "Oppdater kort";
+
 "Update card brand" = "Oppdater kortmerke";
+
+"Use your saved info to check out faster" = "Bruk den lagrede informasjonen din til å betale raskere";
 
 "View more" = "Se mer";
 

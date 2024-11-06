@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Fizetési mód hozzáadása";
 
+"Add bank account" = "Bankszámla hozzáadása";
+
 "Add card" = "Kártya hozzáadása";
 
 "Add new card" = "Új kártya hozzáadása";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Fizetési adatok megadása";
 
 "Approve payment" = "Fizetés jóváhagyása";
+
+"Are you sure you want to remove this card?" = "Biztosan törli ezt a kártyát?";
+
+"Are you sure you want to remove this linked account?" = "Biztosan törli ezt a kapcsolt számlát?";
 
 "Back" = "Vissza";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Szakítsa meg, és fizessen más módon";
 
+"Change email" = "E-mail-cím módosítása";
+
 "Choose a payment method" = "Fizetési mód választása";
 
 "Close card scanner" = "Kártyabeolvasó bezárása";
+
+"Code sent" = "Kód elküldve";
 
 "Confirm" = "Megerősítés";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Kapcsolattartási adatok";
 
+"Default" = "Alapértelmezett";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Cím megadása kézzel";
 
+"Enter the code sent to %@ to use Link to pay by default." = "A Link alapértelmezett fizetési módként történő használatához adja meg a(z) %@ számra küldött kódot";
+
+"Enter your verification code" = "Adja meg az ellenőrző kódot";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Biztonsági okból adja meg újra kártyája biztonsági kódját.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tudomásul veszem, hogy a Stripe beszedéseket végez a(z) %@ nevében, és megerősítem, hogy én vagyok a számla tulajdonosa és az egyetlen személy, aki a terheléseket engedélyezheti erről a számláról.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Csatlakozás a Linkhez";
+
+"Log out of Link" = "Kijelentkezés a Link";
 
 "Manage payment method" = "Fizetési mód kezelése";
 
@@ -101,6 +123,8 @@
 "New card" = "Új kártya";
 
 "New payment method" = "Új fizetési mód";
+
+"Not %@?" = "Nem a(z) %@?";
 
 "Open your UPI app to approve your payment within %@" = "Nyissa meg az UPI-alkalmazását a fizetés jóváhagyásához %@ belül";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Fizessen egyszerűen a bankszámlájával.";
 
+"Payment" = "Fizetés";
+
 "Payment failed" = "A fizetés nem sikerült";
+
+"Payment methods" = "Fizetési módok";
 
 "Please go back and select another payment method" = "Lépjen vissza, és válasszon másik fizetési módot";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Kártya eltávolítása?";
 
+"Remove linked account" = "Kapcsolt számla törlése";
+
 "Remove payment method" = "Fizetés mód eltávolítása";
+
+"Resend code" = "Kód újraküldése";
 
 "Save" = "Mentés";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Mentett";
 
+"Secure 1⁠-⁠click checkout" = "Biztonságos egykattintásos fizetés";
+
 "Select card" = "Kártya kiválasztása";
 
 "Select payment method" = "Fizetési mód választása";
 
 "Select your payment method" = "Fizetési mód kiválasztása";
 
+"Set as default" = "Legyen alapértelmezett";
+
+"Set as default payment method" = "Legyen ez az alapértelmezett fizetési mód";
+
 "Set up" = "Beállítás";
 
 "Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
 
 "Show menu" = "Menü megjelenítése";
+
+"Sign in to your Link account" = "Bejelentkezés a Link-fiókba";
 
 "Simple, secure one-click payments" = "Egyszerű, biztonságos, egykattintásos fizetés";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe néhány munkanapon belül egy 0,01 $ összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a fizetés befejezéséhez a(z) %@ felé.";
 
+"Tap to close" = "Koppintson a bezáráshoz";
+
+"Tap to expand" = "Koppintson a kinyitáshoz";
+
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A beírt IBAN-szám érvénytelen, a(z) „%@” nem támogatott országkód.";
 
+"The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
+
+"The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Ez a kártya lejárt. Frissítse a kártyájat, vagy használjon másik fizetési módot.";
+
+"This is your default" = "Ez az alapértelmezett";
+
+"Too many attempts. Please try again in a few minutes." = "Túl sok kísérlet. Próbálja meg újra néhány perc múlva.";
+
+"Unavailable for this purchase" = "Nem érhető el ennél a vásárlásnál";
+
 "Update" = "Frissítés";
 
+"Update card" = "Kártya módosítása";
+
 "Update card brand" = "Kártya márkájának frissítése";
+
+"Use your saved info to check out faster" = "Mentett adatok használata a gyorsabb fizetéshez";
 
 "View more" = "Továbbiak megjelenítése";
 

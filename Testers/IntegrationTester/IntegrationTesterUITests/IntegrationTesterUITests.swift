@@ -217,10 +217,10 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
 
         // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open:
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        springboard.buttons["Continue"].tap()
+        springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 3)
 
         // This is where we'd fill out Klarna's forms, but we'll just cancel for now
-        app.buttons["Cancel"].tap()
+        app.buttons["Cancel"].waitForExistenceAndTap(timeout: 3)
 
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
@@ -403,25 +403,5 @@ class IntegrationTesterUITests: XCTestCase {
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
-    }
-}
-
-// There seems to be an issue with our SwiftUI buttons - XCTest fails to scroll to the button's position.
-// Work around this by targeting a coordinate inside the button.
-// https://stackoverflow.com/questions/33422681/xcode-ui-test-ui-testing-failure-failed-to-scroll-to-visible-by-ax-action
-extension XCUIElement {
-    func forceTapElement() {
-        // Tap the middle of the element.
-        // (Sometimes the edges of rounded buttons aren't tappable in certain web elements.)
-        let coordinate: XCUICoordinate = self.coordinate(
-            withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        coordinate.tap()
-    }
-
-    func scrollToAndTap(in app: XCUIApplication) {
-        while !self.exists {
-            app.swipeUp()
-        }
-        self.tap()
     }
 }

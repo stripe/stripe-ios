@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Ödeme yöntemi ekle";
 
+"Add bank account" = "Banka hesabı ekle";
+
 "Add card" = "Kart ekle";
 
 "Add new card" = "Yeni kart ekle";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Ödeme bilgilerinizi ekleyin";
 
 "Approve payment" = "Ödemeyi onaylayın";
+
+"Are you sure you want to remove this card?" = "Bu kartı kaldırmak istediğinizden emin misiniz?";
+
+"Are you sure you want to remove this linked account?" = "Bu bağlı hesabı kaldırmak istediğinizden emin misiniz?";
 
 "Back" = "Geri";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "İptal edip başka bir yöntemle ödeyin";
 
+"Change email" = "E-posta adresini değiştir";
+
 "Choose a payment method" = "Yeni bir ödeme yöntemi seçin";
 
 "Close card scanner" = "Kart tarayıcısını kapat";
+
+"Code sent" = "Kod gönderildi";
 
 "Confirm" = "Onayla";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "İletişim bilgileri";
 
+"Default" = "Varsayılan";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Adresi manuel olarak girin";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Ödemenizde varsayılan olarak Link'i kullanmak için %@ numaralı telefona gönderilen kodu girin";
+
+"Enter your verification code" = "Doğrulama kodunuzu girin";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Güvenliğinizin sağlanması için lütfen kartınızın güvenlik kodunu tekrar girin.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Link'e katıl";
+
+"Log out of Link" = "Link'ten çıkış yap";
 
 "Manage payment method" = "Ödeme yöntemini yönetin";
 
@@ -101,6 +123,8 @@
 "New card" = "Yeni kart";
 
 "New payment method" = "Yeni ödeme yöntemi";
+
+"Not %@?" = "%@ doğru değil mi?";
 
 "Open your UPI app to approve your payment within %@" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Sadece birkaç adımda banka hesabınız ile ödeyin.";
 
+"Payment" = "Ödeme";
+
 "Payment failed" = "Ödeme başarısız oldu";
+
+"Payment methods" = "Ödeme yöntemleri";
 
 "Please go back and select another payment method" = "Lütfen geri gidip başka bir ödeme yöntemi seçin";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Kart kaldırılsın mı?";
 
+"Remove linked account" = "Bağlı hesabı kaldır";
+
 "Remove payment method" = "Ödeme yöntemini kaldır";
+
+"Resend code" = "Kodu tekrar gönder";
 
 "Save" = "Kaydet";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Kaydedildi";
 
+"Secure 1⁠-⁠click checkout" = "Tek tıklamayla güvenli ödeme";
+
 "Select card" = "Kart seçin";
 
 "Select payment method" = "Ödeme yöntemini seçin";
 
 "Select your payment method" = "Ödeme yönteminizi seçin";
 
+"Set as default" = "Varsayılan olarak ayarla";
+
+"Set as default payment method" = "Varsayılan ödeme yöntemi olarak ayarla";
+
 "Set up" = "Ayarla";
 
 "Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
 
 "Show menu" = "Menüyü göster";
+
+"Sign in to your Link account" = "Link hesabınızda oturum açın";
 
 "Simple, secure one-click payments" = "Tek tıkla basit ve güvenli ödemeler";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe, 1-2 iş günü içinde hesabınıza 0,01 ABD doları yatıracaktır. Ardından, %@ ödemesini tamamlama talimatlarını içeren bir e-posta alacaksınız.";
 
+"Tap to close" = "Kapatmak için dokunun";
+
+"Tap to expand" = "Genişletmek için dokunun";
+
 "The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Girdiğiniz IBAN geçersiz. \"%@\" desteklenen bir ülke kodu değil.";
 
+"The provided verification code has expired." = "Sağlanan doğrulama kodunun süresi dolmuş.";
+
+"The provided verification code is incorrect." = "Sağlanan doğrulama kodu yanlış.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Bu kartın süresi dolmuş. Kart bilgileirnizi güncelleyin veya farklı bir ödeme yöntemi seçin.";
+
+"This is your default" = "Bu varsayılan ödeme yönteminizdir";
+
+"Too many attempts. Please try again in a few minutes." = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
+
+"Unavailable for this purchase" = "Bu satın alım için kullanılamaz";
+
 "Update" = "Güncelle";
 
+"Update card" = "Kartı güncelle";
+
 "Update card brand" = "Kart markasını güncelle";
+
+"Use your saved info to check out faster" = "Kayıtlı bilgilerinizi kullanarak daha hızlı ödeme yapabilirsiniz";
 
 "View more" = "Daha fazla göster";
 

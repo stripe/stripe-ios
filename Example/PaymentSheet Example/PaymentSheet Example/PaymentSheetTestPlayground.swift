@@ -44,6 +44,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.requireCVCRecollection)
         SettingView(setting: $playgroundController.settings.autoreload)
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
+        SettingView(setting: $playgroundController.settings.instantDebitsInDeferredIntents)
     }
 
     var body: some View {
@@ -278,6 +279,14 @@ extension View {
     }
 }
 
+struct EmbeddedSettingsView: View {
+    @EnvironmentObject var playgroundController: PlaygroundController
+
+    var body: some View {
+        SettingView(setting: $playgroundController.settings.mode)
+    }
+}
+
 @available(iOS 14.0, *)
 struct PaymentSheetButtons: View {
     @EnvironmentObject var playgroundController: PlaygroundController
@@ -294,7 +303,7 @@ struct PaymentSheetButtons: View {
     // We build the settings view here, rather than in EPVC, so that it can easily update the PI/SI like all other settings and ensure the PI/SI is up to date when it's eventually used at confirm-time
     @ViewBuilder
     var embeddedSettingsView: some View {
-        SettingView(setting: $playgroundController.settings.mode)
+        EmbeddedSettingsView()
     }
 
     var titleAndReloadView: some View {
@@ -399,7 +408,9 @@ struct PaymentSheetButtons: View {
                         HStack {
                             Button {
                                 embeddedIsPresented = true
-                                playgroundController.presentEmbedded(settingsView: embeddedSettingsView)
+                                playgroundController.presentEmbedded(settingsView: {
+                                    embeddedSettingsView.environmentObject(playgroundController)
+                                })
                             } label: {
                                 Text("Present embedded payment element")
                             }

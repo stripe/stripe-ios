@@ -11,11 +11,13 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol UpdateCardViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdateCardViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws
+    func didDismiss(viewController: UpdateCardViewController)
 }
 
 /// For internal SDK use only
@@ -43,7 +45,7 @@ final class UpdateCardViewController: UIViewController {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: appearance)
         navBar.delegate = self
-        navBar.setStyle(.back(showAdditionalButton: false))
+        navBar.setStyle(navigationBarStyle())
         return navBar
     }()
 
@@ -172,6 +174,16 @@ final class UpdateCardViewController: UIViewController {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
+        delegate?.didDismiss(viewController: self)
+    }
+
+    private func navigationBarStyle() -> SheetNavigationBar.Style {
+        if let bottomSheet = self.bottomSheetController,
+           bottomSheet.contentStack.count > 1 {
+            return .back(showAdditionalButton: false)
+        } else {
+            return .close(showAdditionalButton: false)
+        }
     }
 
     @objc private func removeCard() {
@@ -207,7 +219,6 @@ final class UpdateCardViewController: UIViewController {
                                                                  error: error,
                                                                  params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         }
-
         view.isUserInteractionEnabled = true
     }
 

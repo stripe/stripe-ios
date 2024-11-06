@@ -556,4 +556,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewCon
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
+    func didDismiss(viewController: UpdateCardViewController) {
+        // No-op
+    }
 }

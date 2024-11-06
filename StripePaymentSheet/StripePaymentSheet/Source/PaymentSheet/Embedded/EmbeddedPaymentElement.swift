@@ -150,7 +150,9 @@ public final class EmbeddedPaymentElement {
             }
             // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             let oldPaymentOption = self.paymentOption
-            self.loadResult = loadResult
+            self.savedPaymentMethods = loadResult.savedPaymentMethods
+            self.elementsSession = loadResult.elementsSession
+            self.intent = loadResult.intent
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
             if oldPaymentOption != self.paymentOption {
@@ -193,9 +195,11 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) var containerView: EmbeddedPaymentElementContainerView
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
-    internal private(set) var loadResult: PaymentSheetLoader.LoadResult
+    internal private(set) var elementsSession: STPElementsSession
+    internal private(set) var intent: Intent
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
-    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
+    internal var savedPaymentMethods: [STPPaymentMethod]
     internal var _paymentOption: PaymentOption? {
         // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.
         // TODO: Handle CVC recollection
@@ -221,6 +225,9 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
+    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+    }()
 
     private init(
         configuration: Configuration,
@@ -228,7 +235,9 @@ public final class EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
-        self.loadResult = loadResult
+        self.elementsSession = loadResult.elementsSession
+        self.savedPaymentMethods = loadResult.savedPaymentMethods
+        self.intent = loadResult.intent
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,

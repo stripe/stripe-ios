@@ -274,7 +274,7 @@ class PlaygroundController: ObservableObject {
     }
 
     var addressConfiguration: AddressViewController.Configuration {
-        var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
+        var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: appearance)
         if case .onWithDefaults = settings.shippingInfo {
             configuration.defaultValues = .init(
                 address: .init(
@@ -337,7 +337,7 @@ class PlaygroundController: ObservableObject {
         case .new:
             return customerId ?? "new"
         case .returning:
-            return "returning"
+            return customerId ?? "returning"
         }
     }
 
@@ -438,6 +438,10 @@ class PlaygroundController: ObservableObject {
             } else {
                 self.ambiguousViewTimer?.invalidate()
             }
+
+            // Hack to enable Instant Debits with deferred intents
+            let enableInstantDebitsInDeferredIntents = newValue.instantDebitsInDeferredIntents == .on
+            UserDefaults.standard.set(enableInstantDebitsInDeferredIntents, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_DEFERRED_INTENTS")
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -493,7 +497,7 @@ class PlaygroundController: ObservableObject {
             let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
                 self.appearance = updatedAppearance
                 self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load()
+                self.load(reinitializeControllers: true)
             }))
 
             rootViewController.present(vc, animated: true, completion: nil)
@@ -948,18 +952,15 @@ extension PlaygroundController {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
             intentConfig: intentConfig,
-            appearance: appearance
+            playgroundController: self
         )
     }
 
-    func presentEmbedded(settingsView: some View) {
+    func presentEmbedded<SettingsView: View>(settingsView: @escaping () -> SettingsView) {
         guard let embeddedPlaygroundViewController else { return }
 
         // Include settings view
-        let hostingController = UIHostingController(rootView: settingsView)
-        embeddedPlaygroundViewController.addChild(hostingController)
-        hostingController.didMove(toParent: rootViewController)
-        embeddedPlaygroundViewController.setSettingsView(hostingController.view)
+        embeddedPlaygroundViewController.setSettingsView(settingsView)
 
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
         embeddedPlaygroundViewController.navigationItem.leftBarButtonItem = closeButton

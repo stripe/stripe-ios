@@ -16,25 +16,38 @@ import UIKit
         NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
         as? FinancialConnectionsSDKInterface.Type
 
-    static let isUnitOrUITest: Bool = {
+    static let isUnitTest: Bool = {
         #if targetEnvironment(simulator)
-        let useProductionSDK = ProcessInfo.processInfo.environment["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK"] == "true"
-        return !useProductionSDK && (NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil)
+        return NSClassFromString("XCTest") != nil
         #else
             return false
         #endif
     }()
 
+    static let isUITest: Bool = {
+        #if targetEnvironment(simulator)
+        return ProcessInfo.processInfo.environment["UITesting"] != nil
+        #else
+            return false
+        #endif
+    }()
+
+    // Return true for unit tests, the value of `FinancialConnectionsSDKAvailable` for UI tests,
+    // and whether or not the Financial Connections SDK is available otherwise.
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
-        // return true for tests
-        if isUnitOrUITest {
+        if isUnitTest {
             return true
+        } else if isUITest {
+            let financialConnectionsSDKAvailable = ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
+            return financialConnectionsSDKAvailable
+        } else {
+            return FinancialConnectionsSDKClass != nil
         }
-        return FinancialConnectionsSDKClass != nil
     }
 
     static func financialConnections() -> FinancialConnectionsSDKInterface? {
-        if isUnitOrUITest {
+        let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
+        if isUnitTest || (isUITest && financialConnectionsStubbedResult) {
             return StubbedConnectionsSDKInterface()
         }
 

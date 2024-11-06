@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Agregar un método de pago";
 
+"Add bank account" = "Agregar cuenta bancaria";
+
 "Add card" = "Agregar tarjeta";
 
 "Add new card" = "Agrega una nueva tarjeta";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Agrega la información de pago";
 
 "Approve payment" = "Aprobar pago";
+
+"Are you sure you want to remove this card?" = "¿Deseas quitar esta tarjeta?";
+
+"Are you sure you want to remove this linked account?" = "¿Deseas quitar esta cuenta vinculada?";
 
 "Back" = "Atrás";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Cancelar y pagar por otra vía";
 
+"Change email" = "Cambiar correo electrónico";
+
 "Choose a payment method" = "Elegir un método de pago";
 
 "Close card scanner" = "Cerrar escáner de tarjetas";
+
+"Code sent" = "Código enviado";
 
 "Confirm" = "Confirmar";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Información de contacto";
 
+"Default" = "Predeterminado";
+
 "EPS Bank" = "Banco que opera con EPS";
 
 "Enter address manually" = "Ingresar dirección manualmente";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Ingresa el código enviado al %@ para utilizar Link como método de pago predeterminado.";
+
+"Enter your verification code" = "Ingresa el código de verificación";
+
 "FPX Bank" = "Banco para FPX";
+
+"For security, please re-enter your card’s security code." = "Por razones de seguridad, vuelve a ingresar el código de seguridad de tu tarjeta.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entiendo que Stripe cobrará débitos directos en nombre de %@ y confirmo que soy el titular de la cuenta y la única persona que se requiere que autorice los débitos a esta cuenta.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Únete a Link";
+
+"Log out of Link" = "Cerrar sesión de Link";
 
 "Manage payment method" = "Gestionar el método de pago";
 
@@ -101,6 +123,8 @@
 "New card" = "Nueva tarjeta";
 
 "New payment method" = "Nuevo método de pago";
+
+"Not %@?" = "¿No eres %@?";
 
 "Open your UPI app to approve your payment within %@" = "Abre tu aplicación UPI para aprobar tu pago en el plazo de %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Paga con tu cuenta bancaria en unos pocos pasos.";
 
+"Payment" = "Pago";
+
 "Payment failed" = "Error en el pago";
+
+"Payment methods" = "Métodos de pago";
 
 "Please go back and select another payment method" = "Regresa y selecciona otro método de pago";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "¿Deseas eliminar la tarjeta?";
 
+"Remove linked account" = "Eliminar cuenta vinculada";
+
 "Remove payment method" = "Elimina el método de pago";
+
+"Resend code" = "Reenviar código";
 
 "Save" = "Guardar";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Guardado";
 
+"Secure 1⁠-⁠click checkout" = "Pago seguro en un click";
+
 "Select card" = "Selecciona la tarjeta";
 
 "Select payment method" = "Selecciona el método de pago";
 
 "Select your payment method" = "Selecciona el método de pago";
 
+"Set as default" = "Establecer como valor predeterminado";
+
+"Set as default payment method" = "Establecer como método de pago predeterminado";
+
 "Set up" = "Configurar";
 
 "Shipping to %@ is not supported." = "No se aceptan envíos a %@.";
 
 "Show menu" = "Mostrar menú";
+
+"Sign in to your Link account" = "Inicia sesión en tu cuenta de Link";
 
 "Simple, secure one-click payments" = "Pagos seguros y sencillos en un clic";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe depositará $0.01 en tu cuenta dentro de 1 o 2 días hábiles. Luego, recibirás un correo electrónico con instrucciones para completar el pago de %@.";
 
+"Tap to close" = "Pulsa para cerrar";
+
+"Tap to expand" = "Pulsa para expandir";
+
 "The IBAN you entered is incomplete." = "El IBAN que ingresaste está incompleto.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "El Código Internacional de Cuenta Bancaria (IBAN) que introdujiste no es válido: \"%@\" no es un código de país admitido.";
 
+"The provided verification code has expired." = "El código de verificación suministrado está vencido.";
+
+"The provided verification code is incorrect." = "El código de verificación proporcionado es incorrecto.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Esta tarjeta se venció. Actualiza los datos de la tarjeta o elige un método de pago diferente.";
+
+"This is your default" = "Tu método predeterminado";
+
+"Too many attempts. Please try again in a few minutes." = "Se hicieron demasiados intentos. Vuelve a intentarlo en unos minutos.";
+
+"Unavailable for this purchase" = "No disponible para esta compra";
+
 "Update" = "Actualizar";
 
+"Update card" = "Actualizar tarjeta";
+
 "Update card brand" = "Actualiza la marca de la tarjeta";
+
+"Use your saved info to check out faster" = "Utiliza la información guardada para finalizar la compra más rápido";
 
 "View more" = "Ver más";
 
