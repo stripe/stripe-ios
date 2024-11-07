@@ -134,7 +134,7 @@ public final class EmbeddedPaymentElement {
                 formViewController = EmbeddedFormViewController(configuration: configuration,
                                                                 intent: loadResult.intent,
                                                                 elementsSession: loadResult.elementsSession,
-                                                                savedPaymentMethods: loadResult.savedPaymentMethods,
+                                                                shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
                                                                 paymentMethodType: formPaymentMethodType,
                                                                 previousPaymentOption: self?.formViewController?.selectedPaymentOption,
                                                                 analyticsHelper: analyticsHelper)
