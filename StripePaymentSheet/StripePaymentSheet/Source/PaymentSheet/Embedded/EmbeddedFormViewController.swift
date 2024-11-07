@@ -173,7 +173,7 @@ class EmbeddedFormViewController: UIViewController {
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
-        
+
         super.init(nibName: nil, bundle: nil)
 
         add(childViewController: paymentMethodFormViewController, containerView: paymentContainerView)

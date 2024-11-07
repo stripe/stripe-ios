@@ -93,6 +93,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func selectionWasTapped(didUpdate: Bool) {
+        // Defer notifying delegate until we are about to exit this function to give time to either allow the new payment option to come from
+        // The new `EmbeddedFormViewController` instance if needed
         defer {
             if didUpdate {
                 delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
@@ -100,6 +102,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
         
         guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
+            // This can occur when selection is being reset to nothing selected, so don't assert.
             return
         }
 
@@ -108,7 +111,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             return
         }
 
-        let embeddedFormVC = EmbeddedFormViewController(
+        let formViewController = EmbeddedFormViewController(
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -118,16 +121,16 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             analyticsHelper: analyticsHelper,
             formCache: formCache
         )
-        embeddedFormVC.delegate = self
+        formViewController.delegate = self
 
         // Only show forms that require user input
-        guard embeddedFormVC.collectsUserInput else {
-            self.formViewController = nil
+        guard formViewController.collectsUserInput else {
+            self.formViewController = nil  // Clear out any previous form view controller to update self._paymentOption
             return
         }
 
         let bottomSheet = BottomSheetViewController(
-            contentViewController: embeddedFormVC,
+            contentViewController: formViewController,
             appearance: configuration.appearance,
             isTestMode: configuration.apiClient.isTestmode,
             didCancelNative3DS2: {
@@ -137,7 +140,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         presentingVC.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
-        self.formViewController = embeddedFormVC
+        self.formViewController = formViewController
     }
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
         // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
@@ -293,9 +296,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
     
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        if formViewController?.selectedPaymentOption == nil {
-            embeddedPaymentMethodsView.resetSelectionToLastSelection()
-        }
+        embeddedPaymentMethodsView.resetSelectionToLastSelection()
         embeddedFormViewController.dismiss(animated: true)
     }
     

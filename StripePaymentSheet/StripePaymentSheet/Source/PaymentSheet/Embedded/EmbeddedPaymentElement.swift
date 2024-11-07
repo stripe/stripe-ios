@@ -147,7 +147,7 @@ public final class EmbeddedPaymentElement {
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                previousPaymentOption: formViewController != nil ? formViewController?.selectedPaymentOption : self?._paymentOption,
+                previousPaymentOption: formViewController != nil ? formViewController?.selectedPaymentOption : self?._paymentOption, // Use the possibly new payment option from the formVC if it exists, self?._paymentOption is not yet updated with the new formVC
                 delegate: self
             )
             
