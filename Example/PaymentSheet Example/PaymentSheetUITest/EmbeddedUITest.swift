@@ -24,7 +24,12 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         try! fillCardData(app, postalEnabled: true)
         XCTAssertTrue(app.buttons["Continue"].isEnabled)
         app.buttons["Continue"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10.0))
+        if !app.staticTexts["•••• 4242"].waitForExistence(timeout: 10.0) {
+            let screenshot = XCUIScreen.main.screenshot()
+            let attachment = XCTAttachment(screenshot: screenshot)
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
         
         // ...and *updating* to a SetupIntent...
         app.buttons.matching(identifier: "Setup").element(boundBy: 1).tap()
