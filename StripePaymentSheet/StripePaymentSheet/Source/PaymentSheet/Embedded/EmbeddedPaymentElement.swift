@@ -141,12 +141,17 @@ public final class EmbeddedPaymentElement {
                 
             }
             
+            // Preserve the previously selected payment option when a new form view controller is created.
+            // Since `_paymentOption` depends on `self.formViewController`, it might be outdated before updating `self.formViewController`.
+            // Use the selected payment option from the new `formViewController` if available, otherwise fallback to `_paymentOption`.
+            let previousPaymentOption = formViewController != nil ? formViewController?.selectedPaymentOption : self?._paymentOption
+            
             // 2.4 Re-initialize embedded view to update the UI to match the newly loaded data.
             let embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                previousPaymentOption: formViewController != nil ? formViewController?.selectedPaymentOption : self?._paymentOption, // Use the possibly new payment option from the formVC if it exists, self?._paymentOption is not yet updated with the new formVC
+                previousPaymentOption: previousPaymentOption,
                 delegate: self
             )
             
