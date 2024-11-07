@@ -16,12 +16,14 @@ class PopupWebViewController: ConnectWebViewController {
     private var titleObserver: NSKeyValueObservation?
 
     init(configuration: WKWebViewConfiguration,
+         analyticsClient: ComponentAnalyticsClient,
          navigationAction: WKNavigationAction,
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
         super.init(configuration: configuration,
-                        urlOpener: urlOpener,
-                        sdkVersion: sdkVersion)
+                   analyticsClient: analyticsClient,
+                   urlOpener: urlOpener,
+                   sdkVersion: sdkVersion)
         webView.load(navigationAction.request)
 
         // Keep navbar title in sync with web view

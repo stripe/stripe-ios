@@ -28,16 +28,12 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NS
         do {
             let payload: Payload = try message.toDecodable()
             let value = try await didReceiveMessage(payload)
-            let responseData = try JSONEncoder.connectEncoder.encode(value)
 
-            guard let response = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) else {
-                return (nil, "Failed to encode response")
-            }
-
+            let response = try value.jsonObject(with: .connectEncoder)
             return (response, nil)
         } catch {
-            debugPrint("Error processing message: \((error as NSError).debugDescription)")
-            return (nil, (error as NSError).debugDescription)
+            debugPrint("Error processing message: \(error.localizedDescription)")
+            return (nil, error.localizedDescription)
         }
     }
 }

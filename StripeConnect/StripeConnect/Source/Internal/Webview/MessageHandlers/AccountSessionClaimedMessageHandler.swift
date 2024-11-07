@@ -13,7 +13,10 @@ class AccountSessionClaimedMessageHandler: ScriptMessageHandler<AccountSessionCl
         /// The connected account ID
         let merchantId: String
     }
-    init(didReceiveMessage: @escaping (Payload) -> Void) {
-        super.init(name: "accountSessionClaimed", didReceiveMessage: didReceiveMessage)
+    init(analyticsClient: ComponentAnalyticsClient,
+         didReceiveMessage: @escaping (Payload) -> Void) {
+        super.init(name: "accountSessionClaimed",
+                   analyticsClient: analyticsClient,
+                   didReceiveMessage: didReceiveMessage)
     }
 }

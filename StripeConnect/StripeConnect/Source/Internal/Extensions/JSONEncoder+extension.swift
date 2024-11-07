@@ -8,10 +8,19 @@
 import Foundation
 
 extension JSONEncoder {
-    static var connectEncoder: JSONEncoder {
+    /// Encoder used for JS Messaging and URL param encoding
+    static let connectEncoder: JSONEncoder = {
         let encoder = JSONEncoder()
         // Ensure keys are sorted for test stability.
         encoder.outputFormatting = .sortedKeys
         return encoder
-    }
+    }()
+
+    /// Encoder used for analytics
+    static let analyticsEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.dateEncodingStrategy = .secondsSince1970
+        return encoder
+    }()
 }

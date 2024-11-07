@@ -28,7 +28,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     /// Manages authenticated web views
     private let authenticatedWebViewManager: AuthenticatedWebViewManager
 
-    private let setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init()
+    private lazy var setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init(analyticsClient: analyticsClient)
 
     private var didFailLoadWithError: (Error) -> Void
 
@@ -46,6 +46,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         fetchInitProps: @escaping () -> InitProps,
         didFailLoadWithError: @escaping (Error) -> Void,
         // Should only be overridden for tests
+        analyticsClient aClient: AnalyticsClientV2Protocol = AnalyticsClientV2.sharedConnect,
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
         authenticatedWebViewManager: AuthenticatedWebViewManager = .init()
@@ -66,7 +67,16 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         // embedded YouTube videos.
         config.allowsInlineMediaPlayback = true
 
-        super.init(configuration: config)
+        super.init(
+            configuration: config,
+            analyticsClient: ComponentAnalyticsClient(
+                client: aClient,
+                commonFields: .init(
+                    apiClient: componentManager.apiClient,
+                    component: componentType
+                )
+            )
+        )
 
         // Setup views
         webView.addSubview(activityIndicator)
@@ -83,11 +93,19 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         addMessageHandlers(fetchInitProps: fetchInitProps)
         addNotificationObservers()
 
+        // Log created event
+        analyticsClient.log(event: ComponentCreatedEvent())
+
         // Load the web page
         if loadContent {
             activityIndicator.startAnimating()
-            let url = ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url
-            webView.load(.init(url: url))
+            do {
+                let url = try ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url()
+                analyticsClient.loadStart = .now
+                webView.load(.init(url: url))
+            } catch {
+                showAlertAndLog(error: error)
+            }
         }
     }
 
@@ -123,19 +141,41 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsClient.logComponentViewed(viewedAt: .now)
+    }
+
     // MARK: - ConnectWebViewController
+
+    override func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        super.webView(webView, didFinish: navigation)
+
+        analyticsClient.logComponentWebPageLoaded(loadEnd: .now)
+    }
 
     override func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
         super.webView(webView, didFail: navigation, withError: error)
+
         didFailLoad(error: error)
-        // TODO: MXMOBILE-2491 log error
+        analyticsClient.log(event: PageLoadErrorEvent(metadata: .init(
+            error: error,
+            url: webView.url
+        )))
     }
 
     override func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse) async -> WKNavigationResponsePolicy {
+        // If the component web page fails to load with an HTTP error, send a
+        // load failure to event
         if let response = navigationResponse.response as? HTTPURLResponse,
+           response.url?.absoluteStringRemovingParams == StripeConnectConstants.connectJSBaseURL.absoluteString,
            response.hasErrorStatus {
-            didFailLoad(error: HTTPStatusError(errorCode: response.statusCode))
-            // TODO: MXMOBILE-2491 log error
+            let error = HTTPStatusError(errorCode: response.statusCode)
+            didFailLoad(error: error)
+            analyticsClient.log(event: PageLoadErrorEvent(metadata: .init(
+                error: error,
+                url: response.url
+            )))
         }
 
         return await super.webView(webView, decidePolicyFor: navigationResponse)
@@ -164,8 +204,11 @@ extension ConnectComponentWebViewController {
 
     /// Convenience method to send messages to the webview.
     func sendMessage(_ sender: any MessageSender) {
-        if let message = sender.javascriptMessage {
+        do {
+            let message = try sender.javascriptMessage()
             webView.evaluateJavaScript(message)
+        } catch {
+            analyticsClient.logClientError(error)
         }
     }
 
@@ -184,7 +227,8 @@ private extension ConnectComponentWebViewController {
         fetchInitProps: @escaping () -> InitProps
     ) {
         addMessageHandler(setterMessageHandler)
-        addMessageHandler(OnLoaderStartMessageHandler { [activityIndicator] _ in
+        addMessageHandler(OnLoaderStartMessageHandler { [analyticsClient, activityIndicator] _ in
+            analyticsClient.logComponentLoaded(loadEnd: .now)
             activityIndicator.stopAnimating()
         })
         addMessageHandler(FetchInitParamsMessageHandler.init(didReceiveMessage: {[weak self] _ in
@@ -198,20 +242,20 @@ private extension ConnectComponentWebViewController {
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
         addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps))
-        addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
-            self?.didFailLoad(error: value.error.connectEmbedError)
+        addMessageHandler(OnLoadErrorMessageHandler { [weak self, analyticsClient] value in
+            self?.didFailLoad(error: value.error.connectEmbedError(analyticsClient: analyticsClient))
         })
-        addMessageHandler(DebugMessageHandler())
+        addMessageHandler(DebugMessageHandler(analyticsClient: analyticsClient))
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler { _ in
-            // TODO: MXMOBILE-2491 Use this for analytics
+        addMessageHandler(PageDidLoadMessageHandler(analyticsClient: analyticsClient) { [analyticsClient] payload in
+            analyticsClient.pageViewId = payload.pageViewId
         })
-        addMessageHandler(AccountSessionClaimedMessageHandler{ _ in
-            // TODO: MXMOBILE-2491 Use this for analytics
+        addMessageHandler(AccountSessionClaimedMessageHandler(analyticsClient: analyticsClient) { [analyticsClient] payload in
+            analyticsClient.merchantId = payload.merchantId
         })
-        addMessageHandler(OpenAuthenticatedWebViewMessageHandler { [weak self] payload in
+        addMessageHandler(OpenAuthenticatedWebViewMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
             self?.openAuthenticatedWebView(payload)
         })
     }
@@ -244,13 +288,15 @@ private extension ConnectComponentWebViewController {
     func openAuthenticatedWebView(_ payload: OpenAuthenticatedWebViewMessageHandler.Payload) {
         Task { @MainActor in
             do {
-                // TODO: MXMOBILE-2491 log `component.authenticated_web.*` analytic
+                analyticsClient.logAuthenticatedWebViewOpenedEvent(id: payload.id)
+
                 let returnUrl = try await authenticatedWebViewManager.present(with: payload.url, from: view)
+
+                analyticsClient.logAuthenticatedWebViewEventComplete(id: payload.id, redirected: returnUrl != nil)
 
                 sendMessage(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)))
             } catch {
-                // TODO: MXMOBILE-2491 log `component.authenticated_web.error` analytic
-                debugPrint("Error returning from authenticated web view: \(error)")
+                analyticsClient.logAuthenticatedWebViewEventComplete(id: payload.id, error: error)
             }
         }
     }

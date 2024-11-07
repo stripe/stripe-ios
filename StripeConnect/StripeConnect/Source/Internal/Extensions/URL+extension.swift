@@ -1,0 +1,20 @@
+//
+//  URL+extension.swift
+//  StripeConnect
+//
+//  Created by Mel Ludowise on 10/4/24.
+//
+
+extension URL {
+    /// Removes query and hashtag params from the absolute URL
+    var absoluteStringRemovingParams: String {
+        // Remove query params
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
+        components?.queryItems = nil
+
+        let absoluteString = components?.url?.absoluteString ?? self.absoluteString
+
+        // Remove hashtag params
+        return absoluteString.split(separator: "#").first.map(String.init) ?? ""
+    }
+}

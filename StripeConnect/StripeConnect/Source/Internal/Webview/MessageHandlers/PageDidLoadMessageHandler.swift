@@ -13,7 +13,10 @@ class PageDidLoadMessageHandler: ScriptMessageHandler<PageDidLoadMessageHandler.
         /// A unique session ID shared with web for analytics logging
         let pageViewId: String
     }
-    init(didReceiveMessage: @escaping (Payload) -> Void) {
-        super.init(name: "pageDidLoad", didReceiveMessage: didReceiveMessage)
+    init(analyticsClient: ComponentAnalyticsClient,
+         didReceiveMessage: @escaping (Payload) -> Void) {
+        super.init(name: "pageDidLoad",
+                   analyticsClient: analyticsClient,
+                   didReceiveMessage: didReceiveMessage)
     }
 }
