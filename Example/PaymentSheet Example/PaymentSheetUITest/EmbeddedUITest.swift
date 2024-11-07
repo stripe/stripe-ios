@@ -403,9 +403,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let cardNumberField = app.textFields["Card number"]
         XCTAssertEqual(cardNumberField.value as? String, "4242424242424242", "Card number field should contain the entered card number.")
         app.buttons["Close"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
-        // Select and cancel out a form PM to ensure that 4242 card is still selected
+        // Select and cancel out a form PM to ensure that the 4242 card is still selected
         app.buttons["Klarna"].waitForExistenceAndTap()
         app.buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
@@ -416,7 +417,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         
-        // FIll out US Bank Acct.
+        // Fill out US Bank Acct.
         app.buttons["US bank account"].waitForExistenceAndTap()
         // Fill out name and email fields
         let continueButton = app.buttons["Continue"]
