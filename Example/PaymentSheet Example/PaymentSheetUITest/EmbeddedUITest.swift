@@ -14,11 +14,37 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.mode = .payment
         settings.integrationType = .deferred_csc
         settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
         loadPlayground(app, settings)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
-        // TODO: Test card form (see PaymentSheetVerticalUITests testUpdate)
-
-        // Selecting Alipay w/ deferred PaymentIntent...
+        
+        // Entering a card w/ deferred PaymentIntent...
+        app.buttons["Card"].waitForExistenceAndTap()
+        try! fillCardData(app, postalEnabled: true)
+        app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
+        
+        // ...and *updating* to a SetupIntent...
+        app.buttons.matching(identifier: "Setup").element(boundBy: 1).tap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should cause Card to no longer be the selected payment method.
+        XCTAssertFalse(app.staticTexts["Payment method"].exists)
+        
+        // ....Tapping card should show the card form with details preserved
+        app.buttons["Card"].waitForExistenceAndTap()
+        // ...thus the Continue button should be enabled
+        app.buttons["Continue"].waitForExistenceAndTap()
+        // ...should cause the card ending in 4242 that was previously entered to be the selected payment method
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
+        // ...switching from setup to payment should preserve this card as the selected payment method
+        app.buttons.matching(identifier: "Payment").element(boundBy: 1).tap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...card entered for setup should be preserved after update
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
+        
+        // ...selecting Alipay w/ deferred PaymentIntent...
         app.buttons["Alipay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
         // ...and *updating* to a SetupIntent...
@@ -27,6 +53,49 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         // ...should cause Alipay to no longer be the selected payment method, since it is not valid for setup.
         XCTAssertFalse(app.staticTexts["Payment method"].exists)
+        
+        // ...go back into deferred PaymentIntent mode
+        app.buttons.matching(identifier: "Payment").element(boundBy: 1).tap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        //...selecting Cash App Pay w/ deferred PaymentIntent...
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
+        // ...and *updating* to a SetupIntent...
+        app.buttons.matching(identifier: "Setup").element(boundBy: 1).tap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should cause Cash App Pay to be the selected payment method, since it is valid for setup.
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
+        
+        // ...go back into deferred PaymentIntent mode
+        app.buttons.matching(identifier: "Payment").element(boundBy: 1).tap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        //...selecting Klarna w/ deferred PaymentIntent...
+        app.buttons["Klarna"].waitForExistenceAndTap()
+        // ...fill out the form for Klarna
+        let emailField = app.textFields["Email"]
+        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+        app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Klarna")
+        // ...and *updating* to a SetupIntent...
+        app.buttons.matching(identifier: "Setup").element(boundBy: 1).tap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should cause Klarna to no longer be the selected payment method.
+        XCTAssertFalse(app.staticTexts["Payment method"].exists)
+        // ...selecting Klarna should present a Klarna form with the previously entered email
+        app.buttons["Klarna"].waitForExistenceAndTap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        // ...switching back to payment should keep Klarna selected
+        app.buttons.matching(identifier: "Payment").element(boundBy: 1).tap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ... Klarna should still be selected
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Klarna")
     }
 
     func testSingleCardCBC_update_and_remove_selectStateApplePay() {
