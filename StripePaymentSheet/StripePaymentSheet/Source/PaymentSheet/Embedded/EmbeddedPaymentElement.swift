@@ -138,8 +138,7 @@ public final class EmbeddedPaymentElement {
                                                                 paymentMethodType: formPaymentMethodType,
                                                                 previousPaymentOption: self?.formViewController?.selectedPaymentOption,
                                                                 analyticsHelper: analyticsHelper,
-                                                                formCache: .init(), // Always use a fresh cache after an update
-                                                                previousFormViewController: self?.formViewController)
+                                                                formCache: .init()) // Always use a fresh cache after an update
                 
             }
             

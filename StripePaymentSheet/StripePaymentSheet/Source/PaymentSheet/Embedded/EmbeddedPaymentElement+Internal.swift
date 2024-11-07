@@ -116,8 +116,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodType: paymentMethodType,
             previousPaymentOption: self.formViewController?.previousPaymentOption,
             analyticsHelper: analyticsHelper,
-            formCache: formCache,
-            previousFormViewController: self.formViewController
+            formCache: formCache
         )
         embeddedFormVC.delegate = self
 
@@ -296,11 +295,6 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
         if formViewController?.selectedPaymentOption == nil {
             embeddedPaymentMethodsView.resetSelectionToLastSelection()
-            // If we were previously presenting a form with a valid payment option, reset back to it
-            if embeddedFormViewController.previousFormViewController?.selectedPaymentOption != nil {
-                self.formViewController = embeddedFormViewController.previousFormViewController
-                delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
-            }
         }
         embeddedFormViewController.dismiss(animated: true)
     }
