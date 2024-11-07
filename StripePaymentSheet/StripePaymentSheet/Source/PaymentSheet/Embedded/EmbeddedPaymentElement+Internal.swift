@@ -107,7 +107,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
 
         guard let presentingVC = presentingViewController else {
-            assertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+            stpAssertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
             return
         }
 
