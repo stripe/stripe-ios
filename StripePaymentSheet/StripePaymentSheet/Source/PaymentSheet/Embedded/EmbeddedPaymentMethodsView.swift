@@ -30,6 +30,11 @@ class EmbeddedPaymentMethodsView: UIView {
         willSet {
             previousSelectedRowButton = selectedRowButton
         }
+        didSet {
+            for case let rowButton as RowButton in stackView.arrangedSubviews {
+                rowButton.isSelected = rowButton === selectedRowButton
+            }
+        }
     }
     private(set) var selection: Selection? {
         willSet {
@@ -202,19 +207,11 @@ class EmbeddedPaymentMethodsView: UIView {
     func resetSelectionToLastSelection() {
         self.selection = previousSelection
         self.selectedRowButton = previousSelectedRowButton
-        
-        for case let rowButton as RowButton in stackView.arrangedSubviews {
-            rowButton.isSelected = rowButton === selectedRowButton
-        }
     }
 
     // MARK: Tap handling
     func didTap(selectedRowButton: RowButton, selection: Selection) {
         self.selectedRowButton = selectedRowButton
-        for case let rowButton as RowButton in stackView.arrangedSubviews {
-            rowButton.isSelected = rowButton === selectedRowButton
-        }
-
         self.selection = selection
     }
 
