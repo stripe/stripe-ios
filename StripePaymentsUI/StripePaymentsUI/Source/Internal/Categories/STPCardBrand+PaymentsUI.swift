@@ -39,4 +39,17 @@ extension STPCardBrand {
             rawData: STPCardBrandUtilities.apiValue(from: self)
         )
     }
+    
+    func cardBrandItemWithLabel(theme: ElementsAppearance = .default, maxWidth: CGFloat? = nil) -> DropdownFieldElement.DropdownItem {
+        let brandName = STPCardBrandUtilities.stringFrom(self) ?? ""
+
+        let displayText = NSMutableAttributedString(attributedString: brandIconAttributedString(theme: theme))
+        displayText.append(NSAttributedString(string: " " + brandName))
+        return DropdownFieldElement.DropdownItem(
+            pickerDisplayName: displayText,
+            labelDisplayName: displayText,
+            accessibilityValue: brandName,
+            rawData: STPCardBrandUtilities.apiValue(from: self)
+        )
+    }
 }

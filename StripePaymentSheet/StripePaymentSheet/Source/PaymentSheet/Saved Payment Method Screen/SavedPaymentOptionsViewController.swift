@@ -565,11 +565,19 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             stpAssertionFailure()
             return
         }
-
-        let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
+        
+//        let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
+//                                              removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+//                                              appearance: appearance,
+//                                              hostedSurface: .paymentSheet,
+//                                              canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+//                                              isTestMode: configuration.isTestMode,
+//                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
+        let editVc = UpdatePaymentMethodViewController(paymentMethod: paymentMethod,
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
+                                              canEditCard: paymentMethod.isCoBrandedCard && cbcEligible,
                                               canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                               isTestMode: configuration.isTestMode,
                                               cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
@@ -671,6 +679,39 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
     }
 
     func didDismiss(viewController: UpdateCardViewController) {
+        // No-op
+    }
+}
+
+// MARK: - UpdatePaymentMethodViewControllerDelegate
+extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
+        removePaymentMethod(paymentMethod)
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
+                   paymentMethod: STPPaymentMethod,
+                   updateParams: STPPaymentMethodUpdateParams) async throws {
+        guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
+              let delegate = delegate
+        else {
+            stpAssertionFailure()
+            throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+        }
+
+        let viewModel = viewModels[row]
+        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
+                                                    paymentMethodSelection: viewModel,
+                                                    updateParams: updateParams)
+
+        let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
+        viewModels[row] = updatedViewModel
+        collectionView.reloadData()
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didDismiss(viewController: UpdatePaymentMethodViewController) {
         // No-op
     }
 }

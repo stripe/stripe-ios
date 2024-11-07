@@ -188,15 +188,26 @@ extension TextFieldElement {
 // MARK: - CVC Configuration
 extension TextFieldElement {
     struct CVCConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand)) {
+        let isEditable: Bool
+        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand), isEditable: Bool = true) {
             self.defaultValue = defaultValue
             self.cardBrandProvider = cardBrandProvider
+            self.isEditable = isEditable
         }
 
-        let defaultValue: String?
+        var defaultValue: String?
         let cardBrandProvider: () -> (STPCardBrand)
         var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+        
+        func censor() -> String {
+            var dots: String = "••••"
+            let maxLength = maxLength(for: dots)
+            if dots.count > maxLength {
+                dots = String(dots.prefix(maxLength))
+            }
+            return dots
+        }
 
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
@@ -227,8 +238,10 @@ extension TextFieldElement {
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil) {
+        let isEditable: Bool
+        init(defaultValue: String? = nil, isEditable: Bool = true) {
             self.defaultValue = defaultValue
+            self.isEditable = isEditable
         }
 
         let label: String = String.Localized.mm_yy
@@ -317,13 +330,13 @@ extension TextFieldElement {
         let label = String.Localized.card_brand
         let lastFour: String
         let isEditable = false
-        let cardBrandDropDown: DropdownFieldElement
+        let cardBrandDropDown: DropdownFieldElement?
 
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, cardBrandDropDown: DropdownFieldElement) {
+        init(lastFour: String, cardBrandDropDown: DropdownFieldElement? = nil) {
             self.lastFour = lastFour
             self.cardBrandDropDown = cardBrandDropDown
         }

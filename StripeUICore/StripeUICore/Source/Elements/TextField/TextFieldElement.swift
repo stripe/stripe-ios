@@ -109,7 +109,12 @@ import UIKit
 
     /// Call this to manually set the text of the text field.
     public func setText(_ text: String) {
-        self.text = sanitize(text: text)
+        if configuration.isEditable {
+            self.text = sanitize(text: text)
+        }
+        else {
+            self.text = text
+        }
 
         // Since we're setting the text manually, disable any previous autofill
         didReceiveAutofill = false

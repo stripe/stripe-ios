@@ -117,7 +117,8 @@ extension SavedPaymentMethodCollectionView {
         /// If the card is a co-branded card and the merchant is eligible for card brand choice, then
         /// the cell should be editable. Otherwise, it should be just removable.
         var shouldAllowEditing: Bool {
-            return (viewModel?.isCoBrandedCard ?? false) && cbcEligible
+//            return (viewModel?.isCoBrandedCard ?? false) && cbcEligible
+            return viewModel?.savedPaymentMethod?.type == STPPaymentMethodType.card
         }
 
         // MARK: - UICollectionViewCell
