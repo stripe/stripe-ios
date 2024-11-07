@@ -89,8 +89,8 @@ private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsView
         didCallHeightDidChange = true
     }
 
-    func selectionWasTapped(didUpdate: Bool) {
-        if didUpdate {
+    func selectionDidUpdate(didChange: Bool) {
+        if didChange {
             didCallSelectionDidUpdate = true
         }
     }
