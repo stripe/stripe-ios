@@ -93,8 +93,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func selectionWasTapped(didUpdate: Bool) {
-        // Defer notifying delegate until we are about to exit this function to give time to either allow the new payment option to come from
-        // The new `EmbeddedFormViewController` instance if needed
+        // Deferring notifying delegate until the exit of this function guarantees the new payment option comes from the new instance of `EmbeddedFormViewController`
         defer {
             if didUpdate {
                 delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
