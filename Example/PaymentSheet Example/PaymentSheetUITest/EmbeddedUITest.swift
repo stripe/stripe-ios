@@ -20,7 +20,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         
         // Entering a card w/ deferred PaymentIntent...
         app.buttons["Card"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 5.0))
         try! fillCardData(app, postalEnabled: true)
+        XCTAssertTrue(app.buttons["Continue"].isEnabled)
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
         
@@ -392,6 +394,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         
         // Try to fill a card
         app.buttons["Card"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 5.0))
         try! fillCardData(app, postalEnabled: true)
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5.0))
