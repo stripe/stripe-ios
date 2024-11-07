@@ -6,7 +6,8 @@
 //
 
 extension URL {
-    /// Removes query and hashtag params from the absolute URL
+    /// Removes query and hashtag params from the absolute URL.
+    /// - Note: Used for logging sanitized URLs to analytics or to compare URLs without query args
     var absoluteStringRemovingParams: String {
         // Remove query params
         var components = URLComponents(url: self, resolvingAgainstBaseURL: true)

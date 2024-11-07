@@ -1,5 +1,5 @@
 //
-//  ConnectAnalyticsClient.swift
+//  ComponentAnalyticsClient.swift
 //  StripeConnect
 //
 //  Created by Mel Ludowise on 10/1/24.
@@ -7,9 +7,12 @@
 
 @_spi(STP) import StripeCore
 
-/// Wraps `AnalyticsClientV2` with some Connect-specific helpers
+/// Wraps `AnalyticsClientV2` with Connect-specific analytic properties.
+/// An analytics client instance should only be used in one component instance
+/// as it tracks component-specific loading metrics.
 @dynamicMemberLookup
 class ComponentAnalyticsClient {
+    /// Fields common to all Connect analytic events
     struct CommonFields: Encodable {
         /// The platform's publishable key
         /// - Note: This will be null when the account is a dashboard account as user keys should never be logged to analytics
@@ -61,6 +64,7 @@ class ComponentAnalyticsClient {
         self.commonFields = commonFields
     }
 
+    // Makes for easy access to common fields
     subscript<T>(dynamicMember keyPath: WritableKeyPath<CommonFields, T>) -> T {
         get { commonFields[keyPath: keyPath] }
         set { commonFields[keyPath: keyPath] = newValue }
@@ -83,11 +87,15 @@ class ComponentAnalyticsClient {
         }
     }
 
+    /// The component is viewed on screen (`viewDidAppear` lifecycle event)
+    /// - Parameter viewedAt: Time the user viewed the component
     func logComponentViewed(viewedAt: Date) {
         componentFirstViewedTime = viewedAt
         log(event: ComponentViewedEvent())
     }
 
+    /// The web page finished loading (`didFinish navigation` event)
+    /// - Parameter loadEnd: Time the web page finished loading
     func logComponentWebPageLoaded(loadEnd: Date) {
         guard !loggedPageLoaded, let loadStart else {
             return
@@ -102,6 +110,9 @@ class ComponentAnalyticsClient {
         loggedPageLoaded = true
     }
 
+    /// The component is successfully loaded within the web view.
+    /// Triggered from `componentDidLoad` message handler from the web view.
+    /// - Parameter loadEnd: Time the component finished loading
     func logComponentLoaded(loadEnd: Date) {
         guard !loggedComponentLoaded, let loadStart else {
             return
@@ -118,6 +129,8 @@ class ComponentAnalyticsClient {
         loggedComponentLoaded = true
     }
 
+    /// The web view sends an onLoadError that can’t be deserialized by the SDK.
+    /// - Parameter type: The error `type` property from web
     func logUnexpectedLoadErrorType(type: String) {
         log(event: UnexpectedLoadErrorTypeEvent(metadata: .init(
             errorType: type,
@@ -125,6 +138,8 @@ class ComponentAnalyticsClient {
         )))
     }
 
+    /// If the web view calls `onSetterFunctionCalled` with a `setter` argument the SDK doesn’t know how to handle.
+    /// - Parameter setter: The `setter` property sent from web
     func logUnexpectedSetterEvent(setter: String) {
         log(event: UnrecognizedSetterEvent(metadata: .init(
             setter: setter,
@@ -132,6 +147,10 @@ class ComponentAnalyticsClient {
         )))
     }
 
+    /// An error occurred deserializing the JSON payload from a web message.
+    /// - Parameters:
+    ///   - message: The name of the message
+    ///   - error: The error thrown deserializing the message
     func logDeserializeMessageErrorEvent(message: String, error: Error) {
         log(event: DeserializeMessageErrorEvent(metadata: .init(
             message: message,
@@ -140,6 +159,8 @@ class ComponentAnalyticsClient {
         )))
     }
 
+    /// An authenticated web view was opened
+    /// - Parameter id: ID for the authenticated web view session (sent in `openAuthenticatedWebView` message
     func logAuthenticatedWebViewOpenedEvent(id: String) {
         log(event: AuthenticatedWebViewOpenedEvent(metadata: .init(
             authenticatedWebViewId: id,
@@ -147,6 +168,12 @@ class ComponentAnalyticsClient {
         )))
     }
 
+    /// The authenticated web view either successfully redirected or was canceled by the user
+    /// - Parameters:
+    ///   - id: ID for the authenticated web view session (sent in
+    ///         `openAuthenticatedWebView` message
+    ///   - redirected: True when the authenticated web view successfully redirected back to the app.
+    ///                 False if the user closed the view before getting directed back to the app.
     func logAuthenticatedWebViewEventComplete(id: String, redirected: Bool) {
         if redirected {
             log(event: AuthenticatedWebViewRedirectedEvent(metadata: .init(
@@ -161,6 +188,11 @@ class ComponentAnalyticsClient {
         }
     }
 
+    /// The authenticated web view threw an error and was not successfully redirected back to the app.
+    /// - Parameters:
+    ///   - id: ID for the authenticated web view session (sent in
+    ///         `openAuthenticatedWebView` message
+    ///   - error: The error thrown by the authenticated web view
     func logAuthenticatedWebViewEventComplete(id: String, error: Error) {
         log(event: AuthenticatedWebViewErrorEvent(metadata: .init(
             authenticatedWebViewId: id,
@@ -169,7 +201,21 @@ class ComponentAnalyticsClient {
         )))
     }
 
-    /// Catch-all for mobile client-side errors
+    /**
+     Catch-all for mobile client-side errors
+     - Parameters:
+       - error: Error to log.
+       - file: File name the error was caught on.
+       - line: File line number the error was caught on.
+
+     - Note: If the error type conforms to `AnalyticLoggableErrorV2` then all
+     properties returned by `analyticLoggableSerializeForLogging()` will be encoded
+     into the event payload. Otherwise only domain and code will be encoded.
+
+     File and line number should be explicitly passed if this method is called
+     from a helper function, otherwise it's difficult to determine where the
+     original error was caught.
+     */
     func logClientError(_ error: Error,
                         file: StaticString = #file,
                         line: UInt = #line) {
