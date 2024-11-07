@@ -670,7 +670,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customer?.id)
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
-            if pmFormVC.form.collectsUserInput {
+            if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {
                 // The payment method form collects user input, display it
                 self.paymentMethodFormViewController = pmFormVC
                 paymentMethodListContentOffsetPercentage = bottomSheetController?.contentOffsetPercentage
@@ -739,6 +739,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     private func shouldDisplayForm(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
+        if paymentMethodType.isBankPayment {
+            // We need to show the form for bank payments (even if we don't collect user input) so that we can launch the auth flow.
+            return true
+        }
+        
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: elementsSession,

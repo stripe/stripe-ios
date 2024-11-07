@@ -508,19 +508,3 @@ private extension LinkBankPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: allResponseFields)
     }
 }
-
-private extension PaymentSheet.PaymentMethodType {
-    
-    var isLinkBankPayment: Bool {
-        switch self {
-        case .stripe:
-            return false
-        case .external:
-            return false
-        case .instantDebits:
-            return true
-        case .linkCardBrand:
-            return true
-        }
-    }
-}
