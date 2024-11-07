@@ -34,6 +34,18 @@ import Foundation
         self.countryCode = countryCode
     }
 
+    @_spi(STP) public init(from billingDetails: ElementsSessionContext.BillingDetails?) {
+        self.init(
+            name: billingDetails?.name,
+            line1: billingDetails?.address?.line1,
+            line2: billingDetails?.address?.line2,
+            city: billingDetails?.address?.city,
+            state: billingDetails?.address?.state,
+            postalCode: billingDetails?.address?.postalCode,
+            countryCode: billingDetails?.address?.country
+        )
+    }
+
     enum CodingKeys: String, CodingKey {
         case name
         case line1 = "line_1"

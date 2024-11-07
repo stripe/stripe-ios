@@ -20,7 +20,7 @@ extension DropdownFieldElement {
                                                         hasPadding: Bool = true,
                                                         didPresent: DropdownFieldElement.DidPresent? = nil,
                                                         didTapClose: DropdownFieldElement.DidTapClose? = nil) -> DropdownFieldElement {
-        return DropdownFieldElement(
+        let dropDown = DropdownFieldElement(
             items: items(from: cardBrands, theme: theme, includePlaceholder: includePlaceholder, maxWidth: maxWidth),
             defaultIndex: 0,
             label: nil,
@@ -30,6 +30,8 @@ extension DropdownFieldElement {
             didPresent: didPresent,
             didTapClose: didTapClose
         )
+        dropDown.view.accessibilityIdentifier = "Card Brand Dropdown"
+        return dropDown
     }
 
     @_spi(STP) public static func items(from cardBrands: Set<STPCardBrand>, theme: ElementsAppearance, includePlaceholder: Bool = true, maxWidth: CGFloat? = nil) -> [DropdownItem] {

@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Lägg till en betalningsmetod";
 
+"Add bank account" = "Lägg till bankkonto";
+
 "Add card" = "Lägg till kort";
 
 "Add new card" = "Lägg till nytt kort";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Lägg till betalningsinformation";
 
 "Approve payment" = "Godkänn betalning";
+
+"Are you sure you want to remove this card?" = "Är du säker på att du vill ta bort kortet?";
+
+"Are you sure you want to remove this linked account?" = "Är du säker på att du vill ta bort det länkade kontot?";
 
 "Back" = "Tillbaka";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Avbryt och betala på ett annat sätt";
 
+"Change email" = "Ändra e-postadress";
+
 "Choose a payment method" = "Välj en betalmetod";
 
 "Close card scanner" = "Stäng kortskanner";
+
+"Code sent" = "Koden har skickats";
 
 "Confirm" = "Bekräfta";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Kontaktinformation";
 
+"Default" = "Standard";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ange adress manuellt";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Ange koden som skickades till %@ för att använda Link för att betala som standard.";
+
+"Enter your verification code" = "Ange din verifieringskod";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Ange säkerhetskoden för ditt kort igen av säkerhetsskäl.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jag är införstådd med att Stripe samlar in autogireringar på uppdrag av %@ och bekräftar att jag är kontoinnehavaren och den enda person som krävs för att godkänna debiteringar från detta konto.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Börja använda Link";
+
+"Log out of Link" = "Logga ut från Link";
 
 "Manage payment method" = "Hantera betalningsmetod";
 
@@ -101,6 +123,8 @@
 "New card" = "Nytt kort";
 
 "New payment method" = "Ny betalningsmetod";
+
+"Not %@?" = "Inte %@?";
 
 "Open your UPI app to approve your payment within %@" = "Öppna UPI-appen för att godkänna din betalning inom %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Betala med ditt bankkonto på några få steg.";
 
+"Payment" = "Betalning";
+
 "Payment failed" = "Betalningen misslyckades";
+
+"Payment methods" = "Betalningsmetoder";
 
 "Please go back and select another payment method" = "Gå tillbaka och välj en annan betalningsmetod";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Ta bort kort?";
 
+"Remove linked account" = "Ta bort länkat konto";
+
 "Remove payment method" = "Ta bort betalningsmetod";
+
+"Resend code" = "Skicka koden igen";
 
 "Save" = "Spara";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Sparad";
 
+"Secure 1⁠-⁠click checkout" = "Betala säkert med ett klick";
+
 "Select card" = "Välj kort";
 
 "Select payment method" = "Välj betalningsmetod";
 
 "Select your payment method" = "Välj din betalningsmetod";
 
+"Set as default" = "Ställ in som standard";
+
+"Set as default payment method" = "Ställ in som standardbetalningsmetod";
+
 "Set up" = "Konfigurera";
 
 "Shipping to %@ is not supported." = "Leverans till %@ stöds inte.";
 
 "Show menu" = "Visa meny";
+
+"Sign in to your Link account" = "Logga in på ditt Link-konto";
 
 "Simple, secure one-click payments" = "Enkla och säkra betalningar med ett klick";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sätter in 0,01 USD på ditt konto inom 1–2 arbetsdagar. Sedan får du ett e-postmeddelande med instruktioner för att slutföra betalningen till %@.";
 
+"Tap to close" = "Klicka för att stänga";
+
+"Tap to expand" = "Klicka för att utvidga";
+
 "The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Angivet IBAN är ogiltigt, \"%@\" är inte en giltig landskod.";
 
+"The provided verification code has expired." = "Den angivna verifieringskoden har förfallit.";
+
+"The provided verification code is incorrect." = "Den angivna verifieringskoden är felaktig.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Detta kort har löpt ut. Uppdatera kortinformationen eller använd en annan betalningsmetod.";
+
+"This is your default" = "Detta är din standardbetalningsmetod";
+
+"Too many attempts. Please try again in a few minutes." = "För många försök. Försök igen om några minuter.";
+
+"Unavailable for this purchase" = "Otillgängligt för detta köp";
+
 "Update" = "Uppdatera";
 
+"Update card" = "Uppdatera kort";
+
 "Update card brand" = "Uppdatera kortvarumärke";
+
+"Use your saved info to check out faster" = "Använd din sparade information för att betala snabbare";
 
 "View more" = "Visa mer";
 

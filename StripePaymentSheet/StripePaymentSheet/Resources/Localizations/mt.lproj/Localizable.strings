@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Żid metodu tal-pagament";
 
+"Add bank account" = "Żid kont tal-bank";
+
 "Add card" = "Żid kard";
 
 "Add new card" = "Żid karta ġdida";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Żid l-informazzjoni dwar il-pagament tiegħek";
 
 "Approve payment" = "Approva l-pagament";
+
+"Are you sure you want to remove this card?" = "Żgur li tixtieq tneħħi dil-karta?";
+
+"Are you sure you want to remove this linked account?" = "Żgur li tixtieq tneħħi dal-kont marbut?";
 
 "Back" = "Lura";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Ikkanċella u ħallas mod ieħor";
 
+"Change email" = "Ibdel l-indirizz tal-email";
+
 "Choose a payment method" = "Agħżel metodu tal-ħlas";
 
 "Close card scanner" = "Agħlaq l-iskenner tal-kard";
+
+"Code sent" = "Il-kodiċi ntbagħat";
 
 "Confirm" = "Ikkonferma";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Id-dettalji tal-kuntatt";
 
+"Default" = "Standard";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża Link u tħallas bil-metodu tal-pagament standard.";
+
+"Enter your verification code" = "Daħħal il-kodiċi ta' verifika tiegħek";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Għal raġunijiet ta' sigurtà, jekk jogħġbok erġa' daħħal il-kodiċi tas-sigurtà tal-karta tiegħek.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jiena nifhem li Stripe se tkun qed tiġbor id-Debiti Diretti f'isem %@ u nikkonferma li jiena d-detentur tal-kont u l-unika persuna meħtieġa biex tawtorizza d-debiti minn dan il-kont.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Ingħaqad ma' Link";
+
+"Log out of Link" = "Oħroġ minn Link";
 
 "Manage payment method" = "Ħu ħsieb il-metodu tal-pagament";
 
@@ -101,6 +123,8 @@
 "New card" = "Karta ġdida";
 
 "New payment method" = "Metodu tal-pagament ġdid";
+
+"Not %@?" = "M'intix %@?";
 
 "Open your UPI app to approve your payment within %@" = "Iftaħ l-app ta' UPI biex tapprova l-pagamenti tiegħek fi żmien %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Ħallas bil-kont tal-bank tiegħek fi ftit passi.";
 
+"Payment" = "Pagament";
+
 "Payment failed" = "Il-pagament ma rnexxiex";
+
+"Payment methods" = "Metodi tal-pagament";
 
 "Please go back and select another payment method" = "Jekk jogħġbok mur lura u agħżel metodu tal-pagament ieħor";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Tixtieq tneħħi l-karta?";
 
+"Remove linked account" = "Neħħi l-kont marbut";
+
 "Remove payment method" = "Neħħi l-metodu tal-pagament";
+
+"Resend code" = "Erġa' ibgħat il-kodiċi";
 
 "Save" = "Erfa'";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Merfugħ";
 
+"Secure 1⁠-⁠click checkout" = "Ħlas sigur b'mossa waħda";
+
 "Select card" = "Agħżel karta";
 
 "Select payment method" = "Agħżel metodu tal-pagament";
 
 "Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
 
+"Set as default" = "Qiegħed bħala standard";
+
+"Set as default payment method" = "Qiegħed bħala l-metodu tal-pagament standard";
+
 "Set up" = "Stabilixxi";
 
 "Shipping to %@ is not supported." = "Ma nistgħux nibagħtu l-affarijiet lejn: %@";
 
 "Show menu" = "Uri l-menù";
+
+"Sign in to your Link account" = "Idħol fil-kont Link tiegħek";
 
 "Simple, secure one-click payments" = "Pagamenti sempliċi u siguri b'mossa waħda";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tagħmel il-pagament lil %@.";
 
+"Tap to close" = "Agħfas biex tagħlaq";
+
+"Tap to expand" = "Agħfas biex tkabbar";
+
 "The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L-IBAN li daħħalt mhux tajjeb, \"%@\" mhux pajjiż li jista' jintuża.";
 
+"The provided verification code has expired." = "Il-kodiċi tal-verifika mogħti skada.";
+
+"The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Dil-karta skadiet. Aġġorna d-dettalji tal-karta tiegħek jew agħżel metodu tal-pagament ieħor.";
+
+"This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
+
+"Too many attempts. Please try again in a few minutes." = "Ippruvajt wisq drabi. Jekk jogħġbok erġa' pprova wara ftit minuti.";
+
+"Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
+
 "Update" = "Ibdel";
 
+"Update card" = "Aġġorna l-karta";
+
 "Update card brand" = "Ibdel id-ditta tal-karta";
+
+"Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
 
 "View more" = "Uri iktar";
 

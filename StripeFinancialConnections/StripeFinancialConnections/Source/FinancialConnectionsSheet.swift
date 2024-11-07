@@ -151,7 +151,7 @@ final public class FinancialConnectionsSheet {
                         let errorDescription = "Instant Debits is not currently supported via this interface."
                         let sessionInfo =
                         """
-                        paymentMethodId=\(linkedBank.paymentMethodId)
+                        paymentMethodId=\(linkedBank.paymentMethod.id)
                         bankName=\(linkedBank.bankName ?? "N/A")
                         last4=\(linkedBank.last4 ?? "N/A")
                         """
