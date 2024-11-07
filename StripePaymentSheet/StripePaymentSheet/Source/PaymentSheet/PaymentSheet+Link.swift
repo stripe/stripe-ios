@@ -4,8 +4,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 // MARK: - Webview Link
 
@@ -17,12 +17,15 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
+        guard let psvc = self.findPaymentSheetViewController() else {
+            stpAssertionFailure()
+            return
+        }
         let backgroundColor = self.configuration.appearance.colors.background.withAlphaComponent(0.85)
         self.bottomSheetViewController.addBlurEffect(animated: false, backgroundColor: backgroundColor) {
             self.bottomSheetViewController.startSpinner()
-            let psvc = self.findPaymentSheetViewController()
-            psvc?.clearTextFields()
-            psvc?.pay(with: paymentOption)
+            psvc.clearTextFields()
+            psvc.pay(with: paymentOption)
         }
     }
 
