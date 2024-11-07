@@ -43,7 +43,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private(set) lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = appearance.embeddedPaymentElement.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
+        stackView.spacing = appearance.embeddedPaymentElement.row.style == .floatingButton ? appearance.embeddedPaymentElement.row.floating.spacing : 0
         return stackView
     }()
 
@@ -67,7 +67,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.appearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
-        self.rowButtonAppearance = appearance.embeddedPaymentElement.style.appearanceForStyle(appearance: appearance)
+        self.rowButtonAppearance = appearance.embeddedPaymentElement.row.style.appearanceForStyle(appearance: appearance)
         self.delegate = delegate
         super.init(frame: .zero)
 
@@ -154,11 +154,11 @@ class EmbeddedPaymentMethodsView: UIView {
             stackView.addArrangedSubview(rowButton)
         }
 
-        if appearance.embeddedPaymentElement.style != .floatingButton {
+        if appearance.embeddedPaymentElement.row.style != .floatingButton {
             stackView.addSeparators(color: appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder,
                                     backgroundColor: appearance.colors.componentBackground,
                                     thickness: appearance.embeddedPaymentElement.row.flat.separatorThickness,
-                                    inset: appearance.embeddedPaymentElement.row.flat.separatorInsets ?? appearance.embeddedPaymentElement.style.defaultInsets,
+                                    inset: appearance.embeddedPaymentElement.row.flat.separatorInsets ?? appearance.embeddedPaymentElement.row.style.defaultInsets,
                                     addTopSeparator: appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled,
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
@@ -228,7 +228,7 @@ class EmbeddedPaymentMethodsView: UIView {
             }
             // Remove old button & insert new button
             stackView.removeArrangedSubview(previousSavedPaymentMethodButton, animated: false)
-            self.stackView.insertArrangedSubview(updatedSavedPaymentMethodButton, at: viewIndex)
+            stackView.insertArrangedSubview(updatedSavedPaymentMethodButton, at: viewIndex)
 
             // Update instance states
             self.savedPaymentMethodButton = updatedSavedPaymentMethodButton
@@ -307,7 +307,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 }
 
-extension PaymentSheet.Appearance.EmbeddedPaymentElement.Style {
+extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
 
     var defaultInsets: UIEdgeInsets {
         switch self {

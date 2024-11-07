@@ -682,7 +682,7 @@ extension STPPaymentMethod {
     var removalMessage: (title: String, message: String) {
         switch type {
         case .card:
-            let brandString = STPCardBrandUtilities.stringFrom(card?.networks?.preferred?.toCardBrand ?? card?.brand ?? .unknown) ?? ""
+            let brandString = STPCardBrandUtilities.stringFrom(card?.preferredDisplayBrand ?? .unknown) ?? ""
             let last4 = card?.last4 ?? ""
             let formattedMessage = STPLocalizedString(
                 "%1$@ •••• %2$@",
