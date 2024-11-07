@@ -13,8 +13,7 @@ private enum JSONSerializationError: Int, Error {
 extension Encodable {
     /// Encodes to a JSON serialized object with the given encoder and options
     func jsonObject(
-        with encoder: JSONEncoder,
-        options opt: JSONSerialization.ReadingOptions = []
+        with encoder: JSONEncoder
     ) throws -> Any {
         let data = try encoder.encode(self)
         return try JSONSerialization.jsonObject(with: data, options: .allowFragments)
