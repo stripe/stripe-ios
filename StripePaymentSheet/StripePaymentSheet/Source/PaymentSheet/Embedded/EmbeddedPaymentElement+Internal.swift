@@ -128,15 +128,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             return
         }
 
-        let bottomSheet = BottomSheetViewController(
-            contentViewController: formViewController,
-            appearance: configuration.appearance,
-            isTestMode: configuration.apiClient.isTestmode,
-            didCancelNative3DS2: {
-                stpAssertionFailure("3DS2 was triggered unexpectedly")
-            }
-        )
-
+        let bottomSheet = bottomSheetController(with: formViewController)
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
         self.formViewController = formViewController
@@ -155,11 +147,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                 isTestMode: configuration.apiClient.isTestmode,
                                                                 cardBrandFilter: configuration.cardBrandFilter)
             updateViewController.delegate = self
-            let bottomSheetVC = BottomSheetViewController(contentViewController: updateViewController,
-                                                          appearance: configuration.appearance,
-                                                          isTestMode: configuration.apiClient.isTestmode, didCancelNative3DS2: {
-                stpAssertionFailure("3DS2 was triggered unexpectedly")
-            })
+            let bottomSheetVC = bottomSheetController(with: updateViewController)
             presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
             return
         }
@@ -172,12 +160,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             analyticsHelper: analyticsHelper
         )
         verticalSavedPaymentMethodsViewController.delegate = self
-        let bottomSheetVC = BottomSheetViewController(contentViewController: verticalSavedPaymentMethodsViewController,
-                                                      appearance: configuration.appearance,
-                                                      isTestMode: configuration.apiClient.isTestmode,
-                                                      didCancelNative3DS2: {
-            stpAssertionFailure("3DS2 was triggered unexpectedly")
-        })
+        let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
         presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
 }
@@ -304,4 +287,15 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
     
+}
+
+extension EmbeddedPaymentElement {
+    func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
+        return BottomSheetViewController(contentViewController: viewController,
+                                         appearance: configuration.appearance,
+                                         isTestMode: configuration.apiClient.isTestmode,
+                                         didCancelNative3DS2: {
+            stpAssertionFailure("3DS2 was triggered unexpectedly")
+        })
+    }
 }
