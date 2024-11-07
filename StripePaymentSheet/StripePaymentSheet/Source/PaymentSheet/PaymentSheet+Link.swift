@@ -118,49 +118,49 @@ extension PaymentSheet {
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PayWithLinkViewControllerDelegate {
 
-func payWithLinkViewControllerDidConfirm(
-    _ payWithLinkViewController: PayWithLinkViewController,
-    intent: Intent,
-    elementsSession: STPElementsSession,
-    with paymentOption: PaymentOption,
-    completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-) {
-    PaymentSheet.confirm(
-        configuration: self.configuration,
-        authenticationContext: self.bottomSheetViewController,
-        intent: intent,
-        elementsSession: elementsSession,
-        paymentOption: paymentOption,
-        paymentHandler: self.paymentHandler,
-        isFlowController: false)
-    { result, confirmationType in
-        if case let .failed(error) = result {
-            self.mostRecentError = error
-        }
-        self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
+    func payWithLinkViewControllerDidConfirm(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        PaymentSheet.confirm(
+            configuration: self.configuration,
+            authenticationContext: self.bottomSheetViewController,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: self.paymentHandler,
+            isFlowController: false)
+        { result, confirmationType in
+            if case let .failed(error) = result {
+                self.mostRecentError = error
+            }
+            self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
 
-        completion(result, confirmationType)
-    }
-}
-
-func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-    payWithLinkViewController.dismiss(animated: true)
-}
-
-func payWithLinkViewControllerDidFinish(
-    _ payWithLinkViewController: PayWithLinkViewController,
-    result: PaymentSheetResult
-) {
-    completion?(result)
-}
-
-private func findPaymentSheetViewController() -> PaymentSheetViewController? {
-    for vc in bottomSheetViewController.contentStack {
-        if let paymentSheetVC = vc as? PaymentSheetViewController {
-            return paymentSheetVC
+            completion(result, confirmationType)
         }
     }
 
-    return nil
-}
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
+        payWithLinkViewController.dismiss(animated: true)
+    }
+
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult
+    ) {
+        completion?(result)
+    }
+
+    private func findPaymentSheetViewController() -> PaymentSheetViewController? {
+        for vc in bottomSheetViewController.contentStack {
+            if let paymentSheetVC = vc as? PaymentSheetViewController {
+                return paymentSheetVC
+            }
+        }
+
+        return nil
+    }
 }
