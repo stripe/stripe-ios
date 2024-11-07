@@ -164,7 +164,7 @@ class EmbeddedFormViewController: UIViewController {
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
-         formCache: PaymentMethodFormCache) {
+         formCache: PaymentMethodFormCache = .init()) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.savedPaymentMethods = savedPaymentMethods
