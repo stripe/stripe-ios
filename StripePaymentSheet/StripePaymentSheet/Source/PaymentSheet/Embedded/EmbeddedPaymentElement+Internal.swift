@@ -114,7 +114,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            savedPaymentMethods: savedPaymentMethods,
+            shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
             paymentMethodType: paymentMethodType,
             previousPaymentOption: self.formViewController?.previousPaymentOption,
             analyticsHelper: analyticsHelper,

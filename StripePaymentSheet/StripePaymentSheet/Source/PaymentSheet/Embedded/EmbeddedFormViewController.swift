@@ -86,7 +86,7 @@ class EmbeddedFormViewController: UIViewController {
     private let configuration: EmbeddedPaymentElement.Configuration
     private let intent: Intent
     private let elementsSession: STPElementsSession
-    private let savedPaymentMethods: [STPPaymentMethod]?
+    private let shouldUseNewCardNewCardHeader: Bool
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var error: Swift.Error?
@@ -132,7 +132,7 @@ class EmbeddedFormViewController: UIViewController {
         let headerView = FormHeaderView(
             paymentMethodType: paymentMethodType,
             // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
-            shouldUseNewCardHeader: savedPaymentMethods?.first?.type == .card,
+            shouldUseNewCardHeader: shouldUseNewCardNewCardHeader,
             appearance: configuration.appearance
         )
 
@@ -160,14 +160,14 @@ class EmbeddedFormViewController: UIViewController {
     init(configuration: EmbeddedPaymentElement.Configuration,
          intent: Intent,
          elementsSession: STPElementsSession,
-         savedPaymentMethods: [STPPaymentMethod]?,
+         shouldUseNewCardNewCardHeader: Bool,
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          formCache: PaymentMethodFormCache = .init()) {
         self.intent = intent
         self.elementsSession = elementsSession
-        self.savedPaymentMethods = savedPaymentMethods
+        self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.analyticsHelper = analyticsHelper
