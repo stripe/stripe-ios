@@ -48,7 +48,6 @@ stages:
     - ui-tests-3: {}
     - ui-tests-4: {}
     - integration-all: {}
-    - deploy-dry-run: {}
     - lokalise-upload: {}
   stage-releases-run-all:
     workflows:
@@ -151,6 +150,11 @@ workflows:
         - content: bundle exec ./ci_scripts/deploy_release.rb --dry-run
         is_always_run: true
         title: Deploy release
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/export_builds.rb
+        is_always_run: true
+        title: Export builds        
     before_run:
     - prep_all
     after_run:

@@ -18,8 +18,6 @@ def verify_xcode_version
   abort
 end
 
-verify_xcode_version
-
 @version = version_from_file
 
 @changelog = changelog(@version)
@@ -27,12 +25,24 @@ verify_xcode_version
 @cleanup_branchname = "releases/#{@version}_cleanup"
 
 def export_builds
+  verify_xcode_version
+
   # Delete Stripe.xcframework.zip if one exists
   run_command('rm -f build/Stripe.xcframework.zip')
 
   run_command('ci_scripts/export_builds.rb')
 
   raise 'build/Stripe.xcframework.zip not found. Did the build fail?' unless File.exist?('build/Stripe.xcframework.zip')
+end
+
+def export_builds_from_xcode_cloud
+  return if @is_dry_run
+  # Delete Stripe.xcframework.zip if one exists
+  run_command('rm -f build/Stripe.xcframework.zip')
+
+  run_command('ci_scripts/export_builds_from_xcode_cloud.rb')
+
+  raise 'build/Stripe.xcframework.zip not found. Did we fail to fetch it from Xcode Cloud?' unless File.exist?('build/Stripe.xcframework.zip')
 end
 
 def approve_pr
@@ -116,7 +126,7 @@ def sync_owner_list
 end
 
 steps = [
-  method(:export_builds),
+  method(:export_builds_from_xcode_cloud),
   method(:approve_pr),
   method(:create_docs_pr),
   method(:push_tag),
