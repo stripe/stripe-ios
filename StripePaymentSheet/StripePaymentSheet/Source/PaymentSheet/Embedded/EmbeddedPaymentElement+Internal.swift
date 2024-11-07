@@ -105,7 +105,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             return
         }
 
-        guard let presentingVC = presentingViewController else {
+        guard let presentingViewController else {
             stpAssertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
             return
         }
@@ -138,7 +138,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
 
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
-        presentingVC.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+        presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
         self.formViewController = formViewController
     }
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
