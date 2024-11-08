@@ -568,28 +568,22 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         error = nil
         // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
-           let paymentMethod = savedPaymentMethods.first,
-           paymentMethod.isCoBrandedCard,
-           elementsSession.isCardBrandChoiceEligible {
-//            let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
-//                                                                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-//                                                                appearance: configuration.appearance,
-//                                                                hostedSurface: .paymentSheet,
-//                                                                canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-//                                                                isTestMode: configuration.apiClient.isTestmode,
-//                                                                cardBrandFilter: configuration.cardBrandFilter)
-            let updateViewController = UpdatePaymentMethodViewController(paymentMethod: paymentMethod,
-                                                                            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                                            appearance: configuration.appearance,
-                                                                            hostedSurface: .paymentSheet,
-                                                                            canEditCard: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
-                                                                            canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-                                                                            isTestMode: configuration.apiClient.isTestmode,
-                                                                            cardBrandFilter: configuration.cardBrandFilter)
-            updateViewController.delegate = self
-            bottomSheetController?.pushContentViewController(updateViewController)
-            return
-        }
+           let paymentMethod = savedPaymentMethods.first
+//           paymentMethod.isCoBrandedCard,
+//           elementsSession.isCardBrandChoiceEligible
+            {
+                let updateViewController = UpdatePaymentMethodViewController(paymentMethod: paymentMethod,
+                                                                                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                                                appearance: configuration.appearance,
+                                                                                hostedSurface: .paymentSheet,
+                                                                                canEditCard: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
+                                                                                canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                                                                                isTestMode: configuration.apiClient.isTestmode,
+                                                                                cardBrandFilter: configuration.cardBrandFilter)
+                updateViewController.delegate = self
+                bottomSheetController?.pushContentViewController(updateViewController)
+                return
+            }
 
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,

@@ -212,6 +212,9 @@ class TextFieldView: UIView {
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
             textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.isEditable)
+            if !isUserInteractionEnabled || !viewModel.isEditable {
+                layer.backgroundColor = viewModel.theme.colors.disabledBackground.cgColor
+            }
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }
