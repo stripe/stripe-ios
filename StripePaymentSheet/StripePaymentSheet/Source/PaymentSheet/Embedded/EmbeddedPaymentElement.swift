@@ -127,11 +127,12 @@ public final class EmbeddedPaymentElement {
                 return UpdateResult.canceled
             }
 
+            // Store the old payment option before we update self.formViewController
+            let oldPaymentOption = self?.paymentOption
             
             // 2.1. Re-initialize embedded form view controller to update the UI to match the newly loaded data.
-            var formViewController: EmbeddedFormViewController?
             if let formPaymentMethodType = self?.formViewController?.selectedPaymentOption?.paymentMethodType {
-                formViewController = EmbeddedFormViewController(configuration: configuration,
+                self?.formViewController = EmbeddedFormViewController(configuration: configuration,
                                                                 intent: loadResult.intent,
                                                                 elementsSession: loadResult.elementsSession,
                                                                 shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
@@ -141,18 +142,12 @@ public final class EmbeddedPaymentElement {
                 
             }
             
-            // Determine the source of truth for the previously selected payment option.
-            // We prioritize the newly created form view controller (if available) as it represents
-            // the most up-to-date state than the computed `_paymentOption`. If not available, we fall back to the stored `_paymentOption`.
-            // This ensures we maintain the user's selection across UI updates and reloads, and invalidate properly.
-            let previousPaymentOption = formViewController != nil ? formViewController?.selectedPaymentOption : self?._paymentOption
-            
             // 2.4 Re-initialize embedded view to update the UI to match the newly loaded data.
             let embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                previousPaymentOption: previousPaymentOption,
+                previousPaymentOption: self?._paymentOption,
                 delegate: self
             )
             
@@ -169,13 +164,11 @@ public final class EmbeddedPaymentElement {
                 return .canceled
             }
             // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
-            let oldPaymentOption = self.paymentOption
             self.savedPaymentMethods = loadResult.savedPaymentMethods
             self.elementsSession = loadResult.elementsSession
             self.intent = loadResult.intent
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
-            self.formViewController = formViewController
             self.formCache = .init()
             if oldPaymentOption != self.paymentOption {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
@@ -225,8 +218,9 @@ public final class EmbeddedPaymentElement {
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     internal var formViewController: EmbeddedFormViewController?
     internal var _paymentOption: PaymentOption? {
-        if let formPaymentOption = formViewController?.selectedPaymentOption {
-            return formPaymentOption
+        // If we have a form use it's payment option
+        if let formViewController {
+            return formViewController.selectedPaymentOption
         }
         
         // TODO: Handle CVC recollection
