@@ -37,7 +37,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
-//    private var updateViewController: UpdateCardViewController?
     private var updateViewController: UpdatePaymentMethodViewController?
 
     private var isEditingPaymentMethods: Bool = false {
@@ -322,13 +321,6 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-//        let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
-//                                                            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-//                                                            appearance: configuration.appearance,
-//                                                            hostedSurface: .paymentSheet,
-//                                                            canRemoveCard: canRemovePaymentMethods,
-//                                                            isTestMode: configuration.apiClient.isTestmode,
-//                                                            cardBrandFilter: configuration.cardBrandFilter)
         let updateViewController = UpdatePaymentMethodViewController(paymentMethod: paymentMethod,
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                             appearance: configuration.appearance,
