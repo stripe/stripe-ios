@@ -24,6 +24,7 @@ class ConnectWebViewControllerTests: XCTestCase {
         mockFileManager = .init()
         mockURLOpener = .init()
         webVC = .init(configuration: .init(),
+                      analyticsClient: .mock(),
                       urlOpener: mockURLOpener,
                       fileManager: mockFileManager,
                       sdkVersion: "1.2.3")
@@ -361,7 +362,7 @@ private class MockFileManager: FileManager {
 }
 
 private class ConnectWebViewControllerTestWrapper: ConnectWebViewController {
-    var presentPopup: (UIViewController) -> Void = {_ in }
+    var presentPopup: (UIViewController) -> Void = { _ in }
 
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         presentPopup(viewControllerToPresent)

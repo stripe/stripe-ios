@@ -43,10 +43,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         componentManager: EmbeddedComponentManager,
         componentType: ComponentType,
         loadContent: Bool,
+        analyticsClient aClient: AnalyticsClientV2Protocol,
         fetchInitProps: @escaping () -> InitProps,
         didFailLoadWithError: @escaping (Error) -> Void,
         // Should only be overridden for tests
-        analyticsClient aClient: AnalyticsClientV2Protocol = AnalyticsClientV2.sharedConnect,
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
         authenticatedWebViewManager: AuthenticatedWebViewManager = .init()
@@ -113,6 +113,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     convenience init(componentManager: EmbeddedComponentManager,
                      componentType: ComponentType,
                      loadContent: Bool,
+                     analyticsClient: AnalyticsClientV2Protocol,
                      didFailLoadWithError: @escaping (Error) -> Void,
                      // Should only be overridden for tests
                      notificationCenter: NotificationCenter = NotificationCenter.default,
@@ -121,6 +122,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         self.init(componentManager: componentManager,
                   componentType: componentType,
                   loadContent: loadContent,
+                  analyticsClient: analyticsClient,
                   fetchInitProps: VoidPayload.init,
                   didFailLoadWithError: didFailLoadWithError,
                   notificationCenter: notificationCenter,

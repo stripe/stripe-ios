@@ -39,7 +39,6 @@
 		41542A692C88B6F2004E728E /* JSONEncoder+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */; };
 		41542A6B2C88B79E004E728E /* JSONSerialization+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41542A6A2C88B79E004E728E /* JSONSerialization+extension.swift */; };
 		4161C2732C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2722C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift */; };
-		4161C2752C9DB1B9005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2742C9DB1B9005BD67C /* StripeUICore.framework */; };
 		4161C2792C9DB1CE005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2782C9DB1CE005BD67C /* StripeUICore.framework */; };
 		4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */; };
 		4161C28C2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C28B2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift */; };
@@ -113,6 +112,8 @@
 		E6660DAB2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DAA2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift */; };
 		E6660DAD2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DAC2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift */; };
 		E6660DAF2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DAE2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift */; };
+		E6660DB12CDD8E25002A7631 /* ComponentAnalyticsClient+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DB02CDD8E1B002A7631 /* ComponentAnalyticsClient+Mock.swift */; };
+		E6660DB32CDD8F6E002A7631 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660DB22CDD8F6E002A7631 /* StripeCoreTestUtils.framework */; };
 		E688AE002CADD8C400951D97 /* NotificationBannerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */; };
 		E688AE032CADE36C00951D97 /* OnNotificationsChangeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */; };
 		E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */; };
@@ -243,6 +244,8 @@
 		E6660DAA2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedWebViewRedirectedEvent.swift; sourceTree = "<group>"; };
 		E6660DAC2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedWebViewCanceledEvent.swift; sourceTree = "<group>"; };
 		E6660DAE2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedWebViewErrorEvent.swift; sourceTree = "<group>"; };
+		E6660DB02CDD8E1B002A7631 /* ComponentAnalyticsClient+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentAnalyticsClient+Mock.swift"; sourceTree = "<group>"; };
+		E6660DB22CDD8F6E002A7631 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewControllerTests.swift; sourceTree = "<group>"; };
 		E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandlerTests.swift; sourceTree = "<group>"; };
 		E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
@@ -269,7 +272,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4161C2752C9DB1B9005BD67C /* StripeUICore.framework in Frameworks */,
+				E6660DB32CDD8F6E002A7631 /* StripeCoreTestUtils.framework in Frameworks */,
 				41D17A4B2C5A73A7007C6EE6 /* StripeConnect.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -479,6 +482,7 @@
 		41A2A5662C5AC5110077FC74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6660DB22CDD8F6E002A7631 /* StripeCoreTestUtils.framework */,
 				4161C2782C9DB1CE005BD67C /* StripeUICore.framework */,
 				4161C2742C9DB1B9005BD67C /* StripeUICore.framework */,
 				41A2A5672C5AC5120077FC74 /* StripeCore.framework */,
@@ -501,6 +505,7 @@
 		41BCCFEE2C8B3C7900797E01 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E6660DB02CDD8E1B002A7631 /* ComponentAnalyticsClient+Mock.swift */,
 				41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */,
 				E6F486082C9E8A40000D914F /* ConnectJSURLParamsTests.swift */,
 				41BCCFF22C8B449800797E01 /* TestHelpers.swift */,
@@ -845,6 +850,7 @@
 				410D0FD92C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift in Sources */,
 				E6F486092C9E8A40000D914F /* ConnectJSURLParamsTests.swift in Sources */,
 				416E9E892C76B36F00A0B917 /* PayoutsViewControllerTests.swift in Sources */,
+				E6660DB12CDD8E25002A7631 /* ComponentAnalyticsClient+Mock.swift in Sources */,
 				41814EEB2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift in Sources */,
 				41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */,
 				41810D692C88C4B100F10EB7 /* AppearanceTests.swift in Sources */,

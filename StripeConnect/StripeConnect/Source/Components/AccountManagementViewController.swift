@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 9/21/24.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 /**
@@ -28,12 +29,14 @@ public class AccountManagementViewController: UIViewController {
 
     init(componentManager: EmbeddedComponentManager,
          collectionOptions: AccountCollectionOptions,
-         loadContent: Bool) {
+         loadContent: Bool,
+         analyticsClient: AnalyticsClientV2Protocol) {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .accountManagement,
-            loadContent: loadContent
+            loadContent: loadContent,
+            analyticsClient: analyticsClient
         ) {
             Props(collectionOptions: collectionOptions)
         } didFailLoadWithError: { [weak self] error in

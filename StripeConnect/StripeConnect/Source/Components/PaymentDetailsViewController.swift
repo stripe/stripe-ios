@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 8/30/24.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 /**
@@ -18,12 +19,14 @@ public class PaymentDetailsViewController: UIViewController {
     public weak var delegate: PaymentDetailsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
-         loadContent: Bool) {
+         loadContent: Bool,
+         analyticsClient: AnalyticsClientV2Protocol) {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .paymentDetails,
-            loadContent: loadContent
+            loadContent: loadContent,
+            analyticsClient: analyticsClient
         ) { [weak self] error in
             guard let self else { return }
             delegate?.paymentDetails(self, didFailLoadWithError: error)

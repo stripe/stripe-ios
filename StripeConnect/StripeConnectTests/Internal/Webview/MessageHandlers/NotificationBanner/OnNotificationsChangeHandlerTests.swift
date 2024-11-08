@@ -12,7 +12,7 @@ class OnNotificationsChangeHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         let expectation = self.expectation(description: "Message received")
-        let messageHandler = OnSetterFunctionCalledMessageHandler()
+        let messageHandler = OnSetterFunctionCalledMessageHandler(analyticsClient: .mock())
 
         messageHandler.addHandler(handler: OnNotificationsChangeHandler(didReceiveMessage: { payload in
             expectation.fulfill()

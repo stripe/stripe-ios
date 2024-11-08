@@ -9,6 +9,7 @@ import Foundation
 import SafariServices
 @_spi(PrivateBetaConnect) @testable import StripeConnect
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import WebKit
 import XCTest
@@ -25,6 +26,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { _ in })
 
         try await webVC.webView.evaluateMessageWithReply(name: "fetchClientSecret",
@@ -39,6 +41,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
@@ -53,6 +56,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
         var appearance = EmbeddedComponentManager.Appearance()
@@ -77,10 +81,11 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let componentManager = componentManagerAssertingOnFetch(appearance: appearance)
 
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
-                                                        componentType: .payouts,
-                                                        loadContent: false,
-                                                        didFailLoadWithError: { _ in },
-                                                        webLocale: Locale(identifier: "fr_FR"))
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
 
         webVC.triggerTraitCollectionChange(style: .dark)
 
@@ -98,6 +103,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
@@ -116,6 +122,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
@@ -137,6 +144,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
             componentManager: componentManager,
             componentType: .payouts,
             loadContent: false,
+            analyticsClient: MockAnalyticsClientV2(),
             didFailLoadWithError: { _ in },
             notificationCenter: notificationCenter,
             webLocale: Locale(identifier: "fr_FR"))
@@ -157,6 +165,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
@@ -173,6 +182,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { _ in })
         // Mock that loading indicator is animating
         webVC.activityIndicator.startAnimating()
@@ -190,6 +200,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { error = $0 })
         // Mock that loading indicator is animating
         webVC.activityIndicator.startAnimating()
@@ -206,6 +217,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { error = $0 })
         // Mock that loading indicator is animating
         webVC.activityIndicator.startAnimating()
@@ -223,8 +235,9 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { error = $0 })
-        _ = await webVC.webView(webVC.webView, decidePolicyFor: MockNavigationResponse(response: HTTPURLResponse(url: URL(string: "https://stripe.com")!, statusCode: 404, httpVersion: nil, headerFields: nil)!))
+        _ = await webVC.webView(webVC.webView, decidePolicyFor: MockNavigationResponse(response: HTTPURLResponse(url: URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!, statusCode: 404, httpVersion: nil, headerFields: nil)!))
         XCTAssertEqual((error as? HTTPStatusError)?.errorCode, 404)
         // Loading indicator should stop
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
@@ -239,6 +252,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
                                                       loadContent: false,
+                                                      analyticsClient: MockAnalyticsClientV2(),
                                                       didFailLoadWithError: { _ in },
                                                       authenticatedWebViewManager: authenticatedWebViewManager)
 

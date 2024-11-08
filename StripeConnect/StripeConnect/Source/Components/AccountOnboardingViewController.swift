@@ -5,6 +5,7 @@
 //  Created by Chris Mays on 9/17/24.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 /// A view controller representing an account-onboarding component
@@ -38,13 +39,15 @@ public class AccountOnboardingViewController: UIViewController {
 
     init(props: Props,
          componentManager: EmbeddedComponentManager,
-         loadContent: Bool
+         loadContent: Bool,
+         analyticsClient: AnalyticsClientV2Protocol
     ) {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .onboarding,
-            loadContent: loadContent
+            loadContent: loadContent,
+            analyticsClient: analyticsClient
         ) {
             props
         } didFailLoadWithError: { [weak self] error in
