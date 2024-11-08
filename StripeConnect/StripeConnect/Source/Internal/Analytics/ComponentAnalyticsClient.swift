@@ -243,6 +243,8 @@ extension ComponentAnalyticsClient.CommonFields {
         // the platform uses a secret key in their app
         var publicKey = params.publicKey
         if publicKey != nil {
+            // Check for nil so we don't log '[REDACTED_LIVE_KEY]' if we don't
+            // intend to log any key (e.g. for user keys)
             publicKey = apiClient.sanitizedPublishableKey
         }
 
