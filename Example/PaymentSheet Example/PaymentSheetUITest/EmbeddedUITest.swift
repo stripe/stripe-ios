@@ -22,14 +22,14 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Card"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
         try! fillCardData(app, postalEnabled: true)
-        app.toolbars.buttons["Done"].tap()
+        app.toolbars.buttons["Done"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Continue"].isEnabled)
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
         
         // ...and *updating* to a SetupIntent...
-        app.buttons.matching(identifier: "Setup").element(boundBy: 1).tap()
+        app.buttons.matching(identifier: "Setup").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         // ...should cause Card to no longer be the selected payment method.
@@ -43,7 +43,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
         // ...switching from setup to payment should preserve this card as the selected payment method
-        app.buttons.matching(identifier: "Payment").element(boundBy: 1).tap()
+        app.buttons.matching(identifier: "Payment").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         // ...card entered for setup should be preserved after update
@@ -54,41 +54,40 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
         // ...and *updating* to a SetupIntent...
-        app.buttons.matching(identifier: "Setup").element(boundBy: 1).tap()
+        app.buttons.matching(identifier: "Setup").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         // ...should cause Alipay to no longer be the selected payment method, since it is not valid for setup.
         XCTAssertFalse(app.staticTexts["Payment method"].exists)
         
         // ...go back into deferred PaymentIntent mode
-        app.buttons.matching(identifier: "Payment").element(boundBy: 1).tap()
+        app.buttons.matching(identifier: "Payment").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         //...selecting Cash App Pay w/ deferred PaymentIntent...
         app.buttons["Cash App Pay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
         // ...and *updating* to a SetupIntent...
-        app.buttons.matching(identifier: "Setup").element(boundBy: 1).tap()
+        app.buttons.matching(identifier: "Setup").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         // ...should cause Cash App Pay to be the selected payment method, since it is valid for setup.
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
         
         // ...go back into deferred PaymentIntent mode
-        app.buttons.matching(identifier: "Payment").element(boundBy: 1).tap()
+        app.buttons.matching(identifier: "Payment").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         //...selecting Klarna w/ deferred PaymentIntent...
         app.buttons["Klarna"].waitForExistenceAndTap()
         // ...fill out the form for Klarna
         let emailField = app.textFields["Email"]
-        XCTAssertTrue(emailField.waitForExistence(timeout: 10))
-        emailField.tap()
+        emailField.waitForExistenceAndTap()
         emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Klarna")
         // ...and *updating* to a SetupIntent...
-        app.buttons.matching(identifier: "Setup").element(boundBy: 1).tap()
+        app.buttons.matching(identifier: "Setup").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         // ...should cause Klarna to no longer be the selected payment method.
@@ -97,7 +96,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Klarna"].waitForExistenceAndTap()
         app.buttons["Continue"].waitForExistenceAndTap()
         // ...switching back to payment should keep Klarna selected
-        app.buttons.matching(identifier: "Payment").element(boundBy: 1).tap()
+        app.buttons.matching(identifier: "Payment").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
         // ... Klarna should still be selected
@@ -415,7 +414,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["New card"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add new card"].waitForExistence(timeout: 10))
         try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
-        app.toolbars.buttons["Done"].tap()
+        app.toolbars.buttons["Done"].waitForExistenceAndTap()
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
@@ -455,7 +454,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         continueButton.tap()
 
         // Go through connections flow
-        app.buttons["Agree and continue"].tap()
+        app.buttons["Agree and continue"].waitForExistenceAndTap()
         app.staticTexts["Test Institution"].forceTapElement()
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
