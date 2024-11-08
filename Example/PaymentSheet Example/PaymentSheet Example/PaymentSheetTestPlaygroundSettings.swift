@@ -518,7 +518,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
-            newUpdatePaymentMethodFlow: .on,
+            newUpdatePaymentMethodFlow: .off,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,
