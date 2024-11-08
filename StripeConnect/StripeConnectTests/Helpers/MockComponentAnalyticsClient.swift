@@ -10,9 +10,20 @@
 import XCTest
 
 class MockComponentAnalyticsClient: ComponentAnalyticsClient {
+    var events: [any ConnectAnalyticEvent] = []
+    var clientErrors: [(error: any Error, file: StaticString)] = []
+
     init(commonFields: CommonFields) {
         super.init(client: MockAnalyticsClientV2(), commonFields: commonFields)
     }
 
-    // TODO: Add test helpers
+    override func log<Event: ConnectAnalyticEvent>(event: Event) {
+        events.append(event)
+    }
+
+    override func logClientError(_ error: any Error,
+                                 file: StaticString = #file,
+                                 line: UInt = #line) {
+        clientErrors.append((error, file))
+    }
 }
