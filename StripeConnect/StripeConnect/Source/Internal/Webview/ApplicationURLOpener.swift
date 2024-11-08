@@ -10,7 +10,7 @@ import UIKit
 
 /// Error thrown when the system can't open a URL.
 /// Used for analytics logging.
-private struct URLOpenError: Error, AnalyticLoggableErrorV2 {
+struct URLOpenError: Error, AnalyticLoggableErrorV2 {
     let url: URL
 
     func analyticLoggableSerializeForLogging() -> [String: Any] {

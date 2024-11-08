@@ -14,7 +14,7 @@ class DebugMessageHandlerTests: ScriptWebTestBase {
         let debugMessage = "test message"
 
         webView.addMessageHandler(messageHandler: DebugMessageHandler(
-            analyticsClient: .mock(),
+            analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
             didReceiveMessage: { payload in
                 expectation.fulfill()
                 XCTAssertEqual(payload, debugMessage)

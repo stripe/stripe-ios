@@ -13,7 +13,7 @@ class OnLoaderStartMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() async throws {
         let expectation = self.expectation(description: "Message received")
 
-        let messageHandler = OnSetterFunctionCalledMessageHandler(analyticsClient: .mock())
+        let messageHandler = OnSetterFunctionCalledMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
 
         messageHandler.addHandler(handler: OnLoaderStartMessageHandler(didReceiveMessage: { payload in
             expectation.fulfill()

@@ -29,7 +29,10 @@ public class EmbeddedComponentManager {
     var shouldLoadContent: Bool = true
 
     // This should only be used for tests to mock the analytics logger
-    var analyticsClient: AnalyticsClientV2Protocol = AnalyticsClientV2.sharedConnect
+    var analyticsClientFactory: ComponentAnalyticsClientFactory = {
+        ComponentAnalyticsClient(client: AnalyticsClientV2.sharedConnect,
+                                 commonFields: $0)
+    }
 
     /**
      Initializes a StripeConnect instance.
@@ -71,7 +74,7 @@ public class EmbeddedComponentManager {
     public func createPayoutsViewController() -> PayoutsViewController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
-              analyticsClient: analyticsClient)
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     /**
@@ -102,14 +105,14 @@ public class EmbeddedComponentManager {
             ),
             componentManager: self,
             loadContent: shouldLoadContent,
-            analyticsClient: analyticsClient)
+            analyticsClientFactory: analyticsClientFactory)
        }
 
     @_spi(DashboardOnly)
     public func createPaymentDetailsViewController() -> PaymentDetailsViewController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
-              analyticsClient: analyticsClient)
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     @_spi(DashboardOnly)
@@ -119,7 +122,7 @@ public class EmbeddedComponentManager {
         .init(componentManager: self,
               collectionOptions: collectionOptions,
               loadContent: shouldLoadContent,
-              analyticsClient: analyticsClient)
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     @_spi(DashboardOnly)
@@ -129,7 +132,7 @@ public class EmbeddedComponentManager {
         .init(componentManager: self,
               collectionOptions: collectionOptions,
               loadContent: shouldLoadContent,
-              analyticsClient: analyticsClient)
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     /// Used to keep reference of all web views associated with this component manager.

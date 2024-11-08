@@ -14,7 +14,7 @@ class OpenAuthenticatedWebViewMessageHandlerTests: ScriptWebTestBase {
         let url = "https://dashboard.stripe.com"
         let id = "1234"
         webView.addMessageHandler(messageHandler: OpenAuthenticatedWebViewMessageHandler(
-            analyticsClient: .mock(),
+            analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
             didReceiveMessage: { payload in
                 expectation.fulfill()
                 XCTAssertEqual(payload, .init(url: URL(string: "https://dashboard.stripe.com")!, id: id))

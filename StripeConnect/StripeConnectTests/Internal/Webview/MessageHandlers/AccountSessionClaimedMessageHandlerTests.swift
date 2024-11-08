@@ -14,7 +14,7 @@ class AccountSessionClaimedMessageHandlerTests: ScriptWebTestBase {
         let merchantId = "acct_1234"
 
         webView.addMessageHandler(messageHandler: AccountSessionClaimedMessageHandler(
-            analyticsClient: .mock(),
+            analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
             didReceiveMessage: { payload in
                 expectation.fulfill()
                 XCTAssertEqual(payload, .init(merchantId: merchantId))

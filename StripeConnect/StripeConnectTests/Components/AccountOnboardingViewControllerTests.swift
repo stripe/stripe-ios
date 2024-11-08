@@ -8,7 +8,6 @@
 import SafariServices
 @_spi(PrivateBetaConnect) @testable import StripeConnect
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
 import WebKit
 import XCTest
 
@@ -21,7 +20,7 @@ class AccountOnboardingViewControllerTests: XCTestCase {
         super.setUp()
         STPAPIClient.shared.publishableKey = "pk_test"
         componentManager.shouldLoadContent = false
-        componentManager.analyticsClient = MockAnalyticsClientV2()
+        componentManager.analyticsClientFactory = MockComponentAnalyticsClient.init
     }
 
     @MainActor

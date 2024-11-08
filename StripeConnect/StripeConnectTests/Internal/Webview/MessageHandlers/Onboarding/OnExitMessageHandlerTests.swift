@@ -12,7 +12,7 @@ class OnExitMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         let expectation = self.expectation(description: "Message received")
-        let messageHandler = OnSetterFunctionCalledMessageHandler(analyticsClient: .mock())
+        let messageHandler = OnSetterFunctionCalledMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
 
         messageHandler.addHandler(handler: OnExitMessageHandler(didReceiveMessage: {
             expectation.fulfill()

@@ -7,6 +7,8 @@
 
 @_spi(STP) import StripeCore
 
+typealias ComponentAnalyticsClientFactory = (ComponentAnalyticsClient.CommonFields) -> ComponentAnalyticsClient
+
 /// Wraps `AnalyticsClientV2` with Connect-specific analytic properties.
 /// An analytics client instance should only be used in one component instance
 /// as it tracks component-specific loading metrics.
@@ -219,13 +221,18 @@ class ComponentAnalyticsClient {
     func logClientError(_ error: Error,
                         file: StaticString = #file,
                         line: UInt = #line) {
+        var params: [String: Any] = [
+            "error": error.analyticsIdentifier,
+            "file": ("\(file)" as NSString).lastPathComponent,
+            "line": line,
+        ]
+        if let loggableError = error as? AnalyticLoggableErrorV2 {
+            params.mergeAssertingOnOverwrites(loggableError.serializeForV2Logging())
+        }
+
         client.log(
             eventName: "client_error",
-            parameters: AnalyticsClientV2.serialize(
-                error: error,
-                filePath: file,
-                line: line
-            )
+            parameters: params
         )
     }
 }

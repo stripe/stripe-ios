@@ -15,7 +15,7 @@ class PageDidLoadMessageHandlerTests: ScriptWebTestBase {
         let pageViewId = "123"
 
         webView.addMessageHandler(messageHandler: PageDidLoadMessageHandler(
-            analyticsClient: .mock(),
+            analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
             didReceiveMessage: { payload in
                 expectation.fulfill()
                 XCTAssertEqual(payload, .init(pageViewId: pageViewId))

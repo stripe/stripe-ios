@@ -43,7 +43,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         componentManager: EmbeddedComponentManager,
         componentType: ComponentType,
         loadContent: Bool,
-        analyticsClient aClient: AnalyticsClientV2Protocol,
+        analyticsClientFactory: ComponentAnalyticsClientFactory,
         fetchInitProps: @escaping () -> InitProps,
         didFailLoadWithError: @escaping (Error) -> Void,
         // Should only be overridden for tests
@@ -69,13 +69,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
         super.init(
             configuration: config,
-            analyticsClient: ComponentAnalyticsClient(
-                client: aClient,
-                commonFields: .init(
-                    apiClient: componentManager.apiClient,
-                    component: componentType
-                )
-            )
+            analyticsClient: analyticsClientFactory(.init(
+                apiClient: componentManager.apiClient,
+                component: componentType
+            ))
         )
 
         // Setup views
@@ -113,7 +110,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     convenience init(componentManager: EmbeddedComponentManager,
                      componentType: ComponentType,
                      loadContent: Bool,
-                     analyticsClient: AnalyticsClientV2Protocol,
+                     analyticsClientFactory: ComponentAnalyticsClientFactory,
                      didFailLoadWithError: @escaping (Error) -> Void,
                      // Should only be overridden for tests
                      notificationCenter: NotificationCenter = NotificationCenter.default,
@@ -122,7 +119,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         self.init(componentManager: componentManager,
                   componentType: componentType,
                   loadContent: loadContent,
-                  analyticsClient: analyticsClient,
+                  analyticsClientFactory: analyticsClientFactory,
                   fetchInitProps: VoidPayload.init,
                   didFailLoadWithError: didFailLoadWithError,
                   notificationCenter: notificationCenter,
