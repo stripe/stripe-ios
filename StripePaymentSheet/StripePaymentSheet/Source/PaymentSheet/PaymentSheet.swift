@@ -280,7 +280,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 elementsSession: paymentSheetViewController.elementsSession,
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
-                integrationShape: .complete
+                integrationShape: .complete,
+                analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {
                     self.mostRecentError = error

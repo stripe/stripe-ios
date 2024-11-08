@@ -47,7 +47,7 @@ final class LinkCardEditElement: Element {
 
     let paymentMethod: ConsumerPaymentDetails
 
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
 
     let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
 
@@ -177,7 +177,7 @@ final class LinkCardEditElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentSheet.Configuration) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
 

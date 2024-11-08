@@ -25,10 +25,10 @@ final class PayWithNativeLinkController {
 
     let intent: Intent
     let elementsSession: STPElementsSession
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
-    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration, analyticsHelper: PaymentSheetAnalyticsHelper) {
+    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration
@@ -87,19 +87,20 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
+            analyticsHelper: analyticsHelper,
             completion: completion
         )
     }
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
         payWithLinkViewController.dismiss(animated: true)
-//        completion?(.canceled)
+        completion?(.canceled, nil)
         selfRetainer = nil
     }
 
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
         payWithLinkViewController.dismiss(animated: true)
-//        completion?(result)
+        completion?(result, nil)
         selfRetainer = nil
     }
 

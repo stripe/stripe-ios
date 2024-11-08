@@ -356,7 +356,8 @@ extension EmbeddedPaymentElement {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            integrationShape: .embedded
+            integrationShape: .embedded,
+            analyticsHelper: analyticsHelper
         )
     }
     

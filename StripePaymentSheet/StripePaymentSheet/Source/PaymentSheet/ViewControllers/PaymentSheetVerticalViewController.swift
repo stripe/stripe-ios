@@ -105,10 +105,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
-    func selectLink() {
-        //TODO(link): Vertical FlowController
-    }
-    
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
