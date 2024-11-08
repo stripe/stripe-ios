@@ -32,8 +32,8 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NS
             let response = try value.jsonObject(with: .connectEncoder)
             return (response, nil)
         } catch {
-            debugPrint("Error processing message: \(error.localizedDescription)")
-            return (nil, error.localizedDescription)
+            debugPrint("Error processing message: \((error as NSError).debugDescription)")
+            return (nil, (error as NSError).debugDescription)
         }
     }
 }
