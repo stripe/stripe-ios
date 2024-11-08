@@ -298,7 +298,7 @@ class ConnectWebViewControllerTests: XCTestCase {
     func testMultipleDownloadsLogsError() async throws {
         let mockFileURL = URL(string: "file:///temp/example.csv")!
         webVC.downloadedFile = mockFileURL
-        let _ = await webVC.download(
+        _ = await webVC.download(
             decideDestinationUsing: .init(),
             suggestedFilename: "example.csv"
         )
