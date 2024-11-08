@@ -41,6 +41,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.delegate = self
+        sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
         // ...with cash app selected...
         let cashAppPayRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay")
@@ -48,12 +49,12 @@ class EmbeddedPaymentElementTest: XCTestCase {
         delegateDidUpdatePaymentOptionCalled = false // This gets set to true when we select cash app ^
         XCTAssertNil(sut.paymentOption?.mandateText)
         // ...its intent should match the initial intent config...
-        XCTAssertEqual(sut.loadResult.intent.amount, 1000)
+        XCTAssertEqual(sut.intent.amount, 1000)
         // ...and updating the amount should succeed...
         let update1Result = await sut.update(intentConfiguration: paymentIntentConfig2
         )
         XCTAssertEqual(update1Result, .succeeded)
-        XCTAssertEqual(sut.loadResult.intent.amount, 999)
+        XCTAssertEqual(sut.intent.amount, 999)
         // ...without invoking the delegate (since neither height nor payment option updated)
         XCTAssertFalse(delegateDidUpdateHeightCalled)
         XCTAssertFalse(delegateDidUpdatePaymentOptionCalled)
@@ -69,7 +70,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.update(intentConfiguration: setupIntentConfig) { update2Result in
             // ...should succeed.
             XCTAssertEqual(update2Result, .succeeded)
-            XCTAssertFalse(sut.loadResult.intent.isPaymentIntent)
+            XCTAssertFalse(sut.intent.isPaymentIntent)
             // ...and preserve the cash app pay selection
             XCTAssertEqual(sut.paymentOption?.label, "Cash App Pay")
             // ...and invoke both delegate methods since cash app now has a mandate
@@ -132,7 +133,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...should cancel the 1st update
         XCTAssertEqual(updateResult, .canceled)
         XCTAssertEqual(updateResult2, .succeeded)
-        XCTAssertTrue(sut.loadResult.intent.isSettingUp)
+        XCTAssertTrue(sut.intent.isSettingUp)
     }
 
     func testConfirmHandlesInflightUpdateThatSucceeds() async throws {

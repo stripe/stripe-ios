@@ -11,26 +11,28 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     /// Handles the selection of a payment method from the list or the modification of the list such as the removal or update of payment methods.
     ///
     /// - Parameters:
-    ///    - viewController: The `VerticalSavedPaymentMethodsViewController` that completed it's selection
+    ///    - viewController: The `VerticalSavedPaymentMethodsViewController` that completed its selection
     ///    - selectedPaymentMethod: The selected method of payment, if any.
     ///    - latestPaymentMethods: The most recent up-to-date list of payment methods, with the selected (if any) payment method at the front of the list.
-    func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
-                     with selectedPaymentMethod: STPPaymentMethod?,
-                     latestPaymentMethods: [STPPaymentMethod])
-
-    /// Notifies the delegate it should close the entire sheet it is presented in
-    func shouldClose()
+    ///    - didTapToDismiss: Whether or not the customer tapped outside the sheet to dismiss it.
+    func didComplete(
+        viewController: VerticalSavedPaymentMethodsViewController,
+        with selectedPaymentMethod: STPPaymentMethod?,
+        latestPaymentMethods: [STPPaymentMethod],
+        didTapToDismiss: Bool
+    )
 }
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
 class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
-    private let configuration: PaymentSheet.Configuration
+    private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let isCBCEligible: Bool
@@ -51,12 +53,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             } else if oldValue {
                 // If we are exiting edit mode restore previous selected states
                 paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
-                navigationBar.setStyle(.back(showAdditionalButton: canEdit)) // Hide edit button if needed
+                navigationBar.setStyle(navigationBarStyle())
 
                 // If we are exiting edit mode and there is only one payment method left which can't be removed, select it and dismiss
                 if paymentMethodRows.count == 1, let firstButton = paymentMethodRows.first {
                     firstButton.state = .selected
-                    completeSelection(afterDelay: 0.3)
+                    complete(afterDelay: 0.3)
                 }
             }
         }
@@ -115,7 +117,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
-        navBar.setStyle(.back(showAdditionalButton: canEdit))
+        navBar.setStyle(navigationBarStyle())
         navBar.delegate = self
         navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
         // TODO(porter) Read color from new secondary action color from appearance
@@ -152,7 +154,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
 
     init(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
@@ -205,6 +207,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         minHeightConstraint.isActive = true
     }
 
+    private func navigationBarStyle() -> SheetNavigationBar.Style {
+        if let bottomSheet = self.bottomSheetController,
+           bottomSheet.contentStack.count > 1 {
+            return .back(showAdditionalButton: canEdit)
+        } else {
+            return .close(showAdditionalButton: canEdit)
+        }
+    }
+
     @objc func didSelectEditSavedPaymentMethodsButton() {
         isEditingPaymentMethods = !isEditingPaymentMethods
     }
@@ -220,20 +231,26 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         paymentMethodRows.removeAll { $0.paymentMethod.stripeId == paymentMethod.stripeId }
         stackView.removeArrangedSubview(button, animated: true)
 
+        // Select the first payment method if nothing is selected anymore
+        // Note: this isn't necessarily the desired behavior, but the next payment method *will* be selected if you cancel out of the sheet at this point, so it's better to be consistent until we change that.
+        if selectedPaymentMethod == nil {
+            paymentMethodRows.first?.state = .selected
+        }
+
         // Update the editing state if needed
         isEditingPaymentMethods = canEdit
 
         // If we deleted the last payment method kick back out to the main screen
         if paymentMethodRows.isEmpty {
-            completeSelection()
+            complete()
         }
     }
 
-    private func completeSelection(afterDelay: TimeInterval = 0.0) {
+    private func complete(didTapToDismiss: Bool = false, afterDelay: TimeInterval = 0.0) {
         // Note this dispatch async gives a brief delay, even when `afterDelay` is 0
         DispatchQueue.main.asyncAfter(deadline: .now() + afterDelay) { [weak self] in
             guard let self = self else { return }
-            // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `completeSelection` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
+            // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `complete` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
             _ = self.updateViewController?.bottomSheetController?.popContentViewController()
 
             var latestPaymentMethods = self.paymentMethods
@@ -242,7 +259,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                 latestPaymentMethods.remove(selectedPaymentMethod)
                 latestPaymentMethods.insert(selectedPaymentMethod, at: 0)
             }
-            self.delegate?.didComplete(viewController: self, with: self.selectedPaymentMethod, latestPaymentMethods: latestPaymentMethods)
+            self.delegate?.didComplete(
+                viewController: self,
+                with: self.selectedPaymentMethod,
+                latestPaymentMethods: latestPaymentMethods,
+                didTapToDismiss: didTapToDismiss
+            )
         }
     }
 }
@@ -254,7 +276,7 @@ extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewContr
     }
 
     func didTapOrSwipeToDismiss() {
-        delegate?.shouldClose()
+        complete(didTapToDismiss: true)
     }
 
     var requiresFullScreen: Bool {
@@ -265,11 +287,16 @@ extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewContr
 // MARK: - SheetNavigationBarDelegate
 extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        // no-op we are in 'back' style mode
+        // 'back' closed used in:
+        //  Embedded
+        complete()
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        completeSelection()
+        // 'back' style used in:
+        //  PS.Complete & Vertical
+        //  PS.FC & Vertical
+        complete()
     }
 }
 
@@ -291,7 +318,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         self.view.isUserInteractionEnabled = false
         self.navigationBar.isUserInteractionEnabled = false
 
-        self.completeSelection()
+        self.complete()
     }
 
     func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
@@ -332,6 +359,10 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
 
         replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
         _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didDismiss(viewController: UpdateCardViewController) {
+        // No-op
     }
 
     private func replace(paymentMethod: STPPaymentMethod, with updatedPaymentMethod: STPPaymentMethod) {

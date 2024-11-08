@@ -193,7 +193,7 @@ extension PaymentSheet {
         // MARK: Internal
         internal var linkPaymentMethodsOnly: Bool = false
 
-        @_spi(STP) public var forceEnableNativeLink: Bool = false
+        @_spi(STP) public var forceNativeLinkEnabled: Bool = false
 
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.

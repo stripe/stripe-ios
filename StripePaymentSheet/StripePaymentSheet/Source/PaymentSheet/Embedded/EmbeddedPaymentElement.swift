@@ -127,7 +127,22 @@ public final class EmbeddedPaymentElement {
                 return UpdateResult.canceled
             }
 
-            // 2. Re-initialize embedded view to update the UI to match the newly loaded data.
+            // Store the old payment option before we update self.formViewController
+            let oldPaymentOption = self?.paymentOption
+            
+            // 2.1. Re-initialize embedded form view controller to update the UI to match the newly loaded data.
+            if let formPaymentMethodType = self?.formViewController?.selectedPaymentOption?.paymentMethodType {
+                self?.formViewController = EmbeddedFormViewController(configuration: configuration,
+                                                                intent: loadResult.intent,
+                                                                elementsSession: loadResult.elementsSession,
+                                                                shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
+                                                                paymentMethodType: formPaymentMethodType,
+                                                                previousPaymentOption: self?.formViewController?.selectedPaymentOption,
+                                                                analyticsHelper: analyticsHelper)
+                
+            }
+            
+            // 2.4 Re-initialize embedded view to update the UI to match the newly loaded data.
             let embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
                 loadResult: loadResult,
@@ -135,7 +150,7 @@ public final class EmbeddedPaymentElement {
                 previousPaymentOption: self?._paymentOption,
                 delegate: self
             )
-
+            
             // 3. Pre-load image into cache
             // Call this on a detached Task b/c this synchronously (!) loads the image from network and we don't want to block the main actor
             let fetchPaymentOption = Task.detached(priority: .userInitiated) {
@@ -149,10 +164,12 @@ public final class EmbeddedPaymentElement {
                 return .canceled
             }
             // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
-            let oldPaymentOption = self.paymentOption
-            self.loadResult = loadResult
+            self.savedPaymentMethods = loadResult.savedPaymentMethods
+            self.elementsSession = loadResult.elementsSession
+            self.intent = loadResult.intent
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
+            self.formCache = .init()
             if oldPaymentOption != self.paymentOption {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
@@ -193,11 +210,19 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) var containerView: EmbeddedPaymentElementContainerView
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
-    internal private(set) var loadResult: PaymentSheetLoader.LoadResult
+    internal private(set) var elementsSession: STPElementsSession
+    internal private(set) var intent: Intent
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
-    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
+    internal var savedPaymentMethods: [STPPaymentMethod]
+    internal private(set) var formCache: PaymentMethodFormCache = .init()
+    internal var formViewController: EmbeddedFormViewController?
     internal var _paymentOption: PaymentOption? {
-        // TODO: Handle forms. See `PaymentSheetVerticalViewController.selectedPaymentOption`.
+        // If we have a form use it's payment option
+        if let formViewController {
+            return formViewController.selectedPaymentOption
+        }
+        
         // TODO: Handle CVC recollection
         switch embeddedPaymentMethodsView.selection {
         case .applePay:
@@ -221,6 +246,9 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
+    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+    }()
 
     private init(
         configuration: Configuration,
@@ -228,7 +256,9 @@ public final class EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
-        self.loadResult = loadResult
+        self.elementsSession = loadResult.elementsSession
+        self.savedPaymentMethods = loadResult.savedPaymentMethods
+        self.intent = loadResult.intent
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,

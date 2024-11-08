@@ -20,7 +20,13 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.launchEnvironment = ["UITesting": "true"]
     }
 
-    func testInstantDebitsOnlyLinkPaymentController() {
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+        app.launchEnvironment = [:]
+    }
+
+    func testWebInstantDebitsOnlyLinkPaymentController() {
+        app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "false"
         app.launch()
 
         // PaymentSheet Example
@@ -88,8 +94,33 @@ class LinkPaymentControllerUITest: XCTestCase {
             withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0)
         )
         // we then navigate from the bottom to the "Done" button
-            .withOffset(CGVector(dx: 0, dy: -130))
-            .tap()
+        .withOffset(CGVector(dx: 0, dy: -130))
+        .tap()
+
+        sleep(3) // wait for modal to disappear before pressing Buy
+
+        // Back to "LinkPaymentController"
+        app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)
+        XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
+    }
+
+    func testNativeInstantDebitsOnlyLinkPaymentController() {
+        app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "true"
+        app.launch()
+
+        // PaymentSheet Example
+        app.staticTexts["LinkPaymentController"].tap()
+
+        // LinkPaymentController
+        let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
+        let paymentMethodButtonEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
+        paymentMethodButton.tap()
+
+        PaymentSheetUITestCase.stepThroughNativeInstantDebitsFlow(app: app, emailPrefilled: false)
 
         sleep(3) // wait for modal to disappear before pressing Buy
 

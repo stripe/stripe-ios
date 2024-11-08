@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Thêm phương thức thanh toán";
 
+"Add bank account" = "Thêm tài khoản ngân hàng";
+
 "Add card" = "Thêm thẻ";
 
 "Add new card" = "Thêm thẻ mới";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Thêm thông tin thanh toán của bạn";
 
 "Approve payment" = "Chấp nhận thanh toán";
+
+"Are you sure you want to remove this card?" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
+
+"Are you sure you want to remove this linked account?" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
 
 "Back" = "Quay lại";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Hủy và thanh toán theo cách khác";
 
+"Change email" = "Đổi email";
+
 "Choose a payment method" = "Chọn phương thức thanh toán";
 
 "Close card scanner" = "Đóng máy quét thẻ";
+
+"Code sent" = "Mã đã được gửi";
 
 "Confirm" = "Xác nhận";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Thông tin liên lạc";
 
+"Default" = "Mặc định";
+
 "EPS Bank" = "Ngân hàng EPS";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Nhập mã được gửi tới %@ để dùng Link làm phương thức thanh toán mặc định.";
+
+"Enter your verification code" = "Nhập mã xác minh của bạn";
+
 "FPX Bank" = "Ngân hàng FPX";
+
+"For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Tham gia Link";
+
+"Log out of Link" = "Đăng xuất khỏi Link";
 
 "Manage payment method" = "Quản lý phương thức thanh toán";
 
@@ -101,6 +123,8 @@
 "New card" = "Thẻ mới";
 
 "New payment method" = "Phương thức thanh toán mới";
+
+"Not %@?" = "Không phải %@?";
 
 "Open your UPI app to approve your payment within %@" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
 
+"Payment" = "Thanh toán";
+
 "Payment failed" = "Thanh toán không thành công";
+
+"Payment methods" = "Phương thức thanh toán";
 
 "Please go back and select another payment method" = "Vui lòng quay lại và chọn phương thức thanh toán khác";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Xóa thẻ?";
 
+"Remove linked account" = "Xóa tài khoản liên kết";
+
 "Remove payment method" = "Gỡ bỏ phương thức thanh toán";
+
+"Resend code" = "Gửi lại mã";
 
 "Save" = "Lưu";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Đã lưu";
 
+"Secure 1⁠-⁠click checkout" = "Thanh toán bảo mật bằng một cú nhấp chuột";
+
 "Select card" = "Chọn thẻ";
 
 "Select payment method" = "Chọn phương thức thanh toán";
 
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
 
+"Set as default" = "Đặt làm mặc định";
+
+"Set as default payment method" = "Đặt làm phương thức thanh toán mặc định";
+
 "Set up" = "Cài đặt";
 
 "Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
 
 "Show menu" = "Hiển thị trình đơn";
+
+"Sign in to your Link account" = "Đăng nhập vào tài khoản Link của bạn";
 
 "Simple, secure one-click payments" = "Thanh toán đơn giản, an toàn chỉ bằng một cú nhấp chuột";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
 
+"Tap to close" = "Nhấp chạm vào để đóng";
+
+"Tap to expand" = "Nhấp chạm vào để mở rộng";
+
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN bạn đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
 
+"The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
+
+"The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Thẻ này đã hết hạn. Hãy cập nhật thông tin thẻ của bạn hoặc chọn một phương thức thanh toán khác.";
+
+"This is your default" = "Đây là thông tin mặc định của bạn";
+
+"Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
+
+"Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
+
 "Update" = "Cập nhật";
 
+"Update card" = "Cập nhật thẻ";
+
 "Update card brand" = "Cập nhật thương hiệu thẻ";
+
+"Use your saved info to check out faster" = "Sử dụng thông tin đã lưu của bạn để thanh toán nhanh hơn";
 
 "View more" = "Xem thêm";
 

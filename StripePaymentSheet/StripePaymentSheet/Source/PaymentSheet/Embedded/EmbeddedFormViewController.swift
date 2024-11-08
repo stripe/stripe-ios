@@ -12,7 +12,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol EmbeddedFormViewControllerDelegate: AnyObject {
+@MainActor protocol EmbeddedFormViewControllerDelegate: AnyObject {
 
     /// Notifies the delegate to confirm the payment or setup with the provided payment option.
     /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm`.
@@ -70,6 +70,10 @@ class EmbeddedFormViewController: UIViewController {
             navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
+    
+    var collectsUserInput: Bool {
+        return paymentMethodFormViewController.form.collectsUserInput
+    }
 
     enum Error: Swift.Error {
         case noPaymentOptionOnBuyButtonTap
@@ -77,18 +81,18 @@ class EmbeddedFormViewController: UIViewController {
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
         return paymentMethodFormViewController.paymentOption
     }
-
-    private let loadResult: PaymentSheetLoader.LoadResult
+    
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let configuration: EmbeddedPaymentElement.Configuration
     private let intent: Intent
     private let elementsSession: STPElementsSession
+    private let shouldUseNewCardNewCardHeader: Bool
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
-    private var previousPaymentOption: PaymentOption?
+    private(set) var previousPaymentOption: PaymentOption?
 
     // MARK: - UI properties
 
@@ -128,7 +132,7 @@ class EmbeddedFormViewController: UIViewController {
         let headerView = FormHeaderView(
             paymentMethodType: paymentMethodType,
             // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
-            shouldUseNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
+            shouldUseNewCardHeader: shouldUseNewCardNewCardHeader,
             appearance: configuration.appearance
         )
 
@@ -154,14 +158,16 @@ class EmbeddedFormViewController: UIViewController {
     // MARK: - Initializers
 
     init(configuration: EmbeddedPaymentElement.Configuration,
-         loadResult: PaymentSheetLoader.LoadResult,
+         intent: Intent,
+         elementsSession: STPElementsSession,
+         shouldUseNewCardNewCardHeader: Bool,
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
-         formCache: PaymentMethodFormCache) {
-        self.loadResult = loadResult
-        self.intent = loadResult.intent
-        self.elementsSession = loadResult.elementsSession
+         formCache: PaymentMethodFormCache = .init()) {
+        self.intent = intent
+        self.elementsSession = elementsSession
+        self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.analyticsHelper = analyticsHelper
@@ -334,7 +340,7 @@ class EmbeddedFormViewController: UIViewController {
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
-                            self.delegate?.embeddedFormViewControllerShouldContinue(self, result: .completed)
+                            self.delegate?.embeddedFormViewControllerShouldContinue(self, result: result)
                         }
                     }
                 }

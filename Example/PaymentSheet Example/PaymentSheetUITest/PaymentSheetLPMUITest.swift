@@ -385,7 +385,10 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
     }
 
     func testUSBankAccountPaymentMethod() throws {
-        app.launchEnvironment = app.launchEnvironment.merging(["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "false"]) { (_, new) in new }
+        app.launchEnvironment = app.launchEnvironment.merging([
+            "FinancialConnectionsSDKAvailable": "true",
+            "FinancialConnectionsStubbedResult": "true",
+        ]) { (_, new) in new }
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off

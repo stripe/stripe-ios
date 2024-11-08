@@ -315,7 +315,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     }
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
-        if configuration.forceEnableNativeLink {
+        if configuration.forceNativeLinkEnabled {
             self.presentPayWithNativeLinkController(
                 from: paymentSheetViewController,
                 intent: paymentSheetViewController.intent,

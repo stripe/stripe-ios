@@ -36,8 +36,9 @@ class PaymentSheetUITestCase: XCTestCase {
         app = XCUIApplication()
         app.launchEnvironment = [
             "UITesting": "true",
-            // This makes the Financial Connections SDK trigger the (testmode) production flow instead of a stub. See FinancialConnectionsSDKAvailability.isUnitTestOrUITest.
-            "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true",
+            // This makes the Financial Connections SDK trigger the (testmode) production flow instead of a stub. See `FinancialConnectionsSDKAvailability`.
+            "FinancialConnectionsSDKAvailable": "true",
+            "FinancialConnectionsStubbedResult": "false",
         ]
     }
 }
@@ -305,7 +306,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         buyButton.forceTapElement()
 
         try! fillCardData(app)
-        app.buttons["Pay €9.73"].tap()
+        app.buttons["Done"].waitForExistenceAndTap(timeout: 3.0)
+        app.buttons["Pay €9.73"].waitForExistenceAndTap(timeout: 3.0)
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Success!"))
@@ -1633,9 +1635,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
-        let payButton = app.buttons["Pay $50.99"]
-        XCTAssert(payButton.isEnabled)
-        payButton.tap()
+        app.buttons["Pay $50.99"].waitForExistenceAndTap(timeout: 5.0)
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -2508,40 +2508,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(continueButton.isEnabled)
         continueButton.tap()
 
-        // "Consent" pane
-        app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10)
-
-        // "Sign Up" pane. Email will be pre-filled.
-        let phoneTextField = app.textFields["phone_text_field"]
-        XCTAssertTrue(phoneTextField.waitForExistence(timeout: 10.0), "Failed to find phone text field")
-
-        let countryCodeSelector = app.otherElements["phone_country_code_selector"]
-        XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
-        countryCodeSelector.tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
-        app.toolbars.buttons["Done"].tap()
-
-        phoneTextField.tap()
-        phoneTextField.typeText("4015006000")
-
-        let linkLoginCtaButton = app.buttons["link_login.primary_button"]
-        XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
-        linkLoginCtaButton.tap()
-
-        // "Institution picker" pane
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
-        XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
-        featuredLegacyTestInstitution.tap()
-
-        let accountPickerLinkAccountsButton = app.buttons["connect_accounts_button"]
-        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
-        XCTAssert(accountPickerLinkAccountsButton.isEnabled, "no account selected")
-        accountPickerLinkAccountsButton.tap()
-
-        // "Success" pane
-        let successDoneButton = app.buttons["success_done_button"]
-        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
-        successDoneButton.tap()
+        Self.stepThroughNativeInstantDebitsFlow(app: app)
 
         // Back to Payment Sheet
         app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
@@ -2667,5 +2634,51 @@ extension PaymentSheetUITestCase {
         app.buttons[confirmButtonText].tap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    static func stepThroughNativeInstantDebitsFlow(app: XCUIApplication, emailPrefilled: Bool = true) {
+        // "Consent" pane
+        app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10)
+
+        // "Sign Up" pane
+        if !emailPrefilled {
+            app.textFields
+                .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
+                .firstMatch
+                .waitForExistenceAndTap(timeout: 10)
+            let email = "linkpaymentcontrolleruitest-\(UUID().uuidString)@example.com"
+            app.typeText(email + XCUIKeyboardKey.return.rawValue)
+        }
+
+        let phoneTextField = app.textFields["phone_text_field"]
+        XCTAssertTrue(phoneTextField.waitForExistence(timeout: 10.0), "Failed to find phone text field")
+
+        let countryCodeSelector = app.otherElements["phone_country_code_selector"]
+        XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
+        countryCodeSelector.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
+        app.toolbars.buttons["Done"].tap()
+
+        phoneTextField.tap()
+        phoneTextField.typeText("4015006000")
+
+        let linkLoginCtaButton = app.buttons["link_login.primary_button"]
+        XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
+        linkLoginCtaButton.tap()
+
+        // "Institution picker" pane
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
+        XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
+        featuredLegacyTestInstitution.tap()
+
+        let accountPickerLinkAccountsButton = app.buttons["connect_accounts_button"]
+        XCTAssertTrue(accountPickerLinkAccountsButton.waitForExistence(timeout: 120.0), "Failed to open Account Picker pane - \(#function) waiting failed")  // wait for accounts to fetch
+        XCTAssert(accountPickerLinkAccountsButton.isEnabled, "no account selected")
+        accountPickerLinkAccountsButton.tap()
+
+        // "Success" pane
+        let successDoneButton = app.buttons["success_done_button"]
+        XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
+        successDoneButton.tap()
     }
 }
