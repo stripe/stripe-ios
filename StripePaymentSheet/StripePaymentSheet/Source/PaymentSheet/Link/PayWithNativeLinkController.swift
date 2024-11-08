@@ -41,7 +41,7 @@ final class PayWithNativeLinkController {
             let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }),
             let presentedViewController = keyWindow.findTopMostPresentedViewController()
         else {
-            assertionFailure("No key window with view controller found")
+            stpAssertionFailure("No key window with view controller found")
             return
         }
 

@@ -182,7 +182,7 @@ public class PaymentSheet {
                     verificationController.present(from: self.bottomSheetViewController) { result in
                         switch result {
                         case .completed:
-                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: true, shouldFinishOnClose: false) {
+                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false) {
                                 // To prevent a flash of PaymentSheet content, don't present it until after the LinkController presentation animation has completed
                                 presentPaymentSheet()
                             }
