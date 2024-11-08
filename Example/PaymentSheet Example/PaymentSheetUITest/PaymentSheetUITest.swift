@@ -1967,7 +1967,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
-    // Tests Native Link, returning user, without SPMs
+    // Tests Native Link with a returning user, 2FA prompt shows first
     func testLinkPaymentSheet_native_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -1983,8 +1983,31 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         codeField.typeText("000000")
         let pwlController = app.otherElements["Stripe.Link.PayWithLinkViewController"]
         let payButton = pwlController.buttons["Pay $50.99"]
-        _ = payButton.waitForExistence(timeout: 5.0)
-        payButton.tap()
+        _ = payButton.waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    // Tests Native Link in Flow Controller with a returning user
+    func testLinkPaymentSheetFC_native_enabledSPM_noSPMs_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkMode = .link_pm
+        settings.uiStyle = .flowController
+        settings.useNativeLink = .on
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
+
+        loadPlayground(app, settings)
+
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["Link"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        let codeField = app.textViews["Code field"]
+        _ = codeField.waitForExistence(timeout: 5.0)
+        codeField.typeText("000000")
+        let pwlController = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        let payButton = pwlController.buttons["Pay $50.99"]
+        _ = payButton.waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
