@@ -89,7 +89,6 @@ class EmbeddedPaymentMethodsView: UIView {
             let savedPaymentMethodButton = makeSavedPaymentMethodButton(savedPaymentMethod: savedPaymentMethod,
                                                                         savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
             if initialSelection == selection {
-                savedPaymentMethodButton.isSelected = true
                 self.selection = initialSelection
                 self.selectedRowButton = savedPaymentMethodButton
             }
@@ -111,7 +110,6 @@ class EmbeddedPaymentMethodsView: UIView {
                 }
             )
             if initialSelection == selection {
-                cardRowButton.isSelected = true
                 self.selection = initialSelection
                 self.selectedRowButton = savedPaymentMethodButton
             }
@@ -127,7 +125,6 @@ class EmbeddedPaymentMethodsView: UIView {
             })
 
             if initialSelection == selection {
-                applePayRowButton.isSelected = true
                 self.selection = initialSelection
                 self.selectedRowButton = savedPaymentMethodButton
             }
@@ -142,7 +139,6 @@ class EmbeddedPaymentMethodsView: UIView {
             }
 
             if initialSelection == selection {
-                linkRowButton.isSelected = true
                 self.selection = initialSelection
                 self.selectedRowButton = savedPaymentMethodButton
             }
@@ -165,7 +161,6 @@ class EmbeddedPaymentMethodsView: UIView {
                 }
             )
             if initialSelection == selection {
-                rowButton.isSelected = true
                 self.selection = initialSelection
                 self.selectedRowButton = savedPaymentMethodButton
             }
@@ -181,6 +176,9 @@ class EmbeddedPaymentMethodsView: UIView {
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
 
+        // Needed b/c didSet is not called when invoked from an initializer
+        selectedRowButton?.isSelected = true
+        
         // Setup mandate
         stackView.addArrangedSubview(mandateView)
         updateMandate(animated: false)
