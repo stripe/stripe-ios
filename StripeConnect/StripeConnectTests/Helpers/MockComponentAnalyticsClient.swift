@@ -10,20 +10,90 @@
 import XCTest
 
 class MockComponentAnalyticsClient: ComponentAnalyticsClient {
-    var events: [any ConnectAnalyticEvent] = []
-    var clientErrors: [(error: any Error, file: StaticString)] = []
+    var loggedEvents: [any ConnectAnalyticEvent] = []
+    var loggedClientErrors: [(error: any Error, file: StaticString)] = []
 
     init(commonFields: CommonFields) {
         super.init(client: MockAnalyticsClientV2(), commonFields: commonFields)
     }
 
     override func log<Event: ConnectAnalyticEvent>(event: Event) {
-        events.append(event)
+        loggedEvents.append(event)
     }
 
     override func logClientError(_ error: any Error,
                                  file: StaticString = #file,
                                  line: UInt = #line) {
-        clientErrors.append((error, file))
+        loggedClientErrors.append((error, file))
+    }
+
+    func lastEvent<T: ConnectAnalyticEvent>(ofType t: T.Type,
+                                            file: StaticString = #file,
+                                            line: UInt = #line) throws -> T {
+        try XCTUnwrap(loggedEvents.compactMap { $0 as? T }.last,
+                      "loggedEvents: \(loggedEvents)",
+                      file: file,
+                      line: line)
     }
 }
+
+/*
+ Because `any ConnectAnalyticEvent` does not conform to Equatable, we have to
+ define some helpers for testing for equality.
+ */
+
+extension ConnectAnalyticEvent {
+    func isEqual(to other: any ConnectAnalyticEvent) -> Bool {
+        guard let typedOther = other as? Self else {
+            return false
+        }
+        return typedOther == self
+    }
+}
+
+extension Optional where Wrapped == (any ConnectAnalyticEvent) {
+    func isEqual(to other: (any ConnectAnalyticEvent)?) -> Bool {
+        if self == nil && other == nil {
+            return true
+        }
+        guard let self, let other else {
+            return false
+        }
+        return self.isEqual(to: other)
+    }
+}
+
+extension Array where Element == (any ConnectAnalyticEvent) {
+    func isEqual(to other: [any ConnectAnalyticEvent]) -> Bool {
+        guard count == other.count else {
+            return false
+        }
+
+        return zip(self, other).allSatisfy { $0.isEqual(to: $1) }
+    }
+}
+
+func XCTAssertEqual(_ actual: (any ConnectAnalyticEvent)?,
+                    _ expected: (any ConnectAnalyticEvent)?,
+                    _ message: String? = nil,
+                    file: StaticString = #file,
+                    line: UInt = #line) {
+    var failureMessage = "\(String(describing: actual)) does not match expected value \(String(describing: expected))"
+    if let message {
+        failureMessage = "\(failureMessage) - \(message)"
+    }
+    XCTAssert(expected.isEqual(to: actual), failureMessage, file: file, line: line)
+}
+
+func XCTAssertEqual(_ actual: [any ConnectAnalyticEvent],
+                    _ expected: [any ConnectAnalyticEvent],
+                    _ message: String? = nil,
+                    file: StaticString = #file,
+                    line: UInt = #line) {
+    var failureMessage = "\(actual) does not match expected value \(expected)"
+    if let message {
+        failureMessage = "\(failureMessage) - \(message)"
+    }
+    XCTAssert(expected.isEqual(to: actual), failureMessage, file: file, line: line)
+}
+

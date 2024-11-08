@@ -7,7 +7,7 @@
 
 /// An error occurred deserializing the JSON payload from a web message.
 struct DeserializeMessageErrorEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// The name of the message
         let message: String
 

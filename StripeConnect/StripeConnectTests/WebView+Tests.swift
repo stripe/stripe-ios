@@ -31,50 +31,50 @@ extension WKWebView {
     func evaluateOnLoaderStart(elementTagName: String) async throws {
         try await evaluateMessage(name: "onSetterFunctionCalled",
                                 json: """
-                        {
-                            "setter": "setOnLoaderStart",
-                            "value": {
-                                "elementTagName": "\(elementTagName)"
-                            }
-                        }
-                        """)
+                                {
+                                    "setter": "setOnLoaderStart",
+                                    "value": {
+                                        "elementTagName": "\(elementTagName)"
+                                    }
+                                }
+                                """)
     }
 
-    func evaluatePageDidLoad(pageViewId: String) {
-        evaluateMessage(name: "pageDidLoad",
-                        json: """
-                        {"pageViewId": "\(pageViewId)"}
-                        """)
+    func evaluatePageDidLoad(pageViewId: String) async throws {
+        try await evaluateMessage(name: "pageDidLoad",
+                                  json: """
+                                  {"pageViewId": "\(pageViewId)"}
+                                  """)
     }
 
-    func evaluateAccountSessionClaimed(merchantId: String) {
-        evaluateMessage(name: "accountSessionClaimed",
-                        json: """
-                        {"merchantId": "\(merchantId)"}
-                        """)
+    func evaluateAccountSessionClaimed(merchantId: String) async throws {
+        try await evaluateMessage(name: "accountSessionClaimed",
+                                  json: """
+                                  {"merchantId": "\(merchantId)"}
+                                  """)
     }
 
-    func evaluateOpenAuthenticatedWebView(url: String, id: String) {
-        evaluateMessage(name: "openAuthenticatedWebView",
-                        json: """
-                        {"url": "\(url)", "id": "\(id)" }
-                        """)
+    func evaluateOpenAuthenticatedWebView(url: String, id: String) async throws {
+        try await evaluateMessage(name: "openAuthenticatedWebView",
+                                  json: """
+                                  {"url": "\(url)", "id": "\(id)" }
+                                  """)
     }
 
     func evaluateOnLoadError(type: String, message: String) async throws {
         try await evaluateMessage(name: "onSetterFunctionCalled",
-                        json:
-                        """
-                        {
-                            "setter": "setOnLoadError",
-                            "value": {
-                                "error": {
-                                    "type": "\(type)",
-                                    "message": "\(message)"
-                                }
-                            }
-                        }
-                        """)
+                                  json:
+                                  """
+                                  {
+                                      "setter": "setOnLoadError",
+                                      "value": {
+                                          "error": {
+                                              "type": "\(type)",
+                                              "message": "\(message)"
+                                          }
+                                      }
+                                  }
+                                  """)
     }
 }
 

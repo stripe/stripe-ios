@@ -7,7 +7,7 @@
 
 /// The authenticated web view threw an error and was not successfully redirected back to the app.
 struct AuthenticatedWebViewErrorEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// ID for the authenticated web view session (sent in `openAuthenticatedWebView` message
         let authenticatedWebViewId: String
 

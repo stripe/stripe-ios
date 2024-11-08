@@ -7,7 +7,7 @@
 
 /// A component was instantiated via `create{ComponentType}`.
 struct ComponentCreatedEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable { }
+    struct Metadata: Encodable, Equatable { }
 
     let name = "component.created"
     let metadata = Metadata()

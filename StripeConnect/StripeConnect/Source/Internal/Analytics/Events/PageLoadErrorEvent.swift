@@ -7,7 +7,7 @@
 
 /// The SDK receives a non-200 status code or error loading the web view, other than “Internet connectivity” errors.
 struct PageLoadErrorEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// http status code if the error was a non-200 response
         let status: Int?
 
