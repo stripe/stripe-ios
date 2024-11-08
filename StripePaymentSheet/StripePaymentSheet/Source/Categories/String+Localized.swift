@@ -76,7 +76,7 @@ extension String.Localized {
     static var back: String {
         STPLocalizedString("Back", "Text for back button")
     }
-    
+
     static var card_details_cannot_be_changed: String {
         STPLocalizedString(
             "Card details cannot be changed.",
@@ -290,7 +290,7 @@ extension String.Localized {
             "Title shown above a carousel containing the customer's payment methods"
         )
     }
-    
+
     static var save: String {
         STPLocalizedString(
             "Save",

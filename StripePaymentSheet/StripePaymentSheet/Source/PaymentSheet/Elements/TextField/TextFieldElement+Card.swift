@@ -199,7 +199,7 @@ extension TextFieldElement {
         let cardBrandProvider: () -> (STPCardBrand)
         var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
-        
+
         func censor() -> String {
             var dots: String = "••••"
             let maxLength = maxLength(for: dots)
