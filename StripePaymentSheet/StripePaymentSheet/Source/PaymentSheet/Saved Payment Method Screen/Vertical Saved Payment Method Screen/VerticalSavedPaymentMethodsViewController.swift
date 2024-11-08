@@ -37,7 +37,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
-    private var updateViewController: UpdateCardViewController?
+//    private var updateViewController: UpdateCardViewController?
+    private var updateViewController: UpdatePaymentMethodViewController?
 
     private var isEditingPaymentMethods: Bool = false {
         didSet {
@@ -47,8 +48,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
-                paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
-                                                                allowsUpdating: $0.paymentMethod.isCoBrandedCard && isCBCEligible) }
+                paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: false,
+                                                                allowsUpdating: $0.paymentMethod.type == STPPaymentMethodType.card) }
             } else if oldValue {
                 // If we are exiting edit mode restore previous selected states
                 paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
@@ -167,7 +168,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         // Put in remove only mode and don't show the option to update PMs if:
         // 1. We only have 1 payment method
         // 2. The customer can't update the card brand 
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
+//        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
+        self.isRemoveOnlyMode = false
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
@@ -320,10 +322,18 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
+//        let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
+//                                                            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+//                                                            appearance: configuration.appearance,
+//                                                            hostedSurface: .paymentSheet,
+//                                                            canRemoveCard: canRemovePaymentMethods,
+//                                                            isTestMode: configuration.apiClient.isTestmode,
+//                                                            cardBrandFilter: configuration.cardBrandFilter)
+        let updateViewController = UpdatePaymentMethodViewController(paymentMethod: paymentMethod,
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                             appearance: configuration.appearance,
                                                             hostedSurface: .paymentSheet,
+                                                            canEditCard: paymentMethod.isCoBrandedCard && isCBCEligible,
                                                             canRemoveCard: canRemovePaymentMethods,
                                                             isTestMode: configuration.apiClient.isTestmode,
                                                             cardBrandFilter: configuration.cardBrandFilter)
@@ -375,4 +385,26 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         stackView.insertArrangedSubview(newButton, at: oldButtonViewIndex)
     }
 
+}
+
+// MARK: - UpdatePaymentMethodViewControllerDelegate
+extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
+        remove(paymentMethod: paymentMethod)
+       _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
+                   paymentMethod: STPPaymentMethod,
+                   updateParams: STPPaymentMethodUpdateParams) async throws {
+        // Update the payment method
+        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+
+        replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didDismiss(viewController: UpdatePaymentMethodViewController) {
+        // No-op
+    }
 }
