@@ -582,7 +582,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 bottomSheetController?.pushContentViewController(updateViewController)
                 return
             }
-            else {
+            else if paymentMethod.isCoBrandedCard, elementsSession.isCardBrandChoiceEligible {
                 let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                                 appearance: configuration.appearance,

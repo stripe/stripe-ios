@@ -94,7 +94,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
-        // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
+        // Special case, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first
         {
