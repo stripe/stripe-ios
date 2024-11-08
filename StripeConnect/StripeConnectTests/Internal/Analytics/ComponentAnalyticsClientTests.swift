@@ -52,7 +52,7 @@ class ComponentAnalyticsClientTests: XCTestCase {
         // well as in first-level
         XCTAssertEqual((payload["event_metadata"] as? NSDictionary), [
             "some_string": "string_value",
-            "some_int": 42
+            "some_int": 42,
         ])
         XCTAssertEqual(payload["some_string"] as? String, "string_value")
         XCTAssertEqual(payload["some_int"] as? Int, 42)
@@ -202,7 +202,7 @@ private struct MockError: Error, AnalyticLoggableErrorV2, CustomNSError {
     let errorCode: Int
     let customPayload: [String: Any]
 
-    func analyticLoggableSerializeForLogging() -> [String : Any] {
+    func analyticLoggableSerializeForLogging() -> [String: Any] {
         customPayload
     }
 }
