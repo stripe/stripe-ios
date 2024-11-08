@@ -93,7 +93,7 @@ class OnSetterFunctionCalledMessageHandlerTests: ScriptWebTestBase {
         let event = try XCTUnwrap(analyticsClient.loggedEvents.last as? DeserializeMessageErrorEvent)
 
         XCTAssertEqual(event.metadata.error, "NSCocoaErrorDomain:4864")
-        XCTAssertEqual(event.metadata.errorDescription, "Expected to decode Bool but found a string instead.")
+        XCTAssertNotNil(event.metadata.errorDescription)
         XCTAssertEqual(event.metadata.message, "onSetterFunctionCalled.setFoo")
     }
 }

@@ -9,7 +9,6 @@ import Foundation
 import SafariServices
 @_spi(PrivateBetaConnect) @testable import StripeConnect
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import WebKit
 import XCTest

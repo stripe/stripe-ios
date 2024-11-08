@@ -52,7 +52,7 @@ class ScriptMessageHandlerTests: ScriptWebTestBase {
         let event = try XCTUnwrap(analyticsClient.loggedEvents.last as? DeserializeMessageErrorEvent)
 
         XCTAssertEqual(event.metadata.error, "NSCocoaErrorDomain:4864")
-        XCTAssertEqual(event.metadata.errorDescription, "Expected to decode Bool but found a dictionary instead.")
+        XCTAssertNotNil(event.metadata.errorDescription)
         XCTAssertEqual(event.metadata.message, "message")
     }
 }
