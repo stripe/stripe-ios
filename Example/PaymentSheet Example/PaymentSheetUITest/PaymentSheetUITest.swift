@@ -2511,11 +2511,7 @@ extension PaymentSheetUITestCase {
         // "Consent" pane
         app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10)
 
-        // "Sign Up" pane
-        let emailTextField = app.textFields["email_text_field"]
-        XCTAssertTrue(emailTextField.waitForExistence(timeout: 10.0), "Failed to find email text field")
-        emailTextField.typeText("\(UUID().uuidString)@uitest.com")
-
+        // "Sign Up" pane. Email will be pre-filled.
         let phoneTextField = app.textFields["phone_text_field"]
         XCTAssertTrue(phoneTextField.waitForExistence(timeout: 10.0), "Failed to find phone text field")
 
