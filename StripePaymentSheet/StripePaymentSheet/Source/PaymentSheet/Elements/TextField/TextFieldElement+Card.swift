@@ -195,7 +195,7 @@ extension TextFieldElement {
             self.isEditable = isEditable
         }
 
-        var defaultValue: String?
+        let defaultValue: String?
         let cardBrandProvider: () -> (STPCardBrand)
         var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit

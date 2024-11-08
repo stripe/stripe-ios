@@ -261,6 +261,7 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
+        configuration.newUpdatePaymentMethodFlow = settings.newUpdatePaymentMethodFlow == .on
 
         switch settings.cardBrandAcceptance {
         case .all:
