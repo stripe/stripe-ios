@@ -1967,6 +1967,27 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
+    // Tests Native Link, returning user, without SPMs
+    func testLinkPaymentSheet_native_enabledSPM_noSPMs_returningLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkMode = .link_pm
+        settings.useNativeLink = .on
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let codeField = app.textViews["Code field"]
+        _ = codeField.waitForExistence(timeout: 5.0)
+        codeField.typeText("000000")
+        let pwlController = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        let payButton = pwlController.buttons["Pay $50.99"]
+        _ = payButton.waitForExistence(timeout: 5.0)
+        payButton.tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
     // Tests the #5 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and first time Link user
     func testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -2379,7 +2400,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 //        // Allow link.com to sign in
 //        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
 //        springboard.buttons["Continue"].forceTapWhenHittableInTestCase(self)
-//        
+//
 //        let emailField = app.webViews.textFields.firstMatch
 //        emailField.forceTapWhenHittableInTestCase(self)
 //        emailField.typeText("test@example.com")
