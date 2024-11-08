@@ -283,7 +283,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     @MainActor
     func testAuthenticatedWebViewCanceled() async throws {
         let componentManager = componentManagerAssertingOnFetch()
-        let authenticatedWebViewManager = MockAuthenticatedWebViewManager { url, _ in
+        let authenticatedWebViewManager = MockAuthenticatedWebViewManager { _, _ in
             return nil
         }
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
@@ -312,7 +312,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     @MainActor
     func testAuthenticatedWebViewErrored() async throws {
         let componentManager = componentManagerAssertingOnFetch()
-        let authenticatedWebViewManager = MockAuthenticatedWebViewManager { url, _ in
+        let authenticatedWebViewManager = MockAuthenticatedWebViewManager { _, _ in
             throw NSError(domain: "test_domain", code: 123)
         }
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,

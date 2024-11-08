@@ -11,7 +11,7 @@ import XCTest
 
 class MockComponentAnalyticsClient: ComponentAnalyticsClient {
     var loggedEvents: [any ConnectAnalyticEvent] = []
-    var loggedClientErrors: [(error: any Error, file: StaticString)] = []
+    var loggedClientErrors: [(domain: String, code: Int)] = []
 
     init(commonFields: CommonFields) {
         super.init(client: MockAnalyticsClientV2(), commonFields: commonFields)
@@ -24,7 +24,8 @@ class MockComponentAnalyticsClient: ComponentAnalyticsClient {
     override func logClientError(_ error: any Error,
                                  file: StaticString = #file,
                                  line: UInt = #line) {
-        loggedClientErrors.append((error, file))
+        loggedClientErrors.append(((error as NSError).domain,
+                                   (error as NSError).code))
     }
 
     func lastEvent<T: ConnectAnalyticEvent>(ofType t: T.Type,
@@ -96,4 +97,3 @@ func XCTAssertEqual(_ actual: [any ConnectAnalyticEvent],
     }
     XCTAssert(expected.isEqual(to: actual), failureMessage, file: file, line: line)
 }
-

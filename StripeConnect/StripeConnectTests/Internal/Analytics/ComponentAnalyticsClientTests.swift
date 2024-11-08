@@ -9,5 +9,5 @@
 import XCTest
 
 class ComponentAnalyticsClientTests: XCTestCase {
-    
+
 }
