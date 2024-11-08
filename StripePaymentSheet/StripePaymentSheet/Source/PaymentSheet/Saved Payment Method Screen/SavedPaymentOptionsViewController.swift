@@ -102,6 +102,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let isCVCRecollectionEnabled: Bool
         let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
+        let newUpdatePaymentMethodFlow: Bool
         let allowsRemovalOfPaymentMethods: Bool
     }
 
@@ -503,7 +504,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, newUpdatePaymentMethodFlow: self.configuration.newUpdatePaymentMethodFlow)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -565,17 +566,29 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             stpAssertionFailure()
             return
         }
-        
-        let editVc = UpdatePaymentMethodViewController(paymentMethod: paymentMethod,
-                                              removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                              appearance: appearance,
-                                              hostedSurface: .paymentSheet,
-                                              canEditCard: paymentMethod.isCoBrandedCard && cbcEligible,
-                                              canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                              isTestMode: configuration.isTestMode,
-                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
-        editVc.delegate = self
-        self.bottomSheetController?.pushContentViewController(editVc)
+        if configuration.newUpdatePaymentMethodFlow {
+            let editVc = UpdatePaymentMethodViewController(paymentMethod: paymentMethod,
+                                                           removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                           appearance: appearance,
+                                                           hostedSurface: .paymentSheet,
+                                                           canEditCard: paymentMethod.isCoBrandedCard && cbcEligible,
+                                                           canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+                                                           isTestMode: configuration.isTestMode,
+                                                           cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
+            editVc.delegate = self
+            self.bottomSheetController?.pushContentViewController(editVc)
+        }
+        else {
+            let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
+                                                           removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                           appearance: appearance,
+                                                           hostedSurface: .paymentSheet,
+                                                           canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+                                                           isTestMode: configuration.isTestMode,
+                                                           cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
+            editVc.delegate = self
+            self.bottomSheetController?.pushContentViewController(editVc)
+        }
     }
 
     func paymentOptionCellDidSelectRemove(

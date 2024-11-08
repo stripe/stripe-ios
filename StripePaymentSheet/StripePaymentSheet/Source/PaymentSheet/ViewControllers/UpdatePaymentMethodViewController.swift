@@ -134,10 +134,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
         return cvcTextField
         
     }()
-    
-    private lazy var notEditableDetailsLabelElement: StaticElement = {
-        return StaticElement(view: notEditableDetailsLabel)
-    }()
 
     private lazy var cardSection: SectionElement = {
         let allSubElements: [Element?] = [

@@ -123,6 +123,11 @@ extension EmbeddedPaymentElement {
         /// If true (the default), the customer can delete all saved payment methods.
         /// If false, the customer can't delete if they only have one saved payment method remaining.
         @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
+        
+        /// This is an experimental feature that may be removed at any time.
+        /// If true (the default), editing the saved payment methods will bring up the new update payment method screen, and you cannot remove the payment method from the list view screen.
+        /// If false, editing the saved payment methods will bring up the update card brand choice screen, and you can remove payment methods from the list screen.
+        @_spi(NewUpdatePaymentMethodFlow) public var newUpdatePaymentMethodFlow = false
 
         /// By default, the embedded payment element will accept all supported cards by Stripe.
         /// You can specify card brands the embedded payment element should block disallow or allow payment for by providing an array of those card brands.

@@ -412,6 +412,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum NewUpdatePaymentMethodFlowEnabled: String, PickerEnum {
+        static let enumName: String = "newUpdatePaymentMethodFlow"
+        case on
+        case off
+    }
+
     enum DisplaysMandateTextEnabled: String, PickerEnum {
         static let enumName: String = "displaysMandateText"
         case on
@@ -466,6 +472,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
+    var newUpdatePaymentMethodFlow: NewUpdatePaymentMethodFlowEnabled
 
     var attachDefaults: BillingDetailsAttachDefaults
     var collectName: BillingDetailsName
@@ -511,6 +518,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
+            newUpdatePaymentMethodFlow: .on,
             attachDefaults: .off,
             collectName: .automatic,
             collectEmail: .automatic,
