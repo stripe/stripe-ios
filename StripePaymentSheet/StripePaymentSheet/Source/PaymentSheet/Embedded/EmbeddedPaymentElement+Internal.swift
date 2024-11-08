@@ -10,6 +10,8 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+@_spi(STP) import StripeCore
+
 extension EmbeddedPaymentElement {
     @MainActor
     static func makeView(
@@ -90,8 +92,46 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
 
-    func selectionDidUpdate() {
-        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+    func selectionDidUpdate(didChange: Bool) {
+        // Deferring notifying delegate until the exit of this function guarantees the new payment option comes from the new instance of `EmbeddedFormViewController`
+        defer {
+            if didChange {
+                delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+            }
+        }
+        
+        guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
+            // This can occur when selection is being reset to nothing selected, so don't assert.
+            return
+        }
+
+        guard let presentingViewController else {
+            stpAssertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+            return
+        }
+
+        let formViewController = EmbeddedFormViewController(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
+            paymentMethodType: paymentMethodType,
+            previousPaymentOption: self.formViewController?.previousPaymentOption,
+            analyticsHelper: analyticsHelper,
+            formCache: formCache
+        )
+        formViewController.delegate = self
+
+        // Only show forms that require user input
+        guard formViewController.collectsUserInput else {
+            self.formViewController = nil  // Clear out any previous form view controller to update self._paymentOption
+            return
+        }
+
+        let bottomSheet = bottomSheetController(with: formViewController)
+        delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
+        presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+        self.formViewController = formViewController
     }
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
         // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
@@ -107,11 +147,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                 isTestMode: configuration.apiClient.isTestmode,
                                                                 cardBrandFilter: configuration.cardBrandFilter)
             updateViewController.delegate = self
-            let bottomSheetVC = BottomSheetViewController(contentViewController: updateViewController,
-                                                          appearance: configuration.appearance,
-                                                          isTestMode: configuration.apiClient.isTestmode, didCancelNative3DS2: {
-                stpAssertionFailure("3DS2 was triggered unexpectedly")
-            })
+            let bottomSheetVC = bottomSheetController(with: updateViewController)
             presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
             return
         }
@@ -124,12 +160,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             analyticsHelper: analyticsHelper
         )
         verticalSavedPaymentMethodsViewController.delegate = self
-        let bottomSheetVC = BottomSheetViewController(contentViewController: verticalSavedPaymentMethodsViewController,
-                                                      appearance: configuration.appearance,
-                                                      isTestMode: configuration.apiClient.isTestmode,
-                                                      didCancelNative3DS2: {
-            stpAssertionFailure("3DS2 was triggered unexpectedly")
-        })
+        let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
         presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
 }
@@ -168,6 +199,7 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }
+    
     func didDismiss(viewController: UpdateCardViewController) {
         presentingViewController?.dismiss(animated: true)
     }
@@ -233,5 +265,40 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             paymentMethodType = paymentMethod.type
             billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
         }
+    }
+}
+
+extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
+    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: EmbeddedFormViewController, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+        // TODO(porter)
+    }
+    
+    func embeddedFormViewControllerShouldContinue(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
+        // TODO(porter)
+    }
+    
+    func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
+        if embeddedFormViewController.selectedPaymentOption == nil {
+            self.formViewController = nil
+            embeddedPaymentMethodsView.resetSelectionToLastSelection()
+        }
+        embeddedFormViewController.dismiss(animated: true)
+    }
+    
+    func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
+        embeddedFormViewController.dismiss(animated: true)
+        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+    }
+    
+}
+
+extension EmbeddedPaymentElement {
+    func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
+        return BottomSheetViewController(contentViewController: viewController,
+                                         appearance: configuration.appearance,
+                                         isTestMode: configuration.apiClient.isTestmode,
+                                         didCancelNative3DS2: {
+            stpAssertionFailure("3DS2 was triggered unexpectedly")
+        })
     }
 }

@@ -13,7 +13,7 @@ import UIKit
 @MainActor
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
-    func selectionDidUpdate()
+    func selectionDidUpdate(didChange: Bool)
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
 }
 
@@ -24,12 +24,25 @@ class EmbeddedPaymentMethodsView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
+    private var previousSelection: Selection?
+    private var previousSelectedRowButton: RowButton?
+    private var selectedRowButton: RowButton? {
+        willSet {
+            previousSelectedRowButton = selectedRowButton
+        }
+        didSet {
+            for case let rowButton as RowButton in stackView.arrangedSubviews {
+                rowButton.isSelected = rowButton === selectedRowButton
+            }
+        }
+    }
     private(set) var selection: Selection? {
+        willSet {
+            previousSelection = selection
+        }
         didSet {
             updateMandate()
-            if oldValue != selection {
-                delegate?.selectionDidUpdate()
-            }
+            delegate?.selectionDidUpdate(didChange: oldValue != selection)
         }
     }
     private let mandateProvider: MandateTextProvider
@@ -76,8 +89,8 @@ class EmbeddedPaymentMethodsView: UIView {
             let savedPaymentMethodButton = makeSavedPaymentMethodButton(savedPaymentMethod: savedPaymentMethod,
                                                                         savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType)
             if initialSelection == selection {
-                savedPaymentMethodButton.isSelected = true
                 self.selection = initialSelection
+                self.selectedRowButton = savedPaymentMethodButton
             }
             self.savedPaymentMethodButton = savedPaymentMethodButton
             stackView.addArrangedSubview(savedPaymentMethodButton)
@@ -97,8 +110,8 @@ class EmbeddedPaymentMethodsView: UIView {
                 }
             )
             if initialSelection == selection {
-                cardRowButton.isSelected = true
                 self.selection = initialSelection
+                self.selectedRowButton = cardRowButton
             }
             stackView.addArrangedSubview(cardRowButton)
         }
@@ -112,8 +125,8 @@ class EmbeddedPaymentMethodsView: UIView {
             })
 
             if initialSelection == selection {
-                applePayRowButton.isSelected = true
                 self.selection = initialSelection
+                self.selectedRowButton = applePayRowButton
             }
 
             stackView.addArrangedSubview(applePayRowButton)
@@ -126,8 +139,8 @@ class EmbeddedPaymentMethodsView: UIView {
             }
 
             if initialSelection == selection {
-                linkRowButton.isSelected = true
                 self.selection = initialSelection
+                self.selectedRowButton = linkRowButton
             }
 
             stackView.addArrangedSubview(linkRowButton)
@@ -148,8 +161,8 @@ class EmbeddedPaymentMethodsView: UIView {
                 }
             )
             if initialSelection == selection {
-                rowButton.isSelected = true
                 self.selection = initialSelection
+                self.selectedRowButton = rowButton
             }
             stackView.addArrangedSubview(rowButton)
         }
@@ -163,6 +176,9 @@ class EmbeddedPaymentMethodsView: UIView {
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
         }
 
+        // Needed b/c didSet is not called when invoked from an initializer
+        selectedRowButton?.isSelected = true
+        
         // Setup mandate
         stackView.addArrangedSubview(mandateView)
         updateMandate(animated: false)
@@ -189,13 +205,16 @@ class EmbeddedPaymentMethodsView: UIView {
             delegate?.heightDidChange()
         }
     }
+    
+    // MARK: Internal functions
+    func resetSelectionToLastSelection() {
+        self.selection = previousSelection
+        self.selectedRowButton = previousSelectedRowButton
+    }
 
     // MARK: Tap handling
     func didTap(selectedRowButton: RowButton, selection: Selection) {
-        for case let rowButton as RowButton in stackView.arrangedSubviews {
-            rowButton.isSelected = rowButton === selectedRowButton
-        }
-
+        self.selectedRowButton = selectedRowButton
         self.selection = selection
     }
 

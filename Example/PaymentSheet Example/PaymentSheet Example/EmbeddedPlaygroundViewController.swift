@@ -53,6 +53,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.setTitle("Checkout", for: .normal)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
+        checkoutButton.isEnabled = false
         return checkoutButton
     }()
 
@@ -115,7 +116,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
         embeddedPaymentElement.delegate = self
         embeddedPaymentElement.presentingViewController = self
         self.embeddedPaymentElement = embeddedPaymentElement
-
+        self.embeddedPaymentElement?.presentingViewController = self
+        
         // Scroll view contains our content
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -198,6 +200,7 @@ extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
     }
 
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
+        checkoutButton.isEnabled = embeddedPaymentElement.paymentOption != nil
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
 }

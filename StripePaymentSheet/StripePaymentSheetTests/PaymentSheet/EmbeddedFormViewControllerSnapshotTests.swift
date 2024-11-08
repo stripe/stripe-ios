@@ -35,11 +35,12 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 
         return EmbeddedFormViewController(
             configuration: configuration,
-            loadResult: loadResult,
+            intent: loadResult.intent,
+            elementsSession: loadResult.elementsSession,
+            shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
             paymentMethodType: .stripe(paymentMethodType),
             previousPaymentOption: previousPaymentOption,
-            analyticsHelper: ._testValue(),
-            formCache: .init()
+            analyticsHelper: ._testValue()
         )
     }
 
