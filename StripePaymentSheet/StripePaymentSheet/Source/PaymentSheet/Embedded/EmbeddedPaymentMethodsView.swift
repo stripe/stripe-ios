@@ -111,7 +111,7 @@ class EmbeddedPaymentMethodsView: UIView {
             )
             if initialSelection == selection {
                 self.selection = initialSelection
-                self.selectedRowButton = savedPaymentMethodButton
+                self.selectedRowButton = cardRowButton
             }
             stackView.addArrangedSubview(cardRowButton)
         }
@@ -126,7 +126,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
             if initialSelection == selection {
                 self.selection = initialSelection
-                self.selectedRowButton = savedPaymentMethodButton
+                self.selectedRowButton = applePayRowButton
             }
 
             stackView.addArrangedSubview(applePayRowButton)
@@ -140,7 +140,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
             if initialSelection == selection {
                 self.selection = initialSelection
-                self.selectedRowButton = savedPaymentMethodButton
+                self.selectedRowButton = linkRowButton
             }
 
             stackView.addArrangedSubview(linkRowButton)
@@ -162,7 +162,7 @@ class EmbeddedPaymentMethodsView: UIView {
             )
             if initialSelection == selection {
                 self.selection = initialSelection
-                self.selectedRowButton = savedPaymentMethodButton
+                self.selectedRowButton = rowButton
             }
             stackView.addArrangedSubview(rowButton)
         }
