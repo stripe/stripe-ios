@@ -23,6 +23,19 @@ class EmbeddedPaymentElementTest: XCTestCase {
     let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
     }
+    let paymentIntentConfigWithConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) {paymentMethod, _, intentCreationCallback in
+        STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
+                                currency: "USD",
+                                paymentMethodID: paymentMethod.stripeId,
+                                confirm: true) { result in
+            switch result {
+            case .success(let clientSecret):
+                intentCreationCallback(.success(clientSecret))
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
     let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
     }
@@ -138,22 +151,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
     func testConfirmHandlesInflightUpdateThatSucceeds() async throws {
         // Given a EmbeddedPaymentElement instance...
-        var paymentIntentConfig = paymentIntentConfig
-        paymentIntentConfig.confirmHandler = {paymentMethod, _, intentCreationCallback in
-            STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
-                                    currency: "USD",
-                                    paymentMethodID: paymentMethod.stripeId,
-                                    confirm: true) { result in
-                switch result {
-                case .success(let clientSecret):
-                    intentCreationCallback(.success(clientSecret))
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        }
-        
-        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
         
@@ -216,24 +214,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
     
     func testConfirmCard() async throws {
-        // Setup a confirm handler to create an intent
-        var paymentIntentConfig = paymentIntentConfig
-        paymentIntentConfig.confirmHandler = {paymentMethod, _, intentCreationCallback in
-            STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
-                                    currency: "USD",
-                                    paymentMethodID: paymentMethod.stripeId,
-                                    confirm: true) { result in
-                switch result {
-                case .success(let clientSecret):
-                    intentCreationCallback(.success(clientSecret))
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        }
-        
         // Given an EmbeddedPaymentElement instance...
-        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
@@ -264,7 +246,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
     func testConfirmWithInvalidCard() async throws {
         // Given an EmbeddedPaymentElement instance
-        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
