@@ -215,7 +215,7 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
 
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, newUpdatePaymentMethodFlow: Bool = false) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, newUpdatePaymentMethodFlow: Bool) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false

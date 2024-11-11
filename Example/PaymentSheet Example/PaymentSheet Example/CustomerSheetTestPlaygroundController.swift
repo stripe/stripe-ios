@@ -118,6 +118,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.headerTextForSelectionScreen = settings.headerTextForSelectionScreen
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
+        configuration.newUpdatePaymentMethodFlow = settings.newUpdatePaymentMethodFlow == .on
 
         if settings.defaultBillingAddress == .on {
             configuration.defaultBillingDetails.name = "Jane Doe"

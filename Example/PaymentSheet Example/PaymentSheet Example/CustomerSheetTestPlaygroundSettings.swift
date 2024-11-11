@@ -104,6 +104,12 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum NewUpdatePaymentMethodFlow: String, PickerEnum {
+        static let enumName: String = "NewUpdatePaymentMethodFlow"
+
+        case on
+        case off
+    }
     enum PaymentMethodRemove: String, PickerEnum {
         static let enumName: String = "PaymentMethodRemove"
 
@@ -159,6 +165,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var merchantCountryCode: MerchantCountry
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethod
+    var newUpdatePaymentMethodFlow: NewUpdatePaymentMethodFlow
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var cardBrandAcceptance: CardBrandAcceptance
@@ -180,6 +187,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    merchantCountryCode: .US,
                                                    preferredNetworksEnabled: .off,
                                                    allowsRemovalOfLastSavedPaymentMethod: .on,
+                                                   newUpdatePaymentMethodFlow: .off,
                                                    paymentMethodRemove: .enabled,
                                                    paymentMethodAllowRedisplayFilters: .always,
                                                    cardBrandAcceptance: .all)

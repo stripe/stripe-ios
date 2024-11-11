@@ -74,6 +74,7 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
+                        SettingView(setting: $playgroundController.settings.newUpdatePaymentMethodFlow)
                         HStack {
                             Text("Macros").font(.headline)
                             Spacer()
