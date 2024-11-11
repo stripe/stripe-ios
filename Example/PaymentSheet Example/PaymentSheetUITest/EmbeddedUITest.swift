@@ -495,6 +495,11 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(app.staticTexts["Payment method"].label, "••••6789")
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         
+        // Confirm with the saved card
+        app.buttons["•••• 4242"].waitForExistenceAndTap()
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
         app.buttons["Checkout"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20))
     }

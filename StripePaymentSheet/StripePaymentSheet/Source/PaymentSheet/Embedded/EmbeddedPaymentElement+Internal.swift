@@ -100,7 +100,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
         
         guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
-            // This can occur when selection is being reset to nothing selected, so don't assert.
+            // This can occur when selection is being reset to nothing selected or to a saved payment method, so don't assert.
+            self.formViewController = nil
             return
         }
 
