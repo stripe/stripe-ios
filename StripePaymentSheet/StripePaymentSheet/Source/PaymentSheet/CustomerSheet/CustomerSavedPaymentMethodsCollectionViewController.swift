@@ -455,15 +455,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             editVc.delegate = self
             self.bottomSheetController?.pushContentViewController(editVc)
         }
-//        let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
-//                                              removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
-//                                              appearance: appearance,
-//                                              hostedSurface: .customerSheet,
-//                                              canRemoveCard: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-//                                              isTestMode: configuration.isTestMode,
-//                                              cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter)
-//        editVc.delegate = self
-//        self.bottomSheetController?.pushContentViewController(editVc)
     }
 
     func paymentOptionCellDidSelectRemove(

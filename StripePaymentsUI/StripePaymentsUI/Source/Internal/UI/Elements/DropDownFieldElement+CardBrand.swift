@@ -33,7 +33,7 @@ extension DropdownFieldElement {
         dropDown.view.accessibilityIdentifier = "Card Brand Dropdown"
         return dropDown
     }
-    
+
     @_spi(STP) public static func makeCardBrandDropdownWithLabel(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(),
                                                         theme: ElementsAppearance = .default,
                                                         includePlaceholder: Bool = true,
@@ -71,7 +71,7 @@ extension DropdownFieldElement {
         let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme, maxWidth: maxWidth) }
         return includePlaceholder ? [placeholderItem] + cardBrandItems : cardBrandItems
     }
-    
+
     @_spi(STP) public static func itemsWithLabel(from cardBrands: Set<STPCardBrand>, theme: ElementsAppearance, includePlaceholder: Bool = true, maxWidth: CGFloat? = nil) -> [DropdownItem] {
         let placeholderItem = DropdownItem(
             pickerDisplayName: NSAttributedString(string: .Localized.card_brand_dropdown_placeholder),

@@ -39,7 +39,7 @@ extension STPCardBrand {
             rawData: STPCardBrandUtilities.apiValue(from: self)
         )
     }
-    
+
     func cardBrandItemWithLabel(theme: ElementsAppearance = .default, maxWidth: CGFloat? = nil) -> DropdownFieldElement.DropdownItem {
         let brandName = STPCardBrandUtilities.stringFrom(self) ?? ""
 

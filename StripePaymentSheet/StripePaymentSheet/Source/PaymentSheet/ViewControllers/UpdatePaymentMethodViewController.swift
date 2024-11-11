@@ -92,13 +92,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
         button.isHidden = !canRemoveCard
         return button
     }()
-    
+
     private lazy var notEditableDetailsLabel: UITextView = {
         let label = ElementsUI.makeSmallFootnote(theme: appearance.asElementsTheme)
         label.text = .Localized.card_details_cannot_be_changed
         return label
     }()
-    
 
     private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
@@ -110,7 +109,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private lazy var headerLabelElement: StaticElement = {
         return StaticElement(view: headerLabel)
     }()
-    
+
     private lazy var cardNumberElement: TextFieldElement = {
         return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "").makeElement(theme: appearance.asElementsTheme)
         
@@ -171,7 +170,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         cardBrandDropDown.view.isHidden = !canEditCard
         return cardBrandDropDown
     }()
-    
+
     private lazy var cardInfoSection: UIStackView = {
         let cardDetails = UIStackView(arrangedSubviews: [cardSection.view, notEditableDetailsLabel])
         cardDetails.axis = .vertical

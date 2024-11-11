@@ -595,6 +595,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 return
             }
         }
+
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,

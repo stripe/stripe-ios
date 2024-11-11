@@ -94,11 +94,13 @@ final class PickerFieldView: UIView {
                 invalidateIntrinsicContentSize()
             }
             textField.attributedText = newValue
-
+            // Only displays the first image— assumes only 1 image (shouldn't need more)
+            // Previously used a hack for card brand choice to show card brand logos
+            // UITextField doesn't render attributed text with text attachments for some reason
+            // Image shows when setting placeholder text, but only if it is just an image with no accompanying text
             if newValue?.hasTextAttachment ?? false {
                 var images: [UIImage] = []
-
-                    // Enumerate through the attributed string's attributes
+                // Enumerate through the attributed string's attributes
                 newValue?.enumerateAttributes(in: NSRange(location: 0, length: newValue?.length ?? 0), options: []) { attributes, range, _ in
                         // Check if the attribute is an NSTextAttachment
                         if let attachment = attributes[NSAttributedString.Key.attachment] as? NSTextAttachment,
@@ -111,13 +113,6 @@ final class PickerFieldView: UIView {
                     textField.leftViewMode = .always
                 }
             }
-//            // Unfortunate hack for card brand choice to show card brand logos
-//            // UITextField doesn't render attributed text with text attachments for some reason
-//            // But it works when setting it's placeholder text
-//            // https://stackoverflow.com/questions/54804809/cant-add-image-as-nstextattachment-to-uitextfield
-//            if (newValue?.hasTextAttachment ?? false) && newValue?.length == 1 {
-//                textField.attributedPlaceholder = newValue
-//            }
         }
     }
 
