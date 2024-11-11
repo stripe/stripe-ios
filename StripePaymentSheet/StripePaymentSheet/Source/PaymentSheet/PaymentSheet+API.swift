@@ -245,7 +245,7 @@ extension PaymentSheet {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
                 let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
-                    // Flow controller CVC using interstitial:
+                    // Flow controller collects CVC using interstitial:
                     ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
