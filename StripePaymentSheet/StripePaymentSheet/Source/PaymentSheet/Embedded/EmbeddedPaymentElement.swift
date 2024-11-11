@@ -8,6 +8,7 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripePayments
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
@@ -241,7 +242,7 @@ public final class EmbeddedPaymentElement {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
     
-    internal lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+    internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     private init(
         configuration: Configuration,
