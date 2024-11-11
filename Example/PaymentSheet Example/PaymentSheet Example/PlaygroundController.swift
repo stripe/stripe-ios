@@ -116,6 +116,7 @@ class PlaygroundController: ObservableObject {
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
+        configuration.forceNativeLinkEnabled = settings.useNativeLink == .on
         if settings.userOverrideCountry != .off {
             configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
         }
@@ -339,7 +340,7 @@ class PlaygroundController: ObservableObject {
         case .new:
             return customerId ?? "new"
         case .returning:
-            return "returning"
+            return customerId ?? "returning"
         }
     }
 
@@ -440,7 +441,7 @@ class PlaygroundController: ObservableObject {
             } else {
                 self.ambiguousViewTimer?.invalidate()
             }
-            
+
             // Hack to enable Instant Debits with deferred intents
             let enableInstantDebitsInDeferredIntents = newValue.instantDebitsInDeferredIntents == .on
             UserDefaults.standard.set(enableInstantDebitsInDeferredIntents, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_DEFERRED_INTENTS")
@@ -953,18 +954,16 @@ extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
-            intentConfig: intentConfig
+            intentConfig: intentConfig,
+            playgroundController: self
         )
     }
 
-    func presentEmbedded(settingsView: some View) {
+    func presentEmbedded<SettingsView: View>(settingsView: @escaping () -> SettingsView) {
         guard let embeddedPlaygroundViewController else { return }
 
         // Include settings view
-        let hostingController = UIHostingController(rootView: settingsView)
-        embeddedPlaygroundViewController.addChild(hostingController)
-        hostingController.didMove(toParent: rootViewController)
-        embeddedPlaygroundViewController.setSettingsView(hostingController.view)
+        embeddedPlaygroundViewController.setSettingsView(settingsView)
 
         let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissEmbedded))
         embeddedPlaygroundViewController.navigationItem.leftBarButtonItem = closeButton

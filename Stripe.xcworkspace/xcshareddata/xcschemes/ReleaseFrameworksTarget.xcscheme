@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1540"
+   LastUpgradeVersion = "1600"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "41D17A3F2C5A73A6007C6EE6"
-               BuildableName = "StripeConnect.framework"
-               BlueprintName = "StripeConnect"
-               ReferencedContainer = "container:StripeConnect.xcodeproj">
+               BlueprintIdentifier = "E652E5F22CB20B7200081F83"
+               BuildableName = "ReleaseFrameworksTarget"
+               BlueprintName = "ReleaseFrameworksTarget"
+               ReferencedContainer = "container:Stripe/Stripe.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,22 +29,9 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "41D17A492C5A73A7007C6EE6"
-               BuildableName = "StripeConnectTests.xctest"
-               BlueprintName = "StripeConnectTests"
-               ReferencedContainer = "container:StripeConnect.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -63,10 +50,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "41D17A3F2C5A73A6007C6EE6"
-            BuildableName = "StripeConnect.framework"
-            BlueprintName = "StripeConnect"
-            ReferencedContainer = "container:StripeConnect.xcodeproj">
+            BlueprintIdentifier = "E652E5F22CB20B7200081F83"
+            BuildableName = "ReleaseFrameworksTarget"
+            BlueprintName = "ReleaseFrameworksTarget"
+            ReferencedContainer = "container:Stripe/Stripe.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
