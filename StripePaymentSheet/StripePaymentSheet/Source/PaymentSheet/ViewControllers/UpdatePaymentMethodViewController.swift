@@ -84,7 +84,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         button.layer.borderColor = appearance.colors.danger.cgColor
         button.layer.borderWidth = appearance.primaryButton.borderWidth
         button.layer.cornerRadius = appearance.cornerRadius
-        button.setTitle(.Localized.remove_card, for: .normal)
+        button.setTitle(.Localized.remove, for: .normal)
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
@@ -111,15 +111,17 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var cardNumberElement: TextFieldElement = {
-        return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "").makeElement(theme: appearance.asElementsTheme)
+        let cardNumberElement = TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "").makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
+        return cardNumberElement
         
     }()
 
     private lazy var expiryDateElement: TextFieldElement = {
-        let formattedMonth = "\(String(format: "%02d", paymentMethod.card?.expMonth ?? 1))"
-        let formattedYear = "\(String(format: "%02d", (paymentMethod.card?.expYear ?? Calendar.current.component(.year, from: Date()) + 1) % 100))"
+        let formattedMonth = "\(String(format: "%02d", paymentMethod.card?.expMonth ?? 0))"
+        let formattedYear = "\(String(format: "%02d", paymentMethod.card?.expYear ?? 0))"
         let formattedExpDate = "\(formattedMonth)\(formattedYear)"
-        return TextFieldElement.ExpiryDateConfiguration(defaultValue: formattedExpDate, isEditable: false).makeElement(theme: appearance.asElementsTheme)
+        let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: formattedExpDate, isEditable: false).makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
+        return expiryDateElement
         
     }()
 
@@ -128,9 +130,9 @@ final class UpdatePaymentMethodViewController: UIViewController {
             self?.paymentMethod.card?.brand ?? .unknown
         }, isEditable: false)
         let censoredCVC = cvcConfiguration.censor()
-        let cvcTextField = cvcConfiguration.makeElement(theme: appearance.asElementsTheme)
-        cvcTextField.setText(censoredCVC)
-        return cvcTextField
+        let cvcElement = cvcConfiguration.makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
+        cvcElement.setText(censoredCVC)
+        return cvcElement
         
     }()
 
@@ -273,7 +275,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
         view.isUserInteractionEnabled = true
     }
-
 }
 
 // MARK: BottomSheetContentViewController

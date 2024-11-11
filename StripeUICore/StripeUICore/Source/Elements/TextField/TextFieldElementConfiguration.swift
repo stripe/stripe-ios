@@ -80,7 +80,7 @@ import UIKit
     /**
      Convenience method that creates a TextFieldElement using this Configuration
     */
-    func makeElement(theme: ElementsAppearance) -> TextFieldElement
+    func makeElement(theme: ElementsAppearance, setDisabledBackgroundColor: Bool) -> TextFieldElement
 }
 
 // MARK: - Default implementation
@@ -138,7 +138,7 @@ public extension TextFieldElementConfiguration {
         return nil
     }
 
-    func makeElement(theme: ElementsAppearance) -> TextFieldElement {
-        return TextFieldElement(configuration: self, theme: theme)
+    func makeElement(theme: ElementsAppearance, setDisabledBackgroundColor: Bool = false) -> TextFieldElement {
+        return TextFieldElement(configuration: self, theme: theme, setDisabledBackgroundColor: setDisabledBackgroundColor)
     }
 }

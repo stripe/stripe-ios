@@ -284,6 +284,10 @@ extension TextFieldElement {
         }
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
+            // suppress error if nothing can be done about it
+            if !isEditable {
+                return .valid
+            }
             // Validate the month here so we can reuse the result later
             let validMonths = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
             let textHasValidMonth = validMonths.contains { text.hasPrefix($0) }

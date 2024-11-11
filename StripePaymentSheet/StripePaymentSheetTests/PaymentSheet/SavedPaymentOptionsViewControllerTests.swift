@@ -303,6 +303,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isCVCRecollectionEnabled: true,
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
+                                                               newUpdatePaymentMethodFlow: false,
                                                                allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods)
     }
 

@@ -430,13 +430,14 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             stpAssertionFailure()
             return
         }
+
         let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
-                                                       removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
-                                                       appearance: appearance,
-                                                       hostedSurface: .paymentSheet,
-                                                       canRemoveCard: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                                       isTestMode: configuration.isTestMode,
-                                                       cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter)
+                                              removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+                                              appearance: appearance,
+                                              hostedSurface: .customerSheet,
+                                              canRemoveCard: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+                                              isTestMode: configuration.isTestMode,
+                                              cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
@@ -556,48 +557,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewCon
     }
 
     func didDismiss(viewController: UpdateCardViewController) {
-        // No-op
-    }
-}
-
-// MARK: - UpdatePaymentMethodViewControllerDelegate
-extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
-    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
-        guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId })
-        else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
-                                              error: Error.removedInvalidItemWithUpdateCardFlow)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-            return
-        }
-
-        removePaymentMethod(indexPath: IndexPath(row: row, section: 0), paymentMethod: paymentMethod)
-        _ = viewController.bottomSheetController?.popContentViewController()
-    }
-
-    func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod,
-                   updateParams: STPPaymentMethodUpdateParams) async throws {
-        guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
-              let delegate = delegate
-        else {
-            stpAssertionFailure()
-            throw CustomerSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
-        }
-
-        let viewModel = viewModels[row]
-        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
-                                                    paymentMethodSelection: viewModel,
-                                                    updateParams: updateParams)
-
-        let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
-        viewModels[row] = updatedViewModel
-        collectionView.reloadData()
-        _ = viewController.bottomSheetController?.popContentViewController()
-    }
-
-    func didDismiss(viewController: UpdatePaymentMethodViewController) {
         // No-op
     }
 }

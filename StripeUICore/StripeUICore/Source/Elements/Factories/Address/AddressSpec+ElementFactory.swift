@@ -10,7 +10,7 @@ import Foundation
 
 /// Convenience methods to create address fields that are localized according to the AddressSpec
 extension AddressSpec {
-    func makeCityElement(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
+    func makeCityElement(defaultValue: String?, theme: ElementsAppearance = .default, setDisabledBackgroundColor: Bool = false) -> TextFieldElement {
         return TextFieldElement.Address.CityConfiguration(
             label: cityNameType.localizedLabel,
             defaultValue: defaultValue,
@@ -18,7 +18,7 @@ extension AddressSpec {
         ).makeElement(theme: theme)
     }
 
-    func makeStateElement(defaultValue: String?, stateDict: [String: String], theme: ElementsAppearance = .default) -> TextOrDropdownElement {
+    func makeStateElement(defaultValue: String?, stateDict: [String: String], theme: ElementsAppearance = .default, setDisabledBackgroundColor: Bool = false) -> TextOrDropdownElement {
         // If no state dict just use a textfield for state
         if stateDict.isEmpty {
             return TextFieldElement.Address.StateConfiguration(
