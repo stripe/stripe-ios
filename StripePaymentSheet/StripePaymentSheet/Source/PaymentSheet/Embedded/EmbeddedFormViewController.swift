@@ -24,11 +24,13 @@ import UIKit
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
 
-    /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.continue`.
+    /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm` after confirmation.
     /// - Parameters:
     ///   - embeddedFormViewController: The view controller that has finished.
+    ///   - result: The `PaymentSheetResult` of the payment or setup process.
     func embeddedFormViewControllerShouldContinue(
-        _ embeddedFormViewController: EmbeddedFormViewController
+        _ embeddedFormViewController: EmbeddedFormViewController,
+        result: PaymentSheetResult
     )
 
     /// Informs the delegate that the user has canceled out of the form.
@@ -336,7 +338,7 @@ class EmbeddedFormViewController: UIViewController {
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
-                            self.delegate?.embeddedFormViewControllerShouldContinue(self)
+                            self.delegate?.embeddedFormViewControllerShouldContinue(self, result: result)
                         }
                     }
                 }

@@ -192,6 +192,7 @@ class PlaygroundController: ObservableObject {
             switch settings.formSheetAction {
             case .confirm:
                 return .confirm { [weak self] result in
+                    self?.embeddedPlaygroundViewController?.dismiss(animated: true)
                     self?.lastPaymentResult = result
                 }
             case .continue:
@@ -368,7 +369,7 @@ class PlaygroundController: ObservableObject {
             let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
             completion(.failed(error: exampleError))
         })
-        if self.settings.uiStyle == .paymentSheet {
+        if self.settings.uiStyle == .paymentSheet || self.settings.uiStyle == .embedded {
             self.rootViewController.presentedViewController?.present(alert, animated: true)
         } else {
             self.rootViewController.present(alert, animated: true)
