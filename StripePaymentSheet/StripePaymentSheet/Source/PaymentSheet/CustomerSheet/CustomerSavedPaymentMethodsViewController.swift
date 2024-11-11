@@ -102,7 +102,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: .init(
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-                newUpdatePaymentMethodFlow: configuration.newUpdatePaymentMethodFlow,
                 paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode
             ),
@@ -654,7 +653,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             configuration: .init(
                 showApplePay: isApplePayEnabled,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-                newUpdatePaymentMethodFlow: configuration.newUpdatePaymentMethodFlow,
                 paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode
             ),
