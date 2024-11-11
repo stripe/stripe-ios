@@ -302,9 +302,19 @@ extension EmbeddedPaymentElement {
             let authContext: STPAuthenticationContext? = {
                 switch configuration.formSheetAction {
                 case .confirm:
-                    return formViewController ?? presentingViewController
+                    if let formViewController {
+                        return formViewController
+                    }
+                    if let presentingViewController {
+                        return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
+                    }
+                    return nil
                 case .continue:
-                    return presentingViewController // formViewController is never currently presented during confirmation in continue mode
+                    // formViewController is never currently presented during confirmation in continue mode
+                    if let presentingViewController {
+                        return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
+                    }
+                    return nil
                 }
             }()
             
@@ -357,8 +367,30 @@ extension EmbeddedPaymentElement {
     }
 }
 
-extension UIViewController: @retroactive STPAuthenticationContext {
+
+// TODO(porter) When we use Xcode 16 on CI do this instead of `STPAuthenticationContextWrapper`
+// @retroactive is not supported in Xcode 15
+//extension UIViewController: @retroactive STPAuthenticationContext {
+//    public func authenticationPresentingViewController() -> UIViewController {
+//        return self
+//    }
+//}
+
+final class STPAuthenticationContextWrapper: UIViewController {
+    let _presentingViewController: UIViewController
+    
+    init(presentingViewController: UIViewController) {
+        self._presentingViewController = presentingViewController
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension STPAuthenticationContextWrapper: STPAuthenticationContext {
     public func authenticationPresentingViewController() -> UIViewController {
-        return self
+        return _presentingViewController
     }
 }

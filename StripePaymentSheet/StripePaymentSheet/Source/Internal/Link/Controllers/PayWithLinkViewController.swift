@@ -349,3 +349,11 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
 }
+
+extension PayWithLinkViewController: STPAuthenticationContext {
+
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
+    }
+
+}
