@@ -279,7 +279,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     func embeddedFormViewControllerShouldContinue(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
         embeddedFormViewController.dismiss(animated: true) {
             if case let .confirm(completion) = self.configuration.formSheetAction {
-                completion(.completed)
+                completion(result)
             }
         }
     }
