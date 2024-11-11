@@ -185,25 +185,8 @@ public final class EmbeddedPaymentElement {
     /// - Returns: The result of the payment after any presented view controllers are dismissed.
     /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
-    public func confirm() async -> EmbeddedPaymentElementResult {
-        // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
-        if let latestUpdateTask {
-            switch await latestUpdateTask.value {
-            case .succeeded:
-                // The view is in sync with the intent. Continue on with confirm!
-                break
-            case .failed(error: let error):
-                return .failed(error: error)
-            case .canceled:
-                let errorMessage = "confirm was called when the current update task is canceled. This shouldn't be possible; the current update task should only cancel if another task began."
-                stpAssertionFailure(errorMessage)
-                let error = PaymentSheetError.flowControllerConfirmFailed(message: errorMessage)
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: error)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                return .failed(error: error)
-            }
-        }
-        return .canceled
+    public func confirm() async -> EmbeddedPaymentElementResult {        
+        return await _confirm().result
     }
 
     // MARK: - Internal
@@ -217,13 +200,21 @@ public final class EmbeddedPaymentElement {
     internal var savedPaymentMethods: [STPPaymentMethod]
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     internal var formViewController: EmbeddedFormViewController?
+#if DEBUG
+    internal var _test_paymentOption: PaymentOption? // for testing only
+#endif
+
     internal var _paymentOption: PaymentOption? {
+    #if DEBUG
+        if let testPaymentOption = _test_paymentOption {
+            return testPaymentOption
+        }
+    #endif
         // If we have a form use it's payment option
         if let formViewController {
             return formViewController.selectedPaymentOption
         }
         
-        // TODO: Handle CVC recollection
         switch embeddedPaymentMethodsView.selection {
         case .applePay:
             return .applePay
@@ -249,6 +240,8 @@ public final class EmbeddedPaymentElement {
     internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
+    
+    internal lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     private init(
         configuration: Configuration,
