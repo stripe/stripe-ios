@@ -160,7 +160,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
         confirmParams.paymentMethodParams.card?.number = "4242424242424242"
         confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
-        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: 34)
+        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
         confirmParams.paymentMethodParams.card?.cvc = "123"
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
         
