@@ -66,6 +66,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     private lazy var deleteButton: UIButton = {
         let button = UIButton(type: .custom)
+        if #available(iOS 15.0, *) {
+            var configuration = UIButton.Configuration.bordered()
+            configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
+            configuration.baseBackgroundColor = .clear
+            button.configuration = configuration
+        } else {
+            button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+        }
         button.setTitleColor(appearance.colors.danger, for: .normal)
         button.layer.borderColor = appearance.colors.danger.cgColor
         button.layer.borderWidth = appearance.primaryButton.borderWidth
