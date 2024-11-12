@@ -146,7 +146,7 @@ extension FinancialConnectionsNavigationController {
 
     static func configureNavigationItemForNative(
         _ navigationItem: UINavigationItem?,
-        closeItem: UIBarButtonItem,
+        trailingItem: UIBarButtonItem,
         shouldHideLogo: Bool,
         theme: FinancialConnectionsTheme,
         isTestMode: Bool
@@ -212,6 +212,6 @@ extension FinancialConnectionsNavigationController {
 
         navigationItem?.titleView = stackView
         navigationItem?.backButtonTitle = ""
-        navigationItem?.rightBarButtonItem = closeItem
+        navigationItem?.rightBarButtonItem = trailingItem
     }
 }
