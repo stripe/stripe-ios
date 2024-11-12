@@ -181,13 +181,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .openPaymentMethodEditScreen))
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .updateCardScreenShown)
     }
 
     // MARK: Private helpers
     private func dismiss() {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closePaymentMethodEditScreen))
         _ = bottomVc.popContentViewController()
         delegate?.didDismiss()
     }

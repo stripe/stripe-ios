@@ -233,8 +233,7 @@ import Foundation
     case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
     case paymentSheetDisallowedCardBrand = "mc_disallowed_card_brand"
 
-    case paymentSheetOpenPaymentMethodEditScreen = "mc_open_payment_method_edit_screen"
-    case paymentSheetClosePaymentMethodEditScreen = "mc_cancel_payment_method_edit_screen"
+    case updateCardScreenShown = "mc_update_card_screen_shown"
 
     // MARK: - CustomerSheet card brand choice
     case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
