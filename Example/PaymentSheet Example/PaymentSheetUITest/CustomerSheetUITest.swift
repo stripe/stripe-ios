@@ -266,7 +266,7 @@ class CustomerSheetUITest: XCTestCase {
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
-            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
+            app.toolbars.buttons["Done"].tap() // dismiss keyboard
             notNowButton.tap()
         }
 

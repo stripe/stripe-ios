@@ -2435,7 +2435,7 @@ extension PaymentSheetUITestCase {
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: 10.0) {
-            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
+            app.toolbars.buttons["Done"].tap() // dismiss keyboard
             notNowButton.tap()
         }
 
