@@ -65,4 +65,18 @@ enum HostedSurface {
         case updateCardBrandFailed
         case closeEditScreen
     }
+
+    func analyticEvent(for event: ManagePaymentMethodEvents) -> STPAnalyticEvent {
+        switch (event) {
+        case (.openPaymentMethodEditScreen):
+            return .paymentSheetOpenPaymentMethodEditScreen
+        case (.closePaymentMethodEditScreen):
+            return .paymentSheetClosePaymentMethodEditScreen
+        }
+    }
+
+    enum ManagePaymentMethodEvents {
+        case openPaymentMethodEditScreen
+        case closePaymentMethodEditScreen
+    }
 }
