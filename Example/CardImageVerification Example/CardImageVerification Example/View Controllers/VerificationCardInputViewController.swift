@@ -19,13 +19,17 @@ class VerificationCardInputViewController: UIViewController {
         setUpViews()
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.destination is VerificationExplanationViewController {
             let vc = segue.destination as? VerificationExplanationViewController
-            let iin = iinTextField.text!
-            let last4 = lastFourTextField.text!
-            vc?.expectedCardViewModel = ExpectedCardViewModel(iin: iin, last4: last4)
+            
+            // Safely unwrap the text fields to prevent runtime crashes
+            if let iin = iinTextField.text, let last4 = lastFourTextField.text, !iin.isEmpty, !last4.isEmpty {
+                vc?.expectedCardViewModel = ExpectedCardViewModel(iin: iin, last4: last4)
+            } else {
+                print("Warning: IIN or Last Four fields are empty.")
+                // Optionally, you could show an alert to the user here.
+            }
         }
     }
 }
@@ -33,50 +37,29 @@ class VerificationCardInputViewController: UIViewController {
 // MARK: UI Views
 private extension VerificationCardInputViewController {
     func setUpViews() {
-        continueButton.layer.cornerRadius = 10.0
-
-        [iinTextField, lastFourTextField].forEach {
-            $0.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
-        }
+        // Example of setting up views, like adding targets for button actions
+        continueButton.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
     }
 
-    func updateButtonState(isLoading: Bool) {
-        continueButton.updateButtonState(isLoading: isLoading)
-    }
-}
-
-// MARK: UITextFieldDelegate
-extension VerificationCardInputViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField == iinTextField {
-            return atTextLimit(iinTextField, newText: string, limit: 6)
+    @objc func continueButtonTapped() {
+        // Handle the button tap, including potential form validation
+        guard let iin = iinTextField.text, !iin.isEmpty else {
+            showAlert(message: "Please enter the IIN.")
+            return
         }
-
-        if textField == lastFourTextField {
-            return atTextLimit(lastFourTextField, newText: string, limit: 4)
+        
+        guard let last4 = lastFourTextField.text, !last4.isEmpty else {
+            showAlert(message: "Please enter the last four digits.")
+            return
         }
-
-        return true
+        
+        // Proceed with further logic
+        print("Continue button tapped with IIN: \(iin) and Last Four: \(last4)")
     }
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
-
-    @objc
-    func textDidChange() {
-        if lastFourTextField.text!.count == 4 {
-            view.endEditing(true)
-        }
-    }
-
-    func atTextLimit(_ textField: UITextField, newText: String, limit: Int) -> Bool {
-        let shouldNotResign =  newText.isEmpty || textField.text!.count + newText.count <= limit
-
-        if !shouldNotResign {
-            textField.resignFirstResponder()
-        }
-
-        return shouldNotResign
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: "Input Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
