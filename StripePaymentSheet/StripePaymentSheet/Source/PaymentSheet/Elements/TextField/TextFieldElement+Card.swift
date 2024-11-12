@@ -223,9 +223,6 @@ extension TextFieldElement {
                 pairedColor: theme.colors.componentBackground
             )
         }
-        func censor() -> String {
-            return String(repeating: "•", count: maxLength(for: String()))
-        }
     }
 }
 
@@ -326,7 +323,7 @@ extension TextFieldElement {
 // MARK: Last four configuration
 extension TextFieldElement {
     struct LastFourConfiguration: TextFieldElementConfiguration {
-        let label = String.Localized.card_number
+        let label = String.Localized.card_brand
         let lastFour: String
         let isEditable = false
         let cardBrandDropDown: DropdownFieldElement?
@@ -347,6 +344,29 @@ extension TextFieldElement {
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
             return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown).accessoryView(for: lastFourFormatted, theme: theme)
+        }
+    }
+
+    struct LastFourConfigurationNoCBCDropdown: TextFieldElementConfiguration {
+        let label = String.Localized.card_number
+        let lastFour: String
+        let isEditable = false
+
+        private var lastFourFormatted: String {
+            "•••• •••• •••• \(lastFour)"
+        }
+
+        init(lastFour: String) {
+            self.lastFour = lastFour
+        }
+
+        func makeDisplayText(for text: String) -> NSAttributedString {
+            return NSAttributedString(string: lastFourFormatted)
+        }
+
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
+            // Re-use same logic from PANConfiguration for accessory view
+            return TextFieldElement.PANConfiguration(cardBrandDropDown: nil).accessoryView(for: lastFourFormatted, theme: theme)
         }
     }
 }

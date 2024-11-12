@@ -97,27 +97,24 @@ final class UpdatePaymentMethodViewController: UIViewController {
     // MARK: Elements
 
     private lazy var cardNumberElement: TextFieldElement = {
-        let cardNumberElement = TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "").makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
+        let cardNumberElement = TextFieldElement.LastFourConfigurationNoCBCDropdown(lastFour: paymentMethod.card?.last4 ?? "").makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
         return cardNumberElement
 
     }()
 
     private lazy var expiryDateElement: TextFieldElement = {
-        let formattedMonth = "\(String(format: "%02d", paymentMethod.card?.expMonth ?? 0))"
-        let formattedYear = "\(String(format: "%02d", paymentMethod.card?.expYear ?? 0))"
-        let formattedExpDate = "\(formattedMonth)\(formattedYear)"
-        let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: formattedExpDate, isEditable: false).makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
+        let expiryDate = CardExpiryDate(month: paymentMethod.card?.expMonth ?? 0, year: paymentMethod.card?.expYear ?? 0)
+        let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
         return expiryDateElement
 
     }()
 
     private lazy var cvcElement: TextFieldElement = {
-        let cvcConfiguration = TextFieldElement.CVCConfiguration(defaultValue: "123", cardBrandProvider:  { [weak self] in
+        let cardBrandProvider = { [weak self] in
             self?.paymentMethod.card?.brand ?? .unknown
-        }, isEditable: false)
-        let censoredCVC = cvcConfiguration.censor()
+        }
+        let cvcConfiguration = TextFieldElement.CVCConfiguration(defaultValue: String(repeating: "•", count: Int(STPCardValidator.maxCVCLength(for: cardBrandProvider()))), cardBrandProvider:  cardBrandProvider, isEditable: false)
         let cvcElement = cvcConfiguration.makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
-        cvcElement.setText(censoredCVC)
         return cvcElement
 
     }()

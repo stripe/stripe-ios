@@ -29,7 +29,12 @@ import UIKit
         }
     }
     public private(set) lazy var text: String = {
-        sanitize(text: configuration.defaultValue ?? "")
+        if configuration.isEditable {
+            sanitize(text: configuration.defaultValue ?? "")
+        }
+        else {
+            configuration.defaultValue ?? ""
+        }
     }()
     public private(set) var isEditing: Bool = false
     private(set) var didReceiveAutofill: Bool = false
