@@ -120,6 +120,8 @@ final class LinkLoginViewController: UIViewController {
 
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
         if let emailAddress, !emailAddress.isEmpty {
+            // Immediately set the button state to loading here to bypass the deboncing by the textfield.
+            footerButton?.isLoading = true
             formView.prefillEmailAddress(emailAddress)
 
             let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.prefillDetails?.formattedPhoneNumber
@@ -153,13 +155,15 @@ final class LinkLoginViewController: UIViewController {
 
     private func lookupAccount(with emailAddress: String) {
         formView.emailTextField.showLoadingView(true)
+        footerButton?.isLoading = true
 
         dataSource
             .lookup(emailAddress: emailAddress)
-            .observe { [weak self, weak formView] result in
+            .observe { [weak self, weak formView, weak footerButton] result in
                 formView?.emailTextField.showLoadingView(false)
-                guard let self else { return }
+                footerButton?.isLoading = false
 
+                guard let self else { return }
                 switch result {
                 case .success(let response):
                     if response.exists {
