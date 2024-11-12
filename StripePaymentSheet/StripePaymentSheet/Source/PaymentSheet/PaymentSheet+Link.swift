@@ -132,7 +132,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: self.paymentHandler,
-            isFlowController: false)
+            integrationShape: .complete)
         { result, confirmationType in
             if case let .failed(error) = result {
                 self.mostRecentError = error
