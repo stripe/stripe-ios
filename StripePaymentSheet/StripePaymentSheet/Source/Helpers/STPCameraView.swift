@@ -36,7 +36,8 @@ class STPCameraView: UIView {
             x: 0, y: 0, width: layer.bounds.size.width, height: layer.bounds.size.height)
         flashLayer?.opacity = 1.0
         CATransaction.commit()
-        DispatchQueue.main.async(execute: {
+        DispatchQueue.main.async(execute: { [weak self] in
+            guard let self = self else { return }
             let fadeAnim = CABasicAnimation(keyPath: "opacity")
             fadeAnim.fromValue = NSNumber(value: 1.0)
             fadeAnim.toValue = NSNumber(value: 0.0)
