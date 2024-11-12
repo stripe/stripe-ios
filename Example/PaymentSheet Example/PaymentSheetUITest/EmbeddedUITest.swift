@@ -106,9 +106,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         app.buttons["Checkout"].waitForExistenceAndTap()
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let sbContinueButton = springboard.buttons["Continue"]
-        XCTAssertTrue(sbContinueButton.waitForExistence(timeout: 10.0))
-        sbContinueButton.tap()
+        springboard.buttons["Continue"].waitForExistenceAndTap()
         // Stop here; Klarna's test playground is out of scope
     }
 
@@ -533,9 +531,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Link"].waitForExistenceAndTap()
         app.buttons["Checkout"].waitForExistenceAndTap()
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let sbContinueButton = springboard.buttons["Continue"]
-        XCTAssertTrue(sbContinueButton.waitForExistence(timeout: 10.0))
-        sbContinueButton.tap()
+        springboard.buttons["Continue"].waitForExistenceAndTap()
         // Stop here; Links's test playground is out of scope
     }
 

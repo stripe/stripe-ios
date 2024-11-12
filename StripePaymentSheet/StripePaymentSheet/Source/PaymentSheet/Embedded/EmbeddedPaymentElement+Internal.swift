@@ -276,7 +276,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         }
     }
     
-    func embeddedFormViewControllerShouldContinue(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
+    func embeddedFormViewControllerDidCompleteConfirmation(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
         embeddedFormViewController.dismiss(animated: true) {
             if case let .confirm(completion) = self.configuration.formSheetAction {
                 completion(result)
@@ -307,7 +307,7 @@ extension EmbeddedPaymentElement {
             let authContext: STPAuthenticationContext? = {
                 switch configuration.formSheetAction {
                 case .confirm:
-                    if let formViewController {
+                    if formViewController?.presentingViewController != nil {
                         return formViewController
                     }
                     if let presentingViewController {
@@ -324,7 +324,7 @@ extension EmbeddedPaymentElement {
             }()
             
             guard let authContext else {
-                return (.failed(error: PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil on both bottomSheetController and presentingViewController.")), STPAnalyticsClient.DeferredIntentConfirmationType.none)
+                return (.failed(error: PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil authContext.")), STPAnalyticsClient.DeferredIntentConfirmationType.none)
             }
             
             guard let paymentOption = _paymentOption else {
