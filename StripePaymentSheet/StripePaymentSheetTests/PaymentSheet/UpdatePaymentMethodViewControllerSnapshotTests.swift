@@ -35,17 +35,24 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerAppearance() {
         _test_UpdatePaymentMethodViewController(darkMode: false, isEmbeddedSingleCard: true, appearance: ._testMSPaintTheme)
     }
-
-    func test_UpdatePaymentMethodViewControllerEditDarkMode() {
-        _test_UpdatePaymentMethodViewController(darkMode: true, isRemoveOnly: false)
+    
+    func test_UpdatePaymentMethodViewControllerExpiredCard() {
+        _test_UpdatePaymentMethodViewController(darkMode: false, isValidExpirationDate: false)
     }
 
-    func test_UpdatePaymentMethodViewControllerEditLightMode() {
+    func test_UpdatePaymentMethodViewControllerCBC() {
         _test_UpdatePaymentMethodViewController(darkMode: false, isRemoveOnly: false)
     }
 
-    func _test_UpdatePaymentMethodViewController(darkMode: Bool, isRemoveOnly: Bool = true, isEmbeddedSingleCard: Bool = false, appearance: PaymentSheet.Appearance = .default) {
-        let sut = UpdatePaymentMethodViewController(paymentMethod: STPFixtures.paymentMethod(),
+    func _test_UpdatePaymentMethodViewController(darkMode: Bool, isRemoveOnly: Bool = true, isValidExpirationDate: Bool = true, isEmbeddedSingleCard: Bool = false, appearance: PaymentSheet.Appearance = .default) {
+        var paymentMethod: STPPaymentMethod
+        if isValidExpirationDate {
+            paymentMethod = STPPaymentMethod._testCardCoBranded()
+        }
+        else {
+            paymentMethod = STPFixtures.paymentMethod()
+        }
+        let sut = UpdatePaymentMethodViewController(paymentMethod: paymentMethod,
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            appearance: appearance,
                                            hostedSurface: .paymentSheet,

@@ -121,7 +121,7 @@ extension STPApplePayContext {
 
     static func create(
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
         guard let applePay = configuration.applePay else {
@@ -155,7 +155,7 @@ extension STPApplePayContext {
 
     static func createPaymentRequest(
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         applePay: PaymentSheet.ApplePayConfiguration
     ) -> PKPaymentRequest {
         let paymentRequest = StripeAPI.paymentRequest(
@@ -200,7 +200,7 @@ extension STPApplePayContext {
     }
 }
 
-private func makeShippingDetails(from configuration: PaymentSheet.Configuration) -> StripeAPI.ShippingDetails? {
+private func makeShippingDetails(from configuration: PaymentElementConfiguration) -> StripeAPI.ShippingDetails? {
     guard let shippingDetails = configuration.shippingDetails(), let name = shippingDetails.name else {
         return nil
     }
@@ -219,7 +219,7 @@ private func makeShippingDetails(from configuration: PaymentSheet.Configuration)
     )
 }
 
-private func makeRequiredBillingDetails(from configuration: PaymentSheet.Configuration) -> Set<PKContactField> {
+private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
     var requiredPKContactFields = Set<PKContactField>()
     let billingConfig = configuration.billingDetailsCollectionConfiguration
     // By default, we always want to request the billing address (as it includes the postal code)

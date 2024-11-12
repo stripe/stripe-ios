@@ -106,7 +106,7 @@ class TextFieldView: UIView {
 
     // MARK: - Initializers
 
-    init(viewModel: TextFieldElement.ViewModel, delegate: TextFieldViewDelegate, setDisabledBackgroundColor: Bool = false) {
+    init(viewModel: TextFieldElement.ViewModel, delegate: TextFieldViewDelegate) {
         self.viewModel = viewModel
         self.delegate = delegate
         super.init(frame: .zero)

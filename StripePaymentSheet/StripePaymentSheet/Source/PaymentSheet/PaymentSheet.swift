@@ -259,7 +259,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 elementsSession: paymentSheetViewController.elementsSession,
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
-                isFlowController: false
+                integrationShape: .complete
             ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {
                     self.mostRecentError = error
