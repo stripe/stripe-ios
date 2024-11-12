@@ -3,7 +3,7 @@
 //  StripePaymentSheet
 //
 //
-//  ⚠️🏗 This is feature has not been released yet, and is under construction
+//  ⚠️💧 This is feature has not been released yet, and is under construction
 //  Note: Do not import Stripe using `@_spi(STP)` in production.
 //  Doing so exposes internal functionality which may cause unexpected behavior if used directly.
 //
@@ -133,7 +133,8 @@ public class CustomerSheet {
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadStarted)
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
-        let completion: () -> Void = {
+        let completion: () -> Void = { [weak self] in
+            guard let self = self else { return }
             if let presentingViewController = self.bottomSheetViewController.presentingViewController {
                 // Calling `dismiss()` on the presenting view controller causes
                 // the bottom sheet and any presented view controller by
@@ -162,7 +163,8 @@ public class CustomerSheet {
             return
         }
 
-        customerSheetDataSource.loadPaymentMethodInfo { result in
+        customerSheetDataSource.loadPaymentMethodInfo { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
@@ -202,7 +204,8 @@ public class CustomerSheet {
             loadSpecsPromise.resolve(with: ())
         }
 
-        loadSpecsPromise.observe(on: .main) { _ in
+        loadSpecsPromise.observe(on: .main) { [weak self] _ in
+            guard let self = self else { return }
             let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
             let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
                                                                                 selectedPaymentMethodOption: selectedPaymentMethodOption,
@@ -252,14 +255,16 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
     }
 
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
-        savedPaymentMethodsViewController.dismiss(animated: true) {
+        savedPaymentMethodsViewController.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
             _completion()
             self.completion?()
         }
     }
 
     func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
-        savedPaymentMethodsViewController.dismiss(animated: true) {
+        savedPaymentMethodsViewController.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
             _completion()
             self.completion?()
         }
@@ -268,7 +273,8 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
 
 extension CustomerSheet: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
-        loadingViewController.dismiss(animated: true) {
+        loadingViewController.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
             self.completion?()
         }
     }
