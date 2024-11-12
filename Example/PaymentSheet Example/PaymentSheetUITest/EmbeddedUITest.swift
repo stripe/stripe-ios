@@ -103,8 +103,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Klarna")
         
         // Confirm the Klarna payment
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        app.buttons["Checkout"].waitForExistenceAndTap()
+        app.buttons["Checkout"].tap()
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         springboard.buttons["Continue"].waitForExistenceAndTap()
         // Stop here; Klarna's test playground is out of scope
