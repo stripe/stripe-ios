@@ -160,6 +160,8 @@ extension STPPaymentMethod {
                 "last4": "4242",
                 "brand": "visa",
                 "fingerprint": "B8XXs2y2JsVBtB9f",
+                "exp_month": "\(Calendar.current.component(.month, from: Date()))",
+                "exp_year": "\(Calendar.current.component(.year, from: Date()) + 1)",
             ],
         ])!
     }
