@@ -51,10 +51,11 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [cardInfoSection, deleteButton, errorLabel])
+        let stackView = UIStackView(arrangedSubviews: [cardInfoSection, saveButton, deleteButton, errorLabel])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding + 12, after: cardInfoSection) // custom spacing from figma
+        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding - 4, after: saveButton) // custom spacing from figma
         return stackView
     }()
 
@@ -63,6 +64,16 @@ final class UpdatePaymentMethodViewController: UIViewController {
         label.text = .Localized.manage_card
         return label
     }()
+
+    private lazy var saveButton: ConfirmButton = {
+            let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: appearance, didTap: {  [weak self] in
+                Task {
+                    await self?.updateCard()
+                }
+            })
+            button.isHidden = !canEditCard
+            return button
+        }()
 
     private lazy var deleteButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -135,14 +146,41 @@ final class UpdatePaymentMethodViewController: UIViewController {
         return section
     }()
 
+    private lazy var cardBrandDropDown: DropdownFieldElement = {
+            let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
+            let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdownWithLabel(cardBrands: Set<STPCardBrand>(cardBrands),
+                                                                               theme: appearance.asElementsTheme,
+                                                                                        includePlaceholder: false) { [weak self] in
+                                                                                    guard let self = self else { return }
+                                                                                    let selectedCardBrand = self.cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
+                                                                                    let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand), "cbc_event_source": "edit"]
+                                                                                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
+                                                                                        params: params)
+                                                                                } didTapClose: { [weak self] in
+                                                                                    guard let self = self else { return }
+                                                                                    let selectedCardBrand = self.cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
+                                                                                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .closeCardBrandDropDown),
+                                                                                                                                         params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand)])
+                                                                                }
+
+            // pre-select current card brand
+            if let currentCardBrand = paymentMethod.card?.preferredDisplayBrand,
+               let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
+                cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+            }
+            cardBrandDropDown.view.isHidden = !canEditCard
+            return cardBrandDropDown
+        }()
+
     private lazy var cardInfoSection: UIStackView = {
         let cardDetails = UIStackView(arrangedSubviews: [cardSection.view, notEditableDetailsLabel])
         cardDetails.axis = .vertical
         cardDetails.setCustomSpacing(8, after: cardSection.view) // custom spacing from figma
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardDetails])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardDetails, cardBrandDropDown.view])
         stackView.axis = .vertical
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding, after: headerLabel) // custom spacing from figma
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding, after: cardDetails) // custom spacing from figma
+        cardBrandDropDown.delegate = self
         return stackView
     }()
 
@@ -211,6 +249,31 @@ final class UpdatePaymentMethodViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
+    private func updateCard() async {
+            guard let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
+
+            view.isUserInteractionEnabled = false
+            saveButton.update(state: .spinnerWithInteractionDisabled)
+
+            // Create the update card params
+            let cardParams = STPPaymentMethodCardParams()
+            cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+            let updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
+
+            // Make the API request to update the payment method
+            do {
+                try await delegate.didUpdate(viewController: self, paymentMethod: paymentMethod, updateParams: updateParams)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .updateCardBrand),
+                                                                     params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
+            } catch {
+                saveButton.update(state: .enabled)
+                latestError = error
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .updateCardBrandFailed),
+                                                                     error: error,
+                                                                     params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
+            }
+            view.isUserInteractionEnabled = true
+        }
 }
 
 // MARK: BottomSheetContentViewController
@@ -250,5 +313,9 @@ extension UpdatePaymentMethodViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
         latestError = nil // clear error on new input
+        let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand
+        let currentCardBrand = paymentMethod.card?.preferredDisplayBrand ?? .unknown
+        let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
+        saveButton.update(state: shouldBeEnabled ? .enabled : .disabled)
     }
 }

@@ -36,6 +36,14 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(darkMode: false, isEmbeddedSingleCard: true, appearance: ._testMSPaintTheme)
     }
 
+    func test_UpdatePaymentMethodViewControllerEditDarkMode() {
+        _test_UpdatePaymentMethodViewController(darkMode: true, isRemoveOnly: false)
+    }
+
+    func test_UpdatePaymentMethodViewControllerEditLightMode() {
+        _test_UpdatePaymentMethodViewController(darkMode: false, isRemoveOnly: false)
+    }
+
     func _test_UpdatePaymentMethodViewController(darkMode: Bool, isRemoveOnly: Bool = true, isEmbeddedSingleCard: Bool = false, appearance: PaymentSheet.Appearance = .default) {
         let sut = UpdatePaymentMethodViewController(paymentMethod: STPFixtures.paymentMethod(),
                                            removeSavedPaymentMethodMessage: "Test removal string",
