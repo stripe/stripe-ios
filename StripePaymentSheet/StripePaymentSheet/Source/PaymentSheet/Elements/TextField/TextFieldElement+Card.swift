@@ -188,12 +188,14 @@ extension TextFieldElement {
 // MARK: - CVC Configuration
 extension TextFieldElement {
     struct CVCConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand)) {
+        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand), isEditable: Bool = true) {
             self.defaultValue = defaultValue
             self.cardBrandProvider = cardBrandProvider
+            self.isEditable = isEditable
         }
 
         let defaultValue: String?
+        let isEditable: Bool
         let cardBrandProvider: () -> (STPCardBrand)
         var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
@@ -221,20 +223,25 @@ extension TextFieldElement {
                 pairedColor: theme.colors.componentBackground
             )
         }
+        func censor() -> String {
+            return String(repeating: "•", count: maxLength(for: String()))
+        }
     }
 }
 
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil) {
+        init(defaultValue: String? = nil, isEditable: Bool = true) {
             self.defaultValue = defaultValue
+            self.isEditable = isEditable
         }
 
         let label: String = String.Localized.mm_yy
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let defaultValue: String?
+        let isEditable: Bool
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -271,6 +278,11 @@ extension TextFieldElement {
         }
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
+            // suppress error if nothing can be done about it
+            if !isEditable {
+                return .valid
+            }
+
             // Validate the month here so we can reuse the result later
             let validMonths = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
             let textHasValidMonth = validMonths.contains { text.hasPrefix($0) }
@@ -314,16 +326,16 @@ extension TextFieldElement {
 // MARK: Last four configuration
 extension TextFieldElement {
     struct LastFourConfiguration: TextFieldElementConfiguration {
-        let label = String.Localized.card_brand
+        let label = String.Localized.card_number
         let lastFour: String
         let isEditable = false
-        let cardBrandDropDown: DropdownFieldElement
+        let cardBrandDropDown: DropdownFieldElement?
 
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, cardBrandDropDown: DropdownFieldElement) {
+        init(lastFour: String, cardBrandDropDown: DropdownFieldElement? = nil) {
             self.lastFour = lastFour
             self.cardBrandDropDown = cardBrandDropDown
         }

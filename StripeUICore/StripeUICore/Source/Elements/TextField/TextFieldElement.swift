@@ -19,8 +19,9 @@ import UIKit
 
     // MARK: - Properties
     weak public var delegate: ElementDelegate?
+    var setDisabledBackgroundColor: Bool
     lazy var textFieldView: TextFieldView = {
-        return TextFieldView(viewModel: viewModel, delegate: self)
+        return TextFieldView(viewModel: viewModel, delegate: self, setDisabledBackgroundColor: setDisabledBackgroundColor)
     }()
     var configuration: TextFieldElementConfiguration {
         didSet {
@@ -102,14 +103,20 @@ import UIKit
 
     // MARK: - Initializer
 
-    public required init(configuration: TextFieldElementConfiguration, theme: ElementsAppearance = .default) {
+    public required init(configuration: TextFieldElementConfiguration, theme: ElementsAppearance = .default, setDisabledBackgroundColor: Bool = false) {
         self.configuration = configuration
         self.theme = theme
+        self.setDisabledBackgroundColor = setDisabledBackgroundColor
     }
 
     /// Call this to manually set the text of the text field.
     public func setText(_ text: String) {
-        self.text = sanitize(text: text)
+        if configuration.isEditable {
+            self.text = sanitize(text: text)
+        }
+        else {
+            self.text = text
+        }
 
         // Since we're setting the text manually, disable any previous autofill
         didReceiveAutofill = false

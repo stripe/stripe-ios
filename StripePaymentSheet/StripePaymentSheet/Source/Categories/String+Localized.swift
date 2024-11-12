@@ -77,6 +77,20 @@ extension String.Localized {
         STPLocalizedString("Back", "Text for back button")
     }
 
+    static var card_details_cannot_be_changed: String {
+        STPLocalizedString(
+            "Card details cannot be changed.",
+            "Text on a screen that indicates card details cannot be changed."
+        )
+    }
+
+    static var manage_card: String {
+        STPLocalizedString(
+            "Manage card",
+            "Title shown above a view containing the customer's card that they can delete or update"
+        )
+    }
+
     static var update_card: String {
         STPLocalizedString(
             "Update card",
