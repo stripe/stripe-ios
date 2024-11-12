@@ -41,6 +41,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.delegate = self
+        sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
         // ...with cash app selected...
         let cashAppPayRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay")
