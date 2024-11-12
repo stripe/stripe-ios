@@ -302,51 +302,12 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
 extension EmbeddedPaymentElement {
     
     func _confirm() async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
-        let result: (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) = await {
-            
-            let authContext: STPAuthenticationContext? = {
-                switch configuration.formSheetAction {
-                case .confirm:
-                    if formViewController?.presentingViewController != nil {
-                        return formViewController
-                    }
-                    if let presentingViewController {
-                        return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
-                    }
-                    return nil
-                case .continue:
-                    // formViewController is never currently presented during confirmation in continue mode
-                    if let presentingViewController {
-                        return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
-                    }
-                    return nil
-                }
-            }()
-            
-            guard let authContext else {
-                return (.failed(error: PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil authContext.")), STPAnalyticsClient.DeferredIntentConfirmationType.none)
-            }
-            
-            guard let paymentOption = _paymentOption else {
-                return (.failed(error: PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil payment option.")),
-                        STPAnalyticsClient.DeferredIntentConfirmationType.none)
-            }
-            
-            return await PaymentSheet.confirm(configuration: configuration,
-                                                    authenticationContext: authContext,
-                                                    intent: intent,
-                                                    elementsSession: elementsSession,
-                                                    paymentOption: paymentOption,
-                                                    paymentHandler: paymentHandler,
-                                                    integrationShape: .embedded)
-        }()
-        
         // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
         if let latestUpdateTask {
             switch await latestUpdateTask.value {
             case .succeeded:
                 // The view is in sync with the intent. Continue on with confirm!
-                return result
+                break
             case .failed(error: let error):
                 return (.failed(error: error), STPAnalyticsClient.DeferredIntentConfirmationType.none)
             case .canceled:
@@ -358,8 +319,44 @@ extension EmbeddedPaymentElement {
                 return (.failed(error: error), STPAnalyticsClient.DeferredIntentConfirmationType.none)
             }
         }
-        
-        return result
+
+        let authContext: STPAuthenticationContext? = {
+            switch configuration.formSheetAction {
+            case .confirm:
+                if formViewController?.presentingViewController != nil {
+                    return formViewController
+                }
+                if let presentingViewController {
+                    return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
+                }
+                return nil
+            case .continue:
+                // 'formViewController' is never currently presented during confirmation in continue mode
+                if let presentingViewController {
+                    return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
+                }
+                return nil
+            }
+        }()
+
+        guard let authContext else {
+            return (.failed(error: PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil authContext.")), STPAnalyticsClient.DeferredIntentConfirmationType.none)
+        }
+
+        guard let paymentOption = _paymentOption else {
+            return (.failed(error: PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil payment option.")),
+                    STPAnalyticsClient.DeferredIntentConfirmationType.none)
+        }
+
+        return await PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: authContext,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            integrationShape: .embedded
+        )
     }
     
     func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
