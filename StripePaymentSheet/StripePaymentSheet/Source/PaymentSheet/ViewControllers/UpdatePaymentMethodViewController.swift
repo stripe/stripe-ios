@@ -21,8 +21,6 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didDismiss()
 }
 
-/// For internal SDK use only
-@objc(STP_Internal_UpdatePaymentMethodViewController)
 final class UpdatePaymentMethodViewController: UIViewController {
     private let appearance: PaymentSheet.Appearance
     private let paymentMethod: STPPaymentMethod
