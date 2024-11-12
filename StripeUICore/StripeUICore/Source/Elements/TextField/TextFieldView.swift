@@ -38,7 +38,6 @@ class TextFieldView: UIView {
     }
 
     var didReceiveAutofill = false
-    var setDisabledBackgroundColor: Bool
 
     // MARK: - Views
 
@@ -110,7 +109,6 @@ class TextFieldView: UIView {
     init(viewModel: TextFieldElement.ViewModel, delegate: TextFieldViewDelegate, setDisabledBackgroundColor: Bool = false) {
         self.viewModel = viewModel
         self.delegate = delegate
-        self.setDisabledBackgroundColor = setDisabledBackgroundColor
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         isAccessibilityElement = false // false b/c we use `accessibilityElements`
@@ -214,9 +212,6 @@ class TextFieldView: UIView {
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
             textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.isEditable)
-            if (!isUserInteractionEnabled || !viewModel.isEditable) && setDisabledBackgroundColor {
-                layer.backgroundColor = viewModel.theme.colors.disabledBackground.cgColor
-            }
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }
