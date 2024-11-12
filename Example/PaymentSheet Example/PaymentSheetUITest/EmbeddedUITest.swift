@@ -786,7 +786,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         
         // Card number from https://docs.stripe.com/testing#regulatory-cards
         try! fillCardData(app, cardNumber: "4000002760003184")
+        app.toolbars.buttons["Done"].waitForExistenceAndTap()
         app.buttons["Continue"].waitForExistenceAndTap()
+        app.swipeUp() // scroll to see the checkout button
         app.buttons["Checkout"].waitForExistenceAndTap()
         
         // Finish the 3DS2 payment
