@@ -39,7 +39,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
 
     private lazy var loadingIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .medium)
+        let indicator = UIActivityIndicatorView(style: .large)
         indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.hidesWhenStopped = true
         return indicator
@@ -53,7 +53,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.setTitle("Checkout", for: .normal)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
-        checkoutButton.isEnabled = false
+        checkoutButton.isEnabled = embeddedPaymentElement?.paymentOption != nil
+        checkoutButton.addTarget(self, action: #selector(pay), for: .touchUpInside)
         return checkoutButton
     }()
 
@@ -189,6 +190,24 @@ class EmbeddedPlaygroundViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
+    
+    @objc func pay() {
+        Task { @MainActor in
+            guard let embeddedPaymentElement else { return }
+            self.isLoading = true
+            let result = await embeddedPaymentElement.confirm()
+            self.isLoading = false
+            
+            switch result {
+            case .completed, .failed:
+                playgroundController?.lastPaymentResult = result
+                self.dismiss(animated: true)
+            case .canceled:
+                break
+            }
+        }
+    }
+
 }
 
 // MARK: - EmbeddedPaymentElementDelegate

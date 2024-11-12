@@ -69,7 +69,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
-        let configuration: PaymentSheet.Configuration
+        let configuration: PaymentElementConfiguration
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
 
@@ -77,12 +77,12 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         /// - Parameters:
         ///   - intent: Intent.
         ///   - elementsSession: STPElementsSession.
-        ///   - configuration: PaymentSheet configuration.
+        ///   - configuration: PaymentElementConfiguration configuration.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             callToAction: ConfirmButton.CallToActionType?
         ) {
             self.intent = intent
@@ -99,7 +99,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     convenience init(
         intent: Intent,
         elementsSession: STPElementsSession,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         callToAction: ConfirmButton.CallToActionType? = nil
     ) {
         self.init(

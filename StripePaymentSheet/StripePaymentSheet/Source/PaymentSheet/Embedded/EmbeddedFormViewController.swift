@@ -18,19 +18,17 @@ import UIKit
     /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm`.
     /// - Parameters:
     ///   - embeddedFormViewController: The view controller requesting the confirmation.
-    ///   - paymentOption: The `PaymentOption` to be confirmed.
     ///   - completion: A completion handler to call with the `PaymentSheetResult` from the confirmation attempt.
     func embeddedFormViewControllerShouldConfirm(
         _ embeddedFormViewController: EmbeddedFormViewController,
-        with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
 
-    /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.continue`.
+    /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm` after confirmation completes.
     /// - Parameters:
     ///   - embeddedFormViewController: The view controller that has finished.
     ///   - result: The `PaymentSheetResult` of the payment or setup process.
-    func embeddedFormViewControllerShouldContinue(
+    func embeddedFormViewControllerDidCompleteConfirmation(
         _ embeddedFormViewController: EmbeddedFormViewController,
         result: PaymentSheetResult
     )
@@ -303,7 +301,7 @@ class EmbeddedFormViewController: UIViewController {
 
         // Confirm the payment with the payment option
         let startTime = NSDate.timeIntervalSinceReferenceDate
-        delegate?.embeddedFormViewControllerShouldConfirm(self, with: paymentOption) { result, deferredIntentConfirmationType in
+        delegate?.embeddedFormViewControllerShouldConfirm(self) { result, deferredIntentConfirmationType in
             let elapsedTime = NSDate.timeIntervalSinceReferenceDate - startTime
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
@@ -340,7 +338,7 @@ class EmbeddedFormViewController: UIViewController {
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
-                            self.delegate?.embeddedFormViewControllerShouldContinue(self, result: result)
+                            self.delegate?.embeddedFormViewControllerDidCompleteConfirmation(self, result: result)
                         }
                     }
                 }
@@ -421,5 +419,11 @@ extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
     func updateErrorLabel(for error: Swift.Error?) {
         self.error = error
         updateError()
+    }
+}
+
+extension EmbeddedFormViewController: STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
     }
 }

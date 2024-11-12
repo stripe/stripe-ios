@@ -393,7 +393,7 @@ extension PaymentSheet {
                     elementsSession: elementsSession,
                     paymentOption: paymentOption,
                     paymentHandler: paymentHandler,
-                    isFlowController: true
+                    integrationShape: .flowController
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
                     analyticsHelper.logPayment(
                         paymentOption: paymentOption,
@@ -468,7 +468,7 @@ extension PaymentSheet {
         // MARK: Internal helper methods
         static func makeBottomSheetViewController(
             _ contentViewController: BottomSheetContentViewController,
-            configuration: Configuration,
+            configuration: PaymentElementConfiguration,
             didCancelNative3DS2: (() -> Void)? = nil
         ) -> BottomSheetViewController {
             let sheet = BottomSheetViewController(
