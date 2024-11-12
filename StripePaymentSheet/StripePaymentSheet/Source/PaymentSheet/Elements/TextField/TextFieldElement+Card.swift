@@ -331,7 +331,7 @@ extension TextFieldElement {
 // MARK: Last four configuration
 extension TextFieldElement {
     struct LastFourConfiguration: TextFieldElementConfiguration {
-        let label = String.Localized.card_brand
+        let label = String.Localized.card_number
         let lastFour: String
         let isEditable = false
         let cardBrandDropDown: DropdownFieldElement?

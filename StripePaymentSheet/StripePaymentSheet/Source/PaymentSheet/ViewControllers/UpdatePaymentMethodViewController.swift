@@ -18,7 +18,7 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws
-    func didDismiss(viewController: UpdatePaymentMethodViewController)
+    func didDismiss()
 }
 
 /// For internal SDK use only
@@ -106,9 +106,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     // MARK: Elements
-    private lazy var headerLabelElement: StaticElement = {
-        return StaticElement(view: headerLabel)
-    }()
 
     private lazy var cardNumberElement: TextFieldElement = {
         let cardNumberElement = TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "").makeElement(theme: appearance.asElementsTheme, setDisabledBackgroundColor: true)
@@ -228,7 +225,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
-        delegate?.didDismiss(viewController: self)
+        delegate?.didDismiss()
     }
 
     private func navigationBarStyle() -> SheetNavigationBar.Style {
@@ -279,10 +276,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
 // MARK: BottomSheetContentViewController
 extension UpdatePaymentMethodViewController: BottomSheetContentViewController {
-
-    var allowsDragToDismiss: Bool {
-        return view.isUserInteractionEnabled
-    }
 
     func didTapOrSwipeToDismiss() {
         guard view.isUserInteractionEnabled else {

@@ -106,6 +106,9 @@
 /* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Cancel and pay another way";
 
+/* Text on a screen that indicates card details cannot be changed. */
+"Card details cannot be changed." = "Card details cannot be changed.";
+
 /* Title for a button that allows the user to use a different email in the signup flow. */
 "Change email" = "Change email";
 
@@ -172,6 +175,9 @@ re-entering the security code (CVV/CVC). */
 
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
+
+/* Title for a screen for managing a card. */
+"Manage card" = "Manage card";
 
 /* Title shown above a view containing the customer's payment method that they can delete or update */
 "Manage payment method" = "Manage payment method";
@@ -268,7 +274,8 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Label for a button that re-sends the a login code when tapped */
 "Resend code" = "Resend code";
 
-/* A button used for saving a new payment method */
+/* A button used for saving a new payment method
+   Label on a button for saving a card. */
 "Save" = "Save";
 
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */

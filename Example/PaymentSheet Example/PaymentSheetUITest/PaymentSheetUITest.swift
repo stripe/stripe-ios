@@ -2395,6 +2395,83 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 //    }
 }
 
+class PaymentSheetNewUpdatePaymentMethodFlowUITests: PaymentSheetUITestCase {
+    func testRemoveOnlyHorizontal() {
+        _setup(vertical: false, cbc: false)
+        _testRemove(vertical: false, removeOnly: true)
+    }
+    func testRemoveOnlyVertical() {
+        _setup(vertical: true, cbc: false)
+        _testRemove(vertical: true, removeOnly: true)
+    }
+    func testCBCUpdateHorizontal() {
+        _setup(vertical: false, cbc: true)
+        _testCBCUpdate()
+    }
+    func testCBCUpdateVertical() {
+        _setup(vertical: true, cbc: true)
+        _testCBCUpdate()
+    }
+    // Helper
+    func _setup(vertical: Bool, cbc: Bool) {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        if cbc {
+            settings.merchantCountryCode = .FR
+            settings.currency = .eur
+        }
+        settings.newUpdatePaymentMethodFlow = .on
+        if vertical {
+            settings.layout = .vertical
+        }
+        else {
+            settings.layout = .horizontal
+        }
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].tap()
+
+        if vertical {
+            app.buttons["View more"].waitForExistenceAndTap(timeout: 3.0)
+        }
+        app.buttons["Edit"].waitForExistenceAndTap(timeout: 3.0)
+    }
+    func _testRemove(vertical: Bool, removeOnly: Bool) {
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap(timeout: 3.0))
+        if removeOnly {
+            XCTAssertFalse(app.otherElements["Card Brand Dropdown"].waitForExistence(timeout: 2.0))
+            XCTAssertFalse(app.buttons["Save"].waitForExistence(timeout: 2.0))
+        }
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap(timeout: 3.0))
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap(timeout: 3.0))
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap(timeout: 3.0))
+        XCTAssertFalse(app.buttons["CircularButton.Edit"].waitForExistence(timeout: 2.0))
+        if vertical {
+            XCTAssertTrue(app.buttons["Edit"].waitForExistence(timeout: 3.0))
+        }
+        else {
+            XCTAssertTrue(app.cells.count == 2)
+        }
+    }
+    func _testCBCUpdate() {
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap(timeout: 3.0))
+        XCTAssertTrue(app.otherElements["Card Brand Dropdown"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.textFields["Card brand"].waitForExistenceAndTap(timeout: 3.0))
+        XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 3.0))
+        app.pickerWheels.firstMatch.swipeUp()
+        app.toolbars.buttons["Done"].waitForExistenceAndTap()
+        app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0)
+        app.buttons["Done"].waitForExistenceAndTap()
+        XCTAssertFalse(app.buttons["CircularButton.Edit"].waitForExistence(timeout: 2.0))
+        let visas = app.buttons.allElementsBoundByIndex.filter { button in
+            if let label = button.label as NSString? {
+                return label.contains("Visa ending in")
+            }
+            return false
+        }
+        XCTAssertTrue(visas.count == 2)
+    }
+}
+
 // MARK: Helpers
 extension PaymentSheetUITestCase {
     func _testUSBankAccount(mode: PaymentSheetTestPlaygroundSettings.Mode, integrationType: PaymentSheetTestPlaygroundSettings.IntegrationType, vertical: Bool = false) {

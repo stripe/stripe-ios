@@ -236,7 +236,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }
-    func didDismiss(viewController: UpdatePaymentMethodViewController) {
+    func didDismiss() {
         presentingViewController?.dismiss(animated: true)
     }
 }
