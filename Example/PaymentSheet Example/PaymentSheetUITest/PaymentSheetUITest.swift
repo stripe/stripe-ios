@@ -2294,7 +2294,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         fillLinkAndPay(mode: .checkbox)
     }
 
-    func testLinkCardBrand() {
+    // TODO: Re-enable once #ir-cozy-potential is resolced.
+    func DISABLED_testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
 
