@@ -7,7 +7,7 @@
 
 /// The component is viewed on screen (`viewDidAppear` lifecycle event)
 struct ComponentViewedEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable { }
+    struct Metadata: Encodable, Equatable { }
 
     let name = "component.viewed"
     let metadata = Metadata()

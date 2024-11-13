@@ -147,14 +147,14 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     // MARK: - ConnectWebViewController
 
-    override func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        super.webView(webView, didFinish: navigation)
+    override func webViewDidFinishNavigation() {
+        super.webViewDidFinishNavigation()
 
         analyticsClient.logComponentWebPageLoaded(loadEnd: .now)
     }
 
-    override func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
-        super.webView(webView, didFail: navigation, withError: error)
+    override func webViewDidFailNavigation(withError error: any Error) {
+        super.webViewDidFailNavigation(withError: error)
 
         didFailLoad(error: error)
         analyticsClient.log(event: PageLoadErrorEvent(metadata: .init(
