@@ -39,7 +39,7 @@
 #import "STDSAnalyticsDelegate.h"
 
 static const NSTimeInterval kMinimumTimeout = 5 * 60;
-static NSString * const kStripeLOA = @"3DS_LOA_SDK_STIN_020100_00162";
+static NSString * const kStripeLOA = @"3DS_LOA_SDK_STIN_020200_00961";
 static NSString * const kULTestLOA = @"3DS_LOA_SDK_PPFU_020100_00007";
 
 NS_ASSUME_NONNULL_BEGIN
