@@ -97,18 +97,36 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
     var address: PaymentSheet.Address {
         PaymentSheet.Address(
-            city: addressElement?.city?.text,
-            country: addressElement?.selectedCountryCode,
-            line1: addressElement?.line1?.text,
-            line2: addressElement?.line2?.text,
-            postalCode: addressElement?.postalCode?.text,
-            state: addressElement?.state?.rawData
+            city: addressElement?.city?.text ?? defaultAddress?.city,
+            country: addressElement?.selectedCountryCode ?? defaultAddress?.country,
+            line1: addressElement?.line1?.text ?? defaultAddress?.line1,
+            line2: addressElement?.line2?.text ?? defaultAddress?.line2,
+            postalCode: addressElement?.postalCode?.text ?? defaultAddress?.postalCode,
+            state: addressElement?.state?.rawData ?? defaultAddress?.state
         )
     }
 
     var defaultAddress: PaymentSheet.Address? {
         guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
         return configuration.defaultBillingDetails.address
+    }
+
+    var billingDetails: ElementsSessionContext.BillingDetails {
+        let billingAddress = ElementsSessionContext.BillingDetails.Address(
+            city: address.city,
+            country: address.country,
+            line1: address.line1,
+            line2: address.line2,
+            postalCode: address.postalCode,
+            state: address.state
+        )
+
+        return ElementsSessionContext.BillingDetails(
+            name: name,
+            email: email,
+            phone: phone,
+            address: billingAddress
+        )
     }
 
     var enableCTA: Bool {

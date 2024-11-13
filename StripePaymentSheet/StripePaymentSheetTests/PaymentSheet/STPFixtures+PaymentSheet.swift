@@ -159,6 +159,7 @@ extension STPPaymentMethod {
             "card": [
                 "last4": "4242",
                 "brand": "visa",
+                "fingerprint": "B8XXs2y2JsVBtB9f",
             ],
         ])!
     }

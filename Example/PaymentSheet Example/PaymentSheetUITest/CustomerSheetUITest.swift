@@ -19,7 +19,8 @@ class CustomerSheetUITest: XCTestCase {
 
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true",
-                                 "USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "true",
+                                 "FinancialConnectionsSDKAvailable": "true",
+                                 "FinancialConnectionsStubbedResult": "false",
         ]
         app.launch()
     }
@@ -265,7 +266,7 @@ class CustomerSheetUITest: XCTestCase {
 
         let notNowButton = app.buttons["Not now"]
         if notNowButton.waitForExistence(timeout: timeout) {
-            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
+            app.toolbars.buttons["Done"].tap() // dismiss keyboard
             notNowButton.tap()
         }
 

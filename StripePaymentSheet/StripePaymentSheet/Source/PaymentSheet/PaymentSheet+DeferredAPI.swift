@@ -12,7 +12,7 @@ import Foundation
 extension PaymentSheet {
     static func handleDeferredIntentConfirmation(
         confirmType: ConfirmPaymentMethodType,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         intentConfig: PaymentSheet.IntentConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
@@ -82,7 +82,7 @@ extension PaymentSheet {
                         }
                     } else {
                         // 4b. Server-side confirmation
-                        try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
+                        try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
@@ -110,7 +110,7 @@ extension PaymentSheet {
                         }
                     } else {
                         // 4b. Server-side confirmation
-                        try PaymentSheetDeferredValidator.validatePaymentMethodId(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
+                        try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
                         paymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,

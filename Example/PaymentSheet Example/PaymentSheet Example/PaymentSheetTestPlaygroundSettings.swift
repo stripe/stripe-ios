@@ -246,6 +246,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case passthrough
     }
 
+    enum LinkNativeMode: String, PickerEnum {
+        static var enumName: String { "Native Link" }
+
+        case on
+        case off
+    }
+
     enum UserOverrideCountry: String, PickerEnum {
         static var enumName: String { "UserOverrideCountry (debug only)" }
 
@@ -296,6 +303,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
     enum ShakeAmbiguousViews: String, PickerEnum {
         static var enumName: String { "Shake Ambiguous Views" }
+
+        case on
+        case off
+    }
+    enum InstantDebitsInDeferredIntents: String, PickerEnum {
+        static var enumName: String { "Instant Debits with Deferred Intents" }
 
         case on
         case off
@@ -449,12 +462,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
     var linkMode: LinkMode
+    var useNativeLink: LinkNativeMode
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String
     var autoreload: Autoreload
     var shakeAmbiguousViews: ShakeAmbiguousViews
+    var instantDebitsInDeferredIntents: InstantDebitsInDeferredIntents
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
@@ -493,12 +508,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             defaultBillingAddress: .off,
             customEmail: nil,
             linkMode: .passthrough,
+            useNativeLink: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
             shakeAmbiguousViews: .off,
+            instantDebitsInDeferredIntents: .off,
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,

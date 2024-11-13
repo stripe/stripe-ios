@@ -78,7 +78,4 @@
          location = "group:IntegrationTester/IntegrationTester.xcodeproj">
       </FileRef>
    </Group>
-   <FileRef
-      location = "group:HTTPStatusError.swift">
-   </FileRef>
 </Workspace>

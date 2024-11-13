@@ -17,51 +17,49 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kSk-Ih-EmG">
-                                <rect key="frame" x="8" y="394" width="222" height="166.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kSk-Ih-EmG">
+                                <rect key="frame" x="8" y="394" width="398" height="166.5"/>
                                 <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Examples" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b2f-ni-mEr" userLabel="Examples">
+                                        <rect key="frame" x="162.5" y="0.0" width="73.5" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="1tV-qm-auM">
-                                        <rect key="frame" x="0.0" y="0.0" width="222" height="0.0"/>
+                                        <rect key="frame" x="149" y="12" width="100" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet"/>
                                         <connections>
                                             <segue destination="ViG-Ud-ejY" kind="show" id="yyz-vx-Eng"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="MKK-aF-Sf3">
-                                        <rect key="frame" x="0.0" y="12" width="222" height="0.0"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="PaymentSheet.FlowController"/>
-                                        <connections>
-                                            <segue destination="My4-RU-qnC" kind="show" id="Xdz-OC-9o9"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="c3T-pG-kA8">
-                                        <rect key="frame" x="0.0" y="24" width="222" height="0.0"/>
+                                        <rect key="frame" x="111.5" y="24" width="175" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet (Deferred)"/>
                                         <connections>
                                             <segue destination="Rd2-MU-RV5" kind="show" id="jdt-d4-E1Y"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="MKK-aF-Sf3">
+                                        <rect key="frame" x="97.5" y="36" width="203" height="0.0"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="PaymentSheet.FlowController"/>
+                                        <connections>
+                                            <segue destination="My4-RU-qnC" kind="show" id="Xdz-OC-9o9"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="d2G-Rh-LKq">
-                                        <rect key="frame" x="0.0" y="36" width="222" height="0.0"/>
+                                        <rect key="frame" x="59.5" y="48" width="279" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet.FlowController (Deferred)"/>
                                         <connections>
                                             <segue destination="Gh7-vw-dR9" kind="show" id="bXJ-Wp-AsJ"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ynH-6g-uwR">
-                                        <rect key="frame" x="0.0" y="48" width="222" height="0.0"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="PaymentSheet (test playground)"/>
-                                        <connections>
-                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showSwiftUITestPlayground:" id="ani-OQ-XpC"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="jAV-Cf-o6R" userLabel="PaymentSheet (SwiftUI)">
-                                        <rect key="frame" x="0.0" y="60" width="222" height="0.0"/>
+                                        <rect key="frame" x="117" y="60" width="164" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet (SwiftUI)"/>
                                         <connections>
@@ -69,31 +67,15 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="UMG-Qh-vSf">
-                                        <rect key="frame" x="0.0" y="72" width="222" height="0.0"/>
+                                        <rect key="frame" x="65" y="72" width="268" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet.FlowController (SwiftUI)"/>
                                         <connections>
                                             <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showSwiftUICustomExample:" id="dAe-GM-ken"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="oRd-Yg-cOM">
-                                        <rect key="frame" x="0.0" y="84" width="222" height="0.0"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="PaymentSheet.FlowController (CVC Recollection)"/>
-                                        <connections>
-                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showSwiftUICustomExampleCVCRecollection:" id="vLD-y3-kCJ"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="or6-aq-0to">
-                                        <rect key="frame" x="0.0" y="96" width="222" height="0.0"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="CustomerSheet (test playground)"/>
-                                        <connections>
-                                            <segue destination="AjW-Xm-4P3" kind="show" identifier="" destinationCreationSelector="showSwiftUICustomerSheetTestPlayground:" id="hYA-FT-Tj0"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hIk-Ur-mhf">
-                                        <rect key="frame" x="0.0" y="108" width="222" height="0.0"/>
+                                        <rect key="frame" x="113.5" y="84" width="171" height="0.0"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="CustomerSheet (SwiftUI)"/>
                                         <connections>
@@ -101,7 +83,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="Ysb-4K-dUG">
-                                        <rect key="frame" x="0.0" y="120" width="222" height="4.5"/>
+                                        <rect key="frame" x="121" y="96" width="156" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="LinkPaymentController"/>
                                         <connections>
@@ -109,11 +91,33 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ZXq-dE-S2O" userLabel="EmbeddedPaymentElement">
-                                        <rect key="frame" x="0.0" y="136.5" width="222" height="30"/>
+                                        <rect key="frame" x="104" y="108" width="190" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="EmbeddedPaymentElement"/>
                                         <connections>
                                             <segue destination="Y7b-Za-B0P" kind="show" id="ebk-ys-cGb"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test Playgrounds" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5HP-ay-2IP" userLabel="Test playgrounds">
+                                        <rect key="frame" x="133.5" y="120" width="131" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="or6-aq-0to">
+                                        <rect key="frame" x="84.5" y="132" width="229" height="0.0"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="CustomerSheet (test playground)"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" identifier="" destinationCreationSelector="showSwiftUICustomerSheetTestPlayground:" id="hYA-FT-Tj0"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ynH-6g-uwR">
+                                        <rect key="frame" x="88" y="144" width="222" height="22.5"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="PaymentSheet (test playground)"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showSwiftUITestPlayground:" id="ani-OQ-XpC"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -870,8 +874,8 @@
                                                                     <action selector="hotDogStepperDidChange" destination="Gh7-vw-dR9" eventType="valueChanged" id="jbm-es-Yyz"/>
                                                                 </connections>
                                                             </stepper>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uqy-nk-Dz2">
-                                                                <rect key="frame" x="235" y="27" width="24" height="21"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uqy-nk-Dz2">
+                                                                <rect key="frame" x="251.5" y="28" width="7.5" height="20.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -930,8 +934,8 @@
                                                                     <action selector="saladStepperDidChange" destination="Gh7-vw-dR9" eventType="valueChanged" id="D5O-sG-o0l"/>
                                                                 </connections>
                                                             </stepper>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HdA-fh-Rhc">
-                                                                <rect key="frame" x="235" y="27" width="24" height="21"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HdA-fh-Rhc">
+                                                                <rect key="frame" x="251.5" y="28" width="7.5" height="20.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -1249,8 +1253,8 @@
                                                                     <action selector="hotDogStepperDidChange" destination="Rd2-MU-RV5" eventType="valueChanged" id="6If-Az-Obu"/>
                                                                 </connections>
                                                             </stepper>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xpa-aB-4LK">
-                                                                <rect key="frame" x="235" y="27" width="24" height="21"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xpa-aB-4LK">
+                                                                <rect key="frame" x="251.5" y="28" width="7.5" height="20.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -1309,8 +1313,8 @@
                                                                     <action selector="saladStepperDidChange" destination="Rd2-MU-RV5" eventType="valueChanged" id="Sui-Em-NJB"/>
                                                                 </connections>
                                                             </stepper>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HHg-Bp-BgD">
-                                                                <rect key="frame" x="235" y="27" width="24" height="21"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HHg-Bp-BgD">
+                                                                <rect key="frame" x="251.5" y="28" width="7.5" height="20.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -1910,8 +1914,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-dc-2Dj">
-                                <rect key="frame" x="20" y="112" width="374" height="708.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-dc-2Dj">
+                                <rect key="frame" x="20" y="112" width="374" height="673.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="tav-0l-Zgd">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="26.5"/>
@@ -1970,8 +1974,8 @@
                                                                     <action selector="hotDogStepperDidChange" destination="Y7b-Za-B0P" eventType="valueChanged" id="8dt-z7-wgK"/>
                                                                 </connections>
                                                             </stepper>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5J3-N0-Zkw">
-                                                                <rect key="frame" x="235" y="27" width="24" height="21"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5J3-N0-Zkw">
+                                                                <rect key="frame" x="251.5" y="28" width="7.5" height="20.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -2030,8 +2034,8 @@
                                                                     <action selector="saladStepperDidChange" destination="Y7b-Za-B0P" eventType="valueChanged" id="WFG-b6-Sch"/>
                                                                 </connections>
                                                             </stepper>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iOI-dl-OSA">
-                                                                <rect key="frame" x="235" y="27" width="24" height="21"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iOI-dl-OSA">
+                                                                <rect key="frame" x="251.5" y="28" width="7.5" height="20.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -2175,9 +2179,9 @@
                                                 <state key="disabled" title="Loading..."/>
                                             </button>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6tV-xJ-AaB">
-                                                <rect key="frame" x="255" y="5" width="40" height="40"/>
+                                                <rect key="frame" x="265" y="10" width="30" height="30"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="Akh-tU-xdx"/>
+                                                    <constraint firstAttribute="height" constant="30" id="Akh-tU-xdx"/>
                                                     <constraint firstAttribute="width" secondItem="6tV-xJ-AaB" secondAttribute="height" multiplier="1:1" id="Oi7-cI-5dJ"/>
                                                 </constraints>
                                             </imageView>
@@ -2195,15 +2199,15 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DkG-em-aK4" userLabel="Total row">
-                                        <rect key="frame" x="0.0" y="519.5" width="374" height="49"/>
+                                        <rect key="frame" x="0.0" y="519.5" width="374" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subscribe for 5% discount" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TP7-AP-s3P">
-                                                <rect key="frame" x="0.0" y="0.0" width="192.5" height="49"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="192.5" height="31"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="zc8-iL-Pqg">
-                                                <rect key="frame" x="317" y="9" width="51" height="31"/>
+                                                <rect key="frame" x="317" y="0.0" width="51" height="31"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="subscribe_switch"/>
                                                 </userDefinedRuntimeAttributes>
@@ -2215,27 +2219,21 @@
                                         <constraints>
                                             <constraint firstItem="TP7-AP-s3P" firstAttribute="height" secondItem="DkG-em-aK4" secondAttribute="height" id="9Ib-g9-ngb"/>
                                             <constraint firstItem="TP7-AP-s3P" firstAttribute="leading" secondItem="DkG-em-aK4" secondAttribute="leading" id="9MB-vz-N5I"/>
-                                            <constraint firstItem="zc8-iL-Pqg" firstAttribute="top" secondItem="DkG-em-aK4" secondAttribute="top" constant="9" id="OBf-sc-u5G"/>
+                                            <constraint firstItem="zc8-iL-Pqg" firstAttribute="top" secondItem="DkG-em-aK4" secondAttribute="top" id="OBf-sc-u5G"/>
                                             <constraint firstItem="zc8-iL-Pqg" firstAttribute="trailing" secondItem="DkG-em-aK4" secondAttribute="trailingMargin" id="cDi-XL-7pi"/>
                                             <constraint firstItem="TP7-AP-s3P" firstAttribute="centerY" secondItem="DkG-em-aK4" secondAttribute="centerY" id="ssX-lm-Dks"/>
                                             <constraint firstItem="zc8-iL-Pqg" firstAttribute="centerY" secondItem="TP7-AP-s3P" secondAttribute="centerY" id="vIG-d1-q3Y"/>
                                         </constraints>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u9v-JL-er0" userLabel="Padding">
-                                        <rect key="frame" x="0.0" y="578.5" width="374" height="20"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="20" id="2JM-jS-isr"/>
-                                        </constraints>
-                                    </view>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="UkM-KF-waD" userLabel="Mandate text view">
-                                        <rect key="frame" x="0.0" y="588.5" width="374" height="50"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UkM-KF-waD" userLabel="Mandate text view">
+                                        <rect key="frame" x="0.0" y="570.5" width="374" height="33"/>
                                         <color key="textColor" systemColor="labelColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                     </textView>
-                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5wc-Gb-x36" userLabel="Buy Button">
-                                        <rect key="frame" x="0.0" y="658.5" width="374" height="50"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5wc-Gb-x36" userLabel="Buy Button">
+                                        <rect key="frame" x="0.0" y="623.5" width="374" height="50"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9bN-BK-U2p">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
@@ -2296,29 +2294,29 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="vLD-y3-kCJ"/>
+        <segue reference="dAe-GM-ken"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray4Color">
-            <color red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -115,7 +115,7 @@ extension WKWebView {
     }
 
     func sendMessage<Sender: MessageSender>(sender: Sender) throws {
-        evaluateJavaScript(try XCTUnwrap(sender.javascriptMessage)) { (_, error) in
+        evaluateJavaScript(try sender.javascriptMessage()) { (_, error) in
             if let error {
                 XCTFail("JavaScript execution failed: \(error)")
             }

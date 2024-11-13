@@ -36,7 +36,7 @@ extension LinkVerificationView {
         }()
 
         override var intrinsicContentSize: CGSize {
-            return CGSize(width: UIView.noIntrinsicMetric, height: 24)
+            return CGSize(width: 72, height: 24)
         }
 
         init() {

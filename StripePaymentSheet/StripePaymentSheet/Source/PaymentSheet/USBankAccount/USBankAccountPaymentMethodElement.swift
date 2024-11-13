@@ -30,6 +30,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         }
     }
 
+    let phoneElement: PhoneNumberElement?
     private(set) var mandateString: NSMutableAttributedString?
     private let configuration: PaymentSheetFormFactoryConfig
     private let merchantName: String
@@ -82,10 +83,10 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     init(
         configuration: PaymentSheetFormFactoryConfig,
         titleElement: StaticElement,
-        nameElement: PaymentMethodElement?,
-        emailElement: PaymentMethodElement?,
-        phoneElement: PaymentMethodElement?,
-        addressElement: PaymentMethodElement?,
+        nameElement: PaymentMethodElementWrapper<TextFieldElement>?,
+        emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
+        phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
+        addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
         checkboxElement: PaymentMethodElement?,
         savingAccount: BoolReference,
         merchantName: String,
@@ -104,6 +105,8 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             (collectingName || hasDefaultName) && (collectingEmail || hasDefaultEmail),
             "If name or email are not collected, they must be provided through defaults"
         )
+
+        self.phoneElement = phoneElement?.element
 
         self.configuration = configuration
         self.linkedBank = initialLinkedBank

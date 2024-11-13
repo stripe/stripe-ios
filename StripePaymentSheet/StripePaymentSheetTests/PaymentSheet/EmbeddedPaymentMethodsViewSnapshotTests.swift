@@ -285,7 +285,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -301,7 +301,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_savedPaymentMethod() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .saved(paymentMethod: STPPaymentMethod._testCard()),
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -317,7 +317,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_noApplePay() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -333,7 +333,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_noLink() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -349,7 +349,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_rowHeight() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
         appearance.embeddedPaymentElement.row.additionalInsets = 20
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -374,7 +374,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_rowHeightSingleLine() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
         appearance.embeddedPaymentElement.row.additionalInsets = 20
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -399,7 +399,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_spacing() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
         appearance.embeddedPaymentElement.row.floating.spacing = 30
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -416,7 +416,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_selectedBorder() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement .style = .floatingButton
+        appearance.embeddedPaymentElement .row.style = .floatingButton
         appearance.selectedBorderWidth = 5.0
         appearance.colors.selectedComponentBorder = .red
 
@@ -439,7 +439,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_borderWidth() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement .style = .floatingButton
+        appearance.embeddedPaymentElement .row.style = .floatingButton
         appearance.borderWidth = 5.0
         appearance.colors.primary = .red
 
@@ -462,7 +462,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_componentBackgroundColor() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
         appearance.colors.componentBackground = .purple
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -479,7 +479,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_cornerRadius() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
         appearance.cornerRadius = 15
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -496,7 +496,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_smallFont() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
         appearance.font.sizeScaleFactor = 0.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
 
@@ -514,7 +514,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_largeFont() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
         appearance.font.sizeScaleFactor = 1.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
 
@@ -660,7 +660,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_floating_withMandateProviderAttributedText() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.style = .floatingButton
+        appearance.embeddedPaymentElement.row.style = .floatingButton
         let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
         let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
 
@@ -731,7 +731,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_shouldShowMandateFalse() {
         let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
         let mockMandateProvider = MockMandateProvider(attributedText: mandateText)

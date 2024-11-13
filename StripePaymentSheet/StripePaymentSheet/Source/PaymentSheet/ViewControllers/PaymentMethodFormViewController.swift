@@ -54,6 +54,16 @@ class PaymentMethodFormViewController: UIViewController {
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
+
+            if paymentMethodType.isLinkBankPayment {
+                // We create the final payment method in the bank auth flow, therefore treating
+                // the Link Bank Payment result like a saved payment option.
+                guard let paymentMethod = params.instantDebitsLinkedBank?.paymentMethod.decode() else {
+                    return nil
+                }
+                return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+            }
+
             return .new(confirmParams: params)
         }
         return nil
@@ -200,12 +210,33 @@ struct OverridePrimaryButtonState {
 extension PaymentMethodFormViewController {
     enum Error: Swift.Error {
         case usBankAccountParamsMissing
-        case instantDebitsDeferredIntentNotSupported
         case instantDebitsParamsMissing
     }
 
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement? { form as? USBankAccountPaymentMethodElement }
     private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? { form as? InstantDebitsPaymentMethodElement }
+
+    private var bankTabEmail: String? {
+        switch paymentMethodType {
+        case .stripe(.USBankAccount):
+            return usBankAccountFormElement?.email
+        case .instantDebits, .linkCardBrand:
+            return instantDebitsFormElement?.email
+        default:
+            return nil
+        }
+    }
+
+    private var bankTabPhoneElement: PhoneNumberElement? {
+        switch paymentMethodType {
+        case .stripe(.USBankAccount):
+            return usBankAccountFormElement?.phoneElement
+        case .instantDebits, .linkCardBrand:
+            return instantDebitsFormElement?.phoneElement
+        default:
+            return nil
+        }
+    }
 
     private var elementsSessionContext: ElementsSessionContext {
         let intentId: ElementsSessionContext.IntentID? = {
@@ -219,17 +250,27 @@ extension PaymentMethodFormViewController {
             }
         }()
 
+        let defaultPhoneNumber = configuration.defaultBillingDetails.phone
+        let defaultUnformattedPhoneNumber: String? = {
+            guard let defaultPhoneNumber else { return nil }
+            return PhoneNumber.fromE164(defaultPhoneNumber)?.number
+        }()
         let prefillDetails = ElementsSessionContext.PrefillDetails(
-            email: instantDebitsFormElement?.email ?? configuration.defaultBillingDetails.name,
-            phoneNumber: instantDebitsFormElement?.phone ?? configuration.defaultBillingDetails.phone
+            email: bankTabEmail ?? configuration.defaultBillingDetails.email,
+            formattedPhoneNumber: bankTabPhoneElement?.phoneNumber?.string(as: .e164) ?? defaultPhoneNumber,
+            unformattedPhoneNumber: bankTabPhoneElement?.phoneNumber?.number ?? defaultUnformattedPhoneNumber,
+            countryCode: bankTabPhoneElement?.selectedCountryCode
         )
         let linkMode = elementsSession.linkSettings?.linkMode
+        let billingDetails = instantDebitsFormElement?.billingDetails
+
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
             prefillDetails: prefillDetails,
             intentId: intentId,
-            linkMode: linkMode
+            linkMode: linkMode,
+            billingDetails: billingDetails
         )
     }
 
@@ -420,11 +461,19 @@ extension PaymentMethodFormViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
-        let additionalParameters: [String: Any] = [
+
+        var additionalParameters: [String: Any] = [
             "product": "instant_debits",
-            "attach_required": true,
             "hosted_surface": "payment_element",
         ]
+
+        switch intent {
+        case .paymentIntent, .setupIntent:
+            additionalParameters["attach_required"] = true
+        case .deferredIntent:
+            break
+        }
+
         switch intent {
         case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
@@ -448,13 +497,36 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .deferredIntent: // not supported
-            let errorAnalytic = ErrorAnalytic(
-                event: .unexpectedPaymentSheetError,
-                error: Error.instantDebitsDeferredIntentNotSupported
+        case .deferredIntent(let intentConfig):
+            let amount: Int?
+            let currency: String?
+            switch intentConfig.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            client.collectBankAccountForDeferredIntent(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: intentConfig.onBehalfOf,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
             )
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
         }
+    }
+}
+
+private extension LinkBankPaymentMethod {
+
+    func decode() -> STPPaymentMethod? {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: allResponseFields)
     }
 }

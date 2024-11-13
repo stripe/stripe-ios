@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Lisää maksutapa";
 
+"Add bank account" = "Lisää pankkitili";
+
 "Add card" = "Lisää kortti";
 
 "Add new card" = "Lisää uusi kortti";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Lisää maksutiedot";
 
 "Approve payment" = "Hyväksy maksu";
+
+"Are you sure you want to remove this card?" = "Haluatko varmasti poistaa tämän kortin?";
+
+"Are you sure you want to remove this linked account?" = "Haluatko varmasti poistaa tämän linkitetyn tilin?";
 
 "Back" = "Takaisin";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Peruuta ja maksa toisella tavalla";
 
+"Change email" = "Vaihda sähköposti";
+
 "Choose a payment method" = "Valitse maksutapa";
 
 "Close card scanner" = "Sulje korttiskanneri";
+
+"Code sent" = "Koodi lähetetty";
 
 "Confirm" = "Vahvista";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Yhteystiedot";
 
+"Default" = "Oletus";
+
 "EPS Bank" = "EPS-pankki";
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Syötä numeroon %@ lähetetty koodi käyttääksesi Link-maksua oletuksena.";
+
+"Enter your verification code" = "Syötä vahvistuskoodi";
+
 "FPX Bank" = "FPX-pankki";
+
+"For security, please re-enter your card’s security code." = "Turvallisuussyistä sinun on annettava korttisi turvakoodi uudelleen.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Liity Link-palveluun";
+
+"Log out of Link" = "Kirjaudu ulos Link-palvelusta";
 
 "Manage payment method" = "Hallinnoi maksutapaa";
 
@@ -101,6 +123,8 @@
 "New card" = "Uusi kortti";
 
 "New payment method" = "Uusi maksutapa";
+
+"Not %@?" = "Ei %@?";
 
 "Open your UPI app to approve your payment within %@" = "Avaa UPI-sovellus ja hyväksy maksu kohteessa %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Maksa pankkitiliäsi käyttäen vain muutamassa vaiheessa.";
 
+"Payment" = "Maksu";
+
 "Payment failed" = "Maksu epäonnistui";
+
+"Payment methods" = "Maksutavat";
 
 "Please go back and select another payment method" = "Palaa takaisin ja valitse toinen maksutapa";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Poista kortti?";
 
+"Remove linked account" = "Poista linkitetty tili";
+
 "Remove payment method" = "Poista maksutapa";
+
+"Resend code" = "Lähetä koodi uudelleen";
 
 "Save" = "Tallenna";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Tallennettu";
 
+"Secure 1⁠-⁠click checkout" = "Turvallinen kerran napsautettava maksaminen";
+
 "Select card" = "Valitse kortti";
 
 "Select payment method" = "Valitse maksutapa";
 
 "Select your payment method" = "Valitse maksutapa";
 
+"Set as default" = "Aseta oletusarvoiseksi";
+
+"Set as default payment method" = "Aseta oletusarvoiseksi maksutavaksi";
+
 "Set up" = "Määritä";
 
 "Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
 
 "Show menu" = "Näytä valikko";
+
+"Sign in to your Link account" = "Kirjaudu sisään Link-tiliisi";
 
 "Simple, secure one-click payments" = "Yksinkertaiset turvalliset kerran napsautettavat maksut";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe tallettaa 0,01 dollaria tilillesi 1–2 arkipäivän kuluessa. Saat myös sähköpostiisi ohjeet maksun suorittamiseksi loppuun yritykselle %@.";
 
+"Tap to close" = "Suljet napauttamalla";
+
+"Tap to expand" = "Laajenna napauttamalla";
+
 "The IBAN you entered is incomplete." = "IBAN on puutteellinen.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Antamasi IBAN on virheellinen, \"%@\" ei ole tuettu maakoodi.";
 
+"The provided verification code has expired." = "Annettu vahvistuskoodi on vanhentunut.";
+
+"The provided verification code is incorrect." = "Annettu vahvistuskoodi on virheellinen.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Tämä kortti on erääntynyt. Päivitä kortin tiedot tai valitse toinen maksutapa.";
+
+"This is your default" = "Tämä on oletusarvoinen";
+
+"Too many attempts. Please try again in a few minutes." = "Liian monta yritystä. Kokeile uudelleen muutaman minuutin kuluttua.";
+
+"Unavailable for this purchase" = "Ei käytettävissä tälle ostolle";
+
 "Update" = "Päivitä";
 
+"Update card" = "Päivitä kortti";
+
 "Update card brand" = "Päivitä kortin merkki";
+
+"Use your saved info to check out faster" = "Käytä tallennettuja tietoja nopeampaan maksamiseen";
 
 "View more" = "Näytä lisää";
 

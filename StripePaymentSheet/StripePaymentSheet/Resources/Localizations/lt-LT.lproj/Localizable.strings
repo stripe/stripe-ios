@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Pridėkite mokėjimo būdą";
 
+"Add bank account" = "Pridėti banko sąskaitą";
+
 "Add card" = "Pridėti kortelę";
 
 "Add new card" = "Pridėti naują kortelę";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Pridėkite mokėjimo informaciją";
 
 "Approve payment" = "Patvirtinti mokėjimą";
+
+"Are you sure you want to remove this card?" = "Ar tikrai norite pašalinti šią kortelę?";
+
+"Are you sure you want to remove this linked account?" = "Ar tikrai norite pašalinti šią susietą paskyrą?";
 
 "Back" = "Atgal";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
 
+"Change email" = "Pakeiskite el. paštą";
+
 "Choose a payment method" = "Pasirinkite mokėjimo būdą";
 
 "Close card scanner" = "Išjungti kortelės skaitytuvą";
+
+"Code sent" = "Kodas išsiųstas";
 
 "Confirm" = "Patvirtinti";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Kontaktinė informacija";
 
+"Default" = "Numatytasis";
+
 "EPS Bank" = "EPS bankas";
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Įveskite kodą, išsiųstą numeriu %@, kad pagal numatytuosius nustatymus galėtumėte mokėti naudodami „Link“.";
+
+"Enter your verification code" = "Įveskite patvirtinimo kodą";
+
 "FPX Bank" = "FPX bankas";
+
+"For security, please re-enter your card’s security code." = "Saugumo sumetimais dar kartą įveskite kortelės saugumo kodą.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Suprantu, kad „Stripe“ atliks tiesioginio debeto nuskaitymus „%@“ vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Prisijungti prie „Link“";
+
+"Log out of Link" = "Atsijungti nuo „Link“";
 
 "Manage payment method" = "Tvarkyti mokėjimo būdą";
 
@@ -101,6 +123,8 @@
 "New card" = "Nauja kortelė";
 
 "New payment method" = "Naujas mokėjimo būdas";
+
+"Not %@?" = "Ne %@?";
 
 "Open your UPI app to approve your payment within %@" = "Atidarykite savo UPI programą mokėjimui patvirtinti per %@";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Mokėkite naudodami savo banko sąskaitą vos keliais veiksmais.";
 
+"Payment" = "Mokėjimas";
+
 "Payment failed" = "Sumokėti nepavyko";
+
+"Payment methods" = "Mokėjimo būdai";
 
 "Please go back and select another payment method" = "Grįžkite atgal ir pasirinkite kitą mokėjimo būdą";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Ištraukti kortelę?";
 
+"Remove linked account" = "Pašalinti susietą paskyrą";
+
 "Remove payment method" = "Pašalinti mokėjimo būdą";
+
+"Resend code" = "Pakartotinai siųsti kodą";
 
 "Save" = "Išsaugoti";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Įrašyta";
 
+"Secure 1⁠-⁠click checkout" = "Saugus atsiskaitymas vienu spustelėjimu";
+
 "Select card" = "Pasirinkti kortelę";
 
 "Select payment method" = "Pasirinkti mokėjimo būdą";
 
 "Select your payment method" = "Pasirinkite mokėjimo būdą";
 
+"Set as default" = "Nustatyti kaip numatytąjį";
+
+"Set as default payment method" = "Nustatyti kaip numatytąjį mokėjimo būdą";
+
 "Set up" = "Nustatyti";
 
 "Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
 
 "Show menu" = "Rodyti meniu";
+
+"Sign in to your Link account" = "Prisijunkite prie savo „Link“ paskyros";
 
 "Simple, secure one-click payments" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
 
+"Tap to close" = "Bakstelėkite, kad uždarytumėte";
+
+"Tap to expand" = "Bakstelėkite, kad išplėstumėte";
+
 "The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Įvedėte neteisingą IBAN kodą, „%@“ nėra palaikomas šalies kodas.";
 
+"The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
+
+"The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Ši kortelė nebegalioja. Atnaujinkite savo kortelės informaciją arba pasirinkite kitą mokėjimo būdą.";
+
+"This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
+
+"Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
+
+"Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
+
 "Update" = "Atnaujinti";
 
+"Update card" = "Atnaujinti kortelę";
+
 "Update card brand" = "Atnaujinti kortelės prekės ženklą";
+
+"Use your saved info to check out faster" = "Naudokite išsaugotą informaciją, kad atsiskaitytumėte greičiau";
 
 "View more" = "Peržiūrėti daugiau";
 

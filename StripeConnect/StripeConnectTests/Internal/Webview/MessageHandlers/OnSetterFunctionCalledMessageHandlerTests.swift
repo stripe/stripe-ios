@@ -12,7 +12,7 @@ class OnSetterFunctionCalledMessageHandlerTests: ScriptWebTestBase {
     func testDeallocation() {
         weak var weakInstance: OnSetterFunctionCalledMessageHandler?
         autoreleasepool {
-            let instance = OnSetterFunctionCalledMessageHandler()
+            let instance = OnSetterFunctionCalledMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
             weakInstance = instance
             XCTAssertNotNil(weakInstance)
         }

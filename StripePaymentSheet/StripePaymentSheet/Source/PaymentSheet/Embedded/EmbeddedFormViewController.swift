@@ -12,25 +12,23 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol EmbeddedFormViewControllerDelegate: AnyObject {
+@MainActor protocol EmbeddedFormViewControllerDelegate: AnyObject {
 
     /// Notifies the delegate to confirm the payment or setup with the provided payment option.
     /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm`.
     /// - Parameters:
     ///   - embeddedFormViewController: The view controller requesting the confirmation.
-    ///   - paymentOption: The `PaymentOption` to be confirmed.
     ///   - completion: A completion handler to call with the `PaymentSheetResult` from the confirmation attempt.
     func embeddedFormViewControllerShouldConfirm(
         _ embeddedFormViewController: EmbeddedFormViewController,
-        with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
 
-    /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.continue`.
+    /// This method is called when the user taps the primary button (e.g., "Buy") while `formSheetAction` is set to `.confirm` after confirmation completes.
     /// - Parameters:
     ///   - embeddedFormViewController: The view controller that has finished.
     ///   - result: The `PaymentSheetResult` of the payment or setup process.
-    func embeddedFormViewControllerShouldContinue(
+    func embeddedFormViewControllerDidCompleteConfirmation(
         _ embeddedFormViewController: EmbeddedFormViewController,
         result: PaymentSheetResult
     )
@@ -70,6 +68,10 @@ class EmbeddedFormViewController: UIViewController {
             navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
+    
+    var collectsUserInput: Bool {
+        return paymentMethodFormViewController.form.collectsUserInput
+    }
 
     enum Error: Swift.Error {
         case noPaymentOptionOnBuyButtonTap
@@ -77,18 +79,18 @@ class EmbeddedFormViewController: UIViewController {
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
         return paymentMethodFormViewController.paymentOption
     }
-
-    private let loadResult: PaymentSheetLoader.LoadResult
+    
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let configuration: EmbeddedPaymentElement.Configuration
     private let intent: Intent
     private let elementsSession: STPElementsSession
+    private let shouldUseNewCardNewCardHeader: Bool
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
-    private var previousPaymentOption: PaymentOption?
+    private(set) var previousPaymentOption: PaymentOption?
 
     // MARK: - UI properties
 
@@ -128,7 +130,7 @@ class EmbeddedFormViewController: UIViewController {
         let headerView = FormHeaderView(
             paymentMethodType: paymentMethodType,
             // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
-            shouldUseNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
+            shouldUseNewCardHeader: shouldUseNewCardNewCardHeader,
             appearance: configuration.appearance
         )
 
@@ -154,14 +156,16 @@ class EmbeddedFormViewController: UIViewController {
     // MARK: - Initializers
 
     init(configuration: EmbeddedPaymentElement.Configuration,
-         loadResult: PaymentSheetLoader.LoadResult,
+         intent: Intent,
+         elementsSession: STPElementsSession,
+         shouldUseNewCardNewCardHeader: Bool,
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
-         formCache: PaymentMethodFormCache) {
-        self.loadResult = loadResult
-        self.intent = loadResult.intent
-        self.elementsSession = loadResult.elementsSession
+         formCache: PaymentMethodFormCache = .init()) {
+        self.intent = intent
+        self.elementsSession = elementsSession
+        self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.analyticsHelper = analyticsHelper
@@ -297,7 +301,7 @@ class EmbeddedFormViewController: UIViewController {
 
         // Confirm the payment with the payment option
         let startTime = NSDate.timeIntervalSinceReferenceDate
-        delegate?.embeddedFormViewControllerShouldConfirm(self, with: paymentOption) { result, deferredIntentConfirmationType in
+        delegate?.embeddedFormViewControllerShouldConfirm(self) { result, deferredIntentConfirmationType in
             let elapsedTime = NSDate.timeIntervalSinceReferenceDate - startTime
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
@@ -334,7 +338,7 @@ class EmbeddedFormViewController: UIViewController {
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
-                            self.delegate?.embeddedFormViewControllerShouldContinue(self, result: .completed)
+                            self.delegate?.embeddedFormViewControllerDidCompleteConfirmation(self, result: result)
                         }
                     }
                 }
@@ -415,5 +419,11 @@ extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
     func updateErrorLabel(for error: Swift.Error?) {
         self.error = error
         updateError()
+    }
+}
+
+extension EmbeddedFormViewController: STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
     }
 }
