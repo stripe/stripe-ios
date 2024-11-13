@@ -518,6 +518,12 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Checkout"].waitForExistenceAndTap()
         payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        
+        // Apple Pay should be selected by default upon reloading with the same customer
+        app.buttons["Reload"].tap()
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Apple Pay")
     }
 
     func testLink() {
