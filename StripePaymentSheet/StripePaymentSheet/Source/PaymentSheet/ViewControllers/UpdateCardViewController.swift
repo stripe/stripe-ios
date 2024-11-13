@@ -123,14 +123,43 @@ final class UpdateCardViewController: UIViewController {
         return cardBrandDropDown
     }()
 
+    private lazy var expiryDateElement: TextFieldElement = {
+        let expiryDate = CardExpiryDate(month: paymentMethod.card?.expMonth ?? 0, year: paymentMethod.card?.expYear ?? 0)
+        let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: appearance.asElementsTheme)
+        return expiryDateElement
+
+    }()
+
+    private lazy var cvcElement: TextFieldElement = {
+        let cardBrandProvider = { [weak self] in
+            self?.paymentMethod.card?.brand ?? .unknown
+        }
+        let cvcConfiguration = TextFieldElement.CVCConfiguration(defaultValue: String(repeating: "•", count: Int(STPCardValidator.maxCVCLength(for: cardBrandProvider()))), cardBrandProvider:  cardBrandProvider, isEditable: false)
+        let cvcElement = cvcConfiguration.makeElement(theme: appearance.asElementsTheme)
+        return cvcElement
+
+    }()
+
     private lazy var cardSection: SectionElement = {
         let allSubElements: [Element?] = [
-            panElement, SectionElement.HiddenElement(cardBrandDropDown),
+            panElement,
+            SectionElement.HiddenElement(cardBrandDropDown),
+            SectionElement.MultiElementRow([expiryDateElement, cvcElement])
         ]
-
         let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: appearance.asElementsTheme)
         section.delegate = self
         return section
+    }()
+
+    private lazy var cardInfoSection: UIStackView = {
+        let cardDetails = UIStackView(arrangedSubviews: [cardSection.view])
+        cardDetails.axis = .vertical
+        cardDetails.setCustomSpacing(8, after: cardSection.view) // custom spacing from figma
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardDetails])
+        stackView.axis = .vertical
+        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding, after: headerLabel) // custom spacing from figma
+        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding, after: cardDetails) // custom spacing from figma
+        return stackView
     }()
 
     // MARK: Overrides
