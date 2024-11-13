@@ -556,8 +556,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Ensure the card is selected and start checking out
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
         app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        app.buttons["Checkout"].waitForExistenceAndTap()
+        app.buttons["Checkout"].tap()
         
         // CVC field should already be selected
         app.typeText("123")
@@ -581,8 +582,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Ensure Cash App Pay is selected and start checking out
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
         app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        app.buttons["Checkout"].waitForExistenceAndTap()
+        app.buttons["Checkout"].tap()
         
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -603,8 +605,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Ensure Cash App Pay is selected and start checking out
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
         app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        app.buttons["Checkout"].waitForExistenceAndTap()
+        app.buttons["Checkout"].tap()
         
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -625,8 +628,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Ensure Cash App Pay is selected and start checking out
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
         app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        app.buttons["Checkout"].waitForExistenceAndTap()
+        app.buttons["Checkout"].tap()
         
         webviewAuthorizeSetupButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -656,8 +660,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
         app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        app.buttons["Checkout"].waitForExistenceAndTap()
+        app.buttons["Checkout"].tap()
         
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -686,8 +691,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Cancel"].waitForExistenceAndTap()
         
         app.buttons["Checkout"].waitForExistenceAndTap()
-        let payButton = app.buttons["Confirm"]
-        payButton.waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
@@ -718,8 +722,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
         app.buttons["Pay €50.99"].tap()
         
-        let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
     
     func testUSBankAccount() {
