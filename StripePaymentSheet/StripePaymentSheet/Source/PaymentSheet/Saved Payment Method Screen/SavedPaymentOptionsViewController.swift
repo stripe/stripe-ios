@@ -567,7 +567,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         }
 
         let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
-                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                              removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
                                               canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
