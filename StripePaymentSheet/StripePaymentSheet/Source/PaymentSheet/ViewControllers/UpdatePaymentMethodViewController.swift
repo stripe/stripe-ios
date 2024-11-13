@@ -31,13 +31,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private let canRemoveCard: Bool
     private let cardBrandFilter: CardBrandFilter
 
-    private var latestError: Error? {
-        didSet {
-            errorLabel.text = latestError?.localizedDescription
-            errorLabel.isHidden = latestError == nil
-        }
-    }
-
     weak var delegate: UpdatePaymentMethodViewControllerDelegate?
 
     // MARK: Navigation bar
@@ -51,7 +44,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [cardInfoSection, deleteButton, errorLabel])
+        let stackView = UIStackView(arrangedSubviews: [cardInfoSection, deleteButton])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding + 12, after: cardInfoSection) // custom spacing from figma
@@ -90,6 +83,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private lazy var notEditableDetailsLabel: UITextView = {
         let label = ElementsUI.makeSmallFootnote(theme: appearance.asElementsTheme)
         label.text = .Localized.card_details_cannot_be_changed
+        switch cardSection.validationState {
+        case .valid:
+            label.isHidden = false
+        default:
+            label.isHidden = true
+        }
         return label
     }()
 
@@ -129,7 +128,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
             cardNumberElement,
             SectionElement.MultiElementRow([expiryDateElement, cvcElement])
         ]
-
         let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: appearance.asElementsTheme)
         section.delegate = self
         return section
@@ -254,6 +252,5 @@ extension UpdatePaymentMethodViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        latestError = nil // clear error on new input
     }
 }

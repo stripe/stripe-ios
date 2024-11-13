@@ -249,6 +249,7 @@ extension TextFieldElement {
         enum Error: TextFieldValidationError {
             case empty
             case incomplete
+            case expired
             case invalidMonth
             case invalid
 
@@ -256,7 +257,7 @@ extension TextFieldElement {
                 switch self {
                 case .empty:                    return false
                 case .incomplete:               return !isUserEditing
-                case .invalidMonth, .invalid:   return true
+                case .expired, .invalidMonth, .invalid:   return true
                 }
             }
 
@@ -266,6 +267,8 @@ extension TextFieldElement {
                     return ""
                 case .incomplete:
                     return String.Localized.your_cards_expiration_date_is_incomplete
+                case .expired:
+                    return String.Localized.your_card_has_expired
                 case .invalidMonth:
                     return String.Localized.your_cards_expiration_month_is_invalid
                 case .invalid:
@@ -292,7 +295,12 @@ extension TextFieldElement {
                 }
                 // Is the date expired?
                 guard let expiryDate = CardExpiryDate(text), !expiryDate.expired() else {
-                    return .invalid(Error.invalid)
+                    if !isEditable {
+                        return .invalid(Error.expired)
+                    }
+                    else {
+                        return .invalid(Error.invalid)
+                    }
                 }
                 return .valid
             default:
