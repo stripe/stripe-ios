@@ -17,6 +17,7 @@
 		2CB72F11E36DB65E8BA9205A /* PlaygroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0C0324B4075DED17688123 /* PlaygroundController.swift */; };
 		2CD71F097C7CD0D9BFC7499D /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD340D0C93E93B9E9DB7691F /* PaymentSheetTestPlaygroundSettings.swift */; };
 		31AB49B72C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */; };
+		31AE570F2CDEDFD6008A4E6C /* PaymentSheetExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AE570E2CDEDFD6008A4E6C /* PaymentSheetExampleApp.swift */; };
 		31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */; };
 		3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */; };
 		37CDE2E21F00571F147FCFF7 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -169,6 +170,7 @@
 		310E6B5E2C581640006A03EC /* PaymentSheet Example-Shard3.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard3.xctestplan"; sourceTree = "<group>"; };
 		31A510FDEA3F1AAED0507251 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
 		31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+PaymentSheetDebugging.swift"; sourceTree = "<group>"; };
+		31AE570E2CDEDFD6008A4E6C /* PaymentSheetExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetExampleApp.swift; sourceTree = "<group>"; };
 		31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		34CCC286E48ADD9F586832D9 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Main.strings"; sourceTree = "<group>"; };
 		36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+Utilities.swift"; sourceTree = "<group>"; };
@@ -438,6 +440,7 @@
 				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
 				132709C10C0114D239ED3FE9 /* Resources */,
 				05E317C6C8459B147C041D93 /* AppDelegate.swift */,
+				31AE570E2CDEDFD6008A4E6C /* PaymentSheetExampleApp.swift */,
 				5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */,
 				DEC6711266D93A72ED4938F8 /* CustomerSheetTestPlayground.swift */,
 				B54E58F2CA450CF49ECD5637 /* CustomerSheetTestPlaygroundController.swift */,
@@ -685,6 +688,7 @@
 				DDF30DE9D7AA4BCC47CC12FB /* CustomerSheetTestPlayground.swift in Sources */,
 				8D9AAFD1D1D49112A7777414 /* CustomerSheetTestPlaygroundController.swift in Sources */,
 				CC9090D573972E8B14D204CB /* CustomerSheetTestPlaygroundSettings.swift in Sources */,
+				31AE570F2CDEDFD6008A4E6C /* PaymentSheetExampleApp.swift in Sources */,
 				84CFB1ACA4915EE5B2E25341 /* EndpointSelectorViewController.swift in Sources */,
 				F998DD23CE1F49B63F5A5741 /* ExampleCheckoutDeferredViewController.swift in Sources */,
 				EB3C76C2A5704F94F0414BEF /* ExampleCheckoutViewController.swift in Sources */,
@@ -830,6 +834,7 @@
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;
@@ -853,6 +858,7 @@
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;
