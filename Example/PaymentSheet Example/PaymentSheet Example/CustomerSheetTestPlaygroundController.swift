@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) @_spi(DefaultSPMFlag) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -147,6 +147,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
+        configuration.defaultSPMFlag = settings.defaultSPMFlag == .on
         return configuration
     }
 

@@ -571,9 +571,12 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
+                                              canEditCard: paymentMethod.isCoBrandedCard && cbcEligible,
                                               canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                               isTestMode: configuration.isTestMode,
-                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
+                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
+                                              defaultSPMFlag: configuration.defaultSPMFlag
+        )
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
@@ -667,6 +670,10 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
 
         let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
         viewModels[row] = updatedViewModel
+        // Update savedPaymentMethods
+        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+            self.savedPaymentMethods[row] = updatedPaymentMethod
+        }
         collectionView.reloadData()
         _ = viewController.bottomSheetController?.popContentViewController()
     }

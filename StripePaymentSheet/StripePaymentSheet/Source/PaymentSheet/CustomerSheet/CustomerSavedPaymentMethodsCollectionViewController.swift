@@ -82,6 +82,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
         let isTestMode: Bool
+        let defaultSPMFlag: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -386,7 +387,9 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
 
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
                           cbcEligible: cbcEligible,
-                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove)
+                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove,
+                          defaultSPMFlag: configuration.defaultSPMFlag
+        )
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -435,9 +438,12 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                               removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .customerSheet,
+                                              canEditCard: paymentMethod.isCoBrandedCard && cbcEligible,
                                               canRemoveCard: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                               isTestMode: configuration.isTestMode,
-                                              cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter)
+                                              cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
+                                              defaultSPMFlag: configuration.defaultSPMFlag
+        )
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
@@ -537,6 +543,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewCon
 
         let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
         viewModels[row] = updatedViewModel
+        // Update savedPaymentMethods
+        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+            self.savedPaymentMethods[row] = updatedPaymentMethod
+        }
         collectionView.reloadData()
         _ = viewController.bottomSheetController?.popContentViewController()
     }

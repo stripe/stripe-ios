@@ -28,8 +28,10 @@ final class UpdateCardViewController: UIViewController {
     private let removeSavedPaymentMethodMessage: String?
     private let isTestMode: Bool
     private let hostedSurface: HostedSurface
+    private let canEditCard: Bool
     private let canRemoveCard: Bool
     private let cardBrandFilter: CardBrandFilter
+    private let defaultSPMFlag: Bool
 
     private var latestError: Error? {
         didSet {
@@ -51,12 +53,15 @@ final class UpdateCardViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardSection.view, updateButton, deleteButton, errorLabel])
+        let cardDetails = UIStackView(arrangedSubviews: [cardSection.view, notEditableDetailsLabel])
+        cardDetails.axis = .vertical
+        cardDetails.setCustomSpacing(8, after: cardSection.view) // custom spacing from figma
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardDetails, updateButton, deleteButton, errorLabel])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding - 4, after: headerLabel) // custom spacing from figma
-        stackView.setCustomSpacing(32, after: cardSection.view) // custom spacing from figma
-        stackView.setCustomSpacing(10, after: updateButton) // custom spacing from figma
+        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding, after: headerLabel) // custom spacing from figma
+        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding + 12, after: cardDetails) // custom spacing from figma
+        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding - 4, after: updateButton) // custom spacing from figma
         return stackView
     }()
 
@@ -67,11 +72,13 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: appearance, didTap: {  [weak self] in
+        let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: appearance, didTap: {  [weak self] in
             Task {
                 await self?.updateCard()
             }
         })
+        button.isHidden = !canEditCard
+        return button
     }()
 
     private lazy var deleteButton: UIButton = {
@@ -100,6 +107,22 @@ final class UpdateCardViewController: UIViewController {
     private lazy var notEditableDetailsLabel: UITextView = {
         let label = ElementsUI.makeSmallFootnote(theme: appearance.asElementsTheme)
         label.text = .Localized.card_details_cannot_be_changed
+        if defaultSPMFlag {
+            if canEditCard {
+                label.isHidden = true
+            }
+            else {
+                switch expiryDateElement.validationState {
+                case .valid:
+                    label.isHidden = false
+                default:
+                    label.isHidden = true
+                }
+            }
+        }
+        else {
+            label.isHidden = true
+        }
         return label
     }()
 
@@ -173,9 +196,12 @@ final class UpdateCardViewController: UIViewController {
          removeSavedPaymentMethodMessage: String?,
          appearance: PaymentSheet.Appearance,
          hostedSurface: HostedSurface,
+         canEditCard: Bool,
          canRemoveCard: Bool,
          isTestMode: Bool,
-         cardBrandFilter: CardBrandFilter = .default) {
+         cardBrandFilter: CardBrandFilter = .default,
+         defaultSPMFlag: Bool
+    ) {
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
@@ -183,7 +209,8 @@ final class UpdateCardViewController: UIViewController {
         self.isTestMode = isTestMode
         self.canRemoveCard = canRemoveCard
         self.cardBrandFilter = cardBrandFilter
-
+        self.canEditCard = canEditCard
+        self.defaultSPMFlag = defaultSPMFlag
         super.init(nibName: nil, bundle: nil)
     }
 

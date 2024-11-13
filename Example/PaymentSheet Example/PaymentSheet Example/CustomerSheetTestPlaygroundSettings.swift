@@ -142,6 +142,12 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
+    enum DefaultSPMFlagEnabled: String, PickerEnum {
+        static let enumName: String = "defaultSPMFlag"
+        case on
+        case off
+    }
+
     var customerMode: CustomerMode
     var customerId: String?
     var customerKeyType: CustomerKeyType
@@ -162,6 +168,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var cardBrandAcceptance: CardBrandAcceptance
+    var defaultSPMFlag: DefaultSPMFlagEnabled
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -182,7 +189,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    allowsRemovalOfLastSavedPaymentMethod: .on,
                                                    paymentMethodRemove: .enabled,
                                                    paymentMethodAllowRedisplayFilters: .always,
-                                                   cardBrandAcceptance: .all)
+                                                   cardBrandAcceptance: .all,
+                                                   defaultSPMFlag: .off)
     }
 
     var base64Data: String {

@@ -566,18 +566,20 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     @objc func presentManageScreen() {
         error = nil
-        // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
+        // Special case, only 1 card remaining but is co-branded (or defaultSPMFlag), skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
-           paymentMethod.isCoBrandedCard,
-           elementsSession.isCardBrandChoiceEligible {
+           (paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible) || configuration.defaultSPMFlag {
             let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                 appearance: configuration.appearance,
                                                                 hostedSurface: .paymentSheet,
+                                                                canEditCard: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                 canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                 isTestMode: configuration.apiClient.isTestmode,
-                                                                cardBrandFilter: configuration.cardBrandFilter)
+                                                                cardBrandFilter: configuration.cardBrandFilter,
+                                                                defaultSPMFlag: configuration.defaultSPMFlag
+            )
             updateViewController.delegate = self
             bottomSheetController?.pushContentViewController(updateViewController)
             return
