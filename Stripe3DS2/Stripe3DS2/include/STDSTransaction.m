@@ -36,9 +36,10 @@
 #import "STDSSecTypeUtilities.h"
 #import "STDSStripe3DS2Error.h"
 #import "STDSDeviceInformationParameter.h"
+#import "STDSAnalyticsDelegate.h"
 
 static const NSTimeInterval kMinimumTimeout = 5 * 60;
-static NSString * const kStripeLOA = @"3DS_LOA_SDK_STIN_020100_00162";
+static NSString * const kStripeLOA = @"3DS_LOA_SDK_STIN_020200_00961";
 static NSString * const kULTestLOA = @"3DS_LOA_SDK_PPFU_020100_00007";
 
 NS_ASSUME_NONNULL_BEGIN
@@ -69,12 +70,15 @@ NS_ASSUME_NONNULL_BEGIN
     STDSACSNetworkingManager *_networkingManager;
     
     STDSUICustomization *_uiCustomization;
+    
+    __weak id<STDSAnalyticsDelegate> _analyticsDelegate;
 }
 
 - (instancetype)initWithDeviceInformation:(STDSDeviceInformation *)deviceInformation
                           directoryServer:(STDSDirectoryServer)directoryServer
                           protocolVersion:(STDSThreeDSProtocolVersion)protocolVersion
-                          uiCustomization:(nonnull STDSUICustomization *)uiCustomization {
+                          uiCustomization:(nonnull STDSUICustomization *)uiCustomization 
+                        analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate {
     self = [super init];
     if (self) {
         _deviceInformation = deviceInformation;
@@ -98,7 +102,8 @@ NS_ASSUME_NONNULL_BEGIN
                directoryServerCertificate:(STDSDirectoryServerCertificate *)directoryServerCertificate
                    rootCertificateStrings:(NSArray<NSString *> *)rootCertificateStrings
                           protocolVersion:(STDSThreeDSProtocolVersion)protocolVersion
-                          uiCustomization:(STDSUICustomization *)uiCustomization {
+                          uiCustomization:(STDSUICustomization *)uiCustomization
+                        analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate {
     self = [super init];
     if (self) {
         _deviceInformation = deviceInformation;
@@ -125,7 +130,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (NSString *)presentedChallengeUIType {
-    switch (self.challengeResponseViewController.response.acsUIType) {
+    return [self UIType:self.challengeResponseViewController.response.acsUIType];
+}
+
+- (NSString *)UIType:(STDSACSUIType)uiType {
+    switch (uiType) {
 
         case STDSACSUITypeNone:
             return @"none";
@@ -150,15 +159,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (STDSAuthenticationRequestParameters *)createAuthenticationRequestParameters {
     NSError *error = nil;
     NSString *encryptedDeviceData = nil;
-
+    
+    NSMutableDictionary *dictionary = [_deviceInformation.dictionaryValue mutableCopy];
+    dictionary[@"DD"][@"C018"] = _identifier;
+    
+    NSString *SDKReferenceNumber = self.useULTestLOA ? kULTestLOA : kStripeLOA;
+    dictionary[@"DD"][@"C016"] = SDKReferenceNumber;
+    
     if (_directoryServer == STDSDirectoryServerCustom) {
-        encryptedDeviceData = [STDSJSONWebEncryption encryptJSON:_deviceInformation.dictionaryValue
+        encryptedDeviceData = [STDSJSONWebEncryption encryptJSON:dictionary
                                                  withCertificate:_customDirectoryServerCertificate
                                                directoryServerID:_customDirectoryServerID
                                                      serverKeyID:_serverKeyID
                                                            error:&error];
     } else {
-        encryptedDeviceData = [STDSJSONWebEncryption encryptJSON:_deviceInformation.dictionaryValue
+        encryptedDeviceData = [STDSJSONWebEncryption encryptJSON:dictionary
                                               forDirectoryServer:_directoryServer
                                                            error:&error];
     }
@@ -170,12 +185,15 @@ NS_ASSUME_NONNULL_BEGIN
                                                                               deviceData:encryptedDeviceData
                                                                    sdkEphemeralPublicKey:_ephemeralKeyPair.publicKeyJWK
                                                                         sdkAppIdentifier:[STDSDeviceInformationParameter sdkAppIdentifier]
-                                                                      sdkReferenceNumber:self.useULTestLOA ? kULTestLOA : kStripeLOA
+                                                                      sdkReferenceNumber:SDKReferenceNumber
                                                                           messageVersion:[self _messageVersion]];
 }
 
 - (UIViewController *)createProgressViewControllerWithDidCancel:(void (^)(void))didCancel {
-    return [[STDSProgressViewController alloc] initWithDirectoryServer:[self _directoryServerForUI] uiCustomization:_uiCustomization didCancel:didCancel];
+    return [[STDSProgressViewController alloc] initWithDirectoryServer:[self _directoryServerForUI]
+                                                       uiCustomization:_uiCustomization
+                                                     analyticsDelegate:_analyticsDelegate
+                                                             didCancel:didCancel];
 }
 
 - (void)doChallengeWithViewController:(UIViewController *)presentingViewController
@@ -276,7 +294,10 @@ NS_ASSUME_NONNULL_BEGIN
                                               acsTransactionIdentifier:self.challengeRequestParameters.acsTransactionIdentifier];
     // Start the Challenge flow
     STDSImageLoader *imageLoader = [[STDSImageLoader alloc] initWithURLSession:NSURLSession.sharedSession];
-    self.challengeResponseViewController = [[STDSChallengeResponseViewController alloc] initWithUICustomization:_uiCustomization imageLoader:imageLoader directoryServer:[self _directoryServerForUI]];
+    self.challengeResponseViewController = [[STDSChallengeResponseViewController alloc] initWithUICustomization:_uiCustomization
+                                                                                                    imageLoader:imageLoader
+                                                                                                directoryServer:[self _directoryServerForUI]
+                                                                                              analyticsDelegate:_analyticsDelegate];
     self.challengeResponseViewController.delegate = self;
     
     presentationBlock(self.challengeResponseViewController, ^{ [self _makeChallengeRequest:self.challengeRequestParameters didCancel:NO]; });
@@ -418,6 +439,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)_handleChallengeResponse:(id<STDSChallengeResponse>)challengeResponse didCancel:(BOOL)didCancel {
+    
     if (challengeResponse.challengeCompletionIndicator) {
         // Final CRes
         // We need to pass didCancel to here because we can't distinguish between cancellation and auth failure from the CRes
@@ -440,6 +462,8 @@ NS_ASSUME_NONNULL_BEGIN
             [self.challengeStatusReceiver transactionDidPresentChallengeScreen:self];
         }
     }
+    
+    [_analyticsDelegate didReceiveChallengeResponseWithTransactionID:challengeResponse.threeDSServerTransactionID flow:[self UIType:challengeResponse.acsUIType]];
 }
 
 - (void)_cleanUp {
