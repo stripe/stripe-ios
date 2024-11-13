@@ -17,13 +17,16 @@ class ConnectWebViewControllerTests: XCTestCase {
 
     private var mockURLOpener: MockURLOpener!
     private var mockFileManager: MockFileManager!
+    private var mockAnalyticsClient: MockComponentAnalyticsClient!
     private var webVC: ConnectWebViewControllerTestWrapper!
 
     override func setUp() {
         super.setUp()
         mockFileManager = .init()
         mockURLOpener = .init()
+        mockAnalyticsClient = .init(commonFields: .mock)
         webVC = .init(configuration: .init(),
+                      analyticsClient: mockAnalyticsClient,
                       urlOpener: mockURLOpener,
                       fileManager: mockFileManager,
                       sdkVersion: "1.2.3")
@@ -316,7 +319,7 @@ class MockNavigationResponse: WKNavigationResponse {
     }
 }
 
-private class MockURLOpener: ApplicationURLOpener {
+class MockURLOpener: ApplicationURLOpener {
     var canOpenURLOverride: ((_ url: URL) -> Bool)?
     var openURLOverride: ((_ url: URL, _ options: [UIApplication.OpenExternalURLOptionsKey: Any], _ completion: OpenCompletionHandler?) -> Void)?
 
@@ -361,7 +364,7 @@ private class MockFileManager: FileManager {
 }
 
 private class ConnectWebViewControllerTestWrapper: ConnectWebViewController {
-    var presentPopup: (UIViewController) -> Void = {_ in }
+    var presentPopup: (UIViewController) -> Void = { _ in }
 
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         presentPopup(viewControllerToPresent)

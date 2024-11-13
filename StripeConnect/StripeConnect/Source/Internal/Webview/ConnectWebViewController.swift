@@ -9,6 +9,11 @@ import SafariServices
 @_spi(STP) import StripeCore
 import WebKit
 
+enum ConnectWebViewControllerError: Int, Error {
+    case downloadFileDoesNotExist
+    case multipleDownloads
+}
+
 /**
  Custom implementation of a web view that handles:
  - Camera access
@@ -30,14 +35,19 @@ class ConnectWebViewController: UIViewController {
     /// The file manager responsible for creating temporary file directories to store downloads
     let fileManager: FileManager
 
+    /// The analytics client used to log load errors
+    let analyticsClient: ComponentAnalyticsClient
+
     /// The current version for the SDK
     let sdkVersion: String?
 
     init(configuration: WKWebViewConfiguration,
+         analyticsClient: ComponentAnalyticsClient,
          // Only override for tests
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          fileManager: FileManager = .default,
          sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
+        self.analyticsClient = analyticsClient
         self.urlOpener = urlOpener
         self.fileManager = fileManager
         self.sdkVersion = sdkVersion
@@ -60,6 +70,8 @@ class ConnectWebViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - UIViewController
+
     override func loadView() {
         view = webView
     }
@@ -69,6 +81,20 @@ class ConnectWebViewController: UIViewController {
 
         // Default disable swipe to dismiss
         parent?.isModalInPresentation = true
+    }
+
+    // MARK: - Internal
+
+    func showAlertAndLog(error: Error,
+                         file: StaticString = #file,
+                         line: UInt = #line) {
+        analyticsClient.logClientError(error, file: file, line: line)
+
+        let alert = UIAlertController(
+            title: nil,
+            message: NSError.stp_unexpectedErrorMessage(),
+            preferredStyle: .alert)
+        present(alert, animated: true)
     }
 }
 
@@ -80,6 +106,7 @@ private extension ConnectWebViewController {
     func openInPopup(configuration: WKWebViewConfiguration,
                      navigationAction: WKNavigationAction) -> WKWebView? {
         let popupVC = PopupWebViewController(configuration: configuration,
+                                             analyticsClient: analyticsClient,
                                              navigationAction: navigationAction,
                                              urlOpener: urlOpener,
                                              sdkVersion: sdkVersion)
@@ -102,18 +129,11 @@ private extension ConnectWebViewController {
 
     // Opens with UIApplication.open, if supported
     func openOnSystem(url: URL) {
-        urlOpener.openIfPossible(url)
-    }
-
-    func showErrorAlert(for error: Error?) {
-        // TODO: MXMOBILE-2491 Log analytic when receiving an error
-        debugPrint(String(describing: error))
-
-        let alert = UIAlertController(
-            title: nil,
-            message: NSError.stp_unexpectedErrorMessage(),
-            preferredStyle: .alert)
-        present(alert, animated: true)
+        do {
+            try urlOpener.openIfPossible(url)
+        } catch {
+            analyticsClient.logClientError(error)
+        }
     }
 
     func cleanupDownloadedFile() {
@@ -182,6 +202,10 @@ extension ConnectWebViewController: WKUIDelegate {
 
 @available(iOS 15, *)
 extension ConnectWebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        // Override from subclass
+    }
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
         // Override from subclass
     }
@@ -248,10 +272,7 @@ extension ConnectWebViewController {
     func download(decideDestinationUsing response: URLResponse,
                   suggestedFilename: String) async -> URL? {
         if downloadedFile != nil {
-            // If there's already a downloaded file, it means there were multiple
-            // simultaneous downloads or we didn't clean up the URL correctly
-            // TODO: MXMOBILE-2491 Log error analytic
-            debugPrint("Multiple downloads")
+            analyticsClient.logClientError(ConnectWebViewControllerError.multipleDownloads)
         }
 
         // The temporary filename must be unique or the download will fail.
@@ -263,7 +284,7 @@ extension ConnectWebViewController {
         do {
             try fileManager.createDirectory(at: tempDir, withIntermediateDirectories: true)
         } catch {
-            showErrorAlert(for: error)
+            showAlertAndLog(error: error)
             return nil
         }
 
@@ -273,7 +294,7 @@ extension ConnectWebViewController {
 
     func download(didFailWithError error: any Error,
                   resumeData: Data?) {
-        showErrorAlert(for: error)
+        showAlertAndLog(error: error)
     }
 
     func downloadDidFinish() {
@@ -282,8 +303,7 @@ extension ConnectWebViewController {
             // `downloadedFile` should never be nil here
             // If file doesn't exist, it indicates something went wrong creating
             // the temp file or the system deleted the temp file too quickly
-            // TODO: MXMOBILE-2491 Log error analytic
-            showErrorAlert(for: nil)
+            showAlertAndLog(error: ConnectWebViewControllerError.downloadFileDoesNotExist)
             cleanupDownloadedFile()
             return
         }
