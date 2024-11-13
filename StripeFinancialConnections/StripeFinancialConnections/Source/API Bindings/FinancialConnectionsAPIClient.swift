@@ -9,6 +9,10 @@ import Foundation
 @_spi(STP) import StripeCore
 
 final class FinancialConnectionsAPIClient {
+    private enum EncodingError: Error {
+        case cannotCastToDictionary
+    }
+
     let backingAPIClient: STPAPIClient
 
     var isLinkWithStripe: Bool = false
@@ -73,6 +77,17 @@ final class FinancialConnectionsAPIClient {
             promise.fulfill { paramsWithTelemetry }
         }
         return promise
+    }
+
+    static func encodeAsParameters(_ value: any Encodable) throws -> [String: Any] {
+        let jsonData = try JSONEncoder().encode(value)
+        let jsonObject = try JSONSerialization.jsonObject(with: jsonData)
+
+        if let dictionary = jsonObject as? [String: Any] {
+            return dictionary
+        } else {
+            throw EncodingError.cannotCastToDictionary
+        }
     }
 }
 
@@ -230,19 +245,24 @@ protocol FinancialConnectionsAPI {
 
     func paymentDetails(
         consumerSessionClientSecret: String,
-        bankAccountId: String
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?
     ) -> Future<FinancialConnectionsPaymentDetails>
 
     func sharePaymentDetails(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        expectedPaymentMethodType: String
+        expectedPaymentMethodType: String,
+        billingEmail: String?,
+        billingPhone: String?
     ) -> Future<FinancialConnectionsSharePaymentDetails>
 
     func paymentMethods(
         consumerSessionClientSecret: String,
-        paymentDetailsId: String
-    ) -> Future<FinancialConnectionsPaymentMethod>
+        paymentDetailsId: String,
+        billingDetails: ElementsSessionContext.BillingDetails?
+    ) -> Future<LinkBankPaymentMethod>
 }
 
 extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
@@ -967,9 +987,11 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func paymentDetails(
         consumerSessionClientSecret: String,
-        bankAccountId: String
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?
     ) -> Future<FinancialConnectionsPaymentDetails> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
@@ -979,6 +1001,22 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             ],
             "type": "bank_account",
         ]
+
+        if let billingAddress {
+            do {
+                let encodedBillingAddress = try Self.encodeAsParameters(billingAddress)
+                parameters["billing_address"] = encodedBillingAddress
+            } catch let error {
+                let promise = Promise<FinancialConnectionsPaymentDetails>()
+                promise.reject(with: error)
+                return promise
+            }
+        }
+
+        if let billingEmail, !billingEmail.isEmpty {
+            parameters["billing_email_address"] = billingEmail.lowercased()
+        }
+
         return post(
             resource: APIEndpointPaymentDetails,
             parameters: parameters,
@@ -989,9 +1027,11 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func sharePaymentDetails(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        expectedPaymentMethodType: String
+        expectedPaymentMethodType: String,
+        billingEmail: String?,
+        billingPhone: String?
     ) -> Future<FinancialConnectionsSharePaymentDetails> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "id": paymentDetailsId,
             "credentials": [
@@ -1000,6 +1040,14 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "expected_payment_method_type": expectedPaymentMethodType,
             "expand": ["payment_method"],
         ]
+
+        if let billingEmail {
+            parameters["billing_email"] = billingEmail
+        }
+
+        if let billingPhone {
+            parameters["billing_phone"] = billingPhone
+        }
 
         return updateAndApplyFraudDetection(to: parameters)
             .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsSharePaymentDetails> in
@@ -1018,9 +1066,10 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func paymentMethods(
         consumerSessionClientSecret: String,
-        paymentDetailsId: String
-    ) -> Future<FinancialConnectionsPaymentMethod> {
-        let parameters: [String: Any] = [
+        paymentDetailsId: String,
+        billingDetails: ElementsSessionContext.BillingDetails?
+    ) -> Future<LinkBankPaymentMethod> {
+        var parameters: [String: Any] = [
             "link": [
                 "credentials": [
                     "consumer_session_client_secret": consumerSessionClientSecret
@@ -1030,8 +1079,19 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             "type": "link",
         ]
 
+        if let billingDetails {
+            do {
+                let encodedBillingDetails = try Self.encodeAsParameters(billingDetails)
+                parameters["billing_details"] = encodedBillingDetails
+            } catch let error {
+                let promise = Promise<LinkBankPaymentMethod>()
+                promise.reject(with: error)
+                return promise
+            }
+        }
+
         return updateAndApplyFraudDetection(to: parameters)
-            .chained { [weak self] parametersWithTelemetry -> Future<FinancialConnectionsPaymentMethod> in
+            .chained { [weak self] parametersWithTelemetry -> Future<LinkBankPaymentMethod> in
                 guard let self else {
                     return Promise(
                         error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated.")

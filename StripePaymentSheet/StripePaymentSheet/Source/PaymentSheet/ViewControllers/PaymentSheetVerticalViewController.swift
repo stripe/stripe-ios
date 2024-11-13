@@ -566,7 +566,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     @objc func presentManageScreen() {
         error = nil
-        // Special case, only 1 card remaining but is co-branded, show update view controller
+        // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
@@ -616,9 +616,12 @@ extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
 // MARK: - VerticalSavedPaymentMethodsViewControllerDelegate
 
 extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewControllerDelegate {
-    func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
-                     with selectedPaymentMethod: STPPaymentMethod?,
-                     latestPaymentMethods: [STPPaymentMethod]) {
+    func didComplete(
+        viewController: VerticalSavedPaymentMethodsViewController,
+        with selectedPaymentMethod: STPPaymentMethod?,
+        latestPaymentMethods: [STPPaymentMethod],
+        didTapToDismiss: Bool
+    ) {
         // Update our list of saved payment methods to be the latest from the manage screen in case of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
         var selection: VerticalPaymentMethodListSelection?
@@ -627,11 +630,12 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         }
         regenerateUI(updatedListSelection: selection)
 
-        _ = viewController.bottomSheetController?.popContentViewController()
-    }
-
-    func shouldClose() {
-        didTapOrSwipeToDismiss()
+        if didTapToDismiss {
+            // Dismiss the entire sheet
+            didCancel()
+        } else {
+            _ = viewController.bottomSheetController?.popContentViewController()
+        }
     }
 }
 
@@ -666,7 +670,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customer?.id)
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
-            if pmFormVC.form.collectsUserInput {
+            if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {
                 // The payment method form collects user input, display it
                 self.paymentMethodFormViewController = pmFormVC
                 paymentMethodListContentOffsetPercentage = bottomSheetController?.contentOffsetPercentage
@@ -735,6 +739,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     private func shouldDisplayForm(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
+        if paymentMethodType.isBankPayment {
+            // We need to show the form for bank payments (even if we don't collect user input) so that we can launch the auth flow.
+            return true
+        }
+        
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: elementsSession,
@@ -807,6 +816,10 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         // Update UI
         regenerateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didDismiss(viewController: UpdateCardViewController) {
+        // No-op
     }
 }
 

@@ -102,7 +102,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(isCustomerProvided, lastEvent.additionalParams[jsonDict: "mpe_config"]?["customer"] as? Bool)
             switch integrationShape {
             case .complete, .flowController:
-                XCTAssertEqual("horizontal", lastEvent.additionalParams[jsonDict: "mpe_config"]?["payment_method_layout"] as? String)
+                XCTAssertEqual("automatic", lastEvent.additionalParams[jsonDict: "mpe_config"]?["payment_method_layout"] as? String)
             case .embedded:
                 XCTAssertEqual("continue", lastEvent.additionalParams[jsonDict: "mpe_config"]?["form_sheet_action"] as? String)
                 XCTAssertEqual(true, lastEvent.additionalParams[jsonDict: "mpe_config"]?["embedded_view_displays_mandate_text"] as? Bool)
@@ -320,13 +320,13 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogPaymentLinkContextWithLinkedBank() {
         let instantDebitsLinkedBank = InstantDebitsLinkedBank(
-            paymentMethodId: "paymentMethodId",
+            paymentMethod: LinkBankPaymentMethod(id: "paymentMethodId"),
             bankName: nil,
             last4: nil,
             linkMode: .linkPaymentMethod
         )
         let linkCardBrandLinkedBank = InstantDebitsLinkedBank(
-            paymentMethodId: "paymentMethodId",
+            paymentMethod: LinkBankPaymentMethod(id: "paymentMethodId"),
             bankName: nil,
             last4: nil,
             linkMode: .linkCardBrand

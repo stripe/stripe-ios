@@ -24,21 +24,42 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
         _test_UpdateCardViewController(darkMode: false, appearance: ._testMSPaintTheme)
     }
 
-    func _test_UpdateCardViewController(darkMode: Bool, appearance: PaymentSheet.Appearance = .default) {
+    func test_EmbeddedSingleCard_UpdateCardViewControllerDarkMode() {
+        _test_UpdateCardViewController(darkMode: true, isEmbeddedSingleCard: true)
+    }
+
+    func test_EmbeddedSingleCard_UpdateCardViewControllerLightMode() {
+        _test_UpdateCardViewController(darkMode: false, isEmbeddedSingleCard: true)
+    }
+
+    func test_EmbeddedSingleCard_UpdateCardViewControllerAppearance() {
+        _test_UpdateCardViewController(darkMode: false, isEmbeddedSingleCard: true, appearance: ._testMSPaintTheme)
+    }
+
+    func _test_UpdateCardViewController(darkMode: Bool, isEmbeddedSingleCard: Bool = false, appearance: PaymentSheet.Appearance = .default) {
         let sut = UpdateCardViewController(paymentMethod: STPFixtures.paymentMethod(),
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            appearance: appearance,
                                            hostedSurface: .paymentSheet,
                                            canRemoveCard: true,
                                            isTestMode: false)
-        sut.view.autosizeHeight(width: 375)
-        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: sut.view.frame.size.height))
+        let bottomSheet: BottomSheetViewController
+        if isEmbeddedSingleCard {
+            bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+        } else {
+            let stubViewController = StubBottomSheetContentViewController()
+            bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+            bottomSheet.pushContentViewController(sut)
+        }
+        bottomSheet.view.autosizeHeight(width: 375)
+
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: bottomSheet.view.frame.size.height + sut.view.frame.size.height))
         testWindow.isHidden = false
         if darkMode {
             testWindow.overrideUserInterfaceStyle = .dark
         }
-        testWindow.rootViewController = sut
-        STPSnapshotVerifyView(sut.view)
+        testWindow.rootViewController = bottomSheet
+        STPSnapshotVerifyView(bottomSheet.view)
     }
 }
 

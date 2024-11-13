@@ -28,12 +28,14 @@ public class AccountManagementViewController: UIViewController {
 
     init(componentManager: EmbeddedComponentManager,
          collectionOptions: AccountCollectionOptions,
-         loadContent: Bool) {
+         loadContent: Bool,
+         analyticsClientFactory: ComponentAnalyticsClientFactory) {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .accountManagement,
-            loadContent: loadContent
+            loadContent: loadContent,
+            analyticsClientFactory: analyticsClientFactory
         ) {
             Props(collectionOptions: collectionOptions)
         } didFailLoadWithError: { [weak self] error in

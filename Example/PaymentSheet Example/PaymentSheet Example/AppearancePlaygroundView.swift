@@ -365,13 +365,13 @@ struct AppearancePlaygroundView: View {
 
                 Section(header: Text("EmbeddedPaymentElement")) {
                     DisclosureGroup {
-                        Picker("Style", selection: $appearance.embeddedPaymentElement.style) {
-                            ForEach(PaymentSheet.Appearance.EmbeddedPaymentElement.Style.allCases, id: \.self) {
-                                Text(String(describing: $0))
-                            }
-                        }
-
                         DisclosureGroup {
+                            Picker("Style", selection: $appearance.embeddedPaymentElement.row.style) {
+                                ForEach(PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.allCases, id: \.self) {
+                                    Text(String(describing: $0))
+                                }
+                            }
+                            
                             Stepper("additionalInsets: \(Int(appearance.embeddedPaymentElement.row.additionalInsets))",
                                     value: $appearance.embeddedPaymentElement.row.additionalInsets, in: 0...40)
 

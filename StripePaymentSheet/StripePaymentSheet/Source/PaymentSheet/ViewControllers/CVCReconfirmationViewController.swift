@@ -50,7 +50,7 @@ class CVCReconfirmationViewController: UIViewController {
     // MARK: - Internal Properties
     private let intent: Intent
     private let paymentMethod: STPPaymentMethod
-    private let configuration: PaymentSheet.Configuration
+    private let configuration: PaymentElementConfiguration
     private let cardBrand: STPCardBrand
     private var isPaymentInFlight: Bool = false
     var paymentOptionIntentConfirmParams: IntentConfirmParams? {
@@ -68,7 +68,7 @@ class CVCReconfirmationViewController: UIViewController {
     required init(
         paymentMethod: STPPaymentMethod,
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         onCompletion: @escaping ((CVCReconfirmationViewController, IntentConfirmParams?) -> Void),
         onCancel: @escaping((CVCReconfirmationViewController) -> Void)
     ) {

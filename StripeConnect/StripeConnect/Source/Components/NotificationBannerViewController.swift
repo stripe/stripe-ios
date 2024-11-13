@@ -25,12 +25,14 @@ public class NotificationBannerViewController: UIViewController {
 
     init(componentManager: EmbeddedComponentManager,
          collectionOptions: AccountCollectionOptions,
-         loadContent: Bool) {
+         loadContent: Bool,
+         analyticsClientFactory: ComponentAnalyticsClientFactory) {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .notificationBanner,
-            loadContent: loadContent
+            loadContent: loadContent,
+            analyticsClientFactory: analyticsClientFactory
         ) {
             Props(collectionOptions: collectionOptions)
         } didFailLoadWithError: { [weak self] error in

@@ -14,9 +14,9 @@ class CallSetterWithSerializableValueSenderTests: ScriptWebTestBase {
         try validateMessageSent(sender: CallSetterWithSerializableValueSender(payload: .init(setter: "setPayment", value: "pi_1234")))
     }
 
-    func testSenderSignature() {
+    func testSenderSignature() throws {
         XCTAssertEqual(
-            CallSetterWithSerializableValueSender(payload: .init(setter: "setPayment", value: "pi_1234")).javascriptMessage,
+            try CallSetterWithSerializableValueSender(payload: .init(setter: "setPayment", value: "pi_1234")).javascriptMessage(),
             """
             window.callSetterWithSerializableValue({"setter":"setPayment","value":"pi_1234"});
             """

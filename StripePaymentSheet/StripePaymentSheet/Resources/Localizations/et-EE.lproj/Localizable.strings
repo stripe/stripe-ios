@@ -8,6 +8,8 @@
 
 "Add a payment method" = "Lisa makseviis";
 
+"Add bank account" = "Lisa pangakonto";
+
 "Add card" = "Kaardi lisamine";
 
 "Add new card" = "Uue kaardi lisamine";
@@ -17,6 +19,10 @@
 "Add your payment information" = "Lisage makseteave";
 
 "Approve payment" = "Kinnitage makse";
+
+"Are you sure you want to remove this card?" = "Kas olete kindel, et soovite selle kaardi eemaldada?";
+
+"Are you sure you want to remove this linked account?" = "Kas olete kindel, et soovite selle lingitud konto eemaldada?";
 
 "Back" = "Tagasi";
 
@@ -66,9 +72,13 @@
 
 "Cancel and pay another way" = "Tühista ja maksa muul viisil";
 
+"Change email" = "Muuda e-posti aadressi";
+
 "Choose a payment method" = "Valige makseviis";
 
 "Close card scanner" = "Kaardiskanneri sulgemine";
+
+"Code sent" = "Kood saadetud";
 
 "Confirm" = "Kinnita";
 
@@ -80,15 +90,27 @@
 
 "Contact information" = "Kontaktandmed";
 
+"Default" = "Vaikimisi";
+
 "EPS Bank" = "EPS pank";
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Vaikimisi Linkiga maksmiseks sisestage numbrile %@ saadetud kood.";
+
+"Enter your verification code" = "Sisestage oma kinnituskood";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Turvalisuse huvides sisestage palun uuesti oma kaardi turvakood.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Mõistan, et Stripe kogub ettevõtte %@ nimel otsekorraldusi, ja kinnitan, et olen kontoomanik ja ainus isik, kes peab selle konto debiteerimist autoriseerima.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Liitu Linkiga";
+
+"Log out of Link" = "Logi Link välja";
 
 "Manage payment method" = "Makseviisi haldamine";
 
@@ -101,6 +123,8 @@
 "New card" = "Uus kaart";
 
 "New payment method" = "Uus makseviis";
+
+"Not %@?" = "Pole %@?";
 
 "Open your UPI app to approve your payment within %@" = "Makse kinnitamiseks avage oma UPI rakendus %@ jooksul";
 
@@ -128,7 +152,11 @@
 
 "Pay with your bank account in just a few steps." = "Pangakontoga maksmine vaid mõne sammuga.";
 
+"Payment" = "Makse";
+
 "Payment failed" = "Makse ebaõnnestus";
+
+"Payment methods" = "Makseviisid";
 
 "Please go back and select another payment method" = "Minge tagasi ja valige mõni muu makseviis";
 
@@ -140,7 +168,11 @@
 
 "Remove card?" = "Kas soovite kaardi eemaldada?";
 
+"Remove linked account" = "Eemalda lingitud konto";
+
 "Remove payment method" = "Makseviisi eemaldamine";
+
+"Resend code" = "Saada kood uuesti";
 
 "Save" = "Salvesta";
 
@@ -160,17 +192,25 @@
 
 "Saved" = "Salvestatud";
 
+"Secure 1⁠-⁠click checkout" = "Turvaline ühe klõpsuga makse lõpuleviimine";
+
 "Select card" = "Vali kaart";
 
 "Select payment method" = "Vali makseviis";
 
 "Select your payment method" = "Valige makseviis";
 
+"Set as default" = "Muuda vaikimisi makseviisiks";
+
+"Set as default payment method" = "Määra vaikimisi makseviisiks";
+
 "Set up" = "Seadista";
 
 "Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
 
 "Show menu" = "Kuva menüü";
+
+"Sign in to your Link account" = "Logi oma Linki kontole sisse";
 
 "Simple, secure one-click payments" = "Lihtsad turvalised maksed ühe hiireklõpsuga";
 
@@ -180,13 +220,33 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega makse sooritamiseks ettevõttele %@.";
 
+"Tap to close" = "Puudutage sulgemiseks";
+
+"Tap to expand" = "Puudutage laiendamiseks";
+
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, „%@“ ei ole toetatud riigikood.";
 
+"The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
+
+"The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
+
+"This card has expired. Update your card info or choose a different payment method." = "See kaart on aegunud. Ajakohastage oma kaarditeavet või kasutage muud makseviisi.";
+
+"This is your default" = "See on teie vaikimisi makseviis";
+
+"Too many attempts. Please try again in a few minutes." = "Liiga palju katseid. Proovige paari minuti pärast uuesti.";
+
+"Unavailable for this purchase" = "Pole selle ostu puhul saadaval";
+
 "Update" = "Värskenda";
 
+"Update card" = "Uuenda kaarti";
+
 "Update card brand" = "Uuenda kaardi kaubamärki";
+
+"Use your saved info to check out faster" = "Kasutage oma salvestatud teavet kiiremaks makse lõpuleviimiseks";
 
 "View more" = "Kuva rohkem";
 

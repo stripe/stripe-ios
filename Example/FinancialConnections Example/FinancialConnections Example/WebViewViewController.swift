@@ -39,13 +39,13 @@ import WebKit
 //
 // 3. When Financial Connections calls the `return_url`, your website code
 //    should redirect to a custom URL. In this example code, the redirect URL
-//    is `my-custom-scheme://your-website-which-is-the-return-url-will-notify-client-of-redirect`.
+//    is `zzz-custom://open/customtab_return`.
 //
 // 4. Dismiss the extra browser to return back to your `WKWebView`.
 //    This is done automatically when using `ASWebAuthenticationSession`.
 
 /// The website that presents the Financial Connections Auth Flow.
-private let websiteURL = URL(string: "https://fc-webview.glitch.me/")!
+private let websiteURL = URL(string: "https://connections-webview-example.glitch.me/")!
 
 // ======================
 // IMPORTANT NOTE:
@@ -53,7 +53,7 @@ private let websiteURL = URL(string: "https://fc-webview.glitch.me/")!
 // This redirect URL comes from your website.
 //
 // Here is example code using `express` of listening
-private let redirectURL = URL(string: "my-custom-scheme://your-website-which-is-the-return-url-will-notify-client-of-redirect")!
+private let redirectURL = URL(string: "zzz-custom://open/customtab_return")!
 
 @available(iOS 14.0, *)
 final class WebViewViewController: UIViewController {

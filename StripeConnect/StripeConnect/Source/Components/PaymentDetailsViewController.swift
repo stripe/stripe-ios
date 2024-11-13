@@ -18,12 +18,14 @@ public class PaymentDetailsViewController: UIViewController {
     public weak var delegate: PaymentDetailsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
-         loadContent: Bool) {
+         loadContent: Bool,
+         analyticsClientFactory: ComponentAnalyticsClientFactory) {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .paymentDetails,
-            loadContent: loadContent
+            loadContent: loadContent,
+            analyticsClientFactory: analyticsClientFactory
         ) { [weak self] error in
             guard let self else { return }
             delegate?.paymentDetails(self, didFailLoadWithError: error)

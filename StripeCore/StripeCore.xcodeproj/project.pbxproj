@@ -39,7 +39,9 @@
 		4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */; };
 		492039932CA47A8600CE2072 /* ElementsSessionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492039922CA47A8600CE2072 /* ElementsSessionContext.swift */; };
 		493B33062CA3015600E3622F /* LinkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B33052CA3015600E3622F /* LinkMode.swift */; };
+		49E8CE2A2CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */; };
 		49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ECDA402CA340E100F647F0 /* AsyncTests.swift */; };
+		49F3828D2CC02D43001CE69A /* BillingAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F3828C2CC02D43001CE69A /* BillingAddress.swift */; };
 		4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7727AEEFD2FC880BADDA1872 /* Dictionary+Stripe.swift */; };
 		53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCE36551600C3E53BEAF8F0 /* StripeCodableTest.swift */; };
 		552DA7969984C443617DBC3E /* STPMultipartFormDataPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C72BA9C44FF60A0E7BEF76 /* STPMultipartFormDataPart.swift */; };
@@ -106,6 +108,7 @@
 		C9C320ADCCF1548D6562CE94 /* File_IdentityDocument.json in Resources */ = {isa = PBXBuildFile; fileRef = DC24A98C4020646F99456187 /* File_IdentityDocument.json */; };
 		CA09DC1EC4142701B31F9673 /* UIImage+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D4100901F9445AC1FD453A /* UIImage+StripeCore.swift */; };
 		CAF857D45689FBEF17627E80 /* BundleLocatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937066801E91C99C50192364 /* BundleLocatorProtocol.swift */; };
+		CB0E9DC82CB9C79E00E083D1 /* LinkBankPaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */; };
 		CB1FB2383FAEE0194C39E4DE /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E86AC7DD5F4DE2780E0AC425 /* OHHTTPStubsSwift */; };
 		CB8A47A5FD057112CB607DE9 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5334916D2A4F927645C2569 /* MockData.swift */; };
 		D144C3A657E5C16975CB2191 /* NSError+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23506F3E93ECA5A96DCE7E31 /* NSError+StripeCore.swift */; };
@@ -234,7 +237,9 @@
 		493B33052CA3015600E3622F /* LinkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMode.swift; sourceTree = "<group>"; };
 		49424775D3233411D9C2473B /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
 		49538DBF8457D96707A2DA56 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedEncodingContainer+Extensions.swift"; sourceTree = "<group>"; };
 		49ECDA402CA340E100F647F0 /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
+		49F3828C2CC02D43001CE69A /* BillingAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingAddress.swift; sourceTree = "<group>"; };
 		4A8030BF88608CA86E295F18 /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		4C51E3FA5EE3587BB7BBC634 /* STPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPError.swift; sourceTree = "<group>"; };
 		4EC3BCEEECB3E1485B18F0C4 /* FinancialConnectionsSDKInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSDKInterface.swift; sourceTree = "<group>"; };
@@ -318,6 +323,7 @@
 		C3DCE66C04A91C235972687D /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		C51179DB520568C246BF3AF0 /* URLEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEncoder.swift; sourceTree = "<group>"; };
 		C666CC926642D7AA76E75B5B /* StripeCoreTestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCoreTestUtils.h; sourceTree = "<group>"; };
+		CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBankPaymentMethod.swift; sourceTree = "<group>"; };
 		CB2721EE8E075E700FF3E58A /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		CC70CDF482E22A29B11466F7 /* STPAPIClient+EmptyResponseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+EmptyResponseTest.swift"; sourceTree = "<group>"; };
 		CD9288E147B8C9D33CCB5045 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -456,6 +462,8 @@
 				6A05FB4A2BCF245C0001D128 /* FinancialConnectionsEvent.swift */,
 				493B33052CA3015600E3622F /* LinkMode.swift */,
 				492039922CA47A8600CE2072 /* ElementsSessionContext.swift */,
+				49F3828C2CC02D43001CE69A /* BillingAddress.swift */,
+				CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */,
 			);
 			path = "Connections Bindings";
 			sourceTree = "<group>";
@@ -624,6 +632,7 @@
 				C51179DB520568C246BF3AF0 /* URLEncoder.swift */,
 				B8B76840742D2CAF2931355A /* URLSession+Retry.swift */,
 				4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */,
+				49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1017,8 +1026,10 @@
 				59CA874015261241AC255907 /* FileDownloader.swift in Sources */,
 				45DAE581F74EF7E11C64212B /* InstallMethod.swift in Sources */,
 				096274D0729AA8849FAD103C /* PaymentsSDKVariant.swift in Sources */,
+				49E8CE2A2CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift in Sources */,
 				DA5A05459309B9B77ACDD736 /* STPDeviceUtils.swift in Sources */,
 				4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */,
+				CB0E9DC82CB9C79E00E083D1 /* LinkBankPaymentMethod.swift in Sources */,
 				83790210FFC2DD764C042C8E /* STPDispatchFunctions.swift in Sources */,
 				72DA29CA8A750E8B00DBF3D4 /* STPError.swift in Sources */,
 				F628BBE9FDA9D3A217ACA753 /* STPNumericStringValidator.swift in Sources */,
@@ -1026,6 +1037,7 @@
 				A62AEDF871AC89489FE19A13 /* ServerErrorMapper.swift in Sources */,
 				B6DBB2BF2BA8C4E400783D15 /* STPAnalyticsClient+Error.swift in Sources */,
 				6A05FB452BCF24100001D128 /* FinancialConnectionsSDKResult.swift in Sources */,
+				49F3828D2CC02D43001CE69A /* BillingAddress.swift in Sources */,
 				62FD088E003BE06F5413FB4F /* StripeCoreBundleLocator.swift in Sources */,
 				17CE96B50813CF626293CBF9 /* URLEncoder.swift in Sources */,
 				0709F5D265CC641E6DE1011D /* URLSession+Retry.swift in Sources */,

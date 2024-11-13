@@ -53,7 +53,7 @@ struct LinkURLParams: Encodable {
 }
 
 class LinkURLGenerator {
-    static func linkParams(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) throws -> LinkURLParams {
+    static func linkParams(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) throws -> LinkURLParams {
         guard let publishableKey = configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey else {
             throw LinkURLGeneratorError.noPublishableKey
         }

@@ -15,7 +15,7 @@ import UIKit
 class RowButton: UIView {
     private let shadowRoundedRect: ShadowedRoundedRectangle
     private lazy var radioButton: RadioButton? = {
-        guard isEmbedded, appearance.embeddedPaymentElement.style == .flatWithRadio else { return nil }
+        guard isEmbedded, appearance.embeddedPaymentElement.row.style == .flatWithRadio else { return nil }
         return RadioButton(appearance: appearance) { [weak self] in
             guard let self else { return }
             self.didTap(self)
