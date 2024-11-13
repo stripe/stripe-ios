@@ -2,6 +2,7 @@
 ### PaymentSheet
 * [Fixed] Fixed an issue with the vertical list with 3 or more saved payment methods where tapping outside the screen sometimes drops changes that were made (e.g. removal or update of PMs).
 * [Fixed] Fixed an issue where the dialog when removing a co-branded card may show the incorrect card brand.
+* [Fixed] Fixed issue preventing users to enter in 4 digit account numbers for AU Becs.
 
 ## 24.0.0 2024-11-04
 ### PaymentSheet

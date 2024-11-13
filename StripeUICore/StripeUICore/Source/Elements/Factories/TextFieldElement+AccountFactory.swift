@@ -56,10 +56,11 @@ import UIKit
                                                             String.Localized.incompleteAccountNumber)
             let label = String.Localized.accountNumber
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
-            let numberOfDigitsRequired = 9
+            let minimumNumberOfDigits = 4
+            let maximumNumberofDigits = 9
 
             func maxLength(for text: String) -> Int {
-                return numberOfDigitsRequired
+                return maximumNumberofDigits
             }
             let defaultValue: String?
 
@@ -67,7 +68,7 @@ import UIKit
                 if text.isEmpty {
                     return isOptional ? .valid : .invalid(Error.empty)
                 }
-                return text.count == numberOfDigitsRequired ? .valid : .invalid(AUBECSAccountNumberConfiguration.incompleteError)
+                return text.count >= minimumNumberOfDigits && text.count <= maximumNumberofDigits ? .valid : .invalid(AUBECSAccountNumberConfiguration.incompleteError)
             }
 
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
