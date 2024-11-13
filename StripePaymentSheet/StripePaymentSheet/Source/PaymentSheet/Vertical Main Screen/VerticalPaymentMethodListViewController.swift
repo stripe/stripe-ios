@@ -26,6 +26,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
     
     private let incentive: PaymentMethodIncentive?
+    private var incentiveVisibility = [PaymentSheet.PaymentMethodType: Bool]()
+    
+    private var refreshHandler = {}
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -51,11 +54,41 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
 
+        refreshHandler = { [weak self] in
+            self?.renderPaymentMethodList(
+                initialSelection: initialSelection,
+                savedPaymentMethod: savedPaymentMethod,
+                paymentMethodTypes: paymentMethodTypes,
+                savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
+                overrideHeaderView: overrideHeaderView,
+                shouldShowApplePay: shouldShowApplePay,
+                shouldShowLink: shouldShowLink,
+                delegate: delegate
+            )
+        }
+        
+        refreshHandler()
+    }
+    
+    private func renderPaymentMethodList(
+        initialSelection: VerticalPaymentMethodListSelection?,
+        savedPaymentMethod: STPPaymentMethod?,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
+        overrideHeaderView: UIView?,
+        shouldShowApplePay: Bool,
+        shouldShowLink: Bool,
+        delegate: VerticalPaymentMethodListViewControllerDelegate
+    ) {
+        stackView.arrangedSubviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
+        
         // Add the header - either the passed in `header` or "Select payment method"
         let header = overrideHeaderView ?? PaymentSheetUI.makeHeaderLabel(title: .Localized.select_payment_method, appearance: appearance)
         stackView.addArrangedSubview(header)
         stackView.setCustomSpacing(24, after: header)
-
+        
         // Create stack view views after super.init so that we can reference `self`
         var views = [UIView]()
         // Saved payment method:
@@ -115,7 +148,11 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let paymentMethodTypes = paymentMethodTypes
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
-            let rightAccessoryView = incentive?.takeIfAppliesTo(paymentMethodType).flatMap { incentive in
+            
+            let canShowIncentive = incentiveVisibility[paymentMethodType] ?? true
+            let applicableIncentive = canShowIncentive ? incentive?.takeIfAppliesTo(paymentMethodType) : nil
+            
+            let rightAccessoryView = applicableIncentive.flatMap { incentive in
                 IncentiveTagView(
                     font: appearance.scaledFont(
                         for: appearance.font.base.medium,
@@ -184,6 +221,11 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     @objc func didTapAccessoryButton() {
         delegate?.didTapSavedPaymentMethodAccessoryButton()
+    }
+    
+    func setPromoBadgeVisibility(_ visible: Bool, for paymentMethodType: PaymentSheet.PaymentMethodType) {
+        incentiveVisibility[paymentMethodType] = visible
+        refreshHandler()
     }
 
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {

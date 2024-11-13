@@ -831,6 +831,12 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
         if viewController.paymentOption != nil {
             analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
         }
+        
+        if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
+            let showPromoBadge = instantDebitsFormElement.canShowPromoBadge
+            let paymentMethodType = viewController.paymentMethodType
+            paymentMethodListViewController?.setPromoBadgeVisibility(showPromoBadge, for: paymentMethodType)
+        }
     }
 
     func updateErrorLabel(for error: Swift.Error?) {
