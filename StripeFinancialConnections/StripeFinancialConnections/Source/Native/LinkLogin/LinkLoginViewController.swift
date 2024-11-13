@@ -120,7 +120,7 @@ final class LinkLoginViewController: UIViewController {
 
         let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
         if let emailAddress, !emailAddress.isEmpty {
-            // Immediately set the button state to loading here to bypass the deboncing by the textfield.
+            // Immediately set the button state to loading here to bypass the debouncing by the textfield.
             footerButton?.isLoading = true
             formView.prefillEmailAddress(emailAddress)
 
