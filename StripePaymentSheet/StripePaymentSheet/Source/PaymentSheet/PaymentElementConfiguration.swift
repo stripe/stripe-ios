@@ -37,6 +37,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance { get set }
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
+    var defaultSPMFlag: Bool { get set }
 }
 
 extension PaymentElementConfiguration {

@@ -86,6 +86,12 @@ final class UpdateCardViewController: UIViewController {
         return button
     }()
 
+    private lazy var notEditableDetailsLabel: UITextView = {
+        let label = ElementsUI.makeSmallFootnote(theme: appearance.asElementsTheme)
+        label.text = .Localized.card_details_cannot_be_changed
+        return label
+    }()
+
     private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(theme: appearance.asElementsTheme)
         label.isHidden = true

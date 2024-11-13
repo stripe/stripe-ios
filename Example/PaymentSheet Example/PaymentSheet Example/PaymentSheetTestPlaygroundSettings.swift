@@ -438,6 +438,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
+    enum DefaultSPMFlagEnabled: String, PickerEnum {
+        static let enumName: String = "defaultSPMFlag"
+        case on
+        case off
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -483,6 +489,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var cardBrandAcceptance: CardBrandAcceptance
+    var defaultSPMFlag: DefaultSPMFlagEnabled
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -527,7 +534,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectAddress: .automatic,
             formSheetAction: .confirm,
             embeddedViewDisplaysMandateText: .on,
-            cardBrandAcceptance: .all)
+            cardBrandAcceptance: .all,
+            defaultSPMFlag: .off
+        )
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"
