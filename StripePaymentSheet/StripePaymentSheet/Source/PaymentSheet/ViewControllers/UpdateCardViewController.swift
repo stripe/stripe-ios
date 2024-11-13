@@ -62,12 +62,12 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
-        label.text = .Localized.update_card_brand
+        label.text = .Localized.manage_card
         return label
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: {  [weak self] in
+        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: appearance, didTap: {  [weak self] in
             Task {
                 await self?.updateCard()
             }
@@ -76,8 +76,19 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var deleteButton: UIButton = {
         let button = UIButton(type: .custom)
+        if #available(iOS 15.0, *) {
+            var configuration = UIButton.Configuration.bordered()
+            configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
+            configuration.baseBackgroundColor = .clear
+            button.configuration = configuration
+        } else {
+            button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+        }
         button.setTitleColor(appearance.colors.danger, for: .normal)
-        button.setTitle(.Localized.remove_card, for: .normal)
+        button.layer.borderColor = appearance.colors.danger.cgColor
+        button.layer.borderWidth = appearance.primaryButton.borderWidth
+        button.layer.cornerRadius = appearance.cornerRadius
+        button.setTitle(.Localized.remove, for: .normal)
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
@@ -129,11 +140,29 @@ final class UpdateCardViewController: UIViewController {
         return cardBrandDropDown
     }()
 
+    private lazy var expiryDateElement: TextFieldElement = {
+        let expiryDate = CardExpiryDate(month: paymentMethod.card?.expMonth ?? 0, year: paymentMethod.card?.expYear ?? 0)
+        let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: appearance.asElementsTheme)
+        return expiryDateElement
+
+    }()
+
+    private lazy var cvcElement: TextFieldElement = {
+        let cardBrandProvider = { [weak self] in
+            self?.paymentMethod.card?.brand ?? .unknown
+        }
+        let cvcConfiguration = TextFieldElement.CVCConfiguration(defaultValue: String(repeating: "•", count: Int(STPCardValidator.maxCVCLength(for: cardBrandProvider()))), cardBrandProvider:  cardBrandProvider, isEditable: false)
+        let cvcElement = cvcConfiguration.makeElement(theme: appearance.asElementsTheme)
+        return cvcElement
+
+    }()
+
     private lazy var cardSection: SectionElement = {
         let allSubElements: [Element?] = [
-            panElement, SectionElement.HiddenElement(cardBrandDropDown),
+            panElement,
+            SectionElement.HiddenElement(cardBrandDropDown),
+            SectionElement.MultiElementRow([expiryDateElement, cvcElement])
         ]
-
         let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: appearance.asElementsTheme)
         section.delegate = self
         return section

@@ -985,7 +985,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
         app.pickerWheels.firstMatch.swipeUp()
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Update"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Visa
         XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: 5))
@@ -996,7 +996,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
         app.pickerWheels.firstMatch.swipeDown()
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Update"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Cartes Bancaires
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
@@ -1016,7 +1016,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         // Remove this card
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 60.0))
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
-        XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap(timeout: 5))
         let confirmRemoval = app.alerts.buttons["Remove"]
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 5))
         confirmRemoval.tap()
