@@ -7,7 +7,7 @@
 
 /// An authenticated web view was opened
 struct AuthenticatedWebViewOpenedEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// ID for the authenticated web view session (sent in `openAuthenticatedWebView` message
         let authenticatedWebViewId: String
 

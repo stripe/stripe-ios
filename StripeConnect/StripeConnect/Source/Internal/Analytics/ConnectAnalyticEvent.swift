@@ -6,8 +6,8 @@
 //
 
 /// Represents an analytics event logged from the Connect SDK
-protocol ConnectAnalyticEvent {
-    associatedtype Metadata: Encodable
+protocol ConnectAnalyticEvent: Equatable {
+    associatedtype Metadata: Encodable & Equatable
 
     /// The `event_name` field of the event
     var name: String { get }

@@ -7,7 +7,7 @@
 
 /// The web page finished loading (`didFinish navigation` event).
 struct ComponentWebPageLoadedEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// Elapsed time in seconds it took the web page to load
         /// (starting when it first began loading).
         let timeToLoad: TimeInterval

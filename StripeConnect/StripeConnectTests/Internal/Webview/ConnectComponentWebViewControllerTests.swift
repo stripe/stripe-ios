@@ -192,6 +192,8 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
 
+    // MARK: - Errors
+
     @MainActor
     func testJSOnLoadError() async throws {
         var error: Error?
@@ -242,7 +244,10 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
 
-    func testOpenAuthenticatedWebView() throws {
+    // MARK: - Authenticated Web View
+
+    @MainActor
+    func testOpenAuthenticatedWebView() async throws {
         let componentManager = componentManagerAssertingOnFetch()
         let authenticatedWebViewManager = MockAuthenticatedWebViewManager { url, _ in
             XCTAssertEqual(url.absoluteString, "https://stripe.com/start")
@@ -262,11 +267,156 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
             ))
         )
 
-        webVC.webView.evaluateOpenAuthenticatedWebView(url: "https://stripe.com/start", id: "1234")
+        try await webVC.webView.evaluateOpenAuthenticatedWebView(url: "https://stripe.com/start", id: "1234")
 
-        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+        let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
+        let openEvent = try analyticsClient.lastEvent(ofType: AuthenticatedWebViewOpenedEvent.self)
+        XCTAssertEqual(openEvent.metadata.authenticatedWebViewId, "1234")
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+
+        let redirectEvent = try analyticsClient.lastEvent(ofType: AuthenticatedWebViewRedirectedEvent.self)
+        XCTAssertEqual(redirectEvent.metadata.authenticatedWebViewId, "1234")
+    }
+
+    @MainActor
+    func testAuthenticatedWebViewCanceled() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let authenticatedWebViewManager = MockAuthenticatedWebViewManager { _, _ in
+            return nil
+        }
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      authenticatedWebViewManager: authenticatedWebViewManager)
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: ReturnedFromAuthenticatedWebViewSender(payload: .init(
+                url: nil,
+                id: "1234"
+            ))
+        )
+
+        try await webVC.webView.evaluateOpenAuthenticatedWebView(url: "https://stripe.com/start", id: "1234")
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+
+        let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
+        let event = try analyticsClient.lastEvent(ofType: AuthenticatedWebViewCanceledEvent.self)
+        XCTAssertEqual(event.metadata.authenticatedWebViewId, "1234")
+    }
+
+    @MainActor
+    func testAuthenticatedWebViewErrored() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let authenticatedWebViewManager = MockAuthenticatedWebViewManager { _, _ in
+            throw NSError(domain: "test_domain", code: 123)
+        }
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      authenticatedWebViewManager: authenticatedWebViewManager)
+
+        try await webVC.webView.evaluateOpenAuthenticatedWebView(url: "https://stripe.com/start", id: "1234")
+
+        let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
+        let event = try analyticsClient.lastEvent(ofType: AuthenticatedWebViewErrorEvent.self)
+        XCTAssertEqual(event.metadata.authenticatedWebViewId, "1234")
+        XCTAssertEqual(event.metadata.error, "test_domain:123")
+    }
+
+    // MARK: - Analytics
+
+    @MainActor
+    func testLifecycleAnalytics() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+        let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
+
+        XCTAssertEqual(analyticsClient.loggedEvents.count, 1)
+        XCTAssertEqual(analyticsClient.loggedEvents.last, ComponentCreatedEvent())
+
+        // Mock that load started 10s ago
+        analyticsClient.loadStart = .now.addingTimeInterval(-10)
+
+        // Mock component is viewed
+        webVC.viewDidAppear(true)
+        XCTAssertEqual(analyticsClient.loggedEvents.count, 2)
+        XCTAssertEqual(analyticsClient.loggedEvents.last, ComponentViewedEvent())
+
+        // Mock that web page loads
+        webVC.webViewDidFinishNavigation()
+        XCTAssertEqual(analyticsClient.loggedEvents.count, 3)
+        let pageLoadedEvent = try XCTUnwrap(analyticsClient.loggedEvents.last as? ComponentWebPageLoadedEvent)
+        XCTAssertEqual(pageLoadedEvent.metadata.timeToLoad, 10, accuracy: 1.0)
+
+        // Mock pageDidLoad event returns with ID
+        try await webVC.webView.evaluatePageDidLoad(pageViewId: "1234")
+        XCTAssertEqual(webVC.analyticsClient.pageViewId, "1234")
+
+        // Mock that component loads
+        try await webVC.webView.evaluateOnLoaderStart(elementTagName: "payouts")
+        XCTAssertEqual(analyticsClient.loggedEvents.count, 4)
+        let componentLoadedEvent = try XCTUnwrap(analyticsClient.loggedEvents.last as? ComponentLoadedEvent)
+        XCTAssertEqual(componentLoadedEvent.metadata.timeToLoad, 10, accuracy: 1.0)
+        XCTAssertEqual(componentLoadedEvent.metadata.pageViewId, "1234")
+    }
+
+    @MainActor
+    func testAccountSessionClaimedSetsAnalyticMerchantId() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+        try await webVC.webView.evaluateAccountSessionClaimed(merchantId: "acct_123")
+        XCTAssertEqual(webVC.analyticsClient.merchantId, "acct_123")
+    }
+
+    @MainActor
+    func testUnexpectedLoadErrorTypeAnalytic() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+        try await webVC.webView.evaluateOnLoadError(type: "unexpected_error_type", message: "Error message")
+
+        let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
+        let event = try analyticsClient.lastEvent(ofType: UnexpectedLoadErrorTypeEvent.self)
+        XCTAssertEqual(event.metadata.errorType, "unexpected_error_type")
+    }
+
+    @MainActor
+    func testUnrecognizedSetterFunctionAnalytic() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+        try await webVC.webView.evaluateMessage(name: "onSetterFunctionCalled",
+                                                json: """
+                                                {
+                                                    "setter": "unknownSetter"
+                                                }
+                                                """)
+        let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
+        let event = try analyticsClient.lastEvent(ofType: UnrecognizedSetterEvent.self)
+        XCTAssertEqual(event.metadata.setter, "unknownSetter")
     }
 }
+
 // MARK: - Helpers
 
 private extension ConnectComponentWebViewControllerTests {
