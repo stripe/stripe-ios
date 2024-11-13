@@ -12,7 +12,8 @@ struct UnexpectedNavigationEvent: ConnectAnalyticEvent {
 
         init(url: URL?) {
             // Sanitize URL for logging
-            self.url = url?.absoluteStringRemovingParams
+            self.url = url?
+                .absoluteStringRemovingParams
         }
     }
 
