@@ -162,17 +162,6 @@ final class UpdateCardViewController: UIViewController {
         return section
     }()
 
-    private lazy var cardInfoSection: UIStackView = {
-        let cardDetails = UIStackView(arrangedSubviews: [cardSection.view])
-        cardDetails.axis = .vertical
-        cardDetails.setCustomSpacing(8, after: cardSection.view) // custom spacing from figma
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardDetails])
-        stackView.axis = .vertical
-        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding, after: headerLabel) // custom spacing from figma
-        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding, after: cardDetails) // custom spacing from figma
-        return stackView
-    }()
-
     // MARK: Overrides
     init(paymentMethod: STPPaymentMethod,
          removeSavedPaymentMethodMessage: String?,
