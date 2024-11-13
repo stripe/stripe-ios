@@ -24,6 +24,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
+    private let customer: PaymentSheet.CustomerConfiguration?
     private var previousSelection: Selection?
     private var previousSelectedRowButton: RowButton?
     private var selectedRowButton: RowButton? {
@@ -75,12 +76,14 @@ class EmbeddedPaymentMethodsView: UIView {
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
+        customer: PaymentSheet.CustomerConfiguration? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
         self.appearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
         self.rowButtonAppearance = appearance.embeddedPaymentElement.row.style.appearanceForStyle(appearance: appearance)
+        self.customer = customer
         self.delegate = delegate
         super.init(frame: .zero)
 
@@ -121,6 +124,7 @@ class EmbeddedPaymentMethodsView: UIView {
             let applePayRowButton = RowButton.makeForApplePay(appearance: rowButtonAppearance,
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
+                CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
                 self?.didTap(selectedRowButton: rowButton, selection: selection)
             })
 
@@ -135,6 +139,7 @@ class EmbeddedPaymentMethodsView: UIView {
         if shouldShowLink {
             let selection: Selection = .link
             let linkRowButton = RowButton.makeForLink(appearance: rowButtonAppearance, isEmbedded: true) { [weak self] rowButton in
+                CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(selectedRowButton: rowButton, selection: selection)
             }
 
@@ -283,6 +288,10 @@ class EmbeddedPaymentMethodsView: UIView {
                                                                            rightAccessoryView: accessoryButton,
                                                                            isEmbedded: true,
                                                                            didTap: { [weak self] rowButton in
+            CustomerPaymentOption.setDefaultPaymentMethod(
+                .stripeId(savedPaymentMethod.stripeId),
+                forCustomer: self?.customer?.id
+            )
            self?.didTap(selectedRowButton: rowButton, selection: selection)
         })
         return savedPaymentMethodButton
