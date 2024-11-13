@@ -116,7 +116,15 @@ class VerticalPaymentMethodListViewController: UIViewController {
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
             let rightAccessoryView = incentive?.takeIfAppliesTo(paymentMethodType).flatMap { incentive in
-                IncentiveTagView(tinyMode: false, text: incentive.displayText)
+                IncentiveTagView(
+                    font: appearance.scaledFont(
+                        for: appearance.font.base.medium,
+                        style: .subheadline,
+                        maximumPointSize: 25
+                    ),
+                    tinyMode: false,
+                    text: "Get \(incentive.displayText)"
+                )
             }
             
             let rowButton = RowButton.makeForPaymentMethodType(

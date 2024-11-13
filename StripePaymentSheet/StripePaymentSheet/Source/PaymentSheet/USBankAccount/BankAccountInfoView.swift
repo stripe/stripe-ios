@@ -42,7 +42,9 @@ class BankAccountInfoView: UIView {
     }()
     
     lazy var incentiveTag: IncentiveTagView = {
-        IncentiveTagView(tinyMode: true)
+        // TODO: Scaling
+        let font = theme.fonts.subheadline.medium
+        return IncentiveTagView(font: font, tinyMode: true)
     }()
 
     lazy var bankIconImageView: UIImageView = {

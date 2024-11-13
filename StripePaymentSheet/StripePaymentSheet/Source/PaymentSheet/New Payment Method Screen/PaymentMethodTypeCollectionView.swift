@@ -207,7 +207,8 @@ extension PaymentMethodTypeCollectionView {
             return paymentMethodLogo
         }()
         private lazy var incentiveTag: IncentiveTagView = {
-            IncentiveTagView(tinyMode: true)
+            let font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            return IncentiveTagView(font: font, tinyMode: true)
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
             return ShadowedRoundedRectangle(appearance: appearance)
@@ -304,9 +305,11 @@ extension PaymentMethodTypeCollectionView {
                 case .shouldDisableUserInteraction:
                     self.label.alpha = 0.6
                     self.paymentMethodLogo.alpha = 0.6
+                    self.incentiveTag.alpha = 0.6
                 case .shouldEnableUserInteraction:
                     self.label.alpha = 1
                     self.paymentMethodLogo.alpha = 1
+                    self.incentiveTag.alpha = 1
                 default:
                     break
                 }
