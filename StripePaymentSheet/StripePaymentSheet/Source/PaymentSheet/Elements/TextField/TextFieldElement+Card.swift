@@ -188,14 +188,12 @@ extension TextFieldElement {
 // MARK: - CVC Configuration
 extension TextFieldElement {
     struct CVCConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand), isEditable: Bool = true) {
+        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand)) {
             self.defaultValue = defaultValue
             self.cardBrandProvider = cardBrandProvider
-            self.isEditable = isEditable
         }
 
         let defaultValue: String?
-        let isEditable: Bool
         let cardBrandProvider: () -> (STPCardBrand)
         var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
@@ -217,6 +215,30 @@ extension TextFieldElement {
 
             return .valid
         }
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
+            return DynamicImageView(
+                dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
+                pairedColor: theme.colors.componentBackground
+            )
+        }
+    }
+}
+
+// MARK: - Censored CVC Configuration
+extension TextFieldElement {
+    struct CensoredCVCConfiguration: TextFieldElementConfiguration {
+        init(cardBrandProvider: @escaping () -> (STPCardBrand)) {
+            self.cardBrandProvider = cardBrandProvider
+            let maxLength = Int(STPCardValidator.maxCVCLength(for: cardBrandProvider()))
+            self.defaultValue = String(repeating: "•", count: maxLength)
+        }
+
+        let defaultValue: String?
+        let cardBrandProvider: () -> (STPCardBrand)
+        var label = String.Localized.cvc
+        let isEditable: Bool = false
+        let disallowedCharacters: CharacterSet = CharacterSet(charactersIn: "•").inverted
+
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             return DynamicImageView(
                 dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
@@ -294,14 +316,14 @@ extension TextFieldElement {
                     return .invalid(Error.invalidMonth)
                 }
                 // Is the date expired?
-                guard let expiryDate = CardExpiryDate(text), !expiryDate.expired() else {
-                    if !isEditable {
-                        return .invalid(Error.expired)
-                    }
-                    else {
-                        return .invalid(Error.invalid)
-                    }
+                guard let expiryDate = CardExpiryDate(text) else {
+                   return .invalid(Error.invalid)
                 }
+
+                guard !expiryDate.expired() else {
+                   return .invalid(Error.expired)
+                }
+
                 return .valid
             default:
                 return .invalid(Error.invalid)

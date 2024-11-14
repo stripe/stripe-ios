@@ -143,9 +143,9 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var cvcElement: TextFieldElement = {
         let cardBrandProvider = { [weak self] in
-            self?.paymentMethod.card?.brand ?? .unknown
+            self?.paymentMethod.card?.preferredDisplayBrand ?? .unknown
         }
-        let cvcConfiguration = TextFieldElement.CVCConfiguration(defaultValue: String(repeating: "•", count: Int(STPCardValidator.maxCVCLength(for: cardBrandProvider()))), cardBrandProvider:  cardBrandProvider, isEditable: false)
+        let cvcConfiguration = TextFieldElement.CensoredCVCConfiguration(cardBrandProvider:  cardBrandProvider)
         let cvcElement = cvcConfiguration.makeElement(theme: appearance.asElementsTheme)
         return cvcElement
 

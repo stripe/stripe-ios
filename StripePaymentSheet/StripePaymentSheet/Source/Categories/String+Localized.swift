@@ -108,13 +108,6 @@ extension String.Localized {
         )
     }
 
-    static var update: String {
-        STPLocalizedString(
-            "Update",
-            "Title for a button that when tapped, updates a card brand."
-        )
-    }
-
     static var show_menu: String {
         STPLocalizedString(
             "Show menu",
