@@ -9,18 +9,17 @@
 import XCTest
 
 class PageDidLoadMessageHandlerTests: ScriptWebTestBase {
-    func testMessageSend() {
-        let expectation = self.expectation(description: "Message received")
-
+    @MainActor
+    func testMessageSend() async throws {
         let pageViewId = "123"
 
-        webView.addMessageHandler(messageHandler: PageDidLoadMessageHandler(didReceiveMessage: { payload in
-            expectation.fulfill()
-            XCTAssertEqual(payload, .init(pageViewId: pageViewId))
-        }))
+        webView.addMessageHandler(messageHandler: PageDidLoadMessageHandler(
+            analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
+            didReceiveMessage: { payload in
+                XCTAssertEqual(payload, .init(pageViewId: pageViewId))
+            }
+        ))
 
-        webView.evaluatePageDidLoad(pageViewId: pageViewId)
-
-        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
+        try await webView.evaluatePageDidLoad(pageViewId: pageViewId)
     }
 }

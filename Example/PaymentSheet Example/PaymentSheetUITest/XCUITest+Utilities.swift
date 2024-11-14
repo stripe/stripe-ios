@@ -274,6 +274,15 @@ extension XCTestCase {
         context.buttons["Done"].tap()
     }
 
+    func skipLinkSignup(_ app: XCUIApplication) {
+        let notNowButton = app.buttons["Not now"]
+        if notNowButton.waitForExistence(timeout: 10.0) {
+            let keyboardCloseButton = app.toolbars.buttons["Done"]
+            keyboardCloseButton.waitForExistenceAndTap() // Dismiss keyboard
+            notNowButton.tap()
+        }
+    }
+
     func waitToDisappear(_ target: Any?) {
         let exists = NSPredicate(format: "exists == 0")
         expectation(for: exists, evaluatedWith: target, handler: nil)

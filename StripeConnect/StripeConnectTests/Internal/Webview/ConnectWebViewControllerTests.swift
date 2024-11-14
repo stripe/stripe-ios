@@ -17,13 +17,16 @@ class ConnectWebViewControllerTests: XCTestCase {
 
     private var mockURLOpener: MockURLOpener!
     private var mockFileManager: MockFileManager!
+    private var mockAnalyticsClient: MockComponentAnalyticsClient!
     private var webVC: ConnectWebViewControllerTestWrapper!
 
     override func setUp() {
         super.setUp()
         mockFileManager = .init()
         mockURLOpener = .init()
+        mockAnalyticsClient = .init(commonFields: .mock)
         webVC = .init(configuration: .init(),
+                      analyticsClient: mockAnalyticsClient,
                       urlOpener: mockURLOpener,
                       fileManager: mockFileManager,
                       sdkVersion: "1.2.3")
@@ -200,13 +203,13 @@ class ConnectWebViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testErrorCreatingDownloadDestinationShowsAlert() async {
+    func testErrorCreatingDownloadDestinationShowsAlert() async throws {
         var alertController: UIAlertController?
         webVC.presentPopup = { vc in
             alertController = vc as? UIAlertController
         }
         mockFileManager.overrideCreateDirectory = { _, _, _ in
-            throw NSError(domain: "Test", code: 0)
+            throw NSError(domain: "Test", code: 10)
         }
 
         let destination = await webVC.download(
@@ -218,21 +221,31 @@ class ConnectWebViewControllerTests: XCTestCase {
         XCTAssertEqual(alertController?.message,
                        "There was an unexpected error -- try again in a few seconds")
         XCTAssertEqual(alertController?.preferredStyle, .alert)
+
+        // Error logged to analytics
+        let loggedError = try XCTUnwrap(mockAnalyticsClient.loggedClientErrors.last)
+        XCTAssertEqual(loggedError.domain, "Test")
+        XCTAssertEqual(loggedError.code, 10)
     }
 
-    func testDownloadFailedShowsAlert() {
+    func testDownloadFailedShowsAlert() throws {
         var alertController: UIAlertController?
         webVC.presentPopup = { vc in
             alertController = vc as? UIAlertController
         }
         webVC.download(
-            didFailWithError: NSError(domain: "Test", code: 0),
+            didFailWithError: NSError(domain: "Test", code: 10),
             resumeData: nil
         )
         XCTAssertNotNil(alertController)
         XCTAssertEqual(alertController?.message,
                        "There was an unexpected error -- try again in a few seconds")
         XCTAssertEqual(alertController?.preferredStyle, .alert)
+
+        // Error logged to analytics
+        let loggedError = try XCTUnwrap(mockAnalyticsClient.loggedClientErrors.last)
+        XCTAssertEqual(loggedError.domain, "Test")
+        XCTAssertEqual(loggedError.code, 10)
     }
 
     func testDownloadFinishedShowsShareSheet() {
@@ -254,7 +267,7 @@ class ConnectWebViewControllerTests: XCTestCase {
         XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
     }
 
-    func testNonExistentFileShowsError() {
+    func testNonExistentFileShowsError() throws {
         let mockFileURL = URL(string: "file:///temp/example.csv")!
 
         var alertController: UIAlertController?
@@ -274,6 +287,25 @@ class ConnectWebViewControllerTests: XCTestCase {
         XCTAssertNil(webVC.downloadedFile)
         wait(for: [mockFileManager.removeItemExpectation])
         XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
+
+        // Error logged to analytics
+        let loggedError = try XCTUnwrap(mockAnalyticsClient.loggedClientErrors.last)
+        XCTAssertEqual(loggedError.domain, "StripeConnect.ConnectWebViewControllerError")
+        XCTAssertEqual(loggedError.code, 0)
+    }
+
+    @MainActor
+    func testMultipleDownloadsLogsError() async throws {
+        let mockFileURL = URL(string: "file:///temp/example.csv")!
+        webVC.downloadedFile = mockFileURL
+        _ = await webVC.download(
+            decideDestinationUsing: .init(),
+            suggestedFilename: "example.csv"
+        )
+        // Error logged to analytics
+        let loggedError = try XCTUnwrap(mockAnalyticsClient.loggedClientErrors.last)
+        XCTAssertEqual(loggedError.domain, "StripeConnect.ConnectWebViewControllerError")
+        XCTAssertEqual(loggedError.code, 1)
     }
 }
 
@@ -316,7 +348,7 @@ class MockNavigationResponse: WKNavigationResponse {
     }
 }
 
-private class MockURLOpener: ApplicationURLOpener {
+class MockURLOpener: ApplicationURLOpener {
     var canOpenURLOverride: ((_ url: URL) -> Bool)?
     var openURLOverride: ((_ url: URL, _ options: [UIApplication.OpenExternalURLOptionsKey: Any], _ completion: OpenCompletionHandler?) -> Void)?
 
@@ -361,7 +393,7 @@ private class MockFileManager: FileManager {
 }
 
 private class ConnectWebViewControllerTestWrapper: ConnectWebViewController {
-    var presentPopup: (UIViewController) -> Void = {_ in }
+    var presentPopup: (UIViewController) -> Void = { _ in }
 
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         presentPopup(viewControllerToPresent)

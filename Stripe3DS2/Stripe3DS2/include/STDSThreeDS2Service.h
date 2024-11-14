@@ -12,6 +12,7 @@
 @class STDSTransaction;
 @class STDSUICustomization;
 @class STDSWarning;
+@protocol STDSAnalyticsDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,6 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeWithConfig:(STDSConfigParameters *)config
                       locale:(nullable NSLocale *)locale
                   uiSettings:(nullable STDSUICustomization *)uiSettings;
+
+- (void)initializeWithConfig:(STDSConfigParameters *)config
+                      locale:(nullable NSLocale *)locale
+                  uiSettings:(nullable STDSUICustomization *)uiSettings
+           analyticsDelegate:(nonnull id<STDSAnalyticsDelegate>)analyticsDelegate;
 
 /**
  Creates and returns an instance of `STDSTransaction`.

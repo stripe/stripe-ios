@@ -184,9 +184,6 @@ extension XCUIApplication {
     }
 
     func fc_dismissKeyboard() {
-        let returnKey = keyboards.buttons["return"]
-        if returnKey.exists && returnKey.isHittable {
-            returnKey.tap()
-        }
+        toolbars.buttons["Done"].waitForExistenceAndTap()
     }
 }

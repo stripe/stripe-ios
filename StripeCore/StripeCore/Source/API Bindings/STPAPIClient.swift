@@ -43,7 +43,7 @@ import UIKit
     /// A publishable key that only contains publishable keys and not secret keys.
     ///
     /// If a secret key is found, returns "[REDACTED_LIVE_KEY]".
-    var sanitizedPublishableKey: String? {
+    @_spi(STP) public var sanitizedPublishableKey: String? {
         guard let publishableKey = publishableKey else {
             return nil
         }

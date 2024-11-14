@@ -16,7 +16,7 @@ class ReturnedFromAuthenticatedWebViewSenderTests: ScriptWebTestBase {
 
     func testSenderSignature() {
         XCTAssertEqual(
-            ReturnedFromAuthenticatedWebViewSender(payload: .init(url: URL(string: "https://dashboard.stripe.com")!, id: "123")).javascriptMessage,
+            try ReturnedFromAuthenticatedWebViewSender(payload: .init(url: URL(string: "https://dashboard.stripe.com")!, id: "123")).javascriptMessage(),
             """
             window.returnedFromAuthenticatedWebView({"id":"123","url":"https:\\/\\/dashboard.stripe.com"});
             """
