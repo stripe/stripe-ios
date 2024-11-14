@@ -106,6 +106,9 @@
 /* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Cancel and pay another way";
 
+/* Text on a screen that indicates card details cannot be changed. */
+"Card details cannot be changed." = "Card details cannot be changed.";
+
 /* Title for a button that allows the user to use a different email in the signup flow. */
 "Change email" = "Change email";
 
