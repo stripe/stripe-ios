@@ -200,18 +200,13 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: FinancialConnections Example
-    - pagerduty@0:
-        is_always_run: true
-        run_if: .IsBuildFailed
-        inputs:
-          - event_description: iOS E2E tests failing! $BITRISE_BUILD_URL.
-          - integration_key: $AUX_PAGERDUTY_INTEGRATION_KEY
     - slack@3:
         is_always_run: true
         run_if: .IsBuildFailed
         inputs:
         - webhook_url: $WEBHOOK_SLACK_CUX_BOTS
         - webhook_url_on_error: $WEBHOOK_SLACK_CUX_BOTS
+        - text_on_error: "iOS build failed (c.c. @connections-consumer-bank-network-oncall @mats)"
     - slack@3:
         is_always_run: true
         inputs:
@@ -223,6 +218,12 @@ workflows:
         inputs:
         - webhook_url: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
+    - slack@3:
+        is_always_run: true
+        run_if: .IsBuildFailed
+        inputs:
+        - webhook_url: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
+        - webhook_url_on_error: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
     - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4

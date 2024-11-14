@@ -481,11 +481,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
-        let notNowButton = app.buttons["Not now"]
-        if notNowButton.waitForExistence(timeout: 10) {
-            app.toolbars.buttons["Done"].tap() // dismiss keyboard
-            notNowButton.tap()
-        }
+        skipLinkSignup(app)
 
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add US bank account"].waitForExistence(timeout: 10))
