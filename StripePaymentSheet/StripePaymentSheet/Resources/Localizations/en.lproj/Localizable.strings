@@ -373,9 +373,6 @@ is not supported by the merchant */
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Unavailable for this purchase";
 
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "Update";
-
 /* Title for a button that when tapped, presents a screen for updating a card. Also
 the heading the screen itself. */
 "Update card" = "Update card";
