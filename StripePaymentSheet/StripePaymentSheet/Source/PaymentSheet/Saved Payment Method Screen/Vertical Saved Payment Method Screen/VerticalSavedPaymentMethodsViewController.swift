@@ -48,11 +48,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
-                if configuration.defaultSPMFlag {
+                switch configuration.defaultSPM {
+                case .allowsDefaultSPM, .navigationOnly:
                     paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: false,
                                                                     allowsUpdating: $0.paymentMethod.type == .card) }
-                }
-                else {
+                case .off:
                     paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
                                                                     allowsUpdating: $0.paymentMethod.isCoBrandedCard && isCBCEligible) }
                 }
@@ -171,7 +171,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
-        if configuration.defaultSPMFlag {
+        if configuration.defaultSPM != .off {
             self.isRemoveOnlyMode = false
         }
         else {
@@ -351,7 +351,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                             canRemoveCard: canRemovePaymentMethods,
                                                             isTestMode: configuration.apiClient.isTestmode,
                                                             cardBrandFilter: configuration.cardBrandFilter,
-                                                            defaultSPMFlag: configuration.defaultSPMFlag
+                                                            defaultSPM: configuration.defaultSPM
         )
 
         updateViewController.delegate = self

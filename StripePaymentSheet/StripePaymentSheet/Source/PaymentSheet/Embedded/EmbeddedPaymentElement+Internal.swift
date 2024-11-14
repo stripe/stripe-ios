@@ -135,11 +135,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         self.formViewController = formViewController
     }
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
-        // Special case, only 1 card remaining but is co-branded (or defaultSPMFlag), skip showing the list and show update view controller
+        // Special case, only 1 card remaining but is co-branded (or defaultSPM), skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
            (paymentMethod.isCoBrandedCard &&
-            elementsSession.isCardBrandChoiceEligible) || configuration.defaultSPMFlag {
+            elementsSession.isCardBrandChoiceEligible) || configuration.defaultSPM != .off {
             let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                 appearance: configuration.appearance,
@@ -148,7 +148,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                 canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                 isTestMode: configuration.apiClient.isTestmode,
                                                                 cardBrandFilter: configuration.cardBrandFilter,
-                                                                defaultSPMFlag: configuration.defaultSPMFlag
+                                                                defaultSPM: configuration.defaultSPM
             )
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)

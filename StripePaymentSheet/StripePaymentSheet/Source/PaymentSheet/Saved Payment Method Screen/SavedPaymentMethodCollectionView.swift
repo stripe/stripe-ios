@@ -112,16 +112,16 @@ extension SavedPaymentMethodCollectionView {
 
         var cbcEligible: Bool = false
         var allowsPaymentMethodRemoval: Bool = true
-        var defaultSPMFlag: Bool = false
+        var defaultSPM: PaymentSheet.DefaultSPM = .off
 
         /// Indicates whether the cell should be editable or just removable.
         /// If the card is a co-branded card and the merchant is eligible for card brand choice, then
         /// the cell should be editable. Otherwise, it should be just removable.
         var shouldAllowEditing: Bool {
-            if defaultSPMFlag {
+            switch defaultSPM {
+            case .allowsDefaultSPM, .navigationOnly:
                 return viewModel?.savedPaymentMethod?.type == STPPaymentMethodType.card
-            }
-            else {
+            default:
                 return (viewModel?.isCoBrandedCard ?? false) && cbcEligible
             }
         }
@@ -216,14 +216,14 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
 
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, defaultSPMFlag: Bool = false) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, defaultSPM: PaymentSheet.DefaultSPM = .off) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
             self.cbcEligible = cbcEligible
             self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
-            self.defaultSPMFlag = defaultSPMFlag
+            self.defaultSPM = defaultSPM
             update()
         }
 

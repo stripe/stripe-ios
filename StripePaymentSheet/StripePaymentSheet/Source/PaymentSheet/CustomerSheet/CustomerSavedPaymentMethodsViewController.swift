@@ -104,7 +104,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode,
-                defaultSPMFlag: configuration.defaultSPMFlag
+                defaultSPMNavigation: configuration.defaultSPMNavigation
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
@@ -656,7 +656,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode,
-                defaultSPMFlag: configuration.defaultSPMFlag
+                defaultSPMNavigation: configuration.defaultSPMNavigation
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,

@@ -82,7 +82,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
         let isTestMode: Bool
-        let defaultSPMFlag: Bool
+        let defaultSPMNavigation: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -388,7 +388,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
                           cbcEligible: cbcEligible,
                           allowsPaymentMethodRemoval: configuration.paymentMethodRemove,
-                          defaultSPMFlag: configuration.defaultSPMFlag
+                          defaultSPM: .off
         )
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
@@ -442,7 +442,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                               canRemoveCard: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                               isTestMode: configuration.isTestMode,
                                               cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
-                                              defaultSPMFlag: configuration.defaultSPMFlag
+                                              defaultSPM: .off
         )
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

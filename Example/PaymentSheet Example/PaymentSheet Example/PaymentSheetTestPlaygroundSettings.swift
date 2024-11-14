@@ -438,9 +438,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum DefaultSPMFlagEnabled: String, PickerEnum {
-        static let enumName: String = "defaultSPMFlag"
-        case on
+    enum DefaultSPM: String, PickerEnum {
+        static let enumName: String = "defaultSPM"
+        case allowDefaultSPM
+        case navigationOnly
         case off
     }
 
@@ -489,7 +490,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var cardBrandAcceptance: CardBrandAcceptance
-    var defaultSPMFlag: DefaultSPMFlagEnabled
+    var defaultSPM: DefaultSPM
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -535,7 +536,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             formSheetAction: .confirm,
             embeddedViewDisplaysMandateText: .on,
             cardBrandAcceptance: .all,
-            defaultSPMFlag: .off
+            defaultSPM: .off
         )
     }
 

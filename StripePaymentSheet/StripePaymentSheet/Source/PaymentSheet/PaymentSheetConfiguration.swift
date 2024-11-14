@@ -213,9 +213,9 @@ extension PaymentSheet {
 
         
         /// This is an experimental feature that may be removed at any time.
-        /// If true, when editing, cards and us bank accounts will have the edit icon, users cannot remove them from the list view screen, and payment methods can be marked as default.
+        /// If true, when editing, cards and us bank accounts will have the edit icon, users cannot remove them from the list view screen.
         /// If false (default), only cbc eligible cards can be edited and users can remove payment methods from the list screen.
-        @_spi(DefaultSPMFlag) public var defaultSPMFlag = false
+        @_spi(DefaultSPM) public var defaultSPM: PaymentSheet.DefaultSPM = .off
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
@@ -566,5 +566,17 @@ extension PaymentSheet.CustomerConfiguration {
         /// Accept all card brands supported by Stripe except for those specified in the associated value
         /// - Note: Any card brands that do not map to a `BrandCategory` will be accepted when using a disallow list.
         case disallowed(brands: [BrandCategory])
+    }
+}
+
+@_spi(DefaultSPM) extension PaymentSheet {
+    /// Options to block certain card brands on the client
+    public enum DefaultSPM: Equatable {
+        /// DefaultSPM navigation and allows setting default SPM
+        case allowsDefaultSPM
+        /// DefaultSPM navigation
+        case navigationOnly
+        /// Existing navigation
+        case off
     }
 }

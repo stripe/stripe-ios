@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CardBrandFilteringBeta) @_spi(DefaultSPMFlag) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CardBrandFilteringBeta) @_spi(DefaultSPM) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -185,7 +185,15 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.defaultSPMFlag = settings.defaultSPMFlag == .on
+        switch settings.defaultSPM {
+        case .allowDefaultSPM:
+            configuration.defaultSPM = .allowsDefaultSPM
+        case .navigationOnly:
+            configuration.defaultSPM = .navigationOnly
+        case .off:
+            configuration.defaultSPM = .off
+        }
+
         return configuration
     }
 
@@ -274,7 +282,14 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.defaultSPMFlag = settings.defaultSPMFlag == .on
+        switch settings.defaultSPM {
+        case .allowDefaultSPM:
+            configuration.defaultSPM = .allowsDefaultSPM
+        case .navigationOnly:
+            configuration.defaultSPM = .navigationOnly
+        case .off:
+            configuration.defaultSPM = .off
+        }
         return configuration
     }
 

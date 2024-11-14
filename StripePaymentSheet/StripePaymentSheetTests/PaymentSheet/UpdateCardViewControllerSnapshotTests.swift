@@ -44,7 +44,7 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
                                            canEditCard: canEditCard,
                                            canRemoveCard: true,
                                            isTestMode: false,
-                                           defaultSPMFlag: true
+                                           defaultSPM: .off
         )
         let bottomSheet: BottomSheetViewController
         if isEmbeddedSingleCard {

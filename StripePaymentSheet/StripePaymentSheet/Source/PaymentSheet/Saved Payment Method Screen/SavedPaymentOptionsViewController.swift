@@ -103,7 +103,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
-        let defaultSPMFlag: Bool
+        let defaultSPM: PaymentSheet.DefaultSPM
     }
 
     // MARK: - Internal Properties
@@ -504,7 +504,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, defaultSPMFlag: self.configuration.defaultSPMFlag)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, defaultSPM: self.configuration.defaultSPM)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -575,7 +575,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                               isTestMode: configuration.isTestMode,
                                               cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
-                                              defaultSPMFlag: configuration.defaultSPMFlag
+                                              defaultSPM: configuration.defaultSPM
         )
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

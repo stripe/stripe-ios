@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable import StripePaymentSheet
+@_spi(STP) @_spi(DefaultSPM) @testable import StripePaymentSheet
 import XCTest
 
 class SavedPaymentOptionsViewControllerTests: XCTestCase {
@@ -294,7 +294,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
     }
 
     // MARK: Helpers
-    func savedPaymentOptionsConfig(allowsRemovalOfLastSavedPaymentMethod: Bool, allowsRemovalOfPaymentMethods: Bool, defaultSPMFlag: Bool = false) -> SavedPaymentOptionsViewController.Configuration {
+    func savedPaymentOptionsConfig(allowsRemovalOfLastSavedPaymentMethod: Bool, allowsRemovalOfPaymentMethods: Bool, defaultSPM: PaymentSheet.DefaultSPM = .off) -> SavedPaymentOptionsViewController.Configuration {
         return SavedPaymentOptionsViewController.Configuration(customerID: "cus_123",
                                                                showApplePay: true,
                                                                showLink: true,
@@ -304,7 +304,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods,
-                                                               defaultSPMFlag: defaultSPMFlag)
+                                                               defaultSPM: defaultSPM)
     }
 
     func savedPaymentOptionsController(_ configuration: SavedPaymentOptionsViewController.Configuration,

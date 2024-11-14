@@ -31,7 +31,7 @@ final class UpdateCardViewController: UIViewController {
     private let canEditCard: Bool
     private let canRemoveCard: Bool
     private let cardBrandFilter: CardBrandFilter
-    private let defaultSPMFlag: Bool
+    private let defaultSPM: PaymentSheet.DefaultSPM
 
     private var latestError: Error? {
         didSet {
@@ -56,11 +56,14 @@ final class UpdateCardViewController: UIViewController {
         let cardDetails = UIStackView(arrangedSubviews: [cardSection.view, notEditableDetailsLabel])
         cardDetails.axis = .vertical
         cardDetails.setCustomSpacing(8, after: cardSection.view) // custom spacing from figma
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardDetails, updateButton, deleteButton, errorLabel])
+        let manageSection = UIStackView(arrangedSubviews: [cardDetails, defaultCheckbox.view])
+        manageSection.axis = .vertical
+        manageSection.setCustomSpacing(PaymentSheetUI.defaultPadding, after: cardDetails) // custom spacing from figma
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, manageSection, updateButton, deleteButton, errorLabel])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding, after: headerLabel) // custom spacing from figma
-        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding + 12, after: cardDetails) // custom spacing from figma
+        stackView.setCustomSpacing(PaymentSheetUI.defaultPadding + 12, after: manageSection) // custom spacing from figma
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding - 4, after: updateButton) // custom spacing from figma
         return stackView
     }()
@@ -77,7 +80,7 @@ final class UpdateCardViewController: UIViewController {
                 await self?.updateCard()
             }
         })
-        button.isHidden = !canEditCard
+        button.isHidden = !canEditCard && defaultSPM != .allowsDefaultSPM
         return button
     }()
 
@@ -107,7 +110,7 @@ final class UpdateCardViewController: UIViewController {
     private lazy var notEditableDetailsLabel: UITextView = {
         let label = ElementsUI.makeSmallFootnote(theme: appearance.asElementsTheme)
         label.text = .Localized.card_details_cannot_be_changed
-        if defaultSPMFlag {
+        if defaultSPM != .off {
             if canEditCard {
                 label.isHidden = true
             }
@@ -191,6 +194,12 @@ final class UpdateCardViewController: UIViewController {
         return section
     }()
 
+    private lazy var defaultCheckbox: CheckboxElement = {
+        let checkbox = CheckboxElement(theme: appearance.asElementsTheme, label: "Set as default payment method.", isSelectedByDefault: false)
+        checkbox.view.isHidden = defaultSPM != .allowsDefaultSPM
+        return checkbox
+    }()
+
     // MARK: Overrides
     init(paymentMethod: STPPaymentMethod,
          removeSavedPaymentMethodMessage: String?,
@@ -200,7 +209,7 @@ final class UpdateCardViewController: UIViewController {
          canRemoveCard: Bool,
          isTestMode: Bool,
          cardBrandFilter: CardBrandFilter = .default,
-         defaultSPMFlag: Bool
+         defaultSPM: PaymentSheet.DefaultSPM
     ) {
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
@@ -210,7 +219,7 @@ final class UpdateCardViewController: UIViewController {
         self.canRemoveCard = canRemoveCard
         self.cardBrandFilter = cardBrandFilter
         self.canEditCard = canEditCard
-        self.defaultSPMFlag = defaultSPMFlag
+        self.defaultSPM = defaultSPM
         super.init(nibName: nil, bundle: nil)
     }
 
