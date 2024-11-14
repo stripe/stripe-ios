@@ -78,12 +78,24 @@ class RowButton: UIView {
         addAndPinSubview(shadowRoundedRect)
 
         if let rightAccessoryView {
+            let rightAccessoryViewPadding: CGFloat = {
+                guard isEmbedded else {
+                    return -12
+                }
+                
+                switch appearance.embeddedPaymentElement.row.style {
+                case .flatWithRadio:
+                    return 0
+                case .floatingButton:
+                    return -12
+                }
+            }()
             rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(rightAccessoryView)
             NSLayoutConstraint.activate([
                 rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
                 rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: isEmbedded ? 0 : -12),
+                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: rightAccessoryViewPadding),
             ])
         }
 
