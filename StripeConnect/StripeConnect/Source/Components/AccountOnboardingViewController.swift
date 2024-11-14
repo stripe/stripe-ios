@@ -38,13 +38,15 @@ public class AccountOnboardingViewController: UIViewController {
 
     init(props: Props,
          componentManager: EmbeddedComponentManager,
-         loadContent: Bool
+         loadContent: Bool,
+         analyticsClientFactory: ComponentAnalyticsClientFactory
     ) {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .onboarding,
-            loadContent: loadContent
+            loadContent: loadContent,
+            analyticsClientFactory: analyticsClientFactory
         ) {
             props
         } didFailLoadWithError: { [weak self] error in

@@ -6,7 +6,7 @@
 //
 
 import JavaScriptCore
-import StripeCore
+@_spi(STP) import StripeCore
 import UIKit
 
 /// Manages Connect embedded components
@@ -27,6 +27,12 @@ public class EmbeddedComponentManager {
     // This should only be used for tests and determines if webview
     // content should load.
     var shouldLoadContent: Bool = true
+
+    // This should only be used for tests to mock the analytics logger
+    var analyticsClientFactory: ComponentAnalyticsClientFactory = {
+        ComponentAnalyticsClient(client: AnalyticsClientV2.sharedConnect,
+                                 commonFields: $0)
+    }
 
     /**
      Initializes a StripeConnect instance.
@@ -66,7 +72,9 @@ public class EmbeddedComponentManager {
     /// Creates a payouts component
     /// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/payouts
     public func createPayoutsViewController() -> PayoutsViewController {
-        .init(componentManager: self, loadContent: shouldLoadContent)
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     /**
@@ -96,12 +104,15 @@ public class EmbeddedComponentManager {
                 collectionOptions: collectionOptions
             ),
             componentManager: self,
-            loadContent: shouldLoadContent)
+            loadContent: shouldLoadContent,
+            analyticsClientFactory: analyticsClientFactory)
        }
 
     @_spi(DashboardOnly)
     public func createPaymentDetailsViewController() -> PaymentDetailsViewController {
-        .init(componentManager: self, loadContent: shouldLoadContent)
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     @_spi(DashboardOnly)
@@ -110,7 +121,8 @@ public class EmbeddedComponentManager {
     ) -> AccountManagementViewController {
         .init(componentManager: self,
               collectionOptions: collectionOptions,
-              loadContent: shouldLoadContent)
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     @_spi(DashboardOnly)
@@ -119,7 +131,8 @@ public class EmbeddedComponentManager {
     ) -> NotificationBannerViewController {
         .init(componentManager: self,
               collectionOptions: collectionOptions,
-              loadContent: shouldLoadContent)
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     /// Used to keep reference of all web views associated with this component manager.

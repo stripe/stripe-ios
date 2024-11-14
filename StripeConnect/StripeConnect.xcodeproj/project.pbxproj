@@ -39,7 +39,6 @@
 		41542A692C88B6F2004E728E /* JSONEncoder+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */; };
 		41542A6B2C88B79E004E728E /* JSONSerialization+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41542A6A2C88B79E004E728E /* JSONSerialization+extension.swift */; };
 		4161C2732C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2722C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift */; };
-		4161C2752C9DB1B9005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2742C9DB1B9005BD67C /* StripeUICore.framework */; };
 		4161C2792C9DB1CE005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2782C9DB1CE005BD67C /* StripeUICore.framework */; };
 		4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */; };
 		4161C28C2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C28B2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift */; };
@@ -95,6 +94,32 @@
 		E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */; };
 		E65691252CA52F9D00E0DB00 /* NotificationBannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */; };
 		E65691272CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */; };
+		E6660D8F2CDC418C002A7631 /* ConnectAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D8E2CDC418C002A7631 /* ConnectAnalyticEvent.swift */; };
+		E6660D902CDC418C002A7631 /* ComponentAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D8D2CDC418C002A7631 /* ComponentAnalyticsClient.swift */; };
+		E6660D912CDC418C002A7631 /* AnalyticsClientV2+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D8C2CDC418C002A7631 /* AnalyticsClientV2+Connect.swift */; };
+		E6660D9A2CDC4194002A7631 /* PageLoadErrorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D972CDC4194002A7631 /* PageLoadErrorEvent.swift */; };
+		E6660D9B2CDC4194002A7631 /* ComponentViewedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D942CDC4194002A7631 /* ComponentViewedEvent.swift */; };
+		E6660D9C2CDC4194002A7631 /* ComponentCreatedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D922CDC4194002A7631 /* ComponentCreatedEvent.swift */; };
+		E6660D9D2CDC4194002A7631 /* DeserializeMessageErrorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D962CDC4194002A7631 /* DeserializeMessageErrorEvent.swift */; };
+		E6660D9E2CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D982CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift */; };
+		E6660D9F2CDC4194002A7631 /* UnrecognizedSetterEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D992CDC4194002A7631 /* UnrecognizedSetterEvent.swift */; };
+		E6660DA02CDC4194002A7631 /* ComponentLoadedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D932CDC4194002A7631 /* ComponentLoadedEvent.swift */; };
+		E6660DA12CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D952CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift */; };
+		E6660DA42CDC4209002A7631 /* URL+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DA32CDC4209002A7631 /* URL+extension.swift */; };
+		E6660DA52CDC4209002A7631 /* Error+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DA22CDC4209002A7631 /* Error+extensions.swift */; };
+		E6660DA72CDC42F4002A7631 /* Encodable+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DA62CDC42F4002A7631 /* Encodable+Connect.swift */; };
+		E6660DA92CDC563C002A7631 /* AuthenticatedWebViewOpenedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DA82CDC563C002A7631 /* AuthenticatedWebViewOpenedEvent.swift */; };
+		E6660DAB2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DAA2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift */; };
+		E6660DAD2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DAC2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift */; };
+		E6660DAF2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DAE2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift */; };
+		E6660DB12CDD8E25002A7631 /* ComponentAnalyticsClient+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DB02CDD8E1B002A7631 /* ComponentAnalyticsClient+Mock.swift */; };
+		E6660DB32CDD8F6E002A7631 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660DB22CDD8F6E002A7631 /* StripeCoreTestUtils.framework */; };
+		E6660DB72CDD99EF002A7631 /* MockComponentAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DB62CDD99E7002A7631 /* MockComponentAnalyticsClient.swift */; };
+		E6660DBC2CDDC5C7002A7631 /* ComponentAnalyticsClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DBB2CDDC5C2002A7631 /* ComponentAnalyticsClientTests.swift */; };
+		E6660DBE2CDDCC3A002A7631 /* AnalyticsCommonFieldsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DBD2CDDCC29002A7631 /* AnalyticsCommonFieldsTests.swift */; };
+		E6660DC22CDE7D66002A7631 /* URL+ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC12CDE7D56002A7631 /* URL+ExtensionTests.swift */; };
+		E6660DC42CDE7F47002A7631 /* ApplicationURLOpenerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC32CDE7F41002A7631 /* ApplicationURLOpenerTests.swift */; };
+		E6660DC72CDE8F28002A7631 /* ScriptMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC62CDE8F28002A7631 /* ScriptMessageHandlerTests.swift */; };
 		E688AE002CADD8C400951D97 /* NotificationBannerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */; };
 		E688AE032CADE36C00951D97 /* OnNotificationsChangeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */; };
 		E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */; };
@@ -207,6 +232,32 @@
 		E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeConnect+Exports.swift"; sourceTree = "<group>"; };
 		E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewController.swift; sourceTree = "<group>"; };
 		E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandler.swift; sourceTree = "<group>"; };
+		E6660D8C2CDC418C002A7631 /* AnalyticsClientV2+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnalyticsClientV2+Connect.swift"; sourceTree = "<group>"; };
+		E6660D8D2CDC418C002A7631 /* ComponentAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentAnalyticsClient.swift; sourceTree = "<group>"; };
+		E6660D8E2CDC418C002A7631 /* ConnectAnalyticEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAnalyticEvent.swift; sourceTree = "<group>"; };
+		E6660D922CDC4194002A7631 /* ComponentCreatedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentCreatedEvent.swift; sourceTree = "<group>"; };
+		E6660D932CDC4194002A7631 /* ComponentLoadedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentLoadedEvent.swift; sourceTree = "<group>"; };
+		E6660D942CDC4194002A7631 /* ComponentViewedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentViewedEvent.swift; sourceTree = "<group>"; };
+		E6660D952CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentWebPageLoadedEvent.swift; sourceTree = "<group>"; };
+		E6660D962CDC4194002A7631 /* DeserializeMessageErrorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeserializeMessageErrorEvent.swift; sourceTree = "<group>"; };
+		E6660D972CDC4194002A7631 /* PageLoadErrorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageLoadErrorEvent.swift; sourceTree = "<group>"; };
+		E6660D982CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnexpectedLoadErrorTypeEvent.swift; sourceTree = "<group>"; };
+		E6660D992CDC4194002A7631 /* UnrecognizedSetterEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnrecognizedSetterEvent.swift; sourceTree = "<group>"; };
+		E6660DA22CDC4209002A7631 /* Error+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+extensions.swift"; sourceTree = "<group>"; };
+		E6660DA32CDC4209002A7631 /* URL+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+extension.swift"; sourceTree = "<group>"; };
+		E6660DA62CDC42F4002A7631 /* Encodable+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Encodable+Connect.swift"; sourceTree = "<group>"; };
+		E6660DA82CDC563C002A7631 /* AuthenticatedWebViewOpenedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedWebViewOpenedEvent.swift; sourceTree = "<group>"; };
+		E6660DAA2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedWebViewRedirectedEvent.swift; sourceTree = "<group>"; };
+		E6660DAC2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedWebViewCanceledEvent.swift; sourceTree = "<group>"; };
+		E6660DAE2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedWebViewErrorEvent.swift; sourceTree = "<group>"; };
+		E6660DB02CDD8E1B002A7631 /* ComponentAnalyticsClient+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentAnalyticsClient+Mock.swift"; sourceTree = "<group>"; };
+		E6660DB22CDD8F6E002A7631 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6660DB62CDD99E7002A7631 /* MockComponentAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockComponentAnalyticsClient.swift; sourceTree = "<group>"; };
+		E6660DBB2CDDC5C2002A7631 /* ComponentAnalyticsClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentAnalyticsClientTests.swift; sourceTree = "<group>"; };
+		E6660DBD2CDDCC29002A7631 /* AnalyticsCommonFieldsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsCommonFieldsTests.swift; sourceTree = "<group>"; };
+		E6660DC12CDE7D56002A7631 /* URL+ExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+ExtensionTests.swift"; sourceTree = "<group>"; };
+		E6660DC32CDE7F41002A7631 /* ApplicationURLOpenerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationURLOpenerTests.swift; sourceTree = "<group>"; };
+		E6660DC62CDE8F28002A7631 /* ScriptMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandlerTests.swift; sourceTree = "<group>"; };
 		E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewControllerTests.swift; sourceTree = "<group>"; };
 		E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandlerTests.swift; sourceTree = "<group>"; };
 		E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
@@ -233,7 +284,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4161C2752C9DB1B9005BD67C /* StripeUICore.framework in Frameworks */,
+				E6660DB32CDD8F6E002A7631 /* StripeCoreTestUtils.framework in Frameworks */,
 				41D17A4B2C5A73A7007C6EE6 /* StripeConnect.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -300,6 +351,7 @@
 		413987C62C63F34B001D375E /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				E6660D8A2CDC414E002A7631 /* Analytics */,
 				E640C9CD2CBF26C9009D0C6E /* AuthenticatedWebView */,
 				416E9ED02C77F6C100A0B917 /* Extensions */,
 				410D0FE22C6D31C6009B0E26 /* StripeConnectConstants.swift */,
@@ -363,12 +415,15 @@
 		416E9ED02C77F6C100A0B917 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */,
+				E6660DA62CDC42F4002A7631 /* Encodable+Connect.swift */,
+				E6660DA22CDC4209002A7631 /* Error+extensions.swift */,
+				41054E422C989AAD00383C09 /* Font+Extension.swift */,
 				E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */,
 				41542A682C88B6F2004E728E /* JSONEncoder+extension.swift */,
 				41542A6A2C88B79E004E728E /* JSONSerialization+extension.swift */,
-				41054E422C989AAD00383C09 /* Font+Extension.swift */,
 				E6EF91C62CBA3BE60082DD1B /* UIViewController+StripeConnect.swift */,
+				E6660DA32CDC4209002A7631 /* URL+extension.swift */,
+				416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -384,6 +439,7 @@
 		41814EE52C6BC8610014EB5E /* Webview */ = {
 			isa = PBXGroup;
 			children = (
+				E6660DC32CDE7F41002A7631 /* ApplicationURLOpenerTests.swift */,
 				410D0FE62C6D3BBB009B0E26 /* ConnectWebViewControllerTests.swift */,
 				41814EE72C6BC8800014EB5E /* ScriptWebTestBase.swift */,
 				410D0FD52C6D07B1009B0E26 /* MessageSenders */,
@@ -396,7 +452,9 @@
 		41814EE62C6BC8690014EB5E /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				E6660DBA2CDDC5BC002A7631 /* Analytics */,
 				E640C9D12CBF4790009D0C6E /* AuthenticatedWebView */,
+				E6660DBF2CDE7D48002A7631 /* Extensions */,
 				41814EE52C6BC8610014EB5E /* Webview */,
 			);
 			path = Internal;
@@ -405,6 +463,7 @@
 		41814EE92C6BCA970014EB5E /* MessageHandlers */ = {
 			isa = PBXGroup;
 			children = (
+				E6660DC52CDE8F22002A7631 /* Helpers */,
 				E688AE012CADE35300951D97 /* NotificationBanner */,
 				4161C2692C9CD0B1005BD67C /* Onboarding */,
 				41814EEA2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift */,
@@ -439,6 +498,7 @@
 		41A2A5662C5AC5110077FC74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6660DB22CDD8F6E002A7631 /* StripeCoreTestUtils.framework */,
 				4161C2782C9DB1CE005BD67C /* StripeUICore.framework */,
 				4161C2742C9DB1B9005BD67C /* StripeUICore.framework */,
 				41A2A5672C5AC5120077FC74 /* StripeCore.framework */,
@@ -461,6 +521,8 @@
 		41BCCFEE2C8B3C7900797E01 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E6660DB62CDD99E7002A7631 /* MockComponentAnalyticsClient.swift */,
+				E6660DB02CDD8E1B002A7631 /* ComponentAnalyticsClient+Mock.swift */,
 				41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */,
 				E6F486082C9E8A40000D914F /* ConnectJSURLParamsTests.swift */,
 				41BCCFF22C8B449800797E01 /* TestHelpers.swift */,
@@ -553,6 +615,61 @@
 				E640C9D22CBF4799009D0C6E /* AuthenticatedWebViewManagerTests.swift */,
 			);
 			path = AuthenticatedWebView;
+			sourceTree = "<group>";
+		};
+		E6660D8A2CDC414E002A7631 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				E6660D8B2CDC4158002A7631 /* Events */,
+				E6660D8C2CDC418C002A7631 /* AnalyticsClientV2+Connect.swift */,
+				E6660D8D2CDC418C002A7631 /* ComponentAnalyticsClient.swift */,
+				E6660D8E2CDC418C002A7631 /* ConnectAnalyticEvent.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		E6660D8B2CDC4158002A7631 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				E6660DAC2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift */,
+				E6660DAE2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift */,
+				E6660DA82CDC563C002A7631 /* AuthenticatedWebViewOpenedEvent.swift */,
+				E6660DAA2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift */,
+				E6660D922CDC4194002A7631 /* ComponentCreatedEvent.swift */,
+				E6660D932CDC4194002A7631 /* ComponentLoadedEvent.swift */,
+				E6660D942CDC4194002A7631 /* ComponentViewedEvent.swift */,
+				E6660D952CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift */,
+				E6660D962CDC4194002A7631 /* DeserializeMessageErrorEvent.swift */,
+				E6660D972CDC4194002A7631 /* PageLoadErrorEvent.swift */,
+				E6660D982CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift */,
+				E6660D992CDC4194002A7631 /* UnrecognizedSetterEvent.swift */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		E6660DBA2CDDC5BC002A7631 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				E6660DBB2CDDC5C2002A7631 /* ComponentAnalyticsClientTests.swift */,
+				E6660DBD2CDDCC29002A7631 /* AnalyticsCommonFieldsTests.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		E6660DBF2CDE7D48002A7631 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E6660DC12CDE7D56002A7631 /* URL+ExtensionTests.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E6660DC52CDE8F22002A7631 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E6660DC62CDE8F28002A7631 /* ScriptMessageHandlerTests.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		E688AE012CADE35300951D97 /* NotificationBanner */ = {
@@ -717,6 +834,7 @@
 				E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */,
 				E65691252CA52F9D00E0DB00 /* NotificationBannerViewController.swift in Sources */,
 				410D0FE32C6D31C6009B0E26 /* StripeConnectConstants.swift in Sources */,
+				E6660DAD2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift in Sources */,
 				4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */,
 				E6D3C8EE2CBE1404003CE967 /* HTTPStatusError.swift in Sources */,
 				413987CC2C63F34B001D375E /* VoidPayload.swift in Sources */,
@@ -734,17 +852,34 @@
 				41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */,
 				413987CA2C63F34B001D375E /* ScriptMessageHandler.swift in Sources */,
 				416E9E862C76B35E00A0B917 /* PayoutsViewController.swift in Sources */,
+				E6660DA92CDC563C002A7631 /* AuthenticatedWebViewOpenedEvent.swift in Sources */,
 				41542A6B2C88B79E004E728E /* JSONSerialization+extension.swift in Sources */,
 				E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */,
 				413987C82C63F34B001D375E /* DebugMessageHandler.swift in Sources */,
 				410D0FCC2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift in Sources */,
+				E6660DAF2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift in Sources */,
 				41BCCFED2C8B34F600797E01 /* StringCodingKey.swift in Sources */,
 				4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */,
 				410D0FE52C6D32F0009B0E26 /* ApplicationURLOpener.swift in Sources */,
 				E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */,
+				E6660D8F2CDC418C002A7631 /* ConnectAnalyticEvent.swift in Sources */,
+				E6660D902CDC418C002A7631 /* ComponentAnalyticsClient.swift in Sources */,
+				E6660D912CDC418C002A7631 /* AnalyticsClientV2+Connect.swift in Sources */,
+				E6660DAB2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift in Sources */,
+				E6660D9A2CDC4194002A7631 /* PageLoadErrorEvent.swift in Sources */,
+				E6660D9B2CDC4194002A7631 /* ComponentViewedEvent.swift in Sources */,
+				E6660D9C2CDC4194002A7631 /* ComponentCreatedEvent.swift in Sources */,
+				E6660D9D2CDC4194002A7631 /* DeserializeMessageErrorEvent.swift in Sources */,
+				E6660D9E2CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift in Sources */,
+				E6660D9F2CDC4194002A7631 /* UnrecognizedSetterEvent.swift in Sources */,
+				E6660DA02CDC4194002A7631 /* ComponentLoadedEvent.swift in Sources */,
+				E6660DA12CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift in Sources */,
+				E6660DA72CDC42F4002A7631 /* Encodable+Connect.swift in Sources */,
 				416E9E762C751B0500A0B917 /* EmbeddedComponentManager.swift in Sources */,
 				416E9ECF2C77EAA400A0B917 /* EmbeddedComponentError.swift in Sources */,
 				E640C9CC2CBF0C1E009D0C6E /* AuthenticatedWebViewManager.swift in Sources */,
+				E6660DA42CDC4209002A7631 /* URL+extension.swift in Sources */,
+				E6660DA52CDC4209002A7631 /* Error+extensions.swift in Sources */,
 				410D0FDF2C6D3176009B0E26 /* ConnectWebViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -757,6 +892,9 @@
 				410D0FD92C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift in Sources */,
 				E6F486092C9E8A40000D914F /* ConnectJSURLParamsTests.swift in Sources */,
 				416E9E892C76B36F00A0B917 /* PayoutsViewControllerTests.swift in Sources */,
+				E6660DB72CDD99EF002A7631 /* MockComponentAnalyticsClient.swift in Sources */,
+				E6660DB12CDD8E25002A7631 /* ComponentAnalyticsClient+Mock.swift in Sources */,
+				E6660DC72CDE8F28002A7631 /* ScriptMessageHandlerTests.swift in Sources */,
 				41814EEB2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift in Sources */,
 				41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */,
 				41810D692C88C4B100F10EB7 /* AppearanceTests.swift in Sources */,
@@ -767,9 +905,12 @@
 				416E9E782C753B7900A0B917 /* ConnectComponentWebViewControllerTests.swift in Sources */,
 				410D0FD42C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift in Sources */,
 				E640C9D32CBF479E009D0C6E /* AuthenticatedWebViewManagerTests.swift in Sources */,
+				E6660DC42CDE7F47002A7631 /* ApplicationURLOpenerTests.swift in Sources */,
+				E6660DBC2CDDC5C7002A7631 /* ComponentAnalyticsClientTests.swift in Sources */,
 				E65691202CA5248300E0DB00 /* AccountManagementViewControllerTests.swift in Sources */,
 				410D0FCA2C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift in Sources */,
 				41BCCFF32C8B449800797E01 /* TestHelpers.swift in Sources */,
+				E6660DC22CDE7D66002A7631 /* URL+ExtensionTests.swift in Sources */,
 				410D0FDB2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift in Sources */,
 				E688AE032CADE36C00951D97 /* OnNotificationsChangeHandlerTests.swift in Sources */,
 				410D0FE72C6D3BBC009B0E26 /* ConnectWebViewControllerTests.swift in Sources */,
@@ -777,6 +918,7 @@
 				41814EED2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift in Sources */,
 				E6165CC12CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift in Sources */,
 				41814EE82C6BC8800014EB5E /* ScriptWebTestBase.swift in Sources */,
+				E6660DBE2CDDCC3A002A7631 /* AnalyticsCommonFieldsTests.swift in Sources */,
 				41BCCFF02C8B3C8900797E01 /* AppearanceWrapper+Default.swift in Sources */,
 				416E9E822C76994C00A0B917 /* WebView+Tests.swift in Sources */,
 				41BCCFFB2C8B95BB00797E01 /* CustomFontSourceTests.swift in Sources */,

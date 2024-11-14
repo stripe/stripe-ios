@@ -54,7 +54,7 @@ class PaymentMethodFormViewController: UIViewController {
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
-            
+
             if paymentMethodType.isLinkBankPayment {
                 // We create the final payment method in the bank auth flow, therefore treating
                 // the Link Bank Payment result like a saved payment option.
@@ -63,7 +63,7 @@ class PaymentMethodFormViewController: UIViewController {
                 }
                 return .saved(paymentMethod: paymentMethod, confirmParams: nil)
             }
-            
+
             return .new(confirmParams: params)
         }
         return nil
@@ -216,6 +216,28 @@ extension PaymentMethodFormViewController {
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement? { form as? USBankAccountPaymentMethodElement }
     private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? { form as? InstantDebitsPaymentMethodElement }
 
+    private var bankTabEmail: String? {
+        switch paymentMethodType {
+        case .stripe(.USBankAccount):
+            return usBankAccountFormElement?.email
+        case .instantDebits, .linkCardBrand:
+            return instantDebitsFormElement?.email
+        default:
+            return nil
+        }
+    }
+
+    private var bankTabPhoneElement: PhoneNumberElement? {
+        switch paymentMethodType {
+        case .stripe(.USBankAccount):
+            return usBankAccountFormElement?.phoneElement
+        case .instantDebits, .linkCardBrand:
+            return instantDebitsFormElement?.phoneElement
+        default:
+            return nil
+        }
+    }
+
     private var elementsSessionContext: ElementsSessionContext {
         let intentId: ElementsSessionContext.IntentID? = {
             switch intent {
@@ -234,10 +256,10 @@ extension PaymentMethodFormViewController {
             return PhoneNumber.fromE164(defaultPhoneNumber)?.number
         }()
         let prefillDetails = ElementsSessionContext.PrefillDetails(
-            email: instantDebitsFormElement?.email ?? configuration.defaultBillingDetails.email,
-            formattedPhoneNumber: instantDebitsFormElement?.phone ?? defaultPhoneNumber,
-            unformattedPhoneNumber: instantDebitsFormElement?.phoneElement?.phoneNumber?.number ?? defaultUnformattedPhoneNumber,
-            countryCode: instantDebitsFormElement?.phoneElement?.selectedCountryCode
+            email: bankTabEmail ?? configuration.defaultBillingDetails.email,
+            formattedPhoneNumber: bankTabPhoneElement?.phoneNumber?.string(as: .e164) ?? defaultPhoneNumber,
+            unformattedPhoneNumber: bankTabPhoneElement?.phoneNumber?.number ?? defaultUnformattedPhoneNumber,
+            countryCode: bankTabPhoneElement?.selectedCountryCode
         )
         let linkMode = elementsSession.linkSettings?.linkMode
         let billingDetails = instantDebitsFormElement?.billingDetails
@@ -444,14 +466,14 @@ extension PaymentMethodFormViewController {
             "product": "instant_debits",
             "hosted_surface": "payment_element",
         ]
-        
+
         switch intent {
         case .paymentIntent, .setupIntent:
             additionalParameters["attach_required"] = true
         case .deferredIntent:
             break
         }
-        
+
         switch intent {
         case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(

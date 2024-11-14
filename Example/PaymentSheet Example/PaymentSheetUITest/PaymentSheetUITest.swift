@@ -2433,11 +2433,7 @@ extension PaymentSheetUITestCase {
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
-        let notNowButton = app.buttons["Not now"]
-        if notNowButton.waitForExistence(timeout: 10.0) {
-            app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
-            notNowButton.tap()
-        }
+        skipLinkSignup(app)
 
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
