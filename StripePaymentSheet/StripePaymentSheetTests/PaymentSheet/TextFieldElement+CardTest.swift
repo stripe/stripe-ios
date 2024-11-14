@@ -287,10 +287,10 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             "13": .invalid(error: Error.invalidMonth, shouldDisplay: true),
 
             // Test expired dates
-            "12/21": .invalid(error: Error.invalid, shouldDisplay: true),
-            "01/22": .invalid(error: Error.invalid, shouldDisplay: true),
+            "12/21": .invalid(error: Error.expired, shouldDisplay: true),
+            "01/22": .invalid(error: Error.expired, shouldDisplay: true),
             dateFormatter.string(from: lastMonth): .invalid(
-                error: Error.invalid,
+                error: Error.expired,
                 shouldDisplay: true
             ),
         ]
