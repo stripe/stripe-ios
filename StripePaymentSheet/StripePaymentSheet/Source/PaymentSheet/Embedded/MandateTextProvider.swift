@@ -41,6 +41,8 @@ class VerticalListMandateProvider: MandateTextProvider {
                 return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(alignment: .natural, theme: configuration.appearance.asElementsTheme)
             case .stripe(.SEPADebit):
                 return .init(string: String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+            case .stripe(.link):
+                return bottomNoticeAttributedString
             default:
                 return nil
             }
