@@ -353,7 +353,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertEqual(analyticsClient.loggedEvents.last, ComponentViewedEvent())
 
         // Mock that web page loads
-        webVC.webViewDidFinishNavigation()
+        webVC.webViewDidFinishNavigation(to: StripeConnectConstants.connectJSBaseURL)
         XCTAssertEqual(analyticsClient.loggedEvents.count, 3)
         let pageLoadedEvent = try XCTUnwrap(analyticsClient.loggedEvents.last as? ComponentWebPageLoadedEvent)
         XCTAssertEqual(pageLoadedEvent.metadata.timeToLoad, 10, accuracy: 1.0)
@@ -414,6 +414,23 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
         let event = try analyticsClient.lastEvent(ofType: UnrecognizedSetterEvent.self)
         XCTAssertEqual(event.metadata.setter, "unknownSetter")
+    }
+
+    @MainActor
+    func testUnexpectedPageLoadAnalytic() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+        let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
+
+        // Mock that web page navigates to a URL that isn't the component wrapper
+        webVC.webViewDidFinishNavigation(to: URL(string: "https://stripe.com?query=to#sanitize"))
+
+        let event = try analyticsClient.lastEvent(ofType: UnexpectedNavigationEvent.self)
+        XCTAssertEqual(event.metadata.url, "https://stripe.com")
     }
 }
 
