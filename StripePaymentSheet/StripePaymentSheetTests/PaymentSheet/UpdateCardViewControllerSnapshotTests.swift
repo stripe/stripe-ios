@@ -36,13 +36,16 @@ final class UpdateCardViewControllerSnapshotTests: STPSnapshotTestCase {
         _test_UpdateCardViewController(darkMode: false, isEmbeddedSingleCard: true, appearance: ._testMSPaintTheme)
     }
 
-    func _test_UpdateCardViewController(darkMode: Bool, isEmbeddedSingleCard: Bool = false, appearance: PaymentSheet.Appearance = .default) {
+    func _test_UpdateCardViewController(darkMode: Bool, canEditCard: Bool = true, isEmbeddedSingleCard: Bool = false, appearance: PaymentSheet.Appearance = .default) {
         let sut = UpdateCardViewController(paymentMethod: STPFixtures.paymentMethod(),
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            appearance: appearance,
                                            hostedSurface: .paymentSheet,
+                                           canEditCard: canEditCard,
                                            canRemoveCard: true,
-                                           isTestMode: false)
+                                           isTestMode: false,
+                                           defaultSPMFlag: true
+        )
         let bottomSheet: BottomSheetViewController
         if isEmbeddedSingleCard {
             bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})

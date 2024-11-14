@@ -294,7 +294,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
     }
 
     // MARK: Helpers
-    func savedPaymentOptionsConfig(allowsRemovalOfLastSavedPaymentMethod: Bool, allowsRemovalOfPaymentMethods: Bool) -> SavedPaymentOptionsViewController.Configuration {
+    func savedPaymentOptionsConfig(allowsRemovalOfLastSavedPaymentMethod: Bool, allowsRemovalOfPaymentMethods: Bool, defaultSPMFlag: Bool = false) -> SavedPaymentOptionsViewController.Configuration {
         return SavedPaymentOptionsViewController.Configuration(customerID: "cus_123",
                                                                showApplePay: true,
                                                                showLink: true,
@@ -303,7 +303,8 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isCVCRecollectionEnabled: true,
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                               allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods)
+                                                               allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods,
+                                                               defaultSPMFlag: defaultSPMFlag)
     }
 
     func savedPaymentOptionsController(_ configuration: SavedPaymentOptionsViewController.Configuration,
