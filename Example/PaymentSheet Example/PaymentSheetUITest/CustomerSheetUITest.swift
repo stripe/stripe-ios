@@ -264,11 +264,7 @@ class CustomerSheetUITest: XCTestCase {
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: timeout)
 
-        let notNowButton = app.buttons["Not now"]
-        if notNowButton.waitForExistence(timeout: timeout) {
-            app.toolbars.buttons["Done"].tap() // dismiss keyboard
-            notNowButton.tap()
-        }
+        skipLinkSignup(app)
 
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: timeout))
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
