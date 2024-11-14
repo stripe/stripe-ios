@@ -227,24 +227,15 @@ extension TextFieldElement {
 // MARK: - Censored CVC Configuration
 extension TextFieldElement {
     struct CensoredCVCConfiguration: TextFieldElementConfiguration {
-        init(cardBrandProvider: @escaping () -> (STPCardBrand)) {
-            self.cardBrandProvider = cardBrandProvider
-            let maxLength = Int(STPCardValidator.maxCVCLength(for: cardBrandProvider()))
+        init(brand: STPCardBrand) {
+            let maxLength = Int(STPCardValidator.maxCVCLength(for: brand))
             self.defaultValue = String(repeating: "•", count: maxLength)
         }
 
         let defaultValue: String?
-        let cardBrandProvider: () -> (STPCardBrand)
         var label = String.Localized.cvc
         let isEditable: Bool = false
         let disallowedCharacters: CharacterSet = CharacterSet(charactersIn: "•").inverted
-
-        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
-            return DynamicImageView(
-                dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
-                pairedColor: theme.colors.componentBackground
-            )
-        }
     }
 }
 
@@ -315,11 +306,10 @@ extension TextFieldElement {
                 guard textHasValidMonth else {
                     return .invalid(Error.invalidMonth)
                 }
-                // Is the date expired?
                 guard let expiryDate = CardExpiryDate(text) else {
                    return .invalid(Error.invalid)
                 }
-
+                // Is the date expired?
                 guard !expiryDate.expired() else {
                    return .invalid(Error.expired)
                 }
