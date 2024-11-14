@@ -220,6 +220,10 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
+    
+    var isLinkCardBrand: Bool {
+        linkSettings?.linkMode == .linkCardBrand
+    }
 }
 
 extension STPElementsSession {
