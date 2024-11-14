@@ -753,6 +753,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
         
         let notNowButton = app.buttons["Not now"]
+        if !notNowButton.isHittable {
+            app.swipeUp()
+        }
         if notNowButton.waitForExistence(timeout: 10.0) {
             app.typeText(XCUIKeyboardKey.return.rawValue) // dismiss keyboard
             notNowButton.tap()
