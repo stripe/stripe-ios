@@ -192,7 +192,7 @@ extension PaymentSheet {
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
                 (!intent.isDeferredIntent || enableInstantDebitsWithDeferredIntents) &&
-                elementsSession.linkSettings?.linkMode == .linkCardBrand &&
+                elementsSession.isLinkCardBrand &&
                 configuration.isEligibleForBankTab
             }
 

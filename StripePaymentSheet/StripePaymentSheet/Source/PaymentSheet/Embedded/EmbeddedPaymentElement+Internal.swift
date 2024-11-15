@@ -79,6 +79,7 @@ extension EmbeddedPaymentElement {
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
+            customer: configuration.customer,
             delegate: delegate
         )
     }

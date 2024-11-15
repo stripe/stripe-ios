@@ -7,7 +7,7 @@
 
 /// If the web view calls `onSetterFunctionCalled` with a `setter` argument the SDK doesn’t know how to handle.
 struct UnrecognizedSetterEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// The `setter` property sent from web
         let setter: String
 

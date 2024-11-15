@@ -184,6 +184,6 @@ extension XCUIApplication {
     }
 
     func fc_dismissKeyboard() {
-        toolbars.buttons["Done"].tap()
+        toolbars.buttons["Done"].waitForExistenceAndTap()
     }
 }

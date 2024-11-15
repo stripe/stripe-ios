@@ -9,20 +9,17 @@
 import XCTest
 
 class OpenAuthenticatedWebViewMessageHandlerTests: ScriptWebTestBase {
-    func testMessageSend() {
-        let expectation = self.expectation(description: "Message received")
+    @MainActor
+    func testMessageSend() async throws {
         let url = "https://dashboard.stripe.com"
         let id = "1234"
         webView.addMessageHandler(messageHandler: OpenAuthenticatedWebViewMessageHandler(
             analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
             didReceiveMessage: { payload in
-                expectation.fulfill()
                 XCTAssertEqual(payload, .init(url: URL(string: "https://dashboard.stripe.com")!, id: id))
             }
         ))
 
-        webView.evaluateOpenAuthenticatedWebView(url: url, id: id)
-
-        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
+        try await webView.evaluateOpenAuthenticatedWebView(url: url, id: id)
     }
 }

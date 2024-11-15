@@ -481,11 +481,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
-        let notNowButton = app.buttons["Not now"]
-        if notNowButton.waitForExistence(timeout: 10) {
-            app.toolbars.buttons["Done"].tap() // dismiss keyboard
-            notNowButton.tap()
-        }
+        skipLinkSignup(app)
 
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add US bank account"].waitForExistence(timeout: 10))
@@ -518,6 +514,12 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Checkout"].waitForExistenceAndTap()
         payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        
+        // Apple Pay should be selected by default upon reloading with the same customer
+        app.buttons["Reload"].tap()
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Apple Pay")
     }
 
     func testLink() {
@@ -535,6 +537,268 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         springboard.buttons["Continue"].waitForExistenceAndTap()
         // Stop here; Links's test playground is out of scope
+    }
+    
+    func testCVCRecollection() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        settings.requireCVCRecollection = .on
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        // Select the saved card
+        app.buttons["View more"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Select payment method"].waitForExistence(timeout: 10))
+        app.buttons["•••• 4242"].firstMatch.waitForExistenceAndTap()
+        
+        // Ensure the card is selected and start checking out
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+        app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        app.buttons["Checkout"].tap()
+        
+        // CVC field should already be selected
+        app.typeText("123")
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+    
+    func testCashAppPay() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        
+        // Ensure Cash App Pay is selected and start checking out
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
+        app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        app.buttons["Checkout"].tap()
+        
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+    
+    func testCashAppPayAndSetup() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.mode = .paymentWithSetup
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        
+        // Ensure Cash App Pay is selected and start checking out
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
+        app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        app.buttons["Checkout"].tap()
+        
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+    
+    func testCashAppPaySetup() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.mode = .setup
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        
+        // Ensure Cash App Pay is selected and start checking out
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
+        app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        app.buttons["Checkout"].tap()
+        
+        webviewAuthorizeSetupButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+    
+    func testCashAppPayBillingAddressCollection() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        settings.collectName = .always
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        
+        let fullNameField = app.textFields["Full name"]
+        XCTAssertTrue(fullNameField.waitForExistence(timeout: 10))
+        fullNameField.forceTapElement()
+        fullNameField.typeText("Jane Doe")
+        
+        app.buttons["Continue"].tap()
+        
+        // Ensure Cash App Pay is selected and start checking out
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
+        app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        app.buttons["Checkout"].tap()
+        
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+    
+    func testExternalPayPal() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        settings.externalPaymentMethods = .paypal
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        app.buttons["PayPal"].waitForExistenceAndTap()
+        
+        // Ensure PayPal is selected and start checking out
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "PayPal")
+        app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        app.buttons["Checkout"].waitForExistenceAndTap()
+        
+        XCTAssertNotNil(app.staticTexts["Confirm external_paypal?"])
+        app.buttons["Cancel"].waitForExistenceAndTap()
+        
+        app.buttons["Checkout"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+    
+    func testSEPA() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.allowsDelayedPMs = .on
+        settings.customerMode = .new
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .confirm
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        app.buttons["SEPA Debit"].waitForExistenceAndTap()
+        
+        app.textFields["Full name"].waitForExistenceAndTap()
+        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
+        app.textFields["Address line 1"].tap()
+        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+        app.textFields["ZIP"].tap()
+        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+        app.buttons["Pay €50.99"].tap()
+        
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+    
+    func testUSBankAccount() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .confirm
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        XCTAssertTrue(app.buttons["US bank account"].waitForExistenceAndTap())
+        
+        // Fill out name and email fields
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.isEnabled)
+        app.textFields["Full name"].tap()
+        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("test-\(UUID().uuidString)@example.com" + XCUIKeyboardKey.return.rawValue)
+        XCTAssertTrue(continueButton.isEnabled)
+        continueButton.tap()
+        
+        // Go through connections flow
+        app.buttons["Agree and continue"].tap()
+        app.staticTexts["Test Institution"].forceTapElement()
+        // "Success" institution is automatically selected because its the first
+        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
+        
+        XCUIApplication().toolbars.buttons["Done"].waitForExistenceAndTap()
+        app.buttons["Not now"].waitForExistenceAndTap()
+        
+        XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
+        app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
+        
+        // Make sure bottom notice mandate is visible
+        XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
+        
+        let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisAccountToggle.isSelected)
+        saveThisAccountToggle.tap()
+        
+        // Confirm
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+    
+    func test3DS2CardAlwaysAuthenticate() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        settings.currency = .eur
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        XCTAssertTrue(app.buttons["Card"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
+        
+        // Card number from https://docs.stripe.com/testing#regulatory-cards
+        try! fillCardData(app, cardNumber: "4000002760003184")
+        app.toolbars.buttons["Done"].waitForExistenceAndTap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.swipeUp() // scroll to see the checkout button
+        app.buttons["Checkout"].waitForExistenceAndTap()
+        
+        // Finish the 3DS2 payment
+        let challengeCodeTextField = app.textFields["STDSTextField"]
+        XCTAssertTrue(challengeCodeTextField.waitForExistenceAndTap(timeout: 10))
+        challengeCodeTextField.typeText("424242" + XCUIKeyboardKey.return.rawValue)
+        app.buttons["Submit"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
@@ -560,4 +824,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons[label1].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.buttons[label1].waitForExistence(timeout: 3.0))
     }
+}
+
+extension EmbeddedUITests {
+    var webviewAuthorizePaymentButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT") }
+    var webviewAuthorizeSetupButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP") }
 }

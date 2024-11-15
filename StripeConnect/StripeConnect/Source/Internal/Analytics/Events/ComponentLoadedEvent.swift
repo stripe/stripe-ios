@@ -8,7 +8,7 @@
 /// The component is successfully loaded within the web view.
 /// Triggered from `componentDidLoad` message handler from the web view.
 struct ComponentLoadedEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// The pageViewID from the web view
         let pageViewId: String?
 

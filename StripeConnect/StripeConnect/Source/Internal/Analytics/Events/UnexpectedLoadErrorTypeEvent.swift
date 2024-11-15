@@ -7,7 +7,7 @@
 
 /// The web view sends an onLoadError that can’t be deserialized by the SDK.
 struct UnexpectedLoadErrorTypeEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// The error `type` property from web
         let errorType: String
 

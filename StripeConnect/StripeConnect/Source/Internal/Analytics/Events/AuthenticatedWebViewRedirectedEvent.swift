@@ -7,7 +7,7 @@
 
 /// The authenticated web view successfully redirected back to the app
 struct AuthenticatedWebViewRedirectedEvent: ConnectAnalyticEvent {
-    struct Metadata: Encodable {
+    struct Metadata: Encodable, Equatable {
         /// ID for the authenticated web view session (sent in `openAuthenticatedWebView` message
         let authenticatedWebViewId: String
 

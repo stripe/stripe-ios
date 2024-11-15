@@ -254,9 +254,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func updateMandate(animated: Bool = true) {
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
-        let newMandateText = mandateProvider.mandate(for: selectedPaymentOption?.paymentMethodType,
-                                                     savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
-                                                     bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString)
+        let newMandateText = mandateProvider.mandate(
+            for: selectedPaymentOption?.paymentMethodType,
+            savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
+            bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString
+        )
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
