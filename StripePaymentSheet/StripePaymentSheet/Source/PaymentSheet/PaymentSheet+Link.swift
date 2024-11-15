@@ -154,9 +154,9 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
         completion?(result)
     }
 
-    private func findPaymentSheetViewController() -> PaymentSheetViewController? {
+    private func findPaymentSheetViewController() -> PaymentSheetViewControllerProtocol? {
         for vc in bottomSheetViewController.contentStack {
-            if let paymentSheetVC = vc as? PaymentSheetViewController {
+            if let paymentSheetVC = vc as? PaymentSheetViewControllerProtocol {
                 return paymentSheetVC
             }
         }

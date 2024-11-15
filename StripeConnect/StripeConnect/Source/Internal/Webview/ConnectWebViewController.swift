@@ -97,7 +97,7 @@ class ConnectWebViewController: UIViewController {
         present(alert, animated: true)
     }
 
-    func webViewDidFinishNavigation() {
+    func webViewDidFinishNavigation(to url: URL?) {
         // Override from subclass
     }
 
@@ -211,7 +211,7 @@ extension ConnectWebViewController: WKUIDelegate {
 @available(iOS 15, *)
 extension ConnectWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        webViewDidFinishNavigation()
+        webViewDidFinishNavigation(to: webView.url)
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {

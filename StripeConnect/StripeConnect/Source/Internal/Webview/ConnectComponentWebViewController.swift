@@ -147,9 +147,14 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     // MARK: - ConnectWebViewController
 
-    override func webViewDidFinishNavigation() {
-        super.webViewDidFinishNavigation()
+    override func webViewDidFinishNavigation(to url: URL?) {
+        super.webViewDidFinishNavigation(to: url)
 
+        guard let url,
+              url.absoluteStringRemovingParams == StripeConnectConstants.connectJSBaseURL.absoluteString else {
+            analyticsClient.log(event: UnexpectedNavigationEvent(metadata: .init(url: url)))
+            return
+        }
         analyticsClient.logComponentWebPageLoaded(loadEnd: .now)
     }
 

@@ -120,6 +120,7 @@
 		E6660DC22CDE7D66002A7631 /* URL+ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC12CDE7D56002A7631 /* URL+ExtensionTests.swift */; };
 		E6660DC42CDE7F47002A7631 /* ApplicationURLOpenerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC32CDE7F41002A7631 /* ApplicationURLOpenerTests.swift */; };
 		E6660DC72CDE8F28002A7631 /* ScriptMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC62CDE8F28002A7631 /* ScriptMessageHandlerTests.swift */; };
+		E6660DC92CE43BE6002A7631 /* UnexpectedNavigationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC82CE43BDF002A7631 /* UnexpectedNavigationEvent.swift */; };
 		E688AE002CADD8C400951D97 /* NotificationBannerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */; };
 		E688AE032CADE36C00951D97 /* OnNotificationsChangeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */; };
 		E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */; };
@@ -258,6 +259,7 @@
 		E6660DC12CDE7D56002A7631 /* URL+ExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+ExtensionTests.swift"; sourceTree = "<group>"; };
 		E6660DC32CDE7F41002A7631 /* ApplicationURLOpenerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationURLOpenerTests.swift; sourceTree = "<group>"; };
 		E6660DC62CDE8F28002A7631 /* ScriptMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandlerTests.swift; sourceTree = "<group>"; };
+		E6660DC82CE43BDF002A7631 /* UnexpectedNavigationEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnexpectedNavigationEvent.swift; sourceTree = "<group>"; };
 		E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewControllerTests.swift; sourceTree = "<group>"; };
 		E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandlerTests.swift; sourceTree = "<group>"; };
 		E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
@@ -642,6 +644,7 @@
 				E6660D962CDC4194002A7631 /* DeserializeMessageErrorEvent.swift */,
 				E6660D972CDC4194002A7631 /* PageLoadErrorEvent.swift */,
 				E6660D982CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift */,
+				E6660DC82CE43BDF002A7631 /* UnexpectedNavigationEvent.swift */,
 				E6660D992CDC4194002A7631 /* UnrecognizedSetterEvent.swift */,
 			);
 			path = Events;
@@ -821,6 +824,7 @@
 				4171B1592C9A5EEC00547F7D /* AccountOnboardingViewController.swift in Sources */,
 				41054E432C989AAD00383C09 /* Font+Extension.swift in Sources */,
 				E6EF91C72CBA3BED0082DD1B /* UIViewController+StripeConnect.swift in Sources */,
+				E6660DC92CE43BE6002A7631 /* UnexpectedNavigationEvent.swift in Sources */,
 				41542A692C88B6F2004E728E /* JSONEncoder+extension.swift in Sources */,
 				416E9E842C76AE0A00A0B917 /* ComponentType.swift in Sources */,
 				410D0FCE2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift in Sources */,

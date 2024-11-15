@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 protocol MandateTextProvider {
@@ -41,6 +42,10 @@ class VerticalListMandateProvider: MandateTextProvider {
                 return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod(alignment: .natural, theme: configuration.appearance.asElementsTheme)
             case .stripe(.SEPADebit):
                 return .init(string: String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+            case .stripe(.link): // Instant Debits
+                return bottomNoticeAttributedString
+            case .stripe(.card) where elementsSession.isLinkCardBrand: // Panther
+                return bottomNoticeAttributedString
             default:
                 return nil
             }
