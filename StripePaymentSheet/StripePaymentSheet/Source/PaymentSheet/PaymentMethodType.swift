@@ -164,9 +164,6 @@ extension PaymentSheet {
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
-            
-            let enableInstantDebitsWithDeferredIntents =
-                UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_DEFERRED_INTENTS")
 
             // We should manually add Instant Debits as a payment method when:
             // - Link is an available payment method.
@@ -177,7 +174,6 @@ extension PaymentSheet {
             var eligibleForInstantDebits: Bool {
                 elementsSession.orderedPaymentMethodTypes.contains(.link) &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
-                (!intent.isDeferredIntent || enableInstantDebitsWithDeferredIntents) &&
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
                 configuration.isEligibleForBankTab
             }
@@ -191,7 +187,6 @@ extension PaymentSheet {
             var eligibleForLinkCardBrand: Bool {
                 elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
                 !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
-                (!intent.isDeferredIntent || enableInstantDebitsWithDeferredIntents) &&
                 elementsSession.isLinkCardBrand &&
                 configuration.isEligibleForBankTab
             }
