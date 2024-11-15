@@ -41,7 +41,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     let appearance: PaymentSheet.Appearance
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
     
-    private var incentiveVisibility = [PaymentSheet.PaymentMethodType: Bool]()
+//    private var incentiveVisibility = [PaymentSheet.PaymentMethodType: Bool]()
     private var incentive: PaymentMethodIncentive?
 
     init(
@@ -89,8 +89,13 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setPromoBadgeVisibility(_ visible: Bool, for paymentMethodType: PaymentSheet.PaymentMethodType) {
-        incentiveVisibility[paymentMethodType] = visible
+//    func setPromoBadgeVisibility(_ visible: Bool, for paymentMethodType: PaymentSheet.PaymentMethodType) {
+//        incentiveVisibility[paymentMethodType] = visible
+//        reloadData()
+//    }
+    
+    func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        self.incentive = incentive
         reloadData()
     }
 
@@ -128,9 +133,10 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         let paymentMethodType = paymentMethodTypes[indexPath.item]
         cell.paymentMethodType = paymentMethodType
         
-        let applicableIncentive = incentive?.takeIfAppliesTo(paymentMethodType)
-        let showPromoBadge = incentiveVisibility[paymentMethodType] ?? true
-        cell.promoBadge = showPromoBadge ? applicableIncentive?.displayText : nil
+//        let applicableIncentive = incentive?.takeIfAppliesTo(paymentMethodType)
+//        let showPromoBadge = incentiveVisibility[paymentMethodType] ?? true
+//        cell.promoBadge = showPromoBadge ? applicableIncentive?.displayText : nil
+        cell.promoBadge = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText
         
         cell.appearance = appearance
         return cell

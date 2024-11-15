@@ -59,6 +59,10 @@ class AddPaymentMethodViewController: UIViewController {
     private var paymentMethodFormElement: PaymentMethodElement {
         paymentMethodFormViewController.form
     }
+    
+    private var incentive: PaymentMethodIncentive? {
+        elementsSession.linkSettings?.linkConsumerIncentive.flatMap { PaymentMethodIncentive(from: $0) }
+    }
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
@@ -72,7 +76,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
-            incentive: elementsSession.linkSettings?.linkConsumerIncentive.flatMap { PaymentMethodIncentive(from: $0) },
+            incentive: incentive,
             delegate: self
         )
         return view
@@ -197,8 +201,7 @@ extension AddPaymentMethodViewController: PaymentMethodFormViewControllerDelegat
         
         if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
             let showPromoBadge = instantDebitsFormElement.canShowPromoBadge
-            let paymentMethodType = viewController.paymentMethodType
-            paymentMethodTypesView.setPromoBadgeVisibility(showPromoBadge, for: paymentMethodType)
+            paymentMethodTypesView.setIncentive(showPromoBadge ? incentive : nil)
         }
     }
 

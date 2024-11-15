@@ -104,6 +104,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
+    
+    private var incentive: PaymentMethodIncentive? {
+        elementsSession.linkSettings?.linkConsumerIncentive.flatMap { PaymentMethodIncentive(from: $0) }
+    }
 
     // MARK: - UI properties
 
@@ -834,8 +838,9 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
         
         if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
             let showPromoBadge = instantDebitsFormElement.canShowPromoBadge
-            let paymentMethodType = viewController.paymentMethodType
-            paymentMethodListViewController?.setPromoBadgeVisibility(showPromoBadge, for: paymentMethodType)
+//            let paymentMethodType = viewController.paymentMethodType
+//            paymentMethodListViewController?.setPromoBadgeVisibility(showPromoBadge, for: paymentMethodType)
+            paymentMethodListViewController?.setIncentive(showPromoBadge ? incentive : nil)
         }
     }
 

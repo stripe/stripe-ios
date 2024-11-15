@@ -25,8 +25,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
     let appearance: PaymentSheet.Appearance
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
     
-    private let incentive: PaymentMethodIncentive?
-    private var incentiveVisibility = [PaymentSheet.PaymentMethodType: Bool]()
+    private var incentive: PaymentMethodIncentive?
+//    private var incentiveVisibility = [PaymentSheet.PaymentMethodType: Bool]()
     
     private var refreshHandler = {}
 
@@ -149,10 +149,10 @@ class VerticalPaymentMethodListViewController: UIViewController {
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
             
-            let canShowIncentive = incentiveVisibility[paymentMethodType] ?? true
-            let applicableIncentive = canShowIncentive ? incentive?.takeIfAppliesTo(paymentMethodType) : nil
+//            let canShowIncentive = incentiveVisibility[paymentMethodType] ?? true
+//            let applicableIncentive = incentive?.takeIfAppliesTo(paymentMethodType)
             
-            let rightAccessoryView = applicableIncentive.flatMap { incentive in
+            let rightAccessoryView = incentive?.takeIfAppliesTo(paymentMethodType).flatMap { incentive in
                 IncentiveTagView(
                     font: appearance.scaledFont(
                         for: appearance.font.base.medium,
@@ -223,8 +223,13 @@ class VerticalPaymentMethodListViewController: UIViewController {
         delegate?.didTapSavedPaymentMethodAccessoryButton()
     }
     
-    func setPromoBadgeVisibility(_ visible: Bool, for paymentMethodType: PaymentSheet.PaymentMethodType) {
-        incentiveVisibility[paymentMethodType] = visible
+//    func setPromoBadgeVisibility(_ visible: Bool, for paymentMethodType: PaymentSheet.PaymentMethodType) {
+//        incentiveVisibility[paymentMethodType] = visible
+//        refreshHandler()
+//    }
+    
+    func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        self.incentive = incentive
         refreshHandler()
     }
 
