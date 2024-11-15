@@ -32,7 +32,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             STPPaymentMethod._testUSBankAccount(),
             STPPaymentMethod._testSEPA(),
         ]
-        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true)
+        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, defaultSPMNavigation: false)
         let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 0, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic), confirmHandler: { _, _, _ in }))
         let sut = SavedPaymentOptionsViewController(savedPaymentMethods: paymentMethods,
                                                     configuration: config,

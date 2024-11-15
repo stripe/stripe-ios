@@ -2395,6 +2395,41 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 //    }
 }
 
+class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
+    func testDefaultSPMHorizontalNavigation() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.defaultSPMNavigation = .on
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.customerMode = .returning
+        settings.layout = .horizontal
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        app.buttons["Edit"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").count == 2)
+    }
+    func testDefaultSPMVerticalNavigation() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.defaultSPMNavigation = .on
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.customerMode = .returning
+        settings.layout = .vertical
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["View more"].waitForExistenceAndTap()
+        app.buttons["Edit"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").count == 2)
+    }
+}
+
 // MARK: Helpers
 extension PaymentSheetUITestCase {
     func _testUSBankAccount(mode: PaymentSheetTestPlaygroundSettings.Mode, integrationType: PaymentSheetTestPlaygroundSettings.IntegrationType, vertical: Bool = false) {

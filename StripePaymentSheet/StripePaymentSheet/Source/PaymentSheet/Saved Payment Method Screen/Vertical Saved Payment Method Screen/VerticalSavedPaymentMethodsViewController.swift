@@ -48,8 +48,14 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
-                paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
-                                                                allowsUpdating: $0.paymentMethod.isCoBrandedCard && isCBCEligible) }
+                if configuration.defaultSPMNavigation {
+                    paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: false,
+                                                                    allowsUpdating: $0.paymentMethod.type == .card) }
+                }
+                else {
+                    paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
+                                                                    allowsUpdating: $0.paymentMethod.isCoBrandedCard && isCBCEligible) }
+                }
             } else if oldValue {
                 // If we are exiting edit mode restore previous selected states
                 paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
@@ -165,10 +171,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
-        // Put in remove only mode and don't show the option to update PMs if:
-        // 1. We only have 1 payment method
-        // 2. The customer can't update the card brand 
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
+        if configuration.defaultSPMNavigation {
+            self.isRemoveOnlyMode = false
+        }
+        else {
+            // Put in remove only mode and don't show the option to update PMs if:
+            // 1. We only have 1 payment method
+            // 2. The customer can't update the card brand
+            self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
+        }
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
