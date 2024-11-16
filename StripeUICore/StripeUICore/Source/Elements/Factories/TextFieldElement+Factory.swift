@@ -22,6 +22,7 @@ import UIKit
         public let defaultValue: String?
         public let label: String
         public let isOptional: Bool
+        public let isEditable: Bool
         private var textContentType: UITextContentType {
             switch type {
             case .given:
@@ -34,7 +35,7 @@ import UIKit
         }
 
         /// - Parameter label: If `nil`, defaults to a string on the `type` e.g. "Name"
-        public init(type: NameType = .full, defaultValue: String?, label: String? = nil, isOptional: Bool = false) {
+        public init(type: NameType = .full, defaultValue: String?, label: String? = nil, isOptional: Bool = false, isEditable: Bool = true) {
             self.type = type
             self.defaultValue = defaultValue
             if let label = label {
@@ -43,6 +44,7 @@ import UIKit
                 self.label = Self.label(for: type)
             }
             self.isOptional = isOptional
+            self.isEditable = isEditable
         }
 
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
@@ -73,14 +75,16 @@ import UIKit
         public let label = String.Localized.email
         public let defaultValue: String?
         public let isOptional: Bool
+        public let isEditable: Bool
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
         let invalidError = Error.invalid(
             localizedDescription: String.Localized.invalid_email
         )
 
-        init(defaultValue: String? = nil, isOptional: Bool = false) {
+        public init(defaultValue: String? = nil, isOptional: Bool = false, isEditable: Bool = true) {
             self.defaultValue = defaultValue
             self.isOptional = isOptional
+            self.isEditable = isEditable
         }
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
@@ -239,4 +243,5 @@ import UIKit
             }
         }
     }
+
 }

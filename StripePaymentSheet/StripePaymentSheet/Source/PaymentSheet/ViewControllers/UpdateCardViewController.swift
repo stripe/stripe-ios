@@ -28,8 +28,8 @@ final class UpdateCardViewController: UIViewController {
     private let removeSavedPaymentMethodMessage: String?
     private let isTestMode: Bool
     private let hostedSurface: HostedSurface
-    private let canRemoveCard: Bool
     private let cardBrandFilter: CardBrandFilter
+    private let viewModel: UpdatePaymentMethodViewModel
 
     private var latestError: Error? {
         didSet {
@@ -51,27 +51,29 @@ final class UpdateCardViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, cardSection.view, updateButton, deleteButton, errorLabel])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodDetails, updateButton, deleteButton, errorLabel])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.setCustomSpacing(PaymentSheetUI.defaultPadding - 4, after: headerLabel) // custom spacing from figma
-        stackView.setCustomSpacing(32, after: cardSection.view) // custom spacing from figma
-        stackView.setCustomSpacing(10, after: updateButton) // custom spacing from figma
+        stackView.setCustomSpacing(32, after: paymentMethodDetails) // custom spacing from figma
+        stackView.setCustomSpacing(16, after: updateButton) // custom spacing from figma
         return stackView
     }()
 
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
-        label.text = .Localized.update_card_brand
+        label.text = viewModel.header
         return label
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: {  [weak self] in
+        let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: {  [weak self] in
             Task {
                 await self?.updateCard()
             }
         })
+        button.isHidden = !viewModel.canEdit
+        return button
     }()
 
     private lazy var deleteButton: UIButton = {
@@ -82,8 +84,40 @@ final class UpdateCardViewController: UIViewController {
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
         button.addTarget(self, action: #selector(removeCard), for: .touchUpInside)
-        button.isHidden = !canRemoveCard
+        button.isHidden = !viewModel.canRemove
         return button
+    }()
+
+    private lazy var paymentMethodDetails: UIStackView = {
+        lazy var details: UIView = {
+            switch viewModel.paymentMethodType {
+            case .card:
+                return cardSection()
+            case .USBankAccount:
+                return usBankAccountSection()
+            case .SEPADebit:
+                return sepaDebitSection()
+            default:
+                fatalError("Updating payment method has not been implemented for \(viewModel.paymentMethodType)")
+            }
+        }()
+        let paymentMethodDetails = UIStackView(arrangedSubviews: [details, detailsCannotBeChangedLabel])
+        paymentMethodDetails.axis = .vertical
+        paymentMethodDetails.setCustomSpacing(8, after: details) // custom spacing from figma
+        return paymentMethodDetails
+    }()
+
+    private lazy var detailsCannotBeChangedLabel: UITextView = {
+        let label = ElementsUI.makeSmallFootnote(theme: appearance.asElementsTheme)
+        label.text = viewModel.detailsCannotBeChanged
+        if viewModel.canEdit {
+            label.isHidden = true
+        }
+        else {
+            // TODO: hide when card expiry error shown
+            label.isHidden = false
+        }
+        return label
     }()
 
     private lazy var errorLabel: UILabel = {
@@ -92,45 +126,33 @@ final class UpdateCardViewController: UIViewController {
         return label
     }()
 
-    // MARK: Elements
-    private lazy var panElement: TextFieldElement = {
-        return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown).makeElement(theme: appearance.asElementsTheme)
-    }()
-
-    private lazy var cardBrandDropDown: DropdownFieldElement = {
-        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
-        let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
-                                                                           theme: appearance.asElementsTheme,
-                                                                           includePlaceholder: false) { [weak self] in
-                                                                                guard let self = self else { return }
-                                                                                let selectedCardBrand = self.cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
-                                                                                let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand), "cbc_event_source": "edit"]
-                                                                                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
-                                                                                                                                                                             params: params)
-                                                                            } didTapClose: { [weak self] in
-                                                                                guard let self = self else { return }
-                                                                                let selectedCardBrand = self.cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
-                                                                                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .closeCardBrandDropDown),
-                                                                                                                                     params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand)])
-                                                                            }
-
-        // pre-select current card brand
-        if let currentCardBrand = paymentMethod.card?.preferredDisplayBrand,
-           let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
-            cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+    private lazy var cardBrandDropDown: DropdownFieldElement? = {
+        if paymentMethod.type == .card {
+            let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
+            let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
+                                                                               theme: appearance.asElementsTheme,
+                                                                               includePlaceholder: false) { [weak self] in
+                guard let self = self else { return }
+                let selectedCardBrand = self.cardBrandDropDown?.selectedItem.rawData.toCardBrand ?? .unknown
+                let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand), "cbc_event_source": "edit"]
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
+                                                                     params: params)
+            } didTapClose: { [weak self] in
+                guard let self = self else { return }
+                let selectedCardBrand = self.cardBrandDropDown?.selectedItem.rawData.toCardBrand ?? .unknown
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .closeCardBrandDropDown),
+                                                                     params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand)])
+            }
+            
+            // pre-select current card brand
+            if let currentCardBrand = paymentMethod.card?.preferredDisplayBrand,
+               let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
+                cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+            }
+            
+            return cardBrandDropDown
         }
-
-        return cardBrandDropDown
-    }()
-
-    private lazy var cardSection: SectionElement = {
-        let allSubElements: [Element?] = [
-            panElement, SectionElement.HiddenElement(cardBrandDropDown),
-        ]
-
-        let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: appearance.asElementsTheme)
-        section.delegate = self
-        return section
+        return nil
     }()
 
     // MARK: Overrides
@@ -138,17 +160,16 @@ final class UpdateCardViewController: UIViewController {
          removeSavedPaymentMethodMessage: String?,
          appearance: PaymentSheet.Appearance,
          hostedSurface: HostedSurface,
-         canRemoveCard: Bool,
          isTestMode: Bool,
-         cardBrandFilter: CardBrandFilter = .default) {
+         cardBrandFilter: CardBrandFilter = .default,
+         viewModel: UpdatePaymentMethodViewModel) {
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
         self.hostedSurface = hostedSurface
         self.isTestMode = isTestMode
-        self.canRemoveCard = canRemoveCard
         self.cardBrandFilter = cardBrandFilter
-
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -197,7 +218,7 @@ final class UpdateCardViewController: UIViewController {
     }
 
     private func updateCard() async {
-        guard let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
+        guard let selectedBrand = cardBrandDropDown?.selectedItem.rawData.toCardBrand, let delegate = delegate else { return }
 
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
@@ -265,9 +286,60 @@ extension UpdateCardViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
         latestError = nil // clear error on new input
-        let selectedBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand
+        let selectedBrand = cardBrandDropDown?.selectedItem.rawData.toCardBrand
         let currentCardBrand = paymentMethod.card?.preferredDisplayBrand ?? .unknown
         let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
         updateButton.update(state: shouldBeEnabled ? .enabled : .disabled)
+    }
+}
+
+// MARK: Helpers
+extension UpdateCardViewController {
+    func cardSection() -> UIView {
+        lazy var panElement: TextFieldElement = {
+            return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown).makeElement(theme: appearance.asElementsTheme)
+        }()
+        let allSubElements: [Element?] = [
+            panElement, SectionElement.HiddenElement(cardBrandDropDown),
+        ]
+        let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: appearance.asElementsTheme)
+        section.delegate = self
+        return section.view
+    }
+    
+    func usBankAccountSection() -> UIStackView {
+        lazy var nameElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
+        }()
+        lazy var emailElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
+        }()
+        lazy var bankAccountElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.USBankNumberConfiguration(bankName: paymentMethod.usBankAccount?.bankName ?? "Bank name", lastFour: paymentMethod.usBankAccount?.last4 ?? "").makeElement(theme: appearance.asElementsTheme)])
+        }()
+        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, bankAccountElement.view])
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
+        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
+        return stackView
+    }
+
+    func sepaDebitSection() -> UIStackView {
+        lazy var nameElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
+        }()
+        lazy var emailElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
+        }()
+        lazy var ibanElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.LastFourIBANConfiguration(lastFour: paymentMethod.sepaDebit?.last4 ?? "0000").makeElement(theme: appearance.asElementsTheme)])
+        }()
+        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, ibanElement.view])
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
+        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
+        return stackView
     }
 }

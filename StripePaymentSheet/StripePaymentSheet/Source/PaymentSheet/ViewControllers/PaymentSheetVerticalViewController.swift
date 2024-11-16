@@ -577,9 +577,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                 appearance: configuration.appearance,
                                                                 hostedSurface: .paymentSheet,
-                                                                canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                 isTestMode: configuration.apiClient.isTestmode,
-                                                                cardBrandFilter: configuration.cardBrandFilter)
+                                                                cardBrandFilter: configuration.cardBrandFilter,
+                                                                viewModel: UpdatePaymentMethodViewModel(paymentMethodType: paymentMethod.type, canEdit: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible, canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()))
             updateViewController.delegate = self
             bottomSheetController?.pushContentViewController(updateViewController)
             return

@@ -46,6 +46,9 @@
 /* Title for collected bank account information */
 "Bank account" = "Bank account";
 
+/* Text on a screen that indicates bank account details cannot be changed. */
+"Bank account details cannot be changed." = "Bank account details cannot be changed.";
+
 /* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
 "Buy now or pay later with <img/>" = "Buy now or pay later with <img/>";
 
@@ -105,6 +108,9 @@
 
 /* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Cancel and pay another way";
+
+/* Text on a screen that indicates card details cannot be changed. */
+"Card details cannot be changed." = "Card details cannot be changed.";
 
 /* Title for a button that allows the user to use a different email in the signup flow. */
 "Change email" = "Change email";
@@ -173,11 +179,20 @@ re-entering the security code (CVV/CVC). */
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
 
+/* Title shown above a view containing the customer's card that they can delete or update */
+"Manage card" = "Manage card";
+
 /* Title shown above a view containing the customer's payment method that they can delete or update */
 "Manage payment method" = "Manage payment method";
 
 /* Title shown above a view containing the customer's payment methods that they can delete or update */
 "Manage payment methods" = "Manage payment methods";
+
+/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
+"Manage SEPA debit" = "Manage SEPA debit";
+
+/* Title shown above a view containing the customer's bank account that they can delete or update */
+"Manage US bank account" = "Manage US bank account";
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Manage your payment methods" = "Manage your payment methods";
@@ -307,6 +322,9 @@ to be saved and used in future checkout sessions. */
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
+
+/* Text on a screen that indicates SEPA debit details cannot be changed. */
+"SEPA debit details cannot be changed." = "SEPA debit details cannot be changed.";
 
 /* Label for a button or menu item that sets a payment method as default when tapped. */
 "Set as default" = "Set as default";

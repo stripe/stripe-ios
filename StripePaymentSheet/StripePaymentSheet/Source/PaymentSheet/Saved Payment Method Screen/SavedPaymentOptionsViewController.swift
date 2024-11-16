@@ -571,9 +571,9 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
-                                              canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                               isTestMode: configuration.isTestMode,
-                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
+                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
+                                              viewModel: UpdatePaymentMethodViewModel(paymentMethodType: paymentMethod.type, canEdit: paymentMethod.isCoBrandedCard && cbcEligible, canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod)))
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
