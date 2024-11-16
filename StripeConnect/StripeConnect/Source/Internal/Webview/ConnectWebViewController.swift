@@ -221,7 +221,6 @@ extension ConnectWebViewController: WKNavigationDelegate {
          https://stackoverflow.com/a/59452941/4133371
          */
         webView.setNeedsLayout()
-        webView.layoutSubviews()
         webViewDidFinishNavigation(to: webView.url)
     }
 
