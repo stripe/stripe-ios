@@ -10,6 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSString * const Stripe3DS2ProtocolVersion = @"2.1.0";
+NSString * const Stripe3DS2ProtocolVersion = @"2.2.0";
 
 NS_ASSUME_NONNULL_END
