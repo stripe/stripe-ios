@@ -131,7 +131,7 @@ private extension ConnectWebViewController {
     func openInAppSafari(url: URL) {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .done
-        safariVC.modalPresentationStyle = .popover
+        safariVC.modalPresentationStyle = .pageSheet
         present(safariVC, animated: true)
     }
 
