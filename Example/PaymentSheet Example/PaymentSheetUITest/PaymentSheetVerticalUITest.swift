@@ -256,7 +256,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
 
         // Should present the update card view controller
-        XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 2.0))
 
         // Update card brand to Visa
         XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
@@ -269,14 +269,14 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
 
         // Update the card
-        app.buttons["Update"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Visa
         XCTAssertTrue(app.buttons["Visa ending in 1 0 0 1"].waitForExistence(timeout: 1.0))
 
         // Reselect edit icon and delete the card from the update view controller
         app.buttons["Edit"].firstMatch.waitForExistenceAndTap()
-        app.buttons["Remove card"].waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Verify we are kicked out to the main screen after removing all saved payment methods

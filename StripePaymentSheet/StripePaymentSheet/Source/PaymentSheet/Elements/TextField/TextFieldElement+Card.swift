@@ -224,17 +224,34 @@ extension TextFieldElement {
     }
 }
 
+// MARK: - Censored CVC Configuration
+extension TextFieldElement {
+    struct CensoredCVCConfiguration: TextFieldElementConfiguration {
+        init(brand: STPCardBrand) {
+            let maxLength = Int(STPCardValidator.maxCVCLength(for: brand))
+            self.defaultValue = String(repeating: "•", count: maxLength)
+        }
+
+        let defaultValue: String?
+        var label = String.Localized.cvc
+        let isEditable: Bool = false
+        let disallowedCharacters: CharacterSet = CharacterSet(charactersIn: "•").inverted
+    }
+}
+
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil) {
+        init(defaultValue: String? = nil, isEditable: Bool = true) {
             self.defaultValue = defaultValue
+            self.isEditable = isEditable
         }
 
         let label: String = String.Localized.mm_yy
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let defaultValue: String?
+        let isEditable: Bool
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -245,6 +262,7 @@ extension TextFieldElement {
         enum Error: TextFieldValidationError {
             case empty
             case incomplete
+            case expired
             case invalidMonth
             case invalid
 
@@ -252,7 +270,7 @@ extension TextFieldElement {
                 switch self {
                 case .empty:                    return false
                 case .incomplete:               return !isUserEditing
-                case .invalidMonth, .invalid:   return true
+                case .expired, .invalidMonth, .invalid:   return true
                 }
             }
 
@@ -262,6 +280,8 @@ extension TextFieldElement {
                     return ""
                 case .incomplete:
                     return String.Localized.your_cards_expiration_date_is_incomplete
+                case .expired:
+                    return String.Localized.your_card_has_expired
                 case .invalidMonth:
                     return String.Localized.your_cards_expiration_month_is_invalid
                 case .invalid:
@@ -286,10 +306,14 @@ extension TextFieldElement {
                 guard textHasValidMonth else {
                     return .invalid(Error.invalidMonth)
                 }
-                // Is the date expired?
-                guard let expiryDate = CardExpiryDate(text), !expiryDate.expired() else {
-                    return .invalid(Error.invalid)
+                guard let expiryDate = CardExpiryDate(text) else {
+                   return .invalid(Error.invalid)
                 }
+                // Is the date expired?
+                guard !expiryDate.expired() else {
+                   return .invalid(Error.expired)
+                }
+
                 return .valid
             default:
                 return .invalid(Error.invalid)
@@ -314,7 +338,7 @@ extension TextFieldElement {
 // MARK: Last four configuration
 extension TextFieldElement {
     struct LastFourConfiguration: TextFieldElementConfiguration {
-        let label = String.Localized.card_brand
+        let label = String.Localized.card_number
         let lastFour: String
         let isEditable = false
         let cardBrandDropDown: DropdownFieldElement?
