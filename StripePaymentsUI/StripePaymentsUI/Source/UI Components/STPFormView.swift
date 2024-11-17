@@ -64,6 +64,15 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     static let borderWidth: CGFloat = 1
     static let cornerRadius: CGFloat = 6
     static let interSectionSpacing: CGFloat = 7
+    public override var intrinsicContentSize: CGSize {
+        var height: CGFloat = 0
+        var width: CGFloat = 0
+        for views in sectionViews {
+            height += views.intrinsicContentSize.height
+            width = max(width, views.intrinsicContentSize.width)
+        }
+        return CGSize(width: width, height: height)
+    }
 
     @_spi(STP) public weak var formViewInternalDelegate: STPFormViewInternalDelegate?
 
@@ -519,6 +528,12 @@ extension STPFormView {
         static let titleVerticalMargin: CGFloat = 4
 
         let footerLabel = UILabel()
+
+        public override var intrinsicContentSize: CGSize {
+            let width = max(stackView.intrinsicContentSize.width, footerLabel.intrinsicContentSize.width)
+            let height = stackView.intrinsicContentSize.height + SectionView.titleVerticalMargin + footerLabel.intrinsicContentSize.height
+            return CGSize(width: width, height: height)
+        }
 
         var footerTextColor: UIColor {
             get {
