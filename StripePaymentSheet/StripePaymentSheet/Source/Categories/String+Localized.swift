@@ -136,10 +136,10 @@ extension String.Localized {
         )
     }
 
-    static var update_card_brand: String {
+    static var update_payment_method: String {
         STPLocalizedString(
-            "Update card brand",
-            "Title for a screen for updating a card brand."
+            "Update payment method",
+            "Accessibility label for a button that leads to a screen for updating a payment method."
         )
     }
 

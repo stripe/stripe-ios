@@ -50,7 +50,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             if isEditingPaymentMethods {
                 paymentMethodRows.forEach {
                     let allowsRemoval = canRemovePaymentMethods && !configuration.alternateUpdatePaymentMethodNavigation
-                    let allowsUpdating = ($0.paymentMethod.isCoBrandedCard && isCBCEligible) || (configuration.alternateUpdatePaymentMethodNavigation && $0.paymentMethod.type == .card)
+                    let allowsUpdating = ($0.paymentMethod.isCoBrandedCard && isCBCEligible) || (configuration.alternateUpdatePaymentMethodNavigation && ($0.paymentMethod.type == .card || $0.paymentMethod.type == .USBankAccount || $0.paymentMethod.type == .SEPADebit))
                     $0.state = .editing(allowsRemoval: allowsRemoval,
                                         allowsUpdating: allowsUpdating)
                 }
@@ -89,7 +89,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     var canEdit: Bool {
         // We can edit if there are removable or editable payment methods and we are not in remove only mode
         // Or, under the new navigation flow, if any of the payment methods are cards
-        return ((canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode) || (configuration.alternateUpdatePaymentMethodNavigation && !paymentMethods.filter { $0.type == .card }.isEmpty)
+        return ((canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode) || (configuration.alternateUpdatePaymentMethodNavigation && !paymentMethods.filter { $0.type == .card || $0.type == .USBankAccount || $0.type == .SEPADebit }.isEmpty)
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {

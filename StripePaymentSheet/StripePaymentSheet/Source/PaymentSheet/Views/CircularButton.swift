@@ -103,7 +103,7 @@ class CircularButton: UIControl {
             accessibilityIdentifier = "CircularButton.Remove"
         case .edit:
             imageView.image = Image.icon_edit.makeImage(template: true)
-            accessibilityLabel = String.Localized.update_card_brand
+            accessibilityLabel = String.Localized.update_payment_method
             accessibilityIdentifier = "CircularButton.Edit"
         }
     }
