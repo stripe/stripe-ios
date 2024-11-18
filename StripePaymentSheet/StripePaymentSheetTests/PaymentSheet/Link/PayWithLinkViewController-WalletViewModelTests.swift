@@ -136,7 +136,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
             context: .init(
                 intent: .paymentIntent(paymentIntent),
                 elementsSession: elementsSession,
-                configuration: .init(),
+                configuration: PaymentSheet.Configuration(),
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 callToAction: nil,
