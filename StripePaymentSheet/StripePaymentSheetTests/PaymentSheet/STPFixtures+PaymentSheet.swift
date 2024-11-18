@@ -183,6 +183,8 @@ extension STPPaymentMethod {
                 "last4": "4242",
                 "brand": brand,
                 "networks": ["available": networks],
+                "exp_month": "\(Calendar.current.component(.month, from: Date()))",
+                "exp_year": "\(Calendar.current.component(.year, from: Date()) + 1)",
             ],
         ]
         if let displayBrand {

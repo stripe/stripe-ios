@@ -188,12 +188,14 @@ extension TextFieldElement {
 // MARK: - CVC Configuration
 extension TextFieldElement {
     struct CVCConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand)) {
+        init(defaultValue: String? = nil, cardBrandProvider: @escaping () -> (STPCardBrand), isEditable: Bool = true) {
             self.defaultValue = defaultValue
             self.cardBrandProvider = cardBrandProvider
+            self.isEditable = isEditable
         }
 
         let defaultValue: String?
+        let isEditable: Bool
         let cardBrandProvider: () -> (STPCardBrand)
         var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
@@ -227,14 +229,16 @@ extension TextFieldElement {
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil) {
+        init(defaultValue: String? = nil, isEditable: Bool = true) {
             self.defaultValue = defaultValue
+            self.isEditable = isEditable
         }
 
         let label: String = String.Localized.mm_yy
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let defaultValue: String?
+        let isEditable: Bool
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -335,6 +339,29 @@ extension TextFieldElement {
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
             return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown).accessoryView(for: lastFourFormatted, theme: theme)
+        }
+    }
+
+    struct LastFourConfigurationNoCBCDropdown: TextFieldElementConfiguration {
+        let label = String.Localized.card_number
+        let lastFour: String
+        let isEditable = false
+
+        private var lastFourFormatted: String {
+            "•••• •••• •••• \(lastFour)"
+        }
+
+        init(lastFour: String) {
+            self.lastFour = lastFour
+        }
+
+        func makeDisplayText(for text: String) -> NSAttributedString {
+            return NSAttributedString(string: lastFourFormatted)
+        }
+
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
+            // Re-use same logic from PANConfiguration for accessory view
+            return TextFieldElement.PANConfiguration(cardBrandDropDown: nil).accessoryView(for: lastFourFormatted, theme: theme)
         }
     }
 }
