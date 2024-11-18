@@ -87,10 +87,8 @@ extension PaymentSheet.LinkConfirmOption {
             return intentConfirmParams.paymentMethodParams.billingDetails
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.billingDetails
-        case .withPaymentDetails:
-//            TODO(link): Implement .billingDetails
-//            return paymentDetails.billingDetails
-            return nil
+        case .withPaymentDetails(_, let paymentDetails):
+            return STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
         case .withPaymentMethodParams(_, let paymentMethodParams):
             return paymentMethodParams.billingDetails
         }

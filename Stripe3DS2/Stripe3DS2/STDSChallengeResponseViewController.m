@@ -602,7 +602,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     if ([request.URL.absoluteString isEqualToString:kHTMLStringLoadingURL]) {
         return decisionHandler(WKNavigationActionPolicyAllow);
     } else {
-        if (navigationAction.navigationType == WKNavigationTypeFormSubmitted || navigationAction.navigationType == WKNavigationTypeOther) {
+        if (navigationAction.navigationType == WKNavigationTypeFormSubmitted || navigationAction.navigationType == WKNavigationTypeLinkActivated || navigationAction.navigationType == WKNavigationTypeOther) {
             // When the Cardholder’s response is returned as a parameter string, the form data is passed to the web view instance by triggering a location change to a specified (HTTPS://EMV3DS/challenge) URL with the challenge responses appended to the location URL as query parameters (for example, HTTPS://EMV3DS/challenge?city=Pittsburgh). The web view instance, because it monitors URL changes, receives the Cardholder’s responses as query parameters.
             [self.delegate challengeResponseViewController:self didSubmitHTMLForm:request.URL.query];
         }

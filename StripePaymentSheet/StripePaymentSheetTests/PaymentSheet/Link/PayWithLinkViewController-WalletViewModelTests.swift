@@ -139,7 +139,8 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 configuration: .init(),
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
-                callToAction: nil
+                callToAction: nil,
+                analyticsHelper: ._testValue()
             ),
             paymentMethods: LinkStubs.paymentMethods()
         )
