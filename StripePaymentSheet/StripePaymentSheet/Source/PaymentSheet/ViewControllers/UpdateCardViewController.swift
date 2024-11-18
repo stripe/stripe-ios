@@ -108,11 +108,11 @@ final class UpdateCardViewController: UIViewController {
         lazy var details: UIView = {
             switch viewModel.paymentMethodType {
             case .card:
-                return cardSection()
+                return cardSection.view
             case .USBankAccount:
-                return usBankAccountSection()
+                return usBankAccountSection
             case .SEPADebit:
-                return sepaDebitSection()
+                return sepaDebitSection
             default:
                 fatalError("Updating payment method has not been implemented for \(viewModel.paymentMethodType)")
             }
@@ -169,6 +169,68 @@ final class UpdateCardViewController: UIViewController {
             return cardBrandDropDown
         }
         return nil
+    }()
+
+    private lazy var cardSection: SectionElement = {
+        lazy var panElement: TextFieldElement = {
+            return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown).makeElement(theme: appearance.asElementsTheme)
+        }()
+        lazy var expiryDateElement: TextFieldElement = {
+            let expiryDate = CardExpiryDate(month: paymentMethod.card?.expMonth ?? 0, year: paymentMethod.card?.expYear ?? 0)
+            let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: appearance.asElementsTheme)
+            return expiryDateElement
+
+        }()
+        lazy var cvcElement: TextFieldElement = {
+            let cvcConfiguration = TextFieldElement.CensoredCVCConfiguration(brand: self.paymentMethod.card?.preferredDisplayBrand ?? .unknown)
+            let cvcElement = cvcConfiguration.makeElement(theme: appearance.asElementsTheme)
+            return cvcElement
+
+        }()
+        let allSubElements: [Element?] = [
+            panElement,
+            SectionElement.HiddenElement(cardBrandDropDown),
+            SectionElement.MultiElementRow([expiryDateElement, cvcElement])
+        ]
+        let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: appearance.asElementsTheme)
+        section.delegate = self
+        return section
+    }()
+
+    private lazy var usBankAccountSection: UIStackView = {
+        lazy var nameElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
+        }()
+        lazy var emailElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
+        }()
+        lazy var bankAccountElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.USBankNumberConfiguration(bankName: paymentMethod.usBankAccount?.bankName ?? "Bank name", lastFour: paymentMethod.usBankAccount?.last4 ?? "").makeElement(theme: appearance.asElementsTheme)])
+        }()
+        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, bankAccountElement.view])
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
+        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
+        return stackView
+    }()
+
+    private lazy var sepaDebitSection: UIStackView = {
+        lazy var nameElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
+        }()
+        lazy var emailElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
+        }()
+        lazy var ibanElement: SectionElement = {
+            return SectionElement(elements: [TextFieldElement.LastFourIBANConfiguration(lastFour: paymentMethod.sepaDebit?.last4 ?? "0000").makeElement(theme: appearance.asElementsTheme)])
+        }()
+        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, ibanElement.view])
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
+        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
+        return stackView
     }()
 
     // MARK: Overrides
@@ -311,70 +373,5 @@ extension UpdateCardViewController: ElementDelegate {
         default:
             break
         }
-    }
-}
-
-// MARK: Helpers
-extension UpdateCardViewController {
-    func cardSection() -> UIView {
-        lazy var panElement: TextFieldElement = {
-            return TextFieldElement.LastFourConfiguration(lastFour: paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown).makeElement(theme: appearance.asElementsTheme)
-        }()
-        lazy var expiryDateElement: TextFieldElement = {
-            let expiryDate = CardExpiryDate(month: paymentMethod.card?.expMonth ?? 0, year: paymentMethod.card?.expYear ?? 0)
-            let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: appearance.asElementsTheme)
-            return expiryDateElement
-
-        }()
-        lazy var cvcElement: TextFieldElement = {
-            let cvcConfiguration = TextFieldElement.CensoredCVCConfiguration(brand: self.paymentMethod.card?.preferredDisplayBrand ?? .unknown)
-            let cvcElement = cvcConfiguration.makeElement(theme: appearance.asElementsTheme)
-            return cvcElement
-
-        }()
-        let allSubElements: [Element?] = [
-            panElement,
-            SectionElement.HiddenElement(cardBrandDropDown),
-            SectionElement.MultiElementRow([expiryDateElement, cvcElement])
-        ]
-        let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: appearance.asElementsTheme)
-        section.delegate = self
-        return section.view
-    }
-    
-    func usBankAccountSection() -> UIStackView {
-        lazy var nameElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
-        }()
-        lazy var emailElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
-        }()
-        lazy var bankAccountElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.USBankNumberConfiguration(bankName: paymentMethod.usBankAccount?.bankName ?? "Bank name", lastFour: paymentMethod.usBankAccount?.last4 ?? "").makeElement(theme: appearance.asElementsTheme)])
-        }()
-        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, bankAccountElement.view])
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.axis = .vertical
-        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
-        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
-        return stackView
-    }
-
-    func sepaDebitSection() -> UIStackView {
-        lazy var nameElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
-        }()
-        lazy var emailElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: appearance.asElementsTheme)])
-        }()
-        lazy var ibanElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.LastFourIBANConfiguration(lastFour: paymentMethod.sepaDebit?.last4 ?? "0000").makeElement(theme: appearance.asElementsTheme)])
-        }()
-        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, ibanElement.view])
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.axis = .vertical
-        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
-        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
-        return stackView
     }
 }
