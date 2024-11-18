@@ -567,13 +567,13 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             return
         }
 
-        let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
+        let editVc = UpdatePaymentMethodViewController(
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
                                               isTestMode: configuration.isTestMode,
                                               cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
-                                              viewModel: UpdatePaymentMethodViewModel(paymentMethodType: paymentMethod.type, canEdit: paymentMethod.isCoBrandedCard && cbcEligible, canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod)))
+                                              viewModel: UpdatePaymentMethodViewModel(paymentMethod: paymentMethod, canEdit: paymentMethod.isCoBrandedCard && cbcEligible, canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod)))
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
@@ -643,14 +643,14 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
     }
 }
 
-// MARK: - UpdateCardViewControllerDelegate
-extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
-    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
+// MARK: - UpdatePaymentMethodViewControllerDelegate
+extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
         removePaymentMethod(paymentMethod)
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(viewController: UpdateCardViewController,
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
@@ -675,7 +675,7 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didDismiss(viewController: UpdateCardViewController) {
+    func didDismiss(viewController: UpdatePaymentMethodViewController) {
         // No-op
     }
 }

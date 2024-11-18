@@ -38,7 +38,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
-    private var updateViewController: UpdateCardViewController?
+    private var updateViewController: UpdatePaymentMethodViewController?
 
     private var isEditingPaymentMethods: Bool = false {
         didSet {
@@ -342,13 +342,13 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
+        let updateViewController = UpdatePaymentMethodViewController(
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                             appearance: configuration.appearance,
                                                             hostedSurface: .paymentSheet,
                                                             isTestMode: configuration.apiClient.isTestmode,
                                                             cardBrandFilter: configuration.cardBrandFilter,
-                                                            viewModel: UpdatePaymentMethodViewModel(paymentMethodType: paymentMethod.type, canEdit: paymentMethod.isCoBrandedCard && isCBCEligible, canRemove: canRemovePaymentMethods))
+                                                            viewModel: UpdatePaymentMethodViewModel(paymentMethod: paymentMethod, canEdit: paymentMethod.isCoBrandedCard && isCBCEligible, canRemove: canRemovePaymentMethods))
 
         updateViewController.delegate = self
         self.updateViewController = updateViewController
@@ -356,14 +356,14 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 }
 
-// MARK: - UpdateCardViewControllerDelegate
-extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDelegate {
-    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
+// MARK: - UpdatePaymentMethodViewControllerDelegate
+extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
         remove(paymentMethod: paymentMethod)
        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    func didUpdate(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         // Update the payment method
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
@@ -371,7 +371,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didDismiss(viewController: UpdateCardViewController) {
+    func didDismiss(viewController: UpdatePaymentMethodViewController) {
         // No-op
     }
 

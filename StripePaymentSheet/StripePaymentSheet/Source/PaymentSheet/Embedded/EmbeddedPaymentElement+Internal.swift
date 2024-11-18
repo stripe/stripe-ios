@@ -140,13 +140,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
            elementsSession.isCardBrandChoiceEligible || configuration.alternateUpdatePaymentMethodNavigation {
-            let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
+            let updateViewController = UpdatePaymentMethodViewController(
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                 appearance: configuration.appearance,
                                                                 hostedSurface: .paymentSheet,
                                                                 isTestMode: configuration.apiClient.isTestmode,
                                                                 cardBrandFilter: configuration.cardBrandFilter,
-                                                                viewModel: UpdatePaymentMethodViewModel(paymentMethodType: paymentMethod.type, canEdit: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible, canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()))
+                                                                viewModel: UpdatePaymentMethodViewModel(paymentMethod: paymentMethod, canEdit: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible, canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()))
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
             presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
@@ -166,9 +166,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 }
 
-// MARK: UpdateCardViewControllerDelegate
-extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
-    func didRemove(viewController: UpdateCardViewController, paymentMethod: StripePayments.STPPaymentMethod) {
+// MARK: UpdatePaymentMethodViewControllerDelegate
+extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: StripePayments.STPPaymentMethod) {
         // Detach the payment method from the customer
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
@@ -183,7 +183,7 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
         presentingViewController?.dismiss(animated: true)
     }
 
-    func didUpdate(viewController: UpdateCardViewController,
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod,
                    updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
@@ -201,7 +201,7 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
         presentingViewController?.dismiss(animated: true)
     }
     
-    func didDismiss(viewController: UpdateCardViewController) {
+    func didDismiss(viewController: UpdatePaymentMethodViewController) {
         presentingViewController?.dismiss(animated: true)
     }
 

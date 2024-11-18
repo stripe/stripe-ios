@@ -182,7 +182,6 @@ extension TextFieldElement {
 
     struct LastFourIBANConfiguration: TextFieldElementConfiguration {
         let label: String = STPLocalizedString("IBAN", "Label for an IBAN field")
-        let defaultValue: String?
         let lastFour: String
         let isEditable = false
 
@@ -192,7 +191,6 @@ extension TextFieldElement {
 
         init(lastFour: String) {
             self.lastFour = lastFour
-            self.defaultValue = "•••• \(lastFour.prefix(2)) \(lastFour.suffix(2))"
         }
 
         func makeDisplayText(for text: String) -> NSAttributedString {
