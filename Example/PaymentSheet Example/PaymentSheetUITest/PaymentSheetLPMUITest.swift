@@ -1024,6 +1024,42 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         // Card should be removed
         XCTAssertFalse(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
     }
+
+    func testCardBrandChoiceUpdateAndRemove() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.alternateUpdatePaymentMethodNavigation = .on
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.customerMode = .returning
+        settings.layout = .horizontal
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        app.buttons["Edit"].waitForExistenceAndTap()
+
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_cartes_bancaires").count, 1)
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
+
+        XCTAssertEqual(app.buttons.matching(identifier: "CircularButton.Edit").count, 2)
+
+        app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap()
+        app.otherElements.matching(identifier: "Card Brand Dropdown").firstMatch.waitForExistenceAndTap()
+        app.pickerWheels.firstMatch.selectNextOption()
+        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 3))
+        app.buttons["Update"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 2)
+
+        app.buttons.matching(identifier: "CircularButton.Edit").element(boundBy: 1).waitForExistenceAndTap()
+        app.buttons["Remove card"].waitForExistenceAndTap()
+        app.alerts.buttons["Remove"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
+        app.buttons["Done"].waitForExistenceAndTap()
+    }
 }
 
 // MARK: - Helpers

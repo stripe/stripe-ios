@@ -175,7 +175,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
                 allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-                defaultSPMNavigation: configuration.defaultSPMNavigation
+                alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,

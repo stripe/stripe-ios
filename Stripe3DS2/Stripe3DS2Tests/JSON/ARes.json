@@ -8,7 +8,7 @@
     "dsReferenceNumber": "3DS_LOA_DIS_PPFU_020100_00010",
     "acsReferenceNumber": "3DS_LOA_ACS_PPFU_020100_00009",
     "threeDSServerTransID": "fc7a39de-dc41-4b65-ba76-a322769b2efc",
-    "messageVersion": "2.1.0",
+    "messageVersion": "2.2.0",
     "authenticationValue": "AABBCCDDEEFFAABBCCDDEEFFAAA=",
     "messageType": "pArs",
     "transStatus": "C",

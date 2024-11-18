@@ -48,13 +48,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
-                if configuration.defaultSPMNavigation {
-                    paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: false,
-                                                                    allowsUpdating: $0.paymentMethod.type == .card) }
-                }
-                else {
-                    paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
-                                                                    allowsUpdating: $0.paymentMethod.isCoBrandedCard && isCBCEligible) }
+                paymentMethodRows.forEach {
+                    let allowsRemoval = canRemovePaymentMethods && !configuration.alternateUpdatePaymentMethodNavigation
+                    let allowsUpdating = ($0.paymentMethod.isCoBrandedCard && isCBCEligible) || (configuration.alternateUpdatePaymentMethodNavigation && $0.paymentMethod.type == .card)
+                    $0.state = .editing(allowsRemoval: allowsRemoval,
+                                        allowsUpdating: allowsUpdating)
                 }
             } else if oldValue {
                 // If we are exiting edit mode restore previous selected states
@@ -90,7 +88,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     var canEdit: Bool {
         // We can edit if there are removable or editable payment methods and we are not in remove only mode
-        return (canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode
+        // Or, under the new navigation flow, if any of the payment methods are cards
+        return ((canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode) || (configuration.alternateUpdatePaymentMethodNavigation && !paymentMethods.filter { $0.type == .card }.isEmpty)
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
@@ -171,7 +170,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
-        if configuration.defaultSPMNavigation {
+        if configuration.alternateUpdatePaymentMethodNavigation {
             self.isRemoveOnlyMode = false
         }
         else {

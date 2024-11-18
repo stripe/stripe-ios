@@ -16,7 +16,7 @@
         "extraHigh": "https://acs.com/extraHigh_image.svg"
     },
     "messageType": "CRes",
-    "messageVersion": "2.1.0",
+    "messageVersion": "2.2.0",
     "psImage": {
         "medium": "https://ds.com/medium_image.svg",
         "high": "https://ds.com/high_image.svg",
