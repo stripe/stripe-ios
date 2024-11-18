@@ -132,9 +132,9 @@ extension EmbeddedPaymentElement {
         @_spi(CardBrandFilteringBeta) public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
         /// This is an experimental feature that may be removed at any time.
-        /// If true, when editing, cards and us bank accounts will have the edit icon, users cannot remove them from the list screen.
-        /// If false (default), only cbc eligible cards can be edited and users can remove payment methods from the list screen.
-        @_spi(DefaultSPM) public var defaultSPMNavigation = false
+        /// If true, when editing, cards and us bank accounts will have the edit icon and users cannot remove them from the list screen.
+        /// If false (default), only card brand choice eligible cards can be edited and users can remove payment methods from the list screen.
+        @_spi(AlternateUpdatePaymentMethodNavigation) public var alternateUpdatePaymentMethodNavigation = false
 
         /// The view can display payment methods like “Card” that, when tapped, open a form sheet where customers enter their payment method details. The sheet has a button at the bottom. `FormSheetAction` enumerates the actions the button can perform.
         public enum FormSheetAction {

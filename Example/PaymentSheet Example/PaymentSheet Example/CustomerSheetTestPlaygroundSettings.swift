@@ -142,8 +142,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum DefaultSPMNavigationEnabled: String, PickerEnum {
-        static let enumName: String = "defaultSPMNavigation"
+    enum AlternateUpdatePaymentMethodNavigation: String, PickerEnum {
+        static let enumName: String = "alternateUpdatePaymentMethodNavigation"
         case on
         case off
     }
@@ -168,7 +168,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var cardBrandAcceptance: CardBrandAcceptance
-    var defaultSPMNavigation: DefaultSPMNavigationEnabled
+    var alternateUpdatePaymentMethodNavigation: AlternateUpdatePaymentMethodNavigation
     
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -190,7 +190,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    paymentMethodRemove: .enabled,
                                                    paymentMethodAllowRedisplayFilters: .always,
                                                    cardBrandAcceptance: .all,
-                                                   defaultSPMNavigation: .off)
+                                                   alternateUpdatePaymentMethodNavigation: .off)
     }
 
     var base64Data: String {

@@ -304,7 +304,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods,
-                                                               defaultSPMNavigation: false)
+                                                               alternateUpdatePaymentMethodNavigation: false)
     }
 
     func savedPaymentOptionsController(_ configuration: SavedPaymentOptionsViewController.Configuration,

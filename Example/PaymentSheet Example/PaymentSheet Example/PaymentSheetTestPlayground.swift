@@ -46,7 +46,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.autoreload)
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
         SettingView(setting: $playgroundController.settings.instantDebitsInDeferredIntents)
-        SettingView(setting: $playgroundController.settings.defaultSPMNavigation)
+        SettingView(setting: $playgroundController.settings.alternateUpdatePaymentMethodNavigation)
     }
 
     var body: some View {

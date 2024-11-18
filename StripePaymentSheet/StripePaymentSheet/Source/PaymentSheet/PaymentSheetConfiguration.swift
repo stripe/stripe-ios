@@ -212,9 +212,9 @@ extension PaymentSheet {
         @_spi(CardBrandFilteringBeta) public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
         /// This is an experimental feature that may be removed at any time.
-        /// If true, when editing, cards and us bank accounts will have the edit icon, users cannot remove them from the list screen.
-        /// If false (default), only cbc eligible cards can be edited and users can remove payment methods from the list screen.
-        @_spi(DefaultSPM) public var defaultSPMNavigation = false
+        /// If true, when editing, cards and us bank accounts will have the edit icon and users cannot remove them from the list screen.
+        /// If false (default), only card brand choice eligible cards can be edited and users can remove payment methods from the list screen.
+        @_spi(AlternateUpdatePaymentMethodNavigation) public var alternateUpdatePaymentMethodNavigation = false
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
