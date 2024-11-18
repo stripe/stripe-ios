@@ -97,6 +97,7 @@ let missingReturnURLErrorMessage = "The payment method requires a return URL and
 /// `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
 /// It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
 /// - seealso: https://stripe.com/docs/payments/3d-secure
+@available(iOSApplicationExtension, unavailable)
 public class STPPaymentHandler: NSObject {
     /// The error domain for errors in `STPPaymentHandler`.
     @objc public static let errorDomain = "STPPaymentHandlerErrorDomain"
@@ -2180,6 +2181,7 @@ public class STPPaymentHandler: NSObject {
 
 /// STPPaymentHandler errors (i.e. errors that are created by the STPPaymentHandler class and have a corresponding STPPaymentHandlerErrorCode) used to be NSErrors.
 /// This struct exists so that these errors can be Swift errors to conform to AnalyticLoggableError, while still looking like the old NSErrors to users (i.e. same domain and code).
+@available(iOSApplicationExtension, unavailable)
 struct STPPaymentHandlerError: Error, CustomNSError, AnalyticLoggableError {
     // AnalyticLoggableError properties
     let analyticsErrorType: String = errorDomain
@@ -2201,6 +2203,7 @@ struct STPPaymentHandlerError: Error, CustomNSError, AnalyticLoggableError {
 }
 
 #if !canImport(CompositorServices)
+@available(iOSApplicationExtension, unavailable)
 extension STPPaymentHandler: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate
     /// :nodoc:
@@ -2226,6 +2229,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
 #endif
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 @_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {
     /// :nodoc:
     @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
@@ -2259,6 +2263,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension STPPaymentHandler {
     // MARK: - STPChallengeStatusReceiver
     /// :nodoc:
