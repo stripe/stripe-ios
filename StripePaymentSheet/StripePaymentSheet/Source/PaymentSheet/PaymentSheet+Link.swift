@@ -71,7 +71,8 @@ extension PaymentSheet {
             elementsSession: elementsSession,
             configuration: configuration,
             shouldOfferApplePay: shouldOfferApplePay,
-            shouldFinishOnClose: shouldFinishOnClose
+            shouldFinishOnClose: shouldFinishOnClose,
+            analyticsHelper: self.analyticsHelper
         )
 
         payWithLinkVC.payWithLinkDelegate = self

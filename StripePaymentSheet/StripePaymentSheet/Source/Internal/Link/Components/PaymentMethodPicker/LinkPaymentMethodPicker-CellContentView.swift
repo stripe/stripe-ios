@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
@@ -22,10 +23,8 @@ extension LinkPaymentMethodPicker {
         var paymentMethod: ConsumerPaymentDetails? {
             didSet {
                 switch paymentMethod?.details {
-                case .card:
-//                    TODO(link): Needs refactor
-//                    case .card(let card):
-//                    cardBrandView.cardBrand = card.stpBrand
+                case .card(let card):
+                    cardBrandView.setCardBrand(STPCard.brand(from: card.brand))
                     bankIconView.isHidden = true
                     cardBrandView.isHidden = false
                     primaryLabel.text = paymentMethod?.paymentSheetLabel
