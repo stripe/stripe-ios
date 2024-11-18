@@ -31,7 +31,7 @@ extension PaymentSheet {
             }
         }
     }
-    
+
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(
         configuration: PaymentElementConfiguration,
@@ -111,7 +111,7 @@ extension PaymentSheet {
             confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, analyticsHelper: analyticsHelper, completion: completion)
         }
     }
-    
+
     static func confirm(
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,

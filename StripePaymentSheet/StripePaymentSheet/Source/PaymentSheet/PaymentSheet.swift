@@ -188,7 +188,7 @@ public class PaymentSheet {
                             }
                         case .canceled:
                             presentPaymentSheet()
-                        case .failed(_):
+                        case .failed:
                             // Error is logged within LinkVerificationViewController
                             presentPaymentSheet()
                         }

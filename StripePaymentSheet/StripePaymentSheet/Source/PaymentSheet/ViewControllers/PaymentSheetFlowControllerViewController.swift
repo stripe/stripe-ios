@@ -85,7 +85,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
     private var isHackyLinkButtonSelected: Bool = false
-    
+
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()

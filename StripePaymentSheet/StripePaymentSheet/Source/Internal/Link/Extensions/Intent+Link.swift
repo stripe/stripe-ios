@@ -37,7 +37,7 @@ extension STPElementsSession {
     var linkPopupWebviewOption: LinkSettings.PopupWebviewOption {
         linkSettings?.popupWebviewOption ?? .shared
     }
-    
+
     func shouldShowLink2FABeforePaymentSheet(for linkAccount: PaymentSheetLinkAccount, configuration: PaymentSheet.Configuration) -> Bool {
         return configuration.forceNativeLinkEnabled &&
         self.supportsLink &&
