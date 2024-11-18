@@ -168,6 +168,7 @@ extension LinkUI {
         // Primary button
         appearance.primaryButton.textColor = .linkPrimaryButtonForeground
         appearance.primaryButton.backgroundColor = .linkBrand
+        appearance.primaryButton.successBackgroundColor = .linkBrand
         appearance.primaryButton.borderWidth = 0
         appearance.primaryButton.cornerRadius = LinkUI.cornerRadius
         appearance.primaryButton.font = LinkUI.font(forTextStyle: .bodyEmphasized)

@@ -64,6 +64,8 @@ extension LinkCardEditElementSnapshotTests {
                     checks: nil
                 )
             ),
+            billingAddress: nil,
+            billingEmailAddress: nil,
             isDefault: isDefault
         )
 
