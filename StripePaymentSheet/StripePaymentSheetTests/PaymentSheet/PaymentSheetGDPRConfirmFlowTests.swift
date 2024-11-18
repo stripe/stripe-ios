@@ -410,7 +410,8 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
             intent: intent,
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: intentConfirmParams),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _  in
             switch result {
             case .failed(error: let error):

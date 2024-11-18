@@ -131,7 +131,7 @@ private extension ConnectWebViewController {
     func openInAppSafari(url: URL) {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .done
-        safariVC.modalPresentationStyle = .popover
+        safariVC.modalPresentationStyle = .pageSheet
         present(safariVC, animated: true)
     }
 
@@ -211,6 +211,16 @@ extension ConnectWebViewController: WKUIDelegate {
 @available(iOS 15, *)
 extension ConnectWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        /*
+         The web view does not adjust its safe area insets after it finishes loading.
+         This causes a race condition where the horizontal safe area insets are
+         rendered incorrectly in landscape with Face ID devices if the page finishes
+         loading before the view is laid out.
+
+         The fix is to force the web view to redraw after the page finishes loading:
+         https://stackoverflow.com/a/59452941/4133371
+         */
+        webView.setNeedsLayout()
         webViewDidFinishNavigation(to: webView.url)
     }
 
@@ -316,7 +326,10 @@ extension ConnectWebViewController {
             return
         }
 
-        let activityViewController = UIActivityViewController(activityItems: [downloadedFile], applicationActivities: nil)
+        // Since downloads can happen async and we don't know where in the webView
+        // the download action was triggered, a popover presentation (default on iPad)
+        // won't look good. Instead, use a `formSheet` presentation style.
+        let activityViewController = FormSheetActivityViewController(activityItems: [downloadedFile], applicationActivities: nil)
         activityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
             self?.cleanupDownloadedFile()
         }
