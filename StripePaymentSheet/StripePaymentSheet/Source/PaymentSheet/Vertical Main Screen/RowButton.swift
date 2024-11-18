@@ -21,9 +21,18 @@ class RowButton: UIView {
             self.didTap(self)
         }
     }()
+    private lazy var checkmarkImageView: UIImageView? = {
+        guard isEmbedded, appearance.embeddedPaymentElement.row.style == .flatWithCheckmark else { return nil }
+        let checkmarkImageView = UIImageView(image: Image.embedded_check.makeImage(template: true))
+        checkmarkImageView.tintColor = appearance.embeddedPaymentElement.row.flat.checkmark.color ?? appearance.colors.primary
+        checkmarkImageView.contentMode = .scaleAspectFit
+        checkmarkImageView.isHidden = true
+        return checkmarkImageView
+    }()
     let imageView: UIImageView
     let label: UILabel
     let sublabel: UILabel?
+    let rightAccessoryView: UIView?
     let shouldAnimateOnPress: Bool
     let appearance: PaymentSheet.Appearance
     typealias DidTapClosure = (RowButton) -> Void
@@ -34,6 +43,7 @@ class RowButton: UIView {
         didSet {
             shadowRoundedRect.isSelected = isSelected
             radioButton?.isOn = isSelected
+            checkmarkImageView?.isHidden = !isSelected
             updateAccessibilityTraits()
         }
     }
@@ -53,6 +63,7 @@ class RowButton: UIView {
         self.imageView = imageView
         self.label = Self.makeVerticalRowButtonLabel(text: text, appearance: appearance)
         self.isEmbedded = isEmbedded
+        self.rightAccessoryView = rightAccessoryView
         if let subtext {
             let sublabel = UILabel()
             sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
@@ -70,21 +81,21 @@ class RowButton: UIView {
         // Label and sublabel
         label.isAccessibilityElement = false
         let labelsStackView = UIStackView(arrangedSubviews: [
-            label, sublabel,
+            label, sublabel, appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? rightAccessoryView : nil
         ].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
         addAndPinSubview(shadowRoundedRect)
 
-        if let rightAccessoryView {
+        if let rightAccessoryView, appearance.embeddedPaymentElement.row.style != .flatWithCheckmark {
             let rightAccessoryViewPadding: CGFloat = {
                 guard isEmbedded else {
                     return -12
                 }
                 
                 switch appearance.embeddedPaymentElement.row.style {
-                case .flatWithRadio:
+                case .flatWithRadio, .flatWithCheckmark:
                     return 0
                 case .floatingButton:
                     return -12
@@ -96,6 +107,17 @@ class RowButton: UIView {
                 rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
                 rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
                 rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: rightAccessoryViewPadding),
+            ])
+        }
+        
+        if let checkmarkImageView {
+            checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(checkmarkImageView)
+            NSLayoutConstraint.activate([
+                checkmarkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+                checkmarkImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                checkmarkImageView.widthAnchor.constraint(equalToConstant: 16),
+                checkmarkImageView.heightAnchor.constraint(equalToConstant: 16),
             ])
         }
 
@@ -115,25 +137,37 @@ class RowButton: UIView {
         // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
         if subtext == nil {
-            heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance))
+            heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, accessoryView: rightAccessoryView))
             heightConstraint?.isActive = true
         }
+        
+        var imageViewConstraints = [
+            imageView.leadingAnchor.constraint(equalTo: radioButton?.trailingAnchor ?? leadingAnchor, constant: 12),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + appearance.embeddedPaymentElement.row.additionalInsets),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - appearance.embeddedPaymentElement.row.additionalInsets),
+            imageView.heightAnchor.constraint(equalToConstant: 20),
+            imageView.widthAnchor.constraint(equalToConstant: 24),
+        ]
 
+        // If we are flat with check style and have an accessory view (saved PM row)
+        if appearance.embeddedPaymentElement.row.style == .flatWithCheckmark, rightAccessoryView != nil {
+            labelsStackView.setCustomSpacing(10, after: label)
+            imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor))
+        } else {
+            imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: centerYAnchor))
+        }
+
+        NSLayoutConstraint.activate(imageViewConstraints)
+        
+        let labelTrailingConstant = appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? checkmarkImageView?.leadingAnchor ?? trailingAnchor : rightAccessoryView?.leadingAnchor ?? trailingAnchor
         NSLayoutConstraint.activate([
             radioButton?.leadingAnchor.constraint(equalTo: leadingAnchor),
             radioButton?.centerYAnchor.constraint(equalTo: centerYAnchor),
             radioButton?.heightAnchor.constraint(equalToConstant: 18),
             radioButton?.widthAnchor.constraint(equalToConstant: 18),
 
-            imageView.leadingAnchor.constraint(equalTo: radioButton?.trailingAnchor ?? leadingAnchor, constant: 12),
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + appearance.embeddedPaymentElement.row.additionalInsets),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - appearance.embeddedPaymentElement.row.additionalInsets),
-            imageView.heightAnchor.constraint(equalToConstant: 20),
-            imageView.widthAnchor.constraint(equalToConstant: 24),
-
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            labelsStackView.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: -12),
+            labelsStackView.trailingAnchor.constraint(equalTo: labelTrailingConstant, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: appearance.embeddedPaymentElement.row.additionalInsets),
             labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -appearance.embeddedPaymentElement.row.additionalInsets),
@@ -172,7 +206,8 @@ class RowButton: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         // Update the height so that RowButtons heights w/o subtext match those with subtext
         heightConstraint?.isActive = false
-        heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance))
+        heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance,
+                                                                                                accessoryView: rightAccessoryView))
         heightConstraint?.isActive = true
         super.traitCollectionDidChange(previousTraitCollection)
     }
@@ -248,11 +283,18 @@ extension RowButton: UIGestureRecognizerDelegate {
 
 // MARK: - Helpers
 extension RowButton {
-    static func calculateTallestHeight(appearance: PaymentSheet.Appearance) -> CGFloat {
+    static func calculateTallestHeight(appearance: PaymentSheet.Appearance, accessoryView: UIView? = nil) -> CGFloat {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
         let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext") { _ in }
         let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
+        
+        // Check if in .flatWithCheck style and if rightAccessoryView exists, if so account for the Edit button being below the labels
+        if appearance.embeddedPaymentElement.row.style == .flatWithCheckmark, let accessoryView = accessoryView {
+            let accessoryViewHeight = accessoryView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            return size.height + accessoryViewHeight + 8 // bake in some extra padding
+        }
+        
         return size.height
     }
 

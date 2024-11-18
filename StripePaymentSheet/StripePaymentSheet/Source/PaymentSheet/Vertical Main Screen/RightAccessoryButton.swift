@@ -51,6 +51,7 @@ extension RowButton {
         }
 
         private var imageView: UIImageView? {
+            guard appearance.embeddedPaymentElement.row.style != .flatWithCheckmark else { return nil } // we never show an image in flatWithCheck style
             guard let image = accessoryType.accessoryImage else { return nil }
             let imageView = UIImageView(image: image)
             imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
