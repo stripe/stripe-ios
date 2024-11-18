@@ -130,7 +130,7 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
 
     STDSTransaction *transaction = [[STDSTransaction alloc] initWithDeviceInformation:_deviceInformation
                                                                       directoryServer:directoryServer
-                                                                      protocolVersion:(protocolVersion != nil) ? STDSThreeDSProtocolVersionForString(protocolVersion) : STDSThreeDSProtocolVersion2_1_0
+                                                                      protocolVersion:(protocolVersion != nil) ? STDSThreeDSProtocolVersionForString(protocolVersion) : STDSThreeDSProtocolVersion2_2_0
                                                                       uiCustomization:_uiSettings
                                                                     analyticsDelegate:_analyticsDelegate];
     transaction.bypassTestModeVerification = [[_configuration parameterValue:kInternalStripeTestingConfigParam] isEqualToString:@"Y"];
@@ -162,7 +162,7 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
                                                              serverKeyID:serverKeyID
                                               directoryServerCertificate:certificate
                                                   rootCertificateStrings:rootCertificateStrings
-                                                         protocolVersion:(protocolVersion != nil) ? STDSThreeDSProtocolVersionForString(protocolVersion) : STDSThreeDSProtocolVersion2_1_0
+                                                         protocolVersion:(protocolVersion != nil) ? STDSThreeDSProtocolVersionForString(protocolVersion) : STDSThreeDSProtocolVersion2_2_0
                                                          uiCustomization:_uiSettings
                                                        analyticsDelegate:_analyticsDelegate];
         transaction.bypassTestModeVerification = [_configuration parameterValue:kInternalStripeTestingConfigParam] != nil;

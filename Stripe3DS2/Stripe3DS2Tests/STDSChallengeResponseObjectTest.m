@@ -39,7 +39,7 @@
     XCTAssertEqualObjects(cr.issuerImage.highDensityURL, [NSURL URLWithString:@"https://acs.com/high_image.svg"]);
     XCTAssertEqualObjects(cr.issuerImage.extraHighDensityURL, [NSURL URLWithString:@"https://acs.com/extraHigh_image.svg"]);
     XCTAssertEqualObjects(cr.messageType, @"CRes");
-    XCTAssertEqualObjects(cr.messageVersion, @"2.1.0");
+    XCTAssertEqualObjects(cr.messageVersion, @"2.2.0");
     XCTAssertEqualObjects(cr.paymentSystemImage.mediumDensityURL, [NSURL URLWithString:@"https://ds.com/medium_image.svg"]);
     XCTAssertEqualObjects(cr.paymentSystemImage.highDensityURL, [NSURL URLWithString:@"https://ds.com/high_image.svg"]);
     XCTAssertEqualObjects(cr.paymentSystemImage.extraHighDensityURL, [NSURL URLWithString:@"https://ds.com/extraHigh_image.svg"]);
