@@ -51,7 +51,7 @@ final class UpdateCardViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodDetails, updateButton, deleteButton, errorLabel])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodDetails, updateButton, removeButton, errorLabel])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.setCustomSpacing(16, after: headerLabel) // custom spacing from figma
@@ -68,15 +68,20 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: appearance, didTap: {  [weak self] in
-            Task {
-                await self?.updateCard()
+            switch self?.paymentMethod.type {
+            case .card:
+                Task {
+                    await self?.updateCard()
+                }
+            default:
+                fatalError("Updating payment method has not been implemented for \(self?.paymentMethod.type ?? .unknown)")
             }
         })
         button.isHidden = !viewModel.canEdit
         return button
     }()
 
-    private lazy var deleteButton: UIButton = {
+    private lazy var removeButton: UIButton = {
         let button = UIButton(type: .custom)
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.bordered()
@@ -94,7 +99,7 @@ final class UpdateCardViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
-        button.addTarget(self, action: #selector(removeCard), for: .touchUpInside)
+        button.addTarget(self, action: #selector(removePaymentMethod), for: .touchUpInside)
         button.isHidden = !viewModel.canRemove
         return button
     }()
@@ -218,7 +223,7 @@ final class UpdateCardViewController: UIViewController {
         }
     }
 
-    @objc private func removeCard() {
+    @objc private func removePaymentMethod() {
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
                                                                           removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
@@ -297,10 +302,15 @@ extension UpdateCardViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
         latestError = nil // clear error on new input
-        let selectedBrand = cardBrandDropDown?.selectedItem.rawData.toCardBrand
-        let currentCardBrand = paymentMethod.card?.preferredDisplayBrand ?? .unknown
-        let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
-        updateButton.update(state: shouldBeEnabled ? .enabled : .disabled)
+        switch paymentMethod.type {
+        case .card:
+            let selectedBrand = cardBrandDropDown?.selectedItem.rawData.toCardBrand
+            let currentCardBrand = paymentMethod.card?.preferredDisplayBrand ?? .unknown
+            let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
+            updateButton.update(state: shouldBeEnabled ? .enabled : .disabled)
+        default:
+            break
+        }
     }
 }
 
