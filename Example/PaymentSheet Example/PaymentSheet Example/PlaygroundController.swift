@@ -441,10 +441,6 @@ class PlaygroundController: ObservableObject {
             } else {
                 self.ambiguousViewTimer?.invalidate()
             }
-
-            // Hack to enable Instant Debits with deferred intents
-            let enableInstantDebitsInDeferredIntents = newValue.instantDebitsInDeferredIntents == .on
-            UserDefaults.standard.set(enableInstantDebitsInDeferredIntents, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_DEFERRED_INTENTS")
         }.store(in: &subscribers)
 
         // Listen for analytics
