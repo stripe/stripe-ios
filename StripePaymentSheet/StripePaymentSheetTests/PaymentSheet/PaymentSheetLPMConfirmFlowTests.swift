@@ -361,7 +361,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                     intent: intent,
                     elementsSession: ._testValue(intent: intent),
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
-                    paymentHandler: paymentHandler
+                    paymentHandler: paymentHandler,
+                    analyticsHelper: ._testValue()
                 ) { result, _  in
                     e.fulfill()
                     switch result {
@@ -681,7 +682,8 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 intent: intent,
                 elementsSession: ._testValue(intent: intent),
                 paymentOption: .new(confirmParams: intentConfirmParams),
-                paymentHandler: paymentHandler
+                paymentHandler: paymentHandler,
+                analyticsHelper: ._testValue()
             ) { result, _  in
                 switch result {
                 case .failed(error: let error):

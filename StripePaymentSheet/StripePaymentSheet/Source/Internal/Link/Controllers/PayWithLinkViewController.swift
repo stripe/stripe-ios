@@ -63,7 +63,7 @@ final class PayWithLinkViewController: UINavigationController {
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
-        let configuration: PaymentSheet.Configuration
+        let configuration: PaymentElementConfiguration
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
         let callToAction: ConfirmButton.CallToActionType
@@ -82,7 +82,7 @@ final class PayWithLinkViewController: UINavigationController {
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool,
             callToAction: ConfirmButton.CallToActionType?,
@@ -119,7 +119,7 @@ final class PayWithLinkViewController: UINavigationController {
     convenience init(
         intent: Intent,
         elementsSession: STPElementsSession,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
         callToAction: ConfirmButton.CallToActionType? = nil,

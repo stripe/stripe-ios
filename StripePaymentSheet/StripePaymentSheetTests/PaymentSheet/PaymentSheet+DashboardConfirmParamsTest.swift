@@ -144,6 +144,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
             elementsSession: .emptyElementsSession,
             paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod, confirmParams: nil),
             paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
             completion: { _, _ in
                 exp.fulfill()
             }
@@ -169,6 +170,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
             elementsSession: .emptyElementsSession,
             paymentOption: .new(confirmParams: MockParams.intentConfirmParams),
             paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
             completion: { _, _ in
                 exp.fulfill()
             }
@@ -198,6 +200,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
             elementsSession: .emptyElementsSession,
             paymentOption: .new(confirmParams: intentConfirmParams),
             paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
             completion: { _, _ in
                 exp.fulfill()
             }
@@ -224,6 +227,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
             elementsSession: .emptyElementsSession,
             paymentOption: .saved(paymentMethod: MockParams.cardPaymentMethod, confirmParams: nil),
             paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
             completion: { _, _ in
                 exp.fulfill()
             }
@@ -249,6 +253,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
             elementsSession: .emptyElementsSession,
             paymentOption: .new(confirmParams: MockParams.intentConfirmParams),
             paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
             completion: { _, _ in
                 exp.fulfill()
             }
