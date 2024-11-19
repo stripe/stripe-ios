@@ -49,8 +49,13 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
                 paymentMethodRows.forEach {
+<<<<<<< HEAD
                     let allowsRemoval = canRemovePaymentMethods && !configuration.alternateUpdatePaymentMethodNavigation
                     let allowsUpdating = ($0.paymentMethod.isCoBrandedCard && isCBCEligible) || (configuration.alternateUpdatePaymentMethodNavigation && ($0.paymentMethod.type == .card || $0.paymentMethod.type == .USBankAccount || $0.paymentMethod.type == .SEPADebit))
+=======
+                    let allowsRemoval = canRemovePaymentMethods
+                    let allowsUpdating = ($0.paymentMethod.isCoBrandedCard && isCBCEligible) || (configuration.alternateUpdatePaymentMethodNavigation && $0.paymentMethod.type == .card)
+>>>>>>> joyceqin-default-spm-navigation
                     $0.state = .editing(allowsRemoval: allowsRemoval,
                                         allowsUpdating: allowsUpdating)
                 }

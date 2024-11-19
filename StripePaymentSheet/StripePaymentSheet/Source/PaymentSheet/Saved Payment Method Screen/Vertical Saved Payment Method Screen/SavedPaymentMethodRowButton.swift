@@ -33,11 +33,11 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            rowButton.isEnabled = !isEditing
+            rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation
             circleView.isHidden = !isSelected
             chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
             updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
-            removeButton.isHidden = !canRemove
+            removeButton.isHidden = !canRemove || alternateUpdatePaymentMethodNavigation
             stackView.isUserInteractionEnabled = isEditing
         }
     }
@@ -108,7 +108,7 @@ final class SavedPaymentMethodRowButton: UIView {
         let updateButton = CircularButton(style: .edit, iconColor: .white)
         updateButton.backgroundColor = appearance.colors.icon
         updateButton.isHidden = true
-        updateButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
+        updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
         return updateButton
     }()
 
@@ -127,11 +127,7 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
-            guard let self else { return }
-            state = .selected
-            delegate?.didSelectButton(self, with: paymentMethod)
-        }
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView, didTap: handleRowButtonTapped)
 
         return button
     }()
@@ -160,4 +156,13 @@ final class SavedPaymentMethodRowButton: UIView {
         delegate?.didSelectRemoveButton(self, with: paymentMethod)
     }
 
+    @objc private func handleRowButtonTapped(rowButton: RowButton) {
+        if alternateUpdatePaymentMethodNavigation && isEditing {
+            delegate?.didSelectUpdateButton(self, with: paymentMethod)
+        }
+        else {
+            state = .selected
+            delegate?.didSelectButton(self, with: paymentMethod)
+        }
+    }
 }
