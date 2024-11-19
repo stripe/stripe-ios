@@ -148,8 +148,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.otherElements["Card Brand Dropdown"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.swipeUp()
         app.buttons["Done"].waitForExistenceAndTap()
-        app.buttons["Update"].waitForExistenceAndTap()
-        XCTAssertFalse(app.staticTexts["Update card brand"].waitForExistence(timeout: 3))
+        app.buttons["Save"].waitForExistenceAndTap()
+        XCTAssertFalse(app.staticTexts["Manage card"].waitForExistence(timeout: 3))
 
         // Ensure card preference is switched to visa
         XCTAssertTrue(card1001Button.waitForExistence(timeout: 3))
@@ -178,12 +178,12 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Remove last card while selected state is NOT on the card
         app.buttons["Edit"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
-        app.buttons["Remove card"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 3.0))
+        app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
         // Apple pay should be continued to be selected
-        XCTAssertFalse(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
+        XCTAssertFalse(app.staticTexts["Manage card"].waitForExistence(timeout: 3.0))
         XCTAssertFalse(app.images["stp_card_visa"].waitForExistence(timeout: 3))
         XCTAssertFalse(app.images["stp_card_cartes_bancaires"].waitForExistence(timeout: 3))
         XCTAssertTrue(applePayButton.isSelected)
@@ -228,8 +228,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Remove last card while selected state is on the card
         app.buttons["Edit"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 3.0))
-        app.buttons["Remove card"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 3.0))
+        app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Cartes Bancaires •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
         // Nothing should be selected
@@ -264,7 +264,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.otherElements["Card Brand Dropdown"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.swipeUp()
         app.buttons["Done"].waitForExistenceAndTap()
-        app.buttons["Update"].waitForExistenceAndTap()
+        app.buttons["Save"].waitForExistenceAndTap()
 
         // Tap done on manage payment methods screen, then select 4242 card
         app.buttons["Done"].waitForExistenceAndTap()
