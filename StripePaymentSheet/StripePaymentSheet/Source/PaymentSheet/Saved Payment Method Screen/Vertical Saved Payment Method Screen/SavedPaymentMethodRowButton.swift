@@ -37,7 +37,7 @@ final class SavedPaymentMethodRowButton: UIView {
             circleView.isHidden = !isSelected
             chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
             updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
-            removeButton.isHidden = !canRemove
+            removeButton.isHidden = !canRemove || alternateUpdatePaymentMethodNavigation
             stackView.isUserInteractionEnabled = isEditing
         }
     }
