@@ -36,7 +36,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .viewMore,
+                                                      savedPaymentMethodAccessoryType: .viewMoreChevron,
                                                       mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
@@ -309,7 +309,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .viewMore,
+                                                      savedPaymentMethodAccessoryType: .viewMoreChevron,
                                                       mandateProvider: MockMandateProvider())
 
         verify(embeddedView)

@@ -74,10 +74,20 @@ final class RightAccessoryButtonTest: XCTestCase {
                                                                                            isCBCEligible: isCBCEligible,
                                                                                            allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                            allowsPaymentMethodRemoval: allowsPaymentMethodRemoval)
-                        XCTAssertEqual(result, .viewMore)
+                        XCTAssertEqual(result, .viewMoreChevron)
                     }
                 }
             }
         }
+    }
+    
+    func testViewMore_Returned_When_SavedPaymentsGreaterThanOne_FlatCheckmarkStyle() {
+        let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 2,
+                                                                           isFirstCardCoBranded: true,
+                                                                           isCBCEligible: true,
+                                                                           allowsRemovalOfLastSavedPaymentMethod: true,
+                                                                           allowsPaymentMethodRemoval: true,
+                                                                           isFlatCheckmarkStyle: true)
+        XCTAssertEqual(result, .viewMore)
     }
 }

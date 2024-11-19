@@ -157,7 +157,6 @@ class RowButton: UIView {
         // If we are flat with check style and have an accessory view (saved PM row)
         if isFlatWithCheckmarkStyle, rightAccessoryView != nil {
             labelsStackView.setCustomSpacing(10, after: label)
-            rightAccessoryView?.isUserInteractionEnabled = true
             imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor))
         } else {
             imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: centerYAnchor))
@@ -314,7 +313,7 @@ extension RowButton {
         // Check if in .flatWithCheck style and if rightAccessoryView exists, if so account for the Edit button being below the labels
         if isFlatWithCheckmarkStyle, let accessoryView {
             let accessoryViewHeight = accessoryView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-            return size.height + accessoryViewHeight + 8 // bake in some extra padding
+            return size.height + accessoryViewHeight + 4 // bake in some extra padding to match figma
         }
         
         return size.height
