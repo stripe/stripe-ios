@@ -473,6 +473,36 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: timeout))
     }
 
+    func testCardBrandChoiceUpdateAndRemove() {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.alternateUpdatePaymentMethodNavigation = .on
+        settings.merchantCountryCode = .FR
+        settings.customerMode = .returning
+
+        loadPlayground(app, settings)
+
+        app.buttons["None"].waitForExistenceAndTap()
+        app.buttons["Edit"].waitForExistenceAndTap()
+
+        // circularEditButton shows up in the view hierarchy, but it's not actually on the screen or tappable so we scroll a little
+        let startCoordinate = app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
+        startCoordinate.press(forDuration: 0.1, thenDragTo: app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
+        XCTAssertTrue(app.otherElements.matching(identifier: "Card Brand Dropdown").firstMatch.waitForExistenceAndTap())
+        app.pickerWheels.firstMatch.selectNextOption()
+        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 3))
+        app.buttons["Save"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 2)
+
+        app.buttons.matching(identifier: "CircularButton.Edit").element(boundBy: 1).waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
+        app.alerts.buttons["Remove"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
+        app.buttons["Done"].waitForExistenceAndTap()
+    }
     // MARK: - allowsRemovalOfLastSavedPaymentMethod
     func testRemoveLastSavedPaymentMethod() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()

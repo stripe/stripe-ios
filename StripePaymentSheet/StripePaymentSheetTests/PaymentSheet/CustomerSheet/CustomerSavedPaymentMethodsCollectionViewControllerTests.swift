@@ -296,7 +296,8 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         return CustomerSavedPaymentMethodsCollectionViewController.Configuration(showApplePay: false,
                                                                                  allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                  paymentMethodRemove: paymentMethodRemove,
-                                                                                 isTestMode: true)
+                                                                                 isTestMode: true,
+                                                                                 alternateUpdatePaymentMethodNavigation: false)
     }
     func customerSavedPaymentMethods(_ configuration: CustomerSavedPaymentMethodsCollectionViewController.Configuration,
                                      savedPaymentMethods: [STPPaymentMethod],
