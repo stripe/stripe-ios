@@ -16,6 +16,7 @@ extension RowButton {
         enum AccessoryType: Equatable {
             case edit
             case viewMore
+            case update
 
             var text: String? {
                 switch self {
@@ -23,6 +24,8 @@ extension RowButton {
                     return .Localized.edit
                 case .viewMore:
                     return .Localized.view_more
+                case .update:
+                    return .Localized.update
                 }
             }
 
@@ -30,7 +33,7 @@ extension RowButton {
                 switch self {
                 case .edit:
                     return nil
-                case .viewMore:
+                case .viewMore, .update:
                     return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
                 }
             }
@@ -38,7 +41,9 @@ extension RowButton {
 
         private var label: UILabel {
             let label = UILabel()
-            label.text = accessoryType.text
+            if accessoryType != .update {
+                label.text = accessoryType.text
+            }
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             if #available(iOS 15.0, *) {
                 label.minimumContentSizeCategory = .large
@@ -53,7 +58,12 @@ extension RowButton {
         private var imageView: UIImageView? {
             guard let image = accessoryType.accessoryImage else { return nil }
             let imageView = UIImageView(image: image)
-            imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
+            if accessoryType == .update {
+                imageView.tintColor = appearance.colors.icon
+            }
+            else {
+                imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
+            }
             imageView.contentMode = .scaleAspectFit
             imageView.isAccessibilityElement = false
             return imageView
