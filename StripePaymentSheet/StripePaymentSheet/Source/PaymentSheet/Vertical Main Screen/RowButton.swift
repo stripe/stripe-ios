@@ -75,7 +75,6 @@ class RowButton: UIView {
             sublabel.adjustsFontForContentSizeCategory = true
             sublabel.text = subtext
             sublabel.textColor = appearance.colors.componentPlaceholderText
-            sublabel.isUserInteractionEnabled = false
             self.sublabel = sublabel
         } else {
             self.sublabel = nil
@@ -125,17 +124,13 @@ class RowButton: UIView {
             ])
         }
 
-        for view in [radioButton, imageView].compactMap({ $0 }) {
+        for view in [radioButton, imageView, labelsStackView].compactMap({ $0 }) {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.isUserInteractionEnabled = false
             view.isAccessibilityElement = false
             addSubview(view)
         }
         
-        labelsStackView.translatesAutoresizingMaskIntoConstraints = false
-        labelsStackView.isAccessibilityElement = false
-        addSubview(labelsStackView)
-
         // Resolve ambiguous height warning by setting these constraints w/ low priority
         let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 14)
         imageViewTopConstraint.priority = .defaultLow
@@ -188,7 +183,9 @@ class RowButton: UIView {
         ].compactMap({ $0 }))
 
         // Add tap gesture
-        shadowRoundedRect.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        gestureRecognizer.delegate = self
+        shadowRoundedRect.addGestureRecognizer(gestureRecognizer)
 
         // Add long press gesture if we should animate on press
         if shouldAnimateOnPress {
@@ -291,6 +288,19 @@ extension RowButton: UIGestureRecognizerDelegate {
         // Without this, the long press prevents you from scrolling or the tap gesture from triggering.
         true
     }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if let accessoryView = rightAccessoryView as? RightAccessoryButton {
+            let locationInAccessoryView = touch.location(in: accessoryView)
+            if accessoryView.bounds.contains(locationInAccessoryView) {
+                // Ignore touches on the accessory view
+                accessoryView.handleTap()
+                return false
+            }
+        }
+        
+        return true
+    }
 }
 
 // MARK: - Helpers
@@ -318,7 +328,6 @@ extension RowButton {
         label.text = text
         label.numberOfLines = 1
         label.textColor = appearance.colors.componentText
-        label.isUserInteractionEnabled = false
         return label
     }
 
