@@ -84,7 +84,7 @@ class RowButton: UIView {
         // Label and sublabel
         label.isAccessibilityElement = false
         let labelsStackView = UIStackView(arrangedSubviews: [
-            label, sublabel, isFlatWithCheckmarkStyle ? rightAccessoryView : nil
+            label, sublabel, isFlatWithCheckmarkStyle ? rightAccessoryView : nil // add accessory view below labels if in checkmark style
         ].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
@@ -130,7 +130,7 @@ class RowButton: UIView {
             view.isAccessibilityElement = false
             addSubview(view)
         }
-        
+
         // Resolve ambiguous height warning by setting these constraints w/ low priority
         let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 14)
         imageViewTopConstraint.priority = .defaultLow
@@ -292,7 +292,6 @@ extension RowButton: UIGestureRecognizerDelegate {
         if let accessoryView = rightAccessoryView as? RightAccessoryButton {
             let locationInAccessoryView = touch.location(in: accessoryView)
             if accessoryView.bounds.contains(locationInAccessoryView) {
-                // Ignore touches on the accessory view
                 accessoryView.handleTap()
                 return false
             }
