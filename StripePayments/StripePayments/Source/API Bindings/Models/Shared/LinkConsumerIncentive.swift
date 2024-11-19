@@ -9,18 +9,18 @@ import Foundation
 
 @_spi(STP) public final class LinkConsumerIncentive: NSObject, STPAPIResponseDecodable {
     
-    @_spi(STP) public let campaign: String
     @_spi(STP) public let incentiveParams: IncentiveParams
+    @_spi(STP) public let incentiveDisplayText: String?
     
     @_spi(STP) public let allResponseFields: [AnyHashable : Any]
     
     init(
-        campaign: String,
         incentiveParams: IncentiveParams,
+        incentiveDisplayText: String?,
         allResponseFields: [AnyHashable: Any]
     ) {
-        self.campaign = campaign
         self.incentiveParams = incentiveParams
+        self.incentiveDisplayText = incentiveDisplayText
         self.allResponseFields = allResponseFields
     }
     
@@ -31,35 +31,24 @@ import Foundation
             return nil
         }
         
-        let campaign = response["campaign"] as! String
-        
-        let amountFlat = incentive["amount_flat"] as? Int
-        let amountPercent = incentive["amount_percent"] as? Float
-        let currency = incentive["currency"] as? String
-        let paymentMethod = incentive["payment_method"] as? String
-        
-        guard let paymentMethod else {
+        guard let paymentMethod = incentive["payment_method"] as? String else {
             return nil
         }
         
+        let incentiveDisplayText = response["incentive_display_text"] as? String
+        
         let incentiveParams = IncentiveParams(
-            amountFlat: amountFlat,
-            amountPercent: amountPercent,
-            currency: currency,
             paymentMethod: paymentMethod
         )
         
         return LinkConsumerIncentive(
-            campaign: campaign,
             incentiveParams: incentiveParams,
+            incentiveDisplayText: incentiveDisplayText,
             allResponseFields: response
         ) as? Self
     }
     
     @_spi(STP) public struct IncentiveParams {
-        @_spi(STP) public let amountFlat: Int?
-        @_spi(STP) public let amountPercent: Float?
-        @_spi(STP) public let currency: String?
         @_spi(STP) public let paymentMethod: String
     }
 }
