@@ -11,7 +11,7 @@ import UIKit
 
 class UpdatePaymentMethodViewModel {
     let paymentMethod: STPPaymentMethod
-    let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     let canEdit: Bool
     let canRemove: Bool
     lazy var header: String = {
@@ -39,7 +39,7 @@ class UpdatePaymentMethodViewModel {
         }
     }()
     init(paymentMethod: STPPaymentMethod, canEdit: Bool, canRemove: Bool) {
-        guard supportedPaymentMethods.contains(paymentMethod.type) else {
+        guard UpdatePaymentMethodViewModel.supportedPaymentMethods.contains(paymentMethod.type) else {
             fatalError("Unsupported payment type \(paymentMethod.type) in PollingViewModel")
         }
         self.paymentMethod = paymentMethod
