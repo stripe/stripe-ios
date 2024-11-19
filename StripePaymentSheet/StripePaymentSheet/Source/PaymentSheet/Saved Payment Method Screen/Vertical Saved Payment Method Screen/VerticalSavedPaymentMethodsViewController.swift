@@ -89,7 +89,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     var canEdit: Bool {
         // We can edit if there are removable or editable payment methods and we are not in remove only mode
-        // Or, under the new navigation flow, if any of the payment methods are cards
+        // Or, under the new navigation flow, if any of the payment methods are cards, US bank accounts, or SEPA debit
         return ((canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode) || (configuration.alternateUpdatePaymentMethodNavigation && paymentMethods.contains { UpdatePaymentMethodViewModel.supportedPaymentMethods.contains($0.type) })
     }
 
