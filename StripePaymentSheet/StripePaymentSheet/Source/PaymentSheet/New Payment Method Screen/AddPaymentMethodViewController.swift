@@ -51,7 +51,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     private let intent: Intent
     private let elementsSession: STPElementsSession
-    private let configuration: PaymentSheet.Configuration
+    private let configuration: PaymentElementConfiguration
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     var previousCustomerInput: IntentConfirmParams?
@@ -90,7 +90,7 @@ class AddPaymentMethodViewController: UIViewController {
     required init(
         intent: Intent,
         elementsSession: STPElementsSession,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         previousCustomerInput: IntentConfirmParams? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         formCache: PaymentMethodFormCache,

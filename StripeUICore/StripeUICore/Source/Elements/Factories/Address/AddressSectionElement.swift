@@ -441,3 +441,20 @@ extension AddressSectionElement: ElementDelegate {
         }
     }
 }
+
+@_spi(STP) public extension AddressSectionElement.AddressDetails {
+    init(billingAddress: BillingAddress, phone: String?) {
+        self.init(
+            name: billingAddress.name,
+            phone: phone,
+            address: Address(
+                city: billingAddress.city,
+                country: billingAddress.countryCode,
+                line1: billingAddress.line1,
+                line2: billingAddress.line2,
+                postalCode: billingAddress.postalCode,
+                state: billingAddress.state
+            )
+        )
+    }
+}

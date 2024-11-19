@@ -483,11 +483,12 @@ extension PaymentSheetLinkAccount {
     /// - Returns: Payment method params for paying with Link.
     func makePaymentMethodParams(from paymentDetails: ConsumerPaymentDetails, cvc: String?) -> STPPaymentMethodParams? {
         guard let currentSession = currentSession else {
-            assertionFailure("Cannot make payment method params without an active session.")
+            stpAssertionFailure("Cannot make payment method params without an active session.")
             return nil
         }
 
         let params = STPPaymentMethodParams(type: .link)
+        params.billingDetails = STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
         params.link?.paymentDetailsID = paymentDetails.stripeID
         params.link?.credentials = ["consumer_session_client_secret": currentSession.clientSecret]
 

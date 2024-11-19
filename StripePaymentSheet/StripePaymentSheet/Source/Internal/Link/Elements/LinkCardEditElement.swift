@@ -12,7 +12,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-// TODO(link): Remove after migrating to modern bindings
 fileprivate extension ConsumerPaymentDetails {
     var cardDetails: Details.Card? {
         switch details {
@@ -48,7 +47,7 @@ final class LinkCardEditElement: Element {
 
     let paymentMethod: ConsumerPaymentDetails
 
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
 
     let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
 
@@ -167,8 +166,10 @@ final class LinkCardEditElement: Element {
     private lazy var billingAddressSection: AddressSectionElement? = {
         guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
 
+        let defaultBillingAddress = AddressSectionElement.AddressDetails(billingAddress: paymentMethod.billingAddress ?? .init(), phone: nil)
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
+            defaults: defaultBillingAddress,
             collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
                 ? .all()
                 : .countryAndPostal(),
@@ -176,7 +177,7 @@ final class LinkCardEditElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentSheet.Configuration) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
 
