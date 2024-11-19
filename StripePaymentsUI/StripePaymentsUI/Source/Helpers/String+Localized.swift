@@ -102,6 +102,13 @@ extension String.Localized {
         )
     }
 
+    @_spi(STP) public static var your_card_has_expired: String {
+        STPLocalizedString(
+            "Your card has expired.",
+            "Error message for card details form when expiration date has passed"
+        )
+    }
+
     @_spi(STP) public static var your_cards_expiration_date_is_incomplete: String {
         STPLocalizedString(
             "Your card's expiration date is incomplete.",
