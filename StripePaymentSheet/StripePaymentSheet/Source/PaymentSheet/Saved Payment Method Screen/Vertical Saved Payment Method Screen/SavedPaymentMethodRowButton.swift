@@ -138,7 +138,7 @@ final class SavedPaymentMethodRowButton: UIView {
 
     private let alternateUpdatePaymentMethodNavigation: Bool
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, alternateUpdatePaymentMethodNavigation: Bool) {
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, alternateUpdatePaymentMethodNavigation: Bool = false) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
         self.alternateUpdatePaymentMethodNavigation = alternateUpdatePaymentMethodNavigation
