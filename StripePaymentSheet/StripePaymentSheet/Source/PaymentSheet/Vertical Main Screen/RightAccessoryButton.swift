@@ -25,7 +25,7 @@ extension RowButton {
                 case .viewMore:
                     return .Localized.view_more
                 case .update:
-                    return .Localized.update
+                    return .Localized.update_payment_method
                 }
             }
 
