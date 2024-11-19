@@ -133,6 +133,17 @@ extension STPElementsSession {
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
+    
+    static var linkPassthroughElementsSession: STPElementsSession {
+        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
+                                                                        "country_code": "US", ] as [String: Any],
+                                          "session_id": "123",
+                                          "apple_pay_preference": "enabled",
+                                          "link_settings": ["link_funding_sources": ["card"],
+                                            "link_passthrough_mode_enabled": true]
+        ]
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
+    }
 }
 
 // Just for the purposes of this test. No need to add the (tiny) overhead of Equatable to the published binary
