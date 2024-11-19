@@ -228,8 +228,13 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
             savedPaymentMethods: latestPaymentMethods
         )
 
+        // Select the selected payment method if we selected a payment method and have more than one saved PM
+        // Or if there are still saved payment methods & the saved payment method was previously selected to presenting
+        // the list of saved payment methods, then the embedded view should continue to show it is selected, otherwise unselected.
+        let isSelected = (latestPaymentMethods.count > 1 && selectedPaymentMethod != nil) ||
+        (embeddedPaymentMethodsView.selection?.isSaved ?? false && latestPaymentMethods.count > 0)
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
-                                                               isSelected: selectedPaymentMethod != nil,
+                                                               isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }

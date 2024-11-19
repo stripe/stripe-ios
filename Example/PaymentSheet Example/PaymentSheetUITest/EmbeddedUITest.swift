@@ -345,7 +345,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let bank6789Button = app.buttons["••••6789"]
         let applePayButton = app.buttons["Apple Pay"]
 
-        // Ensure card bankacct is selected, and apple pay is not.
+        // Ensure card bank acct. is selected, and apple pay is not.
         XCTAssertTrue(bank6789Button.waitForExistence(timeout: 3.0))
         XCTAssertTrue(bank6789Button.isSelected)
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 3.0))
