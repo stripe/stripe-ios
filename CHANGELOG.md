@@ -1,4 +1,4 @@
-## x.x.x yyyy-yy-yy
+## 24.0.1 2024-11-18
 ### PaymentSheet
 * [Added] Instant Bank Payments are now available when using deferred intents.
 * [Fixed] Fixed an issue with the vertical list with 3 or more saved payment methods where tapping outside the screen sometimes drops changes that were made (e.g. removal or update of PMs).

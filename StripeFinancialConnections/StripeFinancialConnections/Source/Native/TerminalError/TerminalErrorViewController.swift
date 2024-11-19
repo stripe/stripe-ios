@@ -39,7 +39,7 @@ final class TerminalErrorViewController: UIViewController {
         navigationItem.hidesBackButton = true
 
         let terminalErrorView = TerminalErrorView(
-            allowManualEntry: true,
+            allowManualEntry: allowManualEntry,
             theme: theme,
             didSelectManualEntry: { [weak self] in
                 guard let self = self else { return }

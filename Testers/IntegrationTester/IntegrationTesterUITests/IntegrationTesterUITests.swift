@@ -54,13 +54,28 @@ class IntegrationTesterUICardEntryTests: IntegrationTesterUITests {
 }
 
 class IntegrationTesterUICardTests: IntegrationTesterUITests {
-
+    
     func testStandardCustomCard3DS2() throws {
-        testAuthentication(cardNumber: "4000000000003220", confirmationBehavior: .threeDS2)
+        testOOBAuthentication(cardNumber: "4000000000003220")
     }
-
+    
+    let alwaysOobCard = "4000582600000094"
+    func testOOB3DS2() throws {
+        testOOBAuthentication(cardNumber: alwaysOobCard)
+    }
+    
     func testDeclinedCard() throws {
         testAuthentication(cardNumber: "4000000000000002", expectedResult: "declined")
+    }
+    
+    let alwaysOtpCard = "4000582600000045"
+    func testOtp3DS2() throws {
+        testOtpAuthentication(cardNumber: alwaysOtpCard)
+    }
+    
+    let alwaysSingleSelectCard = "4000582600000102"
+    func testSingleSelect3DS2() throws {
+        testSingleSelectAuthentication(cardNumber: alwaysSingleSelectCard)
     }
 }
 
@@ -278,7 +293,7 @@ class IntegrationTesterUITests: XCTestCase {
         let postalField = app.textFields["ZIP"]
         postalField.typeText("12345")
     }
-
+    
     func testAuthentication(cardNumber: String, expectedResult: String = "Payment complete!", confirmationBehavior: ConfirmationBehavior = .none) {
         print("Testing \(cardNumber)")
         self.popToMainMenu()
@@ -308,6 +323,89 @@ class IntegrationTesterUITests: XCTestCase {
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: expectedResult))
+    }
+    
+    func testOOBAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let oobChallengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication for a transaction, showing an out-of-band (OOB) flow. In live mode, customers may be asked to open their banking app installed on their phone to complete authentication.'")
+        let challengeText = app.staticTexts.matching(oobChallengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+        
+        let completeAuth = app.scrollViews.otherElements.staticTexts["Complete Authentication"]
+        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+        completeAuth.tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+    
+    func testOtpAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let challengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication, showing a sample one-time-password (OTP) flow. In live mode, customers may be asked to verify their identify by entering a code sent by their bank to their mobile phone. For this test, enter 424242 to complete authentication, or any other value to fail authentication'")
+        let challengeText = app.staticTexts.matching(challengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+
+        let verificationOTPTextView = app.scrollViews.otherElements.textFields["Enter your code below:"]
+        XCTAssertTrue(verificationOTPTextView.waitForExistence(timeout: 10.0))
+        verificationOTPTextView.tap()
+        verificationOTPTextView.typeText("424242")
+        
+        let completeAuth = app.scrollViews.otherElements.staticTexts["Submit"]
+        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+        completeAuth.tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+    
+    func testSingleSelectAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let challengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication for a transaction, showing a sample single-select flow. In live mode, customers may be asked to select a phone number to receive a one-time password.'")
+        let challengeText = app.staticTexts.matching(challengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+        
+        let completeAuth = app.scrollViews.otherElements.staticTexts["Submit"]
+        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+        completeAuth.tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
     }
 
     func testNoInputIntegrationMethod(_ integrationMethod: IntegrationMethod, shouldConfirm: Bool) {

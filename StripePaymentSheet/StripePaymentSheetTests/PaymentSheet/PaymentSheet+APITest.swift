@@ -99,7 +99,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                             intent: loadResult.intent,
                             elementsSession: loadResult.elementsSession,
                             paymentOption: self.newCardPaymentOption,
-                            paymentHandler: self.paymentHandler
+                            paymentHandler: self.paymentHandler,
+                            analyticsHelper: ._testValue()
                         ) { result, _ in
                             switch result {
                             case .completed:
@@ -186,7 +187,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                                      intent: .deferredIntent(intentConfig: intentConfig),
                                      elementsSession: loadResult.elementsSession,
                                      paymentOption: self.newCardPaymentOption,
-                                     paymentHandler: self.paymentHandler) { result, _ in
+                                     paymentHandler: self.paymentHandler,
+                                     analyticsHelper: ._testValue()) { result, _ in
                     switch result {
                     case .completed:
                         confirmExpectation.fulfill()
@@ -253,7 +255,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                                      intent: .deferredIntent(intentConfig: intentConfig),
                                      elementsSession: loadResult.elementsSession,
                                      paymentOption: self.newCardPaymentOption,
-                                     paymentHandler: self.paymentHandler) { result, _ in
+                                     paymentHandler: self.paymentHandler,
+                                     analyticsHelper: ._testValue()) { result, _ in
                     switch result {
                     case .completed:
                         confirmExpectation.fulfill()
@@ -304,7 +307,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     intent: loadResult.intent,
                     elementsSession: loadResult.elementsSession,
                     paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", type: .card), confirmParams: nil),
-                    paymentHandler: self.paymentHandler
+                    paymentHandler: self.paymentHandler,
+                    analyticsHelper: ._testValue()
                 ) { result, _ in
                     switch result {
                     case .completed:
@@ -563,7 +567,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             intent: intent,
             elementsSession: ._testCardValue(),
             paymentOption: inputPaymentOption,
-            paymentHandler: self.paymentHandler
+            paymentHandler: self.paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             XCTAssertTrue(Thread.isMainThread)
             switch (result, expectedResult) {
@@ -624,7 +629,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             intent: .deferredIntent(intentConfig: intentConfig),
             elementsSession: ._testCardValue(),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             e.fulfill()
             guard case let .failed(error) = result else {
@@ -654,7 +660,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             intent: .deferredIntent(intentConfig: intentConfig),
             elementsSession: ._testCardValue(),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             e.fulfill()
             // The result is completed, even though the IntentConfiguration and PaymentIntent amounts are not the same
@@ -682,7 +689,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             intent: .deferredIntent(intentConfig: intentConfig),
             elementsSession: ._testCardValue(),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             e.fulfill()
             guard case let .failed(error) = result else {
@@ -712,7 +720,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             intent: .deferredIntent(intentConfig: intentConfig),
             elementsSession: ._testCardValue(),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             e.fulfill()
             // The result is completed, even though the IntentConfiguration and SetupIntent setup_future_usage values are not the same
@@ -1145,7 +1154,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             intent: intent,
             elementsSession: elementsSession,
             paymentOption: paymentOption,
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { _, deferredConfirmationType in
             // ...should set the newly saved PM as the default
             let defaultPM = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)

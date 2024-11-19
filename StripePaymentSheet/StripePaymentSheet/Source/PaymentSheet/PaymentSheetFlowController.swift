@@ -393,7 +393,8 @@ extension PaymentSheet {
                     elementsSession: elementsSession,
                     paymentOption: paymentOption,
                     paymentHandler: paymentHandler,
-                    integrationShape: .flowController
+                    integrationShape: .flowController,
+                    analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
                     analyticsHelper.logPayment(
                         paymentOption: paymentOption,
