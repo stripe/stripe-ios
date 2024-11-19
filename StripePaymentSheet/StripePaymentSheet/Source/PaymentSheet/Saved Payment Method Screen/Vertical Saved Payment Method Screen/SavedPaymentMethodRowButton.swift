@@ -156,7 +156,7 @@ final class SavedPaymentMethodRowButton: UIView {
         delegate?.didSelectRemoveButton(self, with: paymentMethod)
     }
 
-    @objc private func handleRowButtonTapped(rowButton: RowButton) {
+    @objc private func handleRowButtonTapped(_: RowButton) {
         if alternateUpdatePaymentMethodNavigation && isEditing {
             delegate?.didSelectUpdateButton(self, with: paymentMethod)
         }
