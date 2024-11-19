@@ -347,7 +347,7 @@ extension UpdatePaymentMethodViewController: BottomSheetContentViewController {
 // MARK: SheetNavigationBarDelegate
 extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
 
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+    func sheetNavigationBarDidClose(_: SheetNavigationBar) {
         dismiss()
     }
 
