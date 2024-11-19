@@ -108,7 +108,7 @@ final class SavedPaymentMethodRowButton: UIView {
         let updateButton = CircularButton(style: .edit, iconColor: .white)
         updateButton.backgroundColor = appearance.colors.icon
         updateButton.isHidden = true
-        updateButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
+        updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
         return updateButton
     }()
 
