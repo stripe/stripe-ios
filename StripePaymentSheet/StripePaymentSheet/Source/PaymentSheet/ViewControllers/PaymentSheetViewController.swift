@@ -197,10 +197,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.view.backgroundColor = configuration.appearance.colors.background
     }
 
-    func selectLink() {
-        savedPaymentOptionsViewController.selectLink()
-    }
-
     // MARK: UIViewController Methods
 
     override func viewDidLoad() {
