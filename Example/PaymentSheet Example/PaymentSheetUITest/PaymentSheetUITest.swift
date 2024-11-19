@@ -2470,7 +2470,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
 
-        XCTAssertEqual(app.buttons.matching(identifier: "CircularButton.Edit").count, 2)
+        XCTAssertEqual(app.buttons.matching(identifier: "Update").count, 2)
     }
     func testDefaultSPMNavigationFlagOff() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()

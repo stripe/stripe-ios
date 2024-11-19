@@ -35,7 +35,8 @@ final class SavedPaymentMethodRowButton: UIView {
             rowButton.isSelected = isSelected
             rowButton.isEnabled = !isEditing
             circleView.isHidden = !isSelected
-            updateButton.isHidden = !canUpdate
+            chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
+            updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
             removeButton.isHidden = !canRemove
             stackView.isUserInteractionEnabled = isEditing
         }
@@ -107,12 +108,18 @@ final class SavedPaymentMethodRowButton: UIView {
         let updateButton = CircularButton(style: .edit, iconColor: .white)
         updateButton.backgroundColor = appearance.colors.icon
         updateButton.isHidden = true
-        updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
+        updateButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
         return updateButton
     }()
 
+    private lazy var chevronButton: RowButton.RightAccessoryButton = {
+        let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: appearance, didTap: handleUpdateButtonTapped)
+        chevronButton.isHidden = true
+        return chevronButton
+    }()
+
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, updateButton, removeButton])
+        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, chevronButton, updateButton, removeButton])
         // margins handled by the `RowButton`
         stackView.directionalLayoutMargins = .zero
         stackView.isUserInteractionEnabled = isEditing
@@ -129,9 +136,12 @@ final class SavedPaymentMethodRowButton: UIView {
         return button
     }()
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
+    private let alternateUpdatePaymentMethodNavigation: Bool
+
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, alternateUpdatePaymentMethodNavigation: Bool) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
+        self.alternateUpdatePaymentMethodNavigation = alternateUpdatePaymentMethodNavigation
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)
