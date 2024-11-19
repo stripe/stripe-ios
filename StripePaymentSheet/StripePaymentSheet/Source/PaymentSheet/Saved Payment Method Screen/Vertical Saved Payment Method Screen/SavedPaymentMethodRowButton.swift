@@ -33,7 +33,7 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation && paymentMethod.type == .card
+            rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation
             circleView.isHidden = !isSelected
             chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
             updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
