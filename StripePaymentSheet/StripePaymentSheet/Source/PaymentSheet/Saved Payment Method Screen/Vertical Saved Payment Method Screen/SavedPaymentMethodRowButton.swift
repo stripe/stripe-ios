@@ -33,7 +33,7 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation && paymentMethod.type == .card
+            rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation
             circleView.isHidden = !isSelected
             chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
             updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
@@ -156,7 +156,7 @@ final class SavedPaymentMethodRowButton: UIView {
         delegate?.didSelectRemoveButton(self, with: paymentMethod)
     }
 
-    @objc private func handleRowButtonTapped(rowButton: RowButton) {
+    @objc private func handleRowButtonTapped(_: RowButton) {
         if alternateUpdatePaymentMethodNavigation && isEditing {
             delegate?.didSelectUpdateButton(self, with: paymentMethod)
         }

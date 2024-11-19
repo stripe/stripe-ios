@@ -2470,7 +2470,6 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
 
-        XCTAssertEqual(app.buttons.matching(identifier: "Update payment method").count, 2)
         XCTAssertEqual(app.buttons.matching(identifier: "chevron").count, 2)
     }
     func testDefaultSPMNavigationFlagOff() {
