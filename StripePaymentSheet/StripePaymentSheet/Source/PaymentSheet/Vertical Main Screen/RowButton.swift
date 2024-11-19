@@ -310,6 +310,7 @@ extension RowButton {
         let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
         
         // Check if in .flatWithCheck style and if rightAccessoryView exists, if so account for the Edit button being below the labels
+        // This additional height should not be reflected by other rows
         if isFlatWithCheckmarkStyle, let accessoryView {
             let accessoryViewHeight = accessoryView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
             return size.height + accessoryViewHeight + 4 // bake in some extra padding to match figma
