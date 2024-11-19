@@ -342,17 +342,19 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
-                                                            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                            appearance: configuration.appearance,
-                                                            hostedSurface: .paymentSheet,
-                                                            canRemoveCard: canRemovePaymentMethods,
-                                                            isTestMode: configuration.apiClient.isTestmode,
-                                                            cardBrandFilter: configuration.cardBrandFilter)
-
-        updateViewController.delegate = self
-        self.updateViewController = updateViewController
-        self.bottomSheetController?.pushContentViewController(updateViewController)
+        if paymentMethod.type == .card {
+            let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
+                                                                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                                appearance: configuration.appearance,
+                                                                hostedSurface: .paymentSheet,
+                                                                canRemoveCard: canRemovePaymentMethods,
+                                                                isTestMode: configuration.apiClient.isTestmode,
+                                                                cardBrandFilter: configuration.cardBrandFilter)
+            
+            updateViewController.delegate = self
+            self.updateViewController = updateViewController
+            self.bottomSheetController?.pushContentViewController(updateViewController)
+        }
     }
 }
 

@@ -25,7 +25,7 @@ extension RowButton {
                 case .viewMore:
                     return .Localized.view_more
                 case .update:
-                    return .Localized.update_card
+                    return nil
                 }
             }
 
@@ -41,9 +41,7 @@ extension RowButton {
 
         private var label: UILabel {
             let label = UILabel()
-            if accessoryType != .update {
-                label.text = accessoryType.text
-            }
+            label.text = accessoryType.text
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             if #available(iOS 15.0, *) {
                 label.minimumContentSizeCategory = .large
@@ -89,6 +87,9 @@ extension RowButton {
 
             accessibilityLabel = accessoryType.text
             accessibilityIdentifier = accessoryType.text
+            if accessoryType == .update {
+                accessibilityIdentifier = "chevron"
+            }
             accessibilityTraits = [.button]
             isAccessibilityElement = true
 

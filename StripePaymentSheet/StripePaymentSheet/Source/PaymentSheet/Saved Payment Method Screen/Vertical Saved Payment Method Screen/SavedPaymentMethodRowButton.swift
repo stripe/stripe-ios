@@ -33,7 +33,7 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            rowButton.isEnabled = !isEditing
+            rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation
             circleView.isHidden = !isSelected
             chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
             updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
@@ -127,11 +127,7 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
-            guard let self else { return }
-            state = .selected
-            delegate?.didSelectButton(self, with: paymentMethod)
-        }
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView, didTap: handleRowButtonTapped)
 
         return button
     }()
@@ -160,4 +156,13 @@ final class SavedPaymentMethodRowButton: UIView {
         delegate?.didSelectRemoveButton(self, with: paymentMethod)
     }
 
+    @objc private func handleRowButtonTapped(rowButton: RowButton) {
+        if alternateUpdatePaymentMethodNavigation && isEditing {
+            delegate?.didSelectUpdateButton(self, with: paymentMethod)
+        }
+        else {
+            state = .selected
+            delegate?.didSelectButton(self, with: paymentMethod)
+        }
+    }
 }
