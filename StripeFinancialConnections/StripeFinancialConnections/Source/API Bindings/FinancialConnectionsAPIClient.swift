@@ -79,12 +79,12 @@ final class FinancialConnectionsAPIClient {
         return promise
     }
 
-    static func encodeAsParameters(_ value: any Encodable) throws -> [String: Any] {
+    static func encodeAsParameters(_ value: any Encodable) throws -> [String: Any]? {
         let jsonData = try JSONEncoder().encode(value)
         let jsonObject = try JSONSerialization.jsonObject(with: jsonData)
 
         if let dictionary = jsonObject as? [String: Any] {
-            return dictionary
+            return dictionary.isEmpty ? nil : dictionary
         } else {
             throw EncodingError.cannotCastToDictionary
         }

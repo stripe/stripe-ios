@@ -53,6 +53,13 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
         XCTAssertNil(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: false))
     }
 
+    func testEmptyBillingAddressEncodedAsParameters() throws {
+        let billingAddress = BillingAddress()
+        let encodedBillingAddress = try FinancialConnectionsAPIClient.encodeAsParameters(billingAddress)
+        
+        XCTAssertNil(encodedBillingAddress)
+    }
+
     func testBillingAddressEncodedAsParameters() throws {
         let billingAddress = BillingAddress(
             name: "Bobby Tables",
@@ -65,13 +72,13 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
         )
         let encodedBillingAddress = try FinancialConnectionsAPIClient.encodeAsParameters(billingAddress)
 
-        XCTAssertEqual(encodedBillingAddress["name"] as? String, "Bobby Tables")
-        XCTAssertEqual(encodedBillingAddress["line_1"] as? String, "123 Fake St")
-        XCTAssertNil(encodedBillingAddress["line_2"])
-        XCTAssertEqual(encodedBillingAddress["locality"] as? String, "Utopia")
-        XCTAssertEqual(encodedBillingAddress["administrative_area"] as? String, "CA")
-        XCTAssertEqual(encodedBillingAddress["postal_code"] as? String, "90210")
-        XCTAssertEqual(encodedBillingAddress["country_code"] as? String, "US")
+        XCTAssertEqual(encodedBillingAddress?["name"] as? String, "Bobby Tables")
+        XCTAssertEqual(encodedBillingAddress?["line_1"] as? String, "123 Fake St")
+        XCTAssertNil(encodedBillingAddress?["line_2"])
+        XCTAssertEqual(encodedBillingAddress?["locality"] as? String, "Utopia")
+        XCTAssertEqual(encodedBillingAddress?["administrative_area"] as? String, "CA")
+        XCTAssertEqual(encodedBillingAddress?["postal_code"] as? String, "90210")
+        XCTAssertEqual(encodedBillingAddress?["country_code"] as? String, "US")
     }
 
     func testBillingAddressEncodedAsParametersNonNilLine2() throws {
@@ -86,12 +93,12 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
         )
         let encodedBillingAddress = try FinancialConnectionsAPIClient.encodeAsParameters(billingAddress)
 
-        XCTAssertEqual(encodedBillingAddress["name"] as? String, "Bobby Tables")
-        XCTAssertEqual(encodedBillingAddress["line_1"] as? String, "123 Fake St")
-        XCTAssertNil(encodedBillingAddress["line_2"])
-        XCTAssertEqual(encodedBillingAddress["locality"] as? String, "Utopia")
-        XCTAssertEqual(encodedBillingAddress["administrative_area"] as? String, "CA")
-        XCTAssertEqual(encodedBillingAddress["postal_code"] as? String, "90210")
-        XCTAssertEqual(encodedBillingAddress["country_code"] as? String, "US")
+        XCTAssertEqual(encodedBillingAddress?["name"] as? String, "Bobby Tables")
+        XCTAssertEqual(encodedBillingAddress?["line_1"] as? String, "123 Fake St")
+        XCTAssertNil(encodedBillingAddress?["line_2"])
+        XCTAssertEqual(encodedBillingAddress?["locality"] as? String, "Utopia")
+        XCTAssertEqual(encodedBillingAddress?["administrative_area"] as? String, "CA")
+        XCTAssertEqual(encodedBillingAddress?["postal_code"] as? String, "90210")
+        XCTAssertEqual(encodedBillingAddress?["country_code"] as? String, "US")
     }
 }
