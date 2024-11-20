@@ -652,7 +652,6 @@ extension STPFormView {
                     equalTo: stackView.bottomAnchor,
                     constant: SectionView.titleVerticalMargin
                 ),
-                bottomAnchor.constraint(equalTo: footerLabel.bottomAnchor),
             ])
 
             // the initial layout of a SectionView will log constraint errors if it has a row with multiple
