@@ -444,7 +444,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
-        XCTAssertTrue(app.buttons["•••• 4444"].isSelected)
+        XCTAssertTrue(app.buttons["New card"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Tapping on card again should present the form filled out
@@ -455,7 +455,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
-        XCTAssertTrue(app.buttons["•••• 4444"].isSelected)
+        XCTAssertTrue(app.buttons["New card"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Select and cancel out a form PM to ensure that the 4444 card is still selected
@@ -463,7 +463,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
-        XCTAssertTrue(app.buttons["•••• 4444"].isSelected)
+        XCTAssertTrue(app.buttons["New card"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Select a no-form PM such as Cash App Pay
