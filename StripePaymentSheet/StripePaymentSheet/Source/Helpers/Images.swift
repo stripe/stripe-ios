@@ -90,6 +90,6 @@ enum Image: String, CaseIterable, ImageMaker {
     // Mandates
     case bacsdd_logo = "bacsdd_logo"
     
-    // Embedded
+    // Embedded payment element
     case embedded_check = "icon_check"
 }

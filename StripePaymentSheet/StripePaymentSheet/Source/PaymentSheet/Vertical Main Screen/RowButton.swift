@@ -154,8 +154,8 @@ class RowButton: UIView {
             imageView.widthAnchor.constraint(equalToConstant: 24),
         ]
 
-        // If we are flat with check style and have an accessory view (saved PM row)
-        if isFlatWithCheckmarkStyle, rightAccessoryView != nil {
+        let isSavedPMRow = rightAccessoryView != nil
+        if isFlatWithCheckmarkStyle, isSavedPMRow {
             labelsStackView.setCustomSpacing(10, after: label)
             imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor))
         } else {

@@ -49,7 +49,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         verify(rowButton)
     }
     
-    func testPaymentMethodRowButton_ignoresCheckbox_notEmbedded() {
+    func testPaymentMethodRowButton_ignoresEmbeddedConfiguration_whenEmbeddedIsFalse() {
         var appearance = PaymentSheet.Appearance.default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: appearance)
