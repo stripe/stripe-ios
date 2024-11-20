@@ -100,7 +100,7 @@ class EmbeddedPaymentMethodsView: UIView {
                 shouldAnimateOnPress: true,
                 isEmbedded: true,
                 didTap: { [weak self] rowButton in
-                    self?.didTap(selectedRowButton: rowButton, selection: selection)
+                    self?.didTap(selection: selection)
                 }
             )
             if initialSelection == selection {
@@ -116,7 +116,7 @@ class EmbeddedPaymentMethodsView: UIView {
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
-                self?.didTap(selectedRowButton: rowButton, selection: selection)
+                self?.didTap(selection: selection)
             })
 
             if initialSelection == selection {
@@ -130,7 +130,7 @@ class EmbeddedPaymentMethodsView: UIView {
             let selection: Selection = .link
             let linkRowButton = RowButton.makeForLink(appearance: rowButtonAppearance, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
-                self?.didTap(selectedRowButton: rowButton, selection: selection)
+                self?.didTap(selection: selection)
             }
 
             if initialSelection == selection {
@@ -151,7 +151,7 @@ class EmbeddedPaymentMethodsView: UIView {
                 shouldAnimateOnPress: true,
                 isEmbedded: true,
                 didTap: { [weak self] rowButton in
-                    self?.didTap(selectedRowButton: rowButton, selection: selection)
+                    self?.didTap(selection: selection)
                 }
             )
             if initialSelection == selection {
@@ -208,7 +208,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     // MARK: Tap handling
-    func didTap(selectedRowButton: RowButton, selection: Selection) {
+    func didTap(selection: Selection) {
         self.selection = selection
     }
 
@@ -287,7 +287,7 @@ class EmbeddedPaymentMethodsView: UIView {
                 .stripeId(savedPaymentMethod.stripeId),
                 forCustomer: self?.customer?.id
             )
-           self?.didTap(selectedRowButton: rowButton, selection: selection)
+           self?.didTap(selection: selection)
         })
         return savedPaymentMethodButton
     }
