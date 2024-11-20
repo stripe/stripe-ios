@@ -408,7 +408,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["•••• 4242"].waitForExistenceAndTap())
         
-        // Card should now be selected
+        // Verify we have dismissed the saved payment method view and have the correct card selected
+        XCTAssertTrue(app.buttons["View more"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
     }
