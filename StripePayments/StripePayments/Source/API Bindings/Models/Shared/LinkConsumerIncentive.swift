@@ -12,16 +12,14 @@ import Foundation
     @_spi(STP) public let incentiveParams: IncentiveParams
     @_spi(STP) public let incentiveDisplayText: String?
     
-    @_spi(STP) public let allResponseFields: [AnyHashable : Any]
+    @_spi(STP) public private(set) var allResponseFields: [AnyHashable: Any] = [:]
     
     init(
         incentiveParams: IncentiveParams,
-        incentiveDisplayText: String?,
-        allResponseFields: [AnyHashable: Any]
+        incentiveDisplayText: String?
     ) {
         self.incentiveParams = incentiveParams
         self.incentiveDisplayText = incentiveDisplayText
-        self.allResponseFields = allResponseFields
     }
     
     @_spi(STP) public static func decodedObject(
@@ -43,8 +41,7 @@ import Foundation
         
         return LinkConsumerIncentive(
             incentiveParams: incentiveParams,
-            incentiveDisplayText: incentiveDisplayText,
-            allResponseFields: response
+            incentiveDisplayText: incentiveDisplayText
         ) as? Self
     }
     
