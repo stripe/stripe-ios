@@ -182,6 +182,10 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
 
+    @_spi(STP) public func setCardBrand(_ brand: STPCardBrand) {
+        setCardBrand(.brand(brand), animated: false)
+    }
+
     /// Updates the card brand, optionally animating the transition.
     /// - Parameters:
     ///   - newBrandState: New card brand state.

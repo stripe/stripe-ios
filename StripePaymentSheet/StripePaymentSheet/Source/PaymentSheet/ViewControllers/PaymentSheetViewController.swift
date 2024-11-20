@@ -174,7 +174,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
-                allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+                allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
@@ -195,10 +196,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.savedPaymentOptionsViewController.delegate = self
         // TODO: This self.view call should be moved to viewDidLoad
         self.view.backgroundColor = configuration.appearance.colors.background
-    }
-
-    func selectLink() {
-        savedPaymentOptionsViewController.selectLink()
     }
 
     // MARK: UIViewController Methods

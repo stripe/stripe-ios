@@ -133,14 +133,14 @@ extension PayWithLinkViewController {
 
         private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
 
-        private let configuration: PaymentSheet.Configuration
+        private let configuration: PaymentElementConfiguration
 
         private let country: String?
 
         // MARK: Initializer
 
         init(
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             accountService: LinkAccountServiceProtocol,
             linkAccount: PaymentSheetLinkAccount?,
             country: String?

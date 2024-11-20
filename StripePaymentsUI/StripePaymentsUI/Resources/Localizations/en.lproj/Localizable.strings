@@ -70,6 +70,9 @@
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
+/* Error message for card details form when expiration date has passed */
+"Your card has expired." = "Your card has expired.";
+
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Your card number is incomplete.";
 

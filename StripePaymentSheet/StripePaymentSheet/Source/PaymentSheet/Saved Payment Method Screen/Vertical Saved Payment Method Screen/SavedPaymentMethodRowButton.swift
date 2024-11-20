@@ -33,10 +33,11 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            rowButton.isEnabled = !isEditing
+            rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation
             circleView.isHidden = !isSelected
-            updateButton.isHidden = !canUpdate
-            removeButton.isHidden = !canRemove
+            chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
+            updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
+            removeButton.isHidden = !canRemove || alternateUpdatePaymentMethodNavigation
             stackView.isUserInteractionEnabled = isEditing
         }
     }
@@ -111,8 +112,14 @@ final class SavedPaymentMethodRowButton: UIView {
         return updateButton
     }()
 
+    private lazy var chevronButton: RowButton.RightAccessoryButton = {
+        let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: appearance, didTap: handleUpdateButtonTapped)
+        chevronButton.isHidden = true
+        return chevronButton
+    }()
+
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, updateButton, removeButton])
+        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, chevronButton, updateButton, removeButton])
         // margins handled by the `RowButton`
         stackView.directionalLayoutMargins = .zero
         stackView.isUserInteractionEnabled = isEditing
@@ -120,18 +127,17 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
-            guard let self else { return }
-            state = .selected
-            delegate?.didSelectButton(self, with: paymentMethod)
-        }
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView, didTap: handleRowButtonTapped)
 
         return button
     }()
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
+    private let alternateUpdatePaymentMethodNavigation: Bool
+
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, alternateUpdatePaymentMethodNavigation: Bool = false) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
+        self.alternateUpdatePaymentMethodNavigation = alternateUpdatePaymentMethodNavigation
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)
@@ -150,4 +156,13 @@ final class SavedPaymentMethodRowButton: UIView {
         delegate?.didSelectRemoveButton(self, with: paymentMethod)
     }
 
+    @objc private func handleRowButtonTapped(_: RowButton) {
+        if alternateUpdatePaymentMethodNavigation && isEditing {
+            delegate?.didSelectUpdateButton(self, with: paymentMethod)
+        }
+        else {
+            state = .selected
+            delegate?.didSelectButton(self, with: paymentMethod)
+        }
+    }
 }

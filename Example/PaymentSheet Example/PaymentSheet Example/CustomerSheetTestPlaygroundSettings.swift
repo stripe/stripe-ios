@@ -142,6 +142,12 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
+    enum AlternateUpdatePaymentMethodNavigation: String, PickerEnum {
+        static let enumName: String = "alternateUpdatePaymentMethodNavigation"
+        case on
+        case off
+    }
+
     var customerMode: CustomerMode
     var customerId: String?
     var customerKeyType: CustomerKeyType
@@ -162,7 +168,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var cardBrandAcceptance: CardBrandAcceptance
-
+    var alternateUpdatePaymentMethodNavigation: AlternateUpdatePaymentMethodNavigation
+    
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
                                                    customerId: nil,
@@ -182,7 +189,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    allowsRemovalOfLastSavedPaymentMethod: .on,
                                                    paymentMethodRemove: .enabled,
                                                    paymentMethodAllowRedisplayFilters: .always,
-                                                   cardBrandAcceptance: .all)
+                                                   cardBrandAcceptance: .all,
+                                                   alternateUpdatePaymentMethodNavigation: .off)
     }
 
     var base64Data: String {

@@ -38,6 +38,14 @@ extension STPElementsSession {
         linkSettings?.popupWebviewOption ?? .shared
     }
 
+    func shouldShowLink2FABeforePaymentSheet(for linkAccount: PaymentSheetLinkAccount, configuration: PaymentSheet.Configuration) -> Bool {
+        return configuration.forceNativeLinkEnabled &&
+        self.supportsLink &&
+        linkAccount.sessionState == .requiresVerification &&
+        !linkAccount.hasStartedSMSVerification &&
+        self.linkSettings?.suppress2FAModal != true
+    }
+
     func countryCode(overrideCountry: String?) -> String? {
 #if DEBUG
         if let overrideCountry {

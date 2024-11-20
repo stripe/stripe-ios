@@ -63,11 +63,12 @@ final class PayWithLinkViewController: UINavigationController {
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
-        let configuration: PaymentSheet.Configuration
+        let configuration: PaymentElementConfiguration
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
+        var analyticsHelper: PaymentSheetAnalyticsHelper
 
         /// Creates a new Context object.
         /// - Parameters:
@@ -77,13 +78,15 @@ final class PayWithLinkViewController: UINavigationController {
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
+        ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool,
-            callToAction: ConfirmButton.CallToActionType?
+            callToAction: ConfirmButton.CallToActionType?,
+            analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -91,6 +94,7 @@ final class PayWithLinkViewController: UINavigationController {
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
             self.callToAction = callToAction ?? intent.callToAction
+            self.analyticsHelper = analyticsHelper
         }
     }
 
@@ -115,10 +119,11 @@ final class PayWithLinkViewController: UINavigationController {
     convenience init(
         intent: Intent,
         elementsSession: STPElementsSession,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
-        callToAction: ConfirmButton.CallToActionType? = nil
+        callToAction: ConfirmButton.CallToActionType? = nil,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.init(
             context: Context(
@@ -127,7 +132,8 @@ final class PayWithLinkViewController: UINavigationController {
                 configuration: configuration,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
-                callToAction: callToAction
+                callToAction: callToAction,
+                analyticsHelper: analyticsHelper
             )
         )
     }

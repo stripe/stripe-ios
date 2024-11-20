@@ -173,6 +173,9 @@ re-entering the security code (CVV/CVC). */
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
 
+/* Title shown above a view containing the customer's card that they can delete or update */
+"Manage card" = "Manage card";
+
 /* Title shown above a view containing the customer's payment method that they can delete or update */
 "Manage payment method" = "Manage payment method";
 
@@ -268,7 +271,8 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Label for a button that re-sends the a login code when tapped */
 "Resend code" = "Resend code";
 
-/* A button used for saving a new payment method */
+/* A button used for saving a new payment method
+   Label on a button that when tapped, updates a card brand. */
 "Save" = "Save";
 
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
@@ -368,9 +372,6 @@ is not supported by the merchant */
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Unavailable for this purchase";
-
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "Update";
 
 /* Title for a button that when tapped, presents a screen for updating a card. Also
 the heading the screen itself. */

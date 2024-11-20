@@ -45,7 +45,8 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             intent: intent,
             elementsSession: ._testCardValue(),
             paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: .init()),
-            paymentHandler: .shared()
+            paymentHandler: .shared(),
+            analyticsHelper: ._testValue()
         ) { result, analyticsConfirmType in
             e.fulfill()
             guard case .completed = result else {
@@ -106,7 +107,8 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             intent: intent,
             elementsSession: ._testCardValue(),
             paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: intentConfirmParams.paymentMethodParams.nonnil_billingDetails),
-            paymentHandler: .shared()
+            paymentHandler: .shared(),
+            analyticsHelper: ._testValue()
         ) { _, _ in }
         await fulfillment(of: [externalConfirmHandlerCalled], timeout: 5)
     }
@@ -129,7 +131,8 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
                 intent: intent,
                 elementsSession: ._testCardValue(),
                 paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: .init()),
-                paymentHandler: .shared()
+                paymentHandler: .shared(),
+                analyticsHelper: ._testValue()
             ) { result, analyticsConfirmType in
                 e.fulfill()
                 XCTAssertEqual(analyticsConfirmType, nil)

@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CardBrandFilteringBeta) @_spi(AlternateUpdatePaymentMethodNavigation) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -184,6 +184,7 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
+        configuration.alternateUpdatePaymentMethodNavigation = settings.alternateUpdatePaymentMethodNavigation == .on
         return configuration
     }
 
@@ -271,7 +272,7 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-
+        configuration.alternateUpdatePaymentMethodNavigation = settings.alternateUpdatePaymentMethodNavigation == .on
         return configuration
     }
 
@@ -440,6 +441,10 @@ class PlaygroundController: ObservableObject {
             } else {
                 self.ambiguousViewTimer?.invalidate()
             }
+            
+            // Hack to enable incentives in Instant Debits
+            let enableInstantDebitsIncentives = newValue.instantDebitsIncentives == .on
+            UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
         }.store(in: &subscribers)
 
         // Listen for analytics

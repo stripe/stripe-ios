@@ -100,7 +100,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                 delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
         }
-        
+
         guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
             // This can occur when selection is being reset to nothing selected or to a saved payment method, so don't assert.
             self.formViewController = nil
@@ -136,11 +136,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         self.formViewController = formViewController
     }
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
-        // Special case, only 1 card remaining but is co-branded, skip showing the list and show update view controller
+        // Special case, only 1 card remaining but is co-branded (or alternateUpdatePaymentMethodNavigation), skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
-           elementsSession.isCardBrandChoiceEligible {
+           elementsSession.isCardBrandChoiceEligible || configuration.alternateUpdatePaymentMethodNavigation {
             let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                 appearance: configuration.appearance,
@@ -201,7 +201,7 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }
-    
+
     func didDismiss(viewController: UpdateCardViewController) {
         presentingViewController?.dismiss(animated: true)
     }
@@ -278,7 +278,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             completion(result, deferredIntentConfirmationType)
         }
     }
-    
+
     func embeddedFormViewControllerDidCompleteConfirmation(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
         embeddedFormViewController.dismiss(animated: true) {
             if case let .confirm(completion) = self.configuration.formSheetAction {
@@ -286,7 +286,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
         }
     }
-    
+
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
         if embeddedFormViewController.selectedPaymentOption == nil {
             self.formViewController = nil
@@ -294,16 +294,16 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         }
         embeddedFormViewController.dismiss(animated: true)
     }
-    
+
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
         embeddedFormViewController.dismiss(animated: true)
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
-    
+
 }
 
 extension EmbeddedPaymentElement {
-    
+
     func _confirm() async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
         if let latestUpdateTask {
@@ -358,10 +358,11 @@ extension EmbeddedPaymentElement {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            integrationShape: .embedded
+            integrationShape: .embedded,
+            analyticsHelper: analyticsHelper
         )
     }
-    
+
     func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
         return BottomSheetViewController(contentViewController: viewController,
                                          appearance: configuration.appearance,
@@ -372,23 +373,22 @@ extension EmbeddedPaymentElement {
     }
 }
 
-
 // TODO(porter) When we use Xcode 16 on CI do this instead of `STPAuthenticationContextWrapper`
 // @retroactive is not supported in Xcode 15
-//extension UIViewController: @retroactive STPAuthenticationContext {
+// extension UIViewController: @retroactive STPAuthenticationContext {
 //    public func authenticationPresentingViewController() -> UIViewController {
 //        return self
 //    }
-//}
+// }
 
 final class STPAuthenticationContextWrapper: UIViewController {
     let _presentingViewController: UIViewController
-    
+
     init(presentingViewController: UIViewController) {
         self._presentingViewController = presentingViewController
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -85,6 +85,7 @@
 		41D17A6C2C5A7429007C6EE6 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A612C5A7429007C6EE6 /* StripeiOS-Release.xcconfig */; };
 		41D17A6D2C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A622C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig */; };
 		41D17A6E2C5A7429007C6EE6 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41D17A632C5A7429007C6EE6 /* Version.xcconfig */; };
+		E611A7182CE8372800B3F580 /* ActivityViewControllerWithoutPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = E611A7172CE8372500B3F580 /* ActivityViewControllerWithoutPopover.swift */; };
 		E6165CBF2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6165CBE2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift */; };
 		E6165CC12CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6165CC02CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift */; };
 		E640C9CC2CBF0C1E009D0C6E /* AuthenticatedWebViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E640C9CB2CBF0C1E009D0C6E /* AuthenticatedWebViewManager.swift */; };
@@ -224,6 +225,7 @@
 		41D17A612C5A7429007C6EE6 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		41D17A622C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		41D17A632C5A7429007C6EE6 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		E611A7172CE8372500B3F580 /* ActivityViewControllerWithoutPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewControllerWithoutPopover.swift; sourceTree = "<group>"; };
 		E6165CBE2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitComponentPropsMessageHandler.swift; sourceTree = "<group>"; };
 		E6165CC02CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitComponentPropsMessageHandlerTests.swift; sourceTree = "<group>"; };
 		E640C9CB2CBF0C1E009D0C6E /* AuthenticatedWebViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedWebViewManager.swift; sourceTree = "<group>"; };
@@ -337,6 +339,7 @@
 		413987C42C63F34B001D375E /* Webview */ = {
 			isa = PBXGroup;
 			children = (
+				E611A7172CE8372500B3F580 /* ActivityViewControllerWithoutPopover.swift */,
 				410D0FE42C6D32F0009B0E26 /* ApplicationURLOpener.swift */,
 				410D0FDE2C6D3176009B0E26 /* ConnectWebViewController.swift */,
 				E6D3C8ED2CBE1404003CE967 /* HTTPStatusError.swift */,
@@ -875,6 +878,7 @@
 				E6660D9C2CDC4194002A7631 /* ComponentCreatedEvent.swift in Sources */,
 				E6660D9D2CDC4194002A7631 /* DeserializeMessageErrorEvent.swift in Sources */,
 				E6660D9E2CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift in Sources */,
+				E611A7182CE8372800B3F580 /* ActivityViewControllerWithoutPopover.swift in Sources */,
 				E6660D9F2CDC4194002A7631 /* UnrecognizedSetterEvent.swift in Sources */,
 				E6660DA02CDC4194002A7631 /* ComponentLoadedEvent.swift in Sources */,
 				E6660DA12CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift in Sources */,

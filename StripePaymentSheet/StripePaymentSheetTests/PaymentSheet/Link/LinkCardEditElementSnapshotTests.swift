@@ -64,10 +64,12 @@ extension LinkCardEditElementSnapshotTests {
                     checks: nil
                 )
             ),
+            billingAddress: nil,
+            billingEmailAddress: nil,
             isDefault: isDefault
         )
 
-        return LinkCardEditElement(paymentMethod: paymentMethod, configuration: .init())
+        return LinkCardEditElement(paymentMethod: paymentMethod, configuration: PaymentSheet.Configuration())
     }
 
 }

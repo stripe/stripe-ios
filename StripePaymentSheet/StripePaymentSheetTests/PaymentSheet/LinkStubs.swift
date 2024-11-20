@@ -38,6 +38,8 @@ extension LinkStubs {
                     last4: "1234",
                     checks: nil)
                 ),
+                billingAddress: nil,
+                billingEmailAddress: nil,
                 isDefault: true
             ),
             ConsumerPaymentDetails(
@@ -49,11 +51,15 @@ extension LinkStubs {
                     last4: "4321",
                     checks: .init(cvcCheck: .fail))
                 ),
+                billingAddress: nil,
+                billingEmailAddress: nil,
                 isDefault: false
             ),
             ConsumerPaymentDetails(
                 stripeID: "3",
                 details: .bankAccount(bankAccount: .init(iconCode: nil, name: "test", last4: "1234")),
+                billingAddress: nil,
+                billingEmailAddress: nil,
                 isDefault: false
             ),
             ConsumerPaymentDetails(
@@ -65,6 +71,8 @@ extension LinkStubs {
                     last4: "1111",
                     checks: nil)
                 ),
+                billingAddress: nil,
+                billingEmailAddress: nil,
                 isDefault: false
             ),
         ]

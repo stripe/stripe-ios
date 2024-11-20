@@ -307,6 +307,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum InstantDebitsIncentives: String, PickerEnum {
+        static var enumName: String { "Instant Debits Incentives" }
+
+        case on
+        case off
+    }
     enum ExternalPaymentMethods: String, PickerEnum {
         static let enumName: String = "External PMs"
         // Based on https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/55d7fd10/src/externalPaymentMethods/constants.ts#L13
@@ -432,6 +438,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
+    enum AlternateUpdatePaymentMethodNavigation: String, PickerEnum {
+        static let enumName: String = "alternateUpdatePaymentMethodNavigation"
+        case on
+        case off
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -463,6 +475,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var checkoutEndpoint: String
     var autoreload: Autoreload
     var shakeAmbiguousViews: ShakeAmbiguousViews
+    var instantDebitsIncentives: InstantDebitsIncentives
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
@@ -476,6 +489,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var cardBrandAcceptance: CardBrandAcceptance
+    var alternateUpdatePaymentMethodNavigation: AlternateUpdatePaymentMethodNavigation
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -508,6 +522,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
             shakeAmbiguousViews: .off,
+            instantDebitsIncentives: .off,
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
@@ -519,7 +534,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectAddress: .automatic,
             formSheetAction: .confirm,
             embeddedViewDisplaysMandateText: .on,
-            cardBrandAcceptance: .all)
+            cardBrandAcceptance: .all,
+            alternateUpdatePaymentMethodNavigation: .off)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

@@ -24,7 +24,7 @@ extension PayWithLinkViewController {
         weak var delegate: UpdatePaymentViewControllerDelegate?
         let linkAccount: PaymentSheetLinkAccount
         let intent: Intent
-        var configuration: PaymentSheet.Configuration
+        var configuration: PaymentElementConfiguration
         let paymentMethod: ConsumerPaymentDetails
 
         private let titleLabel: UILabel = {

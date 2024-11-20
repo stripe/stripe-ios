@@ -71,7 +71,8 @@ extension PaymentSheet {
             elementsSession: elementsSession,
             configuration: configuration,
             shouldOfferApplePay: shouldOfferApplePay,
-            shouldFinishOnClose: shouldFinishOnClose
+            shouldFinishOnClose: shouldFinishOnClose,
+            analyticsHelper: self.analyticsHelper
         )
 
         payWithLinkVC.payWithLinkDelegate = self
@@ -132,7 +133,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: self.paymentHandler,
-            integrationShape: .complete)
+            integrationShape: .complete,
+            analyticsHelper: analyticsHelper)
         { result, confirmationType in
             if case let .failed(error) = result {
                 self.mostRecentError = error

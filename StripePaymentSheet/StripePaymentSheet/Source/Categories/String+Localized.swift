@@ -77,6 +77,20 @@ extension String.Localized {
         STPLocalizedString("Back", "Text for back button")
     }
 
+    static var manage_card: String {
+        STPLocalizedString(
+            "Manage card",
+            "Title shown above a view containing the customer's card that they can delete or update"
+        )
+    }
+
+    static var save: String {
+       STPLocalizedString(
+           "Save",
+           "Label on a button that when tapped, updates a card brand."
+       )
+    }
+
     static var update_card: String {
         STPLocalizedString(
             "Update card",
@@ -91,13 +105,6 @@ extension String.Localized {
         STPLocalizedString(
             "Update card brand",
             "Title for a screen for updating a card brand."
-        )
-    }
-
-    static var update: String {
-        STPLocalizedString(
-            "Update",
-            "Title for a button that when tapped, updates a card brand."
         )
     }
 
