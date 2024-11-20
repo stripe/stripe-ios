@@ -40,7 +40,7 @@ class UpdatePaymentMethodViewModel {
     }()
     init(paymentMethod: STPPaymentMethod, canEdit: Bool, canRemove: Bool) {
         guard UpdatePaymentMethodViewModel.supportedPaymentMethods.contains(paymentMethod.type) else {
-            fatalError("Unsupported payment type \(paymentMethod.type) in PollingViewModel")
+            fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
         self.paymentMethod = paymentMethod
         self.canEdit = canEdit
