@@ -227,6 +227,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testCryptoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "USD",
+                               paymentMethodType: .crypto,
+                               merchantCountry: .US) { form in
+            // Crypto has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
     func testAlipayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
