@@ -1,6 +1,7 @@
 ## X.Y.Z 2025-XX-YY
 ### PaymentSheet
 * [Fixed] Fixed an issue in Embedded Payment Element (private beta) where the row could be selected even though there's no valid payment option.
+* [Added] Support for Crypto in PaymentSheet
 
 ## 24.6.0 2025-02-18
 * [Fixed] The SDK and example apps now compile in Xcode 16.2
