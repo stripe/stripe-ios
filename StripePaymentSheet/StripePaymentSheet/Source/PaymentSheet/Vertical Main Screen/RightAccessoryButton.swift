@@ -44,7 +44,7 @@ extension RowButton {
             let label = UILabel()
             label.text = accessoryType.text
             switch accessoryType {
-            case .edit, .viewMoreChevron:
+            case .edit, .viewMoreChevron, .update:
                 label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             case .viewMore:
                 label.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 20)
