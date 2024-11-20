@@ -1,3 +1,7 @@
+## x.x.x y-y-y
+### PaymentsUI
+* [Fixed] Fixed issue which could lead to STPCardFormView being collapsed with SwiftUI
+
 ## 24.0.1 2024-11-18
 ### PaymentSheet
 * [Added] Instant Bank Payments are now available when using deferred intents.
