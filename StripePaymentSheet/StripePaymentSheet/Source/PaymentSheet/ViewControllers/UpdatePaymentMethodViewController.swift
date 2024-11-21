@@ -51,7 +51,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.setCustomSpacing(16, after: headerLabel) // custom spacing from figma
-        stackView.setCustomSpacing(32, after: paymentMethodForm) // custom spacing from figma
+        if let footnoteLabel = footnoteLabel {
+            stackView.addArrangedSubview(footnoteLabel)
+            stackView.setCustomSpacing(8, after: paymentMethodForm) // custom spacing from figma
+            stackView.setCustomSpacing(32, after: footnoteLabel) // custom spacing from figma
+        }
+        else {
+            stackView.setCustomSpacing(32, after: paymentMethodForm) // custom spacing from figma
+        }
         stackView.setCustomSpacing(16, after: updateButton) // custom spacing from figma
         return stackView
     }()
@@ -100,17 +107,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
         return button
     }()
 
-    private lazy var paymentMethodForm: UIStackView = {
+    private lazy var paymentMethodForm: UIView = {
         let form = PaymentMethodForm(viewModel: viewModel)
         form.delegate = self
-        let paymentMethodForm: UIView = form.makePaymentMethodForm()
-        let paymentMethodDetails = UIStackView(arrangedSubviews: [paymentMethodForm])
-        if let footnoteLabel = footnoteLabel {
-            paymentMethodDetails.addArrangedSubview(footnoteLabel)
-        }
-        paymentMethodDetails.axis = .vertical
-        paymentMethodDetails.setCustomSpacing(8, after: paymentMethodForm) // custom spacing from figma
-        return paymentMethodDetails
+        return form.makePaymentMethodForm()
     }()
 
     private lazy var footnoteLabel: UITextView? = {
