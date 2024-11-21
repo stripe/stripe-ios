@@ -148,21 +148,49 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         let selection = VerticalPaymentMethodListSelection.applePay
         let selection1 = VerticalPaymentMethodListSelection.applePay
         
-        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for applePay selections")
+        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for Apple Pay selections")
     }
     
     func testSelectionHash_link() {
         let selection = VerticalPaymentMethodListSelection.link
         let selection1 = VerticalPaymentMethodListSelection.link
         
-        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for link selections")
+        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for Link selections")
     }
     
     func testSelectionHash_applePay_and_link_different() {
         let applePaySelection = VerticalPaymentMethodListSelection.applePay
         let linkSelection = VerticalPaymentMethodListSelection.link
         
-        XCTAssertNotEqual(applePaySelection.hashValue, linkSelection.hashValue, "Hashes should not be equal for applePay and link selections")
+        XCTAssertNotEqual(applePaySelection.hashValue, linkSelection.hashValue, "Hashes should not be equal for Apple Pay and Link selections")
+    }
+    
+    func testSelectionHash_applePay_and_new_different() {
+        let applePaySelection = VerticalPaymentMethodListSelection.applePay
+        let newSelection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.iDEAL))
+        
+        XCTAssertNotEqual(applePaySelection.hashValue, newSelection.hashValue, "Hashes should not be equal for new and Apple Pay selections")
+    }
+
+    func testSelectionHash_applePay_and_saved_different() {
+        let applePaySelection = VerticalPaymentMethodListSelection.applePay
+        let savedSelection = VerticalPaymentMethodListSelection.saved(paymentMethod: ._testCard())
+        
+        XCTAssertNotEqual(applePaySelection.hashValue, savedSelection.hashValue, "Hashes should not be equal for saved and Apple Pay selections")
+    }
+
+    func testSelectionHash_link_and_new_different() {
+        let linkSelection = VerticalPaymentMethodListSelection.link
+        let newSelection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.iDEAL))
+        
+        XCTAssertNotEqual(linkSelection.hashValue, newSelection.hashValue, "Hashes should not be equal for new and Link selections")
+    }
+
+    func testSelectionHash_link_and_saved_different() {
+        let linkSelection = VerticalPaymentMethodListSelection.link
+        let savedSelection = VerticalPaymentMethodListSelection.saved(paymentMethod: ._testCard())
+        
+        XCTAssertNotEqual(linkSelection.hashValue, savedSelection.hashValue, "Hashes should not be equal for saved and Link selections")
     }
 
 }
