@@ -40,6 +40,21 @@ class NativeFlowController {
         return item
     }()
 
+    private lazy var navigationBarSkipBarButtonItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(
+            title: STPLocalizedString("Skip", "Title of a button that allows users to skip the current screen."),
+            style: .plain,
+            target: self,
+            action: #selector(didSelectNavigationBarSkipButton)
+        )
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: FinancialConnectionsFont.label(.large).uiFont,
+            .foregroundColor: UIColor.textDefault,
+        ]
+        item.setTitleTextAttributes(attributes, for: .normal)
+        return item
+    }()
+
     init(
         dataManager: NativeFlowDataManager,
         navigationController: FinancialConnectionsNavigationController
@@ -82,7 +97,11 @@ class NativeFlowController {
             // then also handle "custom manual entry mode"
             closeAuthFlow(customManualEntry: true)
         } else {
-            setNavigationControllerViewControllers([viewController], animated: false)
+            setNavigationControllerViewControllers(
+                [viewController],
+                pane: pane,
+                animated: false
+            )
         }
     }
 
@@ -117,6 +136,16 @@ class NativeFlowController {
         }
     }
 
+    @objc private func didSelectNavigationBarSkipButton() {
+        FeedbackGeneratorAdapter.buttonTapped()
+        dataManager.analyticsClient.log(
+            eventName: "click.nav_bar.skip",
+            pane: FinancialConnectionsAnalyticsClient
+                .paneFromViewController(navigationController.topViewController)
+        )
+        pushPane(.success, animated: true)
+    }
+
     @objc private func applicationWillEnterForeground() {
         dataManager
             .analyticsClient
@@ -136,6 +165,13 @@ class NativeFlowController {
                     .paneFromViewController(navigationController.topViewController)
             )
     }
+
+    private func trailingItem(forPane pane: FinancialConnectionsSessionManifest.NextPane) -> UIBarButtonItem {
+        switch pane {
+        case .networkingLinkSignupPane: navigationBarSkipBarButtonItem
+        default: navigationBarCloseBarButtonItem
+        }
+    }
 }
 
 // MARK: - Core Navigation Helpers
@@ -144,6 +180,7 @@ extension NativeFlowController {
 
     private func setNavigationControllerViewControllers(
         _ viewControllers: [UIViewController],
+        pane: FinancialConnectionsSessionManifest.NextPane,
         animated: Bool = true
     ) {
         dismissVisibleSheetsIfNeeded { [weak self] in
@@ -151,7 +188,7 @@ extension NativeFlowController {
             viewControllers.forEach { viewController in
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
-                    closeItem: self.navigationBarCloseBarButtonItem,
+                    trailingItem: self.trailingItem(forPane: pane),
                     shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
@@ -187,20 +224,32 @@ extension NativeFlowController {
                 dataManager: dataManager
             )
             if clearNavigationStack, let paneViewController = paneViewController {
-                setNavigationControllerViewControllers([paneViewController], animated: animated)
+                setNavigationControllerViewControllers(
+                    [paneViewController],
+                    pane: pane,
+                    animated: animated
+                )
             } else {
-                pushViewController(paneViewController, animated: animated)
+                pushViewController(
+                    paneViewController,
+                    pane: pane,
+                    animated: animated
+                )
             }
         }
     }
 
-    private func pushViewController(_ viewController: UIViewController?, animated: Bool) {
+    private func pushViewController(
+        _ viewController: UIViewController?,
+        pane: FinancialConnectionsSessionManifest.NextPane,
+        animated: Bool
+    ) {
         dismissVisibleSheetsIfNeeded { [weak self] in
             guard let self else { return }
             if let viewController = viewController {
                 FinancialConnectionsNavigationController.configureNavigationItemForNative(
                     viewController.navigationItem,
-                    closeItem: self.navigationBarCloseBarButtonItem,
+                    trailingItem: self.trailingItem(forPane: pane),
                     shouldHideLogo: ShouldHideLogoInNavigationBar(
                         forViewController: viewController,
                         reducedBranding: self.dataManager.reducedBranding,
@@ -283,9 +332,10 @@ extension NativeFlowController {
     }
 
     private func startResetFlow() {
+        let pane: FinancialConnectionsSessionManifest.NextPane = .resetFlow
         guard
             let resetFlowViewController = CreatePaneViewController(
-                pane: .resetFlow,
+                pane: pane,
                 nativeFlowController: self,
                 dataManager: dataManager
             )
@@ -303,7 +353,11 @@ extension NativeFlowController {
         }
         viewControllers.append(resetFlowViewController)
 
-        setNavigationControllerViewControllers(viewControllers, animated: true)
+        setNavigationControllerViewControllers(
+            viewControllers,
+            pane: pane,
+            animated: true
+        )
     }
 
     private func showTerminalError(_ error: Error? = nil) {
@@ -331,7 +385,11 @@ extension NativeFlowController {
             closeAuthFlow(error: terminalError)
             return
         }
-        setNavigationControllerViewControllers([terminalErrorViewController], animated: false)
+        setNavigationControllerViewControllers(
+            [terminalErrorViewController],
+            pane: .terminalError,
+            animated: false
+        )
     }
 
     // There's at least four types of close cases:
