@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.0.2 2024-11-21
 ### PaymentSheet
 * [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
 
