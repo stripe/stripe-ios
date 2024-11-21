@@ -220,6 +220,7 @@ class EmbeddedPaymentMethodsView: UIView {
                                      isSelected: Bool,
                                      accessoryType: RowButton.RightAccessoryButton.AccessoryType?) {
         guard let previousSavedPaymentMethodButton = self.savedPaymentMethodButton,
+              let previousSelection = selectionButtonMapping.first(where: { $0.value == previousSavedPaymentMethodButton })?.key,
               let viewIndex = stackView.arrangedSubviews.firstIndex(of: previousSavedPaymentMethodButton) else {
             stpAssertionFailure("""
             This function should never be called when there isn't already a saved PM row because there's no way for Embedded
@@ -229,9 +230,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
         
         // Remove old mapping from selectionButtonMapping
-        if let previousSelection = selectionButtonMapping.first(where: { $0.value == previousSavedPaymentMethodButton })?.key {
-            selectionButtonMapping.removeValue(forKey: previousSelection)
-        }
+        selectionButtonMapping.removeValue(forKey: previousSelection)
 
         if let savedPaymentMethod {
             // Replace saved payment method button at same index
