@@ -106,6 +106,65 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         )
         XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
     }
+    
+    func testSelectionHash_savedPaymentMethod() {
+        let selection = VerticalPaymentMethodListSelection.saved(paymentMethod: ._testCard())
+        let selection1 = VerticalPaymentMethodListSelection.saved(paymentMethod: ._testCard())
+        
+        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for the same payment method")
+    }
+    
+    func testSelectionHash_differentSavedPaymentMethod() {
+        let selection = VerticalPaymentMethodListSelection.saved(paymentMethod: ._testCard())
+        let selection1 = VerticalPaymentMethodListSelection.saved(paymentMethod: ._testSEPA())
+        
+        XCTAssertNotEqual(selection.hashValue, selection1.hashValue, "Hashes should not be equal for the same payment method")
+    }
+    
+    func testSelectionHash_savedPaymentMethod_sameInstance() {
+        let testCard: STPPaymentMethod = ._testCard()
+        let selection = VerticalPaymentMethodListSelection.saved(paymentMethod: testCard)
+        let selection1 = VerticalPaymentMethodListSelection.saved(paymentMethod: testCard)
+
+        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for the same payment method")
+    }
+    
+    func testSelectionHash_newPaymentMethod_sameType() {
+        let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(.card)
+        let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
+        let selection1 = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
+        
+        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for the same payment method type")
+    }
+    
+    func testSelectionHash_newPaymentMethod_differentType() {
+        let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.card))
+        let selection1 = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.iDEAL))
+        
+        XCTAssertNotEqual(selection.hashValue, selection1.hashValue, "Hashes should not be equal for different payment method types")
+    }
+    
+    func testSelectionHash_applePay() {
+        let selection = VerticalPaymentMethodListSelection.applePay
+        let selection1 = VerticalPaymentMethodListSelection.applePay
+        
+        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for applePay selections")
+    }
+    
+    func testSelectionHash_link() {
+        let selection = VerticalPaymentMethodListSelection.link
+        let selection1 = VerticalPaymentMethodListSelection.link
+        
+        XCTAssertEqual(selection.hashValue, selection1.hashValue, "Hashes should be equal for link selections")
+    }
+    
+    func testSelectionHash_applePay_and_link_different() {
+        let applePaySelection = VerticalPaymentMethodListSelection.applePay
+        let linkSelection = VerticalPaymentMethodListSelection.link
+        
+        XCTAssertNotEqual(applePaySelection.hashValue, linkSelection.hashValue, "Hashes should not be equal for applePay and link selections")
+    }
+
 }
 
 extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodListViewControllerDelegate {
