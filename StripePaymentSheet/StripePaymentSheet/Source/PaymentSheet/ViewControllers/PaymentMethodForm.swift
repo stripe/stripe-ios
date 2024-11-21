@@ -13,7 +13,7 @@ import Foundation
 import UIKit
 
 protocol PaymentMethodFormDelegate: AnyObject {
-    func didUpdate(element: Element, shouldEnableSaveButton: Bool)
+    func didUpdate(_: Element, shouldEnableSaveButton: Bool)
 }
 
 class PaymentMethodForm {
@@ -140,7 +140,7 @@ extension PaymentMethodForm: ElementDelegate {
             let currentCardBrand = viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown
             let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
             viewModel.selectedCardBrand = selectedBrand
-            delegate?.didUpdate(element: element, shouldEnableSaveButton: shouldBeEnabled)
+            delegate?.didUpdate(_: element, shouldEnableSaveButton: shouldBeEnabled)
         default:
             break
         }

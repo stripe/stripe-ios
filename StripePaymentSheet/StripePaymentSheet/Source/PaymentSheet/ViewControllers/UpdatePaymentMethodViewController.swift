@@ -244,7 +244,7 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
 
 // MARK: PaymentMethodFormDelegate
 extension UpdatePaymentMethodViewController: PaymentMethodFormDelegate {
-    func didUpdate(element: Element, shouldEnableSaveButton: Bool) {
+    func didUpdate(_: Element, shouldEnableSaveButton: Bool) {
         latestError = nil // clear error on new input
         switch viewModel.paymentMethod.type {
         case .card:
