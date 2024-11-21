@@ -7,18 +7,52 @@
 
 import UIKit
 
+@_spi(STP) import StripeUICore
+
 class PromoBadgeView: UIView {
     
-    private let labelBackground = UIView()
-    private let label = UILabel()
-    private let tinyMode: Bool
+    private let labelBackground: UIView
+    private let label: UILabel
     
-    init(
-        font: UIFont,
-        tinyMode: Bool = false,
+    convenience init(
+        appearance: PaymentSheet.Appearance,
+        tinyMode: Bool,
         text: String? = nil
     ) {
-        self.tinyMode = tinyMode
+        let backgroundColor = appearance.primaryButton.successBackgroundColor
+        let foregroundColor = appearance.primaryButton.successTextColor ?? appearance.primaryButton.textColor ?? backgroundColor.contrastingColor
+        
+        self.init(
+            font: appearance.scaledFont(
+                for: appearance.font.base.medium,
+                style: tinyMode ? .footnote : .subheadline,
+                maximumPointSize: tinyMode ? 20 : 25
+            ),
+            backgroundColor: backgroundColor,
+            foregroundColor: foregroundColor,
+            cornerRadius: appearance.cornerRadius,
+            tinyMode: tinyMode,
+            text: text
+        )
+    }
+    
+    private init(
+        font: UIFont,
+        backgroundColor: UIColor,
+        foregroundColor: UIColor,
+        cornerRadius: CGFloat,
+        tinyMode: Bool,
+        text: String? = nil
+    ) {
+        let labelBackground = UIView()
+        labelBackground.backgroundColor = backgroundColor
+        labelBackground.layer.cornerRadius = cornerRadius
+        self.labelBackground = labelBackground
+        
+        let label = UILabel()
+        label.textColor = foregroundColor
+        self.label = label
+        
         super.init(frame: .zero)
         setupView(font: font, tinyMode: tinyMode)
         
@@ -38,10 +72,6 @@ class PromoBadgeView: UIView {
     private func setupView(font: UIFont, tinyMode: Bool) {
         labelBackground.translatesAutoresizingMaskIntoConstraints = false
         addSubview(labelBackground)
-        
-        // TODO(tillh-stripe) Revisit this
-        labelBackground.backgroundColor = UIColor(red: 48/255, green: 177/255, blue: 48/255, alpha: 1)
-        labelBackground.layer.cornerRadius = tinyMode ? 4 : 8
         
         let verticalSpacing: CGFloat = tinyMode ? 0 : 2
         let horizontalSpacing: CGFloat = tinyMode ? 4 : 8
@@ -75,10 +105,9 @@ class PromoBadgeView: UIView {
     }
     
     private func formatPromoText(_ text: String) -> String {
-        // We have limited screen real estate, so we only show the "Get" prefix in some cases
+        // We have limited screen real estate, so we only show the "Get" prefix in English
         let isEnglish = Locale.current.isEnglishLanguage
-        let showFullText = isEnglish && !tinyMode
-        return showFullText ? "Get \(text)" : text
+        return isEnglish ? "Get \(text)" : text
     }
 }
 

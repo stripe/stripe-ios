@@ -92,11 +92,7 @@ class RowButton: UIView {
         }
         if let promoText {
             self.promoBadge = PromoBadgeView(
-                font: appearance.scaledFont(
-                    for: appearance.font.base.medium,
-                    style: .subheadline,
-                    maximumPointSize: 25
-                ),
+                appearance: appearance,
                 tinyMode: false,
                 text: promoText
             )
