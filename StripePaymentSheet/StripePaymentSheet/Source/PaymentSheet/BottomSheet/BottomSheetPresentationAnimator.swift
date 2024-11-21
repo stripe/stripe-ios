@@ -28,8 +28,7 @@ class BottomSheetPresentationAnimator: NSObject {
 
     private func animatePresentation(transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let toVC = transitionContext.viewController(forKey: .to),
-            let fromVC = transitionContext.viewController(forKey: .from)
+            let toVC = transitionContext.viewController(forKey: .to)
         else { return }
 
         transitionContext.containerView.layoutIfNeeded()
@@ -64,7 +63,6 @@ class BottomSheetPresentationAnimator: NSObject {
 
     private func animateDismissal(transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let toVC = transitionContext.viewController(forKey: .to),
             let fromVC = transitionContext.viewController(forKey: .from)
         else { return }
 
