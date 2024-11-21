@@ -52,28 +52,28 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         XCTAssertNil(embeddedView.selection)
 
         // Simulate tapping Cash App and verify delegate is called
-        embeddedView.didTap(selectedRowButton: rowButtons[1], selection: .new(paymentMethodType: .stripe(.cashApp)))
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
         XCTAssertTrue(mockDelegate.didCallHeightDidChange, "didCallHeightDidChange should be called when selection changes to show a mandate")
         XCTAssertTrue(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should be called when selection changes")
         XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.cashApp)), "Cash App Pay should be the current selection")
         mockDelegate.reset()
 
         // Simulate tapping Klarna and verify delegate is called
-        embeddedView.didTap(selectedRowButton: rowButtons[2], selection: .new(paymentMethodType: .stripe(.klarna)))
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.klarna)))
         XCTAssertTrue(mockDelegate.didCallHeightDidChange, "didCallHeightDidChange should be called when selection changes to show a different sized mandate")
         XCTAssertTrue(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should be called when selection changes")
         XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.klarna)), "Klarna should be the current selection")
         mockDelegate.reset()
 
         // Simulate tapping PayPal and verify delegate is called
-        embeddedView.didTap(selectedRowButton: rowButtons[3], selection: .new(paymentMethodType: .stripe(.payPal)))
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.payPal)))
         XCTAssertTrue(mockDelegate.didCallHeightDidChange, "didCallHeightDidChange should be called when selection changes to show a different sized mandate")
         XCTAssertTrue(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should be called when selection changes")
         XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.payPal)), "PayPal should be the current selection")
         mockDelegate.reset()
 
         // Simulate tapping PayPal again (same selection) and verify delegate is NOT called
-        embeddedView.didTap(selectedRowButton: rowButtons[3], selection: .new(paymentMethodType: .stripe(.payPal)))
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.payPal)))
         XCTAssertFalse(mockDelegate.didCallHeightDidChange, "didCallHeightDidChange should not be called when the same selection is selected again")
         XCTAssertFalse(mockDelegate.didCallSelectionDidUpdate, "selectionDidUpdate should not be called when the same selection is selected again")
         XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.payPal)), "PayPal should still be the current selection")
