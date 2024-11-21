@@ -33,6 +33,7 @@ class RowButton: UIView {
     let label: UILabel
     let sublabel: UILabel?
     let rightAccessoryView: UIView?
+    let promoBadge: PromoBadgeView?
     let shouldAnimateOnPress: Bool
     let appearance: PaymentSheet.Appearance
     typealias DidTapClosure = (RowButton) -> Void
@@ -58,7 +59,17 @@ class RowButton: UIView {
     }
     var heightConstraint: NSLayoutConstraint?
 
-    init(appearance: PaymentSheet.Appearance, imageView: UIImageView, text: String, subtext: String? = nil, rightAccessoryView: UIView? = nil, shouldAnimateOnPress: Bool = false, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) {
+    init(
+        appearance: PaymentSheet.Appearance,
+        imageView: UIImageView,
+        text: String,
+        subtext: String? = nil,
+        promoText: String? = nil,
+        rightAccessoryView: UIView? = nil,
+        shouldAnimateOnPress: Bool = false,
+        isEmbedded: Bool = false,
+        didTap: @escaping DidTapClosure
+    ) {
         self.appearance = appearance
         self.shouldAnimateOnPress = true
         self.didTap = didTap
@@ -78,6 +89,19 @@ class RowButton: UIView {
             self.sublabel = sublabel
         } else {
             self.sublabel = nil
+        }
+        if let promoText {
+            self.promoBadge = PromoBadgeView(
+                font: appearance.scaledFont(
+                    for: appearance.font.base.medium,
+                    style: .subheadline,
+                    maximumPointSize: 25
+                ),
+                tinyMode: false,
+                text: promoText
+            )
+        } else {
+            self.promoBadge = nil
         }
         super.init(frame: .zero)
 
@@ -121,6 +145,28 @@ class RowButton: UIView {
                 checkmarkImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 checkmarkImageView.widthAnchor.constraint(equalToConstant: 16),
                 checkmarkImageView.heightAnchor.constraint(equalToConstant: 16),
+            ])
+        }
+        
+        if let promoBadge {
+            let promoBadgePadding: CGFloat = {
+                guard isEmbedded else {
+                    return -12
+                }
+                
+                switch appearance.embeddedPaymentElement.row.style {
+                case .flatWithRadio, .flatWithCheckmark:
+                    return 0
+                case .floatingButton:
+                    return -12
+                }
+            }()
+            promoBadge.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(promoBadge)
+            NSLayoutConstraint.activate([
+                promoBadge.topAnchor.constraint(equalTo: topAnchor),
+                promoBadge.bottomAnchor.constraint(equalTo: bottomAnchor),
+                promoBadge.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: promoBadgePadding),
             ])
         }
 
@@ -175,7 +221,7 @@ class RowButton: UIView {
             radioButton?.widthAnchor.constraint(equalToConstant: 18),
 
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            labelsStackView.trailingAnchor.constraint(equalTo: labelTrailingConstant, constant: -12),
+            labelsStackView.trailingAnchor.constraint(equalTo: promoBadge?.leadingAnchor ?? labelTrailingConstant, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
@@ -275,10 +321,12 @@ extension RowButton: EventHandler {
             label.alpha = 1
             sublabel?.alpha = 1
             imageView.alpha = 1
+            promoBadge?.alpha = 1
         case .shouldDisableUserInteraction:
             label.alpha = 0.5
             sublabel?.alpha = 0.5
             imageView.alpha = 0.5
+            promoBadge?.alpha = 0.5
         default:
             break
         }
@@ -334,7 +382,17 @@ extension RowButton {
         return label
     }
 
-    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, hasSavedCard: Bool, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForPaymentMethodType(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        subtitle: String? = nil,
+        hasSavedCard: Bool,
+        rightAccessoryView: UIView? = nil,
+        promoText: String? = nil,
+        appearance: PaymentSheet.Appearance,
+        shouldAnimateOnPress: Bool,
+        isEmbedded: Bool = false,
+        didTap: @escaping DidTapClosure
+    ) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
         // Special case "New card" vs "Card" title
@@ -344,7 +402,7 @@ extension RowButton {
             }
             return paymentMethodType.displayName
         }()
-        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtitle, shouldAnimateOnPress: shouldAnimateOnPress, isEmbedded: isEmbedded, didTap: didTap)
+        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtitle, promoText: promoText, rightAccessoryView: rightAccessoryView, shouldAnimateOnPress: shouldAnimateOnPress, isEmbedded: isEmbedded, didTap: didTap)
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {

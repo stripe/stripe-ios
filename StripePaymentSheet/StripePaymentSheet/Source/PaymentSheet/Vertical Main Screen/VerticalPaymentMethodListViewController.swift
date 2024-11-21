@@ -114,7 +114,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
                 subtitle: Self.subtitleText(for: paymentMethodType),
-                hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708) 
+                hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708)
+                promoText: nil, // TODO(tillh-stripe) Pass promo text along
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
                 shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)

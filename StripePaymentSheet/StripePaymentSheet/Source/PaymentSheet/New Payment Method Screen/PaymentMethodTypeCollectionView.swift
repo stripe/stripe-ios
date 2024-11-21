@@ -114,6 +114,8 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             return UICollectionViewCell()
         }
         cell.paymentMethodType = paymentMethodTypes[indexPath.item]
+        // TODO(tillh-stripe) Pass promo text along
+        cell.promoBadgeText = nil
         cell.appearance = appearance
         return cell
     }
@@ -160,6 +162,12 @@ extension PaymentMethodTypeCollectionView {
                 update()
             }
         }
+        
+        var promoBadgeText: String? = nil {
+            didSet {
+                update()
+            }
+        }
 
         var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default {
             didSet {
@@ -181,6 +189,10 @@ extension PaymentMethodTypeCollectionView {
             let paymentMethodLogo = UIImageView()
             paymentMethodLogo.contentMode = .scaleAspectFit
             return paymentMethodLogo
+        }()
+        private lazy var promoBadge: PromoBadgeView = {
+            let font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            return PromoBadgeView(font: font, tinyMode: true)
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
             return ShadowedRoundedRectangle(appearance: appearance)
@@ -210,7 +222,7 @@ extension PaymentMethodTypeCollectionView {
         override init(frame: CGRect) {
             super.init(frame: frame)
 
-            [paymentMethodLogo, label].forEach {
+            [paymentMethodLogo, label, promoBadge].forEach {
                 shadowRoundedRectangle.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
@@ -233,6 +245,10 @@ extension PaymentMethodTypeCollectionView {
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
                 label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
+                
+                promoBadge.topAnchor.constraint(equalTo: paymentMethodLogo.topAnchor),
+                promoBadge.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12),
+                promoBadge.bottomAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor),
             ])
 
             contentView.layer.cornerRadius = appearance.cornerRadius
@@ -274,9 +290,11 @@ extension PaymentMethodTypeCollectionView {
                 case .shouldDisableUserInteraction:
                     self.label.alpha = 0.6
                     self.paymentMethodLogo.alpha = 0.6
+                    self.promoBadge.alpha = 0.6
                 case .shouldEnableUserInteraction:
                     self.label.alpha = 1
                     self.paymentMethodLogo.alpha = 1
+                    self.promoBadge.alpha = 1
                 default:
                     break
                 }
@@ -307,6 +325,11 @@ extension PaymentMethodTypeCollectionView {
             // Ideally, the DownloadManager API is refactored to not return a placeholder or an image; then we can set the image to a placeholder only when the payment method type of this cell changes.
             if paymentMethodTypeOfCurrentImage != self.paymentMethodType || image.size != CGSize(width: 1, height: 1) {
                 updateImage(image)
+            }
+            
+            promoBadge.isHidden = promoBadgeText == nil
+            if let promoBadgeText {
+                promoBadge.setText(promoBadgeText)
             }
 
             shadowRoundedRectangle.isSelected = isSelected

@@ -159,6 +159,7 @@ class EmbeddedPaymentMethodsView: UIView {
                 paymentMethodType: paymentMethodType,
                 subtitle: VerticalPaymentMethodListViewController.subtitleText(for: paymentMethodType),
                 hasSavedCard: savedPaymentMethods.hasSavedCard,
+                promoText: nil, // TODO(tillh-stripe) Pass promo text along
                 appearance: rowButtonAppearance,
                 shouldAnimateOnPress: true,
                 isEmbedded: true,
