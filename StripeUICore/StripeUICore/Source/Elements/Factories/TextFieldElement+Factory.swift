@@ -81,7 +81,7 @@ import UIKit
             localizedDescription: String.Localized.invalid_email
         )
 
-        init(defaultValue: String? = nil, isOptional: Bool = false, isEditable: Bool = true) {
+        public init(defaultValue: String? = nil, isOptional: Bool = false, isEditable: Bool = true) {
             self.defaultValue = defaultValue
             self.isOptional = isOptional
             self.isEditable = isEditable
