@@ -1,5 +1,9 @@
 ## x.x.x x-x-x
 ### PaymentSheet
+* [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+
+## x.x.x x-x-x
+### PaymentSheet
 * [Fixed] A bug where PaymentSheet would cause layout issues when nested within certain navigation stacks.
 
 ## 24.0.1 2024-11-18
