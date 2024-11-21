@@ -32,8 +32,6 @@ class BottomSheetPresentationAnimator: NSObject {
             let fromVC = transitionContext.viewController(forKey: .from)
         else { return }
 
-        // Calls viewWillAppear and viewWillDisappear
-        fromVC.beginAppearanceTransition(false, animated: true)
         transitionContext.containerView.layoutIfNeeded()
 
         // Move presented view offscreen (from the bottom)
@@ -54,9 +52,6 @@ class BottomSheetPresentationAnimator: NSObject {
             transitionContext.containerView.setNeedsLayout()
             transitionContext.containerView.layoutIfNeeded()
         }) { didComplete in
-            // Calls viewDidAppear and viewDidDisappear
-            fromVC.endAppearanceTransition()
-
             // Complete transition if it hasn't already been completed
             if let bottomSheetController = toVC as? BottomSheetViewController,
                let completePresentationTransition = bottomSheetController.completeBottomSheetPresentationTransition {
@@ -73,15 +68,10 @@ class BottomSheetPresentationAnimator: NSObject {
             let fromVC = transitionContext.viewController(forKey: .from)
         else { return }
 
-        // Calls viewWillAppear and viewWillDisappear
-        toVC.beginAppearanceTransition(true, animated: true)
-
         Self.animate({
             fromVC.view.frame.origin.y = transitionContext.containerView.frame.height
         }) { didComplete in
             fromVC.view.removeFromSuperview()
-            // Calls viewDidAppear and viewDidDisappear
-            toVC.endAppearanceTransition()
             transitionContext.completeTransition(didComplete)
         }
     }
