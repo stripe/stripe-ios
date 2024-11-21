@@ -8,11 +8,11 @@
 import UIKit
 
 class PromoBadgeView: UIView {
-
+    
     private let labelBackground = UIView()
     private let label = UILabel()
     private let tinyMode: Bool
-
+    
     init(
         font: UIFont,
         tinyMode: Bool = false,
@@ -26,19 +26,16 @@ class PromoBadgeView: UIView {
             setText(text)
         }
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     func setText(_ text: String) {
-        let isEnglish = Locale.current.isEnglishLanguage
-        let limitText = !isEnglish || tinyMode
-        label.text = limitText ? text : "Get \(text)"
+        label.text = formatPromoText(text)
     }
-
+    
     private func setupView(font: UIFont, tinyMode: Bool) {
-        // Set the background color and rounded corners
         labelBackground.translatesAutoresizingMaskIntoConstraints = false
         addSubview(labelBackground)
         
@@ -54,8 +51,7 @@ class PromoBadgeView: UIView {
             bottom: verticalSpacing,
             right: horizontalSpacing
         )
-
-        // Set up label styles
+        
         label.textColor = .white
         label.numberOfLines = 0
         label.font = font
@@ -65,13 +61,11 @@ class PromoBadgeView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         labelBackground.addSubview(label)
         
-        // Label background is centered in the container
         NSLayoutConstraint.activate([
             labelBackground.trailingAnchor.constraint(equalTo: trailingAnchor),
             labelBackground.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
         
-        // Label is constrained in its background with layout margins
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: labelBackground.layoutMarginsGuide.leadingAnchor),
             label.topAnchor.constraint(equalTo: labelBackground.layoutMarginsGuide.topAnchor),
@@ -79,15 +73,23 @@ class PromoBadgeView: UIView {
             label.bottomAnchor.constraint(equalTo: labelBackground.layoutMarginsGuide.bottomAnchor),
         ])
     }
+    
+    private func formatPromoText(_ text: String) -> String {
+        // We have limited screen real estate, so we only show the "Get" prefix in some cases
+        let isEnglish = Locale.current.isEnglishLanguage
+        let showFullText = isEnglish && !tinyMode
+        return showFullText ? "Get \(text)" : text
+    }
 }
 
 private extension Locale {
     
     var isEnglishLanguage: Bool {
-        if #available(iOS 16, *) {
-            self.language.languageCode?.identifier == "en"
+        let languageCode = if #available(iOS 16, *) {
+            self.language.languageCode?.identifier
         } else {
-            self.languageCode?.contains("en-") ?? false
+            self.languageCode?.split(separator: "-").first.flatMap { String($0) }
         }
+        return languageCode == "en"
     }
 }
