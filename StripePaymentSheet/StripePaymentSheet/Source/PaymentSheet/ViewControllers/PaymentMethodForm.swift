@@ -86,17 +86,7 @@ class PaymentMethodForm {
         ]
         let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: viewModel.appearance.asElementsTheme)
         section.delegate = self
-        switch section.validationState {
-        case .valid:
-            viewModel.errorState = false
-        case .invalid(let error, let shouldDisplay):
-            if shouldDisplay {
-                viewModel.errorState = true
-            }
-            else {
-                viewModel.errorState = false
-            }
-        }
+        viewModel.errorState = !expiryDateElement.validationState.isValid
         return section
     }()
 
@@ -115,7 +105,6 @@ class PaymentMethodForm {
         stackView.axis = .vertical
         stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
         stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
-        viewModel.errorState = !nameElement.validationState.isValid || !emailElement.validationState.isValid || !bankAccountElement.validationState.isValid
         return stackView
     }()
 
@@ -134,7 +123,6 @@ class PaymentMethodForm {
         stackView.axis = .vertical
         stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
         stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
-        viewModel.errorState = !nameElement.validationState.isValid || !emailElement.validationState.isValid || !ibanElement.validationState.isValid
         return stackView
     }()
 }

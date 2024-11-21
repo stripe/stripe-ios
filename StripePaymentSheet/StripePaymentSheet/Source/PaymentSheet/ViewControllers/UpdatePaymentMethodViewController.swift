@@ -47,7 +47,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodForm, updateButton, removeButton, errorLabel])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodForm])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.setCustomSpacing(16, after: headerLabel) // custom spacing from figma
@@ -59,6 +59,9 @@ final class UpdatePaymentMethodViewController: UIViewController {
         else {
             stackView.setCustomSpacing(32, after: paymentMethodForm) // custom spacing from figma
         }
+        stackView.addArrangedSubview(updateButton)
+        stackView.addArrangedSubview(removeButton)
+        stackView.addArrangedSubview(errorLabel)
         stackView.setCustomSpacing(16, after: updateButton) // custom spacing from figma
         return stackView
     }()
