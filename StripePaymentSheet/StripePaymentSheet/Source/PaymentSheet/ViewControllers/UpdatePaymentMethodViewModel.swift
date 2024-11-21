@@ -7,13 +7,24 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 import UIKit
 
 class UpdatePaymentMethodViewModel {
-    let paymentMethod: STPPaymentMethod
     static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+
+    let paymentMethod: STPPaymentMethod
+    let appearance: PaymentSheet.Appearance
+    let hostedSurface: HostedSurface
+    let cardBrandFilter: CardBrandFilter
     let canEdit: Bool
     let canRemove: Bool
+
+    var selectedCardBrand: STPCardBrand?
+    var errorState: Bool = false
+
     lazy var header: String = {
         switch paymentMethod.type {
         case .card:
@@ -26,7 +37,8 @@ class UpdatePaymentMethodViewModel {
             fatalError("Updating payment method has not been implemented for \(paymentMethod.type)")
         }
     }()
-    lazy var detailsCannotBeChanged: String = {
+
+    lazy var footnote: String = {
         switch paymentMethod.type {
         case .card:
             return .Localized.card_details_cannot_be_changed
@@ -38,11 +50,15 @@ class UpdatePaymentMethodViewModel {
             fatalError("Updating payment method has not been implemented for \(paymentMethod.type)")
         }
     }()
-    init(paymentMethod: STPPaymentMethod, canEdit: Bool, canRemove: Bool) {
+
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canEdit: Bool, canRemove: Bool) {
         guard UpdatePaymentMethodViewModel.supportedPaymentMethods.contains(paymentMethod.type) else {
             fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
         self.paymentMethod = paymentMethod
+        self.appearance = appearance
+        self.hostedSurface = hostedSurface
+        self.cardBrandFilter = cardBrandFilter
         self.canEdit = canEdit
         self.canRemove = canRemove
     }

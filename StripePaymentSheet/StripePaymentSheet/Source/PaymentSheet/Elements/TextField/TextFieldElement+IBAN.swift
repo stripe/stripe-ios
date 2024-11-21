@@ -181,7 +181,7 @@ extension TextFieldElement {
     }
 
     struct LastFourIBANConfiguration: TextFieldElementConfiguration {
-        let label: String = STPLocalizedString("IBAN", "Label for an IBAN field")
+        let label: String = "IBAN"
         let lastFour: String
         let isEditable = false
 

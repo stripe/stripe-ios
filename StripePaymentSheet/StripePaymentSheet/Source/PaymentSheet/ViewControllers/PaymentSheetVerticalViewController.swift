@@ -573,13 +573,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
            elementsSession.isCardBrandChoiceEligible || configuration.alternateUpdatePaymentMethodNavigation {
+            let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+                                                               appearance: configuration.appearance,
+                                                               hostedSurface: .paymentSheet,
+                                                               cardBrandFilter: configuration.cardBrandFilter,
+                                                               canEdit: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
+                                                               canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet())
             let updateViewController = UpdatePaymentMethodViewController(
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                                appearance: configuration.appearance,
-                                                                hostedSurface: .paymentSheet,
                                                                 isTestMode: configuration.apiClient.isTestmode,
-                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                viewModel: UpdatePaymentMethodViewModel(paymentMethod: paymentMethod, canEdit: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible, canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()))
+                                                                viewModel: updateViewModel)
             updateViewController.delegate = self
             bottomSheetController?.pushContentViewController(updateViewController)
             return

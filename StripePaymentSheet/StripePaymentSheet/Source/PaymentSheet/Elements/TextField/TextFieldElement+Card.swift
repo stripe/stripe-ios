@@ -361,23 +361,4 @@ extension TextFieldElement {
             return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown).accessoryView(for: lastFourFormatted, theme: theme)
         }
     }
-    struct USBankNumberConfiguration: TextFieldElementConfiguration {
-        let label = String.Localized.bank_account
-        let bankName: String
-        let lastFour: String
-        let isEditable = false
-
-        private var lastFourFormatted: String {
-            "\(bankName) •••• \(lastFour)"
-        }
-
-        public init(bankName:String, lastFour: String) {
-            self.bankName = bankName
-            self.lastFour = lastFour
-        }
-
-        public func makeDisplayText(for text: String) -> NSAttributedString {
-            return NSAttributedString(string: lastFourFormatted)
-        }
-    }
 }

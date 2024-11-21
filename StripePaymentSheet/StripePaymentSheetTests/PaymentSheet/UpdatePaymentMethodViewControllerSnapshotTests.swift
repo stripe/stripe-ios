@@ -115,12 +115,15 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                 fatalError("Updating payment method has not been implemented for type \(paymentMethodType)")
             }
         }()
+        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+                                                           appearance: appearance,
+                                                           hostedSurface: .paymentSheet,
+                                                           canEdit: canEdit ?? paymentMethod.isCoBrandedCard,
+                                                           canRemove: canRemove)
         let sut = UpdatePaymentMethodViewController(
                                            removeSavedPaymentMethodMessage: "Test removal string",
-                                           appearance: appearance,
-                                           hostedSurface: .paymentSheet,
                                            isTestMode: false,
-                                           viewModel: UpdatePaymentMethodViewModel(paymentMethod: paymentMethod, canEdit: canEdit ?? paymentMethod.isCoBrandedCard, canRemove: canRemove))
+                                           viewModel: updateViewModel)
         let bottomSheet: BottomSheetViewController
         if isEmbeddedSingle {
             bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})

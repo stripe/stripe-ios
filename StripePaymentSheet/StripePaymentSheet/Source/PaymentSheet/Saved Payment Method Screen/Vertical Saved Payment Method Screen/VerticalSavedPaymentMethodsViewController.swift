@@ -343,13 +343,16 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
+        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+                                                           appearance: configuration.appearance,
+                                                           hostedSurface: .paymentSheet,
+                                                           cardBrandFilter: configuration.cardBrandFilter,
+                                                           canEdit: paymentMethod.isCoBrandedCard && isCBCEligible,
+                                                           canRemove: canRemovePaymentMethods)
         let updateViewController = UpdatePaymentMethodViewController(
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                            appearance: configuration.appearance,
-                                                            hostedSurface: .paymentSheet,
                                                             isTestMode: configuration.apiClient.isTestmode,
-                                                            cardBrandFilter: configuration.cardBrandFilter,
-                                                            viewModel: UpdatePaymentMethodViewModel(paymentMethod: paymentMethod, canEdit: paymentMethod.isCoBrandedCard && isCBCEligible, canRemove: canRemovePaymentMethods))
+                                                            viewModel: updateViewModel)
         updateViewController.delegate = self
         self.updateViewController = updateViewController
         self.bottomSheetController?.pushContentViewController(updateViewController)

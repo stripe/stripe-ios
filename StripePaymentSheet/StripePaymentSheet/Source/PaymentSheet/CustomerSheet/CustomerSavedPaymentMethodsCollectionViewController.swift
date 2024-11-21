@@ -432,14 +432,16 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             stpAssertionFailure()
             return
         }
-
+        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+                                                           appearance: appearance,
+                                                           hostedSurface: .customerSheet,
+                                                           cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
+                                                           canEdit: paymentMethod.isCoBrandedCard && cbcEligible,
+                                                           canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod))
         let editVc = UpdatePaymentMethodViewController(
                                               removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
-                                              appearance: appearance,
-                                              hostedSurface: .customerSheet,
                                               isTestMode: configuration.isTestMode,
-                                              cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
-                                              viewModel: UpdatePaymentMethodViewModel(paymentMethod: paymentMethod, canEdit: paymentMethod.isCoBrandedCard && cbcEligible, canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod)))
+                                              viewModel: updateViewModel)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
