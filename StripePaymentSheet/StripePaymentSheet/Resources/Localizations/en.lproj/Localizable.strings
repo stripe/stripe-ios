@@ -392,6 +392,9 @@ is not supported by the merchant */
 the heading the screen itself. */
 "Update card" = "Update card";
 
+/* Accessibility label for a button that leads to a screen for updating a payment method. */
+"Update payment method" = "Update payment method";
+
 /* Two factor authentication screen heading */
 "Use your saved info to check out faster" = "Use your saved info to check out faster";
 

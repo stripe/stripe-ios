@@ -136,6 +136,15 @@ extension String.Localized {
         )
     }
 
+    static var update_payment_method: String {
+        STPLocalizedString(
+            "Update payment method",
+            """
+            Accessibility label for a button that leads to a screen for updating a payment method.
+            """
+        )
+    }
+
     static var show_menu: String {
         STPLocalizedString(
             "Show menu",

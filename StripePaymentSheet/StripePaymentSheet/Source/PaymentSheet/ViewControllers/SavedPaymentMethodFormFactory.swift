@@ -33,7 +33,7 @@ class SavedPaymentMethodFormFactory {
         case .SEPADebit:
             return sepaDebitSection
         default:
-            fatalError("Updating payment method has not been implemented for \(viewModel.paymentMethod.type)")
+            fatalError("Cannot make payment method form for payment method type \(viewModel.paymentMethod.type).")
         }
     }
 
