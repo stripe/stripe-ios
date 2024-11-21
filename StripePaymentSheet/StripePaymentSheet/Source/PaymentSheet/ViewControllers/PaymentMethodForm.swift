@@ -1,5 +1,5 @@
 //
-//  PaymentMethodForm.swift
+//  SavedPaymentMethodFormFactory.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 11/20/24.
@@ -12,13 +12,13 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentMethodFormDelegate: AnyObject {
+protocol SavedPaymentMethodFormFactoryDelegate: AnyObject {
     func didUpdate(_: Element, shouldEnableSaveButton: Bool)
 }
 
-class PaymentMethodForm {
+class SavedPaymentMethodFormFactory {
     let viewModel: UpdatePaymentMethodViewModel
-    weak var delegate: PaymentMethodFormDelegate?
+    weak var delegate: SavedPaymentMethodFormFactoryDelegate?
 
     init(viewModel: UpdatePaymentMethodViewModel) {
         self.viewModel = viewModel
@@ -128,7 +128,7 @@ class PaymentMethodForm {
 }
 
 // MARK: ElementDelegate
-extension PaymentMethodForm: ElementDelegate {
+extension SavedPaymentMethodFormFactory: ElementDelegate {
     func continueToNextField(element: Element) {
         // no-op
     }

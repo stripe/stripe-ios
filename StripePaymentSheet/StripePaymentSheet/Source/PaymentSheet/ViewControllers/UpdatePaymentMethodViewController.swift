@@ -111,7 +111,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var paymentMethodForm: UIView = {
-        let form = PaymentMethodForm(viewModel: viewModel)
+        let form = SavedPaymentMethodFormFactory(viewModel: viewModel)
         form.delegate = self
         return form.makePaymentMethodForm()
     }()
@@ -242,8 +242,8 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
 
 }
 
-// MARK: PaymentMethodFormDelegate
-extension UpdatePaymentMethodViewController: PaymentMethodFormDelegate {
+// MARK: SavedPaymentMethodFormFactoryDelegate
+extension UpdatePaymentMethodViewController: SavedPaymentMethodFormFactoryDelegate {
     func didUpdate(_: Element, shouldEnableSaveButton: Bool) {
         latestError = nil // clear error on new input
         switch viewModel.paymentMethod.type {
