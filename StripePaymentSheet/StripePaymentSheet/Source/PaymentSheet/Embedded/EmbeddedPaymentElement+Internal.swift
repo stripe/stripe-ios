@@ -141,13 +141,16 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
            elementsSession.isCardBrandChoiceEligible || configuration.alternateUpdatePaymentMethodNavigation {
-            let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
+            let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+                                                               appearance: configuration.appearance,
+                                                               hostedSurface: .paymentSheet,
+                                                               cardBrandFilter: configuration.cardBrandFilter,
+                                                               canEdit: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
+                                                               canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet())
+            let updateViewController = UpdatePaymentMethodViewController(
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                                appearance: configuration.appearance,
-                                                                hostedSurface: .paymentSheet,
-                                                                canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                 isTestMode: configuration.apiClient.isTestmode,
-                                                                cardBrandFilter: configuration.cardBrandFilter)
+                                                                viewModel: updateViewModel)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
             presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
@@ -167,9 +170,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 }
 
-// MARK: UpdateCardViewControllerDelegate
-extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
-    func didRemove(viewController: UpdateCardViewController, paymentMethod: StripePayments.STPPaymentMethod) {
+// MARK: UpdatePaymentMethodViewControllerDelegate
+extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: StripePayments.STPPaymentMethod) {
         // Detach the payment method from the customer
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
@@ -184,7 +187,7 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
         presentingViewController?.dismiss(animated: true)
     }
 
-    func didUpdate(viewController: UpdateCardViewController,
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod,
                    updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
@@ -201,8 +204,8 @@ extension EmbeddedPaymentElement: UpdateCardViewControllerDelegate {
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }
-
-    func didDismiss(viewController: UpdateCardViewController) {
+    
+    func didDismiss(_: UpdatePaymentMethodViewController) {
         presentingViewController?.dismiss(animated: true)
     }
 

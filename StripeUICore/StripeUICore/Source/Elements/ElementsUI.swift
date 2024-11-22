@@ -44,6 +44,17 @@ import UIKit
         return label
     }
 
+    public static func makeSmallFootnote(theme: ElementsAppearance) -> UITextView {
+        let textView = UITextView()
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.font = theme.fonts.smallFootnote
+        textView.backgroundColor = .clear
+        textView.textColor = theme.colors.secondaryText
+        textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
+        return textView
+    }
+
     public static func makeNoticeTextField(theme: ElementsAppearance) -> UITextView {
         let textView = UITextView()
         textView.isScrollEnabled = false
@@ -88,6 +99,7 @@ import UIKit
                                             withTextStyle: .caption1,
                                             maximumPointSize: 20)
         public var footnote = UIFont.preferredFont(forTextStyle: .footnote, weight: .regular, maximumPointSize: 20)
+        public var smallFootnote = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 10)
         public var footnoteEmphasis = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
     }
 
