@@ -35,7 +35,7 @@ final class AuthenticationSessionManager: NSObject {
 
     // MARK: - Public
 
-    func start(additionalQueryParameters: String? = nil) -> Promise<AuthenticationSessionManager.Result> {
+    func start(additionalQueryParameters: String?) -> Promise<AuthenticationSessionManager.Result> {
         let promise = Promise<AuthenticationSessionManager.Result>()
 
         guard let hostedAuthUrl = manifest.hostedAuthUrl else {
@@ -43,7 +43,8 @@ final class AuthenticationSessionManager: NSObject {
             return promise
         }
 
-        let urlString = hostedAuthUrl + (additionalQueryParameters ?? "")
+        let queryParameters = additionalQueryParameters ?? ""
+        let urlString = hostedAuthUrl + queryParameters
 
         guard let url = URL(string: urlString) else {
             promise.reject(with: FinancialConnectionsSheetError.unknown(debugDescription: "Malformed hosted auth URL"))

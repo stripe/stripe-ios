@@ -22,13 +22,27 @@ extension TextFieldElement {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
         let cardBrandDropDown: DropdownFieldElement?
+        let cardFilter: CardBrandFilter
 
-        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil) {
+        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default) {
             self.defaultValue = defaultValue
             self.cardBrandDropDown = cardBrandDropDown
+            self.cardFilter = cardFilter
         }
 
-        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+        private func cardBrand(for text: String) -> STPCardBrand {
+            // Try to read the brands from the CBC dropdown
+            guard let cardBrandDropDown = cardBrandDropDown,
+                  let firstBrandString = cardBrandDropDown.nonPlacerholderItems.first?.rawData else {
+                return STPCardValidator.brand(forNumber: text)
+            }
+
+            let cardBrandFromDropDown = STPCard.brand(from: firstBrandString)
+            let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
+            return cardBrandFromDropDown == .unknown ? cardBrandFromBin : cardBrandFromDropDown
+        }
+
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // If CBC is enabled and the PAN is not empty...
             if let cardBrandDropDown = cardBrandDropDown, !text.isEmpty {
                 // Show unknown card brand if we have under 9 pan digits and no card brands
@@ -40,14 +54,14 @@ extension TextFieldElement {
                 }
             }
 
-            let cardBrand = STPCardValidator.brand(forNumber: text)
+            let cardBrand = cardBrand(for: text)
             if cardBrand == .unknown {
                 if case .invalid(Error.invalidBrand) = validate(text: text, isOptional: false) {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
-                        RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases)
+                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter { cardFilter.isAccepted(cardBrand: $0) })
                     return rotatingCardBrandsView
                 }
             } else {
@@ -73,6 +87,7 @@ extension TextFieldElement {
             case incomplete
             case invalidBrand
             case invalidLuhn
+            case disallowedBrand(brand: STPCardBrand)
 
             func shouldDisplay(isUserEditing: Bool) -> Bool {
                 switch self {
@@ -80,7 +95,7 @@ extension TextFieldElement {
                     return false
                 case .incomplete, .invalidLuhn:
                     return !isUserEditing
-                case .invalidBrand:
+                case .invalidBrand, .disallowedBrand:
                     return true
                 }
             }
@@ -93,6 +108,12 @@ extension TextFieldElement {
                     return String.Localized.your_card_number_is_incomplete
                 case .invalidBrand, .invalidLuhn:
                     return String.Localized.your_card_number_is_invalid
+                case .disallowedBrand(let brand):
+                    if let cardBrandDisplayName = STPCardBrandUtilities.stringFrom(brand), brand != .unknown {
+                        return .localizedStringWithFormat(.Localized.brand_not_allowed, cardBrandDisplayName)
+                    }
+
+                    return .Localized.generic_brand_not_allowed
                 }
             }
         }
@@ -108,6 +129,13 @@ extension TextFieldElement {
             let binRange = binController.mostSpecificBINRange(forNumber: text)
             if binRange.brand == .unknown {
                 return .invalid(Error.invalidBrand)
+            }
+
+            let cardBrand = cardBrand(for: text)
+            // If the merchant is CBC eligible, don't show the disallowed error until we have time to hit the card metadata service to determine brands (at 8 digits)
+            let shouldShowDisallowedError = cardBrandDropDown == nil || text.count > 8
+            if !cardFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
+                return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 
             // Is the PAN the correct length?
@@ -167,13 +195,7 @@ extension TextFieldElement {
 
         let defaultValue: String?
         let cardBrandProvider: () -> (STPCardBrand)
-        var label: String {
-            if cardBrandProvider() == .amex {
-                return String.Localized.cvv
-            } else {
-                return String.Localized.cvc
-            }
-        }
+        var label = String.Localized.cvc
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
 
         func keyboardProperties(for text: String) -> KeyboardProperties {
@@ -193,26 +215,43 @@ extension TextFieldElement {
 
             return .valid
         }
-        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             return DynamicImageView(
                 dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
-                pairedColor: theme.colors.background
+                pairedColor: theme.colors.componentBackground
             )
         }
+    }
+}
+
+// MARK: - Censored CVC Configuration
+extension TextFieldElement {
+    struct CensoredCVCConfiguration: TextFieldElementConfiguration {
+        init(brand: STPCardBrand) {
+            let maxLength = Int(STPCardValidator.maxCVCLength(for: brand))
+            self.defaultValue = String(repeating: "•", count: maxLength)
+        }
+
+        let defaultValue: String?
+        var label = String.Localized.cvc
+        let isEditable: Bool = false
+        let disallowedCharacters: CharacterSet = CharacterSet(charactersIn: "•").inverted
     }
 }
 
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil) {
+        init(defaultValue: String? = nil, isEditable: Bool = true) {
             self.defaultValue = defaultValue
+            self.isEditable = isEditable
         }
 
         let label: String = String.Localized.mm_yy
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let defaultValue: String?
+        let isEditable: Bool
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -223,6 +262,7 @@ extension TextFieldElement {
         enum Error: TextFieldValidationError {
             case empty
             case incomplete
+            case expired
             case invalidMonth
             case invalid
 
@@ -230,7 +270,7 @@ extension TextFieldElement {
                 switch self {
                 case .empty:                    return false
                 case .incomplete:               return !isUserEditing
-                case .invalidMonth, .invalid:   return true
+                case .expired, .invalidMonth, .invalid:   return true
                 }
             }
 
@@ -240,6 +280,8 @@ extension TextFieldElement {
                     return ""
                 case .incomplete:
                     return String.Localized.your_cards_expiration_date_is_incomplete
+                case .expired:
+                    return String.Localized.your_card_has_expired
                 case .invalidMonth:
                     return String.Localized.your_cards_expiration_month_is_invalid
                 case .invalid:
@@ -264,10 +306,14 @@ extension TextFieldElement {
                 guard textHasValidMonth else {
                     return .invalid(Error.invalidMonth)
                 }
-                // Is the date expired?
-                guard let expiryDate = CardExpiryDate(text), !expiryDate.expired() else {
-                    return .invalid(Error.invalid)
+                guard let expiryDate = CardExpiryDate(text) else {
+                   return .invalid(Error.invalid)
                 }
+                // Is the date expired?
+                guard !expiryDate.expired() else {
+                   return .invalid(Error.expired)
+                }
+
                 return .valid
             default:
                 return .invalid(Error.invalid)
@@ -292,7 +338,7 @@ extension TextFieldElement {
 // MARK: Last four configuration
 extension TextFieldElement {
     struct LastFourConfiguration: TextFieldElementConfiguration {
-        let label = String.Localized.card_brand
+        let label = String.Localized.card_number
         let lastFour: String
         let isEditable = false
         let cardBrandDropDown: DropdownFieldElement
@@ -310,10 +356,9 @@ extension TextFieldElement {
             return NSAttributedString(string: lastFourFormatted)
         }
 
-        func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
-            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown)
-                                            .accessoryView(for: lastFourFormatted, theme: theme)
+            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown).accessoryView(for: lastFourFormatted, theme: theme)
         }
     }
 }

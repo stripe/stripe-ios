@@ -13,10 +13,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_WWtvni3nO4VpTT
+request-id: req_UwTlRVAcrUV64w
 Content-Length: 330
 Vary: Origin
-Date: Fri, 19 Jul 2024 22:34:13 GMT
+Date: Wed, 31 Jul 2024 02:09:09 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -30,7 +30,7 @@ x-content-type-options: nosniff
     "code" : "resource_missing",
     "message" : "No such setupintent: 'seti_bad'",
     "param" : "intent",
-    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_WWtvni3nO4VpTT?t=1721428453",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_UwTlRVAcrUV64w?t=1722391749",
     "type" : "invalid_request_error",
     "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/resource-missing"
   }

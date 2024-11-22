@@ -16,6 +16,7 @@ extension RowButton {
         enum AccessoryType: Equatable {
             case edit
             case viewMore
+            case update
 
             var text: String? {
                 switch self {
@@ -23,6 +24,8 @@ extension RowButton {
                     return .Localized.edit
                 case .viewMore:
                     return .Localized.view_more
+                case .update:
+                    return nil
                 }
             }
 
@@ -30,7 +33,7 @@ extension RowButton {
                 switch self {
                 case .edit:
                     return nil
-                case .viewMore:
+                case .viewMore, .update:
                     return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
                 }
             }
@@ -53,7 +56,12 @@ extension RowButton {
         private var imageView: UIImageView? {
             guard let image = accessoryType.accessoryImage else { return nil }
             let imageView = UIImageView(image: image)
-            imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
+            if accessoryType == .update {
+                imageView.tintColor = appearance.colors.icon
+            }
+            else {
+                imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
+            }
             imageView.contentMode = .scaleAspectFit
             imageView.isAccessibilityElement = false
             return imageView
@@ -79,6 +87,9 @@ extension RowButton {
 
             accessibilityLabel = accessoryType.text
             accessibilityIdentifier = accessoryType.text
+            if accessoryType == .update {
+                accessibilityIdentifier = "chevron"
+            }
             accessibilityTraits = [.button]
             isAccessibilityElement = true
 
@@ -116,7 +127,20 @@ extension RowButton {
             true
         }
     }
+}
 
+// MARK: - EventHandler
+extension RowButton.RightAccessoryButton: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            alpha = 1
+        case .shouldDisableUserInteraction:
+            alpha = 0.5
+        default:
+            break
+        }
+    }
 }
 
 extension RowButton.RightAccessoryButton {

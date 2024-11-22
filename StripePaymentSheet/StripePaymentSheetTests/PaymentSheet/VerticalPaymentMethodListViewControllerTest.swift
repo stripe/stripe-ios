@@ -32,7 +32,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             delegate: self
         )
         // ...the current selection should be the saved PM
-        let savedPMButton = sut.getRowButton(accessibilityIdentifier: "••••4242")
+        let savedPMButton = sut.getRowButton(accessibilityIdentifier: "•••• 4242")
         XCTAssertEqual(sut.currentSelection, .saved(paymentMethod: savedPaymentMethod))
         XCTAssertTrue(savedPMButton.isSelected)
 
@@ -56,6 +56,56 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         XCTAssertEqual(sut.currentSelection, .applePay)
         XCTAssertTrue(applePayRowButton.isSelected)
     }
+
+    func testApplePayAndLinkOrdering() {
+        // If cards are available, Apple Pay / Link appear after it
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: nil,
+            savedPaymentMethod: nil,
+            paymentMethodTypes: [.stripe(.SEPADebit), .stripe(.card)],
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            delegate: self
+        )
+        XCTAssertEqual(["SEPA Debit", "Card", "Apple Pay", "Link"], sut.rowButtons.map { $0.label.text })
+
+        // If cards only, Apple Pay / Link appear after it
+        let sut_cards_only = VerticalPaymentMethodListViewController(
+            initialSelection: nil,
+            savedPaymentMethod: nil,
+            paymentMethodTypes: [.stripe(.card)],
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            delegate: self
+        )
+        XCTAssertEqual(["Card", "Apple Pay", "Link"], sut_cards_only.rowButtons.map { $0.label.text })
+
+        // Without cards, Apple Pay / Link appear first
+        let sut_no_cards = VerticalPaymentMethodListViewController(
+            initialSelection: nil,
+            savedPaymentMethod: nil,
+            paymentMethodTypes: [.stripe(.SEPADebit)],
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            delegate: self
+        )
+        XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
+    }
 }
 
 extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodListViewControllerDelegate {
@@ -74,6 +124,6 @@ extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodList
 
 extension VerticalPaymentMethodListViewController {
     func getRowButton(accessibilityIdentifier: String) -> RowButton {
-        return stackView.arrangedSubviews.compactMap { $0 as? RowButton }.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
+        return rowButtons.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
     }
 }

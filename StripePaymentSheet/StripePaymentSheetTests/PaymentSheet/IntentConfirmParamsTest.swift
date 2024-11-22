@@ -15,7 +15,7 @@ class IntentConfirmParamsTest: XCTestCase {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
 
         intentConfirmParams.saveForFutureUseCheckboxState = .hidden
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: nil, isSettingUp: true)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: nil, isSettingUp: true)
 
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
@@ -23,7 +23,7 @@ class IntentConfirmParamsTest: XCTestCase {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
 
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: nil, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: nil, isSettingUp: false)
 
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
@@ -31,7 +31,7 @@ class IntentConfirmParamsTest: XCTestCase {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
 
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: nil, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: nil, isSettingUp: false)
 
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
@@ -41,7 +41,8 @@ class IntentConfirmParamsTest: XCTestCase {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
 
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: true, isSettingUp: true)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: true, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: nil),
+                                              isSettingUp: true)
 
         XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
@@ -49,7 +50,20 @@ class IntentConfirmParamsTest: XCTestCase {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
 
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: true, isSettingUp: true)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: true, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: nil),
+                                              isSettingUp: true)
+
+        XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
+    func testInvalidState_SetAllowRedisplay_SI_saveEnabled_allowRedisplay() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        intentConfirmParams.saveForFutureUseCheckboxState = .deselected
+
+        // The backend will prevent allowRedisplayValue from being set, when paymentMethodSave is set to enabled
+        // but our code should be defensive enough to ensure allowRedisplayOverride does not override the value
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: true, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: .always),
+                                              isSettingUp: true)
 
         XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
@@ -58,17 +72,46 @@ class IntentConfirmParamsTest: XCTestCase {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .hidden
 
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: false, isSettingUp: true)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: false, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: nil),
+                                              isSettingUp: true)
 
         XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
 
+    func testSetAllowRedisplay_SI_saveDisabled_allowRedisplayOverrideAlways() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        intentConfirmParams.saveForFutureUseCheckboxState = .hidden
+
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: false, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: .always),
+                                              isSettingUp: true)
+
+        XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+    func testSetAllowRedisplay_SI_saveDisabled_allowRedisplayOverrideLimited() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        intentConfirmParams.saveForFutureUseCheckboxState = .hidden
+
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: false, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: .limited),
+                                              isSettingUp: true)
+
+        XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+    func testSetAllowRedisplay_SI_saveDisabled_allowRedisplayOverrideUnspecified() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        intentConfirmParams.saveForFutureUseCheckboxState = .hidden
+
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: false, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: .unspecified),
+                                              isSettingUp: true)
+
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
     // MARK: CustomerSession, Payment Intents
     func testSetAllowRedisplay_PI_saveEnabled_deselected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
 
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: true, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: true, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: nil),
+                                              isSettingUp: false)
 
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
@@ -76,25 +119,28 @@ class IntentConfirmParamsTest: XCTestCase {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
 
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: true, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: true, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: nil),
+                                              isSettingUp: false)
 
         XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_PI_saveDisabled_deselected() {
+    func testSetAllowRedisplay_PI_saveDisabled_hidden() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
-        intentConfirmParams.saveForFutureUseCheckboxState = .deselected
 
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: false, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: false, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: nil),
+                                              isSettingUp: false)
 
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
-    func testSetAllowRedisplay_PI_saveDisabled_selected() {
+
+    func testSetAllowRedisplay_PI_saveDisabled_hidden_doesNotOverride() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
-        intentConfirmParams.saveForFutureUseCheckboxState = .selected
 
-        intentConfirmParams.setAllowRedisplay(paymentMethodSave: false, isSettingUp: false)
+        intentConfirmParams.setAllowRedisplay(mobilePaymentElementFeatures: .init(paymentMethodSave: false, paymentMethodRemove: false, paymentMethodSaveAllowRedisplayOverride: .limited),
+                                              isSettingUp: false)
 
-        XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
+        // Ensure that allowRedisplayOverride doesn't override: (hidden checkbox and not attached to customer)
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
 
     // MARK: CustomerSheet

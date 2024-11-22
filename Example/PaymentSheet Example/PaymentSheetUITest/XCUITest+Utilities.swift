@@ -24,6 +24,13 @@ extension XCUIElement {
         }
     }
 
+    func scrollToAndTap(in app: XCUIApplication) {
+        while !self.exists {
+            app.swipeUp()
+        }
+        self.tap()
+    }
+
     func forceTapWhenHittableInTestCase(_ testCase: XCTestCase) {
         let predicate = NSPredicate(format: "hittable == true")
         testCase.expectation(for: predicate, evaluatedWith: self, handler: nil)
@@ -192,7 +199,6 @@ extension XCTestCase {
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
         if postalEnabled {
-            app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
             app.typeText("12345") // Postal
         }
     }
@@ -214,6 +220,10 @@ extension XCTestCase {
         let routingField = context.textFields["manual_entry_routing_number_text_field"]
         routingField.forceTapWhenHittableInTestCase(self)
         app.typeText("110000000")
+
+        // Dismiss keyboard, otherwise we can not see the next field
+        // This is only an artifact in the (test) native version of the flow
+        app.tapCoordinate(at: .init(x: 150, y: 150))
 
         let acctField = context.textFields["manual_entry_account_number_text_field"]
         acctField.forceTapWhenHittableInTestCase(self)
@@ -264,6 +274,15 @@ extension XCTestCase {
         context.buttons["Done"].tap()
     }
 
+    func skipLinkSignup(_ app: XCUIApplication) {
+        let notNowButton = app.buttons["Not now"]
+        if notNowButton.waitForExistence(timeout: 10.0) {
+            let keyboardCloseButton = app.toolbars.buttons["Done"]
+            keyboardCloseButton.waitForExistenceAndTap() // Dismiss keyboard
+            notNowButton.tap()
+        }
+    }
+
     func waitToDisappear(_ target: Any?) {
         let exists = NSPredicate(format: "exists == 0")
         expectation(for: exists, evaluatedWith: target, handler: nil)
@@ -274,64 +293,5 @@ extension XCTestCase {
         let elementExistsPredicate = NSPredicate(format: "count == %d", count)
         expectation(for: elementExistsPredicate, evaluatedWith: target, handler: nil)
         waitForExpectations(timeout: 10.0, handler: nil)
-    }
-
-    func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        app.buttons["Reload"].waitForExistenceAndTap(timeout: 10)
-        waitForReload(app, settings: settings)
-    }
-
-    func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        if settings.uiStyle == .paymentSheet {
-            let presentButton = app.buttons["Present PaymentSheet"]
-            expectation(
-                for: NSPredicate(format: "enabled == true"),
-                evaluatedWith: presentButton,
-                handler: nil
-            )
-            waitForExpectations(timeout: 10, handler: nil)
-        } else {
-            let confirm = app.buttons["Confirm"]
-            expectation(
-                for: NSPredicate(format: "enabled == true"),
-                evaluatedWith: confirm,
-                handler: nil
-            )
-            waitForExpectations(timeout: 10, handler: nil)
-        }
-    }
-    func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
-        if #available(iOS 15.0, *) {
-            // Doesn't work on 16.4. Seems like a bug, can't see any confirmation that this works online.
-            //   var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
-            //   urlComponents.query = settings.base64Data
-            //   app.open(urlComponents.url!)
-            // This should work, but we get an "Open in 'PaymentSheet Example'" consent dialog the first time we run it.
-            // And while the dialog is appearing, `open()` doesn't return, so we can't install an interruption handler or anything to handle it.
-            //   XCUIDevice.shared.system.open(urlComponents.url!)
-            app.launchEnvironment = app.launchEnvironment.merging(["STP_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
-            app.launch()
-        } else {
-            XCTFail("This test is only supported on iOS 15.0 or later.")
-        }
-        waitForReload(app, settings: settings)
-    }
-    func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
-        let paymentMethodButton = app.buttons["Payment method"]
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: paymentMethodButton,
-            handler: nil
-        )
-        waitForExpectations(timeout: 10, handler: nil)
-    }
-    func loadPlayground(_ app: XCUIApplication, _ settings: CustomerSheetTestPlaygroundSettings) {
-        if #available(iOS 15.0, *) {
-            app.launchEnvironment = app.launchEnvironment.merging(["STP_CUSTOMERSHEET_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
-            app.launch()
-        } else {
-            XCTFail("This test is only supported on iOS 15.0 or later.")
-        }
-        waitForReload(app, settings: settings)
     }
 }

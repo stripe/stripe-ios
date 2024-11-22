@@ -43,7 +43,7 @@ import UIKit
     /// A publishable key that only contains publishable keys and not secret keys.
     ///
     /// If a secret key is found, returns "[REDACTED_LIVE_KEY]".
-    var sanitizedPublishableKey: String? {
+    @_spi(STP) public var sanitizedPublishableKey: String? {
         guard let publishableKey = publishableKey else {
             return nil
         }
@@ -142,7 +142,7 @@ import UIKit
     // MARK: Helpers
 
     static var didShowTestmodeKeyWarning = false
-    class func validateKey(_ publishableKey: String?) {
+    @_spi(STP) public class func validateKey(_ publishableKey: String?) {
         guard NSClassFromString("XCTest") == nil else {
             return  // no asserts in unit tests
         }
@@ -392,6 +392,11 @@ extension STPAPIClient {
                 "application/x-www-form-urlencoded",
                 forHTTPHeaderField: "Content-Type"
             )
+            #if DEBUG
+            if StripeAPIConfiguration.includeDebugParamsHeader {
+                request.setValue(URLEncoder.queryString(from: parameters), forHTTPHeaderField: "X-Stripe-Mock-Request")
+            }
+            #endif
         }
 
         request.httpMethod = method.rawValue
@@ -501,7 +506,7 @@ extension STPAPIClient {
         }
 
         do {
-            /// HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
+            // HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
             if T.self == EmptyResponse.self,
                 let decodedStripeError = decodeStripeErrorResponse(data: data, response: response)
             {

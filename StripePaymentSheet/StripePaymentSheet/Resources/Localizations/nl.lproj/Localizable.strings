@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li rentevrije betalingen van %2$@";
-
 "+ Add" = "+ Toevoegen";
 
 "Add US bank account" = "Amerikaanse bankrekening toevoegen";
@@ -9,6 +7,8 @@
 "Add a card" = "Een kaart toevoegen";
 
 "Add a payment method" = "Een betaalmethode toevoegen";
+
+"Add bank account" = "Bankrekening toevoegen";
 
 "Add card" = "Kaart toevoegen";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "Betaling goedkeuren";
 
+"Are you sure you want to remove this card?" = "Weet je zeker dat je deze betaalkaart wilt verwijderen?";
+
+"Are you sure you want to remove this linked account?" = "Weet je zeker dat je dit gekoppelde account wilt verwijderen?";
+
 "Back" = "Terug";
 
+"Bank" = "Bank";
+
 "Bank account" = "Bankrekening";
+
+"Buy now or pay later with <img/>" = "Koop nu of betaal later met <img/>";
+
+"Buy now or pay later with Afterpay" = "Koop nu of betaal later met Afterpay";
+
+"Buy now or pay later with Clearpay" = "Koop nu of betaal later met Clearpay";
 
 "Buy now or pay later with Klarna" = "Koop nu of betaal later met Klarna";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Door je bankrekeninggegevens te verstrekken en deze betaling te bevestigen ga je akkoord met deze aanvraag voor automatische incasso en de <terms>Direct Debit Request-serviceovereenkomst</terms>, en autoriseer je Stripe Payments Australia Pty Ltd ACN 160 180 343 met gebruikers-ID voor automatische incasso's 507156 (“Stripe”) om bedragen van je rekening af te schrijven via het BECS-systeem (Bulk Electronic Clearing System) namens %@ (de \"Verkoper\") voor bedragen die afzonderlijk door de verkoper aan je kenbaar worden gemaakt. Je verklaart dat je de rekeninghouder bent van of bevoegd bent om te tekenen voor de hierboven vermelde rekening.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Door je kaartgegevens te verstrekken geef je %@ toestemming om toekomstige betalingen af te schrijven van je betaalkaart in overeenstemming met hun voorwaarden.";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je e-mailadres te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt en dat je betaalgegevens worden opgeslagen naar Link, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Door je betaalgegevens op te geven en deze betaling te bevestigen geef je toestemming aan (A) %@ en Stripe, onze betaaldienstverlener, een opdracht te sturen aan je bank om je rekening te debiteren en aan (B) je bank om je rekening te debiteren conform deze opdracht. Je hebt het recht op terugbetaling door je bank conform de met je bank overeengekomen voorwaarden. Een verzoek tot terugbetaling moet worden ingediend binnen 8 weken vanaf de datum waarop je rekening is gedebiteerd. Je rechten worden uitgelegd in een verklaring die je kunt opvragen bij je bank. Je stemt ermee in dat je minstens 2 dagen voor de uitvoering van toekomstige debiteringen hierover op de hoogte wordt gesteld.";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "Annuleren en op een andere manier betalen";
 
+"Change email" = "E-mailadres wijzigen";
+
 "Choose a payment method" = "Een betaalmethode kiezen";
 
 "Close card scanner" = "Kaartscanner afsluiten";
+
+"Code sent" = "Code verstuurd";
 
 "Confirm" = "Bevestigen";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "Je CVC bevestigen";
 
-"Confirm your CVV" = "Je CVV bevestigen";
-
 "Contact information" = "Contactgegevens";
+
+"Default" = "Standaard";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Adres handmatig invoeren";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Voer de code in die is verstuurd naar %@ om standaard met Link te betalen.";
+
+"Enter your verification code" = "Voer je verificatiecode in.";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Voer uit veiligheidsoverwegingen de beveiligingscode van je betaalkaart opnieuw in.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ik begrijp dat Stripe namens %@ bedragen via automatische incasso gaat afschrijven en ik bevestig dat ik als rekeninghouder de enige vereiste persoon ben om afschrijvingen van deze rekening te autoriseren.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Aanmelden bij Link";
+
+"Log out of Link" = "Afmelden bij Link";
 
 "Manage payment method" = "Betaalmethode beheren";
 
@@ -93,6 +123,8 @@
 "New card" = "Nieuwe betaalkaart";
 
 "New payment method" = "Nieuwe betaalmethode";
+
+"Not %@?" = "Niet %@?";
 
 "Open your UPI app to approve your payment within %@" = "Open de UPI-app om je betaling goed te keuren binnen %@";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "Reken sneller af bij %@ en duizenden andere bedrijven.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betaal in <num_installments/> rentevrije termijnen van <installment_price/> met <img/>";
-
 "Pay over time with %@" = "Betalen in termijnen met %@";
+
+"Pay over time with Affirm" = "Betalen in termijnen met Affirm";
 
 "Pay with Link" = "Betalen met Link";
 
 "Pay with your bank account in just a few steps." = "Betaal in een paar stappen met je bankrekening.";
 
+"Payment" = "Betaling";
+
 "Payment failed" = "Betaling is mislukt";
+
+"Payment methods" = "Betaalmethoden";
 
 "Please go back and select another payment method" = "Ga terug en selecteer een andere betaalmethode.";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "Betaalkaart verwijderen?";
 
+"Remove linked account" = "Gekoppeld account verwijderen";
+
 "Remove payment method" = "Betaalmethode verwijderen";
+
+"Resend code" = "Code opnieuw versturen";
 
 "Save" = "Opslaan";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "Opslaan voor toekomstige betalingen";
 
-"Save this account for future %@ payments" = "Dit account opslaan voor toekomstige betalingen bij %@";
+"Save payment details to %@ for future purchases" = "Betaalgegevens opslaan naar %@ voor toekomstige aankopen";
 
-"Save this card for future %@ payments" = "Deze kaart opslaan voor toekomstige aankopen bij %@";
+"Save this account for future %@ payments" = "Dit account opslaan voor toekomstige betalingen bij %@";
 
 "Save your bank account in just a few steps." = "Sla je bankrekening in een paar stappen op.";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "Opgeslagen";
 
+"Secure 1⁠-⁠click checkout" = "Veilig afrekenen in één klik";
+
 "Select card" = "Betaalkaart selecteren";
 
 "Select payment method" = "Betaalmethode selecteren";
 
 "Select your payment method" = "Betaalmethode selecteren";
+
+"Set as default" = "Instellen als standaard";
+
+"Set as default payment method" = "Instellen als standaardbetaalmethode";
 
 "Set up" = "Instellen";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "Menu weergeven";
 
+"Sign in to your Link account" = "Aanmelden bij je Link-account";
+
 "Simple, secure one-click payments" = "Betaal eenvoudig en veilig met één klik";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Er is iets misgegaan bij het koppelen van je account.\nProbeer het later nog eens.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Binnen 1 à 2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies om het instellen van je bankrekening bij %@ te voltooien.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Binnen 1-2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies over hoe je de betaling aan %@ kunt voltooien.";
 
+"Tap to close" = "Tikken om te sluiten";
+
+"Tap to expand" = "Tikken om uit te vouwen";
+
 "The IBAN you entered is incomplete." = "Het opgegeven IBAN-nummer is onvolledig.";
 
-"Update" = "Bijwerken";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Het opgegeven IBAN-nummer is ongeldig: \"%@\" is geen ondersteunde landcode.";
+
+"The provided verification code has expired." = "De opgegeven verificatiecode is verlopen.";
+
+"The provided verification code is incorrect." = "De opgegeven verificatiecode is onjuist.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Deze betaalkaart is verlopen. Werk de kaartgegevens bij of kies een andere betaalmethode.";
+
+"This is your default" = "Dit is je standaard";
+
+"Too many attempts. Please try again in a few minutes." = "Te veel pogingen. Probeer het over een paar minuten opnieuw.";
+
+"Unavailable for this purchase" = "Niet beschikbaar voor deze aankoop";
+
+"Update card" = "Betaalkaart bijwerken";
 
 "Update card brand" = "Merk van betaalkaart bijwerken";
+
+"Use your saved info to check out faster" = "Gebruik je opgeslagen gegevens om sneller af te rekenen";
 
 "View more" = "Meer weergeven";
 

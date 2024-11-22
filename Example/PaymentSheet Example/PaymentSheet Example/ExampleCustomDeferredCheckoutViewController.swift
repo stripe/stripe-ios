@@ -145,7 +145,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         // MARK: Update the payment method and buy buttons
         if let paymentOption = paymentSheetFlowController.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
+            paymentMethodButton.setTitleColor(.label, for: .normal)
             paymentMethodImage.image = paymentOption.image
             buyButton.isEnabled = true
         } else {
@@ -275,6 +275,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
                 configuration.allowsDelayedPaymentMethods = true
+                configuration.paymentMethodLayout = .horizontal
                 DispatchQueue.main.async {
                     PaymentSheet.FlowController.create(
                         intentConfiguration: self.intentConfig,

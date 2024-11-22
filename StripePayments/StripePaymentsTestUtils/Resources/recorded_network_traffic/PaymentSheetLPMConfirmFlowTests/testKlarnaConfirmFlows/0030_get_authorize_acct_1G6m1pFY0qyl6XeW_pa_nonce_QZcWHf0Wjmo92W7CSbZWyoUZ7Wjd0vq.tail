@@ -1,0 +1,15 @@
+GET
+https:\/\/pm-redirects\.stripe\.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_QZcWHf0Wjmo92W7CSbZWyoUZ7Wjd0vq\?useWebAuthSession=true&followRedirectsInSDK=true$
+302
+text/plain
+Server: nginx
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+content-security-policy: report-uri /csp-report?p=%2Fauthorize%2F%3Amerchant%2F%3Asecret_token;block-all-mixed-content;default-src 'none' 'report-sample';base-uri 'none';form-action 'none';style-src 'unsafe-inline';frame-ancestors 'self';connect-src 'self';img-src 'self' https://b.stripecdn.com
+Content-Type: text/plain;charset=utf-8
+Location: https://pay.playground.klarna.com/na/hpp/payments/2u8PvuK
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=pmredirectgw-srv"}],"include_subdomains":true}
+Date: Wed, 31 Jul 2024 03:33:05 GMT
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=pmredirectgw-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Content-Length: 0
+

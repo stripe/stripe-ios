@@ -11,11 +11,13 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol UpdateCardViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdateCardViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws
+    func didDismiss(viewController: UpdateCardViewController)
 }
 
 /// For internal SDK use only
@@ -27,6 +29,7 @@ final class UpdateCardViewController: UIViewController {
     private let isTestMode: Bool
     private let hostedSurface: HostedSurface
     private let canRemoveCard: Bool
+    private let cardBrandFilter: CardBrandFilter
 
     private var latestError: Error? {
         didSet {
@@ -42,7 +45,7 @@ final class UpdateCardViewController: UIViewController {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: appearance)
         navBar.delegate = self
-        navBar.setStyle(.back(showAdditionalButton: false))
+        navBar.setStyle(navigationBarStyle())
         return navBar
     }()
 
@@ -59,12 +62,12 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var headerLabel: UILabel = {
         let label = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
-        label.text = .Localized.update_card_brand
+        label.text = .Localized.manage_card
         return label
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.update), appearance: appearance, didTap: {  [weak self] in
+        return ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: appearance, didTap: {  [weak self] in
             Task {
                 await self?.updateCard()
             }
@@ -73,8 +76,19 @@ final class UpdateCardViewController: UIViewController {
 
     private lazy var deleteButton: UIButton = {
         let button = UIButton(type: .custom)
+        if #available(iOS 15.0, *) {
+            var configuration = UIButton.Configuration.bordered()
+            configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
+            configuration.baseBackgroundColor = .clear
+            button.configuration = configuration
+        } else {
+            button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+        }
         button.setTitleColor(appearance.colors.danger, for: .normal)
-        button.setTitle(.Localized.remove_card, for: .normal)
+        button.layer.borderColor = appearance.colors.danger.cgColor
+        button.layer.borderWidth = appearance.primaryButton.borderWidth
+        button.layer.cornerRadius = appearance.cornerRadius
+        button.setTitle(.Localized.remove, for: .normal)
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
@@ -95,7 +109,7 @@ final class UpdateCardViewController: UIViewController {
     }()
 
     private lazy var cardBrandDropDown: DropdownFieldElement = {
-        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
+        let cardBrands = paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
         let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
                                                                            theme: appearance.asElementsTheme,
                                                                            includePlaceholder: false) { [weak self] in
@@ -120,11 +134,26 @@ final class UpdateCardViewController: UIViewController {
         return cardBrandDropDown
     }()
 
+    private lazy var expiryDateElement: TextFieldElement = {
+        let expiryDate = CardExpiryDate(month: paymentMethod.card?.expMonth ?? 0, year: paymentMethod.card?.expYear ?? 0)
+        let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: appearance.asElementsTheme)
+        return expiryDateElement
+
+    }()
+
+    private lazy var cvcElement: TextFieldElement = {
+        let cvcConfiguration = TextFieldElement.CensoredCVCConfiguration(brand: self.paymentMethod.card?.preferredDisplayBrand ?? .unknown)
+        let cvcElement = cvcConfiguration.makeElement(theme: appearance.asElementsTheme)
+        return cvcElement
+
+    }()
+
     private lazy var cardSection: SectionElement = {
         let allSubElements: [Element?] = [
-            panElement, SectionElement.HiddenElement(cardBrandDropDown),
+            panElement,
+            SectionElement.HiddenElement(cardBrandDropDown),
+            SectionElement.MultiElementRow([expiryDateElement, cvcElement])
         ]
-
         let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: appearance.asElementsTheme)
         section.delegate = self
         return section
@@ -136,13 +165,15 @@ final class UpdateCardViewController: UIViewController {
          appearance: PaymentSheet.Appearance,
          hostedSurface: HostedSurface,
          canRemoveCard: Bool,
-         isTestMode: Bool) {
+         isTestMode: Bool,
+         cardBrandFilter: CardBrandFilter = .default) {
         self.paymentMethod = paymentMethod
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.appearance = appearance
         self.hostedSurface = hostedSurface
         self.isTestMode = isTestMode
         self.canRemoveCard = canRemoveCard
+        self.cardBrandFilter = cardBrandFilter
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -169,6 +200,16 @@ final class UpdateCardViewController: UIViewController {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
+        delegate?.didDismiss(viewController: self)
+    }
+
+    private func navigationBarStyle() -> SheetNavigationBar.Style {
+        if let bottomSheet = self.bottomSheetController,
+           bottomSheet.contentStack.count > 1 {
+            return .back(showAdditionalButton: false)
+        } else {
+            return .close(showAdditionalButton: false)
+        }
     }
 
     @objc private func removeCard() {
@@ -204,7 +245,6 @@ final class UpdateCardViewController: UIViewController {
                                                                  error: error,
                                                                  params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         }
-
         view.isUserInteractionEnabled = true
     }
 

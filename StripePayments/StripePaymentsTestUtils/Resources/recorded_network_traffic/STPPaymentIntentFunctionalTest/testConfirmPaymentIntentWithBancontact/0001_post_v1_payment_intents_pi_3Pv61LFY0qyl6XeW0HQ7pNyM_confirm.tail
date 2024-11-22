@@ -1,0 +1,74 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pv61LFY0qyl6XeW0HQ7pNyM\/confirm$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_intents%2F%3Aintent%2Fconfirm; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_IOEe2ZhQJ0DKtX
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1148
+Vary: Origin
+Date: Tue, 03 Sep 2024 23:20:23 GMT
+original-request: req_IOEe2ZhQJ0DKtX
+stripe-version: 2020-08-27
+idempotency-key: 776e1432-5ef4-46d8-9b35-3d8ad6389ce0
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: client_secret=pi_3Pv61LFY0qyl6XeW0HQ7pNyM_secret_FpcM4fxislq4dnA4WOIiwOqdb&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[metadata]\[test_key]=test_value&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=bancontact&return_url=example-app-scheme%3A\/\/authorized
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 100,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "eur",
+  "last_payment_error" : null,
+  "amount_subtotal" : 100,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "example-app-scheme:\/\/authorized",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_QmfMK7i0PC7oB56ewOu0vney5Oy3KN9"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tax" : 0
+  },
+  "payment_method" : "pm_1Pv61LFY0qyl6XeWpgroSG3y",
+  "client_secret" : "pi_3Pv61LFY0qyl6XeW0HQ7pNyM_secret_FpcM4fxislq4dnA4WOIiwOqdb",
+  "id" : "pi_3Pv61LFY0qyl6XeW0HQ7pNyM",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "bancontact"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1725405623,
+  "description" : null
+}

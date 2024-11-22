@@ -34,6 +34,6 @@ class STPPaymentMethodSEPADebitTest: XCTestCase {
         XCTAssertEqual(sepaDebit?.last4, "3001")
         XCTAssertEqual(sepaDebit?.mandate, "NXDSYREGC9PSMKWY")
 
-        XCTAssertEqual(sepaDebit?.allResponseFields as! NSDictionary, response as! NSDictionary)
+        XCTAssertEqual(sepaDebit!.allResponseFields as NSDictionary, response! as NSDictionary)
     }
 }

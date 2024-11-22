@@ -69,6 +69,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
     private let returnURL: String?
+    private let elementsSessionContext: ElementsSessionContext?
 
     // MARK: - UI
 
@@ -94,13 +95,15 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         apiClient: FinancialConnectionsAPIClient,
         manifest: FinancialConnectionsSessionManifest,
         sessionFetcher: FinancialConnectionsSessionFetcher,
-        returnURL: String?
+        returnURL: String?,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
         self.manifest = manifest
         self.sessionFetcher = sessionFetcher
         self.returnURL = returnURL
+        self.elementsSessionContext = elementsSessionContext
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -150,10 +153,13 @@ extension FinancialConnectionsWebFlowViewController {
         guard authSessionManager == nil else { return }
         loadingView.showLoading(true)
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
-        var additionalQueryParameters = additionalQueryParameters
-        if manifest.isProductInstantDebits {
-            additionalQueryParameters = (additionalQueryParameters ?? "") + "&return_payment_method=true"
-        }
+        let additionalQueryParameters = Self.buildEncodedUrlParameters(
+            startingAdditionalParameters: additionalQueryParameters,
+            isInstantDebits: manifest.isProductInstantDebits,
+            linkMode: elementsSessionContext?.linkMode,
+            prefillDetails: elementsSessionContext?.prefillDetails,
+            billingDetails: elementsSessionContext?.billingDetails
+        )
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
             .observe(using: { [weak self] (result) in
@@ -162,21 +168,20 @@ extension FinancialConnectionsWebFlowViewController {
                 switch result {
                 case .success(.success(let returnUrl)):
                     if manifest.isProductInstantDebits {
-                        if
-                            let paymentMethodId = Self.extractValue(from: returnUrl, key: "payment_method_id")
-                        {
-                            let instantDebitsLinkedBank = InstantDebitsLinkedBankImplementation(
-                                paymentMethodId: paymentMethodId,
-                                bankName: Self.extractValue(from: returnUrl, key: "bank_name")?
+                        if let paymentMethod = returnUrl.extractLinkBankPaymentMethod() {
+                            let instantDebitsLinkedBank = InstantDebitsLinkedBank(
+                                paymentMethod: paymentMethod,
+                                bankName: returnUrl.extractValue(forKey: "bank_name")?
                                 // backend can return "+" instead of a more-common encoding of "%20" for spaces
                                     .replacingOccurrences(of: "+", with: " "),
-                                last4: Self.extractValue(from: returnUrl, key: "last4")
+                                last4: returnUrl.extractValue(forKey: "last4"),
+                                linkMode: elementsSessionContext?.linkMode
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
                         } else {
                             self.notifyDelegateOfFailure(
                                 error: FinancialConnectionsSheetError.unknown(
-                                    debugDescription: "payment_method_id was not returned"
+                                    debugDescription: "Invalid payment_method returned"
                                 )
                             )
                         }
@@ -287,9 +292,32 @@ extension FinancialConnectionsWebFlowViewController {
 
         notifyDelegate(result: .failed(error: error))
     }
+}
 
-    private static func extractValue(from url: URL, key: String) -> String? {
-        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+private extension URL {
+    
+    /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
+    /// we can parse it back in StripeCore.
+    func extractLinkBankPaymentMethod() -> LinkBankPaymentMethod? {
+        guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
+            return nil
+        }
+        
+        guard let data = Data(base64Encoded: encodedPaymentMethod) else {
+            return nil
+        }
+        
+        let result: Result<LinkBankPaymentMethod, Error> = STPAPIClient.decodeResponse(
+            data: data,
+            error: nil,
+            response: nil
+        )
+        
+        return try? result.get()
+    }
+    
+    func extractValue(forKey key: String) -> String? {
+        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
             assertionFailure("Invalid URL")
             return nil
         }
@@ -414,5 +442,81 @@ private extension FinancialConnectionsWebFlowViewController {
             return startPollingParam
         }
         return startPollingParam + "&\(fragment)"
+    }
+}
+
+extension FinancialConnectionsWebFlowViewController {
+    static func buildEncodedUrlParameters(
+        startingAdditionalParameters: String?,
+        isInstantDebits: Bool,
+        linkMode: LinkMode?,
+        prefillDetails: ElementsSessionContext.PrefillDetails?,
+        billingDetails: ElementsSessionContext.BillingDetails?
+    ) -> String? {
+        var parameters: [String] = []
+
+        if let startingAdditionalParameters {
+            parameters.append(startingAdditionalParameters)
+        }
+
+        if isInstantDebits {
+            parameters.append("return_payment_method=true")
+            parameters.append("expand_payment_method=true")
+            if let linkMode {
+                parameters.append("link_mode=\(linkMode.rawValue)")
+            }
+
+            if let billingDetails = billingDetails {
+                if let name = billingDetails.name, !name.isEmpty {
+                    parameters.append("billingDetails[name]=\(name)")
+                }
+                if let email = billingDetails.email, !email.isEmpty {
+                    parameters.append("billingDetails[email]=\(email)")
+                }
+                if let phone = billingDetails.phone, !phone.isEmpty {
+                    parameters.append("billingDetails[phone]=\(phone)")
+                }
+                if let address = billingDetails.address {
+                    if let city = address.city, !city.isEmpty {
+                        parameters.append("billingDetails[address][city]=\(city)")
+                    }
+                    if let country = address.country, !country.isEmpty {
+                        parameters.append("billingDetails[address][country]=\(country)")
+                    }
+                    if let line1 = address.line1, !line1.isEmpty {
+                        parameters.append("billingDetails[address][line1]=\(line1)")
+                    }
+                    if let line2 = address.line2, !line2.isEmpty {
+                        parameters.append("billingDetails[address][line2]=\(line2)")
+                    }
+                    if let postalCode = address.postalCode, !postalCode.isEmpty {
+                        parameters.append("billingDetails[address][postal_code]=\(postalCode)")
+                    }
+                    if let state = address.state, !state.isEmpty {
+                        parameters.append("billingDetails[address][state]=\(state)")
+                    }
+                }
+            }
+        }
+
+        if let prefillDetails = prefillDetails {
+            if let email = prefillDetails.email, !email.isEmpty {
+                parameters.append("email=\(email)")
+            }
+            if let phoneNumber = prefillDetails.unformattedPhoneNumber, !phoneNumber.isEmpty {
+                parameters.append("linkMobilePhone=\(phoneNumber)")
+            }
+            if let countryCode = prefillDetails.countryCode, !countryCode.isEmpty {
+                parameters.append("linkMobilePhoneCountry=\(countryCode)")
+            }
+        }
+
+        // Join all values with an &, and URL encode.
+        // We encode these parameters since they will be appended to the auth flow URL.
+        guard let result = parameters.joined(separator: "&").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
+            return nil
+        }
+        // Start the result with a & if it is not empty and doesn't already start with one.
+        return result.isEmpty ? nil : result.hasPrefix("&") ? result : "&" + result
     }
 }

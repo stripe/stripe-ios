@@ -1,0 +1,77 @@
+{
+  "configurations" : [
+    {
+      "id" : "8AB8AB83-EA2D-4EC3-B245-B611D3298949",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "environmentVariableEntries" : [
+      {
+        "key" : "FB_REFERENCE_IMAGE_DIR",
+        "value" : "$(SRCROOT)\/..\/..\/Tests\/ReferenceImages"
+      }
+    ],
+    "locationScenario" : {
+      "identifier" : "San Francisco, CA, USA",
+      "referenceType" : "built-in"
+    },
+    "region" : "US",
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:PaymentSheet Example.xcodeproj",
+      "identifier" : "D017784615929C0DD3717FE8",
+      "name" : "PaymentSheet Example"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "skippedTests" : [
+        "CustomerSheetSnapshotTests",
+        "CustomerSheetUITest",
+        "EmbeddedUITests",
+        "EmbeddedUITests\/testUpdate()",
+        "LinkPaymentControllerUITest",
+        "PaymentSheetBillingCollectionBankTests",
+        "PaymentSheetCVCRecollectionUITests",
+        "PaymentSheetCardBrandFilteringUITests",
+        "PaymentSheetCustomerSessionCBCUITests",
+        "PaymentSheetCustomerSessionDedupeUITests",
+        "PaymentSheetDefaultSPMUITests",
+        "PaymentSheetDefaultSPMUITests\/testDefaultSPMHorizontalNavigation()",
+        "PaymentSheetDefaultSPMUITests\/testDefaultSPMNavigationFlagOff()",
+        "PaymentSheetDefaultSPMUITests\/testDefaultSPMVerticalNavigation()",
+        "PaymentSheetDeferredServerSideUITests",
+        "PaymentSheetExternalPMUITests",
+        "PaymentSheetStandardLPMUICBCTests",
+        "PaymentSheetStandardLPMUICase",
+        "PaymentSheetStandardLPMUIOneTests",
+        "PaymentSheetStandardLPMUITests",
+        "PaymentSheetStandardLPMUIThreeTests",
+        "PaymentSheetStandardLPMUITwoTests",
+        "PaymentSheetStandardUITests",
+        "PaymentSheetUITestCase",
+        "PaymentSheetVerticalUITests",
+        "PaymentSheet_AddressTests"
+      ],
+      "target" : {
+        "containerPath" : "container:PaymentSheet Example.xcodeproj",
+        "identifier" : "AAF1424C7F0424C3506712E6",
+        "name" : "PaymentSheetUITest"
+      }
+    },
+    {
+      "enabled" : false,
+      "target" : {
+        "containerPath" : "container:PaymentSheet Example.xcodeproj",
+        "identifier" : "5BBB41069612B9B628C5E65D",
+        "name" : "PaymentSheetLocalizationScreenshotGenerator"
+      }
+    }
+  ],
+  "version" : 1
+}

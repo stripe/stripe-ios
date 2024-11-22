@@ -13,6 +13,7 @@ struct FinancialConnectionsSynchronize: Decodable {
     let visual: VisualUpdate
 
     struct Text: Decodable {
+        let accountPickerPane: FinancialConnectionsAccountPickerPane?
         let consentPane: FinancialConnectionsConsent?
         let networkingLinkSignupPane: FinancialConnectionsNetworkingLinkSignup?
         let linkLoginPane: FinancialConnectionsLinkLoginPane?

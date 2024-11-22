@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li intressivaba makset summas %2$@";
-
 "+ Add" = "+ lisa";
 
 "Add US bank account" = "Lisa Ameerika Ühendriikide pangakonto";
@@ -9,6 +7,8 @@
 "Add a card" = "Kaardi lisamine";
 
 "Add a payment method" = "Lisa makseviis";
+
+"Add bank account" = "Lisa pangakonto";
 
 "Add card" = "Kaardi lisamine";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "Kinnitage makse";
 
+"Are you sure you want to remove this card?" = "Kas olete kindel, et soovite selle kaardi eemaldada?";
+
+"Are you sure you want to remove this linked account?" = "Kas olete kindel, et soovite selle lingitud konto eemaldada?";
+
 "Back" = "Tagasi";
 
+"Bank" = "Pank";
+
 "Bank account" = "Pangakonto";
+
+"Buy now or pay later with <img/>" = "Osta praegu või maksa <img/> abil hiljem";
+
+"Buy now or pay later with Afterpay" = "Osta praegu või maksa Afterpay abil hiljem";
+
+"Buy now or pay later with Clearpay" = "Osta praegu või maksa Clearpay abil hiljem";
 
 "Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Esitades oma pangakonto andmed ja kinnitades selle makse, nõustute käesoleva otsekorralduse taotluse ja <terms>otsekorralduse taotluse teenuselepinguga</terms> ning volitate ettevõtet Stripe Payments Australia Pty Ltd ACN 160 180 343, otsekorralduse kasutaja ID number 507156 („Stripe“), debiteerima teenuse Bulk Electronic Clearing System (BECS) kaudu %@ („kaupleja“) nimel teie kontot mis tahes kaupleja poolt teile eraldi teada antud summade ulatuses. Te kinnitate, et olete ülalnimetatud konto omanik või volitatud allkirjaõiguslik isik.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Kaarditeavet esitades, lubate ettevõttel %@ oma kaarti tulevasteks makseteks nende kehtestatud tingimustel debiteerida.";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Oma e-posti aadressi esitamisega nõustute looma Linki konto ja salvestama oma makseteabe Linki, mille suhtes kehtivad Linki <terms>tingimused</terms> ja <privacy>privaatsuseeskirjad</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Makseteabe esitamise ja käesoleva makse kinnitamisega volitatate (A) ettevõtet %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka juhiseid teie konto debiteerimiseks ning (B) oma panka nende juhiste alusel teie kontot debiteerima. Vastavalt teie õigustele, pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus saada pangalt tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates teie konto debiteerimise kuupäevast. Teie õigusi selgitatakse avalduses, mille saate oma pangast. Nõustute saama teavitusi tulevaste debiteerimiste kohta kaks päeva enne nende toimumist.";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "Tühista ja maksa muul viisil";
 
+"Change email" = "Muuda e-posti aadressi";
+
 "Choose a payment method" = "Valige makseviis";
 
 "Close card scanner" = "Kaardiskanneri sulgemine";
+
+"Code sent" = "Kood saadetud";
 
 "Confirm" = "Kinnita";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "Kinnita CVC";
 
-"Confirm your CVV" = "Kinnita CVV";
-
 "Contact information" = "Kontaktandmed";
+
+"Default" = "Vaikimisi";
 
 "EPS Bank" = "EPS pank";
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Vaikimisi Linkiga maksmiseks sisestage numbrile %@ saadetud kood.";
+
+"Enter your verification code" = "Sisestage oma kinnituskood";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Turvalisuse huvides sisestage palun uuesti oma kaardi turvakood.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Mõistan, et Stripe kogub ettevõtte %@ nimel otsekorraldusi, ja kinnitan, et olen kontoomanik ja ainus isik, kes peab selle konto debiteerimist autoriseerima.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Liitu Linkiga";
+
+"Log out of Link" = "Logi Link välja";
 
 "Manage payment method" = "Makseviisi haldamine";
 
@@ -93,6 +123,8 @@
 "New card" = "Uus kaart";
 
 "New payment method" = "Uus makseviis";
+
+"Not %@?" = "Pole %@?";
 
 "Open your UPI app to approve your payment within %@" = "Makse kinnitamiseks avage oma UPI rakendus %@ jooksul";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "Makske kiiremini kaupleja %@ lehel ja tuhandetel teistel saitidel.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Makske <num_installments/> <installment_price/> suuruse intressivaba osamaksega <img/> abil";
-
 "Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
+
+"Pay over time with Affirm" = "Maksa Affirmi järelmaksuga";
 
 "Pay with Link" = "Maksa Linkiga";
 
 "Pay with your bank account in just a few steps." = "Pangakontoga maksmine vaid mõne sammuga.";
 
+"Payment" = "Makse";
+
 "Payment failed" = "Makse ebaõnnestus";
+
+"Payment methods" = "Makseviisid";
 
 "Please go back and select another payment method" = "Minge tagasi ja valige mõni muu makseviis";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "Kas soovite kaardi eemaldada?";
 
+"Remove linked account" = "Eemalda lingitud konto";
+
 "Remove payment method" = "Makseviisi eemaldamine";
+
+"Resend code" = "Saada kood uuesti";
 
 "Save" = "Salvesta";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "Salvestage tulevasteks makseteks";
 
-"Save this account for future %@ payments" = "Salvesta see konto tulevaste %@ maksete jaoks";
+"Save payment details to %@ for future purchases" = "Salvesta makseandmed %@ tulevaste ostude jaoks";
 
-"Save this card for future %@ payments" = "Salvestage see kaart tulevasteks makseteks teenuses %@";
+"Save this account for future %@ payments" = "Salvesta see konto tulevaste %@ maksete jaoks";
 
 "Save your bank account in just a few steps." = "Salvestage oma pangakonto vaid mõne lihtsa sammuga.";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "Salvestatud";
 
+"Secure 1⁠-⁠click checkout" = "Turvaline ühe klõpsuga makse lõpuleviimine";
+
 "Select card" = "Vali kaart";
 
 "Select payment method" = "Vali makseviis";
 
 "Select your payment method" = "Valige makseviis";
+
+"Set as default" = "Muuda vaikimisi makseviisiks";
+
+"Set as default payment method" = "Määra vaikimisi makseviisiks";
 
 "Set up" = "Seadista";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "Kuva menüü";
 
+"Sign in to your Link account" = "Logi oma Linki kontole sisse";
+
 "Simple, secure one-click payments" = "Lihtsad turvalised maksed ühe hiireklõpsuga";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Midagi läks teie konto linkimisel valesti.\nProovige hiljem uuesti.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega oma pangakonto %@ salvestamiseks.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega makse sooritamiseks ettevõttele %@.";
 
+"Tap to close" = "Puudutage sulgemiseks";
+
+"Tap to expand" = "Puudutage laiendamiseks";
+
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
 
-"Update" = "Värskenda";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, „%@“ ei ole toetatud riigikood.";
+
+"The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
+
+"The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
+
+"This card has expired. Update your card info or choose a different payment method." = "See kaart on aegunud. Ajakohastage oma kaarditeavet või kasutage muud makseviisi.";
+
+"This is your default" = "See on teie vaikimisi makseviis";
+
+"Too many attempts. Please try again in a few minutes." = "Liiga palju katseid. Proovige paari minuti pärast uuesti.";
+
+"Unavailable for this purchase" = "Pole selle ostu puhul saadaval";
+
+"Update card" = "Uuenda kaarti";
 
 "Update card brand" = "Uuenda kaardi kaubamärki";
+
+"Use your saved info to check out faster" = "Kasutage oma salvestatud teavet kiiremaks makse lõpuleviimiseks";
 
 "View more" = "Kuva rohkem";
 

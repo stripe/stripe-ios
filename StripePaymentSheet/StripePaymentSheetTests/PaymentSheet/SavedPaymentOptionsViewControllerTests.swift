@@ -303,7 +303,8 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isCVCRecollectionEnabled: true,
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                               allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods)
+                                                               allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods,
+                                                               alternateUpdatePaymentMethodNavigation: false)
     }
 
     func savedPaymentOptionsController(_ configuration: SavedPaymentOptionsViewController.Configuration,
@@ -315,6 +316,16 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                  intent: Intent._testValue(),
                                                  appearance: .default,
                                                  cbcEligible: cbcEligible,
+                                                 analyticsHelper: ._testValue(),
                                                  delegate: nil)
+    }
+    
+    // Test case for when the preferred brand of a card is nil that we look at the display brand
+    func testRemovalMessagePreferredBrand_nilPreferredBrand() {
+        let coBrandedCard = STPPaymentMethod._testCardCoBranded(displayBrand: "cartes_bancaires")
+        XCTAssertNil(coBrandedCard.card?.networks?.preferred)
+        let removalMessage = coBrandedCard.removalMessage
+        
+        XCTAssertEqual(removalMessage.message, "Cartes Bancaires •••• 4242")
     }
 }

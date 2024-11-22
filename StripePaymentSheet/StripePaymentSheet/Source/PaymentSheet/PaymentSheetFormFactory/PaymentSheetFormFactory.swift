@@ -26,24 +26,23 @@ class PaymentSheetFormFactory {
     let paymentMethod: PaymentSheet.PaymentMethodType
     let configuration: PaymentSheetFormFactoryConfig
     let addressSpecProvider: AddressSpecProvider
-    let offerSaveToLinkWhenSupported: Bool
+    let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
     let previousCustomerInput: IntentConfirmParams?
 
-    let supportsLinkCard: Bool
     let isPaymentIntent: Bool
     let isSettingUp: Bool
-    let currency: String?
-    let amount: Int?
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
-    let analyticsClient: STPAnalyticsClient
+    let analyticsHelper: PaymentSheetAnalyticsHelper?
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
-        case .legacy, .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+        case .legacy:
             return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
+            return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
             return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
@@ -51,7 +50,7 @@ class PaymentSheetFormFactory {
         }
     }
 
-    var theme: ElementsUITheme {
+    var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
     }
 
@@ -62,29 +61,41 @@ class PaymentSheetFormFactory {
 
     convenience init(
         intent: Intent,
+        elementsSession: STPElementsSession,
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
-        offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsHelper: PaymentSheetAnalyticsHelper?
     ) {
+
+        /// Whether or not the card form should show the link inline signup checkbox
+        let showLinkInlineCardSignup: Bool = {
+            guard case .paymentSheet(let configuration) = configuration else {
+                return false
+            }
+
+            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+            guard isLinkEnabled && !elementsSession.disableLinkSignup && elementsSession.supportsLinkCard else {
+                return false
+            }
+
+            let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
+            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
                   addressSpecProvider: addressSpecProvider,
-                  offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
+                  showLinkInlineCardSignup: showLinkInlineCardSignup,
                   linkAccount: linkAccount,
-                  cardBrandChoiceEligible: intent.cardBrandChoiceEligible,
-                  supportsLinkCard: intent.supportsLinkCard,
+                  cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
-                  currency: intent.currency,
-                  amount: intent.amount,
-                  countryCode: intent.countryCode(overrideCountry: configuration.overrideCountry),
-                  savePaymentMethodConsentBehavior: intent.elementsSession.savePaymentMethodConsentBehavior(),
-                  analyticsClient: analyticsClient)
+                  countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
+                  savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
+                  analyticsHelper: analyticsHelper)
     }
 
     required init(
@@ -92,22 +103,19 @@ class PaymentSheetFormFactory {
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
-        offerSaveToLinkWhenSupported: Bool = false,
+        showLinkInlineCardSignup: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
         cardBrandChoiceEligible: Bool = false,
-        supportsLinkCard: Bool,
         isPaymentIntent: Bool,
         isSettingUp: Bool,
-        currency: String?,
-        amount: Int?,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsHelper: PaymentSheetAnalyticsHelper?
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
         self.addressSpecProvider = addressSpecProvider
-        self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
+        self.showLinkInlineCardSignup = showLinkInlineCardSignup
         self.linkAccount = linkAccount
         // Restore the previous customer input if its the same type
         if previousCustomerInput?.paymentMethodType == paymentMethod {
@@ -115,20 +123,17 @@ class PaymentSheetFormFactory {
         } else {
             self.previousCustomerInput = nil
         }
-        self.supportsLinkCard = supportsLinkCard
         self.isPaymentIntent = isPaymentIntent
         self.isSettingUp = isSettingUp
-        self.currency = currency
-        self.amount = amount
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
-        self.analyticsClient = analyticsClient
+        self.analyticsHelper = analyticsHelper
     }
 
     func make() -> PaymentMethodElement {
         switch paymentMethod {
-        case .instantDebits:
+        case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
         case .external:
             return makeExternalPaymentMethodForm()
@@ -177,7 +182,7 @@ class PaymentSheetFormFactory {
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
                 stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-                analyticsClient.log(analytic: errorAnalytic)
+                analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
             }
             if paymentMethod == .iDEAL {
@@ -526,6 +531,7 @@ extension PaymentSheetFormFactory {
             checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             savingAccount: isSaving,
             merchantName: merchantName,
+            initialLinkedBank: previousCustomerInput?.financialConnectionsLinkedBank,
             theme: theme
         )
     }
@@ -598,18 +604,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> StaticElement? {
-        guard let amount = amount, let currency = currency else {
-            assertionFailure("After requires a non-nil amount and currency")
-            return nil
-        }
-
-        return StaticElement(
-            view: AfterpayPriceBreakdownView(
-                amount: amount,
-                currency: currency,
-                theme: theme
-            )
-        )
+        return StaticElement(view: AfterpayPriceBreakdownView(theme: theme))
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
@@ -648,20 +643,33 @@ extension PaymentSheetFormFactory {
         return StaticElement(view: label)
     }
 
-    func makeInstantDebits() -> PaymentMethodElement {
+    func makeInstantDebits(countries: [String]? = nil) -> PaymentMethodElement {
+        let titleElement: StaticElement? = if case .paymentSheet = configuration {
+            makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
+        } else {
+            nil
+        }
+
+        let billingConfiguration = configuration.billingDetailsCollectionConfiguration
+        let nameElement = billingConfiguration.name == .always ? makeName() : nil
+        let phoneElement = billingConfiguration.phone == .always ? makePhone() : nil
+        let addressElement = billingConfiguration.address == .full
+        ? makeBillingAddressSection(collectionMode: .all(), countries: countries)
+            : nil
+
+        // An email is required, so only hide the email field iff:
+        // The configuration specifies never collecting email, and a default (non-empty) email is provided.
+        let shouldHideEmailField = billingConfiguration.email == .never &&
+            configuration.defaultBillingDetails.email?.isEmpty == false
+        let emailElement = shouldHideEmailField ? nil : makeEmail()
+
         return InstantDebitsPaymentMethodElement(
             configuration: configuration,
-            titleElement: {
-                switch configuration {
-                case .customerSheet:
-                    return nil // customer sheet is not supported
-                case .paymentSheet:
-                    return makeSectionTitleLabelWith(
-                        text: Self.PayByBankDescriptionText
-                    )
-                }
-            }(),
-            emailElement: makeEmail(),
+            titleElement: titleElement,
+            nameElement: nameElement,
+            emailElement: emailElement,
+            phoneElement: phoneElement,
+            addressElement: addressElement,
             theme: theme
         )
     }
@@ -815,7 +823,7 @@ extension PaymentSheetFormFactory {
 
 extension FormElement {
     /// Conveniently nests single TextField, PhoneNumber, and DropdownFields in a Section
-    convenience init(autoSectioningElements: [Element], theme: ElementsUITheme = .default) {
+    convenience init(autoSectioningElements: [Element], theme: ElementsAppearance = .default) {
         let elements: [Element] = autoSectioningElements.map {
             if $0 is PaymentMethodElementWrapper<TextFieldElement>
                 || $0 is PaymentMethodElementWrapper<DropdownFieldElement>
@@ -877,13 +885,13 @@ private extension PaymentSheet.Address {
 extension PaymentSheet.Appearance {
 
     /// Creates an `ElementsUITheme` based on this PaymentSheet appearance
-    var asElementsTheme: ElementsUITheme {
-        var theme = ElementsUITheme.default
+    var asElementsTheme: ElementsAppearance {
+        var theme = ElementsAppearance.default
 
-        var colors = ElementsUITheme.Color()
+        var colors = ElementsAppearance.Color()
         colors.primary = self.colors.primary
         colors.parentBackground = self.colors.background
-        colors.background = self.colors.componentBackground
+        colors.componentBackground = self.colors.componentBackground
         colors.bodyText = self.colors.text
         colors.border = self.colors.componentBorder
         colors.divider = self.colors.componentDivider
@@ -896,7 +904,7 @@ extension PaymentSheet.Appearance {
         theme.cornerRadius = cornerRadius
         theme.shadow = shadow.asElementThemeShadow
 
-        var fonts = ElementsUITheme.Font()
+        var fonts = ElementsAppearance.Font()
         fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
         fonts.subheadlineBold = scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
         fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
@@ -914,11 +922,11 @@ extension PaymentSheet.Appearance {
 extension PaymentSheet.Appearance.Shadow {
 
     /// Creates an `ElementsUITheme.Shadow` based on this PaymentSheet appearance shadow
-    var asElementThemeShadow: ElementsUITheme.Shadow? {
-        return ElementsUITheme.Shadow(color: color, opacity: opacity, offset: offset, radius: radius)
+    var asElementThemeShadow: ElementsAppearance.Shadow? {
+        return ElementsAppearance.Shadow(color: color, opacity: opacity, offset: offset, radius: radius)
     }
 
-    init(elementShadow: ElementsUITheme.Shadow) {
+    init(elementShadow: ElementsAppearance.Shadow) {
         self.color = elementShadow.color
         self.opacity = elementShadow.opacity
         self.offset = elementShadow.offset

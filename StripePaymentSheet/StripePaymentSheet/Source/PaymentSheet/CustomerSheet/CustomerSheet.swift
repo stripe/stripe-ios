@@ -21,13 +21,28 @@ internal enum InternalCustomerSheetResult {
 }
 
 public class CustomerSheet {
+    private enum IntegrationType {
+        case customerAdapter
+        case customerSession
+    }
+
     internal enum InternalError: Error {
         case expectedSetupIntent
         case invalidStateOnConfirmation
     }
+    private let integrationType: IntegrationType
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
+
+    private var initEvent: STPAnalyticEvent {
+        switch self.integrationType {
+        case .customerAdapter:
+            STPAnalyticEvent.customerSheetInitWithCustomerAdapter
+        case .customerSession:
+            STPAnalyticEvent.customerSheetInitWithCustomerSession
+        }
+    }
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = {
@@ -65,6 +80,7 @@ public class CustomerSheet {
                 customer: CustomerAdapter) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
+        self.integrationType = .customerAdapter
         self.configuration = configuration
 
         self.customerAdapter = customer
@@ -82,6 +98,7 @@ public class CustomerSheet {
     public init(configuration: CustomerSheet.Configuration,
                 intentConfiguration: CustomerSheet.IntentConfiguration,
                 customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
+        self.integrationType = .customerSession
         self.configuration = configuration
         self.customerAdapter = nil
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
@@ -112,6 +129,7 @@ public class CustomerSheet {
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
         let loadingStartDate = Date()
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.initEvent)
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadStarted)
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
@@ -184,21 +202,19 @@ public class CustomerSheet {
             loadSpecsPromise.resolve(with: ())
         }
 
-        loadSpecsPromise.observe { _ in
-            DispatchQueue.main.async {
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
-                let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
-                                                                                    selectedPaymentMethodOption: selectedPaymentMethodOption,
-                                                                                    merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
-                                                                                    configuration: self.configuration,
-                                                                                    customerSheetDataSource: customerSheetDataSource,
-                                                                                    isApplePayEnabled: isApplePayEnabled,
-                                                                                    paymentMethodRemove: paymentMethodRemove,
-                                                                                    cbcEligible: cbcEligible,
-                                                                                    csCompletion: self.csCompletion,
-                                                                                    delegate: self)
-                self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
-            }
+        loadSpecsPromise.observe(on: .main) { _ in
+            let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
+            let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
+                                                                                selectedPaymentMethodOption: selectedPaymentMethodOption,
+                                                                                merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
+                                                                                configuration: self.configuration,
+                                                                                customerSheetDataSource: customerSheetDataSource,
+                                                                                isApplePayEnabled: isApplePayEnabled,
+                                                                                paymentMethodRemove: paymentMethodRemove,
+                                                                                cbcEligible: cbcEligible,
+                                                                                csCompletion: self.csCompletion,
+                                                                                delegate: self)
+            self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
         }
     }
 
@@ -221,7 +237,7 @@ public class CustomerSheet {
 }
 
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent, elementsSession: STPElementsSession, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
         guard case .setupIntent = intent else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                               error: InternalError.expectedSetupIntent)
@@ -230,7 +246,7 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
             completion(.failed(error: CustomerSheetError.unknown(debugDescription: "No setup intent available")))
             return
         }
-        self.confirmIntent(intent: intent, paymentOption: paymentOption) { result in
+        self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption) { result in
             completion(result)
         }
     }
@@ -300,7 +316,10 @@ extension CustomerSheet {
             case .applePay:
                 return .applePay()
             case .stripeId(let paymentMethodId):
-                let paymentMethods = elementsSession.customer?.paymentMethods ?? []
+                let paymentMethods = elementsSession.customer?.paymentMethods.filter({ paymentMethod in
+                    guard let card = paymentMethod.card else { return true }
+                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
+                }) ?? []
                 guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                     return nil
                 }

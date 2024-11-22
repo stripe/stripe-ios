@@ -16,11 +16,11 @@ final class SavedPaymentMethodManager {
         case missingEphemeralKey
     }
 
-    let configuration: PaymentSheet.Configuration
-    let intent: Intent
+    let configuration: PaymentElementConfiguration
+    let elementsSession: STPElementsSession
 
     private lazy var ephemeralKey: String? = {
-        guard let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(intent: intent) else {
+        guard let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession) else {
             stpAssert(true, "Failed to read ephemeral key.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: Error.missingEphemeralKey,
@@ -31,9 +31,9 @@ final class SavedPaymentMethodManager {
         return ephemeralKey
     }()
 
-    init(configuration: PaymentSheet.Configuration, intent: Intent) {
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) {
         self.configuration = configuration
-        self.intent = intent
+        self.elementsSession = elementsSession
     }
 
     func update(paymentMethod: STPPaymentMethod,

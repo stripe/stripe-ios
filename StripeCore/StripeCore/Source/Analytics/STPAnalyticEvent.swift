@@ -75,15 +75,14 @@ import Foundation
     case mcInitCustomDefault = "mc_custom_init_default"
     case mcInitCompleteDefault = "mc_complete_init_default"
 
+    // MARK: - Embedded Payment Element init
+    case mcInitEmbedded = "mc_embedded_init"
+
     // MARK: - PaymentSheet Show
     case mcShowCustomNewPM = "mc_custom_sheet_newpm_show"
     case mcShowCustomSavedPM = "mc_custom_sheet_savedpm_show"
-    case mcShowCustomApplePay = "mc_custom_sheet_applepay_show"
-    case mcShowCustomLink = "mc_custom_sheet_link_show"
     case mcShowCompleteNewPM = "mc_complete_sheet_newpm_show"
     case mcShowCompleteSavedPM = "mc_complete_sheet_savedpm_show"
-    case mcShowCompleteApplePay = "mc_complete_sheet_applepay_show"
-    case mcShowCompleteLink = "mc_complete_sheet_link_show"
 
     // MARK: - PaymentSheet Payment
     case mcPaymentCustomNewPMSuccess = "mc_custom_payment_newpm_success"
@@ -106,6 +105,9 @@ import Foundation
     case mcPaymentCompleteApplePayFailure = "mc_complete_payment_applepay_failure"
     case mcPaymentCompleteLinkFailure = "mc_complete_payment_link_failure"
 
+    case mcPaymentEmbeddedSuccess = "mc_embedded_payment_success"
+    case mcPaymentEmbeddedFailure = "mc_embedded_payment_failure"
+
     // MARK: - PaymentSheet Option Selected
     case mcOptionSelectCustomNewPM = "mc_custom_paymentoption_newpm_select"
     case mcOptionSelectCustomSavedPM = "mc_custom_paymentoption_savedpm_select"
@@ -115,6 +117,12 @@ import Foundation
     case mcOptionSelectCompleteSavedPM = "mc_complete_paymentoption_savedpm_select"
     case mcOptionSelectCompleteApplePay = "mc_complete_paymentoption_applepay_select"
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
+    case mcOptionSelectEmbeddedSavedPM = "mc_embedded_paymentoption_savedpm_select"
+
+    // MARK: - PaymentSheet Saved Payment Method Removed
+    case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
+    case mcOptionRemoveCompleteSavedPM = "mc_complete_paymentoption_removed"
+    case mcOptionRemoveEmbeddedSavedPM = "mc_embedded_paymentoption_removed"
 
     // MARK: - Link Signup
     case linkSignupCheckboxChecked = "link.signup.checkbox_checked"
@@ -135,6 +143,13 @@ import Foundation
     case linkPopupError = "link.popup.error"
     case linkPopupLogout = "link.popup.logout"
 
+    // MARK: - Link 2FA
+    case link2FAStart = "link.2fa.start"
+    case link2FAStartFailure = "link.2fa.start_failure"
+    case link2FAComplete = "link.2fa.complete"
+    case link2FACancel = "link.2fa.cancel"
+    case link2FAFailure = "link.2fa.failure"
+
     // MARK: - Link Misc
     case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"
@@ -148,6 +163,8 @@ import Foundation
     case luxeImageSelectorIconNotFound = "luxe_image_selector_icon_not_found"
 
     // MARK: - CustomerSheet initialization
+    case customerSheetInitWithCustomerAdapter = "cs_init_with_customer_adapter"
+    case customerSheetInitWithCustomerSession = "cs_init_with_customer_session"
     case customerSheetLoadStarted = "cs_load_started"
     case customerSheetLoadSucceeded = "cs_load_succeeded"
     case customerSheetLoadFailed = "cs_load_failed"
@@ -197,7 +214,9 @@ import Foundation
     case paymentSheetConfirmButtonTapped = "mc_confirm_button_tapped"
     case paymentSheetFormShown = "mc_form_shown"
     case paymentSheetFormInteracted = "mc_form_interacted"
+    case paymentSheetFormCompleted = "mc_form_completed"
     case paymentSheetCardNumberCompleted = "mc_card_number_completed"
+    case paymentSheetDeferredIntentPaymentMethodMismatch = "mc_deferred_intent_payment_method_mismatch"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
@@ -212,6 +231,7 @@ import Foundation
     case paymentSheetUpdateCardBrand = "mc_update_card"
     case paymentSheetUpdateCardBrandFailed = "mc_update_card_failed"
     case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
+    case paymentSheetDisallowedCardBrand = "mc_disallowed_card_brand"
 
     // MARK: - CustomerSheet card brand choice
     case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
@@ -270,4 +290,7 @@ import Foundation
     case refreshSetupIntentSuccess = "stripeios.refresh_setup_intent_success"
     case refreshPaymentIntentFailed = "stripeios.refresh_payment_intent_failed"
     case refreshSetupIntentFailed = "stripeios.refresh_setup_intent_failed"
+
+    // MARK: - Telemetry Client
+    case fraudDetectionApiFailure = "fraud_detection_data_repository.api_failure"
 }

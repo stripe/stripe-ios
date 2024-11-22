@@ -8,13 +8,12 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
 @MainActor
-final class CustomerSheet_ConfirmFlowTests: XCTestCase {
+final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
     enum MerchantCountry: String {
         case US = "us"
         case FR = "fr"
@@ -38,14 +37,20 @@ final class CustomerSheet_ConfirmFlowTests: XCTestCase {
                 }
             }
         }
+        self.followRedirects = false
     }
 
     func testCardConfirmation() async throws {
-        let customer = "cus_QWYdNyavE2M5ah" // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        let merchantCountry = MerchantCountry.US
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+                                                                                              merchantCountry: merchantCountry.rawValue.lowercased())
         try await _testConfirm(
-            merchantCountry: .US,
+            apiClient: apiClient,
+            merchantCountry: merchantCountry,
             paymentMethodType: .card,
-            customerID: customer) { form in
+            elementsSession: ._testCardValue(),
+            customerID: newCustomer.customer) { form in
             form.getTextFieldElement("Card number")?.setText("4242424242424242")
             form.getTextFieldElement("MM / YY").setText("1232")
             form.getTextFieldElement("CVC").setText("123")
@@ -53,11 +58,16 @@ final class CustomerSheet_ConfirmFlowTests: XCTestCase {
         }
     }
     func testCardConfirmation_FR() async throws {
-        let customer = "cus_QWYglNu3orU2Yb" // A hardcoded customer on acct_acct_1JtgfQKG6vc7r7YC
+        let merchantCountry = MerchantCountry.FR
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+                                                                                              merchantCountry: merchantCountry.rawValue.lowercased())
         try await _testConfirm(
-            merchantCountry: .FR,
+            apiClient: apiClient,
+            merchantCountry: merchantCountry,
             paymentMethodType: .card,
-            customerID: customer) { form in
+            elementsSession: ._testCardValue(),
+            customerID: newCustomer.customer) { form in
             form.getTextFieldElement("Card number")?.setText("4242424242424242")
             form.getTextFieldElement("MM / YY").setText("1232")
             form.getTextFieldElement("CVC").setText("123")
@@ -66,11 +76,16 @@ final class CustomerSheet_ConfirmFlowTests: XCTestCase {
     }
 
     func testSepaConfirmation() async throws {
-        let customer = "cus_QWYdNyavE2M5ah" // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        let merchantCountry = MerchantCountry.US
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+                                                                                              merchantCountry: merchantCountry.rawValue.lowercased())
         try await _testConfirm(
-            merchantCountry: .US,
+            apiClient: apiClient,
+            merchantCountry: merchantCountry,
             paymentMethodType: .SEPADebit,
-            customerID: customer) { form in
+            elementsSession: ._testCardValue(),
+            customerID: newCustomer.customer) { form in
                 form.getTextFieldElement("Full name")?.setText("John Doe")
                 form.getTextFieldElement("Email")?.setText("test@example.com")
                 form.getTextFieldElement("IBAN")?.setText("DE89370400440532013000")
@@ -165,15 +180,76 @@ final class CustomerSheet_ConfirmFlowTests: XCTestCase {
             })
         await fulfillment(of: [expectation], timeout: 25)
     }
+
+    func testAllowRedisplay_legacy() async throws {
+        let merchantCountry = MerchantCountry.US
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+                                                                                              merchantCountry: merchantCountry.rawValue.lowercased())
+        guard let clientSecret = try await _testConfirm(apiClient: apiClient,
+                                                        merchantCountry: merchantCountry,
+                                                        paymentMethodType: .card,
+                                                        elementsSession: ._testCardValue(),
+                                                        customerID: newCustomer.customer,
+                                                        formCompleter: ({ form in
+            form.getTextFieldElement("Card number")?.setText("4242424242424242")
+            form.getTextFieldElement("MM / YY").setText("1232")
+            form.getTextFieldElement("CVC").setText("123")
+            form.getTextFieldElement("ZIP").setText("65432")
+        })) else {
+            XCTFail("Failed on confirm")
+            return
+        }
+        try await assertAllowRedisplayValue(apiClient: apiClient,
+                                            confirmedPaymentIntentClientSecret: clientSecret,
+                                            customerResponse: newCustomer,
+                                            expectedAllowRedisplay: .unspecified)
+    }
+    func testAllowRedisplay_customerSession() async throws {
+        let merchantCountry = MerchantCountry.US
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+                                                                                              merchantCountry: merchantCountry.rawValue.lowercased())
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                               "mobile_payment_element": [
+                                                                   "enabled": false,
+                                                               ],
+                                                               "customer_sheet": [
+                                                                   "enabled": true,
+                                                                   "features": ["payment_method_remove": "enabled"],
+                                                               ],
+                                                            ])
+        guard let clientSecret = try await _testConfirm(apiClient: apiClient,
+                                                        merchantCountry: merchantCountry,
+                                                        paymentMethodType: .card,
+                                                        elementsSession: elementsSession,
+                                                        customerID: newCustomer.customer,
+                                                        formCompleter: ({ form in
+            form.getTextFieldElement("Card number")?.setText("4242424242424242")
+            form.getTextFieldElement("MM / YY").setText("1232")
+            form.getTextFieldElement("CVC").setText("123")
+            form.getTextFieldElement("ZIP").setText("65432")
+        })) else {
+            XCTFail("Failed on confirm")
+            return
+        }
+        try await assertAllowRedisplayValue(apiClient: apiClient,
+                                            confirmedPaymentIntentClientSecret: clientSecret,
+                                            customerResponse: newCustomer,
+                                            expectedAllowRedisplay: .always)
+    }
 }
 
 extension CustomerSheet_ConfirmFlowTests {
     @MainActor
-    func _testConfirm(merchantCountry: MerchantCountry = .US,
+    @discardableResult
+    func _testConfirm(apiClient: STPAPIClient,
+                      merchantCountry: MerchantCountry = .US,
                       paymentMethodType: STPPaymentMethodType,
+                      elementsSession: STPElementsSession,
                       customerID: String,
-                      formCompleter: (PaymentMethodElement) -> Void) async throws {
-        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+                      formCompleter: (PaymentMethodElement) -> Void) async throws -> String? {
         let customerSheetConfiguration: CustomerSheet.Configuration = {
             var config = CustomerSheet.Configuration()
             config.apiClient = apiClient
@@ -182,17 +258,17 @@ extension CustomerSheet_ConfirmFlowTests {
             return config
         }()
 
-        let (_, intent, paymentMethodForm) = try await _createElementAndIntent(apiClient: apiClient,
-                                                                               customerSheetConfiguration: customerSheetConfiguration,
-                                                                               merchantCountry: merchantCountry,
-                                                                               paymentMethodType: paymentMethodType,
-                                                                               customerID: customerID,
-                                                                               formCompleter: formCompleter)
+        let (clientSecret, intent, paymentMethodForm) = try await _createElementAndIntent(apiClient: apiClient,
+                                                                                          customerSheetConfiguration: customerSheetConfiguration,
+                                                                                          merchantCountry: merchantCountry,
+                                                                                          paymentMethodType: paymentMethodType,
+                                                                                          customerID: customerID,
+                                                                                          formCompleter: formCompleter)
         // Generate params from the form
         let psPaymentMethodType: PaymentSheet.PaymentMethodType = .stripe(paymentMethodType)
         guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: psPaymentMethodType)) else {
             XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
-            return
+            return nil
         }
         let paymentOption: PaymentSheet.PaymentOption = .new(confirmParams: intentConfirmParams)
 
@@ -202,6 +278,7 @@ extension CustomerSheet_ConfirmFlowTests {
         // Confirm the intent with the form details
         CustomerSheet.confirm(
             intent: intent,
+            elementsSession: elementsSession,
             paymentOption: paymentOption,
             configuration: customerSheetConfiguration,
             paymentHandler: paymentHandler,
@@ -217,6 +294,7 @@ extension CustomerSheet_ConfirmFlowTests {
                 expectation.fulfill()
             }
         await fulfillment(of: [expectation], timeout: 25)
+        return clientSecret
     }
 
     @MainActor
@@ -250,7 +328,7 @@ extension CustomerSheet_ConfirmFlowTests {
     @MainActor
     func _createElementAndIntent(apiClient: STPAPIClient,
                                  customerSheetConfiguration: CustomerSheet.Configuration,
-                                 merchantCountry: MerchantCountry = .US,
+                                 merchantCountry: MerchantCountry,
                                  paymentMethodType: STPPaymentMethodType,
                                  customerID: String,
                                  formCompleter: (PaymentMethodElement) -> Void) async throws -> (String, Intent, PaymentMethodElement) {
@@ -260,16 +338,14 @@ extension CustomerSheet_ConfirmFlowTests {
                                                   paymentMethod: psPaymentMethodType,
                                                   previousCustomerInput: nil,
                                                   addressSpecProvider: .shared,
-                                                  offerSaveToLinkWhenSupported: false,
+                                                  showLinkInlineCardSignup: false,
                                                   linkAccount: nil,
                                                   cardBrandChoiceEligible: false,
-                                                  supportsLinkCard: false,
                                                   isPaymentIntent: false,
                                                   isSettingUp: true,
-                                                  currency: nil,
-                                                  amount: nil,
                                                   countryCode: nil,
-                                                  savePaymentMethodConsentBehavior: .legacy)
+                                                  savePaymentMethodConsentBehavior: .legacy,
+                                                  analyticsHelper: ._testValue())
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view)
@@ -282,8 +358,7 @@ extension CustomerSheet_ConfirmFlowTests {
                                                                      merchantCountry: merchantCountry,
                                                                      customerID: customerID)
         let setupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
-        let intent = Intent.setupIntent(elementsSession: ._testCardValue(),
-                                        setupIntent: setupIntent)
+        let intent = Intent.setupIntent(setupIntent)
         return (clientSecret, intent, paymentMethodForm)
     }
 
@@ -323,7 +398,7 @@ extension CustomerSheet_ConfirmFlowTests {
                 case .completed(let completedResult):
                     if case .financialConnections(let linkedBank) = completedResult {
                         if let usBankElement = paymentMethodForm as? USBankAccountPaymentMethodElement {
-                            usBankElement.setLinkedBank(linkedBank)
+                            usBankElement.linkedBank = linkedBank
                         }
                     } else {
                         XCTFail("no linked account")
@@ -344,6 +419,35 @@ extension CustomerSheet_ConfirmFlowTests {
                                                                      merchantCountry: merchantCountry.rawValue,
                                                                      customerID: customerID)
 
+    }
+
+    func assertAllowRedisplayValue(apiClient: STPAPIClient,
+                                   confirmedPaymentIntentClientSecret clientSecret: String,
+                                   customerResponse: STPTestingAPIClient.CreateEphemeralKeyResponse,
+                                   expectedAllowRedisplay: STPPaymentMethodAllowRedisplay) async throws {
+        let updatedSetupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret)
+        guard let confirmedPaymentMethodId = updatedSetupIntent.paymentMethodID else {
+            XCTFail("No payment method attached to confirmed Intent")
+            return
+        }
+
+        let expect = expectation(description: "Allow_redisplay value matches expected")
+        apiClient.listPaymentMethods(forCustomer: customerResponse.customer,
+                                     using: customerResponse.ephemeralKeySecret) { paymentMethods, error in
+            guard error == nil else {
+                XCTFail("Failed to fetch paymentMethods, error: \(String(describing: error))")
+                return
+            }
+            guard let fetchedPaymentMethod = paymentMethods?.filter({ paymentMethod in
+                paymentMethod.stripeId == confirmedPaymentMethodId
+            }).first else {
+                XCTFail("Failed to fetch paymentMethod: \(confirmedPaymentMethodId)")
+                return
+            }
+            XCTAssertEqual(fetchedPaymentMethod.allowRedisplay, expectedAllowRedisplay)
+            expect.fulfill()
+        }
+        await fulfillment(of: [expect], timeout: 10)
     }
 
 }

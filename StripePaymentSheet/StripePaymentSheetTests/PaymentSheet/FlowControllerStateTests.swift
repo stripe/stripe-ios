@@ -24,9 +24,17 @@ class FlowControllerStateTests: XCTestCase {
             // Nothing
         }
         config.apiClient.publishableKey = "pk_123"
-        let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let apmvcDelegate = StubAPMVCDelegate(expectation: exp)
-        _ = AddPaymentMethodViewController(intent: intent, configuration: config, isLinkEnabled: true, delegate: apmvcDelegate)
+        _ = AddPaymentMethodViewController(
+            intent: intent,
+            elementsSession: .emptyElementsSession,
+            configuration: config,
+            paymentMethodTypes: [.stripe(.card)],
+            formCache: .init(),
+            analyticsHelper: ._testValue(),
+            delegate: apmvcDelegate
+        )
         waitForExpectations(timeout: 0.1)
     }
 }

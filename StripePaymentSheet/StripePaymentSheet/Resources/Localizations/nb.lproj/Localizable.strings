@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li rentefri betalinger på %2$@";
-
 "+ Add" = "+ Legg til";
 
 "Add US bank account" = "Legg til bankkonto i USA";
@@ -9,6 +7,8 @@
 "Add a card" = "Legg til et kort";
 
 "Add a payment method" = "Legg til betalingsmetode";
+
+"Add bank account" = "Legg til bankkonto";
 
 "Add card" = "Legg til kort";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "Godkjenn betaling";
 
+"Are you sure you want to remove this card?" = "Er du sikker på at du vil fjerne dette kortet?";
+
+"Are you sure you want to remove this linked account?" = "Er du sikker på at du vil fjerne denne tilkoblede kontoen?";
+
 "Back" = "Tilbake";
 
+"Bank" = "Bank";
+
 "Bank account" = "Bankkonto";
+
+"Buy now or pay later with <img/>" = "Kjøp nå eller betal senere med <img/>";
+
+"Buy now or pay later with Afterpay" = "Kjøp nå eller betal senere med Afterpay";
+
+"Buy now or pay later with Clearpay" = "Kjøp nå eller betal senere med Clearpay";
 
 "Buy now or pay later with Klarna" = "Kjøp nå eller betal senere med Klarna";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link, godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved å oppgi dine bankkontodetaljer og bekrefte denne innbetalingen samtykker du til denne forespørselen om direktedebitering og til <terms>serviceavtalen for direktedebitering</terms> og autoriserer Stripe Payments Australia Pty Ltd ACN 160 180 343 direktedebitering bruker-ID nummer 507156 (\"Stripe\") til å debitere din konto gjennom Bulk Electronic Clearing System (BECS) på vegne av %@ (\"forhandleren\") for beløp som kommuniseres til deg separat av forhandleren. Du bekrefter at du er enten en kontoinnehaver eller en som er autorisert til å signere for kontoen vist ovenfor.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Ved å oppgi kortinformasjonen din tillater du %@ å belaste kortet ditt for fremtidige betalinger i samsvar med vilkårene deres.";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å oppgi e-postadressen din godtar du å opprette en Link-konto og lagre betalingsinformasjonen din hos Link i henhold til Links <terms>vilkår</terms> og <privacy>personvernerklæring</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgi betalingsinformasjonen din og bekrefte denne betalingen gir du tillatelse til at (A) %@ og Stripe, vår leverandør for betalingstjenesten, sende anmodning til banken din om å belaste kontoen din og (B) banken din belaster kontoen din i samsvar med anmodningen. Som del av dine rettigheter kan du kreve å få beløpet tilbakeført i henhold til avtalen du har med banken. Tilbakeføringskrav må fremsettes innen 8 uker etter at kontoen ble belastet. Rettighetene dine blir forklart i en erklæring som du kan få fra banken. Du godtar å motta varsler om fremtidige belastninger opptil to dager før de skjer.";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "Avbryt og betal på en annen måte";
 
+"Change email" = "Endre e-post";
+
 "Choose a payment method" = "Velg en betalingsmetode";
 
 "Close card scanner" = "Lukk kortskanner";
+
+"Code sent" = "Kode sendt";
 
 "Confirm" = "Bekreft";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "Bekreft CVC-koden din";
 
-"Confirm your CVV" = "Bekreft CVV-koden din";
-
 "Contact information" = "Kontaktinformasjon";
+
+"Default" = "Standard";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Skriv inn koden sendt til %@ for å bruke Link til å betale som standard.";
+
+"Enter your verification code" = "Skriv inn verifiseringskoden";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "For sikkerhets skyld må du skrive inn sikkerhetskoden for kortet ditt på nytt.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg forstår at Stripe vil direktedebitere på vegne av %@ og bekrefter at jeg er kontoinnehaver og den eneste personen som må godkjenne debiteringer fra denne kontoen.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Bli med i Link";
+
+"Log out of Link" = "Logg ut av Link";
 
 "Manage payment method" = "Administrer betalingsmetode";
 
@@ -93,6 +123,8 @@
 "New card" = "Nytt kort";
 
 "New payment method" = "Ny betalingsmetode";
+
+"Not %@?" = "Er du ikke %@?";
 
 "Open your UPI app to approve your payment within %@" = "Åpne UPI-appen for å godkjenne betalingen innen %@";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "Betal raskere hos %@ og hos tusenvis av bedrifter.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal med <num_installments/> rentefri avdrag på <installment_price/> med <img/>";
-
 "Pay over time with %@" = "Betal over tid med%@";
+
+"Pay over time with Affirm" = "Betal over tid med Affirm";
 
 "Pay with Link" = "Betal med Link";
 
 "Pay with your bank account in just a few steps." = "Betal med bankkontoen din med noen få trinn.";
 
+"Payment" = "Betaling";
+
 "Payment failed" = "Betaling mislyktes";
+
+"Payment methods" = "Betalingsmetoder";
 
 "Please go back and select another payment method" = "Gå tilbake og velg en annen betalingsmetode";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "Vil du fjerne kortet?";
 
+"Remove linked account" = "Fjern tilkoblet konto";
+
 "Remove payment method" = "Fjern betalingsmetode";
+
+"Resend code" = "Send koden på nytt";
 
 "Save" = "Lagre";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "Lagre til fremtidige betalinger";
 
-"Save this account for future %@ payments" = "Lagre kontoen til fremtidige betalinger hos %@";
+"Save payment details to %@ for future purchases" = "Lagre betalingsinformasjonen hos %@ for fremtidige kjøp";
 
-"Save this card for future %@ payments" = "Lagre kortet til fremtidige betalinger hos %@";
+"Save this account for future %@ payments" = "Lagre kontoen til fremtidige betalinger hos %@";
 
 "Save your bank account in just a few steps." = "Lagre bankkontoen din med bare noen få trinn.";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "Lagret";
 
+"Secure 1⁠-⁠click checkout" = "Sikker 1-klikk-utsjekking";
+
 "Select card" = "Velg kort";
 
 "Select payment method" = "Velg betalingsmetode";
 
 "Select your payment method" = "Velg betalingsmetode";
+
+"Set as default" = "Angi som standard";
+
+"Set as default payment method" = "Angi som standard betalingsmetode";
 
 "Set up" = "Konfigurer";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "Vis meny";
 
+"Sign in to your Link account" = "Logg inn på Link-kontoen din";
+
 "Simple, secure one-click payments" = "Enkle, trygge betalinger med ett klikk";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Noe gikk galt under tilkobling av kontoen din.\nPrøv igjen senere.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe setter inn $0,01 på kontoen din i løpet av 1–2 virkedager. Deretter får du en e-post med instruksjoner for å fullføre lagringen av bankkontoen din med %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sette inn et innskudd på USD 0,01 på kontoen din innen 1–2 virkedager. Deretter vil du få en e-post med instruksjoner for å fullføre betalingen til %@.";
 
+"Tap to close" = "Trykk for å lukke";
+
+"Tap to expand" = "Trykk for å utvide";
+
 "The IBAN you entered is incomplete." = "IBAN-nummeret du la inn er ufullstendig.";
 
-"Update" = "Oppdater";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN-nummeret du la inn er ugyldig, «%@» er ikke en gyldig landskode.";
+
+"The provided verification code has expired." = "Den oppgitte verifiseringskoden er utløpt.";
+
+"The provided verification code is incorrect." = "Den oppgitte verifiseringskoden er ikke korrekt.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Dette kortet er utløpt. Oppdater kortinformasjonen eller velg en annen betalingsmetode.";
+
+"This is your default" = "Dette er standarden din";
+
+"Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om noen få minutter.";
+
+"Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";
+
+"Update card" = "Oppdater kort";
 
 "Update card brand" = "Oppdater kortmerke";
+
+"Use your saved info to check out faster" = "Bruk den lagrede informasjonen din til å betale raskere";
 
 "View more" = "Se mer";
 

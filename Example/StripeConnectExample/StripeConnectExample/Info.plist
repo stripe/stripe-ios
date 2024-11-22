@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSCameraUsageDescription</key>
+	<string>We use the camera to scan your ID documents</string>
+	<key>NSCameraReactionEffectGesturesEnabledDefault</key>
+	<false/>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>bg_BG</string>
+		<string>zh_Hans</string>
+		<string>zh-Hant_HK</string>
+		<string>zh-Hant_TW</string>
+		<string>hr_HR</string>
+		<string>cs_CZ</string>
+		<string>da_DK</string>
+		<string>nl_NL</string>
+		<string>en_AU</string>
+		<string>en_IN</string>
+		<string>en_IE</string>
+		<string>en_NZ</string>
+		<string>en_SG</string>
+		<string>en_GB</string>
+		<string>en_US</string>
+		<string>et_EE</string>
+		<string>fil_PH</string>
+		<string>fi_FI</string>
+		<string>fr_CA</string>
+		<string>fr_FR</string>
+		<string>de_DE</string>
+		<string>el_GR</string>
+		<string>hu_HU</string>
+		<string>id_ID</string>
+		<string>it_IT</string>
+		<string>ja_JP</string>
+		<string>ko_KR</string>
+		<string>lv_LV</string>
+		<string>lt_LT</string>
+		<string>ms_MY</string>
+		<string>mt_MT</string>
+		<string>nb_NO</string>
+		<string>pl_PL</string>
+		<string>pt_BR</string>
+		<string>pt_PT</string>
+		<string>ro_RO</string>
+		<string>sk_SK</string>
+		<string>sl_SI</string>
+		<string>es_AR</string>
+		<string>es_BR</string>
+		<string>es_419</string>
+		<string>es_MX</string>
+		<string>es_ES</string>
+		<string>sv_SE</string>
+		<string>th_TH</string>
+		<string>tr_TR</string>
+		<string>vi_VN</string>
+	</array>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Handjet-Regular.ttf</string>
+		<string>Handjet-Bold.ttf</string>
+	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>

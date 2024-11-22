@@ -203,4 +203,9 @@ FOUNDATION_EXPORT NSString * const SWHttpTrafficRecorderErrorDomain;
  */
 @property(nonatomic, copy) NSString*(^createFileInCustomFormatBlock)(NSURLRequest *request, NSURLResponse *response, NSData *bodyData, NSString *filePath);
 
+/**
+ *  The optional block (if provided) to transform the HTTP request body, which will be stored in the `X-Stripe-Mock-Request` header of the Mocktail.
+ */
+@property(nonatomic, copy) NSString*(^postBodyTransformBlock)(NSURLRequest *request, NSString *postBody);
+
 @end

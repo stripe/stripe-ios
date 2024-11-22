@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li pagaments sense interessos de %2$@";
-
 "+ Add" = "+ Afegir";
 
 "Add US bank account" = "Afegeix un compte bancari dels EUA";
@@ -9,6 +7,8 @@
 "Add a card" = "Afegir una targeta";
 
 "Add a payment method" = "Afegeix un mètode de pagament";
+
+"Add bank account" = "Afegir compte bancari";
 
 "Add card" = "Afegir targeta";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "Aprova el pagament";
 
+"Are you sure you want to remove this card?" = "Segur que vols eliminar aquesta targeta?";
+
+"Are you sure you want to remove this linked account?" = "Segur que vols eliminar aquest compte vinculat?";
+
 "Back" = "Tornar";
 
+"Bank" = "Banc";
+
 "Bank account" = "Compte bancari";
+
+"Buy now or pay later with <img/>" = "Compra ara o paga més endavant amb <img/>";
+
+"Buy now or pay later with Afterpay" = "Compra ara o paga més endavant amb Afterpay";
+
+"Buy now or pay later with Clearpay" = "Compra ara o paga més endavant amb Clearpay";
 
 "Buy now or pay later with Klarna" = "Compra ara o paga més endavant amb Klarna";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Quan t'incorpores a Link, acceptes els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "En facilitar-nos les dades bancàries i confirmar aquest pagament, esteu d'acord amb aquesta Sol·licitud de Domiciliació Bancària i amb el <terms>Servei de Sol·licitud de Domiciliació Bancària</terms>, i autoritzeu Stripe Payments Australia Pty Ltd ACN 160 180 343, amb número d'identificador d'usuari de domiciliació bancària 507156 («Stripe») a carregar el vostre compte mitjançant el Sistema de Compensació Electrònica a gran escala (BECS per les seves sigles en anglès) en nom de %@ (el «Venedor») per qualsevol import que se us hagi comunicat de manera separada per part del Venedor. Certifiqueu que sou el titular del compte o un signatari autoritzat del compte indicat anteriorment.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Si proporcioneu la informació de la targeta, permeteu que %@ hi faci càrrecs per a pagaments en el futur d'acord amb les seves condicions.";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En proporcionar el correu electrònic, accepteu crear un compte de Link i desar la vostra informació de pagament a Link d'acord amb els <terms>Termes</terms> i <privacy>Política de privadesa</privacy> de Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Proporcionant la informació de pagament i confirmant aquest pagament, estàs autoritzant (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar ordres al teu banc per tal de carregar des del teu compte i (B) carregar el teu compte en conformitat amb aquestes ordres. Tens dret a un reembolsament per part del teu banc sota els termes i condicions que s'hagin acordat amb aquest. El reembolsament s'ha de sol·licitar en un termini de 8 setmanes des de la data en que es va carregar el compte. Els teus drets estan explicats en un extracte que pots demanar al teu banc. Estàs acceptant rebre notificacions per pròxims dèbits fins a dos dies abans de que es portin a terme.";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "Cancel·la i paga d'una altra manera";
 
+"Change email" = "Canvia el correu";
+
 "Choose a payment method" = "Escull un mètode de pagament";
 
 "Close card scanner" = "Tancar l'escàner de la targeta";
+
+"Code sent" = "Codi enviat";
 
 "Confirm" = "Confirma";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "Confirmeu el vostre CVC";
 
-"Confirm your CVV" = "Confirmeu el vostre CVV";
-
 "Contact information" = "Informació de contacte";
+
+"Default" = "Per defecte";
 
 "EPS Bank" = "Banc EPS";
 
 "Enter address manually" = "Introduir l'adreça manualment";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Introdueix el codi enviat a %@ per utilitzar Link per pagar per defecte.";
+
+"Enter your verification code" = "Introdueix el codi de verificació";
+
 "FPX Bank" = "Banc FPX";
+
+"For security, please re-enter your card’s security code." = "Per raons de seguretat, torna a introduir el codi de seguretat de la targeta.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Uneix-te a Link";
+
+"Log out of Link" = "Tanca la sessió a Link";
 
 "Manage payment method" = "Gestiona el mètode de pagament";
 
@@ -93,6 +123,8 @@
 "New card" = "Nova targeta";
 
 "New payment method" = "Nou mètode de pagament";
+
+"Not %@?" = "No ets %@?";
 
 "Open your UPI app to approve your payment within %@" = "Obriu l'aplicació UPI per aprovar el pagament en un termini de %@";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "Pagueu més ràpidament a %@ i a milers de negocis.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Feu <num_installments/> pagaments sense interessos de <installment_price/> amb <img/>";
-
 "Pay over time with %@" = "Pagueu a terminis amb %@";
+
+"Pay over time with Affirm" = "Paga a terminis amb Affirm";
 
 "Pay with Link" = "Pagar amb Link";
 
 "Pay with your bank account in just a few steps." = "Pagueu amb el compte bancari en uns pocs passos.";
 
+"Payment" = "Pagament";
+
 "Payment failed" = "S'ha produït un error en el pagament";
+
+"Payment methods" = "Mètodes de pagament";
 
 "Please go back and select another payment method" = "Torneu enrere i seleccioneu un altre mètode de pagament";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "Voleu eliminar la targeta?";
 
+"Remove linked account" = "Elimina el compte vinculat";
+
 "Remove payment method" = "Elimina el mètode de pagament";
+
+"Resend code" = "Reenvia'm el codi";
 
 "Save" = "Desa";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "Guardar per a futurs pagaments";
 
-"Save this account for future %@ payments" = "Desa aquest compte per a pagaments a %@ en el futur";
+"Save payment details to %@ for future purchases" = "Desa les dades de pagament a %@ per a compres futures";
 
-"Save this card for future %@ payments" = "Desar aquesta tarjeta per futurs %@ pagaments";
+"Save this account for future %@ payments" = "Desa aquest compte per a pagaments a %@ en el futur";
 
 "Save your bank account in just a few steps." = "Deseu el compte bancari en uns pocs passos.";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "Desat";
 
+"Secure 1⁠-⁠click checkout" = "Pagament segur amb 1 clic";
+
 "Select card" = "Selecciona una targeta";
 
 "Select payment method" = "Selecciona el mètode de pagament";
 
 "Select your payment method" = "Selecciona el teu mètode de pagament";
+
+"Set as default" = "Targeta per defecte";
+
+"Set as default payment method" = "Configura com a mètode de pagament per defecte";
 
 "Set up" = "Configuració";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "Mostra el menú";
 
+"Sign in to your Link account" = "Inicia la sessió al compte de Link";
+
 "Simple, secure one-click payments" = "Pagaments senzills i segurs amb un toc";
+
+"Something went wrong when linking your account.\nPlease try again later." = "S'ha produït un error en vincular el compte.\nTorneu-ho a intentar més tard.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per acabar de desar el vostre compte bancari amb %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per completar el pagament a %@.";
 
+"Tap to close" = "Toca per tancar";
+
+"Tap to expand" = "Toca per ampliar";
+
 "The IBAN you entered is incomplete." = "L'BAN és incomplet.";
 
-"Update" = "Actualitza";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L'IBAN no és vàlid, %@ no és un codi de país compatible.";
+
+"The provided verification code has expired." = "El codi de verificació proporcionat ha caducat.";
+
+"The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Aquesta targeta ha caducat. Actualitzeu-ne la informació o trieu un altre mètode de pagament.";
+
+"This is your default" = "Aquesta és l'opció per defecte";
+
+"Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
+
+"Unavailable for this purchase" = "No disponible per a aquesta compra";
+
+"Update card" = "Actualitza la targeta";
 
 "Update card brand" = "Actualitza la marca de la targeta";
+
+"Use your saved info to check out faster" = "Utilitza la informació desada per pagar més ràpidament";
 
 "View more" = "Visualitza més";
 

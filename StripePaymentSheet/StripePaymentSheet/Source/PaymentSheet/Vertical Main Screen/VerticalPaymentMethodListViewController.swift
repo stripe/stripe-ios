@@ -42,7 +42,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
         amount: Int?,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
-        self.currentSelection = initialSelection
         self.delegate = delegate
         self.appearance = appearance
         self.delegate = delegate
@@ -81,51 +80,40 @@ class VerticalPaymentMethodListViewController: UIViewController {
             ]
         }
 
-        // Special case - order "New Card" immediately after saved card:
-        let shouldReorderNewCard: Bool = paymentMethodTypes.contains(.stripe(.card)) && savedPaymentMethod?.type == .card
-        if shouldReorderNewCard {
-            let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: .stripe(.card))
-            let rowButton = RowButton.makeForPaymentMethodType(paymentMethodType: .stripe(.card), savedPaymentMethodType: savedPaymentMethod?.type, appearance: appearance, shouldAnimateOnPress: true) { [weak self] in
-                self?.didTap(rowButton: $0, selection: selection)
-            }
-            views.append(rowButton)
-            if initialSelection == selection {
-                rowButton.isSelected = true
-                currentSelection = selection
-            }
-        }
-
-        // Apple Pay and Link:
-        if shouldShowApplePay {
+        // Build Apple Pay and Link rows
+        let applePay: RowButton? = {
+            guard shouldShowApplePay else { return nil }
             let selection = VerticalPaymentMethodListSelection.applePay
             let rowButton = RowButton.makeForApplePay(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .applePay)
             }
-            views.append(rowButton)
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
             }
-        }
-        if shouldShowLink {
+            return rowButton
+        }()
+        let link: RowButton? = {
+            guard shouldShowLink else { return nil }
             let selection = VerticalPaymentMethodListSelection.link
             let rowButton = RowButton.makeForLink(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
-            views.append(rowButton)
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
             }
-        }
+            return rowButton
+        }()
 
-        // All other payment methods (excluding card, if it was already added above):
-        let paymentMethodTypes = shouldReorderNewCard ? paymentMethodTypes.filter({ $0 != .stripe(.card) }) : paymentMethodTypes
+        // Payment methods
+        var indexAfterCards: Int?
+        let paymentMethodTypes = paymentMethodTypes
         for paymentMethodType in paymentMethodTypes {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
-                subtitle: subtitleText(for: paymentMethodType, currency: currency, amount: amount),
+                subtitle: Self.subtitleText(for: paymentMethodType),
                 savedPaymentMethodType: savedPaymentMethod?.type,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
@@ -134,12 +122,17 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 self?.didTap(rowButton: $0, selection: selection)
             }
             views.append(rowButton)
-
+            if paymentMethodType == .stripe(.card), let index = views.firstIndex(of: rowButton) {
+                indexAfterCards = index + 1
+            }
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
             }
         }
+
+        // Insert Apple Pay/Link after card or, if cards aren't present, first
+        views.insert(contentsOf: [applePay, link].compactMap({ $0 }), at: indexAfterCards ?? 0)
 
         for view in views {
             stackView.addArrangedSubview(view)
@@ -152,13 +145,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
         stackView.spacing = 12.0
         view = stackView
         view.backgroundColor = appearance.colors.background
-    }
-
-    func clearSelection() {
-        currentSelection = nil
-        for rowButton in rowButtons {
-            rowButton.isSelected = false
-        }
     }
 
     // MARK: - Helpers
@@ -192,18 +178,18 @@ class VerticalPaymentMethodListViewController: UIViewController {
         return label
     }
 
-    func subtitleText(for paymentMethodType: PaymentSheet.PaymentMethodType, currency: String?, amount: Int?) -> String? {
+    static func subtitleText(for paymentMethodType: PaymentSheet.PaymentMethodType) -> String? {
         switch paymentMethodType {
         case .stripe(.klarna):
             return String.Localized.buy_now_or_pay_later_with_klarna
         case .stripe(.afterpayClearpay):
-            guard let currency, let amount else { return nil }
-            let numInstallments = AfterpayPriceBreakdownView.numberOfInstallments(currency: currency)
-            let installmentAmount = amount / numInstallments
-            let installmentAmountDisplayString = String.localizedAmountDisplayString(for: installmentAmount, currency: currency)
-            return String(format: .Localized.after_pay_subtitle_text,
-                          numInstallments,
-                          installmentAmountDisplayString)
+            if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: Locale.current) {
+                return String.Localized.buy_now_or_pay_later_with_clearpay
+            } else {
+                return String.Localized.buy_now_or_pay_later_with_afterpay
+            }
+        case .stripe(.affirm):
+            return String.Localized.pay_over_time_with_affirm
         default:
             return nil
         }
@@ -239,9 +225,51 @@ enum VerticalPaymentMethodListSelection: Equatable {
         case let (.new(lhsPMType), .new(rhsPMType)):
             return lhsPMType == rhsPMType
         case let (.saved(lhsPM), .saved(rhsPM)):
-            return lhsPM.stripeId == rhsPM.stripeId
+            return lhsPM.stripeId == rhsPM.stripeId && lhsPM.calculateCardBrandToDisplay() == rhsPM.calculateCardBrandToDisplay()
         default:
             return false
+        }
+    }
+
+    var isSaved: Bool {
+        switch self {
+        case .saved:
+            return true
+        default:
+            return false
+        }
+    }
+
+    var analyticsIdentifier: String {
+        switch self {
+        case .applePay:
+            return "apple_pay"
+        case .link:
+            return "link"
+        case .saved:
+            return "saved"
+        case .new(paymentMethodType: let type):
+            return type.identifier
+        }
+    }
+
+    var savedPaymentMethod: STPPaymentMethod? {
+        switch self {
+        case .applePay, .link, .new:
+            return nil
+        case .saved(let paymentMethod):
+            return paymentMethod
+        }
+    }
+
+    var paymentMethodType: PaymentSheet.PaymentMethodType? {
+        switch self {
+        case .new(let paymentMethodType):
+            return paymentMethodType
+        case .saved(let paymentMethod):
+            return .stripe(paymentMethod.type)
+        case .applePay, .link:
+            return nil
         }
     }
 }

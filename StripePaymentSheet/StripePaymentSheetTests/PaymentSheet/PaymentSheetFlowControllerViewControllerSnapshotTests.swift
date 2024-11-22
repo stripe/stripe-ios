@@ -7,18 +7,18 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @_spi(EarlyAccessCVCRecollectionFeature) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
 
 import XCTest
 
 final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTestCase {
-    func makeTestLoadResult(paymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
+    func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
             intent: ._testValue(),
-            savedPaymentMethods: paymentMethods,
-            isLinkEnabled: false,
-            isApplePayEnabled: false
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: [.stripe(.card)]
         )
     }
 
@@ -27,8 +27,9 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             STPPaymentMethod._testCard(),
         ]
         let sut = PaymentSheetFlowControllerViewController(
-            configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods)
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
+            analyticsHelper: ._testValue()
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -39,8 +40,9 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             STPPaymentMethod._testUSBankAccount(),
         ]
         let sut = PaymentSheetFlowControllerViewController(
-            configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods)
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
+            analyticsHelper: ._testValue()
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -51,14 +53,15 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             STPPaymentMethod._testSEPA(),
         ]
         let sut = PaymentSheetFlowControllerViewController(
-            configuration: ._testValue_MostPermissive(),
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods)
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
+            analyticsHelper: ._testValue()
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
     func testCVCRecollectionScreen() {
-        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
 
         let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCard(),
                                                 intent: ._testValue(),
@@ -70,7 +73,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     }
 
     func testCVVRecollectionScreen() {
-        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
 
         let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCardAmex(),
                                                 intent: ._testValue(),
@@ -85,11 +88,12 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         let paymentMethods = [
             STPPaymentMethod._testSEPA(),
         ]
-        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.primaryButtonLabel = "Submit"
         let sut = PaymentSheetFlowControllerViewController(
             configuration: configuration,
-            loadResult: makeTestLoadResult(paymentMethods: paymentMethods)
+            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
+            analyticsHelper: ._testValue()
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -99,17 +103,17 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             FormSpecProvider.shared.load { _ in
-                PaymentMethodFormViewController.clearFormCache()
                 expectation.fulfill()
             }
         }
         waitForExpectations(timeout: 1)
 
-        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.primaryButtonLabel = "Submit"
         let sut = PaymentSheetFlowControllerViewController(
             configuration: configuration,
-            loadResult: makeTestLoadResult(paymentMethods: [])
+            loadResult: makeTestLoadResult(savedPaymentMethods: []),
+            analyticsHelper: ._testValue()
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)

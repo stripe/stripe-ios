@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li%2$@的无息付款";
-
 "+ Add" = "+ 添加";
 
 "Add US bank account" = "添加美国银行账户";
@@ -9,6 +7,8 @@
 "Add a card" = "添加卡";
 
 "Add a payment method" = "添加支付方式";
+
+"Add bank account" = "添加银行账户";
 
 "Add card" = "添加卡";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "批准付款";
 
+"Are you sure you want to remove this card?" = "您确定要移除此卡吗？";
+
+"Are you sure you want to remove this linked account?" = "您确定要移除这个关联的账户吗？";
+
 "Back" = "返回";
 
+"Bank" = "银行";
+
 "Bank account" = "银行账户";
+
+"Buy now or pay later with <img/>" = "用 <img/> 先买后付";
+
+"Buy now or pay later with Afterpay" = "用 Afterpay 先买后付";
+
+"Buy now or pay later with Clearpay" = "用 Clearpay 先买后付";
 
 "Buy now or pay later with Klarna" = "用 Klarna 先买后付";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>条款</terms>和<privacy>隐私政策</privacy>。";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "提供您的银行账户详情并确认这笔付款即表示您同意该“直接借记请求”以及<terms>“直接借记请求”服务协议</terms>，并授权 Payments Australia Pty Ltd ACN 160 180 343，直接借记用户 ID 507156 (\"Stripe\") 通过“批量电子清算系统” (BECS) 代 %@（“商家”）向您收取“商家”单独与您议定的金额。您确认您是上述所列账户的账户持有人或授权签字者。";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "提供您的银行卡信息，即表示您允许 %@ 按照他们的条款从您的银行卡收取未来款项。";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的电子邮件地址，即表示您同意按照 Link <terms>条款</terms>和<privacy>隐私政策</privacy>创建 Link 账户并将您的支付信息保存到 Link。";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式并确认该付款即表示您授权 (A) %@ 与我们的支付服务商 Stripe 向您的银行发送对您的账户进行扣款的指令以及 (B) 您的银行按照这些指令对您的账户进行扣款。根据您与您的银行协议的条款和条件，您有权从您的银行得到退款。退款必须在 8 周内申请，从您的账户被扣款之日起算。您的权利在对账单上有解释，可从您的银行获取。您同意提前 2 天接收后续扣款的通知。";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "取消并用另一方式支付";
 
+"Change email" = "更改邮件地址";
+
 "Choose a payment method" = "选择一个支付方式";
 
 "Close card scanner" = "关闭银行卡扫描器";
+
+"Code sent" = "验证码已发送";
 
 "Confirm" = "确定";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "确认您的 CVC";
 
-"Confirm your CVV" = "确认您的 CVV";
-
 "Contact information" = "联系信息";
+
+"Default" = "默认";
 
 "EPS Bank" = "EPS 银行";
 
 "Enter address manually" = "手动输入地址";
 
+"Enter the code sent to %@ to use Link to pay by default." = "输入发送到 %@ 的验证码，以默认用 Link 支付。";
+
+"Enter your verification code" = "输入您的验证码";
+
 "FPX Bank" = "FPX 银行";
+
+"For security, please re-enter your card’s security code." = "出于安全原因，请重新输入您的银行卡的安全码。";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 将代表 %@ 收取直接借记，且确认我是该账户持有人，且是唯一一个需要授权该账户扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "加入 Link";
+
+"Log out of Link" = "退出 Link";
 
 "Manage payment method" = "管理支付方式";
 
@@ -93,6 +123,8 @@
 "New card" = "添加新卡";
 
 "New payment method" = "新支付方式";
+
+"Not %@?" = "不是 %@？";
 
 "Open your UPI app to approve your payment within %@" = "请在 %@ 内打开您的 UPI 应用来批准付款";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "在 %@ 及数千商家那里更快支付。";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "用 <img/> 分 <num_installments/> 支付，无利息，每期 <installment_price/>";
-
 "Pay over time with %@" = "用 %@ 慢慢支付";
+
+"Pay over time with Affirm" = "用 Affirm 慢慢支付";
 
 "Pay with Link" = "用 Link 支付";
 
 "Pay with your bank account in just a few steps." = "只需少许几步，即可用您的银行账户付款。";
 
+"Payment" = "支付方式";
+
 "Payment failed" = "付款失败";
+
+"Payment methods" = "支付方式";
 
 "Please go back and select another payment method" = "请返回并选择另一个支付方式。";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "移除卡？";
 
+"Remove linked account" = "移除关联账户";
+
 "Remove payment method" = "移除支付方式";
+
+"Resend code" = "重新发送验证码";
 
 "Save" = "保存";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "保存以用于未来的付款";
 
-"Save this account for future %@ payments" = "保存该账户，方便今后向 %@ 付款";
+"Save payment details to %@ for future purchases" = "将支付详情保存到 %@ 以备将来购物时使用";
 
-"Save this card for future %@ payments" = "保存该卡，用于未来在 %@ 付款";
+"Save this account for future %@ payments" = "保存该账户，方便今后向 %@ 付款";
 
 "Save your bank account in just a few steps." = "几步保存您的银行账户。";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "已保存";
 
+"Secure 1⁠-⁠click checkout" = "安全地一键结账";
+
 "Select card" = "选择卡";
 
 "Select payment method" = "选择支付方式";
 
 "Select your payment method" = "选择您的支付方式";
+
+"Set as default" = "设为默认值";
+
+"Set as default payment method" = "设置为默认支付方式";
 
 "Set up" = "设置";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "显示菜单";
 
+"Sign in to your Link account" = "登录您的 Link 账户";
+
 "Simple, secure one-click payments" = "简单、安全的一键支付";
+
+"Something went wrong when linking your account.\nPlease try again later." = "关联您的账户时发生了错误。\n请稍后重试。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 会在 1-2 个工作日向您的账户存入 0.01 美元。然后您会收到一封包含说明的邮件，指导您用 %@ 保存您的银行账户。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 会在 1-2 个工作日向您的账户存入 0.01 美元。然后您会收到一封邮件，指导您完成向 %@ 的付款。";
 
+"Tap to close" = "点击关闭";
+
+"Tap to expand" = "点击扩展";
+
 "The IBAN you entered is incomplete." = "您输入的 IBAN 不完整。";
 
-"Update" = "更新";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您输入的 IBAN 无效，\"%@\" 是不支持的国家代码。";
+
+"The provided verification code has expired." = "提供的验证码已过期。";
+
+"The provided verification code is incorrect." = "提供的验证码不正确。";
+
+"This card has expired. Update your card info or choose a different payment method." = "该卡已过期。更新您的银行卡信息或选择另一支付方式。";
+
+"This is your default" = "这是您的默认地址";
+
+"Too many attempts. Please try again in a few minutes." = "尝试次数过多。请几分钟后重试。";
+
+"Unavailable for this purchase" = "无法完成这笔订单";
+
+"Update card" = "更新卡";
 
 "Update card brand" = "更新银行卡品牌";
+
+"Use your saved info to check out faster" = "用您保存的信息，更快结账";
 
 "View more" = "查看更多";
 

@@ -1,0 +1,81 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pv61WFY0qyl6XeW0KKcRBfd\/confirm$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_intents%2F%3Aintent%2Fconfirm; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_mt3ixhvoYaH1pA
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1184
+Vary: Origin
+Date: Tue, 03 Sep 2024 23:20:35 GMT
+original-request: req_mt3ixhvoYaH1pA
+stripe-version: 2020-08-27
+idempotency-key: 5f02251e-497b-4d85-878e-0c04c6d174ff
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: client_secret=pi_3Pv61WFY0qyl6XeW0KKcRBfd_secret_KDhGmUbGaMLtBOznEureeYlAT&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[card]\[cvc]=123&payment_method_data\[card]\[exp_month]=7&payment_method_data\[card]\[exp_year]=2029&payment_method_data\[card]\[number]=4242424242424242&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=card&shipping\[address]\[city]=San%20Francisco&shipping\[address]\[country]=US&shipping\[address]\[line1]=123%20Main%20St&shipping\[address]\[line2]=Apt%202&shipping\[address]\[postal_code]=94106&shipping\[address]\[state]=CA&shipping\[carrier]=UPS&shipping\[name]=Jane&shipping\[phone]=555-555-5555&shipping\[tracking_number]=123abc
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 100,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : {
+    "tracking_number" : "123abc",
+    "phone" : "555-555-5555",
+    "carrier" : "UPS",
+    "name" : "Jane",
+    "address" : {
+      "state" : "CA",
+      "country" : "US",
+      "line2" : "Apt 2",
+      "city" : "San Francisco",
+      "line1" : "123 Main St",
+      "postal_code" : "94106"
+    }
+  },
+  "status" : "succeeded",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 100,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tax" : 0
+  },
+  "payment_method" : "pm_1Pv61WFY0qyl6XeWxxD21FkB",
+  "client_secret" : "pi_3Pv61WFY0qyl6XeW0KKcRBfd_secret_KDhGmUbGaMLtBOznEureeYlAT",
+  "id" : "pi_3Pv61WFY0qyl6XeW0KKcRBfd",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1725405634,
+  "description" : null
+}

@@ -35,7 +35,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
-            params.setAllowRedisplayForCustomerSheet(savePaymentMethodConsentBehavior)
             return .new(confirmParams: params)
         }
         return nil
@@ -182,7 +181,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         guard let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
             return false
         }
-        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.getLinkedBank() != nil
+        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.linkedBank != nil
         return customerHasLinkedBankAccount
     }
 
@@ -238,17 +237,15 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethod: type,
             previousCustomerInput: nil,
             addressSpecProvider: .shared,
-            offerSaveToLinkWhenSupported: false,
+            showLinkInlineCardSignup: false,
             linkAccount: nil,
             cardBrandChoiceEligible: cbcEligible,
-            supportsLinkCard: false,
             isPaymentIntent: false,
             isSettingUp: true,
-            currency: nil,
-            amount: nil,
             countryCode: nil,
-            savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior)
-            .make()
+            savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
+            analyticsHelper: nil
+        ).make()
         formElement.delegate = self
         return formElement
     }
@@ -308,7 +305,7 @@ extension CustomerAddPaymentMethodViewController {
                 break
             case .completed(let completedResult):
                 if case .financialConnections(let linkedBank) = completedResult {
-                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+                    usBankAccountPaymentMethodElement.linkedBank = linkedBank
                 } else {
                     self.delegate?.updateErrorLabel(for: genericError)
                 }

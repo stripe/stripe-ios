@@ -198,8 +198,15 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             strongSelf?.processVNRequest(request)
         })
 
-        let captureDevice = AVCaptureDevice.default(
-            .builtInWideAngleCamera, for: .video, position: .back)
+        // The triple and dualWide cameras have a 0.5x lens for better macro focus.
+        // If neither are available, use the default wide angle camera.
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:
+                                                                    [.builtInTripleCamera, .builtInDualWideCamera, .builtInWideAngleCamera],
+                                                                mediaType: .video, position: .back)
+        guard let captureDevice = discoverySession.devices.first else {
+            stopWithError(STPCardScanner.stp_cardScanningError())
+            return
+        }
         self.captureDevice = captureDevice
 
         captureSession = AVCaptureSession()
@@ -207,9 +214,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
         var deviceInput: AVCaptureDeviceInput?
         do {
-            if let captureDevice = captureDevice {
-                deviceInput = try AVCaptureDeviceInput(device: captureDevice)
-            }
+            deviceInput = try AVCaptureDeviceInput(device: captureDevice)
         } catch {
             stopWithError(STPCardScanner.stp_cardScanningError())
             return

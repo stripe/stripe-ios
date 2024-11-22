@@ -20,7 +20,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockClientSecret = "las_123345"
     private let mockAnalyticsClient = MockAnalyticsClient()
-    private let mockApiClient = APIStubbedTestCase.stubbedAPIClient()
+    private let mockApiClient = FinancialConnectionsAPIClient(apiClient: APIStubbedTestCase.stubbedAPIClient())
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -50,6 +50,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
             apiClient: mockApiClient,
             analyticsClientV1: mockAnalyticsClient,
             clientSecret: "test",
+            elementsSessionContext: nil,
             returnURL: nil,
             publishableKey: "test",
             stripeAccount: nil

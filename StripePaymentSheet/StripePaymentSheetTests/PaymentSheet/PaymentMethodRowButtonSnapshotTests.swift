@@ -42,6 +42,14 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         verify(rowButton)
     }
 
+    func testPaymentMethodRowButton_selected_with_zero_border_width() {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.borderWidth = 0
+        let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: appearance)
+        rowButton.state = .selected
+        verify(rowButton)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,

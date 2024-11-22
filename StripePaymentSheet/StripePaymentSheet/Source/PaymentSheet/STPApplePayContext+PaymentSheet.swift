@@ -44,11 +44,11 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         completion: @escaping STPIntentClientSecretCompletionBlock
     ) {
         switch intent {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             completion(paymentIntent.clientSecret, nil)
-        case .setupIntent(_, let setupIntent):
+        case .setupIntent(let setupIntent):
             completion(setupIntent.clientSecret, nil)
-        case .deferredIntent(_, let intentConfig):
+        case .deferredIntent(let intentConfig):
             guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
                 assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
                 completion(nil, STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod."))
@@ -121,7 +121,7 @@ extension STPApplePayContext {
 
     static func create(
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
         guard let applePay = configuration.applePay else {
@@ -155,7 +155,7 @@ extension STPApplePayContext {
 
     static func createPaymentRequest(
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         applePay: PaymentSheet.ApplePayConfiguration
     ) -> PKPaymentRequest {
         let paymentRequest = StripeAPI.paymentRequest(
@@ -192,12 +192,15 @@ extension STPApplePayContext {
             }
 #endif
         }
+        
+        // Update list of `supportedNetworks` based on the merchant's configuration of cardBrandAcceptance
+        paymentRequest.supportedNetworks = paymentRequest.supportedNetworks.filter { configuration.cardBrandFilter.isAccepted(cardBrand: $0.asCardBrand) }
 
         return paymentRequest
     }
 }
 
-private func makeShippingDetails(from configuration: PaymentSheet.Configuration) -> StripeAPI.ShippingDetails? {
+private func makeShippingDetails(from configuration: PaymentElementConfiguration) -> StripeAPI.ShippingDetails? {
     guard let shippingDetails = configuration.shippingDetails(), let name = shippingDetails.name else {
         return nil
     }
@@ -216,7 +219,7 @@ private func makeShippingDetails(from configuration: PaymentSheet.Configuration)
     )
 }
 
-private func makeRequiredBillingDetails(from configuration: PaymentSheet.Configuration) -> Set<PKContactField> {
+private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
     var requiredPKContactFields = Set<PKContactField>()
     let billingConfig = configuration.billingDetailsCollectionConfiguration
     // By default, we always want to request the billing address (as it includes the postal code)
@@ -234,4 +237,27 @@ private func makeRequiredBillingDetails(from configuration: PaymentSheet.Configu
         requiredPKContactFields.insert(.name)
     }
     return requiredPKContactFields
+}
+
+extension PKPaymentNetwork {
+    var asCardBrand: STPCardBrand {
+        switch self {
+        case .amex:
+            return .amex
+        case .cartesBancaires:
+            return .cartesBancaires
+        case .chinaUnionPay:
+            return .unionPay
+        case .discover:
+            return .discover
+        case .masterCard:
+            return .mastercard
+        case .visa:
+            return .visa
+        case .JCB:
+            return .JCB
+        default:
+            return .unknown
+        }
+    }
 }

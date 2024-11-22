@@ -35,7 +35,7 @@ import UIKit
         )
     }()
 
-    public static func makeErrorLabel(theme: ElementsUITheme) -> UILabel {
+    public static func makeErrorLabel(theme: ElementsAppearance) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.footnote
         label.textColor = theme.colors.danger
@@ -44,7 +44,7 @@ import UIKit
         return label
     }
 
-    public static func makeNoticeTextField(theme: ElementsUITheme) -> UITextView {
+    public static func makeNoticeTextField(theme: ElementsAppearance) -> UITextView {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
@@ -55,7 +55,7 @@ import UIKit
         return textView
     }
 
-    public static func makeSectionTitleLabel(theme: ElementsUITheme) -> UILabel {
+    public static func makeSectionTitleLabel(theme: ElementsAppearance) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.sectionHeader
         label.textColor = theme.colors.secondaryText
@@ -65,10 +65,11 @@ import UIKit
 }
 
 /// Describes the appearance of an Element
-@_spi(STP) public struct ElementsUITheme {
+/// A superset of `StripePaymentSheet.PaymentSheetAppearance`. This exists b/c we can't see that type from `StripeUICore`, and we don't want to the public StripePaymentSheet API to be a typealias of this.
+@_spi(STP) public struct ElementsAppearance {
 
     /// The default appearance used for Elements
-    public static let `default` = ElementsUITheme()
+    public static let `default` = ElementsAppearance()
 
     public var fonts = Font()
     public var colors = Color()
@@ -76,12 +77,6 @@ import UIKit
     public var borderWidth = ElementsUI.fieldBorderWidth
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
-
-    /// Checks if the theme is bright.
-    public var isBright: Bool { colors.background.isBright }
-
-    /// Checks if the theme is dark.
-    public var isDark: Bool { !isBright }
 
     public struct Font {
         public init() {}
@@ -101,7 +96,7 @@ import UIKit
 
         public var primary = UIColor.systemBlue
         public var parentBackground = UIColor.systemBackground
-        public var background = ElementsUI.backgroundColor
+        public var componentBackground = ElementsUI.backgroundColor
         public var disabledBackground = ElementsUI.disabledBackgroundColor
         public var border = ElementsUI.fieldBorderColor
         public var divider = ElementsUI.fieldBorderColor

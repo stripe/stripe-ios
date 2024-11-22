@@ -47,11 +47,11 @@ extension String.Localized {
         )
     }
 
-    static func save_this_card_for_future_$merchant_payments(merchantDisplayName: String) -> String {
+    static func save_payment_details_for_future_$merchant_payments(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
-                "Save this card for future %@ payments",
-                "The label of a switch indicating whether to save the user's card for future payment"
+                "Save payment details to %@ for future purchases",
+                "The label of a switch indicating whether to save the user's payment details for future payment"
             ),
             merchantDisplayName
         )
@@ -69,21 +69,42 @@ extension String.Localized {
         STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
 
+    static var bank_continue_mandate_text: String {
+        STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
+    }
+
     static var back: String {
         STPLocalizedString("Back", "Text for back button")
+    }
+
+    static var manage_card: String {
+        STPLocalizedString(
+            "Manage card",
+            "Title shown above a view containing the customer's card that they can delete or update"
+        )
+    }
+
+    static var save: String {
+       STPLocalizedString(
+           "Save",
+           "Label on a button that when tapped, updates a card brand."
+       )
+    }
+
+    static var update_card: String {
+        STPLocalizedString(
+            "Update card",
+            """
+            Title for a button that when tapped, presents a screen for updating a card. Also
+            the heading the screen itself.
+            """
+        )
     }
 
     static var update_card_brand: String {
         STPLocalizedString(
             "Update card brand",
             "Title for a screen for updating a card brand."
-        )
-    }
-
-    static var update: String {
-        STPLocalizedString(
-            "Update",
-            "Title for a button that when tapped, updates a card brand."
         )
     }
 
@@ -326,10 +347,17 @@ extension String.Localized {
         )
     }
 
-    static var after_pay_subtitle_text: String {
+    static var buy_now_or_pay_later_with_afterpay: String {
         STPLocalizedString(
-            "%1$d interest-free payments of %2$@",
-            "Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99"
+            "Buy now or pay later with Afterpay",
+            "Subtitle shown on a button allowing a user to select to pay with Afterpay."
+        )
+    }
+
+    static var buy_now_or_pay_later_with_clearpay: String {
+        STPLocalizedString(
+            "Buy now or pay later with Clearpay",
+            "Subtitle shown on a button allowing a user to select to pay with Clearpay."
         )
     }
 
@@ -358,15 +386,18 @@ extension String.Localized {
         STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
     }
 
-    static var confirm_your_cvv: String {
-        STPLocalizedString("Confirm your CVV", "Title for prompting for a card's CVV on confirming the payment")
-    }
-
     static var confirm: String {
         STPLocalizedString("Confirm", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
     }
 
     static var bank: String {
         STPLocalizedString("Bank", "A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.")
+    }
+
+    static var pay_over_time_with_affirm: String {
+        STPLocalizedString(
+            "Pay over time with Affirm",
+            "Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm"
+        )
     }
 }

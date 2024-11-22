@@ -7,7 +7,7 @@
 
 import XCTest
 
-class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
+class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
     func testEPS() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -149,6 +149,55 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 
+        func testSunbitPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .usd
+        settings.amount = ._10000
+        settings.merchantCountryCode = .US
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Sunbit
+        tapPaymentMethod("Sunbit")
+
+        // Pay
+        app.buttons["Pay $100.00"].waitForExistenceAndTap()
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
+
+    func testBilliePaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.merchantCountryCode = .DE
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Billie
+        tapPaymentMethod("Billie")
+
+        // Pay
+        app.buttons["Pay €50.99"].waitForExistenceAndTap()
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
+
+    func testSatispayPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.merchantCountryCode = .IT
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Satispay
+        tapPaymentMethod("Satispay")
+
+        // Pay
+        app.buttons["Pay €50.99"].waitForExistenceAndTap()
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+    }
+
     func testZipPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
@@ -264,7 +313,9 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
+}
 
+class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
     func testAmazonPayPaymentMethod_setup() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -334,7 +385,10 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
     }
 
     func testUSBankAccountPaymentMethod() throws {
-        app.launchEnvironment = app.launchEnvironment.merging(["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK": "false"]) { (_, new) in new }
+        app.launchEnvironment = app.launchEnvironment.merging([
+            "FinancialConnectionsSDKAvailable": "true",
+            "FinancialConnectionsStubbedResult": "true",
+        ]) { (_, new) in new }
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .off
@@ -567,9 +621,11 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         app.buttons["Pay SGD 50.99"].tap()
         app.webViews.webViews.webViews.buttons["Simulate scan"].waitForExistenceAndTap(timeout: 15)
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25.0))
     }
+}
 
+class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
     func testPromptPayPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new // new customer
@@ -593,7 +649,7 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Pay THB 50.99"].waitForExistenceAndTap(timeout: 5.0))
         app.webViews.webViews.webViews.buttons["Simulate scan"].waitForExistenceAndTap(timeout: 15)
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25.0))
     }
 
     func testSwishPaymentMethod() throws {
@@ -637,11 +693,44 @@ class PaymentSheetStandardLPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 5.0))
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20.0))
     }
-}
 
-// MARK: - Voucher based LPMs
-/// https://docs.stripe.com/payments/vouchers
-extension PaymentSheetStandardLPMUITests {
+    func testBacsDebit() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.apmsEnabled = .on
+        settings.currency = .gbp
+        settings.merchantCountryCode = .GB
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Select Blik and pay
+        tapPaymentMethod("Bacs Direct Debit")
+        app.textFields["Full name"].tap()
+        app.typeText("Jane Doe" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("foo@bar.com" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("108800")
+        app.typeText("00012345")
+        app.typeText("123 Main St" + XCUIKeyboardKey.return.rawValue + XCUIKeyboardKey.return.rawValue)
+        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+        app.toolbars.buttons["Done"].tap() // State picker toolbar's "Done" button
+        app.typeText("94010" + XCUIKeyboardKey.return.rawValue)
+        let payButton = app.buttons["Pay £50.99"]
+        XCTAssertFalse(payButton.isEnabled)
+        let checkbox = app.switches.firstMatch
+        XCTAssertEqual(checkbox.label, "I understand that Stripe will be collecting Direct Debits on behalf of Example, Inc. and confirm that I am the account holder and the only person required to authorise debits from this account.")
+        checkbox.tap()
+        payButton.tap()
+        app.buttons["Modify Details"].waitForExistenceAndTap()
+        payButton.waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20.0))
+    }
+
+    // MARK: - Voucher based LPMs
+    /// https://docs.stripe.com/payments/vouchers
     func testMultibancoPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -742,31 +831,9 @@ extension PaymentSheetStandardLPMUITests {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
     }
 }
+class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
+    // MARK: Card brand choice
 
-// MARK: - Helpers
-extension PaymentSheetStandardLPMUITests {
-    var webviewAuthorizePaymentButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT") }
-    var webviewAuthorizeSetupButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP") }
-    func tapPaymentMethod(_ id: String) {
-        guard let pm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: id) else {
-            XCTFail()
-            return
-        }
-        pm.tap()
-    }
-
-    /// This waits for the ["PaymentSheetExample" Wants to Use "stripe.com" to Sign In] modal that 
-    /// `ASWebAuthenticationSession` shows and taps continue to allow the web view to open:
-    func waitForASWebAuthSigninModalAndTapContinue() {
-        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let sbContinueButton = springboard.buttons["Continue"]
-        XCTAssertTrue(sbContinueButton.waitForExistence(timeout: 10.0))
-        sbContinueButton.tap()
-    }
-}
-
-// MARK: Card brand choice
-extension PaymentSheetStandardLPMUITests {
     func testCardBrandChoice() throws {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -849,7 +916,6 @@ extension PaymentSheetStandardLPMUITests {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled and we should auto select Visa
@@ -879,7 +945,6 @@ extension PaymentSheetStandardLPMUITests {
         app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
         app.typeText("12345") // Postal
 
         // Card brand choice drop down should be enabled
@@ -892,7 +957,7 @@ extension PaymentSheetStandardLPMUITests {
         XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: 5))
 
         // toggle save this card on
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
@@ -905,7 +970,7 @@ extension PaymentSheetStandardLPMUITests {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
         // Saved card should show the cartes bancaires logo
-        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
 
         let editButton = app.staticTexts["Edit"]
@@ -920,7 +985,7 @@ extension PaymentSheetStandardLPMUITests {
         XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
         app.pickerWheels.firstMatch.swipeUp()
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Update"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Visa
         XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: 5))
@@ -931,7 +996,7 @@ extension PaymentSheetStandardLPMUITests {
         XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
         app.pickerWheels.firstMatch.swipeDown()
         app.toolbars.buttons["Done"].tap()
-        app.buttons["Update"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Cartes Bancaires
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
@@ -945,18 +1010,79 @@ extension PaymentSheetStandardLPMUITests {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
         // Saved card should show the cartes bancaires logo
-        XCTAssertTrue(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.images["carousel_card_cartes_bancaires"].waitForExistence(timeout: 5))
 
         // Remove this card
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 60.0))
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
-        XCTAssertTrue(app.buttons["Remove card"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap(timeout: 5))
         let confirmRemoval = app.alerts.buttons["Remove"]
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 5))
         confirmRemoval.tap()
 
         // Card should be removed
-        XCTAssertFalse(app.staticTexts["••••1001"].waitForExistence(timeout: 5.0))
+        XCTAssertFalse(app.staticTexts["•••• 1001"].waitForExistence(timeout: 5.0))
+    }
+
+    func testCardBrandChoiceUpdateAndRemove() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.alternateUpdatePaymentMethodNavigation = .on
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.customerMode = .returning
+        settings.layout = .horizontal
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        app.buttons["Edit"].waitForExistenceAndTap()
+
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_cartes_bancaires").count, 1)
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
+
+        XCTAssertEqual(app.buttons.matching(identifier: "CircularButton.Edit").count, 2)
+
+        app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap()
+        app.otherElements.matching(identifier: "Card Brand Dropdown").firstMatch.waitForExistenceAndTap()
+        app.pickerWheels.firstMatch.selectNextOption()
+        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 3))
+        app.buttons["Save"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 2)
+
+        app.buttons.matching(identifier: "CircularButton.Edit").element(boundBy: 1).waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
+        app.alerts.buttons["Remove"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
+        XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
+        app.buttons["Done"].waitForExistenceAndTap()
+    }
+}
+
+// MARK: - Helpers
+class PaymentSheetStandardLPMUICase: PaymentSheetUITestCase {
+
+}
+extension PaymentSheetStandardLPMUICase {
+    var webviewAuthorizePaymentButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT") }
+    var webviewAuthorizeSetupButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP") }
+    func tapPaymentMethod(_ id: String) {
+        guard let pm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: id) else {
+            XCTFail()
+            return
+        }
+        pm.tap()
+    }
+
+    /// This waits for the ["PaymentSheetExample" Wants to Use "stripe.com" to Sign In] modal that
+    /// `ASWebAuthenticationSession` shows and taps continue to allow the web view to open:
+    func waitForASWebAuthSigninModalAndTapContinue() {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let sbContinueButton = springboard.buttons["Continue"]
+        XCTAssertTrue(sbContinueButton.waitForExistence(timeout: 10.0))
+        sbContinueButton.tap()
     }
 }

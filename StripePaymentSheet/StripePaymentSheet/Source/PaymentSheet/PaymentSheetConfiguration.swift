@@ -9,7 +9,6 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -163,6 +162,9 @@ extension PaymentSheet {
             }
         }
 
+        /// Controls whether to filter out wallet payment methods from the saved payment method list.
+        @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
+
         /// Initializes a Configuration with default values
         public init() {}
 
@@ -188,23 +190,43 @@ extension PaymentSheet {
         /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
         public var paymentMethodOrder: [String]?
 
+        // MARK: Internal
+        internal var linkPaymentMethodsOnly: Bool = false
+
+        @_spi(STP) public var forceNativeLinkEnabled: Bool = false
+
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.
         /// If false, the customer can't delete if they only have one saved payment method remaining.
         @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
 
-        /// The layout of payment methods in PaymentSheet. Defaults to `.horizontal`.
+        /// The layout of payment methods in PaymentSheet. Defaults to `.automatic`.
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
-        @_spi(STP) public var paymentMethodLayout: PaymentMethodLayout = .horizontal
+        public var paymentMethodLayout: PaymentMethodLayout = .automatic
+
+        /// By default, PaymentSheet will accept all supported cards by Stripe.
+        /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
+        /// Note: For Apple Pay, the list of supported card brands is determined by combining `StripeAPI.supportedPKPaymentNetworks()` with `StripeAPI.additionalEnabledApplePayNetworks` and then applying the `cardBrandAcceptance` filter. This filtered list is then assigned to `PKPaymentRequest.supportedNetworks`, ensuring that only the allowed card brands are available for Apple Pay transactions. Any `PKPaymentNetwork` that does not correspond to a `BrandCategory` will be blocked if you have specified an allow list, or will not be blocked if you have specified a disallow list.
+        /// Note: This is only a client-side solution.
+        /// Note: Card brand filtering is not currently supported by Link.
+        @_spi(CardBrandFilteringBeta) public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+
+        /// This is an experimental feature that may be removed at any time.
+        /// If true, when editing, cards and us bank accounts will have the edit icon and users cannot remove them from the list screen.
+        /// If false (default), only card brand choice eligible cards can be edited and users can remove payment methods from the list screen.
+        @_spi(AlternateUpdatePaymentMethodNavigation) public var alternateUpdatePaymentMethodNavigation = false
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
-    @_spi(STP) public enum PaymentMethodLayout {
+    public enum PaymentMethodLayout {
         /// Payment methods are arranged horizontally. Users can swipe left or right to navigate through different payment methods.
         case horizontal
 
         /// Payment methods are arranged vertically. Users can scroll up or down to navigate through different payment methods.
         case vertical
+
+        /// Stripe automatically chooses between `horizontal` and `vertical`.
+        case automatic
     }
 
     internal enum CustomerAccessProvider {
@@ -493,16 +515,6 @@ extension PaymentSheet {
     }
 }
 
-extension PaymentSheet.Configuration {
-    /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
-    func requiresBillingDetailCollection() -> Bool {
-        return billingDetailsCollectionConfiguration.name == .always
-        || billingDetailsCollectionConfiguration.phone == .always
-        || billingDetailsCollectionConfiguration.email == .always
-        || billingDetailsCollectionConfiguration.address == .full
-    }
-}
-
 extension STPPaymentMethodBillingDetails {
     func toPaymentSheetBillingDetails() -> PaymentSheet.BillingDetails {
         let address = PaymentSheet.Address(city: self.address?.city,
@@ -518,12 +530,40 @@ extension STPPaymentMethodBillingDetails {
     }
 }
 extension PaymentSheet.CustomerConfiguration {
-    func ephemeralKeySecretBasedOn(intent: Intent?) -> String? {
+    func ephemeralKeySecretBasedOn(elementsSession: STPElementsSession?) -> String? {
         switch customerAccessProvider {
         case .legacyCustomerEphemeralKey(let legacy):
             return legacy
         case .customerSession:
-            return intent?.elementsSession.customer?.customerSession.apiKey
+            return elementsSession?.customer?.customerSession.apiKey
         }
+    }
+}
+
+@_spi(CardBrandFilteringBeta) extension PaymentSheet {
+    /// Options to block certain card brands on the client
+    public enum CardBrandAcceptance: Equatable {
+
+        /// Card brand categories that can be allowed or disallowed
+        public enum BrandCategory: Equatable  {
+            /// Visa branded cards
+            case visa
+            /// Mastercard branded cards
+            case mastercard
+            /// Amex branded cards
+            case amex
+            /// Discover branded cards.
+            /// - Note: Encompasses all of Discover Global Network (Discover, Diners, JCB, UnionPay, Elo)
+            case discover
+        }
+
+        /// Accept all card brands supported by Stripe
+        case all
+        /// Accept only the card brands specified in the associated value
+        /// - Note: Any card brands that do not map to a `BrandCategory` will be blocked when using an allow list.
+        case allowed(brands: [BrandCategory])
+        /// Accept all card brands supported by Stripe except for those specified in the associated value
+        /// - Note: Any card brands that do not map to a `BrandCategory` will be accepted when using a disallow list.
+        case disallowed(brands: [BrandCategory])
     }
 }

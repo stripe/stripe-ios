@@ -48,13 +48,13 @@ class LinkURLGeneratorTests: XCTestCase {
             // Nothing
         }
         config.apiClient.publishableKey = "pk_123"
-        let intent = Intent.deferredIntent(elementsSession: STPElementsSession.emptyElementsSession, intentConfig: intentConfig)
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
 
         // Create a session ID
         AnalyticsHelper.shared.generateSessionID()
         let sessionID = AnalyticsHelper.shared.sessionID!
 
-        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent)
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .emptyElementsSession)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
                                            publishableKey: config.apiClient.publishableKey!,
@@ -71,6 +71,40 @@ class LinkURLGeneratorTests: XCTestCase {
 
         XCTAssertEqual(params, expectedParams)
     }
+
+    func testURLParamsWithCBC() {
+        var config = PaymentSheet.Configuration()
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _, _ in
+            // Nothing
+        }
+        config.apiClient.publishableKey = "pk_123"
+        config.defaultBillingDetails.address.country = "FR"
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+        let sessionID = AnalyticsHelper.shared.sessionID!
+
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .cbcElementsSession)
+
+        let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
+                                           publishableKey: config.apiClient.publishableKey!,
+                                           paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
+                                           merchantInfo: LinkURLParams.MerchantInfo(businessName: "StripePaymentSheetTestHostApp", country: "FR"),
+                                           customerInfo: LinkURLParams.CustomerInfo(country: "FR", email: nil),
+                                           paymentInfo: LinkURLParams.PaymentInfo(currency: "EUR", amount: 100),
+                                           experiments: [:],
+                                           flags: ["cbc_in_link_popup": true,
+                                                   "disable_cbc_in_link_popup": false],
+                                           loggerMetadata: ["mobile_session_id": sessionID],
+                                           locale: Locale.init(identifier: "en_US").toLanguageTag(),
+                                           intentMode: .payment,
+                                           setupFutureUsage: false,
+                                           cardBrandChoice: LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: true, stripePreferredNetworks: ["cartes_bancaires"], supportedCobrandedNetworks: ["cartes_bancaires": true])
+        )
+
+        XCTAssertEqual(params, expectedParams)
+    }
 }
 
 extension STPElementsSession {
@@ -81,6 +115,32 @@ extension STPElementsSession {
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
                                           "apple_pay_preference": "enabled",
+        ]
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
+    }
+
+    static var cbcElementsSession: STPElementsSession {
+        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
+                                                                        "country_code": "FR", ] as [String: Any],
+                                          "flags": ["cbc_in_link_popup": true,
+                                                    "disable_cbc_in_link_popup": false, ] as [String: Bool],
+                                          "session_id": "123",
+                                          "card_brand_choice": ["eligible": true,
+                                                                "preferred_networks": ["cartes_bancaires"],
+                                                                "supported_cobranded_networks": ["cartes_bancaires": true]
+                                                               ],
+                                          "merchant_country" : "FR"
+        ]
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
+    }
+    
+    static var linkPassthroughElementsSession: STPElementsSession {
+        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
+                                                                        "country_code": "US", ] as [String: Any],
+                                          "session_id": "123",
+                                          "apple_pay_preference": "enabled",
+                                          "link_settings": ["link_funding_sources": ["card"],
+                                            "link_passthrough_mode_enabled": true]
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }

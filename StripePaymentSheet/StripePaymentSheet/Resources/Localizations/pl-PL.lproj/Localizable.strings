@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li płatności bez odsetek: %2$@";
-
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj rachunek bankowy w Stanach Zjednoczonych";
@@ -9,6 +7,8 @@
 "Add a card" = "Dodaj kartę";
 
 "Add a payment method" = "Dodaj metodę płatności";
+
+"Add bank account" = "Dodaj rachunek bankowy";
 
 "Add card" = "Dodaj kartę";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "Zatwierdź płatność";
 
+"Are you sure you want to remove this card?" = "Czy na pewno chcesz usunąć tę kartę?";
+
+"Are you sure you want to remove this linked account?" = "Czy na pewno chcesz usunąć to połączone konto?";
+
 "Back" = "Wstecz";
 
+"Bank" = "Bank";
+
 "Bank account" = "Konto bankowe";
+
+"Buy now or pay later with <img/>" = "Kup teraz lub zapłać później za pomocą <img/>";
+
+"Buy now or pay later with Afterpay" = "Kup teraz lub zapłać później za pomocą Afterpay";
+
+"Buy now or pay later with Clearpay" = "Kup teraz lub zapłać później za pomocą Clearpay";
 
 "Buy now or pay later with Klarna" = "Kup teraz lub zapłać później z Klarna";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dołączając do Link, wyrażasz zgodę na <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Podając dane swojego konta bankowego i potwierdzając tę płatność, wyrażasz zgodę na niniejsze żądanie polecenia zapłaty oraz <terms>umowę dotyczącą usługi polecenia zapłaty</terms>, a także upoważniasz podmiot Stripe Payments Australia Pty Ltd ACN 160 180 343 o identyfikatorze użytkownika polecenia zapłaty 507156 („Stripe”) do obciążenia Twojego konta przez system Bulk Electronic Clearing System (BECS) w imieniu podmiotu %@ („Sprzedawca”) na każdą kwotę osobno zakomunikowaną Ci przez Sprzedawcę. Potwierdzasz, że jesteś właścicielem konta lub upoważnionym sygnatariuszem wyżej wymienionego konta.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poprzez podanie danych karty wyrażasz zgodę na obciążanie przez %@ Twojej karty kwotami przyszłych płatności zgodnie z obowiązującymi warunkami.";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając swój adres e-mail, zgadzasz się na utworzenie konta Link i zapisanie danych do płatności w Link, zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Podając dane płatności i potwierdzając tę płatność, upoważniasz (A) %@ i Stripe, naszego dostawcę usług płatności, do wysłania instrukcji do Twojego banku w celu obciążenia Twojego konta oraz (B) Twój bank do obciążenia Twojego konta zgodnie z tymi instrukcjami. W ramach swoich praw jesteś uprawniony(-a) do otrzymania zwrotu od Twojego banku zgodnie z zasadami i warunkami umowy z bankiem. Zwrot należy odebrać w ciągu 8 tygodni, licząc od daty obciążenia konta. Twoje prawa są wyjaśnione w oświadczeniu, które możesz otrzymać z banku. Wyrażasz zgodę na otrzymywanie powiadomień w przypadku przyszłych obciążeń do 2 dni przed ich wystąpieniem.";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "Anuluj i skorzystaj z innej metody zapłaty";
 
+"Change email" = "Zmień e-mail";
+
 "Choose a payment method" = "Wybierz metodę płatności";
 
 "Close card scanner" = "Zamknij skaner karty";
+
+"Code sent" = "Kod wysłany";
 
 "Confirm" = "Potwierdź";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "Potwierdź CVC";
 
-"Confirm your CVV" = "Potwierdź CVV";
-
 "Contact information" = "Dane kontaktowe";
+
+"Default" = "Domyślne";
 
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Wprowadź adres ręcznie";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Wprowadź kod wysłany na adres %@, aby domyślnie używać Link do płatności.";
+
+"Enter your verification code" = "Wprowadź kod weryfikacyjny";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Ze względów bezpieczeństwa wprowadź ponownie kod bezpieczeństwa Twojej karty.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumiem, że Stripe będzie pobierać polecenia zapłaty w imieniu firmy %@ i potwierdzam, że jestem posiadaczem konta i jedyną osobą wymaganą do autoryzowania poleceń zapłaty z tego konta.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Dołącz do Link";
+
+"Log out of Link" = "Wyloguj się z Link";
 
 "Manage payment method" = "Zarządzaj metodą płatności";
 
@@ -93,6 +123,8 @@
 "New card" = "Nowa karta";
 
 "New payment method" = "Nowa metoda płatności";
+
+"Not %@?" = "Nie jesteś %@?";
 
 "Open your UPI app to approve your payment within %@" = "Otwórz aplikację UPI, aby zatwierdzić płatność w %@";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "Płać szybciej w %@ i tysiącach innych firm.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zapłacić w <num_installments/> nieoprocentowanych ratach <installment_price/> z <img/>";
-
 "Pay over time with %@" = "Zapłać później, korzystając z %@";
+
+"Pay over time with Affirm" = "Zapłać później za pomocą Affirm";
 
 "Pay with Link" = "Zapłać za pomocą Link";
 
 "Pay with your bank account in just a few steps." = "Zapłać za pomocą konta bankowego w kilku krokach.";
 
+"Payment" = "Płatność";
+
 "Payment failed" = "Płatność się nie powiodła";
+
+"Payment methods" = "Metody płatności";
 
 "Please go back and select another payment method" = "Wróć i wybierz inną metodę płatności";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "Usunąć kartę?";
 
+"Remove linked account" = "Usuń podłączone konto";
+
 "Remove payment method" = "Usuń metodę płatności";
+
+"Resend code" = "Wyślij kod ponownie";
 
 "Save" = "Zapisz";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "Zapisz do przyszłych płatności";
 
-"Save this account for future %@ payments" = "Zapisz to konto do przyszłych płatności %@";
+"Save payment details to %@ for future purchases" = "Zapisz informacje o płatności dla %@ do wykorzystania przy przyszłych zakupach";
 
-"Save this card for future %@ payments" = "Zapisz dane tej karty do przyszłych płatności %@";
+"Save this account for future %@ payments" = "Zapisz to konto do przyszłych płatności %@";
 
 "Save your bank account in just a few steps." = "Zapisz konto bankowe w kilku krokach.";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "Zapisano";
 
+"Secure 1⁠-⁠click checkout" = "Bezpieczna finalizacja jednym kliknięciem";
+
 "Select card" = "Wybierz kartę";
 
 "Select payment method" = "Wybierz metodę płatności";
 
 "Select your payment method" = "Wybierz metodę płatności";
+
+"Set as default" = "Ustaw jako domyślną";
+
+"Set as default payment method" = "Użyj jako domyślnej metody płatności";
 
 "Set up" = "Ustaw";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "Pokaż menu";
 
+"Sign in to your Link account" = "Zaloguj się na konto Link";
+
 "Simple, secure one-click payments" = "Łatwe, bezpieczne płatności jednym kliknięciem";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Coś poszło nie tak przy podłączaniu konta.\nSpróbuj ponownie później.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe wpłaci 0,01 USD na Twoje konto w ciągu 1–2 dni roboczych. Następnie otrzymasz wiadomość e-mail z instrukcjami dotyczącymi zakończenia zapisywania konta za pomocą %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe wpłaci 0,01 USD na Twoje konto w ciągu 1-2 dni roboczych. Następnie otrzymasz wiadomość e-mail z instrukcjami dotyczącymi zakończenia płatności na rzecz %@.";
 
+"Tap to close" = "Dotknij, aby zamknąć";
+
+"Tap to expand" = "Dotknij, aby rozwinąć";
+
 "The IBAN you entered is incomplete." = "Podany IBAN jest niepełny.";
 
-"Update" = "Aktualizuj";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Podany numer IBAN jest nieprawidłowy. „%@” nie jest prawidłowym kodem kraju.";
+
+"The provided verification code has expired." = "Podany kod weryfikacyjny jest nieaktualny.";
+
+"The provided verification code is incorrect." = "Podany kod weryfikacyjny jest nieprawidłowy.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Termin ważności tej karty minął. Zaktualizuj informacje o karcie lub wybierz inną metodę płatności.";
+
+"This is your default" = "To Twoje ustawienie domyślne";
+
+"Too many attempts. Please try again in a few minutes." = "Zbyt wiele prób. Spróbuj ponownie za kilka minut.";
+
+"Unavailable for this purchase" = "Niedostępne dla tego zakupu";
+
+"Update card" = "Zaktualizuj kartę";
 
 "Update card brand" = "Zaktualizuj markę karty";
+
+"Use your saved info to check out faster" = "Użyj zapisanych danych, aby szybciej zakończyć operację.";
 
 "View more" = "Wyświetl więcej";
 

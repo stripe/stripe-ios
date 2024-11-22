@@ -13,6 +13,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case paymentSheet
         case flowController
+        case embedded
     }
 
     enum Mode: String, PickerEnum {
@@ -38,6 +39,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Layout" }
         case horizontal
         case vertical
+        case automatic
     }
 
     enum IntegrationType: String, PickerEnum {
@@ -84,6 +86,22 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case customerSession = "customer_session"
     }
 
+    enum Amount: Int, PickerEnum {
+        static var enumName: String { "Amount" }
+
+        case _5099 = 5099
+        case _10000 = 10000
+
+        var displayName: String {
+            switch self {
+            case ._5099:
+                return "50.99"
+            case ._10000:
+                return "100.00"
+            }
+        }
+    }
+
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
 
@@ -117,6 +135,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case JP
         case BR
         case TH
+        case DE
+        case IT
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -163,6 +183,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case enabled
         case disabled
     }
+    enum AllowRedisplayOverride: String, PickerEnum {
+        static var enumName: String { "AllowRedisplayOverride" }
+
+        case always
+        case limited
+        case unspecified
+        case notSet
+    }
+
     enum PaymentMethodRemove: String, PickerEnum {
         static var enumName: String { "PaymentMethodRemove" }
 
@@ -210,8 +239,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum LinkEnabled: String, PickerEnum {
-        static var enumName: String { "Link" }
+    enum LinkMode: String, PickerEnum {
+        static var enumName: String { "Link mode" }
+
+        case link_pm = "Link PM"
+        case passthrough
+    }
+
+    enum LinkNativeMode: String, PickerEnum {
+        static var enumName: String { "Native Link" }
 
         case on
         case off
@@ -265,6 +301,18 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum ShakeAmbiguousViews: String, PickerEnum {
+        static var enumName: String { "Shake Ambiguous Views" }
+
+        case on
+        case off
+    }
+    enum InstantDebitsIncentives: String, PickerEnum {
+        static var enumName: String { "Instant Debits Incentives" }
+
+        case on
+        case off
+    }
     enum ExternalPaymentMethods: String, PickerEnum {
         static let enumName: String = "External PMs"
         // Based on https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/55d7fd10/src/externalPaymentMethods/constants.ts#L13
@@ -276,7 +324,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_azupay",
             "external_bank_pay",
             "external_benefit",
-            "external_billie",
             "external_bitcash",
             "external_bizum",
             "external_catch",
@@ -292,12 +339,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_iwocapay",
             "external_kbc",
             "external_knet",
-            "external_kriya",
             "external_laybuy",
             "external_line_pay",
             "external_merpay",
             "external_momo",
-            "external_mondu",
             "external_net_cash",
             "external_nexi_pay",
             "external_octopus",
@@ -316,9 +361,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_postfinance",
             "external_rakuten_pay",
             "external_samsung_pay",
-            "external_satispay",
             "external_scalapay",
-            "external_sequra",
             "external_sezzle",
             "external_shopback_paylater",
             "external_softbank_carrier_payment",
@@ -376,6 +419,31 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum DisplaysMandateTextEnabled: String, PickerEnum {
+        static let enumName: String = "displaysMandateText"
+        case on
+        case off
+    }
+
+    enum FormSheetAction: String, PickerEnum {
+        static let enumName: String = "formSheetAction"
+        case confirm
+        case `continue`
+    }
+
+    enum CardBrandAcceptance: String, PickerEnum {
+        static let enumName: String = "cardBrandAcceptance"
+        case all
+        case blockAmEx
+        case allowVisa
+    }
+
+    enum AlternateUpdatePaymentMethodNavigation: String, PickerEnum {
+        static let enumName: String = "alternateUpdatePaymentMethodNavigation"
+        case on
+        case off
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -383,6 +451,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
+    var amount: Amount
     var merchantCountryCode: MerchantCountry
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
@@ -392,17 +461,21 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var paymentMethodSave: PaymentMethodSave
+    var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodRedisplay: PaymentMethodRedisplay
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
-    var linkEnabled: LinkEnabled
+    var linkMode: LinkMode
+    var useNativeLink: LinkNativeMode
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
-    var checkoutEndpoint: String?
+    var checkoutEndpoint: String
     var autoreload: Autoreload
+    var shakeAmbiguousViews: ShakeAmbiguousViews
+    var instantDebitsIncentives: InstantDebitsIncentives
     var externalPaymentMethods: ExternalPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
@@ -413,6 +486,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectEmail: BillingDetailsEmail
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
+    var formSheetAction: FormSheetAction
+    var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
+    var cardBrandAcceptance: CardBrandAcceptance
+    var alternateUpdatePaymentMethodNavigation: AlternateUpdatePaymentMethodNavigation
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -423,6 +500,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
+            amount: ._5099,
             merchantCountryCode: .US,
             apmsEnabled: .on,
             shippingInfo: .off,
@@ -430,17 +508,21 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
             paymentMethodSave: .enabled,
+            allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,
             paymentMethodRedisplay: .enabled,
             paymentMethodAllowRedisplayFilters: .always,
             defaultBillingAddress: .off,
             customEmail: nil,
-            linkEnabled: .off,
+            linkMode: .passthrough,
+            useNativeLink: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
+            shakeAmbiguousViews: .off,
+            instantDebitsIncentives: .off,
             externalPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
@@ -449,7 +531,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectName: .automatic,
             collectEmail: .automatic,
             collectPhone: .automatic,
-            collectAddress: .automatic)
+            collectAddress: .automatic,
+            formSheetAction: .confirm,
+            embeddedViewDisplaysMandateText: .on,
+            cardBrandAcceptance: .all,
+            alternateUpdatePaymentMethodNavigation: .off)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

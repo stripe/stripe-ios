@@ -8,9 +8,6 @@
          location = "group:AppClipExample/AppClipExample.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Basic Integration/Basic Integration.xcodeproj">
-      </FileRef>
-      <FileRef
          location = "group:CardImageVerification Example/CardImageVerification Example.xcodeproj">
       </FileRef>
       <FileRef
@@ -24,6 +21,9 @@
       </FileRef>
       <FileRef
          location = "group:PaymentSheet Example/PaymentSheet Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:StripeConnectExample/StripeConnect Example.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:UI Examples/UI Examples.xcodeproj">
@@ -46,6 +46,9 @@
    </FileRef>
    <FileRef
       location = "group:StripeCardScan/StripeCardScan.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripeConnect/StripeConnect.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:StripeCore/StripeCore.xcodeproj">

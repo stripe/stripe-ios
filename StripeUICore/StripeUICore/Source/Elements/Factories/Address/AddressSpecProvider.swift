@@ -22,9 +22,7 @@ let addressDataFilename = "localized_address_data"
     public var countries: [String] {
         return addressSpecs.map { $0.key }
     }
-    private lazy var addressSpecsUpdateQueue: DispatchQueue = {
-        DispatchQueue(label: addressDataFilename, qos: .userInitiated)
-    }()
+    private let addressSpecsUpdateQueue: DispatchQueue = DispatchQueue(label: addressDataFilename, qos: .userInitiated)
 
     /// Loads address specs with a completion block
     public func loadAddressSpecs(completion: (() -> Void)? = nil) {
@@ -56,15 +54,6 @@ let addressDataFilename = "localized_address_data"
                 completion?()
             }
         }
-    }
-
-    /// Loads address specs with a promise
-    public func loadAddressSpecs() -> Promise<Void> {
-        let promise = Promise<Void>()
-        loadAddressSpecs {
-            promise.resolve(with: ())
-        }
-        return promise
     }
 
     func addressSpec(for country: String) -> AddressSpec {

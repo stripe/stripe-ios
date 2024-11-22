@@ -10,6 +10,7 @@ import Foundation
 
 protocol NetworkingLinkSignupDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
+    var elementsSessionContext: ElementsSessionContext? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func synchronize() -> Future<FinancialConnectionsNetworkingLinkSignup>
@@ -24,7 +25,8 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
-    private let selectedAccounts: [FinancialConnectionsPartnerAccount]
+    let elementsSessionContext: ElementsSessionContext?
+    private let selectedAccounts: [FinancialConnectionsPartnerAccount]?
     private let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
@@ -32,11 +34,12 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        selectedAccounts: [FinancialConnectionsPartnerAccount],
+        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         returnURL: String?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
         self.selectedAccounts = selectedAccounts
@@ -44,6 +47,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.elementsSessionContext = elementsSessionContext
     }
 
     func synchronize() -> Future<FinancialConnectionsNetworkingLinkSignup> {

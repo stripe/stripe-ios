@@ -15,34 +15,39 @@ import SwiftUI
 import UIKit
 
 extension PaymentSheet {
+    static var _preconfirmShim: ((UIViewController) -> Void)?
+
+    enum IntegrationShape {
+        case complete
+        case flowController
+        case embedded
+
+        var requiresInterstitialForCVC: Bool {
+            switch self {
+            case .complete:
+                return false
+            case .flowController, .embedded:
+                return true
+            }
+        }
+    }
 
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
+        elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
-        isFlowController: Bool = false,
+        integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        performLocalActionsIfNeededAndConfirm(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, paymentHandler: paymentHandler, isFlowController: isFlowController, completion: completion)
-    }
-
-    /// Perform PaymentSheet-specific local actions before confirming.
-    /// These actions are not represented in the PaymentIntent state and are specific to
-    /// Payment Element (not the API bindings), so we need to handle them here.
-    static fileprivate func performLocalActionsIfNeededAndConfirm(
-        configuration: PaymentSheet.Configuration,
-        authenticationContext: STPAuthenticationContext,
-        intent: Intent,
-        paymentOption: PaymentOption,
-        paymentHandler: STPPaymentHandler,
-        isFlowController: Bool,
-        paymentMethodID: String? = nil,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-    ) {
+        // Perform PaymentSheet-specific local actions before confirming.
+        // These actions are not represented in the PaymentIntent state and are specific to
+        // Payment Element (not the API bindings), so we need to handle them here.
         // First, handle any client-side required actions:
         if case let .new(confirmParams) = paymentOption,
            confirmParams.paymentMethodType == .stripe(.bacsDebit) {
@@ -55,7 +60,7 @@ extension PaymentSheet {
                                                 confirmAction: {
                 // If confirmed, dismiss the MandateView and complete the transaction:
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
-                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, completion: completion)
+                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, analyticsHelper: analyticsHelper, completion: completion)
             }, cancelAction: {
                 // Dismiss the MandateView and return to PaymentSheet
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
@@ -65,10 +70,11 @@ extension PaymentSheet {
             let hostingController = UIHostingController(rootView: mandateView)
             hostingController.isModalInPresentation = true
             authenticationContext.authenticationPresentingViewController().present(hostingController, animated: true)
+            _preconfirmShim?(hostingController)
         } else if case let .saved(paymentMethod, _) = paymentOption,
                   paymentMethod.type == .card,
-                  intent.cvcRecollectionEnabled,
-                  isFlowController {
+                  integrationShape.requiresInterstitialForCVC,
+                  intent.cvcRecollectionEnabled {
             // MARK: - CVC Recollection
             let presentingViewController = authenticationContext.authenticationPresentingViewController()
 
@@ -83,7 +89,7 @@ extension PaymentSheet {
                 configuration: configuration,
                 onCompletion: { vc, intentConfirmParams in
                     vc.dismiss(animated: true)
-                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, completion: completion)
+                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, analyticsHelper: analyticsHelper, completion: completion)
                 },
                 onCancel: { vc in
                     vc.dismiss(animated: true)
@@ -102,19 +108,51 @@ extension PaymentSheet {
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, completion: completion)
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, analyticsHelper: analyticsHelper, completion: completion)
+        }
+    }
+
+    static func confirm(
+        configuration: PaymentElementConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        paymentOption: PaymentOption,
+        paymentHandler: STPPaymentHandler,
+        integrationShape: IntegrationShape = .complete,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        paymentMethodID: String? = nil
+    ) async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) {
+        await withCheckedContinuation { continuation in
+            DispatchQueue.main.async {
+                confirm(
+                    configuration: configuration,
+                    authenticationContext: authenticationContext,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    paymentOption: paymentOption,
+                    paymentHandler: paymentHandler,
+                    integrationShape: integrationShape,
+                    paymentMethodID: paymentMethodID,
+                    analyticsHelper: analyticsHelper
+                ) { result, deferredType in
+                    continuation.resume(returning: (result, deferredType))
+                }
+            }
         }
     }
 
     static fileprivate func confirmAfterHandlingLocalActions(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
+        elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
         intentConfirmParamsForDeferredIntent: IntentConfirmParams?,
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         // Translates a STPPaymentHandler result to a PaymentResult
@@ -140,9 +178,14 @@ extension PaymentSheet {
 
         // MARK: - New Payment Method
         case let .new(confirmParams):
+            // Set allow_redisplay on params
+            confirmParams.setAllowRedisplay(
+                mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
+                isSettingUp: intent.isSettingUp
+            )
             switch intent {
             // MARK: ↪ PaymentIntent
-            case .paymentIntent(_, let paymentIntent):
+            case .paymentIntent(let paymentIntent):
                 let params = makePaymentIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
@@ -152,12 +195,6 @@ extension PaymentSheet {
                     paymentIntent: paymentIntent,
                     configuration: configuration
                 )
-                if case .new(let confirmParams) = paymentOption {
-                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
-                        params.paymentMethodId = paymentMethodId
-                        params.paymentMethodParams = nil
-                    }
-                }
                 paymentHandler.confirmPayment(
                     params,
                     with: authenticationContext,
@@ -169,7 +206,7 @@ extension PaymentSheet {
                     }
                 )
             // MARK: ↪ SetupIntent
-            case .setupIntent(_, let setupIntent):
+            case .setupIntent(let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .new(
                         params: confirmParams.paymentMethodParams,
@@ -179,20 +216,6 @@ extension PaymentSheet {
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
-                if case .new(let confirmParams) = paymentOption {
-                    if let paymentMethodId = confirmParams.instantDebitsLinkedBank?.paymentMethodId {
-                        setupIntentParams.paymentMethodID = paymentMethodId
-                        setupIntentParams.paymentMethodParams = nil
-
-                        let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
-                        let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
-                        // Tell Stripe to infer mandate info from client
-                        onlineParams.inferFromClient = true
-                        mandateCustomerAcceptanceParams.onlineParams = onlineParams
-                        mandateCustomerAcceptanceParams.type = .online
-                        setupIntentParams.mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
-                    }
-                }
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
@@ -204,7 +227,7 @@ extension PaymentSheet {
                     }
                 )
             // MARK: ↪ Deferred Intent
-            case .deferredIntent(_, let intentConfig):
+            case .deferredIntent(let intentConfig):
                 handleDeferredIntentConfirmation(
                     confirmType: .new(
                         params: confirmParams.paymentMethodParams,
@@ -224,7 +247,7 @@ extension PaymentSheet {
         case let .saved(paymentMethod, intentConfirmParamsFromSavedPaymentMethod):
             switch intent {
             // MARK: ↪ PaymentIntent
-            case .paymentIntent(_, let paymentIntent):
+            case .paymentIntent(let paymentIntent):
                 let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
                     // Flow controller collects CVC using interstitial:
                     ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
@@ -241,7 +264,7 @@ extension PaymentSheet {
                     }
                 )
             // MARK: ↪ SetupIntent
-            case .setupIntent(_, let setupIntent):
+            case .setupIntent(let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: nil),
                     setupIntent: setupIntent,
@@ -255,9 +278,9 @@ extension PaymentSheet {
                     }
                 )
             // MARK: ↪ Deferred Intent
-            case .deferredIntent(_, let intentConfig):
+            case .deferredIntent(let intentConfig):
                 let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
-                    // Flow controller collects CVC using interstitial:
+                    // Flow controller and embedded collects CVC using interstitial:
                     ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
@@ -279,7 +302,7 @@ extension PaymentSheet {
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 switch intent {
-                case .paymentIntent(_, let paymentIntent):
+                case .paymentIntent(let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
                     paymentIntentParams.returnURL = configuration.returnURL
@@ -295,7 +318,7 @@ extension PaymentSheet {
                             linkAccount?.logout()
                         }
                     )
-                case .setupIntent(_, let setupIntent):
+                case .setupIntent(let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                     setupIntentParams.paymentMethodParams = paymentMethodParams
                     setupIntentParams.returnURL = configuration.returnURL
@@ -307,7 +330,7 @@ extension PaymentSheet {
                             linkAccount?.logout()
                         }
                     )
-                case .deferredIntent(_, let intentConfig):
+                case .deferredIntent(let intentConfig):
                     handleDeferredIntentConfirmation(
                         confirmType: .new(
                             params: paymentMethodParams,
@@ -335,7 +358,7 @@ extension PaymentSheet {
                 mandateCustomerAcceptanceParams.type = .online
                 let mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
                 switch intent {
-                case .paymentIntent(_, let paymentIntent):
+                case .paymentIntent(let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                     paymentIntentParams.returnURL = configuration.returnURL
@@ -352,7 +375,7 @@ extension PaymentSheet {
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
-                case .setupIntent(_, let setupIntent):
+                case .setupIntent(let setupIntent):
                     let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                     setupIntentParams.paymentMethodID = paymentMethod.stripeId
                     setupIntentParams.returnURL = configuration.returnURL
@@ -365,7 +388,7 @@ extension PaymentSheet {
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
-                case .deferredIntent(_, let intentConfig):
+                case .deferredIntent(let intentConfig):
                     handleDeferredIntentConfirmation(
                         confirmType: .saved(paymentMethod, paymentOptions: nil),
                         configuration: configuration,
@@ -416,12 +439,12 @@ extension PaymentSheet {
                     linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
                         switch result {
                         case .success(let paymentDetails):
-                            if intent.linkPassthroughModeEnabled {
+                            if elementsSession.linkPassthroughModeEnabled {
                                 // If passthrough mode, share payment details
                                 linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
                                     switch result {
-                                    case .success(let shareResponse):
-                                        confirmWithPaymentMethod(STPPaymentMethod(stripeId: shareResponse.paymentMethod, type: .card), linkAccount, shouldSave)
+                                    case .success(let paymentDetailsShareResponse):
+                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
                                     case .failure(let error):
                                         STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
@@ -442,16 +465,20 @@ extension PaymentSheet {
 
             switch confirmOption {
             case .wallet:
-                let linkController = PayWithLinkController(intent: intent, configuration: configuration)
-                linkController.present(from: authenticationContext.authenticationPresentingViewController(),
-                                       completion: completion)
+                if configuration.forceNativeLinkEnabled {
+                    let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+                    linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
+                } else {
+                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+                    linkController.present(from: authenticationContext.authenticationPresentingViewController(),
+                                           completion: completion)
+                }
             case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let intentConfirmParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in
                     UserDefaults.standard.markLinkAsUsed()
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
@@ -461,6 +488,25 @@ extension PaymentSheet {
                 }
             case .withPaymentMethod(let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod, nil, false)
+            case .withPaymentDetails(let linkAccount, let paymentDetails):
+                let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
+
+                if elementsSession.linkPassthroughModeEnabled {
+                    linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentDetails.cvc) { result in
+                        switch result {
+                        case .success(let paymentDetailsShareResponse):
+                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
+                        case .failure(let error):
+                            STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
+                            paymentHandlerCompletion(.failed, error as NSError)
+                        }
+                    }
+                } else {
+                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, shouldSave)
+                }
+            case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
+                // shouldSave is false, as we don't show a save checkbox in the Link VC
+                createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams, false)
             }
         case let .external(paymentMethod, billingDetails):
             guard let confirmHandler = configuration.externalPaymentMethodConfiguration?.externalPaymentMethodConfirmHandler else {
@@ -487,12 +533,7 @@ extension PaymentSheet {
         var isSetupFutureUsageSet: Bool {
             switch self {
             case .paymentIntent(let paymentIntent):
-                return paymentIntent.setupFutureUsage != .none || (paymentIntent.paymentMethodOptions?.allResponseFields.values.contains(where: {
-                    if let value = $0 as? [String: Any] {
-                        return value["setup_future_usage"] != nil
-                    }
-                    return false
-                }) ?? false)
+                return paymentIntent.isSetupFutureUsageSet
             case .setupIntent:
                 return true
             }
@@ -510,7 +551,7 @@ extension PaymentSheet {
 
     /// A helper method that sets the Customer's default payment method if necessary.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
-    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: Configuration) {
+    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration) {
 
         guard
             // Did we successfully save this payment method?
@@ -526,7 +567,7 @@ extension PaymentSheet {
         CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: customer)
     }
 
-    static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentSheet.Configuration)
+    static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentElementConfiguration)
         -> STPPaymentIntentShippingDetailsParams?
     {
         let params = STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration)
@@ -555,7 +596,7 @@ extension PaymentSheet {
     static func makePaymentIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         mandateData: STPMandateDataParams? = nil
     ) -> STPPaymentIntentParams {
         let params: STPPaymentIntentParams
@@ -608,7 +649,7 @@ extension PaymentSheet {
     static func makeSetupIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         mandateData: STPMandateDataParams? = nil
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams

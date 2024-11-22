@@ -17,6 +17,7 @@ protocol NetworkingOTPViewDelegate: AnyObject {
 
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView)
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData)
+    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String)
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error)
 
     func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView)
@@ -70,12 +71,12 @@ final class NetworkingOTPView: UIView {
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
         return otpTextField
     }()
-    private lazy var theme: ElementsUITheme = {
-        var theme: ElementsUITheme = .default
+    private lazy var theme: ElementsAppearance = {
+        var theme: ElementsAppearance = .default
         theme.colors = {
-            var colors = ElementsUITheme.Color()
+            var colors = ElementsAppearance.Color()
             colors.border = .borderDefault
-            colors.background = .customBackgroundColor
+            colors.componentBackground = .customBackgroundColor
             colors.textFieldText = .textDefault
             colors.danger = .textFeedbackCritical
             return colors
@@ -136,7 +137,7 @@ final class NetworkingOTPView: UIView {
                 linkFont: .label(.medium),
                 textColor: .textFeedbackCritical,
                 linkColor: .textFeedbackCritical,
-                alignCenter: true
+                alignment: .center
             )
             errorLabel.setText(errorText)
             let errorView = UIStackView(
@@ -162,6 +163,9 @@ final class NetworkingOTPView: UIView {
                 switch result {
                 case .success(let lookupConsumerSessionResponse):
                     if lookupConsumerSessionResponse.exists {
+                        if let consumerPublishableKey = lookupConsumerSessionResponse.publishableKey {
+                            self.delegate?.networkingOTPView(self, didGetConsumerPublishableKey: consumerPublishableKey)
+                        }
                         self.startVerification()
                     } else {
                         self.delegate?.networkingOTPViewConsumerNotFound(self)
@@ -257,7 +261,7 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
             connectionsMerchantName: nil,
             pane: .networkingLinkVerification,
             consumerSession: nil,
-            apiClient: STPAPIClient.shared,
+            apiClient: FinancialConnectionsAPIClient(apiClient: .shared),
             clientSecret: "",
             analyticsClient: FinancialConnectionsAnalyticsClient(),
             isTestMode: false,

@@ -10,7 +10,6 @@ import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
@@ -82,12 +81,13 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 PaymentSheetLoader.load(
                     mode: .paymentIntentClientSecret(clientSecret),
                     configuration: self.configuration,
-                    isFlowController: false
+                    analyticsHelper: .init(integrationShape: .complete, configuration: self.configuration),
+                    integrationShape: .complete
                 ) { result in
                     switch result {
                     case .success(let loadResult):
                         XCTAssertEqual(
-                            Set(loadResult.intent.recommendedPaymentMethodTypes),
+                            Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                             Set(expected)
                         )
                         XCTAssertEqual(loadResult.savedPaymentMethods, [])
@@ -97,8 +97,10 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                             configuration: self.configuration,
                             authenticationContext: self,
                             intent: loadResult.intent,
+                            elementsSession: loadResult.elementsSession,
                             paymentOption: self.newCardPaymentOption,
-                            paymentHandler: self.paymentHandler
+                            paymentHandler: self.paymentHandler,
+                            analyticsHelper: ._testValue()
                         ) { result, _ in
                             switch result {
                             case .completed:
@@ -164,27 +166,29 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
-            isFlowController: false
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            integrationShape: .complete
         ) { result in
             switch result {
             case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(loadResult.intent.recommendedPaymentMethodTypes),
+                    Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                     Set(expected)
                 )
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 loadExpectation.fulfill()
-                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = loadResult.intent else {
+                guard case .deferredIntent = loadResult.intent else {
                     XCTFail()
                     return
                 }
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
-                                     intent: .deferredIntent(elementsSession: elementsSession,
-                                                             intentConfig: intentConfig),
+                                     intent: .deferredIntent(intentConfig: intentConfig),
+                                     elementsSession: loadResult.elementsSession,
                                      paymentOption: self.newCardPaymentOption,
-                                     paymentHandler: self.paymentHandler) { result, _ in
+                                     paymentHandler: self.paymentHandler,
+                                     analyticsHelper: ._testValue()) { result, _ in
                     switch result {
                     case .completed:
                         confirmExpectation.fulfill()
@@ -230,27 +234,29 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
-            isFlowController: false
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            integrationShape: .complete
         ) { result in
             switch result {
             case .success(let loadResult):
                 XCTAssertEqual(
-                    Set(loadResult.intent.recommendedPaymentMethodTypes),
+                    Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                     Set(expected)
                 )
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 loadExpectation.fulfill()
-                guard case .deferredIntent(elementsSession: let elementsSession, intentConfig: _) = loadResult.intent else {
+                guard case .deferredIntent = loadResult.intent else {
                     XCTFail()
                     return
                 }
 
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
-                                     intent: .deferredIntent(elementsSession: elementsSession,
-                                                             intentConfig: intentConfig),
+                                     intent: .deferredIntent(intentConfig: intentConfig),
+                                     elementsSession: loadResult.elementsSession,
                                      paymentOption: self.newCardPaymentOption,
-                                     paymentHandler: self.paymentHandler) { result, _ in
+                                     paymentHandler: self.paymentHandler,
+                                     analyticsHelper: ._testValue()) { result, _ in
                     switch result {
                     case .completed:
                         confirmExpectation.fulfill()
@@ -287,7 +293,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             PaymentSheetLoader.load(
                 mode: .paymentIntentClientSecret(clientSecret),
                 configuration: self.configuration,
-                isFlowController: false
+                analyticsHelper: .init(integrationShape: .complete, configuration: self.configuration),
+                integrationShape: .complete
             ) { result in
                 guard case .success(let loadResult) = result else {
                     XCTFail()
@@ -298,8 +305,10 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     configuration: self.configuration,
                     authenticationContext: self,
                     intent: loadResult.intent,
+                    elementsSession: loadResult.elementsSession,
                     paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", type: .card), confirmParams: nil),
-                    paymentHandler: self.paymentHandler
+                    paymentHandler: self.paymentHandler,
+                    analyticsHelper: ._testValue()
                 ) { result, _ in
                     switch result {
                     case .completed:
@@ -549,18 +558,17 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             }
         }()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: intentConfigMode, confirmHandler: confirmHandler)
-        let intent: Intent = .deferredIntent(
-            elementsSession: ._testCardValue(),
-            intentConfig: intentConfig
-        )
+        let intent: Intent = .deferredIntent(intentConfig: intentConfig)
         var configuration = self.configuration
         configuration.customer = .init(id: "", ephemeralKeySecret: "")
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
             intent: intent,
+            elementsSession: ._testCardValue(),
             paymentOption: inputPaymentOption,
-            paymentHandler: self.paymentHandler
+            paymentHandler: self.paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             XCTAssertTrue(Thread.isMainThread)
             switch (result, expectedResult) {
@@ -618,9 +626,11 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
+            intent: .deferredIntent(intentConfig: intentConfig),
+            elementsSession: ._testCardValue(),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             e.fulfill()
             guard case let .failed(error) = result else {
@@ -647,9 +657,11 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
+            intent: .deferredIntent(intentConfig: intentConfig),
+            elementsSession: ._testCardValue(),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             e.fulfill()
             // The result is completed, even though the IntentConfiguration and PaymentIntent amounts are not the same
@@ -674,9 +686,11 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
+            intent: .deferredIntent(intentConfig: intentConfig),
+            elementsSession: ._testCardValue(),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             e.fulfill()
             guard case let .failed(error) = result else {
@@ -703,9 +717,11 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig),
+            intent: .deferredIntent(intentConfig: intentConfig),
+            elementsSession: ._testCardValue(),
             paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { result, _ in
             e.fulfill()
             // The result is completed, even though the IntentConfiguration and SetupIntent setup_future_usage values are not the same
@@ -1076,20 +1092,17 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
 
         // Set up intents
-        let pi_intent = try await Intent.paymentIntent(elementsSession: ._testCardValue(), paymentIntent: makePaymentIntent())
-        let deferred_pi_intent: Intent = .deferredIntent(
-            elementsSession: ._testCardValue(),
-            intentConfig: intentConfig
-        )
+        let pi_intent = try await Intent.paymentIntent(makePaymentIntent())
+        let deferred_pi_intent: Intent = .deferredIntent(intentConfig: intentConfig)
 
-        await _testSetsDefaultPM(intent: pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: false)
-        await _testSetsDefaultPM(intent: deferred_pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: false)
+        await _testSetsDefaultPM(intent: pi_intent, elementsSession: ._testCardValue(), apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: false)
+        await _testSetsDefaultPM(intent: deferred_pi_intent, elementsSession: ._testCardValue(), apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: false)
 
         // Selecting the 'save' checkbox should result in the PM being set as default
         let valid_card_checkbox_selected = PaymentSheet.PaymentOption.new(confirmParams: valid_card_checkbox_selected)
-        let pi_intent_2 = try await Intent.paymentIntent(elementsSession: ._testCardValue(), paymentIntent: makePaymentIntent())
-        await _testSetsDefaultPM(intent: pi_intent_2, apiClient: apiClient, paymentHandler: paymentHandler, paymentOption: valid_card_checkbox_selected, shouldSetDefaultPM: true)
-        await _testSetsDefaultPM(intent: deferred_pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, paymentOption: valid_card_checkbox_selected, shouldSetDefaultPM: true)
+        let pi_intent_2 = try await Intent.paymentIntent(makePaymentIntent())
+        await _testSetsDefaultPM(intent: pi_intent_2, elementsSession: ._testCardValue(), apiClient: apiClient, paymentHandler: paymentHandler, paymentOption: valid_card_checkbox_selected, shouldSetDefaultPM: true)
+        await _testSetsDefaultPM(intent: deferred_pi_intent, elementsSession: ._testCardValue(), apiClient: apiClient, paymentHandler: paymentHandler, paymentOption: valid_card_checkbox_selected, shouldSetDefaultPM: true)
     }
 
     func testSetsNewlySavedPMAsDefault_PaymentIntent_SFU() async throws {
@@ -1102,14 +1115,11 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
 
         // Set up intents
-        let pi_intent = Intent.paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)
-        let deferred_pi_intent: Intent = .deferredIntent(
-            elementsSession: ._testCardValue(),
-            intentConfig: intentConfig
-        )
+        let pi_intent = Intent.paymentIntent(paymentIntent)
+        let deferred_pi_intent: Intent = .deferredIntent(intentConfig: intentConfig)
 
-        await _testSetsDefaultPM(intent: pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
-        await _testSetsDefaultPM(intent: deferred_pi_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
+        await _testSetsDefaultPM(intent: pi_intent, elementsSession: ._testCardValue(), apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
+        await _testSetsDefaultPM(intent: deferred_pi_intent, elementsSession: ._testCardValue(), apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
     }
 
     func testSetsNewlySavedPMAsDefault_SetupIntent() async throws {
@@ -1122,17 +1132,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
 
         // Set up intents
-        let si_intent = Intent.setupIntent(elementsSession: ._testCardValue(), setupIntent: setupIntent)
-        let deferred_si_intent: Intent = .deferredIntent(
-            elementsSession: ._testCardValue(),
-            intentConfig: intentConfig
-        )
+        let si_intent = Intent.setupIntent(setupIntent)
+        let deferred_si_intent: Intent = .deferredIntent(intentConfig: intentConfig)
 
-        await _testSetsDefaultPM(intent: si_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
-        await _testSetsDefaultPM(intent: deferred_si_intent, apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
+        await _testSetsDefaultPM(intent: si_intent, elementsSession: ._testCardValue(), apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
+        await _testSetsDefaultPM(intent: deferred_si_intent, elementsSession: ._testCardValue(), apiClient: apiClient, paymentHandler: paymentHandler, shouldSetDefaultPM: true)
     }
 
-    func _testSetsDefaultPM(intent: Intent, apiClient: STPAPIClient, paymentHandler: STPPaymentHandler, paymentOption: PaymentSheet.PaymentOption? = nil, shouldSetDefaultPM: Bool) async {
+    func _testSetsDefaultPM(intent: Intent, elementsSession: STPElementsSession, apiClient: STPAPIClient, paymentHandler: STPPaymentHandler, paymentOption: PaymentSheet.PaymentOption? = nil, shouldSetDefaultPM: Bool) async {
         let paymentOption = paymentOption ?? PaymentSheet.PaymentOption.new(confirmParams: valid_card_checkbox_deselected)
         var configuration = self.configuration
         configuration.apiClient = apiClient
@@ -1145,8 +1152,10 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: intent,
+            elementsSession: elementsSession,
             paymentOption: paymentOption,
-            paymentHandler: paymentHandler
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue()
         ) { _, deferredConfirmationType in
             // ...should set the newly saved PM as the default
             let defaultPM = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)

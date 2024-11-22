@@ -1,10 +1,81 @@
-## X.Y.Z X-Y-Z
+## 24.0.2 2024-11-21
+### PaymentSheet
+* [Fixed] A bug where PaymentSheet would cause layout issues when nested within certain navigation stacks.
+
+## 24.0.1 2024-11-18
+### PaymentSheet
+* [Added] Instant Bank Payments are now available when using deferred intents.
+* [Fixed] Fixed an issue with the vertical list with 3 or more saved payment methods where tapping outside the screen sometimes drops changes that were made (e.g. removal or update of PMs).
+* [Fixed] Fixed an issue where the dialog when removing a co-branded card may show the incorrect card brand.
+* [Fixed] Fixed issue preventing users to enter in 4 digit account numbers for AU Becs.
+
+## 24.0.0 2024-11-04
+### PaymentSheet
+* [Changed] The default value of `PaymentSheet.Configuration.paymentMethodLayout` has changed from `.horizontal` to `.automatic`. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) for more details.
+* [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+* [Fixed] Fixed an issue with FlowController in vertical layout where the payment method could incorrectly be preserved across a call to `update` when it's no longer valid.
+* [Fixed] Fixed a potential deadlock when `paymentOption` is accessed from Swift concurrency.
+* [Fixed] Fixed deferred intent validation to handle cloned payment methods ([#4195](https://github.com/stripe/stripe-ios/issues/4195)
+
+### Basic Integration
+* [Removed] Basic Integration has been removed. [Please use Mobile Payment Element instead](https://docs.stripe.com/payments/mobile/migrating-to-mobile-payment-element-from-basic-integration).
+
+## 23.32.0 2024-10-21
+### PaymentSheet
+* [Added] Added `PaymentSheet.Configuration.paymentMethodLayout`. Configure the layout of payment methods in the sheet using `paymentMethodLayout` to display them either horizontally, vertically, or let Stripe optimize the layout automatically.
+
+## 23.31.1 2024-10-08
+### PaymentSheet
+* [Fixed] Fixed an issue where ISK was not correctly formatted as a zero-decimal currency when using PaymentSheet or Apple Pay. (Thanks [@Thithip](https://github.com/Thithip)!)
+* [Fixed] Fixed an issue where US Bank Account forms would drop form field input when `FlowController.update` is called.
+
+## 23.31.0 2024-09-23
+### PaymentSheet
+* [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
+* [Added] CVC Recollection is now in GA. For more information see our docs for [here](https://docs.stripe.com/payments/accept-a-payment?platform=ios#ios-cvc-recollection) for intent first integrations or [here](https://docs.stripe.com/payments/accept-a-payment-deferred?platform=ios&type=payment#ios-cvc-recollection) for deferred intent integrations.
+* [Fixed] Fixed an issue where checkboxes were not visible when `appearance.colors.componentBorder` was transparent.
+
+### CardScan
+* [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
+
+## 23.30.0 2024-09-09
+### PaymentSheet
+* [Added] CustomerSessions is now in private beta.
+* [Fixed] PaymentSheet now uses a border width of 1.5 instead of 0 when `PaymentSheet.Appearance.borderWidth' is 0.
+* [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
+
+## 23.29.2 2024-08-19
+### PaymentSheet
+* [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
+* [Fixed] Fixed an issue in SwiftUI where setting `isPresented=false` wouldn't dismiss the sheet.
+
+## 23.29.1 2024-08-12
+### PaymentSheet
+* [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
+* [Fixed] Fixed PaymentSheet.FlowController returning unlocalized labels for certain payment methods e.g. "AfterPay ClearPay" instead of "Afterpay" or "Clearpay" depending on locale.
+* [Added] `PaymentSheet.IntentConfiguration` now validates that its `amount` is non-zero.
+
+### PaymentsUI
+* [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed.
+
+## 23.29.0 2024-08-05
 ### PaymentSheet
 * [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
 * [Added] When a card is saved (ie you're using a PaymentIntent + setup_future_usage or SetupIntent), legal disclaimer text now appears below the form indicating the card can be charged for future payments.
 * [Fixed] iOS 18 Compatibility with removing multiple saved payment methods
 * [Fixed] Fixed an issue where the keyboard could focus on a hidden phone number field.
+* [Added] Support for Sunbit (Private Beta) with PaymentIntents.
+* [Added] Support for Billie (Private Beta) with PaymentIntents.
+* [Fixed] Fixed an issue where saved payment method UI wouldn't respect `PaymentSheet.Configuration.style` when selected.
+* [Added] Support for Satispay (Private Beta) with PaymentIntents.
 
+### Payments
+* [Added] Support for Sunbit (Private Beta) bindings.
+* [Added] Support for Billie (Private Beta) bindings.
+* [Added] Support for Satispay (Private Beta) bindings.
+
+## 23.28.3 2024-09-03
+This release was made in error, and contains changes from 23.29.0, 23.29.1, and 23.29.2.
 
 ## 23.28.1 2024-07-16
 ### Payments
@@ -18,7 +89,7 @@
 * [Added] Adds coupon support to STPApplePayContext with a new `didChangeCouponCode` delegate method (h/t @JoeyLeeMEA).
 * [Fixed] Fixed an issue where successful TWINT payments were sometimes incorrectly considered 'canceled'.
 
-## PaymentSheet
+### PaymentSheet
 * [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
 * [Fixed] Fixed an issue where amounts with currency=IDR were displayed as-is, instead of dropping the last two digits.
 * [Fixed] Fixed an issue where some payment method images in the horizontal scrollview could briefly flash.

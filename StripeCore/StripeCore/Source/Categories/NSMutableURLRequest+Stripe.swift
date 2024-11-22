@@ -31,6 +31,12 @@ extension URLRequest {
             forHTTPHeaderField: "Content-Length"
         )
         setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+
+        #if DEBUG
+        if StripeAPIConfiguration.includeDebugParamsHeader {
+            setValue(URLEncoder.queryString(from: formPayload), forHTTPHeaderField: "X-Stripe-Mock-Request")
+        }
+        #endif
     }
 
     @_spi(STP) public mutating func stp_setMultipartForm(_ data: Data?, boundary: String?) {

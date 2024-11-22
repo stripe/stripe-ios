@@ -18,23 +18,52 @@ protocol PaymentMethodFormViewControllerDelegate: AnyObject {
 class PaymentMethodFormViewController: UIViewController {
     let form: PaymentMethodElement
     let intent: Intent
+    let elementsSession: STPElementsSession
     let paymentMethodType: PaymentSheet.PaymentMethodType
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
+    let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
-        // TODO Copied from AddPaymentMethodViewController but this seems wrong; we shouldn't have a divergent path for link. Where is the setDefaultBillingDetailsIfNecessary call, for example?
-        if let linkEnabledElement = form as? LinkEnabledPaymentMethodElement {
-            return linkEnabledElement.makePaymentOption(intent: intent)
-        }
-
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
+
         if let params = form.updateParams(params: params) {
-            params.setAllowRedisplay(paymentMethodSave: intent.elementsSession.customerSessionPaymentSheetPaymentMethodSave(),
-                                     isSettingUp: intent.isSettingUp)
+            if let linkInlineSignupElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? LinkInlineSignupElement }).first {
+                switch linkInlineSignupElement.action {
+                case .signupAndPay(let account, let phoneNumber, let legalName):
+                    return .link(
+                        option: .signUp(
+                            account: account,
+                            phoneNumber: phoneNumber,
+                            consentAction: linkInlineSignupElement.viewModel.consentAction,
+                            legalName: legalName,
+                            intentConfirmParams: params
+                        )
+                    )
+                case .continueWithoutLink:
+                    return .new(confirmParams: params)
+                case .none:
+                    // Link is optional when in textFieldOnly mode
+                    if linkInlineSignupElement.viewModel.mode != .checkbox {
+                        return .new(confirmParams: params)
+                    }
+                    return nil
+                }
+            }
+
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
+
+            if paymentMethodType.isLinkBankPayment {
+                // We create the final payment method in the bank auth flow, therefore treating
+                // the Link Bank Payment result like a saved payment option.
+                guard let paymentMethod = params.instantDebitsLinkedBank?.paymentMethod.decode() else {
+                    return nil
+                }
+                return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+            }
+
             return .new(confirmParams: params)
         }
         return nil
@@ -48,40 +77,47 @@ class PaymentMethodFormViewController: UIViewController {
     }()
     let headerView: UIView?
 
+    /// This caches forms for payment methods so that customers don't have to re-enter details
+    /// This assumes the form generated for a given PM type _does not change_ at any point after load.
+    let formCache: PaymentMethodFormCache
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(type: PaymentSheet.PaymentMethodType, intent: Intent, previousCustomerInput: IntentConfirmParams?, configuration: PaymentSheet.Configuration, isLinkEnabled: Bool, headerView: UIView?, delegate: PaymentMethodFormViewControllerDelegate) {
+    init(
+        type: PaymentSheet.PaymentMethodType,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        previousCustomerInput: IntentConfirmParams?,
+        formCache: PaymentMethodFormCache,
+        configuration: PaymentElementConfiguration,
+        headerView: UIView?,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        delegate: PaymentMethodFormViewControllerDelegate
+    ) {
         self.paymentMethodType = type
         self.intent = intent
+        self.elementsSession = elementsSession
         self.delegate = delegate
         self.configuration = configuration
         self.headerView = headerView
-        let shouldOfferLinkSignup: Bool = {
-            guard isLinkEnabled && !intent.disableLinkSignup else {
-                return false
-            }
-
-            let isAccountNotRegisteredOrMissing = LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
-            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
-        }()
-
-        // TODO: Inject form cache, make it come from LoadResult, maybe move cache to FormFactory so that shouldDisplayForm checks don't initialize this vc and set the form delegate
-        if let form = Self.formCache[type] {
+        self.formCache = formCache
+        if let form = self.formCache[type] {
             self.form = form
         } else {
             self.form = PaymentSheetFormFactory(
                 intent: intent,
+                elementsSession: elementsSession,
                 configuration: .paymentSheet(configuration),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
-                offerSaveToLinkWhenSupported: shouldOfferLinkSignup,
-                linkAccount: LinkAccountContext.shared.account
+                linkAccount: LinkAccountContext.shared.account,
+                analyticsHelper: analyticsHelper
             ).make()
-            Self.formCache[type] = form
+            self.formCache[type] = form
         }
-
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -92,7 +128,7 @@ class PaymentMethodFormViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetFormShown(paymentMethodTypeIdentifier: paymentMethodType.identifier, apiClient: configuration.apiClient)
+        analyticsHelper.logFormShown(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         sendEventToSubviews(.viewDidAppear, from: view)
         // The form is cached and could have been shared across other instance of PaymentMethodFormViewController after this instance was initialized, so we set the delegate in viewDidAppear to ensure that the form's delegate is up to date.
         form.delegate = self
@@ -133,7 +169,7 @@ extension PaymentMethodFormViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: paymentMethodType.identifier)
+        analyticsHelper.logFormInteracted(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         delegate?.didUpdate(self)
         animateHeightChange()
     }
@@ -149,13 +185,18 @@ extension PaymentMethodFormViewController: PresentingViewControllerDelegate {
 
 // MARK: - Form cache
 
-extension PaymentMethodFormViewController {
-    /// This caches forms for payment methods so that customers don't have to re-enter details
-    /// This class expects the formCache to be invalidated (cleared) when we load PaymentSheet; we assume the form generated for a given PM type _does not change_ at any point after load.
-    static var formCache: [PaymentSheet.PaymentMethodType: PaymentMethodElement] = [:]
+/// This caches forms for payment methods so that customers don't have to re-enter details.
+/// ⚠️ Make sure you invalidate the cache appropriately e.g. changing the Intent should invalidate the cache.
+class PaymentMethodFormCache {
+    private var cache: [PaymentSheet.PaymentMethodType: PaymentMethodElement] = [:]
 
-    static func clearFormCache() {
-        formCache = [:]
+    subscript(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodElement? {
+        get {
+            return cache[paymentMethodType]
+        }
+        set {
+            cache[paymentMethodType] = newValue
+        }
     }
 }
 
@@ -169,12 +210,69 @@ struct OverridePrimaryButtonState {
 extension PaymentMethodFormViewController {
     enum Error: Swift.Error {
         case usBankAccountParamsMissing
-        case instantDebitsDeferredIntentNotSupported
         case instantDebitsParamsMissing
     }
 
     private var usBankAccountFormElement: USBankAccountPaymentMethodElement? { form as? USBankAccountPaymentMethodElement }
     private var instantDebitsFormElement: InstantDebitsPaymentMethodElement? { form as? InstantDebitsPaymentMethodElement }
+
+    private var bankTabEmail: String? {
+        switch paymentMethodType {
+        case .stripe(.USBankAccount):
+            return usBankAccountFormElement?.email
+        case .instantDebits, .linkCardBrand:
+            return instantDebitsFormElement?.email
+        default:
+            return nil
+        }
+    }
+
+    private var bankTabPhoneElement: PhoneNumberElement? {
+        switch paymentMethodType {
+        case .stripe(.USBankAccount):
+            return usBankAccountFormElement?.phoneElement
+        case .instantDebits, .linkCardBrand:
+            return instantDebitsFormElement?.phoneElement
+        default:
+            return nil
+        }
+    }
+
+    private var elementsSessionContext: ElementsSessionContext {
+        let intentId: ElementsSessionContext.IntentID? = {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                return .payment(paymentIntent.stripeId)
+            case .setupIntent(let setupIntent):
+                return .setup(setupIntent.stripeID)
+            case .deferredIntent:
+                return nil
+            }
+        }()
+
+        let defaultPhoneNumber = configuration.defaultBillingDetails.phone
+        let defaultUnformattedPhoneNumber: String? = {
+            guard let defaultPhoneNumber else { return nil }
+            return PhoneNumber.fromE164(defaultPhoneNumber)?.number
+        }()
+        let prefillDetails = ElementsSessionContext.PrefillDetails(
+            email: bankTabEmail ?? configuration.defaultBillingDetails.email,
+            formattedPhoneNumber: bankTabPhoneElement?.phoneNumber?.string(as: .e164) ?? defaultPhoneNumber,
+            unformattedPhoneNumber: bankTabPhoneElement?.phoneNumber?.number ?? defaultUnformattedPhoneNumber,
+            countryCode: bankTabPhoneElement?.selectedCountryCode
+        )
+        let linkMode = elementsSession.linkSettings?.linkMode
+        let billingDetails = instantDebitsFormElement?.billingDetails
+
+        return ElementsSessionContext(
+            amount: intent.amount,
+            currency: intent.currency,
+            prefillDetails: prefillDetails,
+            intentId: intentId,
+            linkMode: linkMode,
+            billingDetails: billingDetails
+        )
+    }
 
     private var shouldOverridePrimaryButton: Bool {
         if paymentMethodType == .stripe(.USBankAccount) {
@@ -183,7 +281,7 @@ extension PaymentMethodFormViewController {
             } else {
                 return true
             }
-        } else if paymentMethodType == .instantDebits {
+        } else if paymentMethodType == .instantDebits || paymentMethodType == .linkCardBrand {
             // only override buy button (show "Continue") IF we don't have a linked bank
             return instantDebitsFormElement?.getLinkedBank() == nil
         }
@@ -193,11 +291,12 @@ extension PaymentMethodFormViewController {
     var overridePrimaryButtonState: OverridePrimaryButtonState? {
         guard shouldOverridePrimaryButton else { return nil }
         let isEnabled: Bool = {
-            if paymentMethodType == .stripe(.USBankAccount) && usBankAccountFormElement?.canLinkAccount ?? false {
-                true
-            } else if paymentMethodType == .instantDebits && instantDebitsFormElement?.enableCTA ?? false {
-                true
-            } else {
+            switch paymentMethodType {
+            case .stripe(let paymentMethod):
+                paymentMethod == .USBankAccount && (usBankAccountFormElement?.canLinkAccount ?? false)
+            case .instantDebits, .linkCardBrand:
+                instantDebitsFormElement?.enableCTA ?? false
+            default:
                 false
             }
         }()
@@ -221,7 +320,7 @@ extension PaymentMethodFormViewController {
         switch paymentMethodType {
         case .stripe(.USBankAccount):
             handleCollectBankAccount(from: viewController)
-        case .instantDebits:
+        case .instantDebits, .linkCardBrand:
             handleCollectInstantDebits(from: viewController)
         default:
             return
@@ -263,7 +362,7 @@ extension PaymentMethodFormViewController {
                 break
             case .completed(let completedResult):
                 if case .financialConnections(let linkedBank) = completedResult {
-                    usBankAccountFormElement.setLinkedBank(linkedBank)
+                    usBankAccountFormElement.linkedBank = linkedBank
                 } else {
                     self.delegate?.updateErrorLabel(for: genericError)
                 }
@@ -275,27 +374,29 @@ extension PaymentMethodFormViewController {
             "hosted_surface": "payment_element",
         ]
         switch intent {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent(_, let setupIntent):
+        case .setupIntent(let setupIntent):
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case let .deferredIntent(elementsSession, intentConfig):
+        case let .deferredIntent(intentConfig):
             let amount: Int?
             let currency: String?
             switch intentConfig.mode {
@@ -314,6 +415,7 @@ extension PaymentMethodFormViewController {
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
@@ -359,39 +461,72 @@ extension PaymentMethodFormViewController {
                 self.delegate?.updateErrorLabel(for: genericError)
             }
         }
-        let additionalParameters: [String: Any] = [
+
+        var additionalParameters: [String: Any] = [
             "product": "instant_debits",
-            "attach_required": true,
             "hosted_surface": "payment_element",
         ]
+
         switch intent {
-        case .paymentIntent(_, let paymentIntent):
+        case .paymentIntent, .setupIntent:
+            additionalParameters["attach_required"] = true
+        case .deferredIntent:
+            break
+        }
+
+        switch intent {
+        case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .setupIntent(_, let setupIntent):
+        case .setupIntent(let setupIntent):
             client.collectBankAccountForSetup(
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .deferredIntent: // not supported
-            let errorAnalytic = ErrorAnalytic(
-                event: .unexpectedPaymentSheetError,
-                error: Error.instantDebitsDeferredIntentNotSupported
+        case .deferredIntent(let intentConfig):
+            let amount: Int?
+            let currency: String?
+            switch intentConfig.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            client.collectBankAccountForDeferredIntent(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: intentConfig.onBehalfOf,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
             )
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
         }
+    }
+}
+
+private extension LinkBankPaymentMethod {
+
+    func decode() -> STPPaymentMethod? {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: allResponseFields)
     }
 }

@@ -21,6 +21,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
     var apiClient: STPAPIClient!
 
     override func setUp() {
+        strictParamsEnforcement = false
         super.setUp()
         apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     }
@@ -175,7 +176,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             consumerAccountPublishableKey: sessionWithKey?.publishableKey
         ) { result in
             switch result {
-            case .success(let createdPaymentDetails):
+            case .success:
                 // If this succeeds, log out...
                 consumerSession.logout(with: self.apiClient, consumerAccountPublishableKey: sessionWithKey?.publishableKey) { logoutResult in
                     switch logoutResult {
@@ -183,7 +184,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
                         // Try to use the session again, it shouldn't work
                         consumerSession.createPaymentDetails(paymentMethodParams: paymentMethodParams, with: self.apiClient, consumerAccountPublishableKey: sessionWithKey?.publishableKey) { loggedOutAuthenticatedActionResult in
                             switch loggedOutAuthenticatedActionResult {
-                            case .success(let success):
+                            case .success:
                                 XCTFail("Logout failed to invalidate token")
                             case .failure(let error):
 

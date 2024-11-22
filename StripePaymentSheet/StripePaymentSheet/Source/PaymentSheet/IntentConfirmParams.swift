@@ -13,7 +13,7 @@ import UIKit
 
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
 /// - Note: Assumes you're confirming with a new payment method, unless a payment method ID is provided
-class IntentConfirmParams {
+final class IntentConfirmParams {
     /// An enum for the three possible states of the e.g. "Save this card for future payments" checkbox
     enum SaveForFutureUseCheckboxState {
         /// The checkbox wasn't displayed
@@ -69,6 +69,9 @@ class IntentConfirmParams {
         case .instantDebits:
             let params = STPPaymentMethodParams(type: .link)
             self.init(params: params, type: type)
+        case .linkCardBrand:
+            let params = STPPaymentMethodParams(type: .card)
+            self.init(params: params, type: type)
         }
     }
 
@@ -80,7 +83,7 @@ class IntentConfirmParams {
 
     /// Applies the values of `Configuration.defaultBillingDetails` to this IntentConfirmParams if `attachDefaultsToPaymentMethod` is true.
     /// - Note: This overwrites `paymentMethodParams.billingDetails`.
-    func setDefaultBillingDetailsIfNecessary(for configuration: PaymentSheet.Configuration) {
+    func setDefaultBillingDetailsIfNecessary(for configuration: PaymentElementConfiguration) {
         setDefaultBillingDetailsIfNecessary(defaultBillingDetails: configuration.defaultBillingDetails, billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration)
     }
 
@@ -107,13 +110,15 @@ class IntentConfirmParams {
             paymentMethodParams.nonnil_billingDetails.address = STPPaymentMethodAddress(address: defaultBillingDetails.address)
         }
     }
-    func setAllowRedisplay(paymentMethodSave: Bool?,
+    func setAllowRedisplay(mobilePaymentElementFeatures: MobilePaymentElementComponentFeature?,
                            isSettingUp: Bool) {
-        guard let paymentMethodSave else {
+        guard let mobilePaymentElementFeatures else {
             // Legacy Ephemeral Key
             paymentMethodParams.allowRedisplay = .unspecified
             return
         }
+        let paymentMethodSave = mobilePaymentElementFeatures.paymentMethodSave
+        let allowRedisplayOverride = mobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
 
         // Customer Session is enabled
         if paymentMethodSave {
@@ -131,15 +136,12 @@ class IntentConfirmParams {
                 }
             }
         } else {
+            stpAssert(saveForFutureUseCheckboxState == .hidden, "Checkbox should be hidden")
             if isSettingUp {
-                // Checkbox is hidden
-                paymentMethodParams.allowRedisplay = .limited
+                paymentMethodParams.allowRedisplay = allowRedisplayOverride ?? .limited
             } else {
-                if saveForFutureUseCheckboxState == .selected {
-                    paymentMethodParams.allowRedisplay = .always
-                } else if saveForFutureUseCheckboxState == .deselected {
-                    paymentMethodParams.allowRedisplay = .unspecified
-                }
+                // PaymentMethod won't be attached to customer
+                paymentMethodParams.allowRedisplay = .unspecified
             }
         }
     }

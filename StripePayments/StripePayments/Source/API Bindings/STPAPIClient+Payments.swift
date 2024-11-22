@@ -826,7 +826,6 @@ extension STPAPIClient {
         ) { paymentMethod, _, error in
             completion(paymentMethod, error)
         }
-
     }
 
     /// Creates a PaymentMethod object with the provided params object.
@@ -920,7 +919,7 @@ extension STPAPIClient {
         )
 
         var params = [
-            "app": String(data: appData ?? Data(), encoding: .utf8) ?? "",
+            "app": String(decoding: appData ?? Data(), as: UTF8.self),
             "source": sourceID,
         ]
         if let returnURLString = returnURLString {
@@ -1145,7 +1144,8 @@ extension STPAPIClient {
                         shared_lastError = error
                     }
                     if let paymentMethods = deserializer?.paymentMethods {
-                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
+                        // For unknown reasons, `append(contentsOf:` here sometimes causes an EXC_BAD_INSTRUCTION if you repeatedly run tests
+                        paymentMethods.forEach { shared_allPaymentMethods.append($0) }
                     }
                     group.leave()
                 }
@@ -1248,7 +1248,7 @@ extension STPAPIClient {
         customerId: String,
         fromCustomerUsing ephemeralKeySecret: String
     ) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             detachPaymentMethodRemoveDuplicates(paymentMethodID,
                                                 customerId: customerId,
                                                 fromCustomerUsing: ephemeralKeySecret) { error in
@@ -1281,7 +1281,7 @@ extension STPAPIClient {
         _ paymentMethodID: String,
         fromCustomerUsing ephemeralKeySecret: String
     ) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             detachPaymentMethod(paymentMethodID, fromCustomerUsing: ephemeralKeySecret) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
@@ -1315,7 +1315,7 @@ extension STPAPIClient {
         _ paymentMethodID: String,
         customerID: String,
         ephemeralKeySecret: String) async throws {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 attachPaymentMethod(paymentMethodID, customerID: customerID, ephemeralKeySecret: ephemeralKeySecret) { error in
                     if let error = error {
                         continuation.resume(throwing: error)

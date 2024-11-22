@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li %2$@ bezprocentu maksājumi";
-
 "+ Add" = "+ Pievienot";
 
 "Add US bank account" = "Pievienot ASV bankas kontu";
@@ -9,6 +7,8 @@
 "Add a card" = "Pievienot karti";
 
 "Add a payment method" = "Pievienot maksājuma veidu";
+
+"Add bank account" = "Pievienot bankas kontu";
 
 "Add card" = "Pievienot karti";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "Apstiprināt maksājumu";
 
+"Are you sure you want to remove this card?" = "Vai tiešām vēlaties noņemt šo karti?";
+
+"Are you sure you want to remove this linked account?" = "Vai tiešām vēlaties noņemt šo saistīto kontu?";
+
 "Back" = "Atpakaļ";
 
+"Bank" = "Banka";
+
 "Bank account" = "Bankas konts";
+
+"Buy now or pay later with <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
+
+"Buy now or pay later with Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Afterpay";
+
+"Buy now or pay later with Clearpay" = "Pērciet tagad vai maksājiet vēlāk ar Clearpay";
 
 "Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Sniedzot savu bankas konta informāciju un apstiprinot šo maksājumu, jūs piekrītat šim tiešā debeta pieprasījumam un <terms>tiešā debeta pieprasīšanas pakalpojumu sniegšanas līgumam</terms>, kā arī pilnvarojat uzņēmumu Stripe Payments Australia Pty Ltd ACN 160 180 343, tiešā debeta lietotāja ID numurs 507156 (turpmāk – „Stripe”) izmantot lielapjoma elektronisko klīringa sistēmu (BECS), lai uzņēmuma %@ (turpmāk – „Tirgotājs”) vārdā debitētu jūsu kontu par jebkādām summām, par kurām Tirgotājs jums ir atsevišķi ziņojis. Jūs apliecināt, ka esat vai nu iepriekš minētā konta turētājs, vai tā pilnvarota persona ar paraksta tiesībām.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Norādot savas kartes informāciju, jūs atļaujat uzņēmumam %@ saskaņā ar viņu noteikumiem iekasēt no jūsu kartes turpmākus maksājumus.";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu e-pastu, es piekrītu izveidot Link kontu un saglabāt savu maksājuma informāciju Link, ievērojot Link <terms>noteikumus</terms> un <privacy>Konfidencialitātes politiku</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Norādot savu maksājuma informāciju un apstiprinot šo maksājumu, jūs pilnvarojat A) %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma noteikumiem un nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa astoņu nedēļu laikā, sākot no jūsu konta debetēšanas datuma. Jūsu tiesības ir paskaidrotas paziņojumā, kuru varat saņemt savā bankā. Jūs piekrītat saņemt paziņojumus par turpmākajiem debeta darījumiem vismaz divas dienas pirms to veikšanas.";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "Atcelt vai maksāt citā veidā";
 
+"Change email" = "Mainīt e-pastu";
+
 "Choose a payment method" = "Izvēlēties maksājuma veidu";
 
 "Close card scanner" = "Aizvērt kartes skeneri";
+
+"Code sent" = "Kods nosūtīts";
 
 "Confirm" = "Apstiprināt";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "Apstiprināt CVC";
 
-"Confirm your CVV" = "Apstiprināt CVV";
-
 "Contact information" = "Kontaktinformācija";
+
+"Default" = "Noklusējuma";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Ievadiet kodu, kas nosūtīts %@, lai izmantotu Link maksāšanai pēc noklusējuma.";
+
+"Enter your verification code" = "Ievadiet savu verifikācijas kodu";
+
 "FPX Bank" = "FPX banka";
+
+"For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Es saprotu, ka Stripe iekasēs tiešā debeta maksājumus %@ vārdā, un apstiprinu, ka esmu konta turētājs un vienīgā persona, kurai ir jāautorizē debeti no šī konta.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Pievienoties Link";
+
+"Log out of Link" = "Izrakstīties no Link";
 
 "Manage payment method" = "Pārvaldīt maksājuma veidu";
 
@@ -93,6 +123,8 @@
 "New card" = "Jauna karte";
 
 "New payment method" = "Jauns maksājumu veids";
+
+"Not %@?" = "Ne %@?";
 
 "Open your UPI app to approve your payment within %@" = "Atveriet UPI lietotni, lai apstiprinātu savu maksājumu %@";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "Maksājiet ātrāk %@ un tūkstošiem citos uzņēmumos.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksāt ar <num_installments/> bezprocentu maksājumiem <installment_price/> ar <img/>";
-
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
+
+"Pay over time with Affirm" = "Maksājiet pakāpeniski ar Affirm";
 
 "Pay with Link" = "Maksāt ar Link";
 
 "Pay with your bank account in just a few steps." = "Maksājiet ar savu bankas kontu, izpildot tikai dažus soļus";
 
+"Payment" = "Maksājums";
+
 "Payment failed" = "Maksājums neizdevās";
+
+"Payment methods" = "Maksājuma veidi";
 
 "Please go back and select another payment method" = "Lūdzu, atgriezieties un atlasiet citu maksājuma veidu.";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "Noņemt karti?";
 
+"Remove linked account" = "Noņemt piesaistītu kontu";
+
 "Remove payment method" = "Noņemt maksājumu veidu";
+
+"Resend code" = "Nosūtīt kodu vēlreiz";
 
 "Save" = "Saglabāt";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "Saglabāt nākotnes maksājumiem";
 
-"Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
+"Save payment details to %@ for future purchases" = "Saglabāt maksājuma informāciju %@ turpmākiem pirkumiem";
 
-"Save this card for future %@ payments" = "Saglabāt šo karti %@ maksājumiem nākotnē";
+"Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
 
 "Save your bank account in just a few steps." = "Saglabājiet savu bankas kontu, izpildot tikai dažus soļus.";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "Saglabāts";
 
+"Secure 1⁠-⁠click checkout" = "Droša 1 klikšķa norēķināšanās";
+
 "Select card" = "Atlasīt karti";
 
 "Select payment method" = "Atlasīt maksājuma veidu";
 
 "Select your payment method" = "Izvēlēties savu maksājuma veidu";
+
+"Set as default" = "Iestatīt kā noklusējumu";
+
+"Set as default payment method" = "Iestatīt kā noklusējuma maksājuma veidu";
 
 "Set up" = "Iestatīt";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "Rādīt izvēlni";
 
+"Sign in to your Link account" = "Pierakstīties Link kontā";
+
 "Simple, secure one-click payments" = "Vienkārši, droši 1 klikšķa maksājumi";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Savienojot jūsu kontu, radās problēma.\nLūdzu, vēlāk mēģiniet vēlreiz.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe uz jūsu kontu 1–2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt bankas konta saglabāšanu ar %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe uz jūsu kontu 1-2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt maksājumu ar %@.";
 
+"Tap to close" = "Pieskarieties, lai aizvērtu";
+
+"Tap to expand" = "Pieskarieties, lai izvērstu";
+
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 
-"Update" = "Atjaunināt";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, „%@” nav atbalstīts valsts kods.";
+
+"The provided verification code has expired." = "Norādītajam verifikācijas kodam ir beidzies derīguma termiņš.";
+
+"The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Šai kartei ir beidzies derīguma termiņš. Atjauniniet savu kartes informāciju vai izmantojiet citu maksājuma veidu.";
+
+"This is your default" = "Tas ir jūsu noklusējums";
+
+"Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
+
+"Unavailable for this purchase" = "Nav pieejams šim pirkumam";
+
+"Update card" = "Atjaunināt karti";
 
 "Update card brand" = "Atjaunināt kartes zīmolu";
+
+"Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
 
 "View more" = "Skatīt vairāk";
 

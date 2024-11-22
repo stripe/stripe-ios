@@ -12,8 +12,6 @@
 
 "Bancontact" = "„Bancontact“";
 
-"Bank" = "Bankas";
-
 "Boleto" = "Boleto";
 
 "Card" = "Kortelė";
@@ -52,7 +50,7 @@
 
 "UPI" = "UPI";
 
-"US Bank Account" = "JAV banko sąskaita";
+"US bank account" = "JAV banko sąskaita";
 
 "Unknown" = "Nežinoma";
 

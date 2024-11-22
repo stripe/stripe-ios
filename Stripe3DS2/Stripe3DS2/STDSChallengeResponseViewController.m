@@ -28,6 +28,7 @@
 #import "UIButton+CustomInitialization.h"
 #import "UIFont+DefaultFonts.h"
 #import "UIViewController+Stripe3DS2.h"
+#import "include/STDSAnalyticsDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) id<STDSChallengeResponse> response;
 @property (nonatomic) STDSDirectoryServer directoryServer;
+@property (weak, nonatomic) id<STDSAnalyticsDelegate>analyticsDelegate;
 /// Used to track how long we've been showing a loading spinner.  Nil if we are not showing a spinner.
 @property (nonatomic, strong, nullable) NSDate *loadingStartDate;
 @property (nonatomic, strong, nullable) STDSUICustomization *uiCustomization;
@@ -67,7 +69,10 @@ static const CGFloat kExpandableContentViewTopPadding = 28;
 
 static NSString * const kHTMLStringLoadingURL = @"about:blank";
 
-- (instancetype)initWithUICustomization:(STDSUICustomization * _Nullable)uiCustomization imageLoader:(STDSImageLoader *)imageLoader directoryServer:(STDSDirectoryServer)directoryServer {
+- (instancetype)initWithUICustomization:(STDSUICustomization * _Nullable)uiCustomization 
+                            imageLoader:(STDSImageLoader *)imageLoader
+                        directoryServer:(STDSDirectoryServer)directoryServer
+                      analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate {
     self = [super initWithNibName:nil bundle:nil];
     
     if (self) {
@@ -75,6 +80,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         _imageLoader = imageLoader;
         _tapOutsideKeyboardGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_didTapOutsideKeyboard:)];
         _directoryServer = directoryServer;
+        _analyticsDelegate = analyticsDelegate;
     }
     
     return self;
@@ -88,6 +94,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 
     NSString *imageName = STDSDirectoryServerImageName(self.directoryServer);
     UIImage *dsImage = imageName ? [UIImage imageNamed:imageName inBundle:[STDSBundleLocator stdsResourcesBundle] compatibleWithTraitCollection:nil] : nil;
@@ -150,6 +157,8 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         return;
     }
     
+    self.navigationItem.rightBarButtonItem.enabled = !isLoading;
+
     /* According to the specs [0], this should be set to NO during AReq/Ares and YES during CReq/CRes.
      However, according to UL test feedback [1], the AReq/ARes and initial CReq/CRes processing views should be identical.
 
@@ -505,11 +514,25 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
 
+- (void)_applicationDidEnterBackground {
+    if (self.response.acsUIType == STDSACSUITypeOOB) {
+        [self.analyticsDelegate OOBDidEnterBackground:self.response.threeDSServerTransactionID];
+    }
+}
+
 - (void)_applicationWillEnterForeground:(NSNotification *)notification {
-    if (self.response.acsUIType == STDSACSUITypeOOB && self.response.challengeAdditionalInfoText) {
-        // [Req 316] When Challenge Additional Information Text is present, the SDK would replace the Challenge Information Text and Challenge Information Text Indicator with the Challenge Additional Information Text when the 3DS Requestor App is moved to the foreground.
-        self.challengeInformationView.challengeInformationText = self.response.challengeAdditionalInfoText;
-        self.challengeInformationView.textIndicatorImage = nil;
+    if (self.response.acsUIType == STDSACSUITypeOOB) {
+        
+        [self.analyticsDelegate OOBWillEnterForeground:self.response.threeDSServerTransactionID];
+        
+        if (self.response.challengeAdditionalInfoText) {
+            // [Req 316] When Challenge Additional Information Text is present, the SDK would replace the Challenge Information Text and Challenge Information Text Indicator with the Challenge Additional Information Text when the 3DS Requestor App is moved to the foreground.
+            self.challengeInformationView.challengeInformationText = self.response.challengeAdditionalInfoText;
+            self.challengeInformationView.textIndicatorImage = nil;
+        }
+
+        // [REQ 70]
+        [self submit:self.response.acsUIType];
     } else if (self.response.acsUIType == STDSACSUITypeHTML && self.response.acsHTMLRefresh) {
         // [Req 317] When the ACS HTML Refresh element is present, the SDK replaces the ACS HTML with the contents of ACS HTML Refresh when the 3DS Requestor App is moved to the foreground.
         [self.webView loadExternalResourceBlockingHTMLString:self.response.acsHTMLRefresh];
@@ -526,6 +549,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
 - (void)_cancelButtonTapped:(UIButton *)sender {
     [self.textChallengeView endEditing:NO];
     [self.delegate challengeResponseViewControllerDidCancel:self];
+    [self.analyticsDelegate cancelButtonTappedWithTransactionID:self.response.threeDSServerTransactionID];
 }
 
 - (void)_resendButtonTapped:(UIButton *)sender {
@@ -533,15 +557,18 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [self.delegate challengeResponseViewControllerDidRequestResend:self];
 }
 
-- (void)_actionButtonTapped:(UIButton *)sender {
+- (void)submit:(STDSACSUIType)type {
     [self.textChallengeView endEditing:NO];
-    switch (self.response.acsUIType) {
+
+    switch (type) {
         case STDSACSUITypeNone:
             break;
         case STDSACSUITypeText: {
             [self.delegate challengeResponseViewController:self
                                             didSubmitInput:self.textChallengeView.inputText
                                         whitelistSelection:self.whitelistView.selectedResponse];
+            
+            [self.analyticsDelegate OTPSubmitButtonTappedWithTransactionID:self.response.threeDSServerTransactionID];
             break;
         }
         case STDSACSUITypeSingleSelect:
@@ -554,11 +581,16 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         case STDSACSUITypeOOB:
             [self.delegate challengeResponseViewControllerDidOOBContinue:self
                                                       whitelistSelection:self.whitelistView.selectedResponse];
+            [self.analyticsDelegate OOBContinueButtonTappedWithTransactionID:self.response.threeDSServerTransactionID];
             break;
         case STDSACSUITypeHTML:
             // No action button in this case, see WKNavigationDelegate.
             break;
     }
+}
+
+- (void)_actionButtonTapped:(UIButton *)sender {
+    [self submit:self.response.acsUIType];
 }
 
 #pragma mark - WKNavigationDelegate
@@ -570,7 +602,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     if ([request.URL.absoluteString isEqualToString:kHTMLStringLoadingURL]) {
         return decisionHandler(WKNavigationActionPolicyAllow);
     } else {
-        if (navigationAction.navigationType == WKNavigationTypeFormSubmitted || navigationAction.navigationType == WKNavigationTypeOther) {
+        if (navigationAction.navigationType == WKNavigationTypeFormSubmitted || navigationAction.navigationType == WKNavigationTypeLinkActivated || navigationAction.navigationType == WKNavigationTypeOther) {
             // When the Cardholder’s response is returned as a parameter string, the form data is passed to the web view instance by triggering a location change to a specified (HTTPS://EMV3DS/challenge) URL with the challenge responses appended to the location URL as query parameters (for example, HTTPS://EMV3DS/challenge?city=Pittsburgh). The web view instance, because it monitors URL changes, receives the Cardholder’s responses as query parameters.
             [self.delegate challengeResponseViewController:self didSubmitHTMLForm:request.URL.query];
         }

@@ -20,6 +20,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        elementsSessionContext: ElementsSessionContext?,
         onEvent: ((StripeCore.FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
@@ -29,6 +30,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
             returnURL: returnURL
         )
         financialConnectionsSheet.apiClient = apiClient
+        financialConnectionsSheet.elementsSessionContext = elementsSessionContext
         financialConnectionsSheet.onEvent = onEvent
         // Captures self explicitly until the callback is invoked
         financialConnectionsSheet.present(
@@ -79,8 +81,8 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
     ) -> FinancialConnectionsLinkedBank? {
         switch paymentAccount {
         case .linkedAccount(let linkedAccount):
-            return FinancialConnectionsLinkedBankImplementation(
-                with: session.id,
+            return FinancialConnectionsLinkedBank(
+                sessionId: session.id,
                 accountId: linkedAccount.id,
                 displayName: linkedAccount.displayName,
                 bankName: linkedAccount.institutionName,
@@ -88,8 +90,8 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                 instantlyVerified: true
             )
         case .bankAccount(let bankAccount):
-            return FinancialConnectionsLinkedBankImplementation(
-                with: session.id,
+            return FinancialConnectionsLinkedBank(
+                sessionId: session.id,
                 accountId: bankAccount.id,
                 displayName: bankAccount.bankName,
                 bankName: bankAccount.bankName,

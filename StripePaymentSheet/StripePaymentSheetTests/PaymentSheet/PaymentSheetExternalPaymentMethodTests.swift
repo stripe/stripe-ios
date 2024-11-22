@@ -28,7 +28,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             completion(.completed)
         })
 
-        let intent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
         }))
 
@@ -43,8 +43,10 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: intent,
+            elementsSession: ._testCardValue(),
             paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: .init()),
-            paymentHandler: .shared()
+            paymentHandler: .shared(),
+            analyticsHelper: ._testValue()
         ) { result, analyticsConfirmType in
             e.fulfill()
             guard case .completed = result else {
@@ -78,7 +80,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
-        let intent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
         }))
 
@@ -103,8 +105,10 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: intent,
+            elementsSession: ._testCardValue(),
             paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: intentConfirmParams.paymentMethodParams.nonnil_billingDetails),
-            paymentHandler: .shared()
+            paymentHandler: .shared(),
+            analyticsHelper: ._testValue()
         ) { _, _ in }
         await fulfillment(of: [externalConfirmHandlerCalled], timeout: 5)
     }
@@ -118,15 +122,17 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
                 // The merchant's returned result should be passed back in `PaymentSheet.confirm`
                 completion(merchantReturnedResult)
             })
-            let intent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
                 XCTFail("Intent confirm handler shouldn't be called")
             }))
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: self,
                 intent: intent,
+                elementsSession: ._testCardValue(),
                 paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: .init()),
-                paymentHandler: .shared()
+                paymentHandler: .shared(),
+                analyticsHelper: ._testValue()
             ) { result, analyticsConfirmType in
                 e.fulfill()
                 XCTAssertEqual(analyticsConfirmType, nil)
@@ -152,7 +158,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
     }
 
     func makeForm(intent: Intent, configuration: PaymentSheet.Configuration) -> PaymentMethodElement {
-        let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: .external(._testPayPalValue()))
+        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testCardValue(), configuration: .paymentSheet(configuration), paymentMethod: .external(._testPayPalValue()))
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view) // This gets rid of distracting autolayout warnings in the logs

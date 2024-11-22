@@ -417,8 +417,10 @@ extension PaymentSheetFormFactorySnapshotTest {
         for paymentMethodType: STPPaymentMethodType,
         configuration: PaymentSheet.Configuration
     ) -> PaymentSheetFormFactory {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [paymentMethodType])
         return PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]),
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(paymentMethodType)
         )

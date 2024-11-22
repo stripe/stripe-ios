@@ -131,16 +131,9 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
 
-        let manuallyVerifyLabel = app
-            .otherElements["consent_manually_verify_label"]
-            .links
-            .firstMatch
-        XCTAssertTrue(manuallyVerifyLabel.waitForExistence(timeout: 10.0))
-        manuallyVerifyLabel.tap()
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
 
-        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
-        XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
-        testModeAutofillButton.tap()
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
 
         app.fc_nativeSuccessDoneButton.tap()
 
@@ -403,16 +396,258 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_playgroundCell.tap()
         app.fc_playgroundShowAuthFlowButton.tap()
 
-        let usesLinkText = app.webViews
-            .staticTexts
-            .containing(NSPredicate(format: "label CONTAINS 'uses Link to connect your account'"))
+        let authFlowWebViewUrl = app
+            .otherElements["TopBrowserBar"]
+            .otherElements
+            .containing(NSPredicate(format: "value CONTAINS 'auth.stripe.com'"))
             .firstMatch
-        XCTAssertTrue(usesLinkText.waitForExistence(timeout: 120.0))  // glitch app can take time to load
+        XCTAssertTrue(authFlowWebViewUrl.waitForExistence(timeout: 120.0)) // glitch app can take time to load
 
         app.fc_secureWebViewCancelButton.tap()
 
         let playgroundCancelAlert = app.alerts["Cancelled"]
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
+    }
+
+    func testNativeOnEventClosureEvents() throws {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        app.fc_nativeBackButton().waitForExistenceAndTap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'events=open,manual_entry_initiated,consent_acquired,institution_selected,institution_authorized,accounts_selected,success'")).firstMatch
+                .exists
+        )
+    }
+
+    func testNativeCustomManualEntryHandoff() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":false,"merchant":"platform_c","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        let searchBarTextField = app.fc_searchBarTextField
+        searchBarTextField.waitForExistenceAndTap()
+        searchBarTextField.typeText("show_no_results")
+
+        app.otherElements["institution_search_no_results_subtitle"].links.firstMatch.waitForExistenceAndTap()
+
+        // ...manual entry screen will be skipped...
+
+        let failedAlert = app.alerts["Failed"]
+        XCTAssertTrue(failedAlert.waitForExistence(timeout: 60))
+        XCTAssert(
+            failedAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS 'FinancialConnectionsCustomManualEntryRequiredError'")).firstMatch
+                .exists
+        )
+    }
+
+    func testNativeSkipSuccessPane() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"platform_c","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        let notNowButton = app.buttons["Not now"]
+        XCTAssert(notNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
+        app.fc_dismissKeyboard()
+        notNowButton.waitForExistenceAndTap() // skip networking sign up
+
+        // ...the success pane will be skipped...
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
+
+    func testNativeConnectMerchantForDataUseCase() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"data","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"connect","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+
+        XCTAssert(app.fc_nativeNetworkingNotNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
+        app.fc_dismissKeyboard()
+        app.fc_nativeNetworkingNotNowButton.waitForExistenceAndTap() // skip networking sign up
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
+
+    func testNativeConnectMerchantForPaymentUseCase() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"connect","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+
+        XCTAssert(app.fc_nativeNetworkingNotNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
+        app.fc_dismissKeyboard()
+        app.fc_nativeNetworkingNotNowButton.waitForExistenceAndTap() // skip networking sign up
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
+
+    func testNativeConnectMerchantForPaymentManualEntryUseCase() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"connect","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeManuallyVerifyLabel.waitForExistenceAndTap()
+
+        app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
+
+        // the not now button could appear if networking manual entry is enabled
+        if app.fc_nativeNetworkingNotNowButton.waitForExistence(timeout: 5) {
+            app.fc_dismissKeyboard()
+            app.fc_nativeNetworkingNotNowButton.waitForExistenceAndTap() // skip networking sign up
+        }
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        XCTAssert(app.fc_playgroundSuccessAlertView.exists)
+    }
+
+    func testNativeConnectMerchantForTokenCase() {
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"token","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"connect","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+
+        XCTAssert(app.fc_nativeNetworkingNotNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
+        app.fc_dismissKeyboard()
+        app.fc_nativeNetworkingNotNowButton.waitForExistenceAndTap() // skip networking sign up
+
+        app.fc_nativeSuccessDoneButton.tap()
+
+        // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
+    }
+
+    // this tests going through "ResetFlowViewController"
+    func testNativeResetFlowWithErrorToSuccess() throws {
+        throw XCTSkip("Skipping this test case until we edit this institution's name")
+
+        let app = XCUIApplication.fc_launch(
+            playgroundConfigurationString:
+"""
+{"use_case":"payment_intent","experience":"financial_connections","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
+"""
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
+
+        app.fc_scrollDown()
+
+        app.fc_nativeFeaturedInstitution(name: "Down Bank (Unscheduled)").waitForExistenceAndTap()
+
+        // selecting another bank will activate "reset flow"
+        app.buttons["select_another_bank_button"].waitForExistenceAndTap()
+
+        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+
+        app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
+
+        app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
+
+        XCTAssert(
+            app.fc_playgroundSuccessAlertView.staticTexts.containing(NSPredicate(format: "label CONTAINS 'StripeBank'")).firstMatch
+                .exists
+        )
     }
 }
 

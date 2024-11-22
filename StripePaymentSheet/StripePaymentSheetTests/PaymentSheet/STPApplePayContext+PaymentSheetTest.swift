@@ -6,8 +6,9 @@
 //
 
 @testable import StripeApplePay
-@testable import StripePaymentSheet
+@_spi(CardBrandFilteringBeta) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
+@_spi(STP) import StripeCore
 import XCTest
 
 final class STPApplePayContext_PaymentSheetTest: XCTestCase {
@@ -21,7 +22,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_PaymentIntent() {
         let intent = Intent._testValue()
-        let deferredIntent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -39,7 +40,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_PaymentIntentWithSetupFutureUsage() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession)
-        let deferredIntent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession), confirmHandler: dummyDeferredConfirmHandler))
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -56,8 +57,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_SetupIntent() {
-        let intent = Intent.setupIntent(elementsSession: ._testCardValue(), setupIntent: STPFixtures.setupIntent())
-        let deferredIntent = Intent.deferredIntent(elementsSession: ._testCardValue(), intentConfig: .init(mode: .setup(currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        let intent = Intent.setupIntent(STPFixtures.setupIntent())
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .setup(currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
             let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, .zero)
@@ -70,6 +71,63 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
                 XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
             }
 #endif
+        }
+    }
+    
+    func testCreatePaymentRequest_brandAcceptance_all() {
+        var configuration = configuration
+        configuration.cardBrandAcceptance = .all
+        let intent = Intent._testValue()
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        for intent in [intent, deferredIntent] {
+            let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+            XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
+            XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+            XCTAssertEqual(sut.currencyCode, "USD")
+            XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+            XCTAssertEqual(sut.countryCode, "GB")
+            XCTAssertEqual(sut.supportedNetworks, StripeAPI.supportedPKPaymentNetworks())
+            if #available(macOS 14.0, iOS 17.0, *) {
+                XCTAssertEqual(sut.applePayLaterAvailability, .available)
+            }
+            }
+        }
+
+    func testCreatePaymentRequest_brandAcceptance_disallowedBrands() {
+        var configuration = configuration
+        configuration.cardBrandAcceptance = .disallowed(brands: [.amex, .visa])
+        let intent = Intent._testValue()
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        for intent in [intent, deferredIntent] {
+            let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+            XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
+            XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+            XCTAssertEqual(sut.currencyCode, "USD")
+            XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+            XCTAssertEqual(sut.countryCode, "GB")
+            XCTAssertEqual(sut.supportedNetworks, [.masterCard, .maestro, .discover])
+            if #available(macOS 14.0, iOS 17.0, *) {
+                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
+            }
+            }
+        }
+
+    func testCreatePaymentRequest_brandAcceptance_allowedBrands() {
+        var configuration = configuration
+        configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        let intent = Intent._testValue()
+        let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
+        for intent in [intent, deferredIntent] {
+            let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+            XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
+            XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+            XCTAssertEqual(sut.currencyCode, "USD")
+            XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+            XCTAssertEqual(sut.countryCode, "GB")
+            XCTAssertEqual(sut.supportedNetworks, [.visa])
+            if #available(macOS 14.0, iOS 17.0, *) {
+                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
+            }
         }
     }
 }

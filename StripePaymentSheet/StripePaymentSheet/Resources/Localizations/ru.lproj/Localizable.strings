@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li беспроцентных платежей по %2$@";
-
 "+ Add" = "+ Добавить";
 
 "Add US bank account" = "Добавить банковский счет в США";
@@ -9,6 +7,8 @@
 "Add a card" = "Добавьте карту";
 
 "Add a payment method" = "Добавьте способ оплаты";
+
+"Add bank account" = "Добавить банковский счет";
 
 "Add card" = "Добавить карту";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "Подтвердить платеж";
 
+"Are you sure you want to remove this card?" = "Вы уверены, что хотите удалить эту карту?";
+
+"Are you sure you want to remove this linked account?" = "Вы уверены, что хотите удалить этот привязанный счет?";
+
 "Back" = "Назад";
 
+"Bank" = "Банк";
+
 "Bank account" = "Банковский счет";
+
+"Buy now or pay later with <img/>" = "Купить сейчас или оплатить позже через систему <img/>";
+
+"Buy now or pay later with Afterpay" = "Купите сейчас или оплатите позже через систему Afterpay";
+
+"Buy now or pay later with Clearpay" = "Купите сейчас или оплатите позже через систему Clearpay";
 
 "Buy now or pay later with Klarna" = "Купите сейчас или оплатите позже через систему Klarna";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Указывая свои банковские реквизиты и подтверждая платеж, вы принимаете данный запрос на прямое списание средств и <terms>Сервисное соглашение о запросе на прямое списание средств</terms>, а также уполномочиваете компанию Stripe Payments Australia Pty Ltd ACN 160 180 343, идентификационный номер пользователя системы прямого списания средств 507156, (“Stripe”), снимать средства с вашего счета через систему Bulk Electronic Clearing System (BECS) от имени %@ (далее \"Продавец\") на суммы, отдельно указанные вам Продавцом. Вы подтверждаете, что являетесь владельцем указанного выше счета либо лицом с правом подписи по этому счету.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Указывая реквизиты карты, вы разрешаете компании %@ списывать средства с карты в рамках будущих платежей в соответствии с условиями компании.";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой электронный адрес, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Указав свои платежные данные и подтвердив платеж, вы уполномочиваете (A) %@ и Stripe, нашего поставщика платежных услуг, на отправку вашему банку инструкций на списание средств с вашего счета и (B) ваш банк на списание средств с вашего счета согласно данным инструкциям. Вы имеете право на возврат средств от вашего банка согласно положениям и условиям Вашего соглашения с банком. Подать заявку на возврат средств следует в течение 8 недель с даты списания средств с вашего счета. Ваши права объясняются в выписке, которую вы можете получить в своем банке. Вы даете согласие на получение уведомлений о будущих дебетованиях в срок до 2 дней до их поступления.";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "Отменить платеж и оплатить другим способом";
 
+"Change email" = "Изменить адрес электронной почты";
+
 "Choose a payment method" = "Выберите метод оплаты";
 
 "Close card scanner" = "Закрыть сканер карт";
+
+"Code sent" = "Код отправлен";
 
 "Confirm" = "Подтвердить";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "Подтвердить код CVV карты";
 
-"Confirm your CVV" = "Подтвердить код CVV карты";
-
 "Contact information" = "Контактные данные";
+
+"Default" = "По умолчанию";
 
 "EPS Bank" = "Банк EPS";
 
 "Enter address manually" = "Введите адрес вручную";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Введите код, отправленный на адрес %@, для оплаты с помощью Link по умолчанию.";
+
+"Enter your verification code" = "Введите проверочный код";
+
 "FPX Bank" = "Банк FPX";
+
+"For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Подключиться к Link";
+
+"Log out of Link" = "Выйти из Link";
 
 "Manage payment method" = "Управление способом оплаты";
 
@@ -93,6 +123,8 @@
 "New card" = "Новая карта";
 
 "New payment method" = "Новый способ оплаты";
+
+"Not %@?" = "Не %@?";
 
 "Open your UPI app to approve your payment within %@" = "Откройте приложение UPI, чтобы подтвердить платеж, не позднее чем через %@";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Оплатить в беспроцентную рассрочку <num_installments/> выплатами по <installment_price/> через <img/>";
-
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
+
+"Pay over time with Affirm" = "Оплатить в рассрочку через систему Affirm";
 
 "Pay with Link" = "Оплатить с помощью Link";
 
 "Pay with your bank account in just a few steps." = "Платите с использованием своего банковского счета в несколько простых действий.";
 
+"Payment" = "Платеж";
+
 "Payment failed" = "Выполнить платеж не удалось";
+
+"Payment methods" = "Способы оплаты";
 
 "Please go back and select another payment method" = "Вернитесь назад и выберите другой способ оплаты";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "Удалить карту?";
 
+"Remove linked account" = "Удалить привязанный счет";
+
 "Remove payment method" = "Удалить способ оплаты";
+
+"Resend code" = "Послать код вторично";
 
 "Save" = "Сохранить";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "Сохранить данные для будущих платежей";
 
-"Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
+"Save payment details to %@ for future purchases" = "Сохранить реквизиты платежа в адрес %@ для будущих покупок";
 
-"Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
+"Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
 
 "Save your bank account in just a few steps." = "Сохраните реквизиты своего банковского счета всего за несколько шагов.";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "Сохранено";
 
+"Secure 1⁠-⁠click checkout" = "Безопасное оформление и оплата заказа одним щелчком";
+
 "Select card" = "Выберите карту";
 
 "Select payment method" = "Выберите способ оплаты";
 
 "Select your payment method" = "Выберите способ оплаты";
+
+"Set as default" = "Назначить способом по умолчанию";
+
+"Set as default payment method" = "Назначить способом оплаты по умолчанию";
 
 "Set up" = "Настроить";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "Показать меню";
 
+"Sign in to your Link account" = "Войти в учетную запись Link";
+
 "Simple, secure one-click payments" = "Защищенные безопасные платежи одним нажатием";
+
+"Something went wrong when linking your account.\nPlease try again later." = "При попытке подключить ваш счет произошла ошибка.\nПопробуйте еще раз позже.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Через 1-2 рабочих дня Stripe зачислит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями, которые помогут вам закончить сохранение реквизитов своего банковского счета у %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
 
+"Tap to close" = "Коснитесь, чтобы закрыть";
+
+"Tap to expand" = "Коснитесь, чтобы развернуть";
+
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
-"Update" = "Обновить";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Введенный код IBAN ошибочен, код страны \"%@\" не поддерживается.";
+
+"The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
+
+"The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Срок действия этой карты истек. Обновите данные карты или выберите другой способ оплаты.";
+
+"This is your default" = "Это ваше значение по умолчанию";
+
+"Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
+
+"Unavailable for this purchase" = "Не предусмотрено для этой покупки";
+
+"Update card" = "Обновить реквизиты карты";
 
 "Update card brand" = "Изменить бренд карты";
+
+"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
 
 "View more" = "Показать ещё";
 

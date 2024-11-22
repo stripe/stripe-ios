@@ -14,9 +14,9 @@ import UIKit
 
 extension PaymentSheetFormFactory {
     func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
-        let isLinkEnabled = offerSaveToLinkWhenSupported && supportsLinkCard
+        let showLinkInlineSignup = showLinkInlineCardSignup
         let saveCheckbox = makeSaveCheckbox(
-            label: String.Localized.save_this_card_for_future_$merchant_payments(
+            label: String.Localized.save_payment_details_for_future_$merchant_payments(
                 merchantDisplayName: configuration.merchantDisplayName
             )
         )
@@ -57,7 +57,9 @@ extension PaymentSheetFormFactory {
             preferredNetworks: configuration.preferredNetworks,
             cardBrandChoiceEligible: cardBrandChoiceEligible,
             hostedSurface: .init(config: configuration),
-            theme: theme
+            theme: theme,
+            analyticsHelper: analyticsHelper,
+            cardBrandFilter: configuration.cardBrandFilter
         )
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
@@ -80,34 +82,34 @@ extension PaymentSheetFormFactory {
             addressElement: billingAddressSection,
             phoneElement: phoneElement)
 
-        let mandate: SimpleMandateElement? = {
-            if isSettingUp {
-                return .init(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
-            }
-            return nil
-        }()
+        var elements: [Element?] = [
+            optionalPhoneAndEmailInformationSection,
+            cardSection,
+            billingAddressSection,
+            shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+        ]
 
-        let cardFormElement = FormElement(
-            elements: [
-                optionalPhoneAndEmailInformationSection,
-                cardSection,
-                billingAddressSection,
-                shouldDisplaySaveCheckbox ? saveCheckbox : nil,
-                mandate,
-            ],
-            theme: theme)
-
-        if case .paymentSheet(let configuration) = configuration, isLinkEnabled {
-            return LinkEnabledPaymentMethodElement(
-                type: .card,
-                paymentMethodElement: cardFormElement,
+        if case .paymentSheet(let configuration) = configuration, showLinkInlineSignup {
+            let inlineSignupElement = LinkInlineSignupElement(
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode,
                 showCheckbox: !shouldDisplaySaveCheckbox
             )
-        } else {
-            return cardFormElement
+            elements.append(inlineSignupElement)
         }
+
+        let mandate: SimpleMandateElement? = {
+            if isSettingUp {
+                return makeMandate(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
+
+            }
+            return nil
+        }()
+        elements.append(mandate)
+
+        return FormElement(
+            elements: elements,
+            theme: theme)
     }
 }

@@ -74,6 +74,9 @@ final public class FinancialConnectionsSheet {
 
     private var wrapperViewController: ModalPresentationWrapperViewController?
 
+    // Any additional Elements context useful for the Financial Connections SDK.
+    @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
+
     // Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
@@ -148,7 +151,7 @@ final public class FinancialConnectionsSheet {
                         let errorDescription = "Instant Debits is not currently supported via this interface."
                         let sessionInfo =
                         """
-                        paymentMethodId=\(linkedBank.paymentMethodId)
+                        paymentMethodId=\(linkedBank.paymentMethod.id)
                         bankName=\(linkedBank.bankName ?? "N/A")
                         last4=\(linkedBank.last4 ?? "N/A")
                         """
@@ -211,10 +214,12 @@ final public class FinancialConnectionsSheet {
             }
         }
 
+        let financialConnectionsApiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
         hostController = HostController(
-            apiClient: apiClient,
+            apiClient: financialConnectionsApiClient,
             analyticsClientV1: analyticsClient,
             clientSecret: financialConnectionsSessionClientSecret,
+            elementsSessionContext: elementsSessionContext,
             returnURL: returnURL,
             publishableKey: apiClient.publishableKey,
             stripeAccount: apiClient.stripeAccount

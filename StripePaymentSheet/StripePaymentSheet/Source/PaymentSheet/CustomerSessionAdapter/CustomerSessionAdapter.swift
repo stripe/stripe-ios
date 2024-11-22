@@ -54,15 +54,25 @@ class CustomerSessionAdapter {
         let (elementsSession, _) = try await elementsSessionWithCustomerSessionClientSecret()
         return elementsSession
     }
+    func elementsSession(setupIntentClientSecret: String) async throws -> (STPSetupIntent, STPElementsSession) {
+        let (elementsSession, _) = try await elementsSessionWithCustomerSessionClientSecret(setupIntentClientSecret: setupIntentClientSecret)
 
-    func elementsSessionWithCustomerSessionClientSecret() async throws -> (STPElementsSession, CachedCustomerSessionClientSecret) {
+        guard let paymentMethodPreference = elementsSession.allResponseFields["payment_method_preference"] as? [AnyHashable: Any],
+              let setupIntentDict = paymentMethodPreference["setup_intent"] as? [AnyHashable: Any],
+              let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: setupIntentDict) else {
+            throw PaymentSheetError.unknown(debugDescription: "SetupIntent missing from v1/elements/sessions response")
+        }
+        return (setupIntent, elementsSession)
+    }
+
+    func elementsSessionWithCustomerSessionClientSecret(setupIntentClientSecret: String? = nil) async throws -> (STPElementsSession, CachedCustomerSessionClientSecret) {
         if let cachedCustomerSessionClientSecret = self._cachedCustomerSessionClientSecret,
            !cachedCustomerSessionClientSecret.isExpired() {
-            let elementsSession = try await elementsSession(customerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret)
+            let elementsSession = try await elementsSession(customerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret, setupIntentClientSecret: setupIntentClientSecret)
             return (elementsSession, cachedCustomerSessionClientSecret)
         } else {
             let customerSessionClientSecret = try await customerSessionClientSecretProvider()
-            let elementsSessionResponse = try await elementsSession(customerSessionClientSecret: customerSessionClientSecret)
+            let elementsSessionResponse = try await elementsSession(customerSessionClientSecret: customerSessionClientSecret, setupIntentClientSecret: setupIntentClientSecret)
             guard let apiKey = elementsSessionResponse.customer?.customerSession.apiKey,
                   !apiKey.isEmpty else {
                 throw CustomerSheetError.unknown(debugDescription: "Failed to claim CustomerSession")
@@ -75,11 +85,17 @@ class CustomerSessionAdapter {
         }
     }
 
-    private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret) async throws -> STPElementsSession {
+    private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret, setupIntentClientSecret: String?) async throws -> STPElementsSession {
         let clientDefaultPaymentMethod = fetchClientDefaultPaymentMethod(for: customerSessionClientSecret.customerId)
-        return try await self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(paymentMethodTypes: intentConfiguration.paymentMethodTypes,
-                                                                                              clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                                                              customerSessionClientSecret: customerSessionClientSecret)
+        if let setupIntentClientSecret {
+            return try await self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(setupIntentClientSecret: setupIntentClientSecret,
+                                                                                                  clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                                                  customerSessionClientSecret: customerSessionClientSecret)
+        } else {
+            return try await self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: intentConfiguration.paymentMethodTypes,
+                                                                                                          clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                                                                                                          customerSessionClientSecret: customerSessionClientSecret)
+        }
     }
 }
 extension CustomerSessionAdapter {

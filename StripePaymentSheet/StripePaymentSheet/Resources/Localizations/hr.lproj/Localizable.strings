@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li plaćanja u iznosu od %2$@ bez kamata";
-
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj bankovni račun u SAD-u";
@@ -9,6 +7,8 @@
 "Add a card" = "Dodavanje kartice";
 
 "Add a payment method" = "Dodaj način plaćanja";
+
+"Add bank account" = "Dodajte bankovni račun";
 
 "Add card" = "Dodaj karticu";
 
@@ -20,9 +20,21 @@
 
 "Approve payment" = "Odobri plaćanje";
 
+"Are you sure you want to remove this card?" = "Jeste li sigurni da želite ukloniti ovu karticu?";
+
+"Are you sure you want to remove this linked account?" = "Jeste li sigurni da želite ukloniti ovaj povezani račun?";
+
 "Back" = "Natrag";
 
+"Bank" = "Banka";
+
 "Bank account" = "Bankovni račun";
+
+"Buy now or pay later with <img/>" = "Kupite odmah ili platite kasnije pomoću <img/>";
+
+"Buy now or pay later with Afterpay" = "Kupite odmah ili platite kasnije pomoću Afterpaya";
+
+"Buy now or pay later with Clearpay" = "Kupite odmah ili platite kasnije pomoću Clearpaya";
 
 "Buy now or pay later with Klarna" = "Kupite sada ili platite kasnije pomoću Klarne";
 
@@ -44,6 +56,10 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisupanjem u Link, prihvaćate <terms>Uvjete</terms> i <privacy>Pravila privatnosti</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Davanjem podataka o svom bankovnom računu i potvrđivanjem ove uplate, pristajete na ovaj Zahtjev za izravno terećenje i <terms>Ugovor o usluzi zahtjeva za izravno terećenje</terms> te ovlašćujete društvo Stripe Payments Australia Pty Ltd ACN 160 180 343 Korisnički ID broj za izravno terećenje 507156 (\"Stripe\") za terećenje vašeg računa putem Sustava masovnog elektroničkog obračuna (BECS) u ime %@ (\"Trgovac\") za sve iznose koje vam je Trgovac zasebno priopćio. Potvrđujete da ste ili vlasnik računa ili ovlašteni potpisnik na naprijed navedenom računu.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Davanjem podataka o kartici dopuštate poduzeću %@ da tereti vašu karticu za buduća plaćanja u skladu sa svojim uvjetima.";
+
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Navođenjem svoje adrese e-pošte pristajete na izradu Link računa i spremanje podataka o plaćanju na Link, u skladu s <terms>Uvjetima</terms> i <privacy>Pravilima o privatnosti</privacy> Linka.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Unošenjem vaših podataka o plaćanju, ovlašćujete (A) %@ i Stripe, našeg davatelja usluga platnog prometa, da vašoj banci pošalje upute za terećenje vašeg računa, i (B) vašu banku za terećenje vašeg računa u skladu s tim uputama. U sklopu vaših prava, imate pravo na povrat novca od svoje banke prema uvjetima i odredbama ugovora s bankom. Povrat novca mora se zatražiti u roku od 8 tjedana počevši od datuma terećenja vašeg računa. Vaša prava objašnjena su u izjavi koju možete dobiti od svoje banke. Slažete se s primanjem obavijesti o budućim terećenjima do 2 dana prije njihova izvršenja.";
@@ -56,9 +72,13 @@
 
 "Cancel and pay another way" = "Otkaži i plati na drugi način";
 
+"Change email" = "Izmijeni e-poštu";
+
 "Choose a payment method" = "Odaberite način plaćanja";
 
 "Close card scanner" = "Zatvori skener kartice";
+
+"Code sent" = "Kod je poslan";
 
 "Confirm" = "Potvrdi";
 
@@ -68,19 +88,29 @@
 
 "Confirm your CVC" = "Potvrdite svoj CVC";
 
-"Confirm your CVV" = "Potvrdite svoj CVC";
-
 "Contact information" = "Podaci za kontakt";
+
+"Default" = "Zadano";
 
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Unesite adresu ručno";
 
+"Enter the code sent to %@ to use Link to pay by default." = "Unesite kod poslan na %@ kako biste koristili Link za plaćanje kao zadanu opciju.";
+
+"Enter your verification code" = "Unesite verifikacijski kod";
+
 "FPX Bank" = "FPX Bank";
+
+"For security, please re-enter your card’s security code." = "Radi sigurnosti, ponovno unesite sigurnosni kod vaše kartice.";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Razumijem da će Stripe naplaćivati izravna terećenja u ime %@ i potvrđujem da sam vlasnik računa i jedina osoba koja mora autorizirati terećenja s ovog računa.";
 
 "IBAN" = "IBAN";
+
+"Join Link" = "Pridružite se na Link";
+
+"Log out of Link" = "Odjavite se s Linka";
 
 "Manage payment method" = "Upravljajte načinom plaćanja";
 
@@ -93,6 +123,8 @@
 "New card" = "Nova kartica";
 
 "New payment method" = "Novi način plaćanja";
+
+"Not %@?" = "Niste %@?";
 
 "Open your UPI app to approve your payment within %@" = "Otvorite svoju aplikaciju UPI da biste odobrili svoje plaćanje unutar %@";
 
@@ -112,15 +144,19 @@
 
 "Pay faster at %@ and thousands of businesses." = "Platite brže na %@ i tisućama drugih stranica.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Platite u <num_installments/> beskamatnih obroka po <installment_price/> koristeći <img/>";
-
 "Pay over time with %@" = "Platite u ratama koristeći %@";
+
+"Pay over time with Affirm" = "Platite u ratama pomoću Affirma";
 
 "Pay with Link" = "Platite koristeći Link";
 
 "Pay with your bank account in just a few steps." = "Platite svojim bankovnim računom u samo par koraka.";
 
+"Payment" = "Plaćanje";
+
 "Payment failed" = "Plaćanje nije uspjelo";
+
+"Payment methods" = "Načini plaćanja";
 
 "Please go back and select another payment method" = "Molimo vratite se i odaberite drugi način plaćanja";
 
@@ -132,7 +168,11 @@
 
 "Remove card?" = "Ukloniti karticu?";
 
+"Remove linked account" = "Ukloni povezani račun";
+
 "Remove payment method" = "Ukloni način plaćanja";
+
+"Resend code" = "Ponovo pošalji kod";
 
 "Save" = "Spremi";
 
@@ -142,9 +182,9 @@
 
 "Save for future payments" = "Spremi za buduća plaćanja";
 
-"Save this account for future %@ payments" = "Spremi ovaj račun za buduća %@ plaćanja";
+"Save payment details to %@ for future purchases" = "Spremi podatke za plaćanja poduzeću %@ za buduće kupnje";
 
-"Save this card for future %@ payments" = "Spremi ovu karticu za buduća plaćanja %@";
+"Save this account for future %@ payments" = "Spremi ovaj račun za buduća %@ plaćanja";
 
 "Save your bank account in just a few steps." = "Spremite svoj bankovni račun u samo par koraka.";
 
@@ -152,11 +192,17 @@
 
 "Saved" = "Spremljeno";
 
+"Secure 1⁠-⁠click checkout" = "Sigurno plaćanje pomoću 1 klika";
+
 "Select card" = "Odaberite karticu";
 
 "Select payment method" = "Odaberite način plaćanja";
 
 "Select your payment method" = "Odaberite način plaćanja";
+
+"Set as default" = "Postavi kao zadano";
+
+"Set as default payment method" = "Postavi kao zadani način plaćanja";
 
 "Set up" = "Postavi";
 
@@ -164,17 +210,41 @@
 
 "Show menu" = "Prikaži izbornik";
 
+"Sign in to your Link account" = "Prijavite se na svoj Link račun";
+
 "Simple, secure one-click payments" = "Jednostavna sigurna plaćanja jednim klikom";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Došlo je do greške pri povezivanju vašeg računa.\nPokušajte ponovo kasnije.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe će uplatiti polog u iznosu od 0,01 USD na vaš račun u roku od 1-2 radna dana. Zatim ćete zaprimiti poruku e-pošte s uputama za dovršetak spremanja svog bankovnog računa kod %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe će uplatiti polog u iznosu od 0,01 USD na vaš račun u roku od 1-2 radna dana. Zatim ćete zaprimiti poruku e-pošte s uputama za dovršetak plaćanja za %@.";
 
+"Tap to close" = "Dodirnite za zatvaranje";
+
+"Tap to expand" = "Dodirnite za proširivanje";
+
 "The IBAN you entered is incomplete." = "Uneseni IBAN nije potpun.";
 
-"Update" = "Ažuriraj";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN koji ste unijeli nije važeći, \"%@\" nije podržani kod zemlje.";
+
+"The provided verification code has expired." = "Navedeni kontrolni kôd je istekao.";
+
+"The provided verification code is incorrect." = "Navedeni kontrolni kôd nije točan.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Ova kartica je istekla. Ažurirajte svoje podatke o kartici ili odaberite drugi način plaćanja.";
+
+"This is your default" = "Ovo je vaša zadana vrijednost";
+
+"Too many attempts. Please try again in a few minutes." = "Previše pokušaja. Pokušajte ponovno za nekoliko minuta.";
+
+"Unavailable for this purchase" = "Nije dostupno za ovu kupnju";
+
+"Update card" = "Ažuriraj karticu";
 
 "Update card brand" = "Ažurirajte robnu marku kartice";
+
+"Use your saved info to check out faster" = "Upotrijebite svoje spremljene podatke za brže plaćanje";
 
 "View more" = "Vidi više";
 

@@ -38,40 +38,45 @@ import Foundation
 
     fileprivate var result: Result? {
         // Observe whenever a result is assigned, and report it:
-        didSet { result.map(report) }
+        didSet {
+            propertyAccessQueue.async { [self] in
+                result.map(report)
+            }
+        }
     }
     private var callbacks = [(Result) -> Void]()
+    // Since our methods can be called on different threads and our methods access our properties, we need to protect access to prevent race conditions.
+    let propertyAccessQueue = DispatchQueue(label: "FutureQueue", qos: .userInitiated)
 
     public func observe(
-        on queue: DispatchQueue? = nil,
+        on queue: DispatchQueue = .main,
         using callback: @escaping (Result) -> Void
     ) {
-        let wrappedCallback: (Result) -> Void
-        if let queue = queue {
-            wrappedCallback = { r in
-                queue.async {
-                    callback(r)
-                }
+        let wrappedCallback: (Result) -> Void = { r in
+            queue.async {
+                callback(r)
             }
-        } else {
-            wrappedCallback = callback
         }
 
-        // If a result has already been set, call the callback directly:
-        if let result = result {
-            return wrappedCallback(result)
-        }
+        propertyAccessQueue.async { [self] in
+            // If a result has already been set, call the callback directly:
+            if let result {
+                return wrappedCallback(result)
+            }
 
-        callbacks.append(wrappedCallback)
+            callbacks.append(wrappedCallback)
+        }
     }
 
     private func report(result: Result) {
-        callbacks.forEach { $0(result) }
-        callbacks = []
+        propertyAccessQueue.async { [self] in
+            callbacks.forEach { $0(result) }
+            callbacks = []
+        }
     }
 
     public func chained<T>(
-        on queue: DispatchQueue? = nil,
+        on queue: DispatchQueue = .main,
         using closure: @escaping (Value) throws -> Future<T>
     ) -> Future<T> {
         // We'll start by constructing a "wrapper" promise that will be
@@ -89,7 +94,7 @@ import Foundation
 
                     // Observe the "nested" future, and once it
                     // completes, resolve/reject the "wrapper" future:
-                    future.observe { result in
+                    future.observe(on: queue) { result in
                         switch result {
                         case .success(let value):
                             promise.resolve(with: value)
@@ -106,6 +111,15 @@ import Foundation
         }
 
         return promise
+    }
+
+    public func transformed<T>(
+        on queue: DispatchQueue = .main,
+        with closure: @escaping (Value) throws -> T
+    ) -> Future<T> {
+        chained(on: queue) { value in
+             try Promise(value: closure(value))
+        }
     }
 }
 

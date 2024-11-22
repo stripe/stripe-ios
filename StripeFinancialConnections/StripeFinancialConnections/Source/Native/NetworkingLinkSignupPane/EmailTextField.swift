@@ -27,6 +27,7 @@ final class EmailTextField: UIView {
                 "Email address",
                 "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address."
             ),
+            showDoneToolbar: true,
             theme: theme
         )
         textField.textField.keyboardType = .emailAddress
@@ -39,10 +40,10 @@ final class EmailTextField: UIView {
         textField.textField.accessibilityIdentifier = "email_text_field"
         return textField
     }()
-    private let activityIndicator: ActivityIndicator = {
+    private lazy var activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .medium)
         activityIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
-        activityIndicator.color = .iconActionPrimary
+        activityIndicator.color = theme.spinnerColor
         return activityIndicator
     }()
     fileprivate var didEndEditingOnce = false
@@ -193,6 +194,18 @@ struct EmailTextField_Previews: PreviewProvider {
                     isLoading: false,
                     theme: .light
                 ).frame(height: 90)
+
+                EmailTextFieldUIViewRepresentable(
+                    text: "light@theme.com",
+                    isLoading: true,
+                    theme: .light
+                ).frame(height: 56)
+
+                EmailTextFieldUIViewRepresentable(
+                    text: "linklight@theme.com",
+                    isLoading: true,
+                    theme: .linkLight
+                ).frame(height: 56)
 
                 Spacer()
             }

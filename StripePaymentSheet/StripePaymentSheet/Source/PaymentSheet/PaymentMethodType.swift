@@ -16,7 +16,11 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
+
+        // Synthetic payment methods. These are payment methods which don't have an `STPPaymentMethodType` defined for the same name.
+        // That is, the payment method manifest for a synthetic PMT will show a PMT that doesn't match the form name.
         case instantDebits
+        case linkCardBrand
 
         static var analyticLogForIcon: Set<PaymentMethodType> = []
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
@@ -27,7 +31,7 @@ extension PaymentSheet {
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.label
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
             }
         }
@@ -42,6 +46,8 @@ extension PaymentSheet {
                 return externalPaymentMethod.type
             case .instantDebits:
                 return "instant_debits"
+            case .linkCardBrand:
+                return "link_card_brand"
             }
         }
 
@@ -103,7 +109,7 @@ extension PaymentSheet {
                     }
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
             }
         }
@@ -114,7 +120,7 @@ extension PaymentSheet {
                 return stpPaymentMethodType.iconRequiresTinting
             case .external:
                 return false
-            case .instantDebits:
+            case .instantDebits, .linkCardBrand:
                 return true
             }
         }
@@ -123,14 +129,15 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
-        static func filteredPaymentMethodTypes(from intent: Intent, configuration: Configuration, logAvailability: Bool = false) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
-            var recommendedStripePaymentMethodTypes = intent.recommendedPaymentMethodTypes
+            var recommendedStripePaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
                     paymentMethod: paymentMethodType,
                     configuration: configuration,
                     intent: intent,
+                    elementsSession: elementsSession,
                     supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
                 )
 
@@ -146,7 +153,7 @@ extension PaymentSheet {
 
             // Log a warning if elements session doesn't contain all the merchant's desired external payment methods
             let missingExternalPaymentMethods = Set(configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.map { $0.lowercased() } ?? [])
-                .subtracting(Set(intent.elementsSession.externalPaymentMethods.map { $0.type }))
+                .subtracting(Set(elementsSession.externalPaymentMethods.map { $0.type }))
             if logAvailability && !missingExternalPaymentMethods.isEmpty {
                 print("[Stripe SDK]: PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
             }
@@ -156,14 +163,35 @@ extension PaymentSheet {
                 // Stripe PaymentMethod types
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
-                + intent.elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
+                + elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
 
-            if
-                intent.recommendedPaymentMethodTypes.contains(.link),
-                !intent.recommendedPaymentMethodTypes.contains(.USBankAccount),
-                !intent.isDeferredIntent,
-                intent.linkFundingSources?.contains(.bankAccount) == true
-            {
+            // We should manually add Instant Debits as a payment method when:
+            // - Link is an available payment method.
+            // - US Bank Account is *not* an available payment method.
+            // - Not a deferred intent flow.
+            // - Link Funding Sources contains Bank Account.
+            // - We collect an email, or a default non-empty email has been provided.
+            var eligibleForInstantDebits: Bool {
+                elementsSession.orderedPaymentMethodTypes.contains(.link) &&
+                !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
+                elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
+                configuration.isEligibleForBankTab
+            }
+
+            // We should manually add Link Card Brand as a payment method when:
+            // - Link Funding Sources contains Bank Account.
+            // - US Bank Account is *not* an available payment method.
+            // - Not a deferred intent flow.
+            // - Link Card Brand is the Link Mode
+            // - We collect an email, or a default non-empty email has been provided.
+            var eligibleForLinkCardBrand: Bool {
+                elementsSession.linkFundingSources?.contains(.bankAccount) == true &&
+                !elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) &&
+                elementsSession.isLinkCardBrand &&
+                configuration.isEligibleForBankTab
+            }
+
+            if eligibleForInstantDebits {
                 let availabilityStatus = configurationSatisfiesRequirements(
                     requirements: [.financialConnectionsSDK],
                     configuration: configuration,
@@ -171,6 +199,16 @@ extension PaymentSheet {
                 )
                 if availabilityStatus == .supported {
                     recommendedPaymentMethodTypes.append(.instantDebits)
+                }
+            // Else if here so we don't show both Instant Debits and Link Card Brand together.
+            } else if eligibleForLinkCardBrand {
+                let availabilityStatus = configurationSatisfiesRequirements(
+                    requirements: [.financialConnectionsSDK],
+                    configuration: configuration,
+                    intent: intent
+                )
+                if availabilityStatus == .supported {
+                    recommendedPaymentMethodTypes.append(.linkCardBrand)
                 }
             }
 
@@ -211,8 +249,9 @@ extension PaymentSheet {
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func supportsAdding(
             paymentMethod: STPPaymentMethodType,
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             intent: Intent,
+            elementsSession: STPElementsSession,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> PaymentMethodAvailabilityStatus {
             let requirements: [PaymentMethodTypeRequirement]
@@ -235,7 +274,9 @@ extension PaymentSheet {
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma, .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco:
+                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
+                        .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
+                        .sunbit, .billie, .satispay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -247,7 +288,8 @@ extension PaymentSheet {
                     case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
-                            .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .swish, .twint:
+                            .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
+                            .mobilePay, .swish, .twint, .sunbit, .billie, .satispay:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
@@ -273,6 +315,7 @@ extension PaymentSheet {
                 requirements: requirements,
                 configuration: configuration,
                 intent: intent,
+                elementsSession: elementsSession,
                 supportedPaymentMethods: supportedPaymentMethods
             )
         }
@@ -293,9 +336,9 @@ extension PaymentSheet {
             }
         }
 
-        /// Returns true if the passed configuration satsifies the passed in `requirements`
+        /// Returns true if the passed configuration satisfies the passed in `requirements`
         /// This function is to be used with dynamic payment method types that do not have bindings support and cannot be represented as a `STPPaymentMethodType`.
-        /// It's required for the client to specfiy dynamic payment method type requirements (rather than being server driven) because dynamically delivering new LPMS to clients that don't know about them is no longer/currently a priority.
+        /// It's required for the client to specify dynamic payment method type requirements (rather than being server driven) because dynamically delivering new LPMS to clients that don't know about them is no longer/currently a priority.
         /// - Note: Use this function over `configurationSupports` when the payment method does not have bindings support e.g. cannot be represented as
         /// a `STPPaymentMethodType`.
         /// - Parameters:
@@ -305,7 +348,7 @@ extension PaymentSheet {
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             intent: Intent
         ) -> PaymentMethodAvailabilityStatus {
             let fulfilledRequirements = [configuration, intent].reduce([]) {
@@ -334,8 +377,9 @@ extension PaymentSheet {
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
-            configuration: PaymentSheet.Configuration,
+            configuration: PaymentElementConfiguration,
             intent: Intent,
+            elementsSession: STPElementsSession,
             supportedPaymentMethods: [STPPaymentMethodType]
         ) -> PaymentMethodAvailabilityStatus {
             guard supportedPaymentMethods.contains(paymentMethod) else {
@@ -343,7 +387,7 @@ extension PaymentSheet {
             }
 
             // Hide a payment method type if we are in live mode and it is unactivated
-            if !configuration.apiClient.isTestmode && intent.unactivatedPaymentMethodTypes.contains(paymentMethod) {
+            if !configuration.apiClient.isTestmode && elementsSession.unactivatedPaymentMethodTypes.contains(paymentMethod) {
                 return .unactivated
             }
 
@@ -374,7 +418,7 @@ extension STPPaymentMethod {
     /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
     /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
     /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
-    func supportsSavedPaymentMethod(configuration: PaymentSheet.Configuration, intent: Intent) -> Bool {
+    func supportsSavedPaymentMethod(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) -> Bool {
         let requirements: [PaymentMethodTypeRequirement] = {
             switch type {
             case .card:
@@ -390,6 +434,7 @@ extension STPPaymentMethod {
             requirements: requirements,
             configuration: configuration,
             intent: intent,
+            elementsSession: elementsSession,
             supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
         ) == .supported
     }
@@ -398,13 +443,58 @@ extension STPPaymentMethod {
 extension STPPaymentMethodParams {
     var paymentSheetLabel: String {
         switch type {
+        case .card:
+            return "•••• \(card?.last4 ?? "")"
+        case .FPX:
+            if let fpx = fpx {
+                return STPFPXBank.stringFrom(fpx.bank) ?? ""
+            } else {
+                return "FPX"
+            }
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .giropay, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .sofort, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent:
+            // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
+            return type.displayName
         case .unknown:
+            fallthrough
+        default:
             assertionFailure()
             return rawTypeString ?? ""
-        case .card:
-            return "••••\(card?.last4 ?? "")"
-        default:
-            return label
+        }
+    }
+}
+
+extension PaymentElementConfiguration {
+    var isEligibleForBankTab: Bool {
+        billingDetailsCollectionConfiguration.email != .never ||
+        (defaultBillingDetails.email?.isEmpty == false && billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod)
+    }
+}
+
+extension PaymentSheet.PaymentMethodType {
+    
+    var isLinkBankPayment: Bool {
+        switch self {
+        case .stripe:
+            return false
+        case .external:
+            return false
+        case .instantDebits:
+            return true
+        case .linkCardBrand:
+            return true
+        }
+    }
+    
+    var isBankPayment: Bool {
+        switch self {
+        case .stripe(let type):
+            return type == .USBankAccount
+        case .external:
+            return false
+        case .instantDebits:
+            return true
+        case .linkCardBrand:
+            return true
         }
     }
 }

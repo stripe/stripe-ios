@@ -87,26 +87,20 @@ class VideoFeed {
         do {
             var defaultVideoDevice: AVCaptureDevice?
 
-            // Choose the back dual camera if available, otherwise default to a wide angle camera.
-            if let dualCameraDevice = AVCaptureDevice.default(
-                .builtInDualCamera,
-                for: .video,
-                position: .back
-            ) {
-                defaultVideoDevice = dualCameraDevice
-            } else if let backCameraDevice = AVCaptureDevice.default(
-                .builtInWideAngleCamera,
-                for: .video,
-                position: .back
-            ) {
-                // If the back dual camera is not available, default to the back wide angle camera.
-                defaultVideoDevice = backCameraDevice
+            // The triple and dualWide cameras have a 0.5x lens for better macro focus.
+            // If none are available, use the default wide angle camera.
+            let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:
+                                                                        [.builtInTripleCamera, .builtInDualWideCamera, .builtInWideAngleCamera],
+                                                                    mediaType: .video,
+                                                                    position: .back)
+            if let captureDevice = discoverySession.devices.first {
+                defaultVideoDevice = captureDevice
             } else if let frontCameraDevice = AVCaptureDevice.default(
                 .builtInWideAngleCamera,
                 for: .video,
                 position: .front
             ) {
-                // In some cases where users break their phones, the back wide angle camera is not available.
+                // In some cases where users break their phones, the back camera is not available.
                 // In this case, we should default to the front wide angle camera.
                 defaultVideoDevice = frontCameraDevice
             }

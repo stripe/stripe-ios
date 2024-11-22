@@ -27,9 +27,7 @@ final class AccountPickerFooterView: UIView {
     }()
 
     init(
-        isStripeDirect: Bool,
-        businessName: String?,
-        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        dataAccessNotice: String?,
         singleAccount: Bool,
         theme: FinancialConnectionsTheme,
         didSelectLinkAccounts: @escaping () -> Void,
@@ -40,21 +38,15 @@ final class AccountPickerFooterView: UIView {
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
 
-        let verticalStackView = HitTestStackView(
-            arrangedSubviews: [
-                MerchantDataAccessView(
-                    isStripeDirect: isStripeDirect,
-                    businessName: businessName,
-                    permissions: permissions,
-                    isNetworking: false,
-                    font: .label(.small),
-                    boldFont: .label(.smallEmphasized),
-                    alignCenter: true,
-                    didSelectLearnMore: didSelectMerchantDataAccessLearnMore
-                ),
-                linkAccountsButton,
-            ]
-        )
+        let verticalStackView = HitTestStackView()
+        if let dataAccessNotice {
+            verticalStackView.addArrangedSubview(CreateDataAccessLabel(
+                dataAccessNotice: dataAccessNotice,
+                didSelectLearnMore: didSelectMerchantDataAccessLearnMore
+            ))
+        }
+        verticalStackView.addArrangedSubview(linkAccountsButton)
+
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         verticalStackView.isLayoutMarginsRelativeArrangement = true
@@ -106,4 +98,26 @@ final class AccountPickerFooterView: UIView {
     func startLoading() {
         linkAccountsButton.isLoading = true
     }
+}
+
+private func CreateDataAccessLabel(
+    dataAccessNotice: String,
+    didSelectLearnMore: @escaping (URL) -> Void
+) -> HitTestView {
+    let label = AttributedTextView(
+        font: .label(.small),
+        boldFont: .label(.smallEmphasized),
+        linkFont: .label(.small),
+        textColor: .textDefault,
+        alignment: .center
+    )
+    label.setText(
+        dataAccessNotice,
+        action: { url in
+            didSelectLearnMore(url)
+        }
+    )
+    let hitTestView = HitTestView()
+    hitTestView.addAndPinSubview(label)
+    return hitTestView
 }

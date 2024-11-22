@@ -78,6 +78,19 @@ class SavedPaymentOptionsViewController: UIViewController {
                 return paymentMethod
             }
         }
+
+        var analyticsValue: String {
+            switch self {
+            case .add:
+                return "add"
+            case .saved:
+                return "saved"
+            case .applePay:
+                return "applePay"
+            case .link:
+                return "link"
+            }
+        }
     }
 
     struct Configuration {
@@ -90,6 +103,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
+        let alternateUpdatePaymentMethodNavigation: Bool
     }
 
     // MARK: - Internal Properties
@@ -145,6 +159,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     let configuration: Configuration
     private let intent: Intent
     private let paymentSheetConfiguration: PaymentSheet.Configuration
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
@@ -298,6 +313,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         intent: Intent,
         appearance: PaymentSheet.Appearance,
         cbcEligible: Bool = false,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
@@ -307,6 +323,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.appearance = appearance
         self.cbcEligible = cbcEligible
         self.delegate = delegate
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
         updateUI()
     }
@@ -476,7 +493,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -544,7 +561,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               appearance: appearance,
                                               hostedSurface: .paymentSheet,
                                               canRemoveCard: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                              isTestMode: configuration.isTestMode)
+                                              isTestMode: configuration.isTestMode,
+                                              cardBrandFilter: paymentSheetConfiguration.cardBrandFilter)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
@@ -559,7 +577,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               error: Error.paymentOptionCellDidSelectRemoveOnNonSavedItem,
                                               additionalNonPIIParams: [
                                                 "indexPathRow": collectionView.indexPath(for: paymentOptionCell)?.row ?? "nil",
-                                                "viewModels": viewModels.map { $0.analyticsValue.rawValue },
+                                                "viewModels": viewModels.map { $0.analyticsValue },
                                               ]
             )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
@@ -638,8 +656,16 @@ extension SavedPaymentOptionsViewController: UpdateCardViewControllerDelegate {
 
         let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
         viewModels[row] = updatedViewModel
+        // Update savedPaymentMethods
+        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+            self.savedPaymentMethods[row] = updatedPaymentMethod
+        }
         collectionView.reloadData()
         _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didDismiss(viewController: UpdateCardViewController) {
+        // No-op
     }
 }
 
@@ -650,7 +676,7 @@ extension STPPaymentMethod {
     var removalMessage: (title: String, message: String) {
         switch type {
         case .card:
-            let brandString = STPCardBrandUtilities.stringFrom(card?.networks?.preferred?.toCardBrand ?? card?.brand ?? .unknown) ?? ""
+            let brandString = STPCardBrandUtilities.stringFrom(card?.preferredDisplayBrand ?? .unknown) ?? ""
             let last4 = card?.last4 ?? ""
             let formattedMessage = STPLocalizedString(
                 "%1$@ •••• %2$@",

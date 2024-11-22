@@ -22,6 +22,7 @@ import UIKit
 @objc(STP_Internal_CardSectionWithScannerView)
 final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
+    let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
         let button = UIButton.makeCardScanButton(theme: theme)
         button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
@@ -35,12 +36,13 @@ final class CardSectionWithScannerView: UIView {
         return scanningView
     }()
     weak var delegate: CardSectionWithScannerViewDelegate?
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsUITheme = .default) {
+    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?) {
         self.cardSectionView = cardSectionView
         self.delegate = delegate
         self.theme = theme
+        self.analyticsHelper = analyticsHelper
         super.init(frame: .zero)
         installConstraints()
     }
@@ -60,7 +62,7 @@ final class CardSectionWithScannerView: UIView {
     }
 
     @objc func didTapCardScanButton() {
-        STPAnalyticsClient.sharedClient.logPaymentSheetFormInteracted(paymentMethodTypeIdentifier: "card")
+        analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
         setCardScanVisible(true)
         cardScanningView.start()
         becomeFirstResponder()

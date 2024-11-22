@@ -5,15 +5,15 @@
 //  Created by Yuki Tokuhiro on 7/18/23.
 //
 
-import StripeCoreTestUtils
-import XCTest
-
 import SafariServices
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
+import SwiftUI
+import XCTest
 
 /// These tests exercise 9 different confirm flows based on the combination of:
 /// - The Stripe Intent: PaymentIntent or PaymentIntent+SFU or SetupIntent
@@ -22,6 +22,8 @@ import SafariServices
 /// 👀  See `testIdealConfirmFlows` for an example with comments.
 @MainActor
 final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
+    let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
+
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
@@ -34,6 +36,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         case BR = "br"
         case FR = "fr"
         case TH = "th"
+        case DE = "de"
+        case IT = "it"
 
         var publishableKey: String {
             switch self {
@@ -59,6 +63,10 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingFRPublishableKey
             case .TH:
                 return STPTestingTHPublishableKey
+            case .DE:
+                return STPTestingDEPublishableKey
+            case .IT:
+                return STPTestingITPublishableKey
             }
         }
     }
@@ -155,21 +163,18 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
-    // TODO: Re-enable this test.
-    // More info: It didn't trigger the bacs-specific logic in `performLocalActionsIfNeededAndConfirm` because it used `.dynamic(bacs_debit)`, whereas the logic checked for `.bacsDebit`
-    // This `dynamic` vs. `bacsDebit` mismatch is fixed and no longer possible (happily), but we have no good way to complete the local next action.
-//    func testBacsDDConfirmFlows() async throws {
-//        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .stripe(.bacsDebit), merchantCountry: .GB) { form in
-//            form.getTextFieldElement("Full name")!.setText("Foo")
-//            form.getTextFieldElement("Email")!.setText("f@z.c")
-//            form.getTextFieldElement("Sort code")!.setText("108800")
-//            form.getTextFieldElement("Account number")!.setText("00012345")
-//            form.getTextFieldElement("Address line 1")!.setText("asdf")
-//            form.getTextFieldElement("City")!.setText("asdf")
-//            form.getTextFieldElement("ZIP")!.setText("12345")
-//            form.getCheckboxElement(startingWith: "I understand that Stripe will be collecting Direct Debits")!.isSelected = true
-//        }
-//    }
+    func testBacsDDConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB) { form in
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("f@z.c")
+            form.getTextFieldElement("Sort code").setText("108800")
+            form.getTextFieldElement("Account number").setText("00012345")
+            form.getTextFieldElement("Address line 1").setText("asdf")
+            form.getTextFieldElement("City").setText("asdf")
+            form.getTextFieldElement("ZIP").setText("12345")
+            form.getCheckboxElement(startingWith: "I understand that Stripe will be collecting Direct Debits")!.isSelected = true
+        }
+    }
 
     func testAmazonPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -187,6 +192,37 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .alma,
                                merchantCountry: .FR) { form in
             // Alma has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
+    func testSunbitConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "USD",
+                               amount: 100000,
+                               paymentMethodType: .sunbit,
+                               merchantCountry: .US) { form in
+            // Sunbit has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
+    func testBillieConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .billie,
+                               merchantCountry: .DE) { form in
+            // Billie has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
+    func testSatispayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .satispay,
+                               merchantCountry: .IT) { form in
+            // Satispay has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }
@@ -323,8 +359,10 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                     configuration: configuration,
                     authenticationContext: self,
                     intent: intent,
+                    elementsSession: ._testValue(intent: intent),
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
-                    paymentHandler: paymentHandler
+                    paymentHandler: paymentHandler,
+                    analyticsHelper: ._testValue()
                 ) { result, _  in
                     e.fulfill()
                     switch result {
@@ -386,6 +424,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .FR) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "EUR",
+                               paymentMethodType: .payPal,
+                               merchantCountry: .FR) { form in
+            XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
+        }
     }
 
     func testCashAppConfirmFlows() async throws {
@@ -394,6 +439,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .cashApp,
                                merchantCountry: .US) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "USD",
+                               paymentMethodType: .cashApp,
+                               merchantCountry: .US) { form in
+            XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
         }
     }
 
@@ -502,6 +554,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     func _testConfirm(
         intentKinds: [IntentKind],
         currency: String,
+        amount: Int? = nil,
         paymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
@@ -512,6 +565,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             try await _testConfirm(
                 intentKind: intentKind,
                 currency: currency,
+                amount: amount,
                 paymentMethodType: paymentMethodType,
                 merchantCountry: merchantCountry,
                 configuration: configuration,
@@ -534,6 +588,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     func _testConfirm(
         intentKind: IntentKind,
         currency: String,
+        amount: Int? = nil,
         paymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
@@ -560,36 +615,64 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         }()
         configuration.apiClient = apiClient
 
-        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, apiClient: apiClient)
+        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, apiClient: apiClient)
 
         // Check that the form respects billingDetailsCollection
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)
 
         for (description, intent) in intents {
-            // Make the form
-            let formFactory = PaymentSheetFormFactory(intent: intent, configuration: .paymentSheet(configuration), paymentMethod: .stripe(paymentMethodType))
-            let paymentMethodForm = formFactory.make()
 
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
-            view.addAndPinSubview(paymentMethodForm.view)
+            func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+            }
+            // Make the form
+            let formVC = makeFormVC(previousCustomerInput: nil)
+            let paymentMethodForm = formVC.form
+
+            // Add to window to avoid layout errors due to zero size and presentation errors
+            window.rootViewController = formVC
+
+            // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
+            formVC.viewDidAppear(false)
 
             // Fill out the form
-            sendEventToSubviews(.viewDidAppear, from: paymentMethodForm.view) // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
             formCompleter(paymentMethodForm)
 
             // Generate params from the form
             guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .stripe(paymentMethodType))) else {
-                XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
+                XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState) \n Form: \(paymentMethodForm)")
                 return
             }
+
+            // Re-generate the form and validate that it carries over all previous customer input
+            let regeneratedFormVC = makeFormVC(previousCustomerInput: intentConfirmParams)
+            guard let regeneratedIntentConfirmParams = regeneratedFormVC.form.updateParams(params: IntentConfirmParams(type: .stripe(paymentMethodType))) else {
+                XCTFail("Regenerated form failed to create params. Validation state: \(regeneratedFormVC.form.validationState) \n Form: \(regeneratedFormVC.form)")
+                return
+            }
+            XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
+
             let e = expectation(description: "Confirm")
             let paymentHandler = STPPaymentHandler(apiClient: apiClient)
             var redirectShimCalled = false
             paymentHandler._redirectShim = { _, _, _ in
                 // This gets called instead of the PaymentSheet.confirm callback if the Intent is successfully confirmed and requires next actions.
                 print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
-                paymentHandler._handleWillForegroundNotification()
+                // Defer this until after the `.succeeded` call is made in the below PaymentSheetAuthenticationContext
+                // if applicable, so that we don't re-fetch the PI unintentionally
+                DispatchQueue.main.async {
+                    if paymentHandler.isInProgress {
+                        paymentHandler._handleWillForegroundNotification()
+                    }
+                }
                 redirectShimCalled = true
+            }
+
+            // Hack to PaymentSheet-specific local actions that happen before control is handed over to STPPaymentHandler.
+            PaymentSheet._preconfirmShim = { viewController in
+                if paymentMethodType == .bacsDebit {
+                    ((viewController as! UIHostingController<BacsDDMandateView>).rootView).confirmAction()
+                }
             }
 
             // Confirm the intent with the form details
@@ -597,8 +680,10 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 configuration: configuration,
                 authenticationContext: self,
                 intent: intent,
+                elementsSession: ._testValue(intent: intent),
                 paymentOption: .new(confirmParams: intentConfirmParams),
-                paymentHandler: paymentHandler
+                paymentHandler: paymentHandler,
+                analyticsHelper: ._testValue()
             ) { result, _  in
                 switch result {
                 case .failed(error: let error):
@@ -617,6 +702,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     func makeTestIntents(
         intentKind: IntentKind,
         currency: String,
+        amount: Int? = nil,
         paymentMethod: STPPaymentMethodType,
         merchantCountry: MerchantCountry,
         customer: String? = nil,
@@ -635,7 +721,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             ],
         ]
         func makeDeferredIntent(_ intentConfig: PaymentSheet.IntentConfiguration) -> Intent {
-            return .deferredIntent(elementsSession: ._testCardValue(), intentConfig: intentConfig)
+            return .deferredIntent(intentConfig: intentConfig)
         }
 
         var intents: [(String, Intent)]
@@ -646,32 +732,36 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
 
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer
                 )
             }
 
             intents = [
-                ("PaymentIntent", .paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)),
+                ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
                 return intents
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency)) { paymentMethod, _ in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency)) { paymentMethod, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
-                    types: paymentMethodTypes, currency: currency,
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     paymentMethodID: paymentMethod.stripeId,
                     customerID: customer,
@@ -690,28 +780,31 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     otherParams: ["setup_future_usage": "off_session"]
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     otherParams: ["setup_future_usage": "off_session"]
                 )
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
                 let otherParams = [
                     "setup_future_usage": "off_session",
                 ].merging(paramsForServerSideConfirmation) { _, b in b }
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
+                    amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     paymentMethodID: paymentMethod.stripeId,
                     customerID: customer,
@@ -720,7 +813,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 )
             }
             return [
-                ("PaymentIntent w/ setup_future_usage", .paymentIntent(elementsSession: ._testCardValue(), paymentIntent: paymentIntent)),
+                ("PaymentIntent w/ setup_future_usage", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
@@ -736,7 +829,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: paramsForServerSideConfirmation)
             }
             return [
-                ("SetupIntent", .setupIntent(elementsSession: ._testCardValue(), setupIntent: setupIntent)),
+                ("SetupIntent", .setupIntent(setupIntent)),
                 ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
@@ -768,7 +861,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         noFieldsConfig.billingDetailsCollectionConfiguration.email = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.phone = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.address = .never
-        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), configuration: .paymentSheet(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentSheet(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
 
         XCTAssertNil(getName(from: form))
         XCTAssertNil(form.getTextFieldElement("Email"))
@@ -790,7 +883,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         allFieldsConfig.billingDetailsCollectionConfiguration.email = .always
         allFieldsConfig.billingDetailsCollectionConfiguration.phone = .always
         allFieldsConfig.billingDetailsCollectionConfiguration.address = .full
-        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), configuration: .paymentSheet(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentSheet(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
         XCTAssertNotNil(getName(from: form))
         XCTAssertNotNil(form.getTextFieldElement("Email"))
         XCTAssertNotNil(form.getPhoneNumberElement())
@@ -808,7 +901,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
 extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
-        return UIViewController()
+        return window.rootViewController!
     }
 
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
@@ -824,5 +917,76 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state
         action.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
         action.complete(with: .succeeded, error: nil)
+    }
+}
+
+extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDelegate {
+    nonisolated func didUpdate(_ viewController: StripePaymentSheet.PaymentMethodFormViewController) {
+    }
+
+    nonisolated func updateErrorLabel(for error: (any Error)?) {
+    }
+}
+
+// MARK: - IntentConfirmParams
+
+extension PaymentSheet_LPM_ConfirmFlowTests {
+    func testIntentConfirmParamsEquatable() {
+        let lhs = IntentConfirmParams(type: .stripe(.card))
+        let rhs = IntentConfirmParams(type: .stripe(.card))
+        // When lhs has an obscure difference w/ rhs...
+        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customer: .init(id: "", ephemeralKeySecret: ""))
+        // ...they should not be equal
+        XCTAssertNotEqual(lhs, rhs)
+    }
+}
+
+extension IntentConfirmParams: Equatable {
+    static public func == (lhs: StripePaymentSheet.IntentConfirmParams, rhs: StripePaymentSheet.IntentConfirmParams) -> Bool {
+        // Hack to compare `paymentMethodParams` objects; consider them equal if their serialized versions are the same
+        let lhsPaymentMethodParams = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: lhs.paymentMethodParams))
+        let rhsPaymentMethodParams = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: rhs.paymentMethodParams))
+        if lhsPaymentMethodParams != rhsPaymentMethodParams {
+            print("Params not equal: \(lhsPaymentMethodParams) vs \(rhsPaymentMethodParams)")
+            return false
+        }
+        if lhs.paymentMethodType != rhs.paymentMethodType {
+            print("Payment method types not equal: \(lhs.paymentMethodType) vs \(rhs.paymentMethodType)")
+            return false
+        }
+
+        let lhsConfirmPaymentMethodOptions = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: lhs.confirmPaymentMethodOptions))
+        let rhsConfirmPaymentMethodOptions = URLEncoder.queryString(from: STPFormEncoder.dictionary(forObject: rhs.confirmPaymentMethodOptions))
+        if lhsConfirmPaymentMethodOptions != rhsConfirmPaymentMethodOptions {
+            print("Confirm payment method options not equal: \(lhs.confirmPaymentMethodOptions) vs \(rhs.confirmPaymentMethodOptions)")
+            return false
+        }
+
+        if lhs.saveForFutureUseCheckboxState != rhs.saveForFutureUseCheckboxState {
+            print("Save for future use checkbox states not equal: \(lhs.saveForFutureUseCheckboxState) vs \(rhs.saveForFutureUseCheckboxState)")
+            return false
+        }
+
+        if lhs.didDisplayMandate != rhs.didDisplayMandate {
+            print("Did display mandate states not equal: \(lhs.didDisplayMandate) vs \(rhs.didDisplayMandate)")
+            return false
+        }
+
+        if lhs.financialConnectionsLinkedBank != rhs.financialConnectionsLinkedBank {
+            print("Financial connections linked banks not equal: \(lhs.financialConnectionsLinkedBank.debugDescription) vs \(rhs.financialConnectionsLinkedBank.debugDescription)")
+            return false
+        }
+
+        if lhs.instantDebitsLinkedBank != rhs.instantDebitsLinkedBank {
+            print("Instant debits linked banks not equal: \(lhs.instantDebitsLinkedBank.debugDescription) vs \(rhs.instantDebitsLinkedBank.debugDescription)")
+            return false
+        }
+
+        // Sanity check to make sure when we add new properties, we check them here
+        let mirror = Mirror(reflecting: lhs)
+        let propertyCount = mirror.children.count
+        XCTAssertEqual(propertyCount, 7)
+
+        return true
     }
 }

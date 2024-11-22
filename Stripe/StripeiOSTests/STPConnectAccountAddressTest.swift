@@ -20,19 +20,12 @@ class STPConnectAccountAddressTest: XCTestCase {
         let mapping = STPConnectAccountAddress.propertyNamesToFormFieldNamesMapping()
 
         for propertyName in mapping.keys {
-            guard let propertyName = propertyName as? String else {
-                continue
-            }
             XCTAssertFalse(propertyName.contains(":"))
             XCTAssert(address.responds(to: NSSelectorFromString(propertyName)))
         }
 
         for formFieldName in mapping.values {
-            guard let formFieldName = formFieldName as? String else {
-                continue
-            }
-            XCTAssert((formFieldName is NSString))
-            XCTAssert(formFieldName.count > 0)
+            XCTAssert(!formFieldName.isEmpty)
         }
 
         XCTAssertEqual(mapping.values.count, Set(mapping.values).count)

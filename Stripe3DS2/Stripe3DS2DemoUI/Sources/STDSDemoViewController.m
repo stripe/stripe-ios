@@ -33,6 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
     if (self) {
         _imageLoader = imageLoader;
         _customization = [STDSUICustomization defaultSettings];
+        
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        [appearance configureWithOpaqueBackground];
+        _customization.navigationBarCustomization.scrollEdgeAppearance = appearance;
     }
     
     return self;
@@ -138,7 +142,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)presentTextChallengeLoadsSlowly {
     self.shouldLoadSlowly = YES;
-    STDSProgressViewController *progressVC = [[STDSProgressViewController alloc] initWithDirectoryServer:STDSDirectoryServerULTestEC uiCustomization:self.customization didCancel:^{}];
+    STDSProgressViewController *progressVC = [[STDSProgressViewController alloc] initWithDirectoryServer:STDSDirectoryServerULTestEC uiCustomization:self.customization analyticsDelegate:nil didCancel:^{}];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:progressVC];
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -166,7 +170,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)presentProgressView {
     __weak typeof(self) weakSelf = self;
-    UIViewController *vc = [[STDSProgressViewController alloc] initWithDirectoryServer:STDSDirectoryServerULTestEC uiCustomization:self.customization didCancel:^{
+    UIViewController *vc = [[STDSProgressViewController alloc] initWithDirectoryServer:STDSDirectoryServerULTestEC
+                                                                       uiCustomization:self.customization
+                                                                     analyticsDelegate:nil
+                                                                             didCancel:^{
         [weakSelf dismissViewControllerAnimated:YES completion:nil];
     }];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -174,9 +181,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)presentChallengeForChallengeResponse:(id<STDSChallengeResponse>)challengeResponse {
-    STDSChallengeResponseViewController *challengeResponseViewController = [[STDSChallengeResponseViewController alloc] initWithUICustomization:self.customization imageLoader:self.imageLoader directoryServer:STDSDirectoryServerULTestEC];
+    STDSChallengeResponseViewController *challengeResponseViewController = [[STDSChallengeResponseViewController alloc] initWithUICustomization:self.customization
+                                                                                                                                    imageLoader:self.imageLoader
+                                                                                                                                directoryServer:STDSDirectoryServerULTestEC
+                                                                                                                              analyticsDelegate:nil];
     challengeResponseViewController.delegate = self;
-
+    
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:challengeResponseViewController];
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
     // Simulate what `STDSTransaction` does

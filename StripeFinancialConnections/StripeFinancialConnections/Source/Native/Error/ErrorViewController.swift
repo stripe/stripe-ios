@@ -61,6 +61,7 @@ final class ErrorViewController: UIViewController {
             institutionIconView.setImageUrl(dataSource.institution?.icon?.default)
             let primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
                 title: String.Localized.select_another_bank,
+                accessibilityIdentifier: "select_another_bank_button",
                 action: { [weak self] in
                     guard let self else { return }
                     self.delegate?.errorViewControllerDidSelectAnotherBank(self)
