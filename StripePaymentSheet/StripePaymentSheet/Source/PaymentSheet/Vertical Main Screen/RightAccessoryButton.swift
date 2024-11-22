@@ -159,7 +159,7 @@ extension RowButton.RightAccessoryButton {
     ///   - isCBCEligible: True if the merchant is eligible for card brand choice, false otherwise
     ///   - allowsRemovalOfLastSavedPaymentMethod: True if we can remove the last saved payment method, false otherwise
     ///   - allowsPaymentMethodRemoval: True if removing payment methods is enabled, false otherwise
-    ///   - isFlatCheckmarkStyle: True if we are in embedded and of style `flatWithCheckmark`
+    ///   - isFlatCheckmarkStyle: True if embedded and style of `flatWithCheckmark`
     /// - Returns: 'AccessoryType.viewMore' if more than one payment method is saved, 'AccessoryType.edit' if only one payment method exists and it can either be updated or removed, and 'nil' otherwise.
     static func getAccessoryButtonType(savedPaymentMethodsCount: Int,
                                        isFirstCardCoBranded: Bool,
