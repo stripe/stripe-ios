@@ -335,14 +335,14 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
         switch self {
         case .flatWithRadio:
             return UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        case .floatingButton:
+        case .floatingButton, .flatWithCheckmark:
             return .zero
         }
     }
 
     fileprivate func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
         switch self {
-        case .flatWithRadio:
+        case .flatWithRadio, .flatWithCheckmark:
             // TODO(porter) See if there is a better way to do this, less sneaky
             var appearance = appearance
             appearance.borderWidth = 0.0

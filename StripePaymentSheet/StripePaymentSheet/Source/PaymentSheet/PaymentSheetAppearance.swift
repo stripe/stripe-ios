@@ -251,6 +251,7 @@ public extension PaymentSheet {
                 case flatWithRadio
                 /// A floating button style
                 case floatingButton
+                case flatWithCheckmark
             }
             
             /// The display style of the row
@@ -287,6 +288,9 @@ public extension PaymentSheet {
 
                 /// Appearance settings for the radio button
                 public var radio: Radio = Radio()
+                
+                /// Appearance settings for the checkmark
+                public var checkmark: Checkmark = Checkmark()
 
                 /// Describes the appearance of the radio button
                 public struct Radio: Equatable {
@@ -297,6 +301,13 @@ public extension PaymentSheet {
                     /// The color of the radio button when unselected
                     /// - Note: If `nil`, defaults to `appearance.colors.componentBorder`
                     public var unselectedColor: UIColor?
+                }
+                
+                /// Describes the appearance of the checkmark
+                public struct Checkmark: Equatable {
+                    /// The color of the checkmark button when selected
+                    /// - Note: If `nil`, defaults to `appearance.color.primaryColor`
+                    public var color: UIColor?
                 }
             }
 

@@ -8,8 +8,7 @@
 import Foundation
 import StripeCoreTestUtils
 import UIKit
-
-@testable@_spi(STP) import StripePaymentSheet
+@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
@@ -45,6 +44,14 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     func testPaymentMethodRowButton_selected_with_zero_border_width() {
         var appearance = PaymentSheet.Appearance.default
         appearance.borderWidth = 0
+        let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: appearance)
+        rowButton.state = .selected
+        verify(rowButton)
+    }
+    
+    func testPaymentMethodRowButton_ignoresEmbeddedConfiguration() {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: appearance)
         rowButton.state = .selected
         verify(rowButton)
