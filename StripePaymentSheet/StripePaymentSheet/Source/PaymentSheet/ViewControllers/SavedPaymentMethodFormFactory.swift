@@ -27,7 +27,7 @@ class SavedPaymentMethodFormFactory {
     func makePaymentMethodForm() -> UIView {
         switch viewModel.paymentMethod.type {
         case .card:
-            return cardSection.view
+            return makeCard()
         case .USBankAccount:
             return usBankAccountSection
         case .SEPADebit:
@@ -36,59 +36,6 @@ class SavedPaymentMethodFormFactory {
             fatalError("Cannot make payment method form for payment method type \(viewModel.paymentMethod.type).")
         }
     }
-
-    private lazy var cardBrandDropDown: DropdownFieldElement? = {
-        guard viewModel.paymentMethod.isCoBrandedCard else { return nil }
-        let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
-                    let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
-                                                                                       theme: viewModel.appearance.asElementsTheme,
-                                                                                       includePlaceholder: false) { [self] in
-                        let selectedCardBrand = viewModel.selectedCardBrand ?? .unknown
-                        let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand), "cbc_event_source": "edit"]
-                        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
-                                                                             params: params)
-                    } didTapClose: { [self] in
-                        let selectedCardBrand = viewModel.selectedCardBrand ?? .unknown
-                        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .closeCardBrandDropDown),
-                                                                             params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand)])
-                    }
-
-                    // pre-select current card brand
-                    if let currentCardBrand = viewModel.paymentMethod.card?.preferredDisplayBrand,
-                       let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
-                        cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
-                        viewModel.selectedCardBrand = currentCardBrand
-                    }
-                    return cardBrandDropDown
-    }()
-
-    private lazy var panElement: TextFieldElement = {
-        return TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown).makeElement(theme: viewModel.appearance.asElementsTheme)
-    }()
-
-    private lazy var expiryDateElement: TextFieldElement = {
-        let expiryDate = CardExpiryDate(month: viewModel.paymentMethod.card?.expMonth ?? 0, year: viewModel.paymentMethod.card?.expYear ?? 0)
-        let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)
-        return expiryDateElement
-    }()
-
-    private lazy var cvcElement: TextFieldElement = {
-        let cvcConfiguration = TextFieldElement.CensoredCVCConfiguration(brand: self.viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown)
-        let cvcElement = cvcConfiguration.makeElement(theme: viewModel.appearance.asElementsTheme)
-        return cvcElement
-    }()
-
-    private lazy var cardSection: SectionElement = {
-        let allSubElements: [Element?] = [
-            panElement,
-            SectionElement.HiddenElement(cardBrandDropDown),
-            SectionElement.MultiElementRow([expiryDateElement, cvcElement])
-        ]
-        let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: viewModel.appearance.asElementsTheme)
-        section.delegate = self
-        viewModel.errorState = !expiryDateElement.validationState.isValid
-        return section
-    }()
 
     private lazy var usBankAccountSection: UIStackView = {
         let nameElement: SectionElement = {
@@ -136,11 +83,7 @@ extension SavedPaymentMethodFormFactory: ElementDelegate {
     func didUpdate(element: Element) {
         switch viewModel.paymentMethod.type {
         case .card:
-            let selectedBrand = cardBrandDropDown?.selectedItem.rawData.toCardBrand
-            let currentCardBrand = viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown
-            let shouldBeEnabled = selectedBrand != currentCardBrand && selectedBrand != .unknown
-            viewModel.selectedCardBrand = selectedBrand
-            delegate?.didUpdate(_: element, shouldEnableSaveButton: shouldBeEnabled)
+            delegate?.didUpdate(_: element, shouldEnableSaveButton: viewModel.selectedCardBrand != viewModel.paymentMethod.card?.preferredDisplayBrand)
         default:
             break
         }
