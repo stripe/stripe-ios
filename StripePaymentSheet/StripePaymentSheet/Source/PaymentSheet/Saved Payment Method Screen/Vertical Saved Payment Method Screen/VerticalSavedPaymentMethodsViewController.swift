@@ -38,7 +38,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
-    private var updateViewController: UpdateCardViewController?
+    private var updateViewController: UpdatePaymentMethodViewController?
 
     private var isEditingPaymentMethods: Bool = false {
         didSet {
@@ -50,7 +50,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             if isEditingPaymentMethods {
                 paymentMethodRows.forEach {
                     let allowsRemoval = canRemovePaymentMethods
-                    let allowsUpdating = ($0.paymentMethod.isCoBrandedCard && isCBCEligible) || (configuration.alternateUpdatePaymentMethodNavigation && $0.paymentMethod.type == .card)
+                    let paymentMethodType = $0.paymentMethod.type
+                    let allowsUpdating = ($0.paymentMethod.isCoBrandedCard && isCBCEligible) || (configuration.alternateUpdatePaymentMethodNavigation && (UpdatePaymentMethodViewModel.supportedPaymentMethods.contains { type in paymentMethodType == type }))
                     $0.state = .editing(allowsRemoval: allowsRemoval,
                                         allowsUpdating: allowsUpdating)
                 }
@@ -88,8 +89,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     var canEdit: Bool {
         // We can edit if there are removable or editable payment methods and we are not in remove only mode
-        // Or, under the new navigation flow, if any of the payment methods are cards
-        return ((canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode) || (configuration.alternateUpdatePaymentMethodNavigation && !paymentMethods.filter { $0.type == .card }.isEmpty)
+        // Or, under the new navigation flow, if any of the payment methods are cards, US bank accounts, or SEPA debit
+        return ((canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode) || (configuration.alternateUpdatePaymentMethodNavigation && paymentMethods.contains { UpdatePaymentMethodViewModel.supportedPaymentMethods.contains($0.type) })
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
@@ -342,28 +343,30 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
+        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+                                                           appearance: configuration.appearance,
+                                                           hostedSurface: .paymentSheet,
+                                                           cardBrandFilter: configuration.cardBrandFilter,
+                                                           canEdit: paymentMethod.isCoBrandedCard && isCBCEligible,
+                                                           canRemove: canRemovePaymentMethods)
+        let updateViewController = UpdatePaymentMethodViewController(
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                            appearance: configuration.appearance,
-                                                            hostedSurface: .paymentSheet,
-                                                            canRemoveCard: canRemovePaymentMethods,
                                                             isTestMode: configuration.apiClient.isTestmode,
-                                                            cardBrandFilter: configuration.cardBrandFilter)
-        
+                                                            viewModel: updateViewModel)
         updateViewController.delegate = self
         self.updateViewController = updateViewController
         self.bottomSheetController?.pushContentViewController(updateViewController)
     }
 }
 
-// MARK: - UpdateCardViewControllerDelegate
-extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDelegate {
-    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
+// MARK: - UpdatePaymentMethodViewControllerDelegate
+extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
         remove(paymentMethod: paymentMethod)
        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    func didUpdate(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         // Update the payment method
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
@@ -371,7 +374,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didDismiss(viewController: UpdateCardViewController) {
+    func didDismiss(_: UpdatePaymentMethodViewController) {
         // No-op
     }
 

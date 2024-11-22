@@ -341,13 +341,13 @@ extension TextFieldElement {
         let label = String.Localized.card_number
         let lastFour: String
         let isEditable = false
-        let cardBrandDropDown: DropdownFieldElement
+        let cardBrandDropDown: DropdownFieldElement?
 
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, cardBrandDropDown: DropdownFieldElement) {
+        init(lastFour: String, cardBrandDropDown: DropdownFieldElement?) {
             self.lastFour = lastFour
             self.cardBrandDropDown = cardBrandDropDown
         }

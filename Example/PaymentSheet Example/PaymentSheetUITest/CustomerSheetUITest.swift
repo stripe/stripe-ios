@@ -487,7 +487,7 @@ class CustomerSheetUITest: XCTestCase {
         // circularEditButton shows up in the view hierarchy, but it's not actually on the screen or tappable so we scroll a little
         let startCoordinate = app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
         startCoordinate.press(forDuration: 0.1, thenDragTo: app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
-        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").element(boundBy: 1).waitForExistenceAndTap())
         XCTAssertTrue(app.otherElements.matching(identifier: "Card Brand Dropdown").firstMatch.waitForExistenceAndTap())
         app.pickerWheels.firstMatch.selectNextOption()
         app.toolbars.buttons["Done"].tap()
@@ -496,7 +496,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
         XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 2)
 
-        app.buttons.matching(identifier: "CircularButton.Edit").element(boundBy: 1).waitForExistenceAndTap()
+        app.buttons.matching(identifier: "CircularButton.Edit").element(boundBy: 2).waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         app.alerts.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))

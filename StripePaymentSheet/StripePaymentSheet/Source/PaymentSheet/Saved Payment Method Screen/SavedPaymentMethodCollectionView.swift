@@ -119,7 +119,9 @@ extension SavedPaymentMethodCollectionView {
         /// the cell should be editable. Otherwise, it should be just removable.
         var shouldAllowEditing: Bool {
             if alternateUpdatePaymentMethodNavigation {
-                return viewModel?.savedPaymentMethod?.type == .card
+                return UpdatePaymentMethodViewModel.supportedPaymentMethods.contains { type in
+                    viewModel?.savedPaymentMethod?.type == type
+                }
             }
             else {
                 return (viewModel?.isCoBrandedCard ?? false) && cbcEligible
