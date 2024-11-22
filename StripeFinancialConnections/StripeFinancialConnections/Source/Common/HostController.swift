@@ -16,7 +16,7 @@ import UIKit
     case canceled
 
     @_spi(STP) public enum Completed {
-        case financialConnections(StripeAPI.FinancialConnectionsSession)
+        case financialConnections(StripeAPI.FinancialConnectionsSession, Bool)
         case instantDebits(InstantDebitsLinkedBank)
     }
 }

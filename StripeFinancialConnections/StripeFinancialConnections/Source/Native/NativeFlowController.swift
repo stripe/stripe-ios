@@ -423,7 +423,8 @@ extension NativeFlowController {
                                     status: "completed",
                                     numberOfLinkedAccounts: session.accounts.data.count
                                 )
-                                finishAuthSession(.completed(.financialConnections(session)))
+                                let manualEntryUsesMicrodeposits = dataManager.manifest.manualEntryUsesMicrodeposits
+                                finishAuthSession(.completed(.financialConnections(session, manualEntryUsesMicrodeposits)))
                             }
                         } else if let closeAuthFlowError = closeAuthFlowError {
                             self.logCompleteEvent(

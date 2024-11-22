@@ -232,10 +232,8 @@ extension FinancialConnectionsWebFlowViewController {
                         // Users can cancel the web flow even if they successfully linked
                         // accounts. As a result, we check whether they linked any
                         // before returning "cancelled."
-                        if !session.accounts.data.isEmpty || session.paymentAccount != nil
-                            || session.bankAccountToken != nil
-                        {
-                            self.notifyDelegateOfSuccess(result: .financialConnections(session))
+                        if !session.accounts.data.isEmpty || session.paymentAccount != nil || session.bankAccountToken != nil {
+                            self.notifyDelegateOfSuccess(result: .financialConnections(session, manifest.manualEntryUsesMicrodeposits))
                         } else {
                             self.notifyDelegateOfCancel()
                         }
@@ -246,7 +244,7 @@ extension FinancialConnectionsWebFlowViewController {
                             self.notifyDelegateOfCancel()
                         }
                     } else {
-                        self.notifyDelegateOfSuccess(result: .financialConnections(session))
+                        self.notifyDelegateOfSuccess(result: .financialConnections(session, manifest.manualEntryUsesMicrodeposits))
                     }
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
@@ -257,7 +255,7 @@ extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegateOfSuccess(result: HostControllerResult.Completed) {
         let session: StripeAPI.FinancialConnectionsSession?
-        if case .financialConnections(let wrappedSession) = result {
+        if case .financialConnections(let wrappedSession, _) = result {
             session = wrappedSession
         } else {
             session = nil

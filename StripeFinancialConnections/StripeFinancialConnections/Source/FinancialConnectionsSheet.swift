@@ -144,7 +144,7 @@ final public class FinancialConnectionsSheet {
                 switch hostControllerResult {
                 case .completed(let completedResult):
                     switch completedResult {
-                    case .financialConnections(let session):
+                    case .financialConnections(let session, _):
                         completion(.completed(session: session))
                     case .instantDebits(let linkedBank):
                         // TODO(mats): Add support for instant debits.
