@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### Payments
+* [Added] Support for Crypto bindings.
+
 ## 24.0.2 2024-11-21
 ### PaymentSheet
 * [Fixed] A bug where PaymentSheet would cause layout issues when nested within certain navigation stacks.
