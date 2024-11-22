@@ -345,7 +345,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let bank6789Button = app.buttons["••••6789"]
         let applePayButton = app.buttons["Apple Pay"]
 
-        // Ensure card bankacct is selected, and apple pay is not.
+        // Ensure card bank acct. is selected, and apple pay is not.
         XCTAssertTrue(bank6789Button.waitForExistence(timeout: 3.0))
         XCTAssertTrue(bank6789Button.isSelected)
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 3.0))
@@ -362,7 +362,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(applePayButton.isSelected)
         XCTAssertFalse(bank6789Button.isSelected)
 
-        // Remove bankacct while it isn't selected
+        // Remove bank acct. while it isn't selected
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
         app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
@@ -389,6 +389,49 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
+    
+    func testSelection_savedPaymentMethod() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .embedded
+        settings.customerMode = .returning
+        settings.applePayEnabled = .on
+        
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        
+        // Select Cash App Pay
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
+        // Select a saved card
+        XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Select payment method"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["•••• 4242"].waitForExistenceAndTap())
+        
+        // Verify we have dismissed the saved payment method view and have the correct card selected
+        XCTAssertFalse(app.staticTexts["Select payment method"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
+        // Select Cash App Pay again
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        
+        // Delete one payment method so we only have one left, we should not auto select the last remaining saved PM
+        XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap())
+        dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
+        
+        // Verify we show the bank account in the saved PM row
+        XCTAssertTrue(app.buttons["Edit"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["••••6789"].isSelected)
+        XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
+        XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
+    }
 
     func testSelection() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -414,22 +457,26 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Should auto select a saved payment method
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
 
         // Open card and cancel, should reset selection to saved card
         app.buttons["New card"].waitForExistenceAndTap()
         app.buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
 
         // Select Cash App Pay
         app.buttons["Cash App Pay"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Open card and cancel, should reset back to Cash App Pay
         app.buttons["New card"].waitForExistenceAndTap()
         app.buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Try to fill a card
@@ -440,6 +487,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
+        XCTAssertTrue(app.buttons["New card"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Tapping on card again should present the form filled out
@@ -450,18 +498,21 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
+        XCTAssertTrue(app.buttons["New card"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
-        // Select and cancel out a form PM to ensure that the 4242 card is still selected
+        // Select and cancel out a form PM to ensure that the 4444 card is still selected
         app.buttons["Klarna"].waitForExistenceAndTap()
         app.buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
+        XCTAssertTrue(app.buttons["New card"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Select a no-form PM such as Cash App Pay
         app.buttons["Cash App Pay"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Fill out US Bank Acct.
@@ -488,11 +539,13 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "••••6789")
+        XCTAssertTrue(app.buttons["US bank account"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
         // Confirm with the saved card
         app.buttons["•••• 4242"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
         app.swipeUp() // scroll to see the checkout button
         XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)

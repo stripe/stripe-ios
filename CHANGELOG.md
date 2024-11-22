@@ -1,3 +1,7 @@
+## 24.0.2 2024-11-21
+### PaymentSheet
+* [Fixed] A bug where PaymentSheet would cause layout issues when nested within certain navigation stacks.
+
 ## 24.0.1 2024-11-18
 ### PaymentSheet
 * [Added] Instant Bank Payments are now available when using deferred intents.
