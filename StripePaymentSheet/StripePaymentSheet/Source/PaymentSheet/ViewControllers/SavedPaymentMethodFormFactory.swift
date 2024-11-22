@@ -27,50 +27,18 @@ class SavedPaymentMethodFormFactory {
     func makePaymentMethodForm() -> UIView {
         switch viewModel.paymentMethod.type {
         case .card:
-            return makeCard()
+            return savedCardForm.view
         case .USBankAccount:
-            return usBankAccountSection
+            return makeUSBankAccount()
         case .SEPADebit:
-            return sepaDebitSection
+            return makeSEPADebit()
         default:
             fatalError("Cannot make payment method form for payment method type \(viewModel.paymentMethod.type).")
         }
     }
 
-    private lazy var usBankAccountSection: UIStackView = {
-        let nameElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)])
-        }()
-        let emailElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)])
-        }()
-        let bankAccountElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.USBankNumberConfiguration(bankName: viewModel.paymentMethod.usBankAccount?.bankName ?? "Bank name", lastFour: viewModel.paymentMethod.usBankAccount?.last4 ?? "").makeElement(theme: viewModel.appearance.asElementsTheme)])
-        }()
-        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, bankAccountElement.view])
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.axis = .vertical
-        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
-        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
-        return stackView
-    }()
-
-    private lazy var sepaDebitSection: UIStackView = {
-        let nameElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)])
-        }()
-        let emailElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)])
-        }()
-        let ibanElement: SectionElement = {
-            return SectionElement(elements: [TextFieldElement.LastFourIBANConfiguration(lastFour: viewModel.paymentMethod.sepaDebit?.last4 ?? "0000").makeElement(theme: viewModel.appearance.asElementsTheme)])
-        }()
-        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, ibanElement.view])
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.axis = .vertical
-        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
-        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
-        return stackView
+    private lazy var savedCardForm: Element = {
+       return makeCard()
     }()
 }
 

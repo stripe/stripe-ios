@@ -13,7 +13,7 @@ import Foundation
 import UIKit
 
 extension SavedPaymentMethodFormFactory {
-    func makeCard() -> UIView {
+    func makeCard() -> Element {
         let cardBrandDropDown: DropdownFieldElement? = {
             guard viewModel.paymentMethod.isCoBrandedCard else { return nil }
             let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
@@ -38,7 +38,7 @@ extension SavedPaymentMethodFormFactory {
                 cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
                 viewModel.selectedCardBrand = currentCardBrand
             }
-            cardBrandDropDown.didUpdate = didUpdate
+            cardBrandDropDown.didUpdate = updateSelectedCardBrand
             return cardBrandDropDown
         }()
 
@@ -68,9 +68,9 @@ extension SavedPaymentMethodFormFactory {
             viewModel.errorState = !expiryDateElement.validationState.isValid
             return section
         }()
-        return cardSection.view
+        return cardSection
     }
-    private func didUpdate(index: Int) {
+    private func updateSelectedCardBrand(index: Int) {
         let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
         viewModel.selectedCardBrand = cardBrands[index]
     }
