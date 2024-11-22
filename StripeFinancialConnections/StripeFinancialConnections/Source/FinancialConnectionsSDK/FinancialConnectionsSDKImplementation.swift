@@ -39,7 +39,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                 switch result {
                 case .completed(let hostControllerResult):
                     switch hostControllerResult {
-                    case .financialConnections(let session, let usesMicrodeposits):
+                    case .financialConnections(let session):
                         guard let paymentAccount = session.paymentAccount else {
                             completion(
                                 .failed(
@@ -50,7 +50,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                             )
                             return
                         }
-                        if let linkedBank = self.linkedBankFor(paymentAccount: paymentAccount, session: session, usesMicrodeposits: usesMicrodeposits) {
+                        if let linkedBank = self.linkedBankFor(paymentAccount: paymentAccount, session: session) {
                             completion(.completed(.financialConnections(linkedBank)))
                         } else {
                             completion(
@@ -77,8 +77,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
 
     private func linkedBankFor(
         paymentAccount: StripeAPI.FinancialConnectionsSession.PaymentAccount,
-        session: StripeAPI.FinancialConnectionsSession,
-        usesMicrodeposits: Bool
+        session: StripeAPI.FinancialConnectionsSession
     ) -> FinancialConnectionsLinkedBank? {
         switch paymentAccount {
         case .linkedAccount(let linkedAccount):
@@ -97,7 +96,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                 displayName: bankAccount.bankName,
                 bankName: bankAccount.bankName,
                 last4: bankAccount.last4,
-                instantlyVerified: !usesMicrodeposits
+                instantlyVerified: bankAccount.instantlyVerified
             )
         case .unparsable:
             return nil

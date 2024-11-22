@@ -39,7 +39,7 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
         )
         let analytic = FinancialConnectionsSheetCompletionAnalytic.make(
             clientSecret: "secret",
-            result: .completed(.financialConnections(session, false))
+            result: .completed(.financialConnections(session))
         )
         guard let closedAnalytic = analytic as? FinancialConnectionsSheetClosedAnalytic else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")

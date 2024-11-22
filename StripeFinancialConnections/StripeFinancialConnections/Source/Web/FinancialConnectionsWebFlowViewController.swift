@@ -142,7 +142,8 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegate(result: HostControllerResult) {
-        delegate?.webFlowViewController(self, didFinish: result)
+        let updatedResult = result.updateWith(manifest)
+        delegate?.webFlowViewController(self, didFinish: updatedResult)
         delegate = nil  // prevent the delegate from being called again
     }
 
@@ -233,7 +234,7 @@ extension FinancialConnectionsWebFlowViewController {
                         // accounts. As a result, we check whether they linked any
                         // before returning "cancelled."
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil || session.bankAccountToken != nil {
-                            self.notifyDelegateOfSuccess(result: .financialConnections(session, manifest.manualEntryUsesMicrodeposits))
+                            self.notifyDelegateOfSuccess(result: .financialConnections(session))
                         } else {
                             self.notifyDelegateOfCancel()
                         }
@@ -244,7 +245,7 @@ extension FinancialConnectionsWebFlowViewController {
                             self.notifyDelegateOfCancel()
                         }
                     } else {
-                        self.notifyDelegateOfSuccess(result: .financialConnections(session, manifest.manualEntryUsesMicrodeposits))
+                        self.notifyDelegateOfSuccess(result: .financialConnections(session))
                     }
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
@@ -255,7 +256,7 @@ extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegateOfSuccess(result: HostControllerResult.Completed) {
         let session: StripeAPI.FinancialConnectionsSession?
-        if case .financialConnections(let wrappedSession, _) = result {
+        if case .financialConnections(let wrappedSession) = result {
             session = wrappedSession
         } else {
             session = nil

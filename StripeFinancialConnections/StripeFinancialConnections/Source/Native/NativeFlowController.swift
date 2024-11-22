@@ -354,7 +354,8 @@ extension NativeFlowController {
 
         let finishAuthSession: (HostControllerResult) -> Void = { [weak self] result in
             guard let self = self else { return }
-            self.delegate?.nativeFlowController(self, didFinish: result)
+            let updatedResult = result.updateWith(self.dataManager.manifest)
+            self.delegate?.nativeFlowController(self, didFinish: updatedResult)
         }
 
         dataManager
@@ -423,8 +424,7 @@ extension NativeFlowController {
                                     status: "completed",
                                     numberOfLinkedAccounts: session.accounts.data.count
                                 )
-                                let manualEntryUsesMicrodeposits = dataManager.manifest.manualEntryUsesMicrodeposits
-                                finishAuthSession(.completed(.financialConnections(session, manualEntryUsesMicrodeposits)))
+                                finishAuthSession(.completed(.financialConnections(session)))
                             }
                         } else if let closeAuthFlowError = closeAuthFlowError {
                             self.logCompleteEvent(

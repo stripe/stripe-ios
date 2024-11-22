@@ -16,8 +16,46 @@ import UIKit
     case canceled
 
     @_spi(STP) public enum Completed {
-        case financialConnections(StripeAPI.FinancialConnectionsSession, Bool)
+        case financialConnections(StripeAPI.FinancialConnectionsSession)
         case instantDebits(InstantDebitsLinkedBank)
+    }
+}
+
+extension HostControllerResult {
+    
+    /// Updates the `HostControllerResult` from the manifest to populate any fields that aren't part of the actual API response,
+    /// but that are still necessary to produce the correct result in the host surface.
+    func updateWith(_ manifest: FinancialConnectionsSessionManifest) -> Self {
+        guard case .completed(.financialConnections(let session)) = self else {
+            return self
+        }
+        
+        let instantlyVerified = !manifest.manualEntryUsesMicrodeposits
+        
+        let updatedSession = StripeAPI.FinancialConnectionsSession(
+            clientSecret: session.clientSecret,
+            id: session.id,
+            accounts: session.accounts,
+            livemode: session.livemode,
+            paymentAccount: session.paymentAccount?.setInstantlyVerifiedIfNeeded(instantlyVerified),
+            bankAccountToken: session.bankAccountToken,
+            status: session.status,
+            statusDetails: session.statusDetails
+        )
+        
+        return .completed(.financialConnections(updatedSession))
+    }
+}
+
+private extension StripeAPI.FinancialConnectionsSession.PaymentAccount {
+    
+    func setInstantlyVerifiedIfNeeded(_ value: Bool) -> Self {
+        guard case .bankAccount(var bankAccount) = self else {
+            return self
+        }
+        
+        bankAccount.instantlyVerified = value
+        return .bankAccount(bankAccount)
     }
 }
 
