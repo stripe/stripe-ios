@@ -207,10 +207,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
 
-        // Simulate tapping the last button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
-        }
+        // Simulate tapping the last button (Cash App Pay)
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
 
         verify(embeddedView)
     }
@@ -429,10 +427,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
 
-        // Simulate tapping the last button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
-        }
+        // Simulate tapping the last button (Cash App Pay)
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
 
         verify(embeddedView)
     }
@@ -452,10 +448,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
 
-        // Simulate tapping the last button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
-        }
+        // Simulate tapping the last button (Cash App Pay)
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
 
         verify(embeddedView)
     }
@@ -727,10 +721,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
         
-        // Simulate tapping the last button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: .stripe(.cashApp)))
-        }
+        // Simulate tapping the last button (Cash App Pay)
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
         
         verify(embeddedView)
     }
@@ -750,10 +742,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
         
-        // Simulate tapping the last button
-        if let rowButton = embeddedView.stackView.arrangedSubviews.last(where: { $0 is RowButton }) as? RowButton {
-            embeddedView.didTap(selectedRowButton: rowButton, selection: .new(paymentMethodType: .stripe(.cashApp)))
-        }
+        // Simulate tapping the last button (Cash App Pay)
+        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
         
         verify(embeddedView)
     }
