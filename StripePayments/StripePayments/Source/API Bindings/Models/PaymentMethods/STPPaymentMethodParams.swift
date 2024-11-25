@@ -106,6 +106,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var billie: STPPaymentMethodBillieParams?
     /// If this is a Satispay PaymentMethod, this contains additional details.
     @objc public var satispay: STPPaymentMethodSatispayParams?
+    /// If this is a Crypto PaymentMethod, this contains additional details.
+    @objc public var crypto: STPPaymentMethodCryptoParams?
     /// If this is a Multibanco PaymentMethod, this contains additional details.
     @objc public var multibanco: STPPaymentMethodMultibancoParams?
 
@@ -704,6 +706,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Crypto PaymentMethod.
+    /// - Parameters:
+    ///   - crypto:              An object containing additional Crypto details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        crypto: STPPaymentMethodCryptoParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .crypto
+        self.crypto = crypto
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for an Multibanco PaymentMethod.
     /// - Parameters:
     ///   - multibanco:          An object containing additional Multibanco details.
@@ -792,6 +812,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             self.billie = STPPaymentMethodBillieParams()
         case .satispay:
             self.satispay = STPPaymentMethodSatispayParams()
+        case .crypto:
+            self.crypto = STPPaymentMethodCryptoParams()
         case .multibanco:
             self.multibanco = STPPaymentMethodMultibancoParams()
         case .paynow, .zip, .mobilePay, .konbini, .promptPay, .twint:
@@ -857,6 +879,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: sunbit)): "sunbit",
             NSStringFromSelector(#selector(getter: billie)): "billie",
             NSStringFromSelector(#selector(getter: satispay)): "satispay",
+            NSStringFromSelector(#selector(getter: crypto)): "crypto",
             NSStringFromSelector(#selector(getter: multibanco)): "multibanco",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1333,6 +1356,8 @@ extension STPPaymentMethodParams {
             billie = STPPaymentMethodBillieParams()
         case .satispay:
             satispay = STPPaymentMethodSatispayParams()
+        case .crypto:
+            crypto = STPPaymentMethodCryptoParams()
         case .multibanco:
             multibanco = STPPaymentMethodMultibancoParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint:
