@@ -482,6 +482,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Try to fill a card
         app.buttons["New card"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add new card"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["New card"].isSelected)
+        XCTAssertFalse(app.buttons["Cash App Pay"].isSelected)
         try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.toolbars.buttons["Done"].waitForExistenceAndTap()
         app.buttons["Continue"].waitForExistenceAndTap()
