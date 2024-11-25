@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Zrušit a zaplatit jiným způsobem";
 
+"Card details cannot be changed." = "Údaje na kartě nelze měnit.";
+
 "Change email" = "Změnit e-mail";
 
 "Choose a payment method" = "Zvolte platební metodu";
@@ -111,6 +113,8 @@
 "Join Link" = "Připojit se k Link";
 
 "Log out of Link" = "Odhlásit ze služby Link";
+
+"Manage card" = "Spravovat kartu";
 
 "Manage payment method" = "Spravovat způsob platby";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Není k dispozici pro tento nákup";
 
 "Update card" = "Aktualizovat kartu";
-
-"Update card brand" = "Aktualizovat značku karty";
 
 "Use your saved info to check out faster" = "Použijte uložené informace k rychlejšímu odbavení";
 

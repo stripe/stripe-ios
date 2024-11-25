@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Анулиране или плащане по друг начин";
 
+"Card details cannot be changed." = "Данните на картата не могат да бъдат променяни.";
+
 "Change email" = "Промяна на имейл";
 
 "Choose a payment method" = "Избор на метод на плащане";
@@ -111,6 +113,8 @@
 "Join Link" = "Присъединяване към Link";
 
 "Log out of Link" = "Излизане от Link";
+
+"Manage card" = "Управление на карта";
 
 "Manage payment method" = "Управляване на начина на плащане";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Недостъпно за тази покупка";
 
 "Update card" = "Актуализиране на банкова карта";
-
-"Update card brand" = "Актуализиране на марката на картата";
 
 "Use your saved info to check out faster" = "Използвайте запазената си информация за по-бързо финализиране";
 

@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Kanselahin at magbayad sa ibang paraan";
 
+"Card details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng kard.";
+
 "Change email" = "Palitan ang email";
 
 "Choose a payment method" = "Pumili ng pamamaraan ng pagbabayad";
@@ -111,6 +113,8 @@
 "Join Link" = "Sumali sa Link";
 
 "Log out of Link" = "Mag-log out sa Link";
+
+"Manage card" = "Pangasiwaan ang kard";
 
 "Manage payment method" = "Pangasiwaan ang paraan ng pagbabayad";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Hindi magamit sa pagbiling ito";
 
 "Update card" = "I-update ang kard";
-
-"Update card brand" = "I-update ang brand ng kard";
 
 "Use your saved info to check out faster" = "Gamitin ang iyong naka-save na impormayon para mas mabilis na mag-check out";
 

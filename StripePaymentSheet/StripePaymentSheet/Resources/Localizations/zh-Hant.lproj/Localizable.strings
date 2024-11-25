@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "取消並用另一方式支付";
 
+"Card details cannot be changed." = "無法更改金融卡詳情。";
+
 "Change email" = "更改電郵地址";
 
 "Choose a payment method" = "選擇一個支付方式";
@@ -111,6 +113,8 @@
 "Join Link" = "加入 Link";
 
 "Log out of Link" = "退出 Link";
+
+"Manage card" = "管理金融卡";
 
 "Manage payment method" = "管理支付方式";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "無法完成這筆訂單";
 
 "Update card" = "更新金融卡";
-
-"Update card brand" = "更新金融卡品牌";
 
 "Use your saved info to check out faster" = "用您保存的資訊，更快結帳";
 

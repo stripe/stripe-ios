@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "您的郵區編號無效。";
 
+"Your card has expired." = "您的銀行卡已過期。";
+
 "Your card number is incomplete." = "您的銀行卡號不完整。";
 
 "Your card number is invalid." = "您的卡號無效。";

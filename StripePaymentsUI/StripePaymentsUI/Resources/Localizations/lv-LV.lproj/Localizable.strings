@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Pasta indekss nav derīgs.";
 
+"Your card has expired." = "Kartes derīguma termiņš ir beidzies.";
+
 "Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
 
 "Your card number is invalid." = "Kartes numurs nav derīgs.";

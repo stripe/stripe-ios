@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Szakítsa meg, és fizessen más módon";
 
+"Card details cannot be changed." = "A kártyai adatai nem módosíthatók.";
+
 "Change email" = "E-mail-cím módosítása";
 
 "Choose a payment method" = "Fizetési mód választása";
@@ -111,6 +113,8 @@
 "Join Link" = "Csatlakozás a Linkhez";
 
 "Log out of Link" = "Kijelentkezés a Link";
+
+"Manage card" = "Kártya kezelése";
 
 "Manage payment method" = "Fizetési mód kezelése";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Nem érhető el ennél a vásárlásnál";
 
 "Update card" = "Kártya módosítása";
-
-"Update card brand" = "Kártya márkájának frissítése";
 
 "Use your saved info to check out faster" = "Mentett adatok használata a gyorsabb fizetéshez";
 

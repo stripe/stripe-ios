@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Dit postnummer er ugyldigt.";
 
+"Your card has expired." = "Dit kort er udløbet.";
+
 "Your card number is incomplete." = "Dit kortnummer er ikke fuldendt.";
 
 "Your card number is invalid." = "Dit kortnummer er ugyldigt.";

@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "A ZIP érvénytelen.";
 
+"Your card has expired." = "A kártyája lejárt.";
+
 "Your card number is incomplete." = "A kártyaszám hiányos.";
 
 "Your card number is invalid." = "A kártyaszám érvénytelen.";

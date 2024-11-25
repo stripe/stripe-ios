@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Annulla e paga in altro modo";
 
+"Card details cannot be changed." = "Non puoi modificare i dati della carta.";
+
 "Change email" = "Cambia email";
 
 "Choose a payment method" = "Scegli una modalità di pagamento";
@@ -111,6 +113,8 @@
 "Join Link" = "Registrati su Link";
 
 "Log out of Link" = "Esci da Link";
+
+"Manage card" = "Gestisci carta";
 
 "Manage payment method" = "Gestisci modalità di pagamento";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Non disponibile per questo acquisto";
 
 "Update card" = "Aggiorna carta";
-
-"Update card brand" = "Aggiorna il circuito carta";
 
 "Use your saved info to check out faster" = "Usa le informazioni salvate per pagare più velocemente";
 

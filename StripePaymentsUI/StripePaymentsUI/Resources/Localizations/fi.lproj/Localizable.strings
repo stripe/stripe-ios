@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Postinumero on virheellinen.";
 
+"Your card has expired." = "Korttisi on vanhentunut.";
+
 "Your card number is incomplete." = "Kortin numero on puutteellinen.";
 
 "Your card number is invalid." = "Kortin numero on virheellinen.";
