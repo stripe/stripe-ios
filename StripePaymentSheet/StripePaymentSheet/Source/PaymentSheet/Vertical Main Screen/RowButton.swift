@@ -141,6 +141,7 @@ class RowButton: UIView {
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
         if subtext == nil {
             heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance,
+                                                                                                    isEmbedded: isEmbedded,
                                                                                                     isFlatWithCheckmarkStyle: isFlatWithCheckmarkStyle,
                                                                                                     accessoryView: rightAccessoryView))
             heightConstraint?.isActive = true
@@ -216,6 +217,7 @@ class RowButton: UIView {
         // Update the height so that RowButtons heights w/o subtext match those with subtext
         heightConstraint?.isActive = false
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance,
+                                                                                                isEmbedded: isEmbedded,
                                                                                                 isFlatWithCheckmarkStyle: isFlatWithCheckmarkStyle,
                                                                                                 accessoryView: rightAccessoryView))
         heightConstraint?.isActive = true
@@ -305,10 +307,10 @@ extension RowButton: UIGestureRecognizerDelegate {
 
 // MARK: - Helpers
 extension RowButton {
-    static func calculateTallestHeight(appearance: PaymentSheet.Appearance, isFlatWithCheckmarkStyle: Bool = false, accessoryView: UIView? = nil) -> CGFloat {
+    static func calculateTallestHeight(appearance: PaymentSheet.Appearance, isEmbedded: Bool, isFlatWithCheckmarkStyle: Bool = false, accessoryView: UIView? = nil) -> CGFloat {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext") { _ in }
+        let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext", isEmbedded: isEmbedded) { _ in }
         let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
         
         // Check if in .flatWithCheck style and if rightAccessoryView exists, if so account for the Edit button being below the labels

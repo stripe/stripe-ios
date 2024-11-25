@@ -82,7 +82,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
         verify(embeddedView)
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -106,7 +106,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
 
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -362,7 +362,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
 
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -387,7 +387,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
 
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -656,7 +656,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
         
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -681,7 +681,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
         
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
