@@ -191,6 +191,15 @@ extension PaymentSheet {
                 configuration.isEligibleForBankTab
             }
 
+            func insertAtBankTabPosition(paymentMethodType: PaymentMethodType) {
+                let bankTabPosition = elementsSession.orderedPaymentMethodTypes.firstIndex(of: .link)
+                if let bankTabPosition, recommendedPaymentMethodTypes.indices.contains(bankTabPosition) {
+                    recommendedPaymentMethodTypes.insert(paymentMethodType, at: bankTabPosition)
+                } else {
+                    recommendedPaymentMethodTypes.append(paymentMethodType)
+                }
+            }
+
             if eligibleForInstantDebits {
                 let availabilityStatus = configurationSatisfiesRequirements(
                     requirements: [.financialConnectionsSDK],
@@ -198,7 +207,7 @@ extension PaymentSheet {
                     intent: intent
                 )
                 if availabilityStatus == .supported {
-                    recommendedPaymentMethodTypes.append(.instantDebits)
+                    insertAtBankTabPosition(paymentMethodType: .instantDebits)
                 }
             // Else if here so we don't show both Instant Debits and Link Card Brand together.
             } else if eligibleForLinkCardBrand {
@@ -208,7 +217,7 @@ extension PaymentSheet {
                     intent: intent
                 )
                 if availabilityStatus == .supported {
-                    recommendedPaymentMethodTypes.append(.linkCardBrand)
+                    insertAtBankTabPosition(paymentMethodType: .linkCardBrand)
                 }
             }
 
