@@ -272,6 +272,30 @@ class EmbeddedPaymentMethodsView: UIView {
             // Update instance states
             self.savedPaymentMethodButton = nil
         }
+        
+        // Update text on card row to say just "Card" instead of "New card" if needed
+        if let oldCardButton = selectionButtonMapping[.new(paymentMethodType: .stripe(.card))],
+           let oldCardButtonIndex = stackView.arrangedSubviews.firstIndex(of: oldCardButton) {
+            // Update selectionButtonMapping and add this new one to the stack view and remove old card row
+            let cardRowButton = RowButton.makeForPaymentMethodType(
+                paymentMethodType: .stripe(.card),
+                savedPaymentMethodType: savedPaymentMethod?.type,
+                appearance: rowButtonAppearance,
+                shouldAnimateOnPress: true,
+                isEmbedded: true,
+                didTap: { [weak self] rowButton in
+                    self?.didTap(selection: .new(paymentMethodType: .stripe(.card)))
+                }
+            )
+            
+            // Remove old card button from selectionButtonMapping and stack view
+            selectionButtonMapping.removeValue(forKey: .new(paymentMethodType: .stripe(.card)))
+            stackView.removeArrangedSubview(oldCardButton, animated: false)
+            
+            // Add new card button to stack view at the same index and update button mapping
+            stackView.insertArrangedSubview(cardRowButton, at: oldCardButtonIndex)
+            selectionButtonMapping[.new(paymentMethodType: .stripe(.card))] = cardRowButton
+        }
     }
 
     func makeSavedPaymentMethodButton(savedPaymentMethod: STPPaymentMethod,
