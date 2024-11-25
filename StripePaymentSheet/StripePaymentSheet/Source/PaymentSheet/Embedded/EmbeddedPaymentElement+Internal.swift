@@ -134,7 +134,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
         self.formViewController = formViewController
-        return formViewController.selectedPaymentOption != nil // Don't show row as selected when presenting a form
+        return formViewController.selectedPaymentOption != nil // Don't show row as selected when presenting a form unless we have a valid payment option
     }
     
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
