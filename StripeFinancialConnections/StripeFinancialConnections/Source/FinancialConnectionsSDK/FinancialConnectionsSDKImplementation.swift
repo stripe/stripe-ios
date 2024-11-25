@@ -96,7 +96,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                 displayName: bankAccount.bankName,
                 bankName: bankAccount.bankName,
                 last4: bankAccount.last4,
-                instantlyVerified: false
+                instantlyVerified: bankAccount.instantlyVerified
             )
         case .unparsable:
             return nil
