@@ -142,7 +142,8 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 extension FinancialConnectionsWebFlowViewController {
 
     private func notifyDelegate(result: HostControllerResult) {
-        delegate?.webFlowViewController(self, didFinish: result)
+        let updatedResult = result.updateWith(manifest)
+        delegate?.webFlowViewController(self, didFinish: updatedResult)
         delegate = nil  // prevent the delegate from being called again
     }
 
@@ -232,9 +233,7 @@ extension FinancialConnectionsWebFlowViewController {
                         // Users can cancel the web flow even if they successfully linked
                         // accounts. As a result, we check whether they linked any
                         // before returning "cancelled."
-                        if !session.accounts.data.isEmpty || session.paymentAccount != nil
-                            || session.bankAccountToken != nil
-                        {
+                        if !session.accounts.data.isEmpty || session.paymentAccount != nil || session.bankAccountToken != nil {
                             self.notifyDelegateOfSuccess(result: .financialConnections(session))
                         } else {
                             self.notifyDelegateOfCancel()

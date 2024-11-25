@@ -2,6 +2,9 @@
 ### Payments
 * [Added] Support for Crypto bindings.
 
+### PaymentSheet
+* [Fixed] US Bank Account now shows the correct mandate when using the `instant_or_skip` verification method.
+
 ## 24.0.2 2024-11-21
 ### PaymentSheet
 * [Fixed] A bug where PaymentSheet would cause layout issues when nested within certain navigation stacks.
