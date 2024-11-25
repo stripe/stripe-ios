@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Atcelt vai maksāt citā veidā";
 
+"Card details cannot be changed." = "Kartes informāciju nevar mainīt.";
+
 "Change email" = "Mainīt e-pastu";
 
 "Choose a payment method" = "Izvēlēties maksājuma veidu";
@@ -111,6 +113,8 @@
 "Join Link" = "Pievienoties Link";
 
 "Log out of Link" = "Izrakstīties no Link";
+
+"Manage card" = "Pārvaldīt karti";
 
 "Manage payment method" = "Pārvaldīt maksājuma veidu";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Nav pieejams šim pirkumam";
 
 "Update card" = "Atjaunināt karti";
-
-"Update card brand" = "Atjaunināt kartes zīmolu";
 
 "Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
 

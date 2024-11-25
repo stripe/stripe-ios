@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "ZIP-koden er ugyldig.";
 
+"Your card has expired." = "Kortet er gått ut.";
+
 "Your card number is incomplete." = "Kortnummeret er ufullstendig.";
 
 "Your card number is invalid." = "Kortnummeret ditt er ugyldig.";

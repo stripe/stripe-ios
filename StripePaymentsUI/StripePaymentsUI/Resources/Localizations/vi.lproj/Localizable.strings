@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Mã ZIP không hợp lệ";
 
+"Your card has expired." = "Thẻ đã hết hạn.";
+
 "Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
 
 "Your card number is invalid." = "Số thẻ không hợp lệ.";

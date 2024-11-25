@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Cancel·la i paga d'una altra manera";
 
+"Card details cannot be changed." = "Les dades de la targeta no es poden canviar.";
+
 "Change email" = "Canvia el correu";
 
 "Choose a payment method" = "Escull un mètode de pagament";
@@ -111,6 +113,8 @@
 "Join Link" = "Uneix-te a Link";
 
 "Log out of Link" = "Tanca la sessió a Link";
+
+"Manage card" = "Administra la targeta";
 
 "Manage payment method" = "Gestiona el mètode de pagament";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "No disponible per a aquesta compra";
 
 "Update card" = "Actualitza la targeta";
-
-"Update card brand" = "Actualitza la marca de la targeta";
 
 "Use your saved info to check out faster" = "Utilitza la informació desada per pagar més ràpidament";
 

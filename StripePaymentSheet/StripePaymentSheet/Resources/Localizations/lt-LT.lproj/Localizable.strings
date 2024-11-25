@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
 
+"Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
+
 "Change email" = "Pakeiskite el. paštą";
 
 "Choose a payment method" = "Pasirinkite mokėjimo būdą";
@@ -111,6 +113,8 @@
 "Join Link" = "Prisijungti prie „Link“";
 
 "Log out of Link" = "Atsijungti nuo „Link“";
+
+"Manage card" = "Tvarkyti kortelę";
 
 "Manage payment method" = "Tvarkyti mokėjimo būdą";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
 
 "Update card" = "Atnaujinti kortelę";
-
-"Update card brand" = "Atnaujinti kortelės prekės ženklą";
 
 "Use your saved info to check out faster" = "Naudokite išsaugotą informaciją, kad atsiskaitytumėte greičiau";
 

@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
 
+"Card details cannot be changed." = "Detail kartu tidak dapat diubah.";
+
 "Change email" = "Ubah email";
 
 "Choose a payment method" = "Pilih metode pembayaran";
@@ -111,6 +113,8 @@
 "Join Link" = "Bergabunglah dengan Link";
 
 "Log out of Link" = "Keluar dari Link";
+
+"Manage card" = "Kelola kartu";
 
 "Manage payment method" = "Kelola metode pembayaran";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
 
 "Update card" = "Perbarui kartu";
-
-"Update card brand" = "Perbarui brand kartu";
 
 "Use your saved info to check out faster" = "Gunakan info yang tersimpan untuk memproses pembayaran dengan lebih cepat";
 

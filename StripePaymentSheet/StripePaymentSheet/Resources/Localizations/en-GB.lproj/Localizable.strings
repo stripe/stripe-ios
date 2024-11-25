@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Cancel and pay another way";
 
+"Card details cannot be changed." = "Card details cannot be changed.";
+
 "Change email" = "Change email";
 
 "Choose a payment method" = "Choose a payment method";
@@ -111,6 +113,8 @@
 "Join Link" = "Join Link";
 
 "Log out of Link" = "Log out of Link";
+
+"Manage card" = "Manage card";
 
 "Manage payment method" = "Manage payment method";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Unavailable for this purchase";
 
 "Update card" = "Update card";
-
-"Update card brand" = "Update card brand";
 
 "Use your saved info to check out faster" = "Use your saved info to check out faster";
 

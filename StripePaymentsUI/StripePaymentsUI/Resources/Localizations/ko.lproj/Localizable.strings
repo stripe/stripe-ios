@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "우편번호가 유효하지 않습니다.";
 
+"Your card has expired." = "카드가 만료되었습니다.";
+
 "Your card number is incomplete." = "카드 번호가 불완전합니다.";
 
 "Your card number is invalid." = "카드 번호가 유효하지 않습니다.";

@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "郵便番号が無効です。";
 
+"Your card has expired." = "カードの有効期限が切れています。";
+
 "Your card number is incomplete." = "カード番号に不備があります。";
 
 "Your card number is invalid." = "カード番号が無効です。";

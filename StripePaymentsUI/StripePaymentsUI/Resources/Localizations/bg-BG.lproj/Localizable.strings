@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Вашият ZIP код е невалиден.";
 
+"Your card has expired." = "Вашата карта е изтекла.";
+
 "Your card number is incomplete." = "Номерът на Вашата карта е непълен.";
 
 "Your card number is invalid." = "Номерът на Вашата карта е невалиден.";

@@ -82,6 +82,8 @@ import Foundation
     case billie
     /// A Satispay payment method
     case satispay
+    /// A Crypto payment method
+    case crypto
     /// A MobilePay payment method
     case mobilePay
     /// A Konbini payment method
@@ -174,6 +176,8 @@ import Foundation
             return "Billie"
         case .satispay:
             return "Satispay"
+        case .crypto:
+            return "Crypto"
         case .mobilePay:
             return "MobilePay"
         case .konbini:
@@ -269,6 +273,8 @@ import Foundation
             return "billie"
         case .satispay:
             return "satispay"
+        case .crypto:
+            return "crypto"
         case .mobilePay:
             return "mobilepay"
         case .konbini:
