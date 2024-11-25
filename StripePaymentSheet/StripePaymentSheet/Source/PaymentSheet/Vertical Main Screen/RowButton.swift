@@ -146,10 +146,12 @@ class RowButton: UIView {
             heightConstraint?.isActive = true
         }
         
+        let insets = isEmbedded ? appearance.embeddedPaymentElement.row.additionalInsets : 4
+        
         var imageViewConstraints = [
             imageView.leadingAnchor.constraint(equalTo: radioButton?.trailingAnchor ?? leadingAnchor, constant: 12),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + appearance.embeddedPaymentElement.row.additionalInsets),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - appearance.embeddedPaymentElement.row.additionalInsets),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
         ]
@@ -174,8 +176,8 @@ class RowButton: UIView {
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             labelsStackView.trailingAnchor.constraint(equalTo: labelTrailingConstant, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: appearance.embeddedPaymentElement.row.additionalInsets),
-            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -appearance.embeddedPaymentElement.row.additionalInsets),
+            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
+            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
 
             imageViewBottomConstraint,
             imageViewTopConstraint,
