@@ -158,22 +158,19 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }()
 
     private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
-    private let shouldHideSelectedCheckmark: Bool
 
     init(
         configuration: PaymentElementConfiguration,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
-        analyticsHelper: PaymentSheetAnalyticsHelper,
-        shouldHideSelectedCheckmark: Bool = false
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
-        self.shouldHideSelectedCheckmark = shouldHideSelectedCheckmark
         if configuration.alternateUpdatePaymentMethodNavigation {
             self.isRemoveOnlyMode = false
         }
@@ -192,8 +189,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
                                                      appearance: configuration.appearance,
-                                                     alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation,
-                                                     shouldHideSelectedCheckmark: shouldHideSelectedCheckmark)
+                                                     alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
             button.delegate = self
             return button
         }

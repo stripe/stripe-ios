@@ -162,8 +162,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper,
-            shouldHideSelectedCheckmark: true
+            analyticsHelper: analyticsHelper
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)

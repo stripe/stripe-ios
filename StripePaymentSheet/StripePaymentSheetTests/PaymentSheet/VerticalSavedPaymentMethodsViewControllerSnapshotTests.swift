@@ -43,12 +43,8 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     func test_Embedded_VerticalSavedPaymentMethodsViewControllerSnapshotTestsRemoveOnlyMode() {
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, isEmbedded: true, isRemoveOnlyMode: true)
     }
-    
-    func test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsHideSelectedCheckmark() {
-        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, shouldHideSelectedCheckmark: true)
-    }
 
-    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, isRemoveOnlyMode: Bool = false, shouldHideSelectedCheckmark: Bool = false) {
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, isRemoveOnlyMode: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
         let paymentMethods = isRemoveOnlyMode ? [STPPaymentMethod._testCardAmex()] : generatePaymentMethods()
@@ -57,8 +53,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
                                                             elementsSession: ._testCardValue(),
-                                                            analyticsHelper: ._testValue(),
-                                                            shouldHideSelectedCheckmark: shouldHideSelectedCheckmark
+                                                            analyticsHelper: ._testValue()
         )
         let bottomSheet: BottomSheetViewController
         if isEmbedded {
