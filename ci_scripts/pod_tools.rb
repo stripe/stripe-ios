@@ -77,7 +77,7 @@ def push_retrying(podspec, expected_pod_version, max_retries: 10)
       puts "No need to push: #{podspec}.  Latest version is already #{expected_pod_version}"
       return true
     end
-    system("pod trunk push #{podspec} --synchronous --allow-warnings --skip-import-validation --skip-tests")
+    system("pod trunk push #{podspec} --synchronous --allow-warnings --skip-import-validation")
     success = $?.success?
     return success unless !success && retries <= max_retries
 
