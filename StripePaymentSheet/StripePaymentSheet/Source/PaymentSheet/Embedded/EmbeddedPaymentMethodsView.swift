@@ -253,7 +253,9 @@ class EmbeddedPaymentMethodsView: UIView {
         } else {
             // No more saved payment methods
             let separatorIndex = stackView.arrangedSubviews.index(before: viewIndex)
-            stackView.removeArrangedSubview(at: separatorIndex, animated: false)
+            if separatorIndex >= 0 {
+                stackView.removeArrangedSubview(at: separatorIndex, animated: false)
+            }
             stackView.removeArrangedSubview(previousSavedPaymentMethodButton, animated: false)
 
             if case .saved = selection {
