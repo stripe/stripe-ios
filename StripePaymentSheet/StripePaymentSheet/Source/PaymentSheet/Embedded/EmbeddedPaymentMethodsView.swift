@@ -35,7 +35,7 @@ class EmbeddedPaymentMethodsView: UIView {
         didSet {
             previousSelection = oldValue
             updateMandate()
-            let shouldShowSelection = delegate?.selectionDidUpdate(didChange: oldValue != selection) ?? false
+            let shouldShowSelection = delegate?.selectionDidUpdate(didChange: oldValue != selection) ?? true
             selectionButtonMapping.forEach { (key, button) in
                 button.isSelected = key == selection && shouldShowSelection
             }
