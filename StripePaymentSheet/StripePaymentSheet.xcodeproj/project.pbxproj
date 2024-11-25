@@ -1020,6 +1020,7 @@
 		417CC7FB8A8E73B6E1E16FE8 /* PaymentSheet */ = {
 			isa = PBXGroup;
 			children = (
+				A3EDEEFB2CF4CA8300136FD3 /* SavedPaymentMethodFormFactory */,
 				6180A5C52C82434A009D1536 /* Embedded */,
 				C50EBF7550F6A596EDAF6ABB /* AddressViewController */,
 				9A5ACB8060F5CFC60687631B /* BottomSheet */,
@@ -1190,10 +1191,6 @@
 				BBB56BACEB0ADD42882632CB /* SepaMandateViewController.swift */,
 				BF0E71D9DEA93036E4C87CEC /* UpdatePaymentMethodViewController.swift */,
 				A36949C42CE7D72300739E5D /* UpdatePaymentMethodViewModel.swift */,
-				A3B2F2B32CEE882D00C0E88C /* SavedPaymentMethodFormFactory.swift */,
-				A3B2F2B92CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift */,
-				A3B2F2B52CF1149200C0E88C /* SavedPaymentMethodFormFactory+Card.swift */,
-				A3B2F2B72CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1394,6 +1391,17 @@
 			);
 			name = Stripe;
 			path = ../Stripe;
+			sourceTree = "<group>";
+		};
+		A3EDEEFB2CF4CA8300136FD3 /* SavedPaymentMethodFormFactory */ = {
+			isa = PBXGroup;
+			children = (
+				A3B2F2B32CEE882D00C0E88C /* SavedPaymentMethodFormFactory.swift */,
+				A3B2F2B92CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift */,
+				A3B2F2B52CF1149200C0E88C /* SavedPaymentMethodFormFactory+Card.swift */,
+				A3B2F2B72CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift */,
+			);
+			path = SavedPaymentMethodFormFactory;
 			sourceTree = "<group>";
 		};
 		A8911824D9D347A10962BA1C /* Frameworks */ = {
