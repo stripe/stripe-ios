@@ -89,10 +89,11 @@ private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsView
         didCallHeightDidChange = true
     }
 
-    func selectionDidUpdate(didChange: Bool) {
+    func selectionDidUpdate(didChange: Bool) -> Bool {
         if didChange {
             didCallSelectionDidUpdate = true
         }
+        return true
     }
 
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {

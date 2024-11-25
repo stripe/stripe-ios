@@ -13,7 +13,11 @@ import UIKit
 @MainActor
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
-    func selectionDidUpdate(didChange: Bool)
+    
+    /// Called when a selection is tapped
+    /// - Parameter didChange: True if the selection is different than the last time `selectionDidUpdate` was called
+    /// - Returns: True if this selection should have the selected border around it to indicate selection.
+    func selectionDidUpdate(didChange: Bool) -> Bool
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
 }
 
@@ -30,11 +34,11 @@ class EmbeddedPaymentMethodsView: UIView {
     private(set) var selection: Selection? {
         didSet {
             previousSelection = oldValue
-            selectionButtonMapping.forEach { (key, button) in
-                button.isSelected = key == selection
-            }
             updateMandate()
-            delegate?.selectionDidUpdate(didChange: oldValue != selection)
+            let shouldShowSelection = delegate?.selectionDidUpdate(didChange: oldValue != selection) ?? false
+            selectionButtonMapping.forEach { (key, button) in
+                button.isSelected = key == selection && shouldShowSelection
+            }
         }
     }
     private let mandateProvider: MandateTextProvider
@@ -326,6 +330,12 @@ class EmbeddedPaymentMethodsView: UIView {
             self.setNeedsLayout()
             self.layoutIfNeeded()
         })
+    }
+    
+    func highlightSelection() {
+        selectionButtonMapping.forEach { (key, button) in
+            button.isSelected = key == selection
+        }
     }
 }
 

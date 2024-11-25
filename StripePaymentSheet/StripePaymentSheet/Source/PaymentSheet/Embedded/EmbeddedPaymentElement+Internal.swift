@@ -93,7 +93,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
 
-    func selectionDidUpdate(didChange: Bool) {
+    func selectionDidUpdate(didChange: Bool) -> Bool {
         // Deferring notifying delegate until the exit of this function guarantees the new payment option comes from the new instance of `EmbeddedFormViewController`
         defer {
             if didChange {
@@ -104,12 +104,12 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
             // This can occur when selection is being reset to nothing selected or to a saved payment method, so don't assert.
             self.formViewController = nil
-            return
+            return true
         }
 
         guard let presentingViewController else {
             stpAssertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
-            return
+            return true
         }
 
         let formViewController = EmbeddedFormViewController(
@@ -127,14 +127,16 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Only show forms that require user input
         guard formViewController.collectsUserInput else {
             self.formViewController = nil  // Clear out any previous form view controller to update self._paymentOption
-            return
+            return true
         }
 
         let bottomSheet = bottomSheetController(with: formViewController)
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
         self.formViewController = formViewController
+        return formViewController.selectedPaymentOption != nil // Don't show row as selected when presenting a form
     }
+    
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
         // Special case, only 1 card remaining but is co-branded (or alternateUpdatePaymentMethodNavigation), skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
@@ -301,6 +303,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
+        embeddedPaymentMethodsView.highlightSelection()
         embeddedFormViewController.dismiss(animated: true)
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
