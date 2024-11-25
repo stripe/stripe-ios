@@ -52,7 +52,14 @@ class EmbeddedPaymentMethodsView: UIView {
         return stackView
     }()
 
-    private lazy var mandateView = SimpleMandateTextView(theme: appearance.asElementsTheme)
+    private lazy var mandateView = {
+        // Special font size for mandates in embedded
+        var theme = appearance.asElementsTheme
+        theme.fonts.caption = UIFont.systemFont(ofSize: 11, weight: .regular).scaled(
+            withTextStyle: .caption2,
+            maximumPointSize: 20)
+        return SimpleMandateTextView(theme: theme)
+    }()
     private var savedPaymentMethodButton: RowButton?
 
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
