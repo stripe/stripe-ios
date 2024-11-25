@@ -34,7 +34,7 @@ final class SavedPaymentMethodRowButton: UIView {
 
             rowButton.isSelected = isSelected
             rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation
-            circleView.isHidden = !isSelected
+            circleView.isHidden = !isSelected || shouldHideSelectedCheckmark
             chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
             updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
             removeButton.isHidden = !canRemove || alternateUpdatePaymentMethodNavigation
@@ -133,11 +133,16 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private let alternateUpdatePaymentMethodNavigation: Bool
+    private let shouldHideSelectedCheckmark: Bool
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, alternateUpdatePaymentMethodNavigation: Bool = false) {
+    init(paymentMethod: STPPaymentMethod,
+         appearance: PaymentSheet.Appearance,
+         alternateUpdatePaymentMethodNavigation: Bool = false,
+         shouldHideSelectedCheckmark: Bool = false) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
         self.alternateUpdatePaymentMethodNavigation = alternateUpdatePaymentMethodNavigation
+        self.shouldHideSelectedCheckmark = shouldHideSelectedCheckmark
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)

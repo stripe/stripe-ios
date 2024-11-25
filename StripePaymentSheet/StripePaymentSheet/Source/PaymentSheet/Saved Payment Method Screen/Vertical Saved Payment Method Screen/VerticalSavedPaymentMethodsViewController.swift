@@ -158,19 +158,22 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }()
 
     private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
+    private let shouldHideSelectedCheckmark: Bool
 
     init(
         configuration: PaymentElementConfiguration,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        shouldHideSelectedCheckmark: Bool = false
     ) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
+        self.shouldHideSelectedCheckmark = shouldHideSelectedCheckmark
         if configuration.alternateUpdatePaymentMethodNavigation {
             self.isRemoveOnlyMode = false
         }
@@ -188,7 +191,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [SavedPaymentMethodRowButton] {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
-                                                     appearance: configuration.appearance, alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
+                                                     appearance: configuration.appearance,
+                                                     alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation,
+                                                     shouldHideSelectedCheckmark: shouldHideSelectedCheckmark)
             button.delegate = self
             return button
         }
