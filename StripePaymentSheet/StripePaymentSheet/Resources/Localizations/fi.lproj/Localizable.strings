@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Peruuta ja maksa toisella tavalla";
 
+"Card details cannot be changed." = "Kortin tietoja ei voi muuttaa.";
+
 "Change email" = "Vaihda sähköposti";
 
 "Choose a payment method" = "Valitse maksutapa";
@@ -111,6 +113,8 @@
 "Join Link" = "Liity Link-palveluun";
 
 "Log out of Link" = "Kirjaudu ulos Link-palvelusta";
+
+"Manage card" = "Hallinnoi korttia";
 
 "Manage payment method" = "Hallinnoi maksutapaa";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Ei käytettävissä tälle ostolle";
 
 "Update card" = "Päivitä kortti";
-
-"Update card brand" = "Päivitä kortin merkki";
 
 "Use your saved info to check out faster" = "Käytä tallennettuja tietoja nopeampaan maksamiseen";
 

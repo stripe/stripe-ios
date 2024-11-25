@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Ακύρωση και πληρωμή με άλλον τρόπο";
 
+"Card details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων κάρτας.";
+
 "Change email" = "Αλλαγή email";
 
 "Choose a payment method" = "Επιλέξτε μέθοδο πληρωμής";
@@ -111,6 +113,8 @@
 "Join Link" = "Σύνδεση στο Link";
 
 "Log out of Link" = "Αποσύνδεση από το Link";
+
+"Manage card" = "Διαχείριση κάρτας";
 
 "Manage payment method" = "Διαχείριση μεθόδου πληρωμής";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Δεν είναι διαθέσιμο για αυτήν την αγορά";
 
 "Update card" = "Ενημέρωση κάρτας";
-
-"Update card brand" = "Ενημέρωση επωνυμίας κάρτας";
 
 "Use your saved info to check out faster" = "Χρησιμοποιήστε τα αποθηκευμένα στοιχεία σας για τη συντομότερη ολοκλήρωση της αγοράς";
 

@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Teie sihtnumber on kehtetu.";
 
+"Your card has expired." = "Teie kaart on aegunud.";
+
 "Your card number is incomplete." = "Teie kaardinumber on puudulik.";
 
 "Your card number is invalid." = "Teie kaardinumber on kehtetu.";

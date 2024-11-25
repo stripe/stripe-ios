@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.1.0 2024-11-25
 ### Payments
 * [Added] Support for Crypto bindings.
 

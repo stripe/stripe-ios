@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Posta kodunuz geçersiz.";
 
+"Your card has expired." = "Kartınızın süresi dolmuş.";
+
 "Your card number is incomplete." = "Kart numaranız eksik.";
 
 "Your card number is invalid." = "Kart numaranız geçersiz.";

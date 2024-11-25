@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Annuleren en op een andere manier betalen";
 
+"Card details cannot be changed." = "Betaalkaartgegevens kunnen niet worden gewijzigd.";
+
 "Change email" = "E-mailadres wijzigen";
 
 "Choose a payment method" = "Een betaalmethode kiezen";
@@ -111,6 +113,8 @@
 "Join Link" = "Aanmelden bij Link";
 
 "Log out of Link" = "Afmelden bij Link";
+
+"Manage card" = "Betaalkaart beheren";
 
 "Manage payment method" = "Betaalmethode beheren";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Niet beschikbaar voor deze aankoop";
 
 "Update card" = "Betaalkaart bijwerken";
-
-"Update card brand" = "Merk van betaalkaart bijwerken";
 
 "Use your saved info to check out faster" = "Gebruik je opgeslagen gegevens om sneller af te rekenen";
 
