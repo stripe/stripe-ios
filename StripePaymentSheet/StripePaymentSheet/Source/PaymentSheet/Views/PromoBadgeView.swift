@@ -25,8 +25,8 @@ class PromoBadgeView: UIView {
         self.init(
             font: appearance.scaledFont(
                 for: appearance.font.base.medium,
-                style: tinyMode ? .footnote : .subheadline,
-                maximumPointSize: tinyMode ? 20 : 25
+                style: .caption1,
+                maximumPointSize: 20
             ),
             backgroundColor: backgroundColor,
             foregroundColor: foregroundColor,
@@ -50,11 +50,13 @@ class PromoBadgeView: UIView {
         self.labelBackground = labelBackground
         
         let label = UILabel()
+        label.font = font
+        label.numberOfLines = 1
         label.textColor = foregroundColor
         self.label = label
         
         super.init(frame: .zero)
-        setupView(font: font, tinyMode: tinyMode)
+        setupView(tinyMode: tinyMode)
         
         if let text {
             setText(text)
@@ -69,12 +71,12 @@ class PromoBadgeView: UIView {
         label.text = formatPromoText(text)
     }
     
-    private func setupView(font: UIFont, tinyMode: Bool) {
+    private func setupView(tinyMode: Bool) {
         labelBackground.translatesAutoresizingMaskIntoConstraints = false
         addSubview(labelBackground)
         
-        let verticalSpacing: CGFloat = tinyMode ? 0 : 2
-        let horizontalSpacing: CGFloat = tinyMode ? 4 : 8
+        let verticalSpacing: CGFloat = tinyMode ? 2 : 4
+        let horizontalSpacing: CGFloat = tinyMode ? 4 : 6
         labelBackground.layoutMargins = UIEdgeInsets(
             top: verticalSpacing,
             left: horizontalSpacing,
@@ -82,12 +84,8 @@ class PromoBadgeView: UIView {
             right: horizontalSpacing
         )
         
-        label.textColor = .white
-        label.numberOfLines = 0
-        label.font = font
         label.adjustsFontSizeToFitWidth = true
         label.adjustsFontForContentSizeCategory = true
-        label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
         labelBackground.addSubview(label)
         
