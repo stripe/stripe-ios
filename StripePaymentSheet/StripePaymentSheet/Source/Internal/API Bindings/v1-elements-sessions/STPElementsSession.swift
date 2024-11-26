@@ -208,6 +208,10 @@ extension STPElementsSession {
         return allowsRemovalOfPaymentMethods
     }
 
+    var allowsRemovalOfLastPaymentMethodForPaymentSheet: Bool {
+        return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
+    }
+
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {
@@ -220,7 +224,7 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
-    
+
     var isLinkCardBrand: Bool {
         linkSettings?.linkMode == .linkCardBrand
     }

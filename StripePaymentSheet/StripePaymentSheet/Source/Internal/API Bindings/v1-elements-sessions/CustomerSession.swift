@@ -41,6 +41,10 @@ struct CustomerSession: Equatable, Hashable {
                   let paymentMethodRemove = mobilePaymentElementFeaturesDict["payment_method_remove"] as? String else {
                 return nil
             }
+            var paymentMethodRemoveLastValue: String = "enabled"
+            if let paymentMethodRemoveLast = mobilePaymentElementFeaturesDict["payment_method_remove_last"] as? String {
+                paymentMethodRemoveLastValue = paymentMethodRemoveLast
+            }
 
             var allowRedisplayOverrideValue: STPPaymentMethodAllowRedisplay?
             if let allowRedisplayOverride = mobilePaymentElementFeaturesDict["payment_method_save_allow_redisplay_override"] as? String {
@@ -50,6 +54,7 @@ struct CustomerSession: Equatable, Hashable {
             mobilePaymentElementComponent = MobilePaymentElementComponent(enabled: true,
                                                                           features: MobilePaymentElementComponentFeature(paymentMethodSave: paymentMethodSave == "enabled",
                                                                                                                          paymentMethodRemove: paymentMethodRemove == "enabled",
+                                                                                                                         paymentMethodRemoveLast: paymentMethodRemoveLastValue == "enabled",
                                                                                                                          paymentMethodSaveAllowRedisplayOverride: allowRedisplayOverrideValue))
         } else {
             mobilePaymentElementComponent = MobilePaymentElementComponent(enabled: false, features: nil)
@@ -87,6 +92,7 @@ struct MobilePaymentElementComponent: Equatable, Hashable {
 struct MobilePaymentElementComponentFeature: Equatable, Hashable {
     let paymentMethodSave: Bool
     let paymentMethodRemove: Bool
+    let paymentMethodRemoveLast: Bool
     let paymentMethodSaveAllowRedisplayOverride: STPPaymentMethodAllowRedisplay?
 }
 
