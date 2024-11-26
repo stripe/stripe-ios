@@ -167,14 +167,14 @@ public class CustomerSheet {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
-                let paymentMethodRemoveLast = customerSheetDataSource.paymentMethodRemoveLast(elementsSession: elementsSession)
+                let allowsRemovalOfLastSavedPaymentMethod = CustomerSheet.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: self.configuration)
                 self.present(from: presentingViewController,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                              customerSheetDataSource: customerSheetDataSource,
                              paymentMethodRemove: paymentMethodRemove,
-                             paymentMethodRemoveLast: paymentMethodRemoveLast,
+                             allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
                                                                      duration: Date().timeIntervalSince(loadingStartDate))
@@ -198,7 +198,7 @@ public class CustomerSheet {
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
                  customerSheetDataSource: CustomerSheetDataSource,
                  paymentMethodRemove: Bool,
-                 paymentMethodRemoveLast: Bool,
+                 allowsRemovalOfLastSavedPaymentMethod: Bool,
                  cbcEligible: Bool) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -214,7 +214,7 @@ public class CustomerSheet {
                                                                                 customerSheetDataSource: customerSheetDataSource,
                                                                                 isApplePayEnabled: isApplePayEnabled,
                                                                                 paymentMethodRemove: paymentMethodRemove,
-                                                                                paymentMethodRemoveLast: paymentMethodRemoveLast,
+                                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
                                                                                 csCompletion: self.csCompletion,
                                                                                 delegate: self)
@@ -238,6 +238,18 @@ public class CustomerSheet {
     // MARK: - Internal Properties
     var completion: (() -> Void)?
     var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
+}
+
+extension CustomerSheet {
+    static func allowsRemovalOfLastPaymentMethod(elementsSession: STPElementsSession, configuration: CustomerSheet.Configuration) -> Bool {
+        // Merchant has set local configuration to "false"
+        if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            return false
+        } else {
+            // Defer to CustomerSession if local configuration == true
+            return elementsSession.customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
+        }
+    }
 }
 
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {

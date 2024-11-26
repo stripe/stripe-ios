@@ -173,7 +173,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
-                allowsRemovalOfLastSavedPaymentMethod: (configuration.allowsRemovalOfLastSavedPaymentMethod || elementsSession.allowsRemovalOfLastPaymentMethodForPaymentSheet),
+                allowsRemovalOfLastSavedPaymentMethod: PaymentSheetViewController.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: configuration),
                 allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                 alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
             ),
@@ -486,6 +486,18 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     }
                 }
             }
+        }
+    }
+}
+// MARK: - Helpers
+extension PaymentSheetViewController {
+    static func allowsRemovalOfLastPaymentMethod(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) -> Bool {
+        // Merchant has set local configuration to "false"
+        if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            return false
+        } else {
+            // Defer to CustomerSession if local configuration == true
+            return elementsSession.paymentMethodRemoveLastForPaymentSheet
         }
     }
 }

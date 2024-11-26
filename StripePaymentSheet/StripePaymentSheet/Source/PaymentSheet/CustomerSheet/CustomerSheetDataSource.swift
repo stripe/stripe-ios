@@ -203,7 +203,7 @@ extension CustomerSheetDataSource {
         case .customerAdapter:
             return true
         case .customerSession:
-            return elementsSession.allowsRemovalOfLastPaymentMethodForCustomerSheet
+            return elementsSession.customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
         }
     }
 }

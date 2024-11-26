@@ -34,7 +34,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let configuration: CustomerSheet.Configuration
     let customerSheetDataSource: CustomerSheetDataSource
     let paymentMethodRemove: Bool
-    let paymentMethodRemoveLast: Bool
+    let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
 
     // MARK: - Writable Properties
@@ -102,7 +102,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             savedPaymentMethodsConfiguration: self.configuration,
             configuration: .init(
                 showApplePay: showApplePay,
-                allowsRemovalOfLastSavedPaymentMethod: (configuration.allowsRemovalOfLastSavedPaymentMethod || paymentMethodRemoveLast),
+                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode,
                 alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
@@ -147,7 +147,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         customerSheetDataSource: CustomerSheetDataSource,
         isApplePayEnabled: Bool,
         paymentMethodRemove: Bool,
-        paymentMethodRemoveLast: Bool,
+        allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
@@ -159,7 +159,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.customerSheetDataSource = customerSheetDataSource
         self.isApplePayEnabled = isApplePayEnabled
         self.paymentMethodRemove = paymentMethodRemove
-        self.paymentMethodRemoveLast = paymentMethodRemoveLast
+        self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
         self.csCompletion = csCompletion
         self.delegate = delegate
@@ -656,7 +656,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             savedPaymentMethodsConfiguration: self.configuration,
             configuration: .init(
                 showApplePay: isApplePayEnabled,
-                allowsRemovalOfLastSavedPaymentMethod: (configuration.allowsRemovalOfLastSavedPaymentMethod || paymentMethodRemoveLast),
+                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode,
                 alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation

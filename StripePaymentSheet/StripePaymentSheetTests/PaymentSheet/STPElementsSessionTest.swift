@@ -141,7 +141,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
-        XCTAssertTrue(elementsSession.allowsRemovalOfLastPaymentMethodForPaymentSheet)
+        XCTAssertTrue(elementsSession.paymentMethodRemoveLastForPaymentSheet)
         XCTAssertEqual(.paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, savePaymentMethodConsentBehavior)
     }
     func testSPMConsentAndRemoval_pmsD_pmrE() {
@@ -222,7 +222,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
-        XCTAssertTrue(elementsSession.allowsRemovalOfLastPaymentMethodForPaymentSheet)
+        XCTAssertTrue(elementsSession.paymentMethodRemoveLastForPaymentSheet)
     }
     func testPaymentMethodRemoveLast_disabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
@@ -242,7 +242,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
-        XCTAssertFalse(elementsSession.allowsRemovalOfLastPaymentMethodForPaymentSheet)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveLastForPaymentSheet)
     }
     func testSPMConsentAndRemoval_invalidComponent() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
@@ -304,7 +304,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
 
         XCTAssertFalse(allowsRemoval)
-        XCTAssertTrue(elementsSession.allowsRemovalOfLastPaymentMethodForCustomerSheet)
+        XCTAssertTrue(elementsSession.paymentMethodRemoveLastForCustomerSheet)
     }
     func testAllowsRemovalOfPaymentMethodsForCustomerSheet_removeLast_enabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
@@ -322,7 +322,7 @@ class STPElementsSessionTest: XCTestCase {
 
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
         XCTAssertTrue(allowsRemoval)
-        XCTAssertTrue(elementsSession.allowsRemovalOfLastPaymentMethodForCustomerSheet)
+        XCTAssertTrue(elementsSession.paymentMethodRemoveLastForCustomerSheet)
     }
     func testAllowsRemovalOfPaymentMethodsForCustomerSheet_removeLast_disabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
@@ -340,6 +340,6 @@ class STPElementsSessionTest: XCTestCase {
 
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
         XCTAssertTrue(allowsRemoval)
-        XCTAssertFalse(elementsSession.allowsRemovalOfLastPaymentMethodForCustomerSheet)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveLastForCustomerSheet)
     }
 }

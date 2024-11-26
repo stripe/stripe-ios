@@ -207,8 +207,7 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
-
-    var allowsRemovalOfLastPaymentMethodForPaymentSheet: Bool {
+    var paymentMethodRemoveLastForPaymentSheet: Bool {
         return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
     }
 
@@ -224,7 +223,7 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
-    var allowsRemovalOfLastPaymentMethodForCustomerSheet: Bool {
+    var paymentMethodRemoveLastForCustomerSheet: Bool {
         return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
     }
 
