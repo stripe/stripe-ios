@@ -108,4 +108,32 @@ final class InstantDebitsUITests: XCTestCase {
         app.fc_nativeConnectAccountsButton.tap()
         app.fc_nativeSuccessDoneButton.tap()
     }
+    
+    func test_connect() {
+        let app = XCUIApplication.fc_launch(playgroundConfigurationString:
+            """
+            {"use_case":"payment_intent","experience":"instant_debits","sdk_type":"native","test_mode":true,"merchant":"connect","payment_method_permission":true}
+            """
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let emailTextField = app.textFields["email_text_field"]
+        XCTAssertTrue(emailTextField.waitForExistence(timeout: 10.0), "Failed to find email text field")
+        emailTextField.typeText("email@email.com")
+
+        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
+        XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
+        testModeAutofillButton.tap()
+
+        let successBankAccountRow = app.staticTexts["Success"]
+        XCTAssertTrue(successBankAccountRow.waitForExistence(timeout: 60.0))
+        successBankAccountRow.tap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+        app.fc_nativeSuccessDoneButton.tap()
+    }
 }
