@@ -272,7 +272,8 @@ class EmbeddedPaymentMethodsView: UIView {
             self.savedPaymentMethodButton = nil
         }
         
-        // Update text on card row to say just "Card" instead of "New card" if needed
+        // Update text on card row based on the new selected payment method
+        // It can vary between "Card" and "New card" depending on the payment method type of the selected saved payment method
         if let oldCardButton = selectionButtonMapping[.new(paymentMethodType: .stripe(.card))],
            let oldCardButtonIndex = stackView.arrangedSubviews.firstIndex(of: oldCardButton) {
             // Update selectionButtonMapping and add this new one to the stack view and remove old card row
