@@ -201,9 +201,11 @@ extension TextFieldElement {
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
+
         func maxLength(for text: String) -> Int {
             return Int(STPCardValidator.maxCVCLength(for: cardBrandProvider()))
         }
+
         func validate(text: String, isOptional: Bool) -> ValidationState {
             if text.isEmpty {
                 return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
@@ -215,6 +217,7 @@ extension TextFieldElement {
 
             return .valid
         }
+
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             return DynamicImageView(
                 dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
@@ -230,12 +233,20 @@ extension TextFieldElement {
         init(brand: STPCardBrand) {
             let maxLength = Int(STPCardValidator.maxCVCLength(for: brand))
             self.defaultValue = String(repeating: "•", count: maxLength)
+            self.brand = brand
         }
 
         let defaultValue: String?
+        let brand: STPCardBrand
         var label = String.Localized.cvc
         let isEditable: Bool = false
         let disallowedCharacters: CharacterSet = CharacterSet(charactersIn: "•").inverted
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
+            return DynamicImageView(
+                dynamicImage: STPImageLibrary.cvcImage(for: brand),
+                pairedColor: theme.colors.componentBackground
+            )
+        }
     }
 }
 
@@ -252,9 +263,11 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let defaultValue: String?
         let isEditable: Bool
+
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
+
         func maxLength(for text: String) -> Int {
             return 4
         }
@@ -319,6 +332,7 @@ extension TextFieldElement {
                 return .invalid(Error.invalid)
             }
         }
+
         func makeDisplayText(for text: String) -> NSAttributedString {
             var text = text
             // A MM/YY starting with 2-9 must be a single digit month; prepend a 0
