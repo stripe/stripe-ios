@@ -224,6 +224,9 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
+    var allowsRemovalOfLastPaymentMethodForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
+    }
 
     var isLinkCardBrand: Bool {
         linkSettings?.linkMode == .linkCardBrand

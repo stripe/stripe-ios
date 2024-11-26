@@ -66,8 +66,14 @@ struct CustomerSession: Equatable, Hashable {
                   let paymentMethodRemove = customerSheetFeaturesDict["payment_method_remove"] as? String else {
                 return nil
             }
+
+            var paymentMethodRemoveLastValue: String = "enabled"
+            if let paymentMethodRemoveLast = customerSheetFeaturesDict["payment_method_remove_last"] as? String {
+                paymentMethodRemoveLastValue = paymentMethodRemoveLast
+            }
             customerSheetComponent = CustomerSheetComponent(enabled: true,
-                                                          features: CustomerSheetComponentFeature(paymentMethodRemove: paymentMethodRemove == "enabled"))
+                                                            features: CustomerSheetComponentFeature(paymentMethodRemove: paymentMethodRemove == "enabled",
+                                                                                                    paymentMethodRemoveLast: paymentMethodRemoveLastValue == "enabled"))
         } else {
             customerSheetComponent = CustomerSheetComponent(enabled: false, features: nil)
         }
@@ -103,4 +109,5 @@ struct CustomerSheetComponent: Equatable, Hashable {
 
 struct CustomerSheetComponentFeature: Equatable, Hashable {
     let paymentMethodRemove: Bool
+    let paymentMethodRemoveLast: Bool
 }
