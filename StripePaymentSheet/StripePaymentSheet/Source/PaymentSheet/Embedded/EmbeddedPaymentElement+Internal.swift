@@ -80,6 +80,7 @@ extension EmbeddedPaymentElement {
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
+            savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
             delegate: delegate
         )
@@ -182,6 +183,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+                                                               savedPaymentMethods,
                                                                isSelected: false,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
@@ -200,6 +202,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selection?.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+                                                               savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
@@ -239,6 +242,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         let isSelected = (latestPaymentMethods.count > 1 && selectedPaymentMethod != nil) ||
         (embeddedPaymentMethodsView.selection?.isSaved ?? false && latestPaymentMethods.count > 0)
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+                                                               savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)

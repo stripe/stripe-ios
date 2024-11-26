@@ -334,12 +334,12 @@ extension RowButton {
         return label
     }
 
-    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, savedPaymentMethodType: STPPaymentMethodType?, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, hasSavedCard: Bool, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
         // Special case "New card" vs "Card" title
         let text: String = {
-            if savedPaymentMethodType == .card && paymentMethodType == .stripe(.card) {
+            if hasSavedCard && paymentMethodType == .stripe(.card) {
                 return .Localized.new_card
             }
             return paymentMethodType.displayName
