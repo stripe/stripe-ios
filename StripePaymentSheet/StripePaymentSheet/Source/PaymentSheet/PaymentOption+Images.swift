@@ -150,7 +150,7 @@ extension STPPaymentMethodType {
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
         switch self {
-        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto:
+        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto, .bacsDebit:
             return true
         default:
             return false
