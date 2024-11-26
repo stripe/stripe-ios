@@ -492,11 +492,11 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 // MARK: - Helpers
 extension PaymentSheetViewController {
     static func allowsRemovalOfLastPaymentMethod(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) -> Bool {
-        // Merchant has set local configuration to "false"
         if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            // Merchant has set local configuration to false, so honor it.
             return false
         } else {
-            // Defer to CustomerSession if local configuration == true
+            // Merchant is using client side default, so defer to CustomerSession's value
             return elementsSession.paymentMethodRemoveLastForPaymentSheet
         }
     }

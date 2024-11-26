@@ -242,11 +242,11 @@ public class CustomerSheet {
 
 extension CustomerSheet {
     static func allowsRemovalOfLastPaymentMethod(elementsSession: STPElementsSession, configuration: CustomerSheet.Configuration) -> Bool {
-        // Merchant has set local configuration to "false"
         if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            // Merchant has set local configuration to false, so honor it.
             return false
         } else {
-            // Defer to CustomerSession if local configuration == true
+            // Merchant is using client side default, so defer to CustomerSession's value
             return elementsSession.customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
         }
     }
