@@ -14,10 +14,11 @@ import UIKit
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
     
-    /// Called when a selection is tapped
-    /// - Parameter didChange: True if the selection is different than the last time `selectionDidUpdate` was called
-    /// - Returns: True if this selection should have the selected border around it to indicate selection.
-    func selectionDidUpdate(didChange: Bool) -> Bool
+    /// Updates the selection state and determines visual feedback
+    /// - Parameters:
+    ///   - isNewSelection: Indicates if this is a newly selected item
+    /// - Returns: A boolean indicating whether to display a visual selection indicator
+    func updateSelectionState(isNewSelection: Bool) -> Bool
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
 }
 
@@ -35,7 +36,7 @@ class EmbeddedPaymentMethodsView: UIView {
         didSet {
             previousSelection = oldValue
             updateMandate()
-            let shouldShowSelection = delegate?.selectionDidUpdate(didChange: oldValue != selection) ?? true
+            let shouldShowSelection = delegate?.updateSelectionState(isNewSelection: oldValue != selection) ?? true
             selectionButtonMapping.forEach { (key, button) in
                 button.isSelected = key == selection && shouldShowSelection
             }

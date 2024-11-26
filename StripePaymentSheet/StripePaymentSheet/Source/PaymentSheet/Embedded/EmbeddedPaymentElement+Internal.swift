@@ -93,10 +93,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
 
-    func selectionDidUpdate(didChange: Bool) -> Bool {
+    func updateSelectionState(isNewSelection: Bool) -> Bool {
         // Deferring notifying delegate until the exit of this function guarantees the new payment option comes from the new instance of `EmbeddedFormViewController`
         defer {
-            if didChange {
+            if isNewSelection {
                 delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
         }
