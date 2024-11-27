@@ -1328,7 +1328,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
     }
     // MARK: - Remove last saved PM
 
-    func testRemoveLastSavedPaymentMethodPaymentSheet() throws {
+    func testRemoveLastSavedPaymentMethodPaymentSheet_clientConfig() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
@@ -1338,11 +1338,38 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkMode = .link_pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
+
+        try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings, shouldTapSaveCheckbox: false)
+    }
+    func testRemoveLastSavedPaymentMethodPaymentSheet() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .paymentSheet
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+        settings.linkMode = .link_pm
+
+        settings.allowsRemovalOfLastSavedPaymentMethod = .on
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodRemoveLast = .disabled
+        settings.paymentMethodSave = .enabled
+        settings.allowsRemovalOfLastSavedPaymentMethod = .on
+
+        try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings, shouldTapSaveCheckbox: true)
+    }
+    func _testRemoveLastSavedPaymentMethodPaymentSheet(settings: PaymentSheetTestPlaygroundSettings, shouldTapSaveCheckbox: Bool) throws {
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         try! fillCardData(app)
+        if shouldTapSaveCheckbox {
+            let saveThisAccountToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+        }
 
         // Complete payment
         app.buttons["Pay $50.99"].tap()
@@ -1358,7 +1385,12 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app)
+        try! fillCardData(app, cardNumber: "5555555555554444")
+        if shouldTapSaveCheckbox {
+            let saveThisAccountToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+        }
         app.buttons["Pay $50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
@@ -1381,7 +1413,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
     }
 
-    func testRemoveLastSavedPaymentMethodFlowController() throws {
+    func test_RemoveLastSavedPaymentMethodFlowController_clientConfig() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .flowController
@@ -1390,13 +1422,41 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
         settings.linkMode = .link_pm
+
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
+        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings, shouldTapSaveCheckbox: false)
+    }
+    func test_RemoveLastSavedPaymentMethodFlowController_customerSession() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .flowController
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+        settings.linkMode = .link_pm
+
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodRemoveLast = .disabled
+        settings.paymentMethodSave = .enabled
+        settings.allowsRemovalOfLastSavedPaymentMethod = .on
+        loadPlayground(app, settings)
+
+        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings, shouldTapSaveCheckbox: true)
+    }
+
+    func _testRemoveLastSavedPaymentMethodFlowController(settings: PaymentSheetTestPlaygroundSettings, shouldTapSaveCheckbox: Bool) throws {
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         app.buttons["+ Add"].waitForExistenceAndTap()
 
         try! fillCardData(app)
+        if shouldTapSaveCheckbox {
+            let saveThisAccountToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+        }
 
         // Complete payment
         app.buttons["Continue"].tap()
@@ -1418,14 +1478,20 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app)
+        try! fillCardData(app, cardNumber: "5555555555554444")
+        if shouldTapSaveCheckbox {
+            let saveThisAccountToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+        }
+
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Should be able to edit two saved PMs
         reload(app, settings: settings)
-        app.staticTexts["•••• 4242"].waitForExistenceAndTap()
+        app.staticTexts["•••• 4444"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
@@ -1492,8 +1558,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         app.buttons["Done"].waitForExistenceAndTap(timeout: 5)
         app.buttons["Close"].waitForExistenceAndTap(timeout: 5)
     }
-    func testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC() {
-
+    func testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC_clientConfig() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
@@ -1508,6 +1573,28 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
 
+        _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: settings)
+    }
+    func testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC_customerSession() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .paymentSheet
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodRedisplay = .enabled
+        settings.paymentMethodAllowRedisplayFilters = .unspecified_limited_always
+        settings.customerMode = .new
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+        settings.paymentMethodRemove = .enabled
+        settings.allowsRemovalOfLastSavedPaymentMethod = .on
+        settings.paymentMethodRemoveLast = .disabled
+
+        _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: settings)
+    }
+
+    func _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: PaymentSheetTestPlaygroundSettings) {
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -1534,6 +1621,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         app.buttons["Done"].waitForExistenceAndTap(timeout: 5)
         app.buttons["Close"].waitForExistenceAndTap(timeout: 5)
     }
+
     func testPreservesSelectionAfterDismissPaymentSheetFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .flowController
