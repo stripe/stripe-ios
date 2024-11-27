@@ -141,15 +141,18 @@ class RowButton: UIView {
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
         if subtext == nil {
             heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance,
+                                                                                                    isEmbedded: isEmbedded,
                                                                                                     isFlatWithCheckmarkStyle: isFlatWithCheckmarkStyle,
                                                                                                     accessoryView: rightAccessoryView))
             heightConstraint?.isActive = true
         }
         
+        let insets = isEmbedded ? appearance.embeddedPaymentElement.row.additionalInsets : 4
+        
         var imageViewConstraints = [
             imageView.leadingAnchor.constraint(equalTo: radioButton?.trailingAnchor ?? leadingAnchor, constant: 12),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + appearance.embeddedPaymentElement.row.additionalInsets),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - appearance.embeddedPaymentElement.row.additionalInsets),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
         ]
@@ -174,8 +177,8 @@ class RowButton: UIView {
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             labelsStackView.trailingAnchor.constraint(equalTo: labelTrailingConstant, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: appearance.embeddedPaymentElement.row.additionalInsets),
-            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -appearance.embeddedPaymentElement.row.additionalInsets),
+            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
+            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
 
             imageViewBottomConstraint,
             imageViewTopConstraint,
@@ -214,6 +217,7 @@ class RowButton: UIView {
         // Update the height so that RowButtons heights w/o subtext match those with subtext
         heightConstraint?.isActive = false
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance,
+                                                                                                isEmbedded: isEmbedded,
                                                                                                 isFlatWithCheckmarkStyle: isFlatWithCheckmarkStyle,
                                                                                                 accessoryView: rightAccessoryView))
         heightConstraint?.isActive = true
@@ -303,10 +307,10 @@ extension RowButton: UIGestureRecognizerDelegate {
 
 // MARK: - Helpers
 extension RowButton {
-    static func calculateTallestHeight(appearance: PaymentSheet.Appearance, isFlatWithCheckmarkStyle: Bool = false, accessoryView: UIView? = nil) -> CGFloat {
+    static func calculateTallestHeight(appearance: PaymentSheet.Appearance, isEmbedded: Bool, isFlatWithCheckmarkStyle: Bool = false, accessoryView: UIView? = nil) -> CGFloat {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext") { _ in }
+        let tallestRowButton = RowButton(appearance: appearance, imageView: imageView, text: "Dummy text", subtext: "Dummy subtext", isEmbedded: isEmbedded) { _ in }
         let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
         
         // Check if in .flatWithCheck style and if rightAccessoryView exists, if so account for the Edit button being below the labels
@@ -330,12 +334,12 @@ extension RowButton {
         return label
     }
 
-    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, savedPaymentMethodType: STPPaymentMethodType?, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForPaymentMethodType(paymentMethodType: PaymentSheet.PaymentMethodType, subtitle: String? = nil, hasSavedCard: Bool, appearance: PaymentSheet.Appearance, shouldAnimateOnPress: Bool, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
         // Special case "New card" vs "Card" title
         let text: String = {
-            if savedPaymentMethodType == .card && paymentMethodType == .stripe(.card) {
+            if hasSavedCard && paymentMethodType == .stripe(.card) {
                 return .Localized.new_card
             }
             return paymentMethodType.displayName
