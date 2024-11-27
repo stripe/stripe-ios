@@ -60,7 +60,7 @@ public enum CustomerPaymentOption: Equatable {
         guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key] else {
             return nil
         }
- 
+
         return CustomerPaymentOption(value: value)
     }
 }

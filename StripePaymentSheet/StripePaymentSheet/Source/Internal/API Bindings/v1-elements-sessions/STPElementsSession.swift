@@ -224,7 +224,6 @@ extension STPElementsSession {
     var isLinkCardBrand: Bool {
         linkSettings?.linkMode == .linkCardBrand
     }
-
 }
 
 extension STPElementsSession {
