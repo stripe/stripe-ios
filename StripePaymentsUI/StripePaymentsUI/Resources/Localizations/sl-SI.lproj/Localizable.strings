@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Vaša poštna številka ni veljavna.";
 
+"Your card has expired." = "Vaša kartica je potekla.";
+
 "Your card number is incomplete." = "Številka vaše kartice ni popolna.";
 
 "Your card number is invalid." = "Številka vaše kartice ni veljavna.";

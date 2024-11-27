@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
 
+"Your card has expired." = "Η κάρτα σας έχει λήξει.";
+
 "Your card number is incomplete." = "Ο αριθμός της κάρτας σας είναι ελλιπής.";
 
 "Your card number is invalid." = "Ο αριθμός της κάρτας σας δεν είναι έγκυρος.";

@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Nieprawidłowy kod pocztowy (ZIP).";
 
+"Your card has expired." = "Ważność Twojej karty wygasła.";
+
 "Your card number is incomplete." = "Numer karty jest niekompletny.";
 
 "Your card number is invalid." = "Numer karty jest nieprawidłowy.";

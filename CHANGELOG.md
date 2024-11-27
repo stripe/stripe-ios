@@ -1,4 +1,8 @@
 ## x.x.x x-x-x
+### PaymentSheet
+* [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+
+## 24.1.0 2024-11-25
 ### Payments
 * [Added] Support for Crypto bindings.
 

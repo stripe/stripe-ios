@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Отменить платеж и оплатить другим способом";
 
+"Card details cannot be changed." = "Реквизиты карты нельзя изменить.";
+
 "Change email" = "Изменить адрес электронной почты";
 
 "Choose a payment method" = "Выберите метод оплаты";
@@ -111,6 +113,8 @@
 "Join Link" = "Подключиться к Link";
 
 "Log out of Link" = "Выйти из Link";
+
+"Manage card" = "Управление картой";
 
 "Manage payment method" = "Управление способом оплаты";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Не предусмотрено для этой покупки";
 
 "Update card" = "Обновить реквизиты карты";
-
-"Update card brand" = "Изменить бренд карты";
 
 "Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
 

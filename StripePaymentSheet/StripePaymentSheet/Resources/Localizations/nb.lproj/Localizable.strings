@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Avbryt og betal på en annen måte";
 
+"Card details cannot be changed." = "Kortopplysninger kan ikke endres.";
+
 "Change email" = "Endre e-post";
 
 "Choose a payment method" = "Velg en betalingsmetode";
@@ -111,6 +113,8 @@
 "Join Link" = "Bli med i Link";
 
 "Log out of Link" = "Logg ut av Link";
+
+"Manage card" = "Administrer kort";
 
 "Manage payment method" = "Administrer betalingsmetode";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";
 
 "Update card" = "Oppdater kort";
-
-"Update card brand" = "Oppdater kortmerke";
 
 "Use your saved info to check out faster" = "Bruk den lagrede informasjonen din til å betale raskere";
 

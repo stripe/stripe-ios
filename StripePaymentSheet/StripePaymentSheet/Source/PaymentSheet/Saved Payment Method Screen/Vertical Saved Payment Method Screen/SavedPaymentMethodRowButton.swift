@@ -34,7 +34,6 @@ final class SavedPaymentMethodRowButton: UIView {
 
             rowButton.isSelected = isSelected
             rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation
-            circleView.isHidden = !isSelected
             chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
             updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
             removeButton.isHidden = !canRemove || alternateUpdatePaymentMethodNavigation
@@ -88,14 +87,6 @@ final class SavedPaymentMethodRowButton: UIView {
 
     // MARK: Private views
 
-    // TODO(porter) Refactor CircleIconView out of SavedPaymentMethodCollectionView once it is deleted
-    private lazy var circleView: SavedPaymentMethodCollectionView.CircleIconView = {
-        let circleView = SavedPaymentMethodCollectionView.CircleIconView(icon: .icon_checkmark,
-                                                                         fillColor: appearance.colors.primary)
-        circleView.isHidden = true
-        return circleView
-    }()
-
     private lazy var removeButton: CircularButton = {
         let removeButton = CircularButton(style: .remove, iconColor: .white)
         removeButton.backgroundColor = appearance.colors.danger
@@ -119,7 +110,7 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, chevronButton, updateButton, removeButton])
+        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [chevronButton, updateButton, removeButton])
         // margins handled by the `RowButton`
         stackView.directionalLayoutMargins = .zero
         stackView.isUserInteractionEnabled = isEditing
@@ -134,7 +125,9 @@ final class SavedPaymentMethodRowButton: UIView {
 
     private let alternateUpdatePaymentMethodNavigation: Bool
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, alternateUpdatePaymentMethodNavigation: Bool = false) {
+    init(paymentMethod: STPPaymentMethod,
+         appearance: PaymentSheet.Appearance,
+         alternateUpdatePaymentMethodNavigation: Bool = false) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
         self.alternateUpdatePaymentMethodNavigation = alternateUpdatePaymentMethodNavigation
