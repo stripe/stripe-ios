@@ -57,6 +57,54 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
     }
+    
+    /// Ensure PaymentSheet does not call any invalid functions that
+    /// could break UINavigationController's internal state.
+    /// See https://github.com/stripe/stripe-ios/issues/4243 for details.
+    func testPaymentSheetDoesNotBreakUI() {
+        app.launch()
+        app.staticTexts["PaymentSheet"].tap()
+        app.staticTexts["Buy"].waitForExistenceAndTap(timeout: 60)
+
+        // Get screen position of a static item at the top of the VC:
+        let yourCartText = XCUIApplication().staticTexts["Your cart"]
+        let yourCartFrame = yourCartText.frame
+        
+        // Close PaymentSheet. At this point, if we messed up our presentation
+        // logic, the containing UINavigationController will be in a bad state.
+        app.buttons["Close"].waitForExistenceAndTap()
+        
+        // Exercise the UINavigationController by popping and pushing the VC
+        let backButton = XCUIApplication().buttons["Back"]
+        backButton.waitForExistenceAndTap()
+        app.staticTexts["PaymentSheet"].waitForExistenceAndTap()
+        
+        // If the static element has moved from the original location, we messed something up.
+        XCTAssertEqual(yourCartFrame, yourCartText.frame)
+    }
+    
+    func testPaymentSheetDoesNotBreakUISwiftUI() {
+        // Same as above, but invoke from SwiftUI.
+        app.launch()
+        app.staticTexts["PaymentSheet"].tap()
+        let backButton = XCUIApplication().buttons["Back"]
+        // Get the position of the static text in the main PS Example (Our SwiftUI example doesn't have anything anchored to a specific location)
+        let yourCartText = XCUIApplication().staticTexts["Your cart"]
+        let yourCartFrame = yourCartText.frame
+
+        // Go back and invoke PaymentSheet via SwiftUI
+        backButton.waitForExistenceAndTap()
+        app.staticTexts["PaymentSheet (SwiftUI)"].tap()
+        app.buttons["Buy"].waitForExistenceAndTap(timeout: 60)
+        
+        // Close the sheet (at this point UINavigationController would be in the bad state)
+        app.buttons["Close"].waitForExistenceAndTap()
+
+        // Go back to the main PS example and check the layout. Is it the same?
+        backButton.waitForExistenceAndTap()
+        app.staticTexts["PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertEqual(yourCartFrame, yourCartText.frame)
+    }
 
     func testCardFormAmexCVV() throws {
         let app = XCUIApplication()
