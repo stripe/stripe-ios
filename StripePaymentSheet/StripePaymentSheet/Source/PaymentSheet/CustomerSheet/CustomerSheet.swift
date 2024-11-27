@@ -247,7 +247,7 @@ extension CustomerSheet {
             return false
         } else {
             // Merchant is using client side default, so defer to CustomerSession's value
-            return elementsSession.customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
+            return elementsSession.paymentMethodRemoveLastForCustomerSheet
         }
     }
 }

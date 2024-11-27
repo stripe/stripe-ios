@@ -198,12 +198,4 @@ extension CustomerSheetDataSource {
             return elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
         }
     }
-    func paymentMethodRemoveLast(elementsSession: STPElementsSession) -> Bool {
-        switch dataSource {
-        case .customerAdapter:
-            return true
-        case .customerSession:
-            return elementsSession.paymentMethodRemoveLastForCustomerSheet
-        }
-    }
 }
