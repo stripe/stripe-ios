@@ -627,7 +627,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2&gt;&amp;1 | grep "iPhone 12 mini,OS=16.4" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@4:
         inputs:
@@ -649,7 +649,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2&gt;&amp;1 | grep "iPhone 12 mini,OS=16.4" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)    
     - xcode-test@4:
         inputs:
@@ -671,7 +671,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2&gt;&amp;1 | grep "iPhone 12 mini,OS=16.4" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)      
     - xcode-test@4:
         inputs:
@@ -693,7 +693,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2&gt;&amp;1 | grep "iPhone 12 mini,OS=16.4" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)    
     - xcode-test@4:
         inputs:
@@ -715,7 +715,7 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2&gt;&amp;1 | grep "iPhone 12 mini,OS=16.4" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)    
     - xcode-test@4:
         inputs:
