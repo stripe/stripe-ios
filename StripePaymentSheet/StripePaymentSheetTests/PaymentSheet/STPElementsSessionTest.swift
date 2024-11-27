@@ -211,7 +211,7 @@ class STPElementsSessionTest: XCTestCase {
                                                                     "enabled": true,
                                                                     "features": ["payment_method_save": "enabled",
                                                                                  "payment_method_remove": "enabled",
-                                                                                 "payment_method_remove_last": "enabled"
+                                                                                 "payment_method_remove_last": "enabled",
                                                                                 ],
                                                                 ],
                                                                 "customer_sheet": [
@@ -231,7 +231,7 @@ class STPElementsSessionTest: XCTestCase {
                                                                     "enabled": true,
                                                                     "features": ["payment_method_save": "enabled",
                                                                                  "payment_method_remove": "enabled",
-                                                                                 "payment_method_remove_last": "disabled"
+                                                                                 "payment_method_remove_last": "disabled",
                                                                                 ],
                                                                 ],
                                                                 "customer_sheet": [

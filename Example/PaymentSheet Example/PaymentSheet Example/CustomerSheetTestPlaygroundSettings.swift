@@ -176,7 +176,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var cardBrandAcceptance: CardBrandAcceptance
     var alternateUpdatePaymentMethodNavigation: AlternateUpdatePaymentMethodNavigation
-    
+
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
                                                    customerId: nil,

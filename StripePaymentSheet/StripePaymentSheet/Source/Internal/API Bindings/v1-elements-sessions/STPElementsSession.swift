@@ -25,7 +25,7 @@ final class STPElementsSession: NSObject {
 
     /// Link-specific settings for this ElementsSession.
     let linkSettings: LinkSettings?
-    
+
     /// Flags for this ElementsSession.
     let flags: [String: Bool]
 
