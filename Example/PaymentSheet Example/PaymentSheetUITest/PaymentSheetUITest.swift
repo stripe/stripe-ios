@@ -57,7 +57,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
     }
-    
+
     /// Ensure PaymentSheet does not call any invalid functions that
     /// could break UINavigationController's internal state.
     /// See https://github.com/stripe/stripe-ios/issues/4243 for details.
@@ -69,20 +69,20 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // Get screen position of a static item at the top of the VC:
         let yourCartText = XCUIApplication().staticTexts["Your cart"]
         let yourCartFrame = yourCartText.frame
-        
+
         // Close PaymentSheet. At this point, if we messed up our presentation
         // logic, the containing UINavigationController will be in a bad state.
         app.buttons["Close"].waitForExistenceAndTap()
-        
+
         // Exercise the UINavigationController by popping and pushing the VC
         let backButton = XCUIApplication().buttons["Back"]
         backButton.waitForExistenceAndTap()
         app.staticTexts["PaymentSheet"].waitForExistenceAndTap()
-        
+
         // If the static element has moved from the original location, we messed something up.
         XCTAssertEqual(yourCartFrame, yourCartText.frame)
     }
-    
+
     func testPaymentSheetDoesNotBreakUISwiftUI() {
         // Same as above, but invoke from SwiftUI.
         app.launch()
@@ -96,7 +96,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         backButton.waitForExistenceAndTap()
         app.staticTexts["PaymentSheet (SwiftUI)"].tap()
         app.buttons["Buy"].waitForExistenceAndTap(timeout: 60)
-        
+
         // Close the sheet (at this point UINavigationController would be in the bad state)
         app.buttons["Close"].waitForExistenceAndTap()
 
