@@ -325,8 +325,12 @@ final class PaymentSheetLoader {
                 let defaultPaymentMethod = customer.paymentMethods.filter {
                     $0.stripeId == customer.defaultPaymentMethod
                 }.first
-                guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
-                    defaultPaymentMethodOption = .stripeId(defaultPaymentMethod.stripeId)
+                if let defaultPaymentMethod = defaultPaymentMethod {
+                    defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                }
+                else {
+                    defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+                }
             }
             else {
                 defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)

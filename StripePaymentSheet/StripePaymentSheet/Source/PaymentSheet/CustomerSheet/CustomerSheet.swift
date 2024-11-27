@@ -319,8 +319,12 @@ extension CustomerSheet {
                 let defaultPaymentMethod = customer.paymentMethods.filter {
                     $0.stripeId == customer.defaultPaymentMethod
                 }.first
-                guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
-                selectedPaymentOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                if let defaultPaymentMethod = defaultPaymentMethod {
+                    selectedPaymentOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                }
+                else {
+                    selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+                }
             }
             else {
                 selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
