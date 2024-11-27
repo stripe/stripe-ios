@@ -190,7 +190,8 @@ extension XCTestCase {
     func fillCardData(_ app: XCUIApplication,
                       container: XCUIElement? = nil,
                       cardNumber: String? = nil,
-                      postalEnabled: Bool = true) throws {
+                      postalEnabled: Bool = true,
+                      tapCheckboxWithText checkboxText: String? = nil) throws {
         let context = container ?? app
 
         let numberField = context.textFields["Card number"]
@@ -200,6 +201,12 @@ extension XCTestCase {
         app.typeText("123") // CVC
         if postalEnabled {
             app.typeText("12345") // Postal
+        }
+        if let checkboxText {
+            let saveThisAccountToggle = app.switches[checkboxText]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+            XCTAssertTrue(saveThisAccountToggle.isSelected)
         }
     }
 

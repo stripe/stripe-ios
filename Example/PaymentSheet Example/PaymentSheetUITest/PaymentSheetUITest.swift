@@ -1364,12 +1364,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
-        try! fillCardData(app)
-        if shouldTapSaveCheckbox {
-            let saveThisAccountToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
-            XCTAssertFalse(saveThisAccountToggle.isSelected)
-            saveThisAccountToggle.tap()
-        }
+        try! fillCardData(app, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
 
         // Complete payment
         app.buttons["Pay $50.99"].tap()
@@ -1385,12 +1380,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app, cardNumber: "5555555555554444")
-        if shouldTapSaveCheckbox {
-            let saveThisAccountToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
-            XCTAssertFalse(saveThisAccountToggle.isSelected)
-            saveThisAccountToggle.tap()
-        }
+        try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+
         app.buttons["Pay $50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
@@ -1451,12 +1442,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         app.buttons["+ Add"].waitForExistenceAndTap()
 
-        try! fillCardData(app)
-        if shouldTapSaveCheckbox {
-            let saveThisAccountToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
-            XCTAssertFalse(saveThisAccountToggle.isSelected)
-            saveThisAccountToggle.tap()
-        }
+        try! fillCardData(app, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
 
         // Complete payment
         app.buttons["Continue"].tap()
@@ -1478,12 +1464,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app, cardNumber: "5555555555554444")
-        if shouldTapSaveCheckbox {
-            let saveThisAccountToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
-            XCTAssertFalse(saveThisAccountToggle.isSelected)
-            saveThisAccountToggle.tap()
-        }
+        try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
 
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
@@ -1631,12 +1612,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
 
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try fillCardData(app)
-
-        // toggle save this card on
-        let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
-        saveThisCardToggle.tap()
-        XCTAssertTrue(saveThisCardToggle.isSelected)
+        try fillCardData(app, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
 
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
