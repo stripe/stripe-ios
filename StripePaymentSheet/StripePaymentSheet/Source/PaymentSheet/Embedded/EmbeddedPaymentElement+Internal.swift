@@ -182,8 +182,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
-        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
-                                                               savedPaymentMethods,
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: false,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
@@ -201,8 +200,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selection?.isSaved ?? false
-        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
-                                                               savedPaymentMethods,
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
@@ -241,8 +239,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         // there are still saved payment methods & the saved payment method was previously selected to presenting
         let isSelected = (latestPaymentMethods.count > 1 && selectedPaymentMethod != nil) ||
         (embeddedPaymentMethodsView.selection?.isSaved ?? false && latestPaymentMethods.count > 0)
-        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
-                                                               savedPaymentMethods,
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
