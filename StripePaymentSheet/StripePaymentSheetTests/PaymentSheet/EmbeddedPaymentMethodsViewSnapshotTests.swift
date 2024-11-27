@@ -37,7 +37,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .viewMoreChevron,
-                                                      mandateProvider: MockMandateProvider())
+                                                      mandateProvider: MockMandateProvider(),
+                                                      savedPaymentMethods: [._testCard()])
 
         verify(embeddedView)
     }
@@ -82,7 +83,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
         verify(embeddedView)
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -106,7 +107,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
 
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -308,7 +309,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .viewMoreChevron,
-                                                      mandateProvider: MockMandateProvider())
+                                                      mandateProvider: MockMandateProvider(),
+                                                      savedPaymentMethods: [._testCard()])
 
         verify(embeddedView)
     }
@@ -362,7 +364,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
 
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -387,7 +389,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
 
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -567,7 +569,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .edit,
-                                                      mandateProvider: MockMandateProvider())
+                                                      mandateProvider: MockMandateProvider(),
+                                                      savedPaymentMethods: [._testCard()])
 
         XCTAssertEqual(embeddedView.selection, initialSelection)
         verify(embeddedView)
@@ -602,7 +605,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .viewMore,
-                                                      mandateProvider: MockMandateProvider())
+                                                      mandateProvider: MockMandateProvider(),
+                                                      savedPaymentMethods: [._testCard()])
         
         verify(embeddedView)
     }
@@ -656,7 +660,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
         
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -681,7 +685,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
         
         // Assert height
-        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default)
+        let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
         for case let rowButton as RowButton in embeddedView.stackView.arrangedSubviews {
             let newHeight = rowButton.frame.size.height
@@ -892,7 +896,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             shouldShowApplePay: true,
             shouldShowLink: true,
             savedPaymentMethodAccessoryType: .edit,
-            mandateProvider: mockMandateProvider
+            mandateProvider: mockMandateProvider,
+            savedPaymentMethods: [savedPaymentMethod]
         )
 
         verify(embeddedView)
@@ -990,6 +995,35 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         verify(embeddedView)
     }
+    
+    func testEmbeddedPaymentMethodsView_withSavedCard() {
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: .default,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider(),
+                                                      savedPaymentMethods: [._testCard()])
+        
+        verify(embeddedView)
+    }
+    
+    func testEmbeddedPaymentMethodsView_withoutSavedCard() {
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: .default,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider(),
+                                                      savedPaymentMethods: [._testUSBankAccount()])
+        
+        verify(embeddedView)
+    }
+
 
     func verify(
         _ view: UIView,

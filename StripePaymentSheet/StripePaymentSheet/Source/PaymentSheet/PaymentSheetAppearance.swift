@@ -259,7 +259,7 @@ public extension PaymentSheet {
             
             /// Additional vertical insets applied to a payment method row
             /// - Note: Increasing this value increases the height of each row
-            public var additionalInsets: CGFloat = 4.0
+            public var additionalInsets: CGFloat = 6.0
 
             /// Appearance settings for the flat style
             public var flat: Flat = Flat()
