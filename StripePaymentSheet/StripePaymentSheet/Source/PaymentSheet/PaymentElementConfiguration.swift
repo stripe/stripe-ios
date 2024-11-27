@@ -38,6 +38,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var alternateUpdatePaymentMethodNavigation: Bool { get set }
+    var allowsSetAsDefaultPM: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
     var forceNativeLinkEnabled: Bool { get set }
 }

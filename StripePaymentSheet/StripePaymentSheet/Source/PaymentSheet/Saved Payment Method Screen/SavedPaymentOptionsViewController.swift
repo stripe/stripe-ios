@@ -104,6 +104,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
         let alternateUpdatePaymentMethodNavigation: Bool
+        let allowsSetAsDefaultPM: Bool
     }
 
     // MARK: - Internal Properties
@@ -217,6 +218,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
     weak var delegate: SavedPaymentOptionsViewControllerDelegate?
     var appearance = PaymentSheet.Appearance.default
+    var elementsSession: STPElementsSession
 
     // MARK: - Private Properties
     private var selectedViewModelIndex: Int?
@@ -312,6 +314,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         paymentSheetConfiguration: PaymentSheet.Configuration,
         intent: Intent,
         appearance: PaymentSheet.Appearance,
+        elementsSession: STPElementsSession,
         cbcEligible: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
@@ -321,6 +324,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.paymentSheetConfiguration = paymentSheetConfiguration
         self.intent = intent
         self.appearance = appearance
+        self.elementsSession = elementsSession
         self.cbcEligible = cbcEligible
         self.delegate = delegate
         self.analyticsHelper = analyticsHelper
@@ -364,7 +368,9 @@ class SavedPaymentOptionsViewController: UIViewController {
             savedPaymentMethods: savedPaymentMethods,
             customerID: configuration.customerID,
             showApplePay: configuration.showApplePay,
-            showLink: configuration.showLink
+            showLink: configuration.showLink,
+            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+            elementsSession: elementsSession
         )
 
         collectionView.reloadData()
@@ -438,9 +444,21 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
-    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, allowsSetAsDefaultPM: Bool, elementsSession: STPElementsSession) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
-        let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+        var defaultPaymentMethodOption: CustomerPaymentOption?
+        // read from back end
+        if allowsSetAsDefaultPM,
+           let customer =  elementsSession.customer {
+            let defaultPaymentMethod = customer.paymentMethods.filter {
+                $0.stripeId == customer.defaultPaymentMethod
+            }.first
+            guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
+            defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+        }
+        else {
+            defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+        }
 
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
@@ -461,7 +479,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let firstPaymentMethodIsLink = !showApplePay && showLink
         let defaultIndex = firstPaymentMethodIsLink ? 2 : 1
 
-        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod }) ?? defaultIndex
+        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethodOption }) ?? defaultIndex
         return (defaultSelectedIndex, viewModels)
     }
 }
@@ -493,7 +511,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation, allowsSetAsDefaultPM: self.configuration.allowsSetAsDefaultPM)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

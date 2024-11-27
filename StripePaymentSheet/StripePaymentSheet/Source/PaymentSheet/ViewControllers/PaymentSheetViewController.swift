@@ -175,11 +175,13 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
                 allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-                alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
+                alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation,
+                allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
             appearance: configuration.appearance,
+            elementsSession: elementsSession,
             cbcEligible: elementsSession.isCardBrandChoiceEligible,
             analyticsHelper: analyticsHelper
         )

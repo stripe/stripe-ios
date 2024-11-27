@@ -136,6 +136,11 @@ extension EmbeddedPaymentElement {
         /// If false (default), only card brand choice eligible cards can be edited and users can remove payment methods from the list screen.
         @_spi(AlternateUpdatePaymentMethodNavigation) public var alternateUpdatePaymentMethodNavigation = false
 
+        /// This is an experimental feature that may be removed at any time.
+        /// If true, users can set a payment method as default.
+        /// If false (default), users cannot set default payment methods.
+        @_spi(AllowsSetAsDefaultPM) public var allowsSetAsDefaultPM = false
+
         /// The view can display payment methods like “Card” that, when tapped, open a form sheet where customers enter their payment method details. The sheet has a button at the bottom. `FormSheetAction` enumerates the actions the button can perform.
         public enum FormSheetAction {
             /// The button says “Pay” or “Setup”. When tapped, we confirm the payment or setup in the form sheet.

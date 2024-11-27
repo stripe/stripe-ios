@@ -288,6 +288,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             if let selection {
                 return selection
             }
+            // read from back end
+            if configuration.allowsSetAsDefaultPM,
+               let customer =  elementsSession.customer {
+                let defaultPaymentMethod = customer.paymentMethods.filter {
+                    $0.stripeId == customer.defaultPaymentMethod
+                }.first
+                guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
+                return .saved(paymentMethod: defaultPaymentMethod)
+            }
 
             switch previousPaymentOption {
             case .applePay:

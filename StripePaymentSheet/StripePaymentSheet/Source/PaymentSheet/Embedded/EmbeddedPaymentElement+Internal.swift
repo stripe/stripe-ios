@@ -37,6 +37,16 @@ extension EmbeddedPaymentElement {
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
         let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
+            // read from back end
+            if configuration.allowsSetAsDefaultPM,
+               let customer =  loadResult.elementsSession.customer {
+                let defaultPaymentMethod = customer.paymentMethods.filter {
+                    $0.stripeId == customer.defaultPaymentMethod
+                }.first
+                guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
+                return .saved(paymentMethod: defaultPaymentMethod)
+            }
+
             // Select the previous payment option
             switch previousPaymentOption {
             case .applePay:

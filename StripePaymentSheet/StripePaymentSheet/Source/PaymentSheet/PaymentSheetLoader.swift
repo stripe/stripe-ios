@@ -116,7 +116,9 @@ final class PaymentSheetLoader {
                     savedPaymentMethods: filteredSavedPaymentMethods,
                     customerID: configuration.customer?.id,
                     showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
-                    showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false
+                    showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
+                    allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+                    elementsSession: elementsSession
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
 
@@ -316,9 +318,21 @@ final class PaymentSheetLoader {
 
         // Move default PM to front
         if let customerID = configuration.customer?.id {
-            let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+            var defaultPaymentMethodOption: CustomerPaymentOption?
+            // read from back end
+            if configuration.allowsSetAsDefaultPM,
+               let customer =  elementsSession.customer {
+                let defaultPaymentMethod = customer.paymentMethods.filter {
+                    $0.stripeId == customer.defaultPaymentMethod
+                }.first
+                guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
+                    defaultPaymentMethodOption = .stripeId(defaultPaymentMethod.stripeId)
+            }
+            else {
+                defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+            }
             if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
-                $0.stripeId == defaultPaymentMethod?.value
+                $0.stripeId == defaultPaymentMethodOption?.value
             }) {
                 let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
                 savedPaymentMethods.insert(defaultPM, at: 0)

@@ -444,6 +444,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum AllowsSetAsDefaultPM: String, PickerEnum {
+        static let enumName: String = "allowsSetAsDefaultPM"
+        case on
+        case off
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -490,6 +496,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var cardBrandAcceptance: CardBrandAcceptance
     var alternateUpdatePaymentMethodNavigation: AlternateUpdatePaymentMethodNavigation
+    var allowsSetAsDefaultPM: AllowsSetAsDefaultPM
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -535,7 +542,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             formSheetAction: .confirm,
             embeddedViewDisplaysMandateText: .on,
             cardBrandAcceptance: .all,
-            alternateUpdatePaymentMethodNavigation: .off)
+            alternateUpdatePaymentMethodNavigation: .off,
+            allowsSetAsDefaultPM: .off)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

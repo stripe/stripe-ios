@@ -310,7 +310,21 @@ extension CustomerSheet {
         switch customerSheetDataSource.dataSource {
         case .customerSession(let customerSessionAdapter):
             let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
-            let selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+
+            var selectedPaymentOption: CustomerPaymentOption?
+
+            // read from back end
+            if configuration.allowsSetAsDefaultPM,
+               let customer =  elementsSession.customer {
+                let defaultPaymentMethod = customer.paymentMethods.filter {
+                    $0.stripeId == customer.defaultPaymentMethod
+                }.first
+                guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
+                selectedPaymentOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+            }
+            else {
+                selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+            }
 
             switch selectedPaymentOption {
             case .applePay:

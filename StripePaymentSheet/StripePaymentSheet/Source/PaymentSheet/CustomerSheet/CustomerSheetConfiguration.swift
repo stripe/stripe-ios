@@ -86,6 +86,11 @@ extension CustomerSheet {
         /// If false (default), only card brand choice eligible cards can be edited and users can remove payment methods from the list screen.
         @_spi(AlternateUpdatePaymentMethodNavigation) public var alternateUpdatePaymentMethodNavigation = false
 
+        /// This is an experimental feature that may be removed at any time.
+        /// If true, users can set a payment method as default.
+        /// If false (default), users cannot set default payment methods.
+        @_spi(AllowsSetAsDefaultPM) public var allowsSetAsDefaultPM = false
+
         public init () {
         }
     }

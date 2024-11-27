@@ -119,6 +119,9 @@ struct PaymentSheetTestPlayground: View {
                                 if playgroundController.settings.paymentMethodRedisplay == .enabled {
                                     SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
                                 }
+                                if playgroundController.settings.alternateUpdatePaymentMethodNavigation == .on {
+                                    SettingPickerView(setting: $playgroundController.settings.allowsSetAsDefaultPM)
+                                }
                             }
                         }
                     }
