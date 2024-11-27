@@ -295,7 +295,8 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        if embeddedFormViewController.selectedPaymentOption == nil {
+        // If the formViewController was populated with a previous payment option don't reset
+        if embeddedFormViewController.previousPaymentOption == nil {
             self.formViewController = nil
             embeddedPaymentMethodsView.resetSelectionToLastSelection()
         }
