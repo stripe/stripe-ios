@@ -211,4 +211,85 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
     }
+    
+    // tests signup, createPaymentDetails, Connect Account
+    func testSignUpAndCreateDetailsConnectAccount() {
+        let expectation = self.expectation(description: "consumer sign up")
+        let newAccountEmail = "mobile-payments-sdk-ci+\(UUID())@stripe.com"
+        apiClient.stripeAccount = "acct_1QPtbqFZrlYv4BIL"
+
+        var sessionWithKey: ConsumerSession.SessionWithPublishableKey?
+
+        ConsumerSession.signUp(
+            email: newAccountEmail,
+            phoneNumber: "+13105551234",
+            legalName: nil,
+            countryCode: "US",
+            consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
+            with: apiClient
+        ) { result in
+            switch result {
+            case .success(let signupResponse):
+                XCTAssertTrue(signupResponse.consumerSession.isVerifiedForSignup)
+                XCTAssertTrue(
+                    signupResponse.consumerSession.verificationSessions.isVerifiedForSignup
+                )
+                XCTAssertTrue(
+                    signupResponse.consumerSession.verificationSessions.contains(where: {
+                        $0.type == .signup
+                    })
+                )
+
+                sessionWithKey = signupResponse
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+
+        let consumerSession = sessionWithKey!.consumerSession
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.expMonth = 12
+        cardParams.expYear = NSNumber(
+            value: Calendar.autoupdatingCurrent.component(.year, from: Date()) + 1
+        )
+        cardParams.cvc = "123"
+
+        let billingParams = STPPaymentMethodBillingDetails()
+        billingParams.name = "Payments SDK CI"
+        let address = STPPaymentMethodAddress()
+        address.postalCode = "55555"
+        address.country = "US"
+        billingParams.address = address
+
+        let paymentMethodParams = STPPaymentMethodParams.paramsWith(
+            card: cardParams,
+            billingDetails: billingParams,
+            metadata: nil
+        )
+
+        let createExpectation = self.expectation(description: "create payment details")
+        let logoutExpectation = self.expectation(description: "logout")
+        let useDetailsAfterLogoutExpectation = self.expectation(description: "try using payment details after logout")
+        consumerSession.createPaymentDetails(
+            paymentMethodParams: paymentMethodParams,
+            with: apiClient,
+            consumerAccountPublishableKey: sessionWithKey?.publishableKey
+        ) { result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
+            createExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
+    }
 }
