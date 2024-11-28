@@ -1339,7 +1339,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.linkMode = .link_pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
 
-        try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings, shouldTapSaveCheckbox: false)
+        try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings)
     }
     func testRemoveLastSavedPaymentMethodPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -1357,14 +1357,14 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.paymentMethodSave = .enabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
 
-        try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings, shouldTapSaveCheckbox: true)
+        try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
     }
-    func _testRemoveLastSavedPaymentMethodPaymentSheet(settings: PaymentSheetTestPlaygroundSettings, shouldTapSaveCheckbox: Bool) throws {
+    func _testRemoveLastSavedPaymentMethodPaymentSheet(settings: PaymentSheetTestPlaygroundSettings, tapCheckboxWithText: String? = nil) throws {
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
-        try! fillCardData(app, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+        try! fillCardData(app, tapCheckboxWithText: tapCheckboxWithText)
 
         // Complete payment
         app.buttons["Pay $50.99"].tap()
@@ -1380,7 +1380,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+        try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: tapCheckboxWithText)
 
         app.buttons["Pay $50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
@@ -1417,7 +1417,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
-        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings, shouldTapSaveCheckbox: false)
+        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings)
     }
     func test_RemoveLastSavedPaymentMethodFlowController_customerSession() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -1435,14 +1435,14 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
         loadPlayground(app, settings)
 
-        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings, shouldTapSaveCheckbox: true)
+        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
     }
 
-    func _testRemoveLastSavedPaymentMethodFlowController(settings: PaymentSheetTestPlaygroundSettings, shouldTapSaveCheckbox: Bool) throws {
+    func _testRemoveLastSavedPaymentMethodFlowController(settings: PaymentSheetTestPlaygroundSettings, tapCheckboxWithText: String? = nil) throws {
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         app.buttons["+ Add"].waitForExistenceAndTap()
 
-        try! fillCardData(app, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+        try! fillCardData(app, tapCheckboxWithText: tapCheckboxWithText)
 
         // Complete payment
         app.buttons["Continue"].tap()
@@ -1464,7 +1464,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+        try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: tapCheckboxWithText)
 
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].tap()
