@@ -103,7 +103,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
-            paymentMethodTypes: paymentMethodTypes, appearance: configuration.appearance, delegate: self)
+            paymentMethodTypes: paymentMethodTypes,
+            appearance: configuration.appearance,
+            incentive: nil,
+            delegate: self
+        )
         return view
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {

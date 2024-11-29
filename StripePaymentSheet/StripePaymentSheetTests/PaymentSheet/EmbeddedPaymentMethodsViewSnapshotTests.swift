@@ -594,6 +594,22 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
     
+    func testEmbeddedPaymentMethodsView_flatRadio_promoBadge() {
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .instantDebits, .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: MockMandateProvider(),
+            incentive: PaymentMethodIncentive(identifier: "link_instant_debits", displayText: "$5")
+        )
+        
+        verify(embeddedView)
+    }
+    
     // MARK: Flat with checkmark snapshot tests
 
     func testEmbeddedPaymentMethodsView_flatWithCheckmark() {
@@ -836,6 +852,44 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
+        
+        verify(embeddedView)
+    }
+    
+    func testEmbeddedPaymentMethodsView_flatWithCheckmark_promoBadge_unselected() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
+        
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .new(paymentMethodType: .stripe(.card)),
+            paymentMethodTypes: [.stripe(.card), .instantDebits, .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: appearance,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: MockMandateProvider(),
+            incentive: PaymentMethodIncentive(identifier: "link_instant_debits", displayText: "$5")
+        )
+        
+        verify(embeddedView)
+    }
+    
+    func testEmbeddedPaymentMethodsView_flatWithCheckmark_promoBadge_selected() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
+        
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .new(paymentMethodType: .instantDebits),
+            paymentMethodTypes: [.stripe(.card), .instantDebits, .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: appearance,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: MockMandateProvider(),
+            incentive: PaymentMethodIncentive(identifier: "link_instant_debits", displayText: "$5")
+        )
         
         verify(embeddedView)
     }

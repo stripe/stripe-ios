@@ -16,12 +16,19 @@ class PromoBadgeView: UIView {
     
     init(
         appearance: PaymentSheet.Appearance,
+        cornerRadius: CGFloat? = nil,
         tinyMode: Bool,
         text: String? = nil
     ) {
         super.init(frame: .zero)
         setupView(tinyMode: tinyMode)
         setAppearance(appearance)
+        
+        if let cornerRadius {
+            // In embedded mode with checkmarks, the `appearance` corner radius might not be what the
+            // merchant has specified. We use the original corner radius instead.
+            labelBackground.layer.cornerRadius = cornerRadius
+        }
         
         if let text {
             setText(text)

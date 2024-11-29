@@ -59,6 +59,10 @@ class AddPaymentMethodViewController: UIViewController {
     private var paymentMethodFormElement: PaymentMethodElement {
         paymentMethodFormViewController.form
     }
+    
+    private var incentive: PaymentMethodIncentive? {
+        elementsSession.linkSettings?.linkConsumerIncentive.flatMap { PaymentMethodIncentive(from: $0) }
+    }
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
@@ -72,6 +76,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
+            incentive: incentive,
             delegate: self
         )
         return view

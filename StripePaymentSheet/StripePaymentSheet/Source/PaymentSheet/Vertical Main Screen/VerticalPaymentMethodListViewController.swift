@@ -40,6 +40,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         appearance: PaymentSheet.Appearance,
         currency: String?,
         amount: Int?,
+        incentive: PaymentMethodIncentive?,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.delegate = delegate
@@ -115,7 +116,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 paymentMethodType: paymentMethodType,
                 subtitle: Self.subtitleText(for: paymentMethodType),
                 hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708)
-                promoText: nil, // TODO(tillh-stripe) Pass promo text along
+                promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
                 shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)

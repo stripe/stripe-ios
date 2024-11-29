@@ -82,6 +82,7 @@ extension EmbeddedPaymentElement {
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
             savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
+            incentive: loadResult.elementsSession.linkSettings?.linkConsumerIncentive.flatMap { PaymentMethodIncentive(from: $0) },
             delegate: delegate
         )
     }

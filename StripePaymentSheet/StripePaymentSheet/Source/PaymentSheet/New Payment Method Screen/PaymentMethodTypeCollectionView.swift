@@ -39,16 +39,20 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
+    
+    private var incentive: PaymentMethodIncentive?
 
     init(
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
+        incentive: PaymentMethodIncentive?,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
 
         self.paymentMethodTypes = paymentMethodTypes
+        self.incentive = incentive
         self._delegate = delegate
         let selectedItemIndex: Int = {
             if let initialPaymentMethodType = initialPaymentMethodType {
@@ -113,9 +117,10 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             stpAssertionFailure()
             return UICollectionViewCell()
         }
+        let paymentMethodType = paymentMethodTypes[indexPath.item]
+        cell.paymentMethodType = paymentMethodType
         cell.paymentMethodType = paymentMethodTypes[indexPath.item]
-        // TODO(tillh-stripe) Pass promo text along
-        cell.promoBadgeText = nil
+        cell.promoBadgeText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText
         cell.appearance = appearance
         return cell
     }
