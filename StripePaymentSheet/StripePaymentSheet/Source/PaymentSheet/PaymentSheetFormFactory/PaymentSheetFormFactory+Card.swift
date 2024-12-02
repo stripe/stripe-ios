@@ -94,7 +94,8 @@ extension PaymentSheetFormFactory {
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode,
-                showCheckbox: !shouldDisplaySaveCheckbox
+                showCheckbox: !shouldDisplaySaveCheckbox,
+                previousCustomerInput: previousCustomerInput
             )
             elements.append(inlineSignupElement)
         }

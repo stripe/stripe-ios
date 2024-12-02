@@ -31,11 +31,12 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var checkboxElement = CheckboxElement(
         merchantName: viewModel.configuration.merchantDisplayName,
         appearance: viewModel.configuration.appearance,
-        borderColor: borderColor
+        borderColor: borderColor,
+        isSelected: viewModel.saveCheckboxChecked
     )
 
     private(set) lazy var emailElement: LinkEmailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
+        let element = LinkEmailElement(defaultValue: viewModel.initialEmail ?? viewModel.emailAddress,
                                        isOptional: viewModel.isEmailOptional,
                                        showLogo: viewModel.mode != .textFieldsOnlyPhoneFirst,
                                        theme: theme)
@@ -44,7 +45,7 @@ final class LinkInlineSignupView: UIView {
     }()
 
     private(set) lazy var nameElement: TextFieldElement = {
-        let configuration = TextFieldElement.NameConfiguration(type: .full, defaultValue: viewModel.legalName)
+        let configuration = TextFieldElement.NameConfiguration(type: .full, defaultValue: viewModel.initialName ?? viewModel.legalName)
         return TextFieldElement(configuration: configuration, theme: theme)
     }()
 
@@ -53,15 +54,28 @@ final class LinkInlineSignupView: UIView {
         // Otherwise, we'd imply consumer consent when it hasn't occurred.
         switch viewModel.mode {
         case .checkbox:
+            let defaultCountryCode = viewModel.initialPhoneNumber?.countryCode ?? viewModel.configuration.defaultBillingDetails.address.country
+            let defaultPhoneNumber = viewModel.initialPhoneNumber?.number ?? viewModel.configuration.defaultBillingDetails.phone
             return PhoneNumberElement(
-                defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
-                defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone,
+                defaultCountryCode: defaultCountryCode,
+                defaultPhoneNumber: defaultPhoneNumber,
                 theme: theme
         )
         case .textFieldsOnlyEmailFirst:
-            return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, theme: theme)
+            return PhoneNumberElement(
+                defaultCountryCode: viewModel.initialPhoneNumber?.countryCode,
+                defaultPhoneNumber: viewModel.initialPhoneNumber?.number,
+                isOptional: viewModel.isPhoneNumberOptional,
+                theme: theme
+            )
         case .textFieldsOnlyPhoneFirst:
-            return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, infoView: LinkMoreInfoView(), theme: theme)
+            return PhoneNumberElement(
+                defaultCountryCode: viewModel.initialPhoneNumber?.countryCode,
+                defaultPhoneNumber: viewModel.initialPhoneNumber?.number,
+                isOptional: viewModel.isPhoneNumberOptional,
+                infoView: LinkMoreInfoView(),
+                theme: theme
+            )
         }
     }()
 

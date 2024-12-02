@@ -9,10 +9,11 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class LinkInlineSignupElement: Element {
+// TODO: Refactor this to be a ContainerElement and contain its sub-elements.
+final class LinkInlineSignupElement: PaymentMethodElement {
     let collectsUserInput: Bool = true
 
-    private let signupView: LinkInlineSignupView
+    let signupView: LinkInlineSignupView
 
     lazy var view: UIView = {
 
@@ -39,12 +40,14 @@ final class LinkInlineSignupElement: Element {
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
         country: String?,
-        showCheckbox: Bool
+        showCheckbox: Bool,
+        previousCustomerInput: IntentConfirmParams?
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
             configuration: configuration,
             showCheckbox: showCheckbox,
             accountService: LinkAccountService(apiClient: configuration.apiClient),
+            previousCustomerInput: previousCustomerInput?.linkInlineSignupCustomerInput,
             linkAccount: linkAccount,
             country: country
         ))
@@ -55,6 +58,15 @@ final class LinkInlineSignupElement: Element {
         self.signupView.delegate = self
     }
 
+    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
+        params.linkInlineSignupCustomerInput = .init(
+            phoneNumber: signupView.phoneNumberElement.phoneNumber,
+            name: signupView.nameElement.text,
+            email: signupView.emailElement.emailAddressString,
+            checkboxSelected: signupView.checkboxElement.isChecked
+        )
+        return params
+    }
 }
 
 extension LinkInlineSignupElement: LinkInlineSignupViewDelegate {
