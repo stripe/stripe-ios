@@ -111,7 +111,7 @@ extension STPPaymentMethod {
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
-            )
+            ).rounded(radius: 3)
         case .SEPADebit:
             return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         default:
@@ -150,7 +150,7 @@ extension STPPaymentMethodType {
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
         switch self {
-        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto:
+        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto, .bacsDebit:
             return true
         default:
             return false
@@ -223,5 +223,15 @@ extension String {
 extension STPPaymentMethodCard {
     var preferredDisplayBrand: STPCardBrand {
         return networks?.preferred?.toCardBrand ?? displayBrand?.toCardBrand ?? brand
+    }
+}
+
+extension UIImage {
+    func rounded(radius: CGFloat) -> UIImage {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
+        draw(in: rect)
+        return UIGraphicsGetImageFromCurrentImageContext()!
     }
 }
