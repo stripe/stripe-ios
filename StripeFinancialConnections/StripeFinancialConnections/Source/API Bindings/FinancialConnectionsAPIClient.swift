@@ -50,7 +50,7 @@ final class FinancialConnectionsAPIClient {
         return backingAPIClient.get(
             resource: resource,
             parameters: parameters,
-            ephemeralKeySecret: possibleConsumerPublishableKey
+            consumerPublishableKey: possibleConsumerPublishableKey
         )
     }
 
@@ -64,7 +64,7 @@ final class FinancialConnectionsAPIClient {
         return backingAPIClient.post(
             resource: resource,
             parameters: parameters,
-            ephemeralKeySecret: possibleConsumerPublishableKey
+            consumerPublishableKey: possibleConsumerPublishableKey
         )
     }
 
