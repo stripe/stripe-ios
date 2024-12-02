@@ -304,7 +304,8 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods,
-                                                               alternateUpdatePaymentMethodNavigation: false)
+                                                               alternateUpdatePaymentMethodNavigation: false,
+                                                               allowsSetAsDefaultPM: false)
     }
 
     func savedPaymentOptionsController(_ configuration: SavedPaymentOptionsViewController.Configuration,
@@ -315,6 +316,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                  paymentSheetConfiguration: paymentSheetConfiguration,
                                                  intent: Intent._testValue(),
                                                  appearance: .default,
+                                                 elementsSession: .emptyElementsSession,
                                                  cbcEligible: cbcEligible,
                                                  analyticsHelper: ._testValue(),
                                                  delegate: nil)
