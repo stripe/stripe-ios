@@ -1,6 +1,7 @@
 ## x.x.x x-x-x
 ### PaymentSheet
 * [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+* [Fixed] Fixed an issue in Instant Bank Payments that occurred when using a connected account.
 
 ## 24.1.0 2024-11-25
 ### Payments

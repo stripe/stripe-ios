@@ -240,6 +240,7 @@ extension STPAPIClient {
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -248,6 +249,7 @@ extension STPAPIClient {
             method: .get,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource,
             completion: completion
         )
@@ -258,6 +260,7 @@ extension STPAPIClient {
         url: URL,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -266,6 +269,7 @@ extension STPAPIClient {
             method: .get,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             url: url,
             completion: completion
         )
@@ -277,12 +281,14 @@ extension STPAPIClient {
     @_spi(STP) public func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
-        ephemeralKeySecret: String? = nil
+        ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil
     ) -> Promise<T> {
         return request(
             method: .get,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource
         )
     }
@@ -292,12 +298,14 @@ extension STPAPIClient {
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         request(
             method: .post,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource,
             completion: completion
         )
@@ -308,12 +316,14 @@ extension STPAPIClient {
         url: URL,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         request(
             method: .post,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             url: url,
             completion: completion
         )
@@ -325,12 +335,14 @@ extension STPAPIClient {
     @_spi(STP) public func post<T: Decodable>(
         resource: String,
         parameters: [String: Any],
-        ephemeralKeySecret: String? = nil
+        ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil
     ) -> Promise<T> {
         return request(
             method: .post,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource
         )
     }
@@ -339,6 +351,7 @@ extension STPAPIClient {
         method: HTTPMethod,
         parameters: [String: Any],
         ephemeralKeySecret: String?,
+        consumerPublishableKey: String?,
         resource: String
     ) -> Promise<T> {
         let promise = Promise<T>()
@@ -346,6 +359,7 @@ extension STPAPIClient {
             method: method,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource
         ) { result in
             promise.fullfill(with: result)
@@ -357,6 +371,7 @@ extension STPAPIClient {
         method: HTTPMethod,
         parameters: [String: Any],
         ephemeralKeySecret: String?,
+        consumerPublishableKey: String?,
         resource: String,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
@@ -365,6 +380,7 @@ extension STPAPIClient {
             method: method,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             url: url,
             completion: completion
         )
@@ -374,6 +390,7 @@ extension STPAPIClient {
         method: HTTPMethod,
         parameters: [String: Any],
         ephemeralKeySecret: String?,
+        consumerPublishableKey: String?,
         url: URL,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
@@ -400,8 +417,14 @@ extension STPAPIClient {
         }
 
         request.httpMethod = method.rawValue
-        for (k, v) in authorizationHeader(using: ephemeralKeySecret) {
+        for (k, v) in authorizationHeader(using: ephemeralKeySecret ?? consumerPublishableKey) {
             request.setValue(v, forHTTPHeaderField: k)
+        }
+        
+        if consumerPublishableKey != nil {
+            // If we now have a consumer publishable key, we no longer send the connected account
+            // in the header, as otherwise the request will justifiably fail.
+            request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
         }
 
         self.sendRequest(request: request, completion: completion)
