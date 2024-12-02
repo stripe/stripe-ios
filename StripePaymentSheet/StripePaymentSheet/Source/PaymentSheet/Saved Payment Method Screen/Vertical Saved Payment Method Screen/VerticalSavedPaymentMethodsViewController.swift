@@ -188,7 +188,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [SavedPaymentMethodRowButton] {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
-                                                     appearance: configuration.appearance, alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
+                                                     appearance: configuration.appearance,
+                                                     alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
             button.delegate = self
             return button
         }

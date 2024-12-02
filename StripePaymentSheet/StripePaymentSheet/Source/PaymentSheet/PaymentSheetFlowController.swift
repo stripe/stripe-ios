@@ -307,9 +307,12 @@ extension PaymentSheet {
                 return
             }
 
-            if let completion = completion {
-                presentPaymentOptionsCompletion = completion
+            // Overwrite completion closure to retain self until called
+            let wrappedCompletion: () -> Void = {
+                completion?()
+                self.presentPaymentOptionsCompletion = nil
             }
+            presentPaymentOptionsCompletion = wrappedCompletion
 
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }

@@ -92,6 +92,7 @@ extension EmbeddedPaymentElement {
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
+            savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
             delegate: delegate
         )
@@ -105,10 +106,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
 
-    func selectionDidUpdate(didChange: Bool) {
+    func updateSelectionState(isNewSelection: Bool) -> Bool {
         // Deferring notifying delegate until the exit of this function guarantees the new payment option comes from the new instance of `EmbeddedFormViewController`
         defer {
-            if didChange {
+            if isNewSelection {
                 delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
         }
@@ -116,12 +117,12 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
             // This can occur when selection is being reset to nothing selected or to a saved payment method, so don't assert.
             self.formViewController = nil
-            return
+            return true
         }
 
         guard let presentingViewController else {
             stpAssertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
-            return
+            return true
         }
 
         let formViewController = EmbeddedFormViewController(
@@ -139,14 +140,17 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Only show forms that require user input
         guard formViewController.collectsUserInput else {
             self.formViewController = nil  // Clear out any previous form view controller to update self._paymentOption
-            return
+            return true
         }
 
         let bottomSheet = bottomSheetController(with: formViewController)
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
         self.formViewController = formViewController
+        let formHasValidPaymentOption = formViewController.selectedPaymentOption != nil
+        return formHasValidPaymentOption // Show row selected only if payment option is valid
     }
+    
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
         // Special case, only 1 card remaining but is co-branded (or alternateUpdatePaymentMethodNavigation), skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
@@ -193,7 +197,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
-        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: false,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
@@ -211,7 +215,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selection?.isSaved ?? false
-        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
@@ -250,7 +254,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         // there are still saved payment methods & the saved payment method was previously selected to presenting
         let isSelected = (latestPaymentMethods.count > 1 && selectedPaymentMethod != nil) ||
         (embeddedPaymentMethodsView.selection?.isSaved ?? false && latestPaymentMethods.count > 0)
-        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods.first,
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
@@ -305,7 +309,8 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        if embeddedFormViewController.selectedPaymentOption == nil {
+        // If the formViewController was populated with a previous payment option don't reset
+        if embeddedFormViewController.previousPaymentOption == nil {
             self.formViewController = nil
             embeddedPaymentMethodsView.resetSelectionToLastSelection()
         }
@@ -313,6 +318,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
+        embeddedPaymentMethodsView.highlightSelection()
         embeddedFormViewController.dismiss(animated: true)
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
