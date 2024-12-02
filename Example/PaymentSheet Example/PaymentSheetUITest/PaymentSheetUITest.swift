@@ -70,6 +70,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let yourCartText = XCUIApplication().staticTexts["Your cart"]
         let yourCartFrame = yourCartText.frame
 
+        // Wait for the sheet to load
+        let numberField = app.textFields["Card number"]
+        _ = numberField.waitForExistence(timeout: 20)
+
         // Close PaymentSheet. At this point, if we messed up our presentation
         // logic, the containing UINavigationController will be in a bad state.
         app.buttons["Close"].waitForExistenceAndTap()
@@ -96,6 +100,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         backButton.waitForExistenceAndTap()
         app.staticTexts["PaymentSheet (SwiftUI)"].tap()
         app.buttons["Buy"].waitForExistenceAndTap(timeout: 60)
+
+        // Wait for the sheet to load
+        let numberField = app.textFields["Card number"]
+        _ = numberField.waitForExistence(timeout: 20)
 
         // Close the sheet (at this point UINavigationController would be in the bad state)
         app.buttons["Close"].waitForExistenceAndTap()
