@@ -211,7 +211,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     // tests signup, createPaymentDetails, Connect Account
     func testSignUpAndCreateDetailsConnectAccount() {
         let expectation = self.expectation(description: "consumer sign up")
@@ -273,8 +273,6 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
         )
 
         let createExpectation = self.expectation(description: "create payment details")
-        let logoutExpectation = self.expectation(description: "logout")
-        let useDetailsAfterLogoutExpectation = self.expectation(description: "try using payment details after logout")
         consumerSession.createPaymentDetails(
             paymentMethodParams: paymentMethodParams,
             with: apiClient,
