@@ -90,6 +90,7 @@ import UIKit
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.httpBody = clientData
+            print("Request to /attest: \(String(data: clientData, encoding: .utf8)!)")
             let (data, _) = try! await URLSession.shared.data(for: request)
             print(data)
         } catch {
@@ -113,12 +114,13 @@ import UIKit
 
         let challenge = await getChallenge()
         let deviceId = await UIDevice.current.identifierForVendor!.uuidString
-        let request = [ "action": "getGameLevel",
-                        "levelId": "1234",
-                        "deviceId": deviceId,
+        let request = [ "deviceId": deviceId,
                         "challenge": challenge.base64EncodedString() ]
+        let requestFieldsToHash = [ "challenge": request["challenge"] ]
         let clientData = try! JSONSerialization.data(withJSONObject: request)
-        let clientDataHash = Data(SHA256.hash(data: clientData))
+        let clientDataToHash = try! JSONSerialization.data(withJSONObject: requestFieldsToHash)
+        print(String(data: clientDataToHash, encoding: .utf8)!)
+        let clientDataHash = Data(SHA256.hash(data: clientDataToHash))
         do {
             let assertion = try await service.generateAssertion(keyId, clientDataHash: clientDataHash)
             print(assertion)
@@ -128,6 +130,8 @@ import UIKit
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue(assertion.base64EncodedString(), forHTTPHeaderField: "X-Stripe-Apple-Assertion")
             request.httpBody = clientData
+            print("Request to /assert: \(String(data: clientData, encoding: .utf8)!)")
+            print("Request to /assert X-Stripe-Apple-Assertion header: \(assertion.base64EncodedString())")
             let (data, _) = try! await URLSession.shared.data(for: request)
             print(String(data: data, encoding: .utf8)!)
 
