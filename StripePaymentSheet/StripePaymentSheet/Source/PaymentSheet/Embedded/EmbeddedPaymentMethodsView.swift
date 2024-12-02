@@ -13,7 +13,12 @@ import UIKit
 @MainActor
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
-    func selectionDidUpdate(didChange: Bool)
+    
+    /// Updates the selection state and determines visual feedback
+    /// - Parameters:
+    ///   - isNewSelection: Indicates if this is a newly selected item
+    /// - Returns: A boolean indicating whether to display a visual selection indicator
+    func updateSelectionState(isNewSelection: Bool) -> Bool
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
 }
 
@@ -30,11 +35,11 @@ class EmbeddedPaymentMethodsView: UIView {
     private(set) var selection: Selection? {
         didSet {
             previousSelection = oldValue
-            selectionButtonMapping.forEach { (key, button) in
-                button.isSelected = key == selection
-            }
             updateMandate()
-            delegate?.selectionDidUpdate(didChange: oldValue != selection)
+            let shouldShowSelection = delegate?.updateSelectionState(isNewSelection: oldValue != selection) ?? true
+            selectionButtonMapping.forEach { (key, button) in
+                button.isSelected = key == selection && shouldShowSelection
+            }
         }
     }
     private let mandateProvider: MandateTextProvider
@@ -360,6 +365,12 @@ class EmbeddedPaymentMethodsView: UIView {
             self.setNeedsLayout()
             self.layoutIfNeeded()
         })
+    }
+    
+    func highlightSelection() {
+        selectionButtonMapping.forEach { (key, button) in
+            button.isSelected = key == selection
+        }
     }
 }
 

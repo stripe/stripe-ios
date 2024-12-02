@@ -70,6 +70,7 @@ extension SavedPaymentMethodFormFactory {
         }()
         return cardSection
     }
+
     private func updateSelectedCardBrand(index: Int) {
         let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
         viewModel.selectedCardBrand = cardBrands[index]
