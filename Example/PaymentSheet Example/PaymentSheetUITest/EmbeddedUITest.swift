@@ -18,6 +18,14 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
+        sleep(1)
+        let startupLog = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter({ !$0.starts(with: "luxe") })
+        XCTAssertEqual(
+            startupLog,
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_init"]
+        )
+
         // Entering a card w/ deferred PaymentIntent...
         app.buttons["Card"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
@@ -27,6 +35,13 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+
+        let fillCardAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
+            .suffix(5)
+        XCTAssertEqual(
+            fillCardAnalytics,
+            ["mc_form_shown", "mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
+        )
 
         // ...and *updating* to a SetupIntent...
         app.buttons.matching(identifier: "Setup").element(boundBy: 1).waitForExistenceAndTap()
@@ -53,6 +68,13 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // ...selecting Alipay w/ deferred PaymentIntent...
         app.buttons["Alipay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
+
+        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
+        XCTAssertEqual(
+            aliPayAnalytics,
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_carousel_payment_method_tapped"]
+        )
+
         // ...and *updating* to a SetupIntent...
         app.buttons.matching(identifier: "Setup").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
@@ -95,6 +117,15 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // ...selecting Klarna should present a Klarna form with the previously entered email
         app.buttons["Klarna"].waitForExistenceAndTap()
         app.buttons["Continue"].waitForExistenceAndTap()
+
+        let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
+        XCTAssertEqual(
+            klarnaAnalytics,
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_carousel_payment_method_tapped",
+             "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped",
+            ]
+        )
+
         // ...switching back to payment should keep Klarna selected
         app.buttons.matching(identifier: "Payment").element(boundBy: 1).waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
@@ -196,7 +227,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
     func testSingleCardCBC_onRemove_selectStateNone() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
-        settings.uiStyle = .paymentSheet
+        settings.uiStyle = .embedded
+        settings.integrationType = .deferred_csc
         settings.customerKeyType = .legacy
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
@@ -206,13 +238,26 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
 
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        sleep(1)
+        let presentEmbeddedLog = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter({ $0.starts(with: "mc_") })
+        XCTAssertEqual(
+            presentEmbeddedLog,
+            ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_carousel_payment_method_tapped", "mc_form_shown"]
+        )
         try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
 
         // Complete payment
         app.buttons["Pay €50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        let completedPayment = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter({ $0.starts(with: "mc_") }).suffix(3)
+        XCTAssertEqual(
+            completedPayment,
+            ["mc_form_completed", "mc_confirm_button_tapped", "mc_embedded_payment_success"]
+        )
 
         // Switch to embedded mode kicks off a reload
         app.buttons["embedded"].waitForExistenceAndTap(timeout: 5)
@@ -324,6 +369,16 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(card4242Button.waitForExistence(timeout: 3.0))
         XCTAssertFalse(bank6789Button.waitForExistence(timeout: 3.0))
         XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
+        let events = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter({ !$0.starts(with: "luxe") })
+
+        XCTAssertEqual(
+            events,
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_init", "mc_embedded_paymentoption_savedpm_select",
+             "mc_carousel_payment_method_tapped", "mc_embedded_paymentoption_removed",
+             "mc_carousel_payment_method_tapped", "mc_embedded_paymentoption_removed",
+            ]
+        )
     }
 
     func testMultipleCard_remove_selectNonSavedCard() {
@@ -431,6 +486,38 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.buttons["••••6789"].isSelected)
         XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
+    }
+
+    func testConfirmationWithUserButton_savedPaymentMethod() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .embedded
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .returning
+        settings.mode = .setup
+        settings.applePayEnabled = .on
+        settings.merchantCountryCode = .US
+        settings.currency = .usd
+        loadPlayground(app, settings)
+
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        ensureSPMSelection("••••6789", insteadOf: "•••• 4242")
+
+        XCTAssertTrue(app.staticTexts["••••6789"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["••••6789"].isSelected)
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistenceAndTap())
+
+        sleep(1)
+        let loadEventsWithoutSPMSelection = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter({ $0.starts(with: "mc_") }).prefix(3)
+        XCTAssertEqual(loadEventsWithoutSPMSelection,
+                       ["mc_load_started", "mc_load_succeeded", "mc_embedded_init"])
+
+
+
+        let confirmationEvents = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter({ $0.starts(with: "mc_") }).suffix(1)
+        XCTAssertEqual(confirmationEvents,
+                       ["mc_embedded_payment_success"])
     }
 
     func testSelection() {
@@ -808,7 +895,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.typeText("test-\(UUID().uuidString)@example.com" + XCUIKeyboardKey.return.rawValue)
         XCTAssertTrue(continueButton.isEnabled)
         continueButton.tap()
-        
+
         // Go through connections flow
         app.buttons["Agree and continue"].tap()
         app.staticTexts["Test Institution"].forceTapElement()
