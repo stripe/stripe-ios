@@ -327,6 +327,7 @@ class CustomerSheetBackend {
                      "customer_key_type": settings.customerKeyType.rawValue,
                      "merchant_country_code": settings.merchantCountryCode.rawValue,
                      "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
+                     "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
         ] as [String: Any]
 
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {

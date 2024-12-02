@@ -167,12 +167,14 @@ public class CustomerSheet {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
+                let allowsRemovalOfLastSavedPaymentMethod = CustomerSheet.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: self.configuration)
                 self.present(from: presentingViewController,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                              customerSheetDataSource: customerSheetDataSource,
                              paymentMethodRemove: paymentMethodRemove,
+                             allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
                                                                      duration: Date().timeIntervalSince(loadingStartDate))
@@ -196,6 +198,7 @@ public class CustomerSheet {
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
                  customerSheetDataSource: CustomerSheetDataSource,
                  paymentMethodRemove: Bool,
+                 allowsRemovalOfLastSavedPaymentMethod: Bool,
                  cbcEligible: Bool) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -211,6 +214,7 @@ public class CustomerSheet {
                                                                                 customerSheetDataSource: customerSheetDataSource,
                                                                                 isApplePayEnabled: isApplePayEnabled,
                                                                                 paymentMethodRemove: paymentMethodRemove,
+                                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
                                                                                 csCompletion: self.csCompletion,
                                                                                 delegate: self)
@@ -234,6 +238,18 @@ public class CustomerSheet {
     // MARK: - Internal Properties
     var completion: (() -> Void)?
     var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
+}
+
+extension CustomerSheet {
+    static func allowsRemovalOfLastPaymentMethod(elementsSession: STPElementsSession, configuration: CustomerSheet.Configuration) -> Bool {
+        if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            // Merchant has set local configuration to false, so honor it.
+            return false
+        } else {
+            // Merchant is using client side default, so defer to CustomerSession's value
+            return elementsSession.paymentMethodRemoveLastForCustomerSheet
+        }
+    }
 }
 
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
