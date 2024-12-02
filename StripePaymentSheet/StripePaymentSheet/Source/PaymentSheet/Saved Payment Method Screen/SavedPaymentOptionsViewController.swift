@@ -449,9 +449,10 @@ class SavedPaymentOptionsViewController: UIViewController {
         var defaultPaymentMethodOption: CustomerPaymentOption?
         // read from back end
         if allowsSetAsDefaultPM,
-           let customer =  elementsSession.customer {
+           let customer =  elementsSession.customer,
+           let customerDefault = customer.defaultPaymentMethod {
             let defaultPaymentMethod = customer.paymentMethods.filter {
-                $0.stripeId == customer.defaultPaymentMethod
+                $0.stripeId == customerDefault
             }.first
             guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
             defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
@@ -511,7 +512,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation, allowsSetAsDefaultPM: self.configuration.allowsSetAsDefaultPM)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
