@@ -12,6 +12,14 @@ import Foundation
     @_spi(STP) @frozen public enum IntentID {
         case payment(String)
         case setup(String)
+        case deferred(String)
+        
+        @_spi(STP) public var id: String {
+            switch self {
+            case let .payment(string), let .setup(string), let .deferred(string):
+                return string
+            }
+        }
     }
 
     /// These fields will be used to prefill the Financial Connections Link Login pane.
@@ -42,9 +50,17 @@ import Foundation
     @_spi(STP) public let intentId: IntentID?
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let billingDetails: BillingDetails?
+    @_spi(STP) public let eligibleForIncentive: Bool
 
     @_spi(STP) public var billingAddress: BillingAddress? {
         BillingAddress(from: billingDetails)
+    }
+    
+    @_spi(STP) public var incentiveEligibilitySession: IntentID? {
+        guard eligibleForIncentive else {
+            return nil
+        }
+        return intentId
     }
 
     @_spi(STP) public init(
@@ -53,7 +69,8 @@ import Foundation
         prefillDetails: PrefillDetails?,
         intentId: IntentID?,
         linkMode: LinkMode?,
-        billingDetails: BillingDetails?
+        billingDetails: BillingDetails?,
+        eligibleForIncentive: Bool
     ) {
         self.amount = amount
         self.currency = currency
@@ -61,6 +78,7 @@ import Foundation
         self.intentId = intentId
         self.linkMode = linkMode
         self.billingDetails = billingDetails
+        self.eligibleForIncentive = eligibleForIncentive
     }
 }
 
