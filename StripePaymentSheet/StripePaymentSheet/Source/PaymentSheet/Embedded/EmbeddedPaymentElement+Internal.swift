@@ -94,7 +94,8 @@ extension EmbeddedPaymentElement {
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
             savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
-            delegate: delegate
+            delegate: delegate,
+            isDefaultPM: loadResult.savedPaymentMethods.first?.stripeId == loadResult.elementsSession.customer?.defaultPaymentMethod
         )
     }
 }

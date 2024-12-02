@@ -189,7 +189,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
                                                      appearance: configuration.appearance,
-                                                     alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
+                                                     alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation,
+                                                     showDefaultPMBadge: configuration.allowsSetAsDefaultPM && paymentMethod.stripeId == elementsSession.customer?.defaultPaymentMethod)
             button.delegate = self
             return button
         }
@@ -388,7 +389,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         }
 
         // Create the new button
-        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance, alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
+        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance, alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation, showDefaultPMBadge: configuration.allowsSetAsDefaultPM && updatedPaymentMethod.stripeId == elementsSession.customer?.defaultPaymentMethod)
         newButton.delegate = self
         newButton.previousSelectedState = oldButton.previousSelectedState
         newButton.state = oldButton.state

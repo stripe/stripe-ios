@@ -148,6 +148,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             }
         }
     }
+
     var bottomNoticeAttributedString: NSAttributedString? {
         if case .saved(let paymentMethod, _) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
@@ -512,9 +513,12 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation, allowsSetAsDefaultPM: self.configuration.allowsSetAsDefaultPM)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
+        if self.configuration.allowsSetAsDefaultPM {
+            cell.isDefaultPM = viewModel.savedPaymentMethod?.stripeId == elementsSession.customer?.defaultPaymentMethod
+        }
         cell.appearance = appearance
 
         return cell

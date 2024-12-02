@@ -15,7 +15,7 @@ import UIKit
 
 // MARK: - Constants
 /// Entire cell size
-private let cellSize: CGSize = CGSize(width: 106, height: 94)
+private let cellSize: CGSize = CGSize(width: 106, height: 106)
 /// Size of the rounded rectangle that contains the PM logo
 let roundedRectangleSize = CGSize(width: 100, height: 64)
 private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
@@ -49,7 +49,7 @@ class SavedPaymentMethodCollectionView: UICollectionView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: 100)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 112)
     }
 }
 
@@ -93,8 +93,21 @@ extension SavedPaymentMethodCollectionView {
             button.accessibilityIdentifier = "Remove"
             return button
         }()
+        lazy var defaultBadge: UILabel = {
+            let label = UILabel()
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.textColor = appearance.colors.textSecondary
+            label.adjustsFontForContentSizeCategory = true
+            label.text = "Default"
+            return label
+        }()
 
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
+        var isDefaultPM: Bool = false {
+            didSet {
+                update()
+            }
+        }
 
         var isRemovingPaymentMethods: Bool = false {
             didSet {
@@ -113,6 +126,7 @@ extension SavedPaymentMethodCollectionView {
         var cbcEligible: Bool = false
         var allowsPaymentMethodRemoval: Bool = true
         var alternateUpdatePaymentMethodNavigation: Bool = false
+        var allowsSetAsDefaultPM: Bool = false
 
         /// Indicates whether the cell should be editable or just removable.
         /// If the card is a co-branded card and the merchant is eligible for card brand choice, then
@@ -150,7 +164,7 @@ extension SavedPaymentMethodCollectionView {
             paymentMethodLogo.contentMode = .scaleAspectFit
             accessoryButton.addTarget(self, action: #selector(didSelectAccessory), for: .touchUpInside)
             let views = [
-                label, shadowRoundedRectangle, paymentMethodLogo, plus, selectedIcon, accessoryButton,
+                label, shadowRoundedRectangle, paymentMethodLogo, plus, selectedIcon, accessoryButton, defaultBadge,
             ]
             views.forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -167,9 +181,15 @@ extension SavedPaymentMethodCollectionView {
 
                 label.topAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: 4),
-                label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+//                label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
                 label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+
+                defaultBadge.topAnchor.constraint(
+                    equalTo: label.bottomAnchor, constant: 4),
+                defaultBadge.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+                defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
+                defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 
                 paymentMethodLogo.centerXAnchor.constraint(
                     equalTo: shadowRoundedRectangle.centerXAnchor),
@@ -196,6 +216,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: contentView.trailingAnchor, constant: 0),
                 accessoryButton.topAnchor.constraint(
                     equalTo: contentView.topAnchor, constant: 0),
+                
             ])
         }
 
@@ -218,7 +239,7 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
 
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, alternateUpdatePaymentMethodNavigation: Bool) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, alternateUpdatePaymentMethodNavigation: Bool, allowsSetAsDefaultPM: Bool) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
@@ -226,6 +247,7 @@ extension SavedPaymentMethodCollectionView {
             self.cbcEligible = cbcEligible
             self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
             self.alternateUpdatePaymentMethodNavigation = alternateUpdatePaymentMethodNavigation
+            self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             update()
         }
 
@@ -343,17 +365,25 @@ extension SavedPaymentMethodCollectionView {
                             accessoryButton.backgroundColor = UIColor.dynamic(
                                 light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
                             accessoryButton.iconColor = appearance.colors.icon
+                            if allowsSetAsDefaultPM && isDefaultPM {
+                                defaultBadge.isHidden = false
+                            }
+                            else {
+                                defaultBadge.isHidden = true
+                            }
                         } else if allowsPaymentMethodRemoval {
                             accessoryButton.isHidden = false
                             accessoryButton.set(style: .remove, with: appearance.colors.danger)
                             accessoryButton.backgroundColor = appearance.colors.danger
                             accessoryButton.iconColor = appearance.colors.danger.contrastingColor
+                            defaultBadge.isHidden = true
                         }
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
 
                     } else {
                         accessoryButton.isHidden = true
+                        defaultBadge.isHidden = true
 
                         // apply disabled style
                         shadowRoundedRectangle.isEnabled = false
@@ -364,6 +394,7 @@ extension SavedPaymentMethodCollectionView {
 
                 } else if isSelected {
                     accessoryButton.isHidden = true
+                    defaultBadge.isHidden = true
                     shadowRoundedRectangle.isEnabled = true
                     label.textColor = appearance.colors.text
                     paymentMethodLogo.alpha = 1
@@ -375,6 +406,7 @@ extension SavedPaymentMethodCollectionView {
                     shadowRoundedRectangle.isSelected = true
                 } else {
                     accessoryButton.isHidden = true
+                    defaultBadge.isHidden = true
                     applyDefaultStyle()
                 }
                 accessoryButton.isAccessibilityElement = !accessoryButton.isHidden

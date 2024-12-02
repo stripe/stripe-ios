@@ -67,6 +67,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private var savedPaymentMethodButton: RowButton?
 
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
+    var isDefaultPM: Bool = false
 
     init(
         initialSelection: Selection?,
@@ -80,7 +81,8 @@ class EmbeddedPaymentMethodsView: UIView {
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
         customer: PaymentSheet.CustomerConfiguration? = nil,
-        delegate: EmbeddedPaymentMethodsViewDelegate? = nil
+        delegate: EmbeddedPaymentMethodsViewDelegate? = nil,
+        isDefaultPM: Bool = false
     ) {
         self.appearance = appearance
         self.mandateProvider = mandateProvider
@@ -88,6 +90,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.rowButtonAppearance = appearance.embeddedPaymentElement.row.style.appearanceForStyle(appearance: appearance)
         self.customer = customer
         self.delegate = delegate
+        self.isDefaultPM = isDefaultPM
         super.init(frame: .zero)
 
         if let savedPaymentMethod {
