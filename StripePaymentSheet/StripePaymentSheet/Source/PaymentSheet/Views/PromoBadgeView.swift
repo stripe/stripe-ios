@@ -11,52 +11,17 @@ import UIKit
 
 class PromoBadgeView: UIView {
     
-    private let labelBackground: UIView
-    private let label: UILabel
+    private let labelBackground = UIView()
+    private let label = UILabel()
     
-    convenience init(
+    init(
         appearance: PaymentSheet.Appearance,
         tinyMode: Bool,
         text: String? = nil
     ) {
-        let backgroundColor = appearance.primaryButton.successBackgroundColor
-        let foregroundColor = appearance.primaryButton.successTextColor ?? appearance.primaryButton.textColor ?? backgroundColor.contrastingColor
-        
-        self.init(
-            font: appearance.scaledFont(
-                for: appearance.font.base.medium,
-                style: .caption1,
-                maximumPointSize: 20
-            ),
-            backgroundColor: backgroundColor,
-            foregroundColor: foregroundColor,
-            cornerRadius: appearance.cornerRadius,
-            tinyMode: tinyMode,
-            text: text
-        )
-    }
-    
-    private init(
-        font: UIFont,
-        backgroundColor: UIColor,
-        foregroundColor: UIColor,
-        cornerRadius: CGFloat,
-        tinyMode: Bool,
-        text: String? = nil
-    ) {
-        let labelBackground = UIView()
-        labelBackground.backgroundColor = backgroundColor
-        labelBackground.layer.cornerRadius = cornerRadius
-        self.labelBackground = labelBackground
-        
-        let label = UILabel()
-        label.font = font
-        label.numberOfLines = 1
-        label.textColor = foregroundColor
-        self.label = label
-        
         super.init(frame: .zero)
         setupView(tinyMode: tinyMode)
+        setAppearance(appearance)
         
         if let text {
             setText(text)
@@ -65,6 +30,21 @@ class PromoBadgeView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setAppearance(_ appearance: PaymentSheet.Appearance) {
+        let backgroundColor = appearance.primaryButton.successBackgroundColor
+        let foregroundColor = appearance.primaryButton.successTextColor ?? appearance.primaryButton.textColor ?? backgroundColor.contrastingColor
+        
+        labelBackground.backgroundColor = backgroundColor
+        labelBackground.layer.cornerRadius = appearance.cornerRadius
+        label.font = appearance.scaledFont(
+            for: appearance.font.base.medium,
+            style: .caption1,
+            maximumPointSize: 20
+        )
+        label.numberOfLines = 1
+        label.textColor = foregroundColor
     }
     
     func setText(_ text: String) {

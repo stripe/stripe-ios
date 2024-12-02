@@ -20,6 +20,19 @@ class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
         verify(cell)
     }
     
+    func test_withPromoBadge_customAppearance() {
+        var appearance = PaymentSheet.Appearance()
+        appearance.cornerRadius = 2
+        appearance.primaryButton.successTextColor = .black
+        appearance.primaryButton.successBackgroundColor = .red
+        
+        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
+        cell.paymentMethodType = .instantDebits
+        cell.appearance = appearance
+        cell.promoBadgeText = "$5"
+        verify(cell)
+    }
+    
     func verify(
         _ cell: UICollectionViewCell,
         identifier: String? = nil,

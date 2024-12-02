@@ -160,8 +160,7 @@ class RowButton: UIView {
             promoBadge.translatesAutoresizingMaskIntoConstraints = false
             addSubview(promoBadge)
             NSLayoutConstraint.activate([
-                promoBadge.topAnchor.constraint(equalTo: topAnchor),
-                promoBadge.bottomAnchor.constraint(equalTo: bottomAnchor),
+                promoBadge.centerYAnchor.constraint(equalTo: centerYAnchor),
                 promoBadge.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: promoBadgePadding),
             ])
         }
@@ -312,17 +311,13 @@ class RowButton: UIView {
 // MARK: - EventHandler
 extension RowButton: EventHandler {
     func handleEvent(_ event: STPEvent) {
+        let views = [label, sublabel, imageView, promoBadge].compactMap { $0.self }
+        
         switch event {
         case .shouldEnableUserInteraction:
-            label.alpha = 1
-            sublabel?.alpha = 1
-            imageView.alpha = 1
-            promoBadge?.alpha = 1
+            views.forEach { $0.alpha = 1 }
         case .shouldDisableUserInteraction:
-            label.alpha = 0.5
-            sublabel?.alpha = 0.5
-            imageView.alpha = 0.5
-            promoBadge?.alpha = 0.5
+            views.forEach { $0.alpha = 0.5 }
         default:
             break
         }

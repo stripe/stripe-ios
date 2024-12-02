@@ -246,9 +246,8 @@ extension PaymentMethodTypeCollectionView {
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
                 label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
                 
-                promoBadge.topAnchor.constraint(equalTo: paymentMethodLogo.topAnchor),
+                promoBadge.centerYAnchor.constraint(equalTo: paymentMethodLogo.centerYAnchor),
                 promoBadge.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12),
-                promoBadge.bottomAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor),
             ])
 
             contentView.layer.cornerRadius = appearance.cornerRadius
@@ -286,15 +285,12 @@ extension PaymentMethodTypeCollectionView {
 
         func handleEvent(_ event: STPEvent) {
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                let views = [self.label, self.paymentMethodLogo, self.promoBadge].compactMap { $0 }
                 switch event {
                 case .shouldDisableUserInteraction:
-                    self.label.alpha = 0.6
-                    self.paymentMethodLogo.alpha = 0.6
-                    self.promoBadge.alpha = 0.6
+                    views.forEach { $0.alpha = 0.6 }
                 case .shouldEnableUserInteraction:
-                    self.label.alpha = 1
-                    self.paymentMethodLogo.alpha = 1
-                    self.promoBadge.alpha = 1
+                    views.forEach { $0.alpha = 1 }
                 default:
                     break
                 }
@@ -329,6 +325,7 @@ extension PaymentMethodTypeCollectionView {
             
             promoBadge.isHidden = promoBadgeText == nil
             if let promoBadgeText {
+                promoBadge.setAppearance(appearance)
                 promoBadge.setText(promoBadgeText)
             }
 
