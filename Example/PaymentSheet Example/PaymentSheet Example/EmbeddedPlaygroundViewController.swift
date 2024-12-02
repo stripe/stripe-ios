@@ -35,8 +35,9 @@ class EmbeddedPlaygroundViewController: UIViewController {
     private let configuration: EmbeddedPaymentElement.Configuration
 
     private let intentConfig: EmbeddedPaymentElement.IntentConfiguration
-
-    private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
+    
+    // TODO: Add an instance of `EmbeddedPaymentElement?`
+    // Tip: Make it a private(set) to be compatible w/ the playground
 
     private lazy var loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
@@ -53,7 +54,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.setTitle("Checkout", for: .normal)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
-        checkoutButton.isEnabled = embeddedPaymentElement?.paymentOption != nil
+        // TODO: Enable or disable the button depending on the embedded payment element payment option
         checkoutButton.addTarget(self, action: #selector(pay), for: .touchUpInside)
         return checkoutButton
     }()
@@ -110,14 +111,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }
 
     private func setupUI() async throws {
-        let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-            intentConfiguration: intentConfig,
-            configuration: configuration
-        )
-        embeddedPaymentElement.delegate = self
-        embeddedPaymentElement.presentingViewController = self
-        self.embeddedPaymentElement = embeddedPaymentElement
-        self.embeddedPaymentElement?.presentingViewController = self
+        // TODO: Create your `EmbeddedPaymentElement` and hold the instance
         
         // Scroll view contains our content
         let scrollView = UIScrollView()
@@ -125,7 +119,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
         view.addSubview(scrollView)
 
         // All our content is in a stack view
-        let stackView = UIStackView(arrangedSubviews: [settingsViewContainer, embeddedPaymentElement.view, paymentOptionView, checkoutButton])
+        // TODO: Insert the embedded payment element view into our stack view
+        let stackView = UIStackView(arrangedSubviews: [settingsViewContainer, paymentOptionView, checkoutButton])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -146,7 +141,9 @@ class EmbeddedPlaygroundViewController: UIViewController {
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
             checkoutButton.heightAnchor.constraint(equalToConstant: 45),
         ])
-        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
+        
+        // TODO: Update paymentOptionView with the initial load result of the embedded payment element.
+        // See `paymentOptionView.configure`
     }
 
     private func setupLoadingIndicator() {
@@ -177,6 +174,24 @@ class EmbeddedPlaygroundViewController: UIViewController {
         hostingController.didMove(toParent: self)
     }
     
+    @objc func pay() {
+        Task { @MainActor in
+            self.isLoading = true
+            // TODO: Confirm the payment using embedded payment element
+            let result: PaymentSheetResult = .canceled
+            self.isLoading = false
+            
+            switch result {
+            case .completed, .failed:
+                playgroundController?.lastPaymentResult = result
+                self.dismiss(animated: true)
+            case .canceled:
+                break
+            }
+        }
+    }
+    
+    // Ignore for bug bash
     private func observePlaygroundController() {
         guard let playgroundController else { return }
         playgroundController.objectWillChange
@@ -190,23 +205,6 @@ class EmbeddedPlaygroundViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
-    
-    @objc func pay() {
-        Task { @MainActor in
-            guard let embeddedPaymentElement else { return }
-            self.isLoading = true
-            let result = await embeddedPaymentElement.confirm()
-            self.isLoading = false
-            
-            switch result {
-            case .completed, .failed:
-                playgroundController?.lastPaymentResult = result
-                self.dismiss(animated: true)
-            case .canceled:
-                break
-            }
-        }
-    }
 
 }
 
@@ -214,13 +212,12 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
 extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
     func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
-        self.view.setNeedsLayout()
-        self.view.layoutIfNeeded()
+        // TODO: Handle height changes
     }
 
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
-        checkoutButton.isEnabled = embeddedPaymentElement.paymentOption != nil
-        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
+        // TODO: Enable checkout button if embedded payment element has a payment option
+        // TODO: Update `paymentOptionView` with the new payment option, see `paymentOptionView.configure`
     }
 }
 

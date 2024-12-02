@@ -975,7 +975,8 @@ extension PlaygroundController {
     func updateEmbedded() {
         Task { @MainActor in
             guard let embeddedPlaygroundViewController else { return }
-            let result = await embeddedPlaygroundViewController.embeddedPaymentElement?.update(intentConfiguration: intentConfig)
+            // TODO: Update the embeddedPaymentElement w/ the intent config
+            let result: EmbeddedPaymentElement.UpdateResult = .canceled
             switch result {
             case .canceled, nil:
                 // Do nothing; this happens when a subsequent `update` call cancels this one
