@@ -32,6 +32,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private var linkedBank: InstantDebitsLinkedBank?
     private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
+    var incentive: PaymentMethodIncentive?
 
     var delegate: ElementDelegate?
     var view: UIView {
@@ -190,6 +191,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
         self.linkedBank = nil
         self.linkedBankInfoSectionElement.view.isHidden = true
+        self.incentive = incentive
         self.theme = theme
         
         let promoDisclaimerElement = incentive.flatMap {

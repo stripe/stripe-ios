@@ -203,7 +203,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        intentId: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?
     ) -> Future<LinkSignUpResponse> {
         return Promise<StripeFinancialConnections.LinkSignUpResponse>()
     }
