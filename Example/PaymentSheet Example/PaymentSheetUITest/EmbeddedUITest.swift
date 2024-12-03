@@ -818,9 +818,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
-    // TODO: This crashes because deferredIntentConfirmationType is nil w/ deferred intents
-    // This also crashes on PaymentSheet, so it's unclear what the design is here.
-    /*
     func testExternalPayPal() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -847,7 +844,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Confirm"].waitForExistenceAndTap()
         
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
-    }*/
+    }
 
     func testSEPA() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
