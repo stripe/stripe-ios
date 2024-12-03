@@ -291,7 +291,7 @@ class EmbeddedFormViewController: UIViewController {
 
     // MARK: - Confirmation handling
 
-    private func pay(with paymentOption: PaymentOption) {
+    private func pay(with _: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
         error = nil
