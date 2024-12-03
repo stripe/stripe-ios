@@ -18,7 +18,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
-        sleep(1)
+        let cardButton = app.buttons["Card"]
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 10))
         let startupLog = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ !$0.starts(with: "luxe") })
         XCTAssertEqual(
@@ -27,7 +28,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         )
 
         // Entering a card w/ deferred PaymentIntent...
-        app.buttons["Card"].waitForExistenceAndTap()
+        cardButton.tap()
         XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
         try! fillCardData(app, postalEnabled: true)
         app.toolbars.buttons["Done"].waitForExistenceAndTap()
@@ -240,14 +241,16 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
-        sleep(1)
+
+        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+
         let presentEmbeddedLog = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ $0.starts(with: "mc_") })
+            .prefix(5)
         XCTAssertEqual(
             presentEmbeddedLog,
             ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_carousel_payment_method_tapped", "mc_form_shown"]
         )
-        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
 
         // Complete payment
         app.buttons["Pay €50.99"].tap()
@@ -509,16 +512,13 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Checkout"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
-        sleep(1)
         let loadEventsWithoutSPMSelection = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ $0.starts(with: "mc_") }).prefix(3)
-        XCTAssertEqual(loadEventsWithoutSPMSelection,
-                       ["mc_load_started", "mc_load_succeeded", "mc_embedded_init"])
+        XCTAssertEqual(loadEventsWithoutSPMSelection, ["mc_load_started", "mc_load_succeeded", "mc_embedded_init"])
 
         let confirmationEvents = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ $0.starts(with: "mc_") }).suffix(1)
-        XCTAssertEqual(confirmationEvents,
-                       ["mc_embedded_payment_success"])
+        XCTAssertEqual(confirmationEvents, ["mc_embedded_payment_success"])
     }
 
     func testSelection() {
