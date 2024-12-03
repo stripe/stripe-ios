@@ -19,7 +19,8 @@ protocol ConsentViewControllerDelegate: AnyObject {
     )
     func consentViewController(
         _ viewController: ConsentViewController,
-        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest,
+        customNextPane: FinancialConnectionsSessionManifest.NextPane?
     )
 }
 
@@ -146,8 +147,8 @@ class ConsentViewController: UIViewController {
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let manifest):
-                    self.delegate?.consentViewController(self, didConsentWithManifest: manifest)
+                case .success(let result):
+                    self.delegate?.consentViewController(self, didConsentWithManifest: result.manifest, customNextPane: result.customNextPane)
                 case .failure(let error):
                     // we display no errors on failure
                     self.dataSource
