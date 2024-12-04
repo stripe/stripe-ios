@@ -291,7 +291,7 @@ class EmbeddedFormViewController: UIViewController {
 
     // MARK: - Confirmation handling
 
-    private func pay(with paymentOption: PaymentOption) {
+    private func pay(with _: PaymentOption) {
         view.endEditing(true)
         isPaymentInFlight = true
         error = nil
@@ -301,17 +301,11 @@ class EmbeddedFormViewController: UIViewController {
 
         // Confirm the payment with the payment option
         let startTime = NSDate.timeIntervalSinceReferenceDate
-        delegate?.embeddedFormViewControllerShouldConfirm(self) { result, deferredIntentConfirmationType in
+        delegate?.embeddedFormViewControllerShouldConfirm(self) { result, _ in
             let elapsedTime = NSDate.timeIntervalSinceReferenceDate - startTime
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) { [self] in
-                analyticsHelper.logPayment(
-                    paymentOption: paymentOption,
-                    result: result,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType
-                )
-
                 self.isPaymentInFlight = false
                 switch result {
                 case .canceled:

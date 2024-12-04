@@ -81,6 +81,12 @@ extension PaymentSheet {
                 return nil
             }
         }
+        var isExternal: Bool {
+            if case .external = self {
+                return true
+            }
+            return false
+        }
     }
 
     /// A class that presents the individual steps of a payment flow

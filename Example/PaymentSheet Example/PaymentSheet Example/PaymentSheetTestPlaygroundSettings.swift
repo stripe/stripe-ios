@@ -198,6 +198,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case enabled
         case disabled
     }
+    enum PaymentMethodRemoveLast: String, PickerEnum {
+        static var enumName: String { "PaymentMethodRemoveLast" }
+
+        case enabled
+        case disabled
+    }
     enum PaymentMethodRedisplay: String, PickerEnum {
         static var enumName: String { "PaymentMethodRedisplay" }
 
@@ -469,6 +475,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
+    var paymentMethodRemoveLast: PaymentMethodRemoveLast
     var paymentMethodRedisplay: PaymentMethodRedisplay
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var defaultBillingAddress: DefaultBillingAddress
@@ -517,6 +524,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,
+            paymentMethodRemoveLast: .enabled,
             paymentMethodRedisplay: .enabled,
             paymentMethodAllowRedisplayFilters: .always,
             defaultBillingAddress: .off,

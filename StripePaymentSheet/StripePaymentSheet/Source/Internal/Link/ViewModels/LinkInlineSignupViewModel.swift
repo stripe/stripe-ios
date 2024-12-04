@@ -205,9 +205,11 @@ final class LinkInlineSignupViewModel {
 
         if linkAccount?.isRegistered ?? false {
             // User already has a Link account, they can't sign up
-            STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()
-            // Don't bother them again
-            UserDefaults.standard.markLinkAsUsed()
+            if !UserDefaults.standard.customerHasUsedLink {
+                STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()
+                // Don't bother them again
+                UserDefaults.standard.markLinkAsUsed()
+            }
             return .continueWithoutLink
         }
 

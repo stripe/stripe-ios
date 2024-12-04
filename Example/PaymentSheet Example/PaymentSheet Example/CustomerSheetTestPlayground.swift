@@ -51,6 +51,7 @@ struct CustomerSheetTestPlayground: View {
                                     Spacer()
                                 }
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemoveLast)
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
                                 if playgroundController.settings.alternateUpdatePaymentMethodNavigation == .on {
                                     SettingPickerView(setting: $playgroundController.settings.allowsSetAsDefaultPM)
