@@ -119,7 +119,6 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         }
         let paymentMethodType = paymentMethodTypes[indexPath.item]
         cell.paymentMethodType = paymentMethodType
-        cell.paymentMethodType = paymentMethodTypes[indexPath.item]
         cell.promoBadgeText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText
         cell.appearance = appearance
         return cell

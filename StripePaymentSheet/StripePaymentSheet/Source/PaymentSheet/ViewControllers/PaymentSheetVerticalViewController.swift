@@ -359,7 +359,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             appearance: configuration.appearance,
             currency: loadResult.intent.currency,
             amount: loadResult.intent.amount,
-            incentive: loadResult.elementsSession.linkSettings?.linkConsumerIncentive.flatMap { PaymentMethodIncentive(from: $0) },
+            incentive: loadResult.elementsSession.incentive,
             delegate: self
         )
     }
