@@ -34,6 +34,7 @@ class RowButton: UIView {
     let sublabel: UILabel?
     let rightAccessoryView: UIView?
     let promoBadge: PromoBadgeView?
+    private var promoBadgeConstraintToCheckmark: NSLayoutConstraint?
     let shouldAnimateOnPress: Bool
     let appearance: PaymentSheet.Appearance
     typealias DidTapClosure = (RowButton) -> Void
@@ -46,6 +47,9 @@ class RowButton: UIView {
             radioButton?.isOn = isSelected
             checkmarkImageView?.isHidden = !isSelected
             updateAccessibilityTraits()
+            if isFlatWithCheckmarkStyle {
+                alignBadgeAndCheckmark()
+            }
         }
     }
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
@@ -61,6 +65,7 @@ class RowButton: UIView {
 
     init(
         appearance: PaymentSheet.Appearance,
+        originalCornerRadius: CGFloat? = nil,
         imageView: UIImageView,
         text: String,
         subtext: String? = nil,
@@ -93,6 +98,7 @@ class RowButton: UIView {
         if let promoText {
             self.promoBadge = PromoBadgeView(
                 appearance: appearance,
+                cornerRadius: originalCornerRadius,
                 tinyMode: false,
                 text: promoText
             )
@@ -151,9 +157,9 @@ class RowButton: UIView {
                 }
                 
                 switch appearance.embeddedPaymentElement.row.style {
-                case .flatWithRadio, .flatWithCheckmark:
+                case .flatWithRadio:
                     return 0
-                case .floatingButton:
+                case .flatWithCheckmark, .floatingButton:
                     return -12
                 }
             }()
@@ -161,8 +167,12 @@ class RowButton: UIView {
             addSubview(promoBadge)
             NSLayoutConstraint.activate([
                 promoBadge.centerYAnchor.constraint(equalTo: centerYAnchor),
-                promoBadge.trailingAnchor.constraint(equalTo: rightAccessoryView?.leadingAnchor ?? trailingAnchor, constant: promoBadgePadding),
+                promoBadge.trailingAnchor.constraint(equalTo: trailingAnchor, constant: promoBadgePadding),
             ])
+            
+            if isFlatWithCheckmarkStyle {
+                alignBadgeAndCheckmark()
+            }
         }
 
         for view in [radioButton, imageView, labelsStackView].compactMap({ $0 }) {
@@ -248,6 +258,18 @@ class RowButton: UIView {
         shadowRoundedRect.isAccessibilityElement = true
         updateAccessibilityTraits()
     }
+    
+    private func alignBadgeAndCheckmark() {
+        guard let promoBadge, let checkmarkImageView else {
+            return
+        }
+        
+        if promoBadgeConstraintToCheckmark == nil {
+            promoBadgeConstraintToCheckmark = promoBadge.trailingAnchor.constraint(equalTo: checkmarkImageView.leadingAnchor, constant: -12)
+        }
+        
+        promoBadgeConstraintToCheckmark?.isActive = isSelected
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -292,7 +314,7 @@ class RowButton: UIView {
 
     /// Sets icon, text, and sublabel alpha
     func setContentViewAlpha(_ alpha: CGFloat) {
-        [imageView, label, sublabel].compactMap { $0 }.forEach {
+        [imageView, label, sublabel, promoBadge].compactMap { $0 }.forEach {
             $0.alpha = alpha
         }
     }
@@ -380,6 +402,7 @@ extension RowButton {
         rightAccessoryView: UIView? = nil,
         promoText: String? = nil,
         appearance: PaymentSheet.Appearance,
+        originalCornerRadius: CGFloat? = nil,
         shouldAnimateOnPress: Bool,
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
@@ -393,7 +416,7 @@ extension RowButton {
             }
             return paymentMethodType.displayName
         }()
-        return RowButton(appearance: appearance, imageView: imageView, text: text, subtext: subtitle, promoText: promoText, rightAccessoryView: rightAccessoryView, shouldAnimateOnPress: shouldAnimateOnPress, isEmbedded: isEmbedded, didTap: didTap)
+        return RowButton(appearance: appearance, originalCornerRadius: originalCornerRadius, imageView: imageView, text: text, subtext: subtitle, promoText: promoText, rightAccessoryView: rightAccessoryView, shouldAnimateOnPress: shouldAnimateOnPress, isEmbedded: isEmbedded, didTap: didTap)
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {

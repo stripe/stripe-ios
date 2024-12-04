@@ -82,6 +82,7 @@ extension EmbeddedPaymentElement {
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
             savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
+            incentive: loadResult.elementsSession.incentive,
             delegate: delegate
         )
     }
