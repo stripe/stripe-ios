@@ -99,6 +99,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         defer {
             if isNewSelection {
                 delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+                if let selection = embeddedPaymentMethodsView.selection {
+                    analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
+                }
             }
         }
 
@@ -138,7 +141,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let formHasValidPaymentOption = formViewController.selectedPaymentOption != nil
         return formHasValidPaymentOption // Show row selected only if payment option is valid
     }
-    
+
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
         // Special case, only 1 card remaining but is co-branded (or alternateUpdatePaymentMethodNavigation), skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
@@ -208,7 +211,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
     }
-    
+
     func didDismiss(_: UpdatePaymentMethodViewController) {
         presentingViewController?.dismiss(animated: true)
     }
@@ -362,7 +365,7 @@ extension EmbeddedPaymentElement {
                     STPAnalyticsClient.DeferredIntentConfirmationType.none)
         }
 
-        return await PaymentSheet.confirm(
+        let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: authContext,
             intent: intent,
@@ -372,6 +375,10 @@ extension EmbeddedPaymentElement {
             integrationShape: .embedded,
             analyticsHelper: analyticsHelper
         )
+        analyticsHelper.logPayment(paymentOption: paymentOption,
+                                   result: result,
+                                   deferredIntentConfirmationType: deferredIntentConfirmationType)
+        return (result, deferredIntentConfirmationType)
     }
 
     func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
