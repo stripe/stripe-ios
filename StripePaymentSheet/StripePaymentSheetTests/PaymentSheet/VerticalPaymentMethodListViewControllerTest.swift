@@ -29,6 +29,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             appearance: .default,
             currency: "USD",
             amount: 1099,
+            incentive: nil,
             delegate: self
         )
         // ...the current selection should be the saved PM
@@ -70,6 +71,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             appearance: .default,
             currency: "USD",
             amount: 1099,
+            incentive: nil,
             delegate: self
         )
         XCTAssertEqual(["SEPA Debit", "Card", "Apple Pay", "Link"], sut.rowButtons.map { $0.label.text })
@@ -86,6 +88,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             appearance: .default,
             currency: "USD",
             amount: 1099,
+            incentive: nil,
             delegate: self
         )
         XCTAssertEqual(["Card", "Apple Pay", "Link"], sut_cards_only.rowButtons.map { $0.label.text })
@@ -102,6 +105,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             appearance: .default,
             currency: "USD",
             amount: 1099,
+            incentive: nil,
             delegate: self
         )
         XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
