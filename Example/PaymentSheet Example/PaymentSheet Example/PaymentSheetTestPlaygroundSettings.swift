@@ -88,12 +88,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     enum Amount: Int, PickerEnum {
         static var enumName: String { "Amount" }
-
+        
+        case _100 = 100
         case _5099 = 5099
         case _10000 = 10000
 
         var displayName: String {
             switch self {
+            case ._100:
+                return "1.00"
             case ._5099:
                 return "50.99"
             case ._10000:
