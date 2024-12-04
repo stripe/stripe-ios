@@ -441,7 +441,7 @@ class PlaygroundController: ObservableObject {
             } else {
                 self.ambiguousViewTimer?.invalidate()
             }
-            
+
             // Hack to enable incentives in Instant Debits
             let enableInstantDebitsIncentives = newValue.instantDebitsIncentives == .on
             UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
@@ -619,6 +619,7 @@ extension PlaygroundController {
             "customer_session_component_name": "mobile_payment_element",
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
             "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
+            "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
             "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]

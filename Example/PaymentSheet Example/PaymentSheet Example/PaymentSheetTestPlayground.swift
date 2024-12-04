@@ -115,6 +115,7 @@ struct PaymentSheetTestPlayground: View {
                                     SettingPickerView(setting: $playgroundController.settings.allowRedisplayOverride)
                                 }
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemoveLast)
                                 SettingPickerView(setting: paymentMethodRedisplayBinding)
                                 if playgroundController.settings.paymentMethodRedisplay == .enabled {
                                     SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)

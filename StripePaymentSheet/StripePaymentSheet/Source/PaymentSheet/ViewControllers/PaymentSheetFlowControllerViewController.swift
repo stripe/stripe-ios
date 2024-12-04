@@ -205,7 +205,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
-                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+                allowsRemovalOfLastSavedPaymentMethod: PaymentSheetViewController.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: configuration),
                 allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                 alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
             ),
