@@ -52,6 +52,7 @@ import UIKit
         textView.backgroundColor = .clear
         textView.textColor = theme.colors.secondaryText
         textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
+        textView.isUserInteractionEnabled = false
         return textView
     }
 

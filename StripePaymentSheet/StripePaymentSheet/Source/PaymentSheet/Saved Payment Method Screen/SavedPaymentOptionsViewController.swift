@@ -637,8 +637,17 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 // MARK: - UpdatePaymentMethodViewControllerDelegate
 extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
-        removePaymentMethod(paymentMethod)
-        _ = viewController.bottomSheetController?.popContentViewController()
+        // if it's the last saved pm, there's some animation jank from trying to dismiss the update pm screen and expanding the add card screen, so we wait until the update pm screen is dismissed before expanding
+        if savedPaymentMethods.count == 1 {
+            _ = self.bottomSheetController?.popContentViewController { [self] in
+                removePaymentMethod(paymentMethod)
+            }
+        }
+        // if it isn't the last saved pm, waiting for update pm screen dismissal results in a weird flash, so we do it like this
+        else {
+            removePaymentMethod(paymentMethod)
+            _ = self.bottomSheetController?.popContentViewController()
+        }
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
