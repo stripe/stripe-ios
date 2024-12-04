@@ -127,7 +127,7 @@ extension STPPaymentMethodOptions.USBankAccount.VerificationMethod {
 typealias PaymentMethodTypeRequirement = PaymentSheet.PaymentMethodTypeRequirement
 
 extension PaymentSheet {
-    enum PaymentMethodTypeRequirement: Comparable {
+    enum PaymentMethodTypeRequirement: Hashable {
 
         /// A special case that indicates the payment method is always unsupported by PaymentSheet
         case unsupported
@@ -152,6 +152,9 @@ extension PaymentSheet {
 
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod
+        
+        /// A generic requirement is missing for this payment method type.
+        case generic(message: String)
 
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
@@ -172,6 +175,8 @@ extension PaymentSheet {
                 return "financialConnectionsSDK: The FinancialConnections SDK must be linked. See https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-ach"
             case .validUSBankVerificationMethod:
                 return "Requires a valid US bank verification method."
+            case let .generic(message):
+                return message
             }
         }
 
@@ -186,6 +191,8 @@ extension PaymentSheet {
         case unactivated
         /// This payment method has requirements not met by the configuration or intent
         case missingRequirements(Set<PaymentMethodTypeRequirement>)
+        /// The primary requirement for this payment method were met, but other requirements are missing, preventing us from displaying this payment method.
+        case primaryRequirementMetButMissingOtherRequirements(String, Set<PaymentMethodTypeRequirement>)
 
         var debugDescription: String {
             switch self {
@@ -197,6 +204,8 @@ extension PaymentSheet {
                 return "This payment method is enabled for test mode, but is not activated for live mode. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
             case .missingRequirements(let missingRequirements):
                 return missingRequirements.map { $0.debugDescription }.joined(separator: "\n\t* ")
+            case .primaryRequirementMetButMissingOtherRequirements(let primaryRequirementMessage, let missingRequirements):
+                return "Primary requirement met: \(primaryRequirementMessage)\n\t* Missing requirements: \n\t\(missingRequirements.map(\.debugDescription).joined(separator: "\n\t* "))"
             }
         }
 
@@ -207,8 +216,10 @@ extension PaymentSheet {
                  (.unactivated, .unactivated):
                   return true
             case (.missingRequirements(let requirements), .missingRequirements(let otherRequirements)):
-                // don't care about the ordering
-                return requirements.sorted(by: { $0 >= $1 }) == otherRequirements.sorted(by: { $0 >= $1 })
+                // Using `==` on two sets does not consider the order of items in the set.
+                return requirements == otherRequirements
+            case let (.primaryRequirementMetButMissingOtherRequirements(lhsPrimary, lhsMissingRequirements), .primaryRequirementMetButMissingOtherRequirements(rhsPrimary, rhsMissingRequirements)):
+                return lhsPrimary == rhsPrimary && lhsMissingRequirements == rhsMissingRequirements
             default:
                 return false
             }
