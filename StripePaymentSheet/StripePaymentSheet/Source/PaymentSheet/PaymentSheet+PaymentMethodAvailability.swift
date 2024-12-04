@@ -152,9 +152,9 @@ extension PaymentSheet {
 
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod
-        
-        /// A generic requirement is missing for this payment method type.
-        case generic(message: String)
+
+        /// An instant bank payment requirement is missing
+        case instantBankPaymentRequirement(InstantBankPaymentRequirement)
 
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
@@ -175,11 +175,34 @@ extension PaymentSheet {
                 return "financialConnectionsSDK: The FinancialConnections SDK must be linked. See https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-ach"
             case .validUSBankVerificationMethod:
                 return "Requires a valid US bank verification method."
-            case let .generic(message):
-                return message
+            case .instantBankPaymentRequirement(let requirement):
+                return requirement.debugDescription
             }
         }
 
+    }
+
+    enum InstantBankPaymentRequirement: Hashable {
+        case missingLink
+        case unexpectedUsBankAccount
+        case invalidEmailCollectionConfiguration
+        case linkFundingSourcesMissingBankAccount
+        case unexpectedLinkMode
+
+        var debugDescription: String {
+            switch self {
+            case .missingLink:
+                return "Specified payment methods must contain link"
+            case .unexpectedUsBankAccount:
+                return "US Bank Account should not be set as a payment method"
+            case .invalidEmailCollectionConfiguration:
+                return "The provided configuration must either collect an email, or a default non-empty email must be provided"
+            case .linkFundingSourcesMissingBankAccount:
+                return "Link funding sources must contain bank account"
+            case .unexpectedLinkMode:
+                return "The Link Mode received is not Link Card Brand"
+            }
+        }
     }
 
     enum PaymentMethodAvailabilityStatus: Equatable {
@@ -195,6 +218,7 @@ extension PaymentSheet {
         case primaryRequirementMetButMissingOtherRequirements(String, Set<PaymentMethodTypeRequirement>)
 
         var debugDescription: String {
+            let separator = "\n\t* "
             switch self {
             case .supported:
                 return "Supported by PaymentSheet."
@@ -203,9 +227,9 @@ extension PaymentSheet {
             case .unactivated:
                 return "This payment method is enabled for test mode, but is not activated for live mode. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
             case .missingRequirements(let missingRequirements):
-                return missingRequirements.map { $0.debugDescription }.joined(separator: "\n\t* ")
+                return "\t* \(missingRequirements.map { $0.debugDescription }.joined(separator: separator))"
             case .primaryRequirementMetButMissingOtherRequirements(let primaryRequirementMessage, let missingRequirements):
-                return "Primary requirement met: \(primaryRequirementMessage)\n\t* Missing requirements: \n\t\(missingRequirements.map(\.debugDescription).joined(separator: "\n\t* "))"
+                return "\(primaryRequirementMessage)\nMissing requirements:\(separator)\(missingRequirements.map(\.debugDescription).joined(separator: separator))"
             }
         }
 
