@@ -130,7 +130,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
         let label = ElementsUI.makeSmallFootnote(theme: viewModel.appearance.asElementsTheme)
         label.text = viewModel.footnote
-        label.isUserInteractionEnabled = false
         return label
     }()
 
