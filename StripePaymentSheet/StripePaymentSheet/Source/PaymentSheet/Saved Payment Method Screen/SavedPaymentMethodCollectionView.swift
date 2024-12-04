@@ -356,6 +356,8 @@ extension SavedPaymentMethodCollectionView {
                     selectedIcon.isHidden = true
                     layer.shadowOpacity = 0
                 }
+                
+                defaultBadge.isHidden = true
 
                 if isRemovingPaymentMethods {
                     if case .saved = viewModel {
@@ -368,22 +370,17 @@ extension SavedPaymentMethodCollectionView {
                             if allowsSetAsDefaultPM && isDefaultPM {
                                 defaultBadge.isHidden = false
                             }
-                            else {
-                                defaultBadge.isHidden = true
-                            }
                         } else if allowsPaymentMethodRemoval {
                             accessoryButton.isHidden = false
                             accessoryButton.set(style: .remove, with: appearance.colors.danger)
                             accessoryButton.backgroundColor = appearance.colors.danger
                             accessoryButton.iconColor = appearance.colors.danger.contrastingColor
-                            defaultBadge.isHidden = true
                         }
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
 
                     } else {
                         accessoryButton.isHidden = true
-                        defaultBadge.isHidden = true
 
                         // apply disabled style
                         shadowRoundedRectangle.isEnabled = false
@@ -394,7 +391,6 @@ extension SavedPaymentMethodCollectionView {
 
                 } else if isSelected {
                     accessoryButton.isHidden = true
-                    defaultBadge.isHidden = true
                     shadowRoundedRectangle.isEnabled = true
                     label.textColor = appearance.colors.text
                     paymentMethodLogo.alpha = 1
@@ -406,7 +402,6 @@ extension SavedPaymentMethodCollectionView {
                     shadowRoundedRectangle.isSelected = true
                 } else {
                     accessoryButton.isHidden = true
-                    defaultBadge.isHidden = true
                     applyDefaultStyle()
                 }
                 accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
