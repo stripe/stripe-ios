@@ -50,6 +50,16 @@ extension PaymentSheet {
                 return "link_card_brand"
             }
         }
+        
+        /// Returns the Stripe API identifier used for incentives for this payment method type, which can be different from `identifier`.
+        var incentiveIdentifier: String? {
+            switch self {
+            case .stripe, .external:
+                return nil
+            case .instantDebits, .linkCardBrand:
+                return "link_instant_debits"
+            }
+        }
 
         static func shouldLogAnalytic(paymentMethod: PaymentSheet.PaymentMethodType) -> Bool {
             analyticLogForIconSemaphore.wait()
