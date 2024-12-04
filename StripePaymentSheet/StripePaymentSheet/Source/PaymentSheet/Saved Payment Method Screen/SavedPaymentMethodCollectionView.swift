@@ -98,7 +98,7 @@ extension SavedPaymentMethodCollectionView {
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             label.textColor = appearance.colors.textSecondary
             label.adjustsFontForContentSizeCategory = true
-            label.text = "Default"
+            label.text = STPLocalizedString("Default", "Label for identifying the default payment method.")
             return label
         }()
 

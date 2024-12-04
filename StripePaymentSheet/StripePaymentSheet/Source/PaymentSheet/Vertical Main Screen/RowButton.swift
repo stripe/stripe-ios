@@ -85,7 +85,7 @@ class RowButton: UIView {
             defaultBadge.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             defaultBadge.textColor = appearance.colors.textSecondary
             defaultBadge.adjustsFontForContentSizeCategory = true
-            defaultBadge.text = "Default"
+            defaultBadge.text = STPLocalizedString("Default", "Label for identifying the default payment method.")
             self.defaultBadge = defaultBadge
         }
         else {
