@@ -115,8 +115,8 @@ extension PaymentSheet {
                     label = String.Localized.apple_pay
                     paymentMethodType = "apple_pay"
                     billingDetails = nil
-                case .saved(let paymentMethod, _):
-                    label = paymentMethod.paymentSheetLabel
+                case .saved(let paymentMethod, let confirmParams):
+                    label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                 case .new(let confirmParams):
