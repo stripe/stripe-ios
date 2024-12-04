@@ -95,6 +95,9 @@ final class UpdatePaymentMethodViewController: UIViewController {
             button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
         }
         button.setTitleColor(viewModel.appearance.colors.danger, for: .normal)
+        button.setTitleColor(viewModel.appearance.colors.danger.disabledColor, for: .highlighted)
+        button.addTarget(self, action: #selector(buttonTouchDown(_:)), for: .touchDown)
+        button.addTarget(self, action: #selector(buttonTouchUp(_:)), for: [.touchUpInside, .touchUpOutside])
         button.layer.borderColor = viewModel.appearance.colors.danger.cgColor
         button.layer.borderWidth = viewModel.appearance.primaryButton.borderWidth
         button.layer.cornerRadius = viewModel.appearance.cornerRadius
@@ -106,6 +109,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
         button.isHidden = !viewModel.canRemove
         return button
     }()
+
+    @objc private func buttonTouchDown(_ button: UIButton) {
+        button.layer.borderColor = viewModel.appearance.colors.danger.disabledColor.cgColor
+    }
+
+    @objc private func buttonTouchUp(_ button: UIButton) {
+        button.layer.borderColor = viewModel.appearance.colors.danger.cgColor
+    }
 
     private lazy var paymentMethodForm: UIView = {
         let form = SavedPaymentMethodFormFactory(viewModel: viewModel)
@@ -119,6 +130,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
         let label = ElementsUI.makeSmallFootnote(theme: viewModel.appearance.asElementsTheme)
         label.text = viewModel.footnote
+        label.isUserInteractionEnabled = false
         return label
     }()
 
