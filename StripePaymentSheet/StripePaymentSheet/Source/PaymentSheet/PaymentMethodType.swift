@@ -174,19 +174,19 @@ extension PaymentSheet {
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
-            
+
             // We support Instant Bank Payments as a payment method when:
             // - (Primary condition) Link is an available payment method.
             // - The Financial Connections SDK is available.
             // - US Bank Account is *not* an available payment method.
             // - Link Funding Sources contains Bank Account.
             // - We collect an email, or a default non-empty email has been provided.
-            let instantDebitsAvailability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
+            let instantBankPaymentsAvailability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
                 configuration: configuration,
                 intent: intent,
                 elementsSession: elementsSession
             )
-            
+
             // We support Link Card Brand as a payment method when:
             // - (Primary condition) Link is an available payment method.
             // - The Financial Connections SDK is available.
@@ -198,27 +198,27 @@ extension PaymentSheet {
                 intent: intent,
                 elementsSession: elementsSession
             )
-            
+
             let eligibleForInstantDebits: Bool
-            switch instantDebitsAvailability {
+            switch instantBankPaymentsAvailability {
             case .supported:
                 eligibleForInstantDebits = true
             case .primaryRequirementMetButMissingOtherRequirements:
                 if logAvailability {
                     #if DEBUG
-                    print("[Stripe SDK]: PaymentSheet could not offer Instant Bank Payments: \(instantDebitsAvailability.debugDescription)")
+                    print("[Stripe SDK]: PaymentSheet could not offer Instant Bank Payments: \(instantBankPaymentsAvailability.debugDescription)")
                     #endif
                 }
                 fallthrough
             default:
                 eligibleForInstantDebits = false
             }
-            
+
             let eligibleForLinkCardBrand: Bool
             switch linkCardBrandAvailability {
             case .supported:
                 eligibleForLinkCardBrand = true
-                
+
                 // Instant Bank Payments take precedence over the Link Card integration,
                 // so this payment won't be shown even though all other requirements are met.
                 if eligibleForInstantDebits, logAvailability {
@@ -229,14 +229,14 @@ extension PaymentSheet {
             case .primaryRequirementMetButMissingOtherRequirements:
                 if logAvailability {
                     #if DEBUG
-                    print("[Stripe SDK]: PaymentSheet could not offer the Link Card integration: \(instantDebitsAvailability.debugDescription)")
+                    print("[Stripe SDK]: PaymentSheet could not offer the Link Card integration: \(linkCardBrandAvailability.debugDescription)")
                     #endif
                 }
                 fallthrough
             default:
                 eligibleForLinkCardBrand = false
             }
-            
+
             if eligibleForInstantDebits {
                 recommendedPaymentMethodTypes.append(.instantDebits)
             } else if eligibleForLinkCardBrand {
@@ -351,7 +351,7 @@ extension PaymentSheet {
                 supportedPaymentMethods: supportedPaymentMethods
             )
         }
-        
+
         /// We support Instant Bank Payments as a payment method when:
         /// - (Primary condition) Link is an available payment method.
         /// - The Financial Connections SDK is available.
@@ -373,40 +373,34 @@ extension PaymentSheet {
                 configuration: configuration,
                 intent: intent
             )
-            
+
             if case .missingRequirements(let requirements) = configurationAvailabilityStatus {
                 missingRequirements.formUnion(requirements)
             }
-            
+
             // Primary requirement:
             // - Link is an available payment method.
             if !elementsSession.orderedPaymentMethodTypes.contains(.link) {
-                missingRequirements.insert(.generic(
-                    message: "Specified payment methods must contain link"
-                ))
+                missingRequirements.insert(.instantBankPaymentRequirement(.missingLink))
+            } else {
+                primaryRequirementMet = true
             }
-            
+
             // - US Bank Account is *not* an available payment method.
             if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.generic(
-                    message: "US Bank Account should not be set as a payment method"
-                ))
+                missingRequirements.insert(.instantBankPaymentRequirement(.unexpectedUsBankAccount))
             }
-            
+
             // - Link Funding Sources contains Bank Account.
             if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.generic(
-                    message: "Link funding sources must contain bank account"
-                ))
+                missingRequirements.insert(.instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount))
             }
-            
+
             // - We collect an email, or a default non-empty email has been provided.
             if !configuration.isEligibleForBankTab {
-                missingRequirements.insert(.generic(
-                    message: "The provided configuration must either collect an email, or a default non-empty email must be provided"
-                ))
+                missingRequirements.insert(.instantBankPaymentRequirement(.invalidEmailCollectionConfiguration))
             }
-            
+
             let hasMissingRequirements = !missingRequirements.isEmpty
             if primaryRequirementMet, hasMissingRequirements {
                 return .primaryRequirementMetButMissingOtherRequirements(
@@ -416,10 +410,10 @@ extension PaymentSheet {
             } else if hasMissingRequirements {
                 return .missingRequirements(missingRequirements)
             }
-            
+
             return .supported
         }
-        
+
         /// We support Link Card Brand as a payment method when:
         /// - (Primary condition) Link is an available payment method.
         /// - The Financial Connections SDK is available.
@@ -441,43 +435,34 @@ extension PaymentSheet {
                 configuration: configuration,
                 intent: intent
             )
-            
+
             if case .missingRequirements(let requirements) = configurationAvailabilityStatus {
                 missingRequirements.formUnion(requirements)
             }
-            
+
             // Primary:
             // - Link Mode is set to Link Card Brand.
             if !elementsSession.isLinkCardBrand {
-                missingRequirements.insert(.generic(
-                    message: "The Link Mode received is not Link Card Brand"
-                ))
+                missingRequirements.insert(.instantBankPaymentRequirement(.unexpectedLinkMode))
             } else {
                 primaryRequirementMet = true
             }
 
             // - Link Funding Sources contains Bank Account.
             if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.generic(
-                    message: "Link funding sources must contain bank account"
-                ))
+                missingRequirements.insert(.instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount))
             }
-            
+
             // - US Bank Account is *not* an available payment method.
             if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.generic(
-                    message: "US Bank Account should not be set as a payment method type"
-                ))
+                missingRequirements.insert(.instantBankPaymentRequirement(.unexpectedUsBankAccount))
             }
-            
-            
+
             // - We collect an email, or a default non-empty email has been provided.
             if !configuration.isEligibleForBankTab {
-                missingRequirements.insert(.generic(
-                    message: "The provided configuration must either collect an email, or a default non-empty email must be provided"
-                ))
+                missingRequirements.insert(.instantBankPaymentRequirement(.invalidEmailCollectionConfiguration))
             }
-            
+
             let hasMissingRequirements = !missingRequirements.isEmpty
             if primaryRequirementMet, hasMissingRequirements {
                 return .primaryRequirementMetButMissingOtherRequirements(
@@ -487,7 +472,7 @@ extension PaymentSheet {
             } else if hasMissingRequirements {
                 return .missingRequirements(missingRequirements)
             }
-            
+
             return .supported
         }
 
@@ -642,7 +627,7 @@ extension PaymentElementConfiguration {
 }
 
 extension PaymentSheet.PaymentMethodType {
-    
+
     var isLinkBankPayment: Bool {
         switch self {
         case .stripe, .external:
@@ -651,7 +636,7 @@ extension PaymentSheet.PaymentMethodType {
             return true
         }
     }
-    
+
     var isBankPayment: Bool {
         switch self {
         case .stripe(let type):
