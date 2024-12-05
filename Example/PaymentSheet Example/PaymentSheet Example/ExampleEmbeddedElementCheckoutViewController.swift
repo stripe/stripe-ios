@@ -91,6 +91,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     @objc
     func didTapPaymentMethodButton() {
         let paymentMethodsViewController = PaymentMethodsViewController(embeddedPaymentElement: embeddedPaymentElement, needsDismissal: { [weak self] in
+            self?.embeddedPaymentElement.presentingViewController = self
             self?.dismiss(animated: true)
             self?.updateLabels()
             self?.updateButtons()
@@ -100,10 +101,12 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     }
 
     @objc
-    func didTapCheckoutButton() async {
-        // MARK: - Confirm the payment
-        let result = await embeddedPaymentElement.confirm()
-        handlePaymentResult(result)
+    func didTapCheckoutButton() {
+        Task {
+            // MARK: - Confirm the payment
+            let result = await embeddedPaymentElement.confirm()
+            handlePaymentResult(result)
+        }
     }
 
     @IBAction func hotDogStepperDidChange() {
