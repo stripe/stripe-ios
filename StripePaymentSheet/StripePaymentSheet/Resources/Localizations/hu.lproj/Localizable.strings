@@ -30,6 +30,8 @@
 
 "Bank account" = "Bankszámla";
 
+"Bank account details cannot be changed." = "A bankszámlaadatok nem módosíthatók.";
+
 "Buy now or pay later with <img/>" = "Vegye meg most vagy fizessen később a következővel: <img/>";
 
 "Buy now or pay later with Afterpay" = "Vegye meg most, vagy fizessen később Afterpayjel";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Kijelentkezés a Link";
 
+"Manage SEPA debit" = "SEPA beszedés kezelése";
+
+"Manage US bank account" = "USA bankszámla kezelése";
+
 "Manage card" = "Kártya kezelése";
 
 "Manage payment method" = "Fizetési mód kezelése";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Fizetés mód eltávolítása";
 
 "Resend code" = "Kód újraküldése";
+
+"SEPA debit details cannot be changed." = "A SEPA beszedés adatai nem módosíthatók.";
 
 "Save" = "Mentés";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Nem érhető el ennél a vásárlásnál";
 
 "Update card" = "Kártya módosítása";
+
+"Update payment method" = "Fizetési mód frissítése";
 
 "Use your saved info to check out faster" = "Mentett adatok használata a gyorsabb fizetéshez";
 

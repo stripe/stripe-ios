@@ -30,6 +30,8 @@
 
 "Bank account" = "Banko sąskaita";
 
+"Bank account details cannot be changed." = "Banko sąskaitos duomenų keisti negalima.";
+
 "Buy now or pay later with <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami \"<img/>\"";
 
 "Buy now or pay later with Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Afterpay\"";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Atsijungti nuo „Link“";
 
+"Manage SEPA debit" = "Tvarkyti SEPA debetą";
+
+"Manage US bank account" = "Tvarkyti JAV banko sąskaitą";
+
 "Manage card" = "Tvarkyti kortelę";
 
 "Manage payment method" = "Tvarkyti mokėjimo būdą";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Pašalinti mokėjimo būdą";
 
 "Resend code" = "Pakartotinai siųsti kodą";
+
+"SEPA debit details cannot be changed." = "SEPA debeto duomenų keisti negalima.";
 
 "Save" = "Išsaugoti";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
 
 "Update card" = "Atnaujinti kortelę";
+
+"Update payment method" = "Atnaujinti mokėjimo būdą";
 
 "Use your saved info to check out faster" = "Naudokite išsaugotą informaciją, kad atsiskaitytumėte greičiau";
 

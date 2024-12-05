@@ -30,6 +30,8 @@
 
 "Bank account" = "Tài khoản ngân hàng";
 
+"Bank account details cannot be changed." = "Không thể thay đổi thông tin tài khoản ngân hàng.";
+
 "Buy now or pay later with <img/>" = "Mua ngay hoặc thanh toán sau bằng <img/>";
 
 "Buy now or pay later with Afterpay" = "Mua ngay hoặc thanh toán sau bằng Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Đăng xuất khỏi Link";
 
+"Manage SEPA debit" = "Quản lý Ghi nợ SEPA";
+
+"Manage US bank account" = "Quản lý tài khoản ngân hàng Hoa Kỳ";
+
 "Manage card" = "Quản lý thẻ";
 
 "Manage payment method" = "Quản lý phương thức thanh toán";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Gỡ bỏ phương thức thanh toán";
 
 "Resend code" = "Gửi lại mã";
+
+"SEPA debit details cannot be changed." = "Không thể thay đổi thông tin Ghi nợ SEPA.";
 
 "Save" = "Lưu";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
 
 "Update card" = "Cập nhật thẻ";
+
+"Update payment method" = "Cập nhật phương thức thanh toán";
 
 "Use your saved info to check out faster" = "Sử dụng thông tin đã lưu của bạn để thanh toán nhanh hơn";
 

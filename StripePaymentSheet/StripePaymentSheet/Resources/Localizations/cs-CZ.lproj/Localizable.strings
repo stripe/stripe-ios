@@ -30,6 +30,8 @@
 
 "Bank account" = "Bankovní účet";
 
+"Bank account details cannot be changed." = "Údaje o bankovním účtu nelze měnit.";
+
 "Buy now or pay later with <img/>" = "Kupte nyní nebo zaplaťte později pomocí <img/>";
 
 "Buy now or pay later with Afterpay" = "Koupit nyní nebo zaplatit pomocí Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Odhlásit ze služby Link";
 
+"Manage SEPA debit" = "Správa inkasa SEPA";
+
+"Manage US bank account" = "Správa bankovního účtu v USA";
+
 "Manage card" = "Spravovat kartu";
 
 "Manage payment method" = "Spravovat způsob platby";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Odebrat způsob platby";
 
 "Resend code" = "Znovu zaslat kód";
+
+"SEPA debit details cannot be changed." = "Údaje pro inkaso SEPA nelze měnit.";
 
 "Save" = "Uložit";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Není k dispozici pro tento nákup";
 
 "Update card" = "Aktualizovat kartu";
+
+"Update payment method" = "Aktualizovat způsob platby";
 
 "Use your saved info to check out faster" = "Použijte uložené informace k rychlejšímu odbavení";
 
