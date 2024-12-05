@@ -59,7 +59,7 @@ public class EmbeddedComponentManager {
     
     
     /**
-     Initializes a StripeConnect instance.
+     Initializes an EmbeddedComponentManager instance.
 
      - Parameters:
        - apiClient: The APIClient instance used to make requests to Stripe.
