@@ -43,18 +43,22 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let panElement: TextFieldElement = {
-            return TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.card?.brand, cardBrandDropDown: cardBrandDropDown).makeElement(theme: viewModel.appearance.asElementsTheme)
+            let panElement = TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.card?.brand, cardBrandDropDown: cardBrandDropDown).makeElement(theme: viewModel.appearance.asElementsTheme)
+            panElement.view.layer.backgroundColor = viewModel.appearance.asElementsTheme.colors.disabledBackground.cgColor
+            return panElement
         }()
 
         let expiryDateElement: TextFieldElement = {
             let expiryDate = CardExpiryDate(month: viewModel.paymentMethod.card?.expMonth ?? 0, year: viewModel.paymentMethod.card?.expYear ?? 0)
             let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)
+            expiryDateElement.view.layer.backgroundColor = viewModel.appearance.asElementsTheme.colors.disabledBackground.cgColor
             return expiryDateElement
         }()
 
         let cvcElement: TextFieldElement = {
             let cvcConfiguration = TextFieldElement.CensoredCVCConfiguration(brand: self.viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown)
             let cvcElement = cvcConfiguration.makeElement(theme: viewModel.appearance.asElementsTheme)
+            cvcElement.view.layer.backgroundColor = viewModel.appearance.asElementsTheme.colors.disabledBackground.cgColor
             return cvcElement
         }()
         let cardSection: SectionElement = {
