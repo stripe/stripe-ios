@@ -28,7 +28,7 @@ class UpdatePaymentMethodViewModel {
     lazy var header: String = {
         switch paymentMethod.type {
         case .card:
-            return .Localized.manage_card
+            return canEdit ? .Localized.only_card_brand_can_be_changed : .Localized.manage_card
         case .USBankAccount:
             return .Localized.manage_us_bank_account
         case .SEPADebit:
