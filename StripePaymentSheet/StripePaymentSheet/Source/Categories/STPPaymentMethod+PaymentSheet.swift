@@ -44,6 +44,13 @@ extension STPPaymentMethod {
         default:
             return nil
         }
-
+    }
+    
+    func paymentOptionLabel(confirmParams: IntentConfirmParams?) -> String {
+        if let instantDebitsLinkedBank = confirmParams?.instantDebitsLinkedBank {
+            return "•••• \(instantDebitsLinkedBank.last4 ?? "")"
+        } else {
+            return paymentSheetLabel
+        }
     }
 }
