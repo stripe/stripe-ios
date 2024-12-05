@@ -44,15 +44,22 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, isEmbedded: true, isRemoveOnlyMode: true)
     }
 
-    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, isRemoveOnlyMode: Bool = false) {
+    func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDefaultBadge() {
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, showDefaultPMBadge: true)
+    }
+
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, isRemoveOnlyMode: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
+        if showDefaultPMBadge {
+            configuration.allowsSetAsDefaultPM = true
+        }
         let paymentMethods = isRemoveOnlyMode ? [STPPaymentMethod._testCardAmex()] : generatePaymentMethods()
 
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
-                                                            elementsSession: ._testCardValue(),
+                                                            elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first ?? STPPaymentMethod._testCard()) : ._testCardValue(),
                                                             analyticsHelper: ._testValue()
         )
         let bottomSheet: BottomSheetViewController
@@ -81,7 +88,9 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     }
 
     private func generatePaymentMethods() -> [STPPaymentMethod] {
-        return [STPFixtures.paymentMethod(),
+        let card = STPPaymentMethod._testCard()
+        return [card,
+                STPFixtures.paymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "BANK OF AMERICA"),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "STRIPE"),

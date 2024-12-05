@@ -45,6 +45,19 @@ extension STPElementsSession {
         return _testValue(paymentMethodTypes: ["card"])
     }
 
+    static func _testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod) -> STPElementsSession {
+        return _testValue(paymentMethodTypes: ["card"], customerSessionData: [
+            "mobile_payment_element": [
+                "enabled": true,
+                "features": ["payment_method_save": "enabled",
+                             "payment_method_remove": "enabled",
+                            ],
+            ],
+            "customer_sheet": [
+                "enabled": false,
+            ]], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod)
+    }
+
     static func _testValue(
         paymentMethodTypes: [String],
         externalPaymentMethodTypes: [String] = [],
@@ -53,7 +66,9 @@ extension STPElementsSession {
         isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
-        disableLinkSignup: Bool? = nil
+        disableLinkSignup: Bool? = nil,
+        allowsSetAsDefaultPM: Bool = false,
+        defaultPaymentMethod: STPPaymentMethod? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -66,16 +81,31 @@ extension STPElementsSession {
             ]
         }
         if let customerSessionData {
-            json["customer"] = ["payment_methods": [],
-                                "customer_session": [
-                                    "id": "id123",
-                                    "livemode": false,
-                                    "api_key": "ek_12345",
-                                    "api_key_expiry": 12345,
-                                    "customer": "cus_123",
-                                    "components": customerSessionData,
-                                    ],
-                                ]
+            if allowsSetAsDefaultPM {
+                json["customer"] = ["payment_methods": [],
+                                    "customer_session": [
+                                        "id": "id123",
+                                        "livemode": false,
+                                        "api_key": "ek_12345",
+                                        "api_key_expiry": 12345,
+                                        "customer": "cus_123",
+                                        "components": customerSessionData,
+                                        ],
+                                    "default_payment_method": defaultPaymentMethod?.stripeId ?? "nil"
+                                    ]
+            }
+            else {
+                json["customer"] = ["payment_methods": [],
+                                    "customer_session": [
+                                        "id": "id123",
+                                        "livemode": false,
+                                        "api_key": "ek_12345",
+                                        "api_key_expiry": 12345,
+                                        "customer": "cus_123",
+                                        "components": customerSessionData,
+                                        ]
+                                    ]
+            }
         }
 
         if let cardBrandChoiceData {

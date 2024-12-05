@@ -26,20 +26,24 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_all_saved_pms_and_apple_pay_and_link(darkMode: false, appearance: ._testMSPaintTheme)
     }
 
-    func _test_all_saved_pms_and_apple_pay_and_link(darkMode: Bool, appearance: PaymentSheet.Appearance = .default) {
+    func test_all_saved_pms_and_apple_pay_and_link_default_badge() {
+        _test_all_saved_pms_and_apple_pay_and_link(darkMode: false, showDefaultPMBadge: true)
+    }
+
+    func _test_all_saved_pms_and_apple_pay_and_link(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, showDefaultPMBadge: Bool = false) {
         let paymentMethods = [
             STPPaymentMethod._testCard(),
             STPPaymentMethod._testUSBankAccount(),
             STPPaymentMethod._testSEPA(),
         ]
-        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, alternateUpdatePaymentMethodNavigation: false, allowsSetAsDefaultPM: false)
+        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, alternateUpdatePaymentMethodNavigation: showDefaultPMBadge, allowsSetAsDefaultPM: showDefaultPMBadge)
         let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 0, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic), confirmHandler: { _, _, _ in }))
         let sut = SavedPaymentOptionsViewController(savedPaymentMethods: paymentMethods,
                                                     configuration: config,
                                                     paymentSheetConfiguration: PaymentSheet.Configuration(),
                                                     intent: intent,
                                                     appearance: appearance,
-                                                    elementsSession: .emptyElementsSession,
+                                                    elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first ?? STPPaymentMethod._testCard()) : .emptyElementsSession,
                                                     analyticsHelper: ._testValue())
         let testWindow = UIWindow()
         testWindow.isHidden = false
@@ -54,6 +58,9 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             sut.view.topAnchor.constraint(equalTo: testWindow.topAnchor),
             sut.view.leftAnchor.constraint(equalTo: testWindow.leftAnchor),
         ])
+        if showDefaultPMBadge {
+            sut.isRemovingPaymentMethods = true
+        }
         STPSnapshotVerifyView(sut.view)
     }
 }
