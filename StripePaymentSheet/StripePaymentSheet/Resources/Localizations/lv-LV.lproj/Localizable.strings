@@ -30,6 +30,8 @@
 
 "Bank account" = "Bankas konts";
 
+"Bank account details cannot be changed." = "Bankas konta informāciju nevar mainīt.";
+
 "Buy now or pay later with <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
 
 "Buy now or pay later with Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Izrakstīties no Link";
 
+"Manage SEPA debit" = "Pārvaldīt SEPA debetu";
+
+"Manage US bank account" = "Pārvaldīt ASV bankas kontu";
+
 "Manage card" = "Pārvaldīt karti";
 
 "Manage payment method" = "Pārvaldīt maksājuma veidu";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Noņemt maksājumu veidu";
 
 "Resend code" = "Nosūtīt kodu vēlreiz";
+
+"SEPA debit details cannot be changed." = "SEPA debeta informāciju nevar mainīt.";
 
 "Save" = "Saglabāt";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Nav pieejams šim pirkumam";
 
 "Update card" = "Atjaunināt karti";
+
+"Update payment method" = "Atjaunināt maksājuma veidu";
 
 "Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
 

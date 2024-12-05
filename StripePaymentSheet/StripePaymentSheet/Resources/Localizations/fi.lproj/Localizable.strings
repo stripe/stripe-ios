@@ -30,6 +30,8 @@
 
 "Bank account" = "Pankkitili";
 
+"Bank account details cannot be changed." = "Pankkitilin tietoja ei voi muuttaa.";
+
 "Buy now or pay later with <img/>" = "Osta nyt tai maksa myöhemmin kohteella.<img/>";
 
 "Buy now or pay later with Afterpay" = "Osta nyt tai maksa myöhemmin Afterpaylla";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Kirjaudu ulos Link-palvelusta";
 
+"Manage SEPA debit" = "Hallinnoi SEPA-pankkiveloitusta";
+
+"Manage US bank account" = "Hallinnoi yhdysvaltalaista pankkitiliä";
+
 "Manage card" = "Hallinnoi korttia";
 
 "Manage payment method" = "Hallinnoi maksutapaa";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Poista maksutapa";
 
 "Resend code" = "Lähetä koodi uudelleen";
+
+"SEPA debit details cannot be changed." = "SEPA-pankkimaksun tietoja ei voi muuttaa.";
 
 "Save" = "Tallenna";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Ei käytettävissä tälle ostolle";
 
 "Update card" = "Päivitä kortti";
+
+"Update payment method" = "Päivitä maksutapa";
 
 "Use your saved info to check out faster" = "Käytä tallennettuja tietoja nopeampaan maksamiseen";
 

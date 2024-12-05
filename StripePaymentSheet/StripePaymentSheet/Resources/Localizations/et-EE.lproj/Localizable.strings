@@ -30,6 +30,8 @@
 
 "Bank account" = "Pangakonto";
 
+"Bank account details cannot be changed." = "Pangakonto andmeid ei saa muuta.";
+
 "Buy now or pay later with <img/>" = "Osta praegu või maksa <img/> abil hiljem";
 
 "Buy now or pay later with Afterpay" = "Osta praegu või maksa Afterpay abil hiljem";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Logi Link välja";
 
+"Manage SEPA debit" = "SEPA deebeti haldamine";
+
+"Manage US bank account" = "Ameerika Ühendriikide pangakonto haldamine";
+
 "Manage card" = "Halda kaarti";
 
 "Manage payment method" = "Makseviisi haldamine";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Makseviisi eemaldamine";
 
 "Resend code" = "Saada kood uuesti";
+
+"SEPA debit details cannot be changed." = "SEPA deebeti andmeid ei saa muuta.";
 
 "Save" = "Salvesta";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Pole selle ostu puhul saadaval";
 
 "Update card" = "Uuenda kaarti";
+
+"Update payment method" = "Uuenda makseviisi";
 
 "Use your saved info to check out faster" = "Kasutage oma salvestatud teavet kiiremaks makse lõpuleviimiseks";
 
