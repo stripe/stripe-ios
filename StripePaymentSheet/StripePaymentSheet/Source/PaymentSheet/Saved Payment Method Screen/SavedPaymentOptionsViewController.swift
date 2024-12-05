@@ -451,7 +451,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         if allowsSetAsDefaultPM,
            let customer =  elementsSession.customer,
            let customerDefault = customer.defaultPaymentMethod {
-            let defaultPaymentMethod = customer.paymentMethods.filter {
+            let defaultPaymentMethod = savedPaymentMethods.filter {
                 $0.stripeId == customerDefault
             }.first
             guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
