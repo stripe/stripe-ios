@@ -28,7 +28,7 @@ class UpdatePaymentMethodViewModel {
     lazy var header: String = {
         switch paymentMethod.type {
         case .card:
-            return canEdit ? .Localized.only_card_brand_can_be_changed : .Localized.manage_card
+            return .Localized.manage_card
         case .USBankAccount:
             return .Localized.manage_us_bank_account
         case .SEPADebit:
@@ -41,7 +41,7 @@ class UpdatePaymentMethodViewModel {
     lazy var footnote: String = {
         switch paymentMethod.type {
         case .card:
-            return .Localized.card_details_cannot_be_changed
+            return canEdit ? .Localized.only_card_brand_can_be_changed : .Localized.card_details_cannot_be_changed
         case .USBankAccount:
             return .Localized.bank_account_details_cannot_be_changed
         case .SEPADebit:
