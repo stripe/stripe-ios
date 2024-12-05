@@ -61,7 +61,7 @@ class PaymentMethodFormViewController: UIViewController {
                 guard let paymentMethod = params.instantDebitsLinkedBank?.paymentMethod.decode() else {
                     return nil
                 }
-                return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+                return .saved(paymentMethod: paymentMethod, confirmParams: params)
             }
 
             return .new(confirmParams: params)

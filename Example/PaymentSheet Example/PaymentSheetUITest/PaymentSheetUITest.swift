@@ -2461,6 +2461,10 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
+    
+    func testLinkCardBrand_flowController() {
+        _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
+    }
 
     // MARK: Link test helpers
 
@@ -2671,11 +2675,12 @@ extension PaymentSheetUITestCase {
     func _testInstantDebits(
         mode: PaymentSheetTestPlaygroundSettings.Mode,
         vertical: Bool = false,
-        useLinkCardBrand: Bool = false
+        useLinkCardBrand: Bool = false,
+        uiStyle: PaymentSheetTestPlaygroundSettings.UIStyle = .paymentSheet
     ) {
-
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = mode
+        settings.uiStyle = uiStyle
         settings.apmsEnabled = .off
         settings.supportedPaymentMethods = useLinkCardBrand ? "card" : "card,link"
         if vertical {
@@ -2683,7 +2688,13 @@ extension PaymentSheetUITestCase {
         }
 
         loadPlayground(app, settings)
-        app.buttons["Present PaymentSheet"].tap()
+        
+        if uiStyle == .flowController {
+            app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+            app.buttons["+ Add"].waitForExistenceAndTap()
+        } else {
+            app.buttons["Present PaymentSheet"].tap()
+        }
 
         // Select "Bank"
         if vertical {
@@ -2704,7 +2715,17 @@ extension PaymentSheetUITestCase {
         Self.stepThroughNativeInstantDebitsFlow(app: app)
 
         // Back to Payment Sheet
-        app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
+        switch uiStyle {
+        case .paymentSheet:
+            app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
+        case .flowController, .embedded:
+            // Give time for the dismiss animation
+            sleep(2)
+            app.buttons["Continue"].waitForExistenceAndTap(timeout: 10)
+            XCTAssertTrue(app.staticTexts["•••• 6789"].waitForExistence(timeout: 10))
+            app.buttons["Confirm"].waitForExistenceAndTap(timeout: 10)
+        }
+        
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 

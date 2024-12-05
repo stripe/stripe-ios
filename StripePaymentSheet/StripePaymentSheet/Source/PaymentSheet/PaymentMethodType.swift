@@ -484,13 +484,9 @@ extension PaymentSheet.PaymentMethodType {
     
     var isLinkBankPayment: Bool {
         switch self {
-        case .stripe:
+        case .stripe, .external:
             return false
-        case .external:
-            return false
-        case .instantDebits:
-            return true
-        case .linkCardBrand:
+        case .instantDebits, .linkCardBrand:
             return true
         }
     }
@@ -501,9 +497,7 @@ extension PaymentSheet.PaymentMethodType {
             return type == .USBankAccount
         case .external:
             return false
-        case .instantDebits:
-            return true
-        case .linkCardBrand:
+        case .instantDebits, .linkCardBrand:
             return true
         }
     }

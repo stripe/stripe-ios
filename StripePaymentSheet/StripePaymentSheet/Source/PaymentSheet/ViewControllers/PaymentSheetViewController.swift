@@ -385,8 +385,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     }
 
     func buyButtonEnabledForSavedPayments() -> ConfirmButton.Status {
-        if savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParamsRequired &&
-            savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams == nil {
+        if savedPaymentOptionsViewController.isRemovingPaymentMethods || (savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParamsRequired &&
+            savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams == nil) {
             return .disabled
         }
         return .enabled
