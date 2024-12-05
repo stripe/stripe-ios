@@ -591,7 +591,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         updateUI()
     }
 
-    func didDismiss(_ viewController: SavedPaymentOptionsViewController) {
+    func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController) {
         if isDismissable {
             delegate?.paymentSheetViewControllerDidCancel(self)
         }

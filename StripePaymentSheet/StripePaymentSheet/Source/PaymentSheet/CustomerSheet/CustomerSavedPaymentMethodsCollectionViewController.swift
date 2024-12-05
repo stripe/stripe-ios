@@ -28,7 +28,7 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
-    func didDismiss(viewController: CustomerSavedPaymentMethodsCollectionViewController)
+    func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController)
 }
 /*
  This class is largely a copy of SavedPaymentOptionsViewController, however a couple of exceptions
@@ -566,6 +566,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
-        delegate?.didDismiss(viewController: self)
+        delegate?.shouldCloseSheet(viewController: self)
     }
 }

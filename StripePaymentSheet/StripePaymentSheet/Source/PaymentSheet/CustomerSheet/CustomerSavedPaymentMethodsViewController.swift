@@ -933,7 +933,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
         return try await customerSheetDataSource.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
     }
 
-    func didDismiss(viewController: CustomerSavedPaymentMethodsCollectionViewController) {
+    func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController) {
         self.processingInFlight = false
         self.handleDismissSheet(shouldDismissImmediately: true)
     }

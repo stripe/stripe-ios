@@ -548,7 +548,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         updateBottomNotice()
     }
 
-    func didDismiss(_ viewController: SavedPaymentOptionsViewController) {
+    func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController) {
         if isDismissable {
             didDismiss(didCancel: true)
         }

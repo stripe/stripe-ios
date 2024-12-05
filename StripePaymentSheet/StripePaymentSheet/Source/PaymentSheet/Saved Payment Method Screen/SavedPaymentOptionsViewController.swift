@@ -25,7 +25,7 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
-    func didDismiss(_ viewController: SavedPaymentOptionsViewController)
+    func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController)
 }
 
 /// For internal SDK use only
@@ -677,7 +677,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
-        delegate?.didDismiss(self)
+        delegate?.shouldCloseSheet(self)
     }
 }
 
