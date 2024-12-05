@@ -27,6 +27,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     @IBOutlet weak var mandateTextView: UITextView!
 
     var embeddedPaymentElement: EmbeddedPaymentElement!
+    private var paymentMethodsViewController: PaymentMethodsViewController?
 
     private let backendCheckoutUrl = URL(string: baseUrl + "/checkout")!
     private let confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
@@ -96,6 +97,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             self?.updateLabels()
             self?.updateButtons()
         })
+        self.paymentMethodsViewController = paymentMethodsViewController
         let navController = UINavigationController(rootViewController: paymentMethodsViewController)
         present(navController, animated: true)
     }
@@ -283,6 +285,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                 intentConfiguration: self.intentConfig,
                 configuration: configuration
             )
+            embeddedPaymentElement.presentingViewController = self
             self.embeddedPaymentElement = embeddedPaymentElement
             self.paymentMethodButton.isEnabled = true
             self.hotDogStepper.isEnabled = true
@@ -298,6 +301,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
     // MARK: - Handle payment result
     func handlePaymentResult(_ result: EmbeddedPaymentElementResult) {
+        paymentMethodsViewController?.dismiss(animated: true)
         switch result {
         case .completed:
             displayAlert("Your order is confirmed!", shouldDismiss: true)
