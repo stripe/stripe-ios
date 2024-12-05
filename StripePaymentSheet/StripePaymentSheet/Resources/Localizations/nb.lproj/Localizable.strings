@@ -30,6 +30,8 @@
 
 "Bank account" = "Bankkonto";
 
+"Bank account details cannot be changed." = "Bankkontoopplysninger kan ikke endres.";
+
 "Buy now or pay later with <img/>" = "Kjøp nå eller betal senere med <img/>";
 
 "Buy now or pay later with Afterpay" = "Kjøp nå eller betal senere med Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Logg ut av Link";
 
+"Manage SEPA debit" = "Administrer SEPA-debet";
+
+"Manage US bank account" = "Administrer bankkonto i USA";
+
 "Manage card" = "Administrer kort";
 
 "Manage payment method" = "Administrer betalingsmetode";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Fjern betalingsmetode";
 
 "Resend code" = "Send koden på nytt";
+
+"SEPA debit details cannot be changed." = "SEPA-debetopplysninger kan ikke endres.";
 
 "Save" = "Lagre";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";
 
 "Update card" = "Oppdater kort";
+
+"Update payment method" = "Oppdater betalingsmetode";
 
 "Use your saved info to check out faster" = "Bruk den lagrede informasjonen din til å betale raskere";
 

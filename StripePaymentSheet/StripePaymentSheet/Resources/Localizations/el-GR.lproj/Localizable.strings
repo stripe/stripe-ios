@@ -30,6 +30,8 @@
 
 "Bank account" = "Τραπεζικός λογαριασμός";
 
+"Bank account details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων τραπεζικού λογαριασμού.";
+
 "Buy now or pay later with <img/>" = "Αγορά τώρα ή πληρωμή αργότερα με <img/>";
 
 "Buy now or pay later with Afterpay" = "Αγορά τώρα ή πληρωμή αργότερα με Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Αποσύνδεση από το Link";
 
+"Manage SEPA debit" = "Διαχείριση χρέωσης SEPA";
+
+"Manage US bank account" = "Διαχείριση τραπεζικού λογαριασμού στις Ηνωμένες Πολιτείες";
+
 "Manage card" = "Διαχείριση κάρτας";
 
 "Manage payment method" = "Διαχείριση μεθόδου πληρωμής";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Αφαίρεση μεθόδου πληρωμής";
 
 "Resend code" = "Επανάληψη αποστολής κωδικού";
+
+"SEPA debit details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων χρέωσης SEPA.";
 
 "Save" = "Αποθήκευση";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Δεν είναι διαθέσιμο για αυτήν την αγορά";
 
 "Update card" = "Ενημέρωση κάρτας";
+
+"Update payment method" = "Ενημέρωση μεθόδου πληρωμής";
 
 "Use your saved info to check out faster" = "Χρησιμοποιήστε τα αποθηκευμένα στοιχεία σας για τη συντομότερη ολοκλήρωση της αγοράς";
 

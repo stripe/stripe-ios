@@ -30,6 +30,8 @@
 
 "Bank account" = "銀行口座";
 
+"Bank account details cannot be changed." = "銀行口座の詳細は変更できません。";
+
 "Buy now or pay later with <img/>" = "<img/> で後払い";
 
 "Buy now or pay later with Afterpay" = "Afterpay で後払い";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Link からログアウト";
 
+"Manage SEPA debit" = "SEPA デビットの管理";
+
+"Manage US bank account" = "アメリカの銀行口座の管理";
+
 "Manage card" = "カードの管理";
 
 "Manage payment method" = "支払い方法の管理";
@@ -177,6 +183,8 @@
 "Remove payment method" = "決済手段の削除";
 
 "Resend code" = "コードを再送信";
+
+"SEPA debit details cannot be changed." = "SEPA デビットの詳細は変更できません。";
 
 "Save" = "保存";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "この購入には利用できません";
 
 "Update card" = "カードを更新";
+
+"Update payment method" = "決済手段の更新";
 
 "Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
 

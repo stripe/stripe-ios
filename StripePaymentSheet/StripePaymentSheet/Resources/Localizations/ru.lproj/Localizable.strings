@@ -30,6 +30,8 @@
 
 "Bank account" = "Банковский счет";
 
+"Bank account details cannot be changed." = "Реквизиты банковского счета нельзя изменить.";
+
 "Buy now or pay later with <img/>" = "Купить сейчас или оплатить позже через систему <img/>";
 
 "Buy now or pay later with Afterpay" = "Купите сейчас или оплатите позже через систему Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Выйти из Link";
 
+"Manage SEPA debit" = "Управление дебетованием SEPA";
+
+"Manage US bank account" = "Управление банковским счетом в США";
+
 "Manage card" = "Управление картой";
 
 "Manage payment method" = "Управление способом оплаты";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Удалить способ оплаты";
 
 "Resend code" = "Послать код вторично";
+
+"SEPA debit details cannot be changed." = "Реквизиты платежа дебетованием SEPA нельзя изменить.";
 
 "Save" = "Сохранить";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Не предусмотрено для этой покупки";
 
 "Update card" = "Обновить реквизиты карты";
+
+"Update payment method" = "Обновить способ оплаты";
 
 "Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
 

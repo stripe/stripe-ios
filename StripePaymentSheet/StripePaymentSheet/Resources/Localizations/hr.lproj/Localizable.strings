@@ -30,6 +30,8 @@
 
 "Bank account" = "Bankovni račun";
 
+"Bank account details cannot be changed." = "Podaci o bankovnom računu ne mogu se mijenjati.";
+
 "Buy now or pay later with <img/>" = "Kupite odmah ili platite kasnije pomoću <img/>";
 
 "Buy now or pay later with Afterpay" = "Kupite odmah ili platite kasnije pomoću Afterpaya";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Odjavite se s Linka";
 
+"Manage SEPA debit" = "Upravljajte SEPA terećenjem";
+
+"Manage US bank account" = "Upravljajte bankovnim računom u SAD-u";
+
 "Manage card" = "Upravljajte karticom";
 
 "Manage payment method" = "Upravljajte načinom plaćanja";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Ukloni način plaćanja";
 
 "Resend code" = "Ponovo pošalji kod";
+
+"SEPA debit details cannot be changed." = "Podaci o SEPA terećenju ne mogu se mijenjati.";
 
 "Save" = "Spremi";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Nije dostupno za ovu kupnju";
 
 "Update card" = "Ažuriraj karticu";
+
+"Update payment method" = "Ažurirajte način plaćanja";
 
 "Use your saved info to check out faster" = "Upotrijebite svoje spremljene podatke za brže plaćanje";
 

@@ -30,6 +30,8 @@
 
 "Bank account" = "Bankrekening";
 
+"Bank account details cannot be changed." = "Bankrekeninggegevens kunnen niet worden gewijzigd.";
+
 "Buy now or pay later with <img/>" = "Koop nu of betaal later met <img/>";
 
 "Buy now or pay later with Afterpay" = "Koop nu of betaal later met Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Afmelden bij Link";
 
+"Manage SEPA debit" = "SEPA-incasso beheren";
+
+"Manage US bank account" = "Amerikaanse bankrekening beheren";
+
 "Manage card" = "Betaalkaart beheren";
 
 "Manage payment method" = "Betaalmethode beheren";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Betaalmethode verwijderen";
 
 "Resend code" = "Code opnieuw versturen";
+
+"SEPA debit details cannot be changed." = "SEPA-incassogegevens kunnen niet worden gewijzigd.";
 
 "Save" = "Opslaan";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Niet beschikbaar voor deze aankoop";
 
 "Update card" = "Betaalkaart bijwerken";
+
+"Update payment method" = "Betaalmethode bijwerken";
 
 "Use your saved info to check out faster" = "Gebruik je opgeslagen gegevens om sneller af te rekenen";
 

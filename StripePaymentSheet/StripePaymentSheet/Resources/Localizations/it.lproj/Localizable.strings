@@ -30,6 +30,8 @@
 
 "Bank account" = "Conto bancario";
 
+"Bank account details cannot be changed." = "Non puoi modificare i dati del conto bancario.";
+
 "Buy now or pay later with <img/>" = "Acquista ora, paga dopo con <img/>";
 
 "Buy now or pay later with Afterpay" = "Acquista ora, paga dopo con Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Esci da Link";
 
+"Manage SEPA debit" = "Gestisci addebito SEPA";
+
+"Manage US bank account" = "Gestisci conto bancario Stati Uniti";
+
 "Manage card" = "Gestisci carta";
 
 "Manage payment method" = "Gestisci modalità di pagamento";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Rimuovi modalità di pagamento";
 
 "Resend code" = "Reinvia codice";
+
+"SEPA debit details cannot be changed." = "Non puoi modificare i dati dell'addebito SEPA.";
 
 "Save" = "Salva";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Non disponibile per questo acquisto";
 
 "Update card" = "Aggiorna carta";
+
+"Update payment method" = "Aggiorna il metodo di pagamento";
 
 "Use your saved info to check out faster" = "Usa le informazioni salvate per pagare più velocemente";
 

@@ -30,6 +30,8 @@
 
 "Bank account" = "Compte bancari";
 
+"Bank account details cannot be changed." = "Les dades del compte bancari no es poden canviar.";
+
 "Buy now or pay later with <img/>" = "Compra ara o paga més endavant amb <img/>";
 
 "Buy now or pay later with Afterpay" = "Compra ara o paga més endavant amb Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Tanca la sessió a Link";
 
+"Manage SEPA debit" = "Administra la domiciliació SEPA";
+
+"Manage US bank account" = "Administra el compte bancari dels EUA";
+
 "Manage card" = "Administra la targeta";
 
 "Manage payment method" = "Gestiona el mètode de pagament";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Elimina el mètode de pagament";
 
 "Resend code" = "Reenvia'm el codi";
+
+"SEPA debit details cannot be changed." = "Les dades de la domiciliació SEPA no es poden canviar.";
 
 "Save" = "Desa";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "No disponible per a aquesta compra";
 
 "Update card" = "Actualitza la targeta";
+
+"Update payment method" = "Actualitza el mètode de pagament";
 
 "Use your saved info to check out faster" = "Utilitza la informació desada per pagar més ràpidament";
 

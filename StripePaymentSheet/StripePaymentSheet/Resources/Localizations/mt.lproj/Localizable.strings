@@ -30,6 +30,8 @@
 
 "Bank account" = "Kont tal-bank";
 
+"Bank account details cannot be changed." = "Id-dettalji tal-kont tal-bank ma jistgħux jinbidlu.";
+
 "Buy now or pay later with <img/>" = "Ixtri issa jew ħallas iktar tard grazzi għal <img/>";
 
 "Buy now or pay later with Afterpay" = "Ixtri issa jew ħallas iktar tard b'Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Oħroġ minn Link";
 
+"Manage SEPA debit" = "Ħu ħsieb id-debitu SEPA";
+
+"Manage US bank account" = "Ħu ħsieb il-kont tal-bank tal-Istati Uniti tal-Amerka";
+
 "Manage card" = "Ħu ħsieb il-karta";
 
 "Manage payment method" = "Ħu ħsieb il-metodu tal-pagament";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Neħħi l-metodu tal-pagament";
 
 "Resend code" = "Erġa' ibgħat il-kodiċi";
+
+"SEPA debit details cannot be changed." = "Id-dettalji tad-debitu SEPA ma jistgħux jinbidlu.";
 
 "Save" = "Erfa'";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
 
 "Update card" = "Aġġorna l-karta";
+
+"Update payment method" = "Ibdel il-metodu tal-pagament";
 
 "Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
 
