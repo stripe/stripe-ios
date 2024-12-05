@@ -103,7 +103,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
-        let alternateUpdatePaymentMethodNavigation: Bool
         let allowsSetAsDefaultPM: Bool
     }
 
@@ -370,7 +369,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             showApplePay: configuration.showApplePay,
             showLink: configuration.showLink,
             allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
-            elementsSession: elementsSession
+            customer: elementsSession.customer
         )
 
         collectionView.reloadData()
@@ -444,17 +443,12 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
-    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, allowsSetAsDefaultPM: Bool, elementsSession: STPElementsSession) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, allowsSetAsDefaultPM: Bool, customer: ElementsCustomer?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
         var defaultPaymentMethodOption: CustomerPaymentOption?
-        // read from back end
+        // get default payment method from elements session
         if allowsSetAsDefaultPM,
-           let customer =  elementsSession.customer,
-           let customerDefault = customer.defaultPaymentMethod {
-            let defaultPaymentMethod = savedPaymentMethods.filter {
-                $0.stripeId == customerDefault
-            }.first
-            guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
+           let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: customer) {
             defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
         }
         else {
@@ -512,7 +506,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

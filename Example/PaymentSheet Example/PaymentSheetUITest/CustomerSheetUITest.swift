@@ -475,7 +475,6 @@ class CustomerSheetUITest: XCTestCase {
 
     func testCardBrandChoiceUpdateAndRemove() {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .on
         settings.merchantCountryCode = .FR
         settings.customerMode = .returning
 

@@ -444,12 +444,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum AlternateUpdatePaymentMethodNavigation: String, PickerEnum {
-        static let enumName: String = "alternateUpdatePaymentMethodNavigation"
-        case on
-        case off
-    }
-
     enum AllowsSetAsDefaultPM: String, PickerEnum {
         static let enumName: String = "allowsSetAsDefaultPM"
         case on
@@ -502,7 +496,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var cardBrandAcceptance: CardBrandAcceptance
-    var alternateUpdatePaymentMethodNavigation: AlternateUpdatePaymentMethodNavigation
     var allowsSetAsDefaultPM: AllowsSetAsDefaultPM
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
@@ -550,7 +543,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             formSheetAction: .confirm,
             embeddedViewDisplaysMandateText: .on,
             cardBrandAcceptance: .all,
-            alternateUpdatePaymentMethodNavigation: .off,
             allowsSetAsDefaultPM: .off)
     }
 

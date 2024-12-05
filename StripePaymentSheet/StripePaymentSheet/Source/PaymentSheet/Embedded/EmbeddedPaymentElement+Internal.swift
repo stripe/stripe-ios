@@ -37,16 +37,10 @@ extension EmbeddedPaymentElement {
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
         let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
-            // read from back end
+            // get default payment method from elements session
             if configuration.allowsSetAsDefaultPM,
-               let customer =  loadResult.elementsSession.customer {
-                let defaultPaymentMethod = customer.paymentMethods.filter {
-                    $0.stripeId == customer.defaultPaymentMethod
-                }.first
-                if let defaultPaymentMethod = defaultPaymentMethod {
+               let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: loadResult.elementsSession.customer) {
                     return .saved(paymentMethod: defaultPaymentMethod)
-                }
-                
             }
 
             // Select the previous payment option
@@ -156,11 +150,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
-        // Special case, only 1 card remaining but is co-branded (or alternateUpdatePaymentMethodNavigation), skip showing the list and show update view controller
+        // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
-           elementsSession.isCardBrandChoiceEligible || configuration.alternateUpdatePaymentMethodNavigation {
+           elementsSession.isCardBrandChoiceEligible {
             let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
                                                                appearance: configuration.appearance,
                                                                hostedSurface: .paymentSheet,

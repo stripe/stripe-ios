@@ -82,7 +82,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
         let isTestMode: Bool
-        let alternateUpdatePaymentMethodNavigation: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -387,8 +386,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
 
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
                           cbcEligible: cbcEligible,
-                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove,
-                          alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
+                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

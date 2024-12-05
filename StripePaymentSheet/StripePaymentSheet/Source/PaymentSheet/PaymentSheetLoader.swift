@@ -118,7 +118,7 @@ final class PaymentSheetLoader {
                     showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
                     showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
                     allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
-                    elementsSession: elementsSession
+                    customer: elementsSession.customer
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
 
@@ -319,18 +319,10 @@ final class PaymentSheetLoader {
         // Move default PM to front
         if let customerID = configuration.customer?.id {
             var defaultPaymentMethodOption: CustomerPaymentOption?
-            // read from back end
+            // get default payment method from elements session
             if configuration.allowsSetAsDefaultPM,
-               let customer =  elementsSession.customer {
-                let defaultPaymentMethod = customer.paymentMethods.filter {
-                    $0.stripeId == customer.defaultPaymentMethod
-                }.first
-                if let defaultPaymentMethod = defaultPaymentMethod {
-                    defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-                }
-                else {
-                    defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
-                }
+               let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: elementsSession.customer) {
+                defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
             }
             else {
                 defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
