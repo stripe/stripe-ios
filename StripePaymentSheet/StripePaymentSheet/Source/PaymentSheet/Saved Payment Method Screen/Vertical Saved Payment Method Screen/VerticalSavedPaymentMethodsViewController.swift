@@ -375,7 +375,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didDismiss(_: UpdatePaymentMethodViewController) {
+    func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
         complete(didTapToDismiss: true)
     }
 

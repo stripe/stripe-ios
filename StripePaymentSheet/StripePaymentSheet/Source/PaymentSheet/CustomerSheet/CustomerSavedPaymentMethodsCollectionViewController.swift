@@ -565,7 +565,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didDismiss(_: UpdatePaymentMethodViewController) {
+    func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
         delegate?.didDismiss(viewController: self)
     }
 }
