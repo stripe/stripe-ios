@@ -56,6 +56,30 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         rowButton.state = .selected
         verify(rowButton)
     }
+    
+    func testPaymentMethodRowButton_newPaymentMethod_unselected() {
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .instantDebits,
+            hasSavedCard: false,
+            promoText: nil,
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
+        verify(rowButton)
+    }
+    
+    func testPaymentMethodRowButton_newPaymentMethod_withPromo_unselected() {
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .instantDebits,
+            hasSavedCard: false,
+            promoText: "$5",
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
+        verify(rowButton)
+    }
 
     func verify(
         _ view: UIView,

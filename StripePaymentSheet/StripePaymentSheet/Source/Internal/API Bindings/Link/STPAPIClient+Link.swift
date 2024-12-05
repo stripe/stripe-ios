@@ -93,7 +93,7 @@ extension STPAPIClient {
         post(
             resource: endpoint,
             parameters: parameters,
-            ephemeralKeySecret: consumerAccountPublishableKey
+            consumerPublishableKey: consumerAccountPublishableKey
         ) { (result: Result<DetailsResponse, Error>) in
             completion(result.map { $0.redactedPaymentDetails })
         }
@@ -167,7 +167,7 @@ extension STPAPIClient {
         post(
             resource: endpoint,
             parameters: parameters,
-            ephemeralKeySecret: consumerAccountPublishableKey
+            consumerPublishableKey: consumerAccountPublishableKey
         ) { (result: Result<SessionResponse, Error>) in
             completion(result.map { $0.consumerSession })
         }
@@ -273,7 +273,7 @@ extension STPAPIClient {
         post(
             resource: endpoint,
             parameters: parameters,
-            ephemeralKeySecret: consumerAccountPublishableKey
+            consumerPublishableKey: consumerAccountPublishableKey
         ) { (result: Result<DetailsListResponse, Error>) in
             completion(result.map { $0.redactedPaymentDetails })
         }

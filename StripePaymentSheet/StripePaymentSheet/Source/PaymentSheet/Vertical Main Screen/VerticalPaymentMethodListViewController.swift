@@ -41,6 +41,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         appearance: PaymentSheet.Appearance,
         currency: String?,
         amount: Int?,
+        incentive: PaymentMethodIncentive?,
         delegate: VerticalPaymentMethodListViewControllerDelegate,
         isDefaultPM: Bool = false
     ) {
@@ -117,7 +118,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
                 subtitle: Self.subtitleText(for: paymentMethodType),
-                hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708) 
+                hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708)
+                promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
                 shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)

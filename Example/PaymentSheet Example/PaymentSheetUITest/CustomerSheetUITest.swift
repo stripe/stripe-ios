@@ -504,7 +504,7 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Done"].waitForExistenceAndTap()
     }
     // MARK: - allowsRemovalOfLastSavedPaymentMethod
-    func testRemoveLastSavedPaymentMethod() throws {
+    func testRemoveLastSavedPaymentMethod_clientConfig() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.merchantCountryCode = .FR
         settings.customerMode = .new
@@ -514,7 +514,23 @@ class CustomerSheetUITest: XCTestCase {
             app,
             settings
         )
-
+        try _testRemoveLastSavedPaymentMethod()
+    }
+    func testRemoveLastSavedPaymentMethod_customerSession() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.merchantCountryCode = .FR
+        settings.customerMode = .new
+        settings.applePay = .on
+        settings.allowsRemovalOfLastSavedPaymentMethod = .on
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodRemoveLast = .disabled
+        loadPlayground(
+            app,
+            settings
+        )
+        try _testRemoveLastSavedPaymentMethod()
+    }
+    func _testRemoveLastSavedPaymentMethod() throws {
         // Save a card
         app.staticTexts["None"].waitForExistenceAndTap()
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -527,7 +543,7 @@ class CustomerSheetUITest: XCTestCase {
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
-        try! fillCardData(app, postalEnabled: true)
+        try! fillCardData(app, cardNumber: "5555555555554444", postalEnabled: true)
         app.buttons["Save"].tap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
 
@@ -538,6 +554,9 @@ class CustomerSheetUITest: XCTestCase {
         // Remove one saved PM
         XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Sleep for 1 second to ensure animation has been completed
+        sleep(1)
 
         // Should be kicked out of edit mode now that we have one saved PM
         XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode

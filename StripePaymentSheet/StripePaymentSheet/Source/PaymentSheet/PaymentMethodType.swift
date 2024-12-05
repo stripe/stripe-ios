@@ -50,6 +50,16 @@ extension PaymentSheet {
                 return "link_card_brand"
             }
         }
+        
+        /// Returns the Stripe API identifier used for incentives for this payment method type, which can be different from `identifier`.
+        var incentiveIdentifier: String? {
+            switch self {
+            case .stripe, .external:
+                return nil
+            case .instantDebits, .linkCardBrand:
+                return "link_instant_debits"
+            }
+        }
 
         static func shouldLogAnalytic(paymentMethod: PaymentSheet.PaymentMethodType) -> Bool {
             analyticLogForIconSemaphore.wait()
@@ -474,13 +484,9 @@ extension PaymentSheet.PaymentMethodType {
     
     var isLinkBankPayment: Bool {
         switch self {
-        case .stripe:
+        case .stripe, .external:
             return false
-        case .external:
-            return false
-        case .instantDebits:
-            return true
-        case .linkCardBrand:
+        case .instantDebits, .linkCardBrand:
             return true
         }
     }
@@ -491,9 +497,7 @@ extension PaymentSheet.PaymentMethodType {
             return type == .USBankAccount
         case .external:
             return false
-        case .instantDebits:
-            return true
-        case .linkCardBrand:
+        case .instantDebits, .linkCardBrand:
             return true
         }
     }

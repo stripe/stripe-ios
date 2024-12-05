@@ -25,7 +25,7 @@ final class STPElementsSession: NSObject {
 
     /// Link-specific settings for this ElementsSession.
     let linkSettings: LinkSettings?
-    
+
     /// Flags for this ElementsSession.
     let flags: [String: Bool]
 
@@ -207,6 +207,9 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
+    var paymentMethodRemoveLastForPaymentSheet: Bool {
+        return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
+    }
 
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
@@ -220,9 +223,16 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
-    
+    var paymentMethodRemoveLastForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
+    }
+
     var isLinkCardBrand: Bool {
         linkSettings?.linkMode == .linkCardBrand
+    }
+    
+    var incentive: PaymentMethodIncentive? {
+        linkSettings?.linkConsumerIncentive.flatMap(PaymentMethodIncentive.init)
     }
 }
 

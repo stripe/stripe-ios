@@ -43,7 +43,7 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let panElement: TextFieldElement = {
-            return TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrandDropDown: cardBrandDropDown).makeElement(theme: viewModel.appearance.asElementsTheme)
+            return TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.card?.brand, cardBrandDropDown: cardBrandDropDown).makeElement(theme: viewModel.appearance.asElementsTheme)
         }()
 
         let expiryDateElement: TextFieldElement = {
@@ -70,6 +70,7 @@ extension SavedPaymentMethodFormFactory {
         }()
         return cardSection
     }
+
     private func updateSelectedCardBrand(index: Int) {
         let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
         viewModel.selectedCardBrand = cardBrands[index]

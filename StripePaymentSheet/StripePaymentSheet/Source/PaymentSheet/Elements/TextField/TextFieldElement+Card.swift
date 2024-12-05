@@ -21,11 +21,13 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
+        let cardBrand: STPCardBrand?
         let cardBrandDropDown: DropdownFieldElement?
         let cardFilter: CardBrandFilter
 
-        init(defaultValue: String? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default) {
+        init(defaultValue: String? = nil, cardBrand: STPCardBrand? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default) {
             self.defaultValue = defaultValue
+            self.cardBrand = cardBrand
             self.cardBrandDropDown = cardBrandDropDown
             self.cardFilter = cardFilter
         }
@@ -52,6 +54,13 @@ extension TextFieldElement {
                     // Show the dropdown if we have 8 or more digits and at least 2 brands, otherwise fall through and show brand as normal
                     return cardBrandDropDown.view
                 }
+            }
+
+            // If this is coming from the LastFourConfiguration, cardBrand(for: text) will retrieve a card brand from •••• •••• •••• last4, which may be incorrect, so we pass in the card brand for that case
+            if let cardBrand = cardBrand,
+               cardBrandDropDown == nil {
+                rotatingCardBrandsView.cardBrands = [cardBrand]
+                return rotatingCardBrandsView
             }
 
             let cardBrand = cardBrand(for: text)
@@ -230,12 +239,20 @@ extension TextFieldElement {
         init(brand: STPCardBrand) {
             let maxLength = Int(STPCardValidator.maxCVCLength(for: brand))
             self.defaultValue = String(repeating: "•", count: maxLength)
+            self.brand = brand
         }
 
         let defaultValue: String?
+        let brand: STPCardBrand
         var label = String.Localized.cvc
         let isEditable: Bool = false
         let disallowedCharacters: CharacterSet = CharacterSet(charactersIn: "•").inverted
+        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
+            return DynamicImageView(
+                dynamicImage: STPImageLibrary.cvcImage(for: brand),
+                pairedColor: theme.colors.componentBackground
+            )
+        }
     }
 }
 
@@ -341,14 +358,16 @@ extension TextFieldElement {
         let label = String.Localized.card_number
         let lastFour: String
         let isEditable = false
+        let cardBrand: STPCardBrand?
         let cardBrandDropDown: DropdownFieldElement?
 
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, cardBrandDropDown: DropdownFieldElement?) {
+        init(lastFour: String, cardBrand: STPCardBrand?, cardBrandDropDown: DropdownFieldElement?) {
             self.lastFour = lastFour
+            self.cardBrand = cardBrand
             self.cardBrandDropDown = cardBrandDropDown
         }
 
@@ -358,7 +377,7 @@ extension TextFieldElement {
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // Re-use same logic from PANConfiguration for accessory view
-            return TextFieldElement.PANConfiguration(cardBrandDropDown: cardBrandDropDown).accessoryView(for: lastFourFormatted, theme: theme)
+            return TextFieldElement.PANConfiguration(cardBrand: cardBrand, cardBrandDropDown: cardBrandDropDown).accessoryView(for: lastFourFormatted, theme: theme)
         }
     }
 }

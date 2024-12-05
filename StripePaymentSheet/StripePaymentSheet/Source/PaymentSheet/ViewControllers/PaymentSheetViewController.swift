@@ -173,7 +173,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
-                allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+                allowsRemovalOfLastSavedPaymentMethod: PaymentSheetViewController.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: configuration),
                 allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                 alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation,
                 allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM
@@ -386,8 +386,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     }
 
     func buyButtonEnabledForSavedPayments() -> ConfirmButton.Status {
-        if savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParamsRequired &&
-            savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams == nil {
+        if savedPaymentOptionsViewController.isRemovingPaymentMethods || (savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParamsRequired &&
+            savedPaymentOptionsViewController.selectedPaymentOptionIntentConfirmParams == nil) {
             return .disabled
         }
         return .enabled
@@ -488,6 +488,18 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     }
                 }
             }
+        }
+    }
+}
+// MARK: - Helpers
+extension PaymentSheetViewController {
+    static func allowsRemovalOfLastPaymentMethod(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) -> Bool {
+        if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            // Merchant has set local configuration to false, so honor it.
+            return false
+        } else {
+            // Merchant is using client side default, so defer to CustomerSession's value
+            return elementsSession.paymentMethodRemoveLastForPaymentSheet
         }
     }
 }

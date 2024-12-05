@@ -1,5 +1,9 @@
 ## x.x.x x-x-x
 ### PaymentSheet
+* [Fixed] Fixed an issue where FlowController returned incorrect `PaymentOptionDisplayData` for Link card brand transactions.
+
+## 24.1.1 2024-12-02
+### PaymentSheet
 * [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
 * [Fixed] Fixed an issue in Instant Bank Payments that occurred when using a connected account.
 
