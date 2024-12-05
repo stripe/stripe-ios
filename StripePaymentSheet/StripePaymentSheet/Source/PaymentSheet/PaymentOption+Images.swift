@@ -21,8 +21,12 @@ extension PaymentOption {
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
-        case .saved(let paymentMethod, _):
-            return paymentMethod.makeIcon()
+        case .saved(let paymentMethod, let paymentOption):
+            if let linkedBank = paymentOption?.instantDebitsLinkedBank {
+                return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName))
+            } else {
+                return paymentMethod.makeIcon()
+            }
         case .new(let confirmParams):
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
         case .link:
