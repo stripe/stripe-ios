@@ -27,6 +27,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     @IBOutlet weak var mandateTextView: UITextView!
 
     var embeddedPaymentElement: EmbeddedPaymentElement!
+    private var paymentMethodsViewController: PaymentMethodsViewController?
 
     private let backendCheckoutUrl = URL(string: baseUrl + "/checkout")!
     private let confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
@@ -91,19 +92,23 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     @objc
     func didTapPaymentMethodButton() {
         let paymentMethodsViewController = PaymentMethodsViewController(embeddedPaymentElement: embeddedPaymentElement, needsDismissal: { [weak self] in
+            self?.embeddedPaymentElement.presentingViewController = self
             self?.dismiss(animated: true)
             self?.updateLabels()
             self?.updateButtons()
         })
+        self.paymentMethodsViewController = paymentMethodsViewController
         let navController = UINavigationController(rootViewController: paymentMethodsViewController)
         present(navController, animated: true)
     }
 
     @objc
-    func didTapCheckoutButton() async {
-        // MARK: - Confirm the payment
-        let result = await embeddedPaymentElement.confirm()
-        handlePaymentResult(result)
+    func didTapCheckoutButton() {
+        Task {
+            // MARK: - Confirm the payment
+            let result = await embeddedPaymentElement.confirm()
+            handlePaymentResult(result)
+        }
     }
 
     @IBAction func hotDogStepperDidChange() {
@@ -280,6 +285,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                 intentConfiguration: self.intentConfig,
                 configuration: configuration
             )
+            embeddedPaymentElement.presentingViewController = self
             self.embeddedPaymentElement = embeddedPaymentElement
             self.paymentMethodButton.isEnabled = true
             self.hotDogStepper.isEnabled = true
@@ -295,6 +301,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
     // MARK: - Handle payment result
     func handlePaymentResult(_ result: EmbeddedPaymentElementResult) {
+        paymentMethodsViewController?.dismiss(animated: true)
         switch result {
         case .completed:
             displayAlert("Your order is confirmed!", shouldDismiss: true)
