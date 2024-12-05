@@ -25,6 +25,7 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
+    func didDismiss(_ viewController: SavedPaymentOptionsViewController)
 }
 
 /// For internal SDK use only
@@ -676,7 +677,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
     }
 
     func didDismiss(_: UpdatePaymentMethodViewController) {
-        // No-op
+        delegate?.didDismiss(self)
     }
 }
 

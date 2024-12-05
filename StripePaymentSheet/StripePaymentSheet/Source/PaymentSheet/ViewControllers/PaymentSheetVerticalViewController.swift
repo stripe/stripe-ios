@@ -825,7 +825,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     }
 
     func didDismiss(_: UpdatePaymentMethodViewController) {
-        // No-op
+        didCancel()
     }
 }
 

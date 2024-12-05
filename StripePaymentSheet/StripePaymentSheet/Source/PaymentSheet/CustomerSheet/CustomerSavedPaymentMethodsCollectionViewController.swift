@@ -28,6 +28,7 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
+    func didDismiss(viewController: CustomerSavedPaymentMethodsCollectionViewController)
 }
 /*
  This class is largely a copy of SavedPaymentOptionsViewController, however a couple of exceptions
@@ -565,6 +566,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
     }
 
     func didDismiss(_: UpdatePaymentMethodViewController) {
-        // No-op
+        delegate?.didDismiss(viewController: self)
     }
 }

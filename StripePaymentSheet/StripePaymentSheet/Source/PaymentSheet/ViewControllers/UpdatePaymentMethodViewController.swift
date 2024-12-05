@@ -245,7 +245,9 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_: SheetNavigationBar) {
-        dismiss()
+        guard let bottomVc = parent as? BottomSheetViewController else { return }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .closeEditScreen))
+        _ = bottomVc.popContentViewController()
     }
 
 }

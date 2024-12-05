@@ -376,7 +376,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     }
 
     func didDismiss(_: UpdatePaymentMethodViewController) {
-        // No-op
+        complete(didTapToDismiss: true)
     }
 
     private func replace(paymentMethod: STPPaymentMethod, with updatedPaymentMethod: STPPaymentMethod) {

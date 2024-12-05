@@ -591,6 +591,12 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         updateUI()
     }
 
+    func didDismiss(_ viewController: SavedPaymentOptionsViewController) {
+        if isDismissable {
+            delegate?.paymentSheetViewControllerDidCancel(self)
+        }
+    }
+
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
