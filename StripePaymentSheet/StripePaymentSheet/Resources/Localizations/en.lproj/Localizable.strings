@@ -209,6 +209,9 @@ re-entering the security code (CVV/CVC). */
 /* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
 "Not %@?" = "Not %@?";
 
+/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+"Only card brand can be changed." = "Only card brand can be changed.";
+
 /* Countdown timer text on a screen asking the user to approve a payment */
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
 
