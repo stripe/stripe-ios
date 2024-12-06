@@ -51,7 +51,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                 paymentMethodRows.forEach {
                     let allowsRemoval = canRemovePaymentMethods
                     let paymentMethodType = $0.paymentMethod.type
-                    let allowsUpdating = ($0.paymentMethod.isCoBrandedCard && isCBCEligible) || (configuration.alternateUpdatePaymentMethodNavigation && (UpdatePaymentMethodViewModel.supportedPaymentMethods.contains { type in paymentMethodType == type }))
+                    let allowsUpdating = UpdatePaymentMethodViewModel.supportedPaymentMethods.contains { type in paymentMethodType == type }
                     $0.state = .editing(allowsRemoval: allowsRemoval,
                                         allowsUpdating: allowsUpdating)
                 }
@@ -90,7 +90,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     var canEdit: Bool {
         // We can edit if there are removable or editable payment methods and we are not in remove only mode
         // Or, under the new navigation flow, if any of the payment methods are cards, US bank accounts, or SEPA debit
-        return ((canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode) || (configuration.alternateUpdatePaymentMethodNavigation && paymentMethods.contains { UpdatePaymentMethodViewModel.supportedPaymentMethods.contains($0.type) })
+        return !isRemoveOnlyMode && paymentMethods.contains { UpdatePaymentMethodViewModel.supportedPaymentMethods.contains($0.type) }
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
@@ -171,15 +171,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
-        if configuration.alternateUpdatePaymentMethodNavigation {
-            self.isRemoveOnlyMode = false
-        }
-        else {
-            // Put in remove only mode and don't show the option to update PMs if:
-            // 1. We only have 1 payment method
-            // 2. The customer can't update the card brand
-            self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
-        }
+        // Put in remove only mode and don't show the option to update PMs if:
+        // 1. We only have 1 payment method
+        // 2. The customer can't update the card brand
+        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
@@ -188,8 +183,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [SavedPaymentMethodRowButton] {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
-                                                     appearance: configuration.appearance,
-                                                     alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
+                                                     appearance: configuration.appearance)
             button.delegate = self
             return button
         }
@@ -388,7 +382,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         }
 
         // Create the new button
-        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance, alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
+        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
         newButton.delegate = self
         newButton.previousSelectedState = oldButton.previousSelectedState
         newButton.state = oldButton.state

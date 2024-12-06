@@ -144,11 +144,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
-        // Special case, only 1 card remaining but is co-branded (or alternateUpdatePaymentMethodNavigation), skip showing the list and show update view controller
+        // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
-           let paymentMethod = savedPaymentMethods.first,
-           paymentMethod.isCoBrandedCard,
-           elementsSession.isCardBrandChoiceEligible || configuration.alternateUpdatePaymentMethodNavigation {
+           let paymentMethod = savedPaymentMethods.first {
             let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
                                                                appearance: configuration.appearance,
                                                                hostedSurface: .paymentSheet,

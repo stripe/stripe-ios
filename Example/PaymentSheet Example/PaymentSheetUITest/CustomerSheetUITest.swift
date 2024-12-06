@@ -475,7 +475,6 @@ class CustomerSheetUITest: XCTestCase {
 
     func testCardBrandChoiceUpdateAndRemove() {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .on
         settings.merchantCountryCode = .FR
         settings.customerMode = .returning
 
@@ -552,7 +551,8 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
         // Remove one saved PM
-        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Edit")?.tap())
+        app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Sleep for 1 second to ensure animation has been completed
@@ -573,7 +573,8 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
         // Remove the 4242 saved PM
-        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Edit")?.tap())
+        app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Wait for alert view to disappear and removal animation to finish
@@ -623,7 +624,6 @@ class CustomerSheetUITest: XCTestCase {
         // Assert there are no remove buttons on each tile and the update screen
         XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
-        XCTAssertFalse(app.buttons["Remove"].exists)
 
         // Dismiss Sheet
         app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
@@ -658,7 +658,6 @@ class CustomerSheetUITest: XCTestCase {
         // Assert there are no remove buttons on each tile and the update screen
         XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
-        XCTAssertFalse(app.buttons["Remove"].exists)
 
         // Dismiss Sheet
         app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
@@ -695,8 +694,9 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     func removeFirstPaymentMethodInList(alertBody: String = "Visa •••• 4242") {
-        let removeButton1 = app.buttons["Remove"].firstMatch
-        removeButton1.tap()
+        let editButton = app.buttons["Edit"].firstMatch
+        editButton.tap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: alertBody, alertTitle: "Remove card?", buttonToTap: "Remove")
     }
 

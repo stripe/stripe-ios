@@ -225,7 +225,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["View more"].waitForExistenceAndTap()
         XCTAssertTrue(firstPaymentMethod.isSelected)
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         app.alerts.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertFalse(firstPaymentMethod.exists)
         app.buttons["Done"].waitForExistenceAndTap()
@@ -243,12 +244,13 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
 
         // Remove the 4242 card
-        app.otherElements["•••• 4242"].buttons["CircularButton.Remove"].waitForExistenceAndTap()
+        app.otherElements["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Exit edit mode, remove button should be hidden
         XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
-        XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+        XCTAssertFalse(app.buttons["CircularButton.Edit"].waitForExistence(timeout: 2.0))
 
         // Update the card brand on the last card
         XCTAssertTrue(app.buttons["Cartes Bancaires ending in 1 0 0 1"].waitForExistence(timeout: 1.0)) // Cartes Bancaires card should be selected now that 4242 card is removed
@@ -276,6 +278,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         // Reselect edit icon and delete the card from the update view controller
         app.buttons["Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 

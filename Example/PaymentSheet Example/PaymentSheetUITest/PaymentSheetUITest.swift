@@ -330,6 +330,9 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
+        let circularEditButton = app.buttons["CircularButton.Edit"]
+        circularEditButton.waitForExistenceAndTap()
+
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
         removeButton.tap()
@@ -1169,6 +1172,9 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
+        let circularEditButton = app.buttons["CircularButton.Edit"]
+        circularEditButton.waitForExistenceAndTap()
+
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
         removeButton.tap()
@@ -1451,7 +1457,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
         // Remove one saved PM
-        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Edit")?.tap())
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Should be kicked out of edit mode now that we have one saved PM
@@ -1533,7 +1540,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
         // Remove one saved PM
-        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Edit")?.tap())
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Should be kicked out of edit mode now that we have one saved PM
@@ -2566,7 +2574,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
     func testDefaultSPMHorizontalNavigation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .on
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning
@@ -2582,7 +2589,6 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
     }
     func testDefaultSPMVerticalNavigation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .on
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning
@@ -2595,22 +2601,6 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Edit"].waitForExistenceAndTap()
 
         XCTAssertEqual(app.buttons.matching(identifier: "chevron").count, 2)
-    }
-    func testDefaultSPMNavigationFlagOff() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .off
-        settings.merchantCountryCode = .FR
-        settings.currency = .eur
-        settings.customerMode = .returning
-        settings.layout = .horizontal
-
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
-        app.buttons["Edit"].waitForExistenceAndTap()
-
-        XCTAssertEqual(app.buttons.matching(identifier: "CircularButton.Edit").count, 1)
     }
 }
 
