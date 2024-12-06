@@ -83,7 +83,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         hotDogStepper.isEnabled = false
         saladStepper.isEnabled = false
         subscribeSwitch.isEnabled = false
-
+        self.view.backgroundColor = .systemBackground
         Task {
             await self.loadCheckout()
         }
@@ -412,6 +412,13 @@ private class PaymentMethodsViewController: UIViewController {
         title = "Choose your payment method"
         let closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeButtonTapped))
         navigationItem.leftBarButtonItem = closeButton
+        self.view.backgroundColor = UIColor(dynamicProvider: { traitCollection in
+            if traitCollection.userInterfaceStyle == .dark {
+                return .secondarySystemBackground
+            }
+
+            return .systemBackground
+        })
     }
 
     @objc private func closeButtonTapped() {
