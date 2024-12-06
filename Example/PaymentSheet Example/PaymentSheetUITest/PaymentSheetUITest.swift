@@ -1181,8 +1181,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        // Should still show "+ Add" and Link
-        XCTAssertEqual(app.cells.count, 2)
+        // Should still show "+ Add". Should show Link for a split second, but then it fades out because there is no wallet or other saved pm
+        XCTAssertTrue(app.staticTexts["+ Add"].waitForExistence(timeout: 3))
     }
 }
 
