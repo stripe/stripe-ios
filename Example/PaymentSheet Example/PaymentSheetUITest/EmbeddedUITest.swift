@@ -311,7 +311,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Switch from 1001 to 4242
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["chevron"].waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.otherElements["Card Brand Dropdown"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.swipeUp()
         app.buttons["Done"].waitForExistenceAndTap()
@@ -370,7 +370,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Remove 6789 & verify
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Bank account •••• 6789", alertTitle: "Remove bank account?", buttonToTap: "Remove")
 
@@ -379,13 +378,13 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
         let events = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ !$0.starts(with: "luxe") })
-            .suffix(5)
+            .suffix(7)
 
         XCTAssertEqual(
             events,
             ["mc_embedded_paymentoption_savedpm_select",
-             "mc_carousel_payment_method_tapped", "mc_embedded_paymentoption_removed",
-             "mc_carousel_payment_method_tapped", "mc_embedded_paymentoption_removed",
+             "mc_carousel_payment_method_tapped", "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
+             "mc_carousel_payment_method_tapped", "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
             ]
         )
     }
@@ -443,7 +442,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Remove 4242
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
 

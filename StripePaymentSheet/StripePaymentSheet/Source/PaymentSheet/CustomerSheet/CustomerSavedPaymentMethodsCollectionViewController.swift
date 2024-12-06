@@ -40,7 +40,6 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
 @objc(STP_Internal_SavedPaymentMethodsCollectionViewController)
 class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     enum Error: Swift.Error {
-        case didSelectRemoveOnInvalidItem
         case didSelectEditOnInvalidItem
         case removedInvalidItemWithUpdateCardFlow
         case unableToDequeueReusableCell

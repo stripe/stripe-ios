@@ -83,15 +83,12 @@ extension SavedPaymentMethodCollectionView {
             return ShadowedRoundedRectangle(appearance: appearance)
         }()
         lazy var accessoryButton: CircularButton = {
-            let button = CircularButton(style: .edit,
-                                        dangerColor: appearance.colors.danger)
-            button.set(style: .edit, with: appearance.colors.danger)
+            let button = CircularButton(style: .edit)
             button.backgroundColor = UIColor.dynamic(
                 light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
             button.iconColor = appearance.colors.icon
             button.isAccessibilityElement = true
             button.accessibilityLabel = String.Localized.edit
-            button.accessibilityIdentifier = "Edit"
             return button
         }()
 
