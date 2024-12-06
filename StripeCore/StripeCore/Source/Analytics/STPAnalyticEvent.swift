@@ -24,7 +24,7 @@ import Foundation
 
     // MARK: - Payment Confirmation
     case _3DS2AuthenticationRequestParamsFailed =
-        "stripeios.3ds2_authentication_request_params_failed"
+            "stripeios.3ds2_authentication_request_params_failed"
     case _3DS2AuthenticationAttempt = "stripeios.3ds2_authenticate"
     case _3DS2FrictionlessFlow = "stripeios.3ds2_frictionless_flow"
     case urlRedirectNextAction = "stripeios.url_redirect_next_action"
@@ -293,4 +293,10 @@ import Foundation
 
     // MARK: - Telemetry Client
     case fraudDetectionApiFailure = "fraud_detection_data_repository.api_failure"
+
+    // MARK: - Attestation
+    case attestationFailed = "stripeios.attest.attestation.failed"
+    case attestationSucceeded = "stripeios.attest.attestation.succeeded"
+    case assertionFailed = "stripeios.attest.assertion.failed"
+    case assertionSucceeded = "stripeios.attest.assertion.succeeded"
 }
