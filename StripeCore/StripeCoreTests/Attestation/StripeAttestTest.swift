@@ -18,7 +18,7 @@ class StripeAttestTest: XCTestCase {
         self.stripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: .shared)
 
         // Reset storage
-        UserDefaults.standard.removeObject(forKey: "STPAttestKeyLastGenerated")
+        UserDefaults.standard.removeObject(forKey: StripeAttest.DefaultsKeys.lastAttestedDate.rawValue)
         stripeAttest.resetKey()
     }
 
@@ -33,29 +33,17 @@ class StripeAttestTest: XCTestCase {
         try! await self.mockAttestBackend.assertionTest(assertion: assertionResponse)
     }
 
-    func testCanOnlyGenerateOncePerDay() async {
+    func testCanOnlyAttestOncePerDay() async {
         // Create and attest a key
         try! await stripeAttest.attest()
         let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
-        // But fail the assertion, causing the key to be reset, and have the second attestation fail too:
+        // But fail the assertion, causing the key to be reset
         mockAttestService.shouldFailAssertionWithError = invalidKeyError
-        mockAttestService.shouldFailAttestationWithError = invalidKeyError
         do {
             _ = try await stripeAttest.assert()
             XCTFail("Should not succeed")
         } catch {
-            XCTAssertEqual(error as NSError, invalidKeyError)
-        }
-
-        // Fix the errors:
-        mockAttestService.shouldFailAssertionWithError = nil
-        mockAttestService.shouldFailAttestationWithError = nil
-        // Now try again:
-        do {
-            try await stripeAttest.attest()
-            XCTFail("Should not succeed")
-        } catch {
-            // Should get a rate limiting error
+            // Should get a rate limiting error when we try to generate the second key:
             XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.keygenRateLimitExceeded)
         }
     }
@@ -64,8 +52,8 @@ class StripeAttestTest: XCTestCase {
         do {
             // Create and attest a key
             try! await stripeAttest.attest()
-            // But it's an old key, so we'll be allowed to generate a new one
-            UserDefaults.standard.set(Date.distantPast, forKey: "STPAttestKeyLastGenerated")
+            // But it's an old key, so we'll be allowed to attest a new one
+            UserDefaults.standard.set(Date.distantPast, forKey: StripeAttest.DefaultsKeys.lastAttestedDate.rawValue)
             // Always fail the assertions:
             let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
             mockAttestService.shouldFailAssertionWithError = invalidKeyError

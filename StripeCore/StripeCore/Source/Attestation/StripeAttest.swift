@@ -70,11 +70,11 @@ import UIKit
     // MARK: - Internal
 
     // MARK: - Device-local settings
-    private enum DefaultsKeys: String {
+    enum DefaultsKeys: String {
         /// The ID of the attestation key stored in the keychain.
         case keyID = "STPAttestKeyID"
         /// The last date we generated an attestation key, used for rate limiting.
-        case lastGeneratedDate = "STPAttestKeyLastGenerated"
+        case lastAttestedDate = "STPAttestKeyLastAttestedDate"
         /// Whether the current keyID key has been attested successfully.
         case successfullyAttested = "STPAttestKeySuccessfullyAttested"
     }
@@ -97,12 +97,12 @@ import UIKit
         }
     }
 
-    private static var lastGeneratedDate: Date? {
+    private static var lastAttestedDate: Date? {
         get {
-            UserDefaults.standard.object(forKey: DefaultsKeys.lastGeneratedDate.rawValue) as? Date
+            UserDefaults.standard.object(forKey: DefaultsKeys.lastAttestedDate.rawValue) as? Date
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: DefaultsKeys.lastGeneratedDate.rawValue)
+            UserDefaults.standard.set(newValue, forKey: DefaultsKeys.lastAttestedDate.rawValue)
         }
     }
 
@@ -159,6 +159,13 @@ import UIKit
     }
 
     func _attest() async throws {
+        // It's dangerous to attest, as it increments a permanent counter for the device.
+        // First, make sure we the last time we called this is more than 24 hours away from now.
+        // (Either in the future or the past, who knows what people are doing with their clocks)
+        if let lastGenerated = StripeAttest.lastAttestedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
+            throw AttestationError.keygenRateLimitExceeded
+        }
+
         let keyId = try await self.getOrCreateKeyID()
         let challenge = try await getChallenge()
         guard let challengeData = challenge.data(using: .utf8) else {
@@ -170,6 +177,7 @@ import UIKit
         let appId = try getAppID()
 
         do {
+            Self.lastAttestedDate = Date()
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
             // Store the successful attestation
@@ -196,7 +204,7 @@ import UIKit
             return keyId
         }
         // If we don't have a key, generate one.
-        return try await self.createKeyIfAllowed()
+        return try await self.createKey()
     }
 
     @_spi(STP) public func resetKey() {
@@ -204,17 +212,9 @@ import UIKit
         Self.successfullyAttested = false
     }
 
-    private func createKeyIfAllowed() async throws -> String {
-        // Perform key generation and attestation.
-        // It's dangerous to call this, as it increments a permanent counter for the device.
-        // First, make sure we the last time we called this is more than 24 hours away from now.
-        // (Either in the future or the past, who knows what people are doing with their clocks)
-        if let lastGenerated = StripeAttest.lastGeneratedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
-            throw AttestationError.keygenRateLimitExceeded
-        }
+    private func createKey() async throws -> String {
         let keyId = try await appAttestService.generateKey()
-        // Save the last time we generated a key, the Key ID, and that the key is not attested.
-        Self.lastGeneratedDate = Date()
+        // Save the Key ID, and that the key is not attested.
         Self.keyID = keyId
         Self.successfullyAttested = false
         return keyId
@@ -257,13 +257,13 @@ import UIKit
             // then the key is either unattested or corrupted.
             let error = error as NSError
             if error.domain == DCErrorDomain && error.code == DCError.invalidKey.rawValue {
-                // We'll try to attest again, maybe our initial attestation was unsuccessful?
-                // `DCError.invalidKey` could mean a lot of things, unfortunately.
-                // If this doesn't work, then in `attest()` we'll deem the key to be corrupted
-                // and throw it out.
-                try await attest()
-                // Once we've successfully re-attested, we'll try one more time to do the assertion.
                 if retryIfNeeded {
+                    // We'll try to attest again, maybe our initial attestation was unsuccessful?
+                    // `DCError.invalidKey` could mean a lot of things, unfortunately.
+                    // If this doesn't work, then in `attest()` we'll deem the key to be corrupted
+                    // and throw it out.
+                    try await attest()
+                    // Once we've successfully re-attested, we'll try one more time to do the assertion.
                     return try await generateAssertion(keyId: keyId, challenge: challenge, retryIfNeeded: false)
                 } else {
                     // If it *still* fails, something is super broken.
