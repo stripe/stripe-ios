@@ -141,6 +141,14 @@ extension PaymentSheet {
         ///   - configuration: A `PaymentSheet` configuration.
         static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
+            func logIfNecessary(_ message: String) {
+                if logAvailability {
+                    #if DEBUG
+                    print("[Stripe SDK]: \(message)")
+                    #endif
+                }
+            }
+
             var recommendedStripePaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in
                 let availabilityStatus = PaymentSheet.PaymentMethodType.supportsAdding(
@@ -151,11 +159,9 @@ extension PaymentSheet {
                     supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
                 )
 
-                if logAvailability && availabilityStatus != .supported {
+                if availabilityStatus != .supported {
                     // This payment method is being filtered out, log the reason/s why
-                    #if DEBUG
-                    print("[Stripe SDK]: PaymentSheet could not offer \(paymentMethodType.displayName):\n\t* \(availabilityStatus.debugDescription)")
-                    #endif
+                    logIfNecessary("PaymentSheet could not offer \(paymentMethodType.displayName):\n\t* \(availabilityStatus.debugDescription)")
                 }
 
                 return availabilityStatus == .supported
@@ -164,8 +170,8 @@ extension PaymentSheet {
             // Log a warning if elements session doesn't contain all the merchant's desired external payment methods
             let missingExternalPaymentMethods = Set(configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.map { $0.lowercased() } ?? [])
                 .subtracting(Set(elementsSession.externalPaymentMethods.map { $0.type }))
-            if logAvailability && !missingExternalPaymentMethods.isEmpty {
-                print("[Stripe SDK]: PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
+            if !missingExternalPaymentMethods.isEmpty {
+                logIfNecessary("PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
             }
 
             // The full ordered list of recommended payment method types:
@@ -203,12 +209,8 @@ extension PaymentSheet {
             switch instantBankPaymentsAvailability {
             case .supported:
                 eligibleForInstantDebits = true
-            case .primaryRequirementMetButMissingOtherRequirements:
-                if logAvailability {
-                    #if DEBUG
-                    print("[Stripe SDK]: PaymentSheet could not offer Instant Bank Payments: \(instantBankPaymentsAvailability.debugDescription)")
-                    #endif
-                }
+            case .missingRequirements:
+                logIfNecessary("PaymentSheet could not offer the 'Bank' payment method type. See https://docs.stripe.com/payments/link/instant-bank-payments. Missing requirements: \(instantBankPaymentsAvailability.debugDescription)")
                 fallthrough
             default:
                 eligibleForInstantDebits = false
@@ -221,17 +223,11 @@ extension PaymentSheet {
 
                 // Instant Bank Payments take precedence over the Link Card integration,
                 // so this payment won't be shown even though all other requirements are met.
-                if eligibleForInstantDebits, logAvailability {
-                    #if DEBUG
-                    print("[Stripe SDK]: PaymentSheet could not offer the Link Card integration: This configuration supports Instant Bank Payments, which takes precedence over the Link Card integration")
-                    #endif
+                if eligibleForInstantDebits {
+                    logIfNecessary("PaymentSheet could not offer the Link Card integration: This configuration supports Instant Bank Payments, which takes precedence over the Link Card integration")
                 }
-            case .primaryRequirementMetButMissingOtherRequirements:
-                if logAvailability {
-                    #if DEBUG
-                    print("[Stripe SDK]: PaymentSheet could not offer the Link Card integration: \(linkCardBrandAvailability.debugDescription)")
-                    #endif
-                }
+            case .missingRequirements:
+                logIfNecessary("PaymentSheet could not offer the Link Card integration. See https://docs.stripe.com/payments/link/link-payment-integrations?link-integrations=link-card-integrations. Missing requirements: \(linkCardBrandAvailability.debugDescription)")
                 fallthrough
             default:
                 eligibleForLinkCardBrand = false
@@ -380,35 +376,32 @@ extension PaymentSheet {
 
             // Primary requirement:
             // - Link is an available payment method.
-            if !elementsSession.orderedPaymentMethodTypes.contains(.link) {
-                missingRequirements.insert(.instantBankPaymentRequirement(.missingLink))
-            } else {
+            if elementsSession.orderedPaymentMethodTypes.contains(.link) {
                 primaryRequirementMet = true
+            } else {
+                missingRequirements.insert(.unsupported)
             }
 
             // - US Bank Account is *not* an available payment method.
             if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.instantBankPaymentRequirement(.unexpectedUsBankAccount))
+                missingRequirements.insert(.unexpectedUsBankAccount)
             }
 
             // - Link Funding Sources contains Bank Account.
             if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount))
+                missingRequirements.insert(.linkFundingSourcesMissingBankAccount)
             }
 
             // - We collect an email, or a default non-empty email has been provided.
             if !configuration.isEligibleForBankTab {
-                missingRequirements.insert(.instantBankPaymentRequirement(.invalidEmailCollectionConfiguration))
+                missingRequirements.insert(.invalidEmailCollectionConfiguration)
             }
 
             let hasMissingRequirements = !missingRequirements.isEmpty
             if primaryRequirementMet, hasMissingRequirements {
-                return .primaryRequirementMetButMissingOtherRequirements(
-                    "Link was specified as a payment method, but other requirements were not met for Instant Bank Payments. See https://docs.stripe.com/payments/link/instant-bank-payments",
-                    missingRequirements
-                )
-            } else if hasMissingRequirements {
                 return .missingRequirements(missingRequirements)
+            } else if hasMissingRequirements {
+                return .notSupported
             }
 
             return .supported
@@ -442,35 +435,32 @@ extension PaymentSheet {
 
             // Primary:
             // - Link Mode is set to Link Card Brand.
-            if !elementsSession.isLinkCardBrand {
-                missingRequirements.insert(.instantBankPaymentRequirement(.unexpectedLinkMode))
-            } else {
+            if elementsSession.isLinkCardBrand {
                 primaryRequirementMet = true
+            } else {
+                missingRequirements.insert(.unsupported)
             }
 
             // - Link Funding Sources contains Bank Account.
             if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount))
+                missingRequirements.insert(.linkFundingSourcesMissingBankAccount)
             }
 
             // - US Bank Account is *not* an available payment method.
             if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.instantBankPaymentRequirement(.unexpectedUsBankAccount))
+                missingRequirements.insert(.unexpectedUsBankAccount)
             }
 
             // - We collect an email, or a default non-empty email has been provided.
             if !configuration.isEligibleForBankTab {
-                missingRequirements.insert(.instantBankPaymentRequirement(.invalidEmailCollectionConfiguration))
+                missingRequirements.insert(.invalidEmailCollectionConfiguration)
             }
 
             let hasMissingRequirements = !missingRequirements.isEmpty
             if primaryRequirementMet, hasMissingRequirements {
-                return .primaryRequirementMetButMissingOtherRequirements(
-                    "The Link mode was set to Link Card Brand, but other requirements were not met for the Link Card integration. See https://docs.stripe.com/payments/link/link-payment-integrations?link-integrations=link-card-integrations",
-                    missingRequirements
-                )
-            } else if hasMissingRequirements {
                 return .missingRequirements(missingRequirements)
+            } else if hasMissingRequirements {
+                return .notSupported
             }
 
             return .supported

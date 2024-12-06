@@ -153,8 +153,14 @@ extension PaymentSheet {
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod
 
-        /// An instant bank payment requirement is missing
-        case instantBankPaymentRequirement(InstantBankPaymentRequirement)
+        /// The `us_bank_account` payment method is preventing this payment method from being shown.
+        case unexpectedUsBankAccount
+
+        /// The email collection configuration is invalid for this payment method.
+        case invalidEmailCollectionConfiguration
+
+        /// The Stripe account is not configured for bank payments.
+        case linkFundingSourcesMissingBankAccount
 
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
@@ -175,32 +181,12 @@ extension PaymentSheet {
                 return "financialConnectionsSDK: The FinancialConnections SDK must be linked. See https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-ach"
             case .validUSBankVerificationMethod:
                 return "Requires a valid US bank verification method."
-            case .instantBankPaymentRequirement(let requirement):
-                return requirement.debugDescription
-            }
-        }
-
-    }
-
-    enum InstantBankPaymentRequirement: Hashable {
-        case missingLink
-        case unexpectedUsBankAccount
-        case invalidEmailCollectionConfiguration
-        case linkFundingSourcesMissingBankAccount
-        case unexpectedLinkMode
-
-        var debugDescription: String {
-            switch self {
-            case .missingLink:
-                return "Specified payment methods must contain link"
             case .unexpectedUsBankAccount:
-                return "US Bank Account should not be set as a payment method"
+                return "The list of payment method types includes 'us_bank_account', which prevents the 'Bank' tab from being displayed."
             case .invalidEmailCollectionConfiguration:
-                return "The provided configuration must either collect an email, or a default non-empty email must be provided"
+                return "The provided configuration must either collect an email, or a default email must be provided. See https://docs.stripe.com/payments/payment-element/control-billing-details-collection"
             case .linkFundingSourcesMissingBankAccount:
-                return "Link funding sources must contain bank account"
-            case .unexpectedLinkMode:
-                return "The Link Mode received is not Link Card Brand"
+                return "Your account isn't set up to process Instant Bank Payments. Reach out to Stripe support."
             }
         }
     }
@@ -214,8 +200,6 @@ extension PaymentSheet {
         case unactivated
         /// This payment method has requirements not met by the configuration or intent
         case missingRequirements(Set<PaymentMethodTypeRequirement>)
-        /// The primary requirement for this payment method were met, but other requirements are missing, preventing us from displaying this payment method.
-        case primaryRequirementMetButMissingOtherRequirements(String, Set<PaymentMethodTypeRequirement>)
 
         var debugDescription: String {
             let separator = "\n\t* "
@@ -228,8 +212,6 @@ extension PaymentSheet {
                 return "This payment method is enabled for test mode, but is not activated for live mode. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
             case .missingRequirements(let missingRequirements):
                 return "\t* \(missingRequirements.map { $0.debugDescription }.joined(separator: separator))"
-            case .primaryRequirementMetButMissingOtherRequirements(let primaryRequirementMessage, let missingRequirements):
-                return "\(primaryRequirementMessage)\nMissing requirements:\(separator)\(missingRequirements.map(\.debugDescription).joined(separator: separator))"
             }
         }
 
@@ -242,8 +224,6 @@ extension PaymentSheet {
             case (.missingRequirements(let requirements), .missingRequirements(let otherRequirements)):
                 // Using `==` on two sets does not consider the order of items in the set.
                 return requirements == otherRequirements
-            case let (.primaryRequirementMetButMissingOtherRequirements(lhsPrimary, lhsMissingRequirements), .primaryRequirementMetButMissingOtherRequirements(rhsPrimary, rhsMissingRequirements)):
-                return lhsPrimary == rhsPrimary && lhsMissingRequirements == rhsMissingRequirements
             default:
                 return false
             }
