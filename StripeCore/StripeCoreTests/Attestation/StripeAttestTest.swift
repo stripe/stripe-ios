@@ -3,15 +3,15 @@
 //  StripeCore
 //
 
+import DeviceCheck
 @testable @_spi(STP) import StripeCore
 import XCTest
-import DeviceCheck
 
 class StripeAttestTest: XCTestCase {
     var mockAttestService: MockAppAttestService!
     var mockAttestBackend: MockAttestBackend!
     var stripeAttest: StripeAttest!
-    
+
     override func setUp() {
         self.mockAttestBackend = MockAttestBackend()
         self.mockAttestService = MockAppAttestService()
@@ -21,13 +21,13 @@ class StripeAttestTest: XCTestCase {
         UserDefaults.standard.removeObject(forKey: "STPAttestKeyLastGenerated")
         stripeAttest.resetKey()
     }
-    
+
     func testAppAttestService() async {
         try! await stripeAttest.attest()
         let assertionResponse = try! await stripeAttest.assert()
         try! await self.mockAttestBackend.assertionTest(assertion: assertionResponse)
     }
-    
+
     func testCanAssertWithoutAttestation() async {
         let assertionResponse = try! await stripeAttest.assert()
         try! await self.mockAttestBackend.assertionTest(assertion: assertionResponse)
@@ -41,12 +41,12 @@ class StripeAttestTest: XCTestCase {
         mockAttestService.shouldFailAssertionWithError = invalidKeyError
         mockAttestService.shouldFailAttestationWithError = invalidKeyError
         do {
-            let _ = try await stripeAttest.assert()
+            _ = try await stripeAttest.assert()
             XCTFail("Should not succeed")
         } catch {
             XCTAssertEqual(error as NSError, invalidKeyError)
         }
-        
+
         // Fix the errors:
         mockAttestService.shouldFailAssertionWithError = nil
         mockAttestService.shouldFailAttestationWithError = nil
@@ -59,7 +59,7 @@ class StripeAttestTest: XCTestCase {
             XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.keygenRateLimitExceeded)
         }
     }
-    
+
     func testAssertionGivesUpAfterMultipleTries() async {
         do {
             // Create and attest a key

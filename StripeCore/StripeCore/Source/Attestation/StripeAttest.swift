@@ -5,9 +5,9 @@
 //  Created by David Estes on 7/29/24.
 //
 
-import Foundation
 import CryptoKit
 import DeviceCheck
+import Foundation
 import UIKit
 
 @_spi(STP) public class StripeAttest {
@@ -21,9 +21,9 @@ import UIKit
         self.appAttestService = appAttestService
         self.appAttestBackend = appAttestBackend
     }
-    
+
     // MARK: - Public functions
-    
+
     /// Sign an assertion using the current device key.
     @_spi(STP) public func assert() async throws -> Assertion {
         do {
@@ -37,9 +37,9 @@ import UIKit
             throw error
         }
     }
-    
+
     // MARK: Public structs
-    
+
     /// Contains the signed data and various information used to sign the request.
     @_spi(STP) public struct Assertion {
         /// The signed assertion data.
@@ -50,16 +50,16 @@ import UIKit
         @_spi(STP) public var appID: String
         /// The key ID
         @_spi(STP) public var keyID: String
-        
+
         /// A convenience function to return the fields used in an asserted request.
         @_spi(STP) public var requestFields: [String: String] {
             return [ "deviceId": deviceID,
                      "appID": appID,
                      "keyID": keyID,
-                     "assertionData": assertionData.base64EncodedString() ]
+                     "assertionData": assertionData.base64EncodedString(), ]
         }
     }
-    
+
     @_spi(STP) public enum AttestationError: Error {
         /// Attestation is not supported on this device.
         case attestationNotSupported
@@ -84,7 +84,7 @@ import UIKit
         /// Whether the current keyID key has been attested successfully.
         case successfullyAttested = "STPAttestKeySuccessfullyAttested"
     }
-    
+
     private static var keyID: String? {
         get {
             UserDefaults.standard.string(forKey: DefaultsKeys.keyID.rawValue)
@@ -93,7 +93,7 @@ import UIKit
             UserDefaults.standard.set(newValue, forKey: DefaultsKeys.keyID.rawValue)
         }
     }
-    
+
     private static var successfullyAttested: Bool {
         get {
             UserDefaults.standard.bool(forKey: DefaultsKeys.successfullyAttested.rawValue)
@@ -102,7 +102,7 @@ import UIKit
             UserDefaults.standard.set(newValue, forKey: DefaultsKeys.successfullyAttested.rawValue)
         }
     }
-    
+
     private static var lastGeneratedDate: Date? {
         get {
             UserDefaults.standard.object(forKey: DefaultsKeys.lastGeneratedDate.rawValue) as? Date
@@ -111,9 +111,9 @@ import UIKit
             UserDefaults.standard.set(newValue, forKey: DefaultsKeys.lastGeneratedDate.rawValue)
         }
     }
-    
+
     // MARK: - Internal
-    
+
     /// The minimum time between key generation attempts.
     /// This is a safeguard against generating keys too often, as each key generation
     /// permanently increases a counter for the device/app pair.
@@ -135,24 +135,24 @@ import UIKit
             throw error
         }
     }
-    
+
     func _assert() async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
-        
+
         if !Self.successfullyAttested {
             // We haven't attested yet, so do that first.
             try await self.attest()
         }
-        
+
         let challenge = try await getChallenge()
-        
+
         let deviceId = try getDeviceID()
         let appId = try getAppID()
-        
+
         let assertion = try await generateAssertion(keyId: keyId, challenge: challenge)
         return Assertion(assertionData: assertion, deviceID: deviceId, appID: appId, keyID: keyId)
     }
-    
+
     func _attest() async throws {
         let keyId = try await self.getOrCreateKeyID()
         let challenge = try await getChallenge()
@@ -160,7 +160,7 @@ import UIKit
             throw AttestationError.invalidChallengeData
         }
         let hash = Data(SHA256.hash(data: challengeData))
-        
+
         do {
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
             print(attestation)
@@ -183,7 +183,7 @@ import UIKit
         // Store the successful attestation
         Self.successfullyAttested = true
     }
-    
+
     /// Returns the device's current key ID, creating one if needed.
     /// Throw an error if the device doesn't support attestation, or if key generation fails.
     private func getOrCreateKeyID() async throws -> String {
@@ -196,12 +196,12 @@ import UIKit
         // If we don't have a key, generate one.
         return try await self.createKeyIfAllowed()
     }
-    
+
     @_spi(STP) public func resetKey() {
         Self.keyID = nil
         Self.successfullyAttested = false
     }
-    
+
     private func createKeyIfAllowed() async throws -> String {
         // Perform key generation and attestation.
         // It's dangerous to call this, as it increments a permanent counter for the device.
@@ -217,27 +217,26 @@ import UIKit
         Self.successfullyAttested = false
         return keyId
     }
-    
+
     func getAppID() throws -> String {
         if let appID = Bundle.main.bundleIdentifier {
             return appID
         }
         throw AttestationError.noAppID
     }
-    
+
     func getDeviceID() throws -> String {
         if let deviceID = UIDevice.current.identifierForVendor?.uuidString {
             return deviceID
         }
         throw AttestationError.noDeviceID
     }
-    
+
     /// Get a challenge from the backend.
     func getChallenge() async throws -> String {
         let keyID = try await self.getOrCreateKeyID()
         return try await appAttestBackend.getChallenge(appId: getAppID(), deviceId: getDeviceID(), keyId: keyID)
     }
-    
 
     /// Generate the assertion data from a key and challenge.
     private func generateAssertion(keyId: String, challenge: String, retryIfNeeded: Bool = true) async throws -> Data {

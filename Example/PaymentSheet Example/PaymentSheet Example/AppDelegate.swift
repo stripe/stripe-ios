@@ -6,8 +6,8 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import StripePaymentSheet
 @_spi(STP) import StripeCore
+import StripePaymentSheet
 import UIKit
 
 @UIApplicationMain
@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            await StripeAttest.shared.attest()
             try await StripeAttest.shared.assert()
         }
-        
+
         // Override point for customization after application launch.
         #if targetEnvironment(simulator)
         if ProcessInfo.processInfo.environment["UITesting"] != nil {
