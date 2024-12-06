@@ -11,139 +11,267 @@ import DeviceCheck
 import UIKit
 
 @_spi(STP) public class StripeAttest {
-    @_spi(STP) public static let shared = StripeAttest()
-    
-    private static let keyPrefName = "STPAttestKey"
+    /// A wrapper for the DCAppAttestService service.
+    @_spi(STP) public var appAttestService: AppAttestService
+    /// A network backend for the /challenge and /attest endpoints.
+    @_spi(STP) public var appAttestBackend: StripeAttestBackend
 
-    func getKeyID() async -> String? {
-        if let keyId = UserDefaults.standard.string(forKey: Self.keyPrefName) {
-            return keyId
-        }
-        // Otherwise generate one (IF APP ATTESTATION IS ALLOWED! ADD A CHECK TO PREVENT THSI FROM LOOPING)
-        guard #available(iOS 14.0, *),
-              DCAppAttestService.shared.isSupported
-        else {
-            return nil // Don't do anything
-        }
-        let service = DCAppAttestService.shared
-        // Perform key generation and attestation.
-//        let hashedEmailAddress = SHA256.hash(data: "jane@test.com".data(using: .utf8)!).compactMap { String(format: "%02x", $0) }.joined()
-        
-        // Dangerous to call this!
+    /// Initialize a new StripeAttest object.
+    @_spi(STP) public init(appAttestService: AppAttestService = AppleAppAttestService.shared, appAttestBackend: StripeAttestBackend = StripeAPIAttestationBackend(apiClient: STPAPIClient.shared)) {
+        self.appAttestService = appAttestService
+        self.appAttestBackend = appAttestBackend
+    }
+    
+    // MARK: - Public functions
+    
+    /// Sign an assertion using the current device key.
+    @_spi(STP) public func assert() async throws -> Assertion {
         do {
-            let keyId = try await service.generateKey()
-            UserDefaults.standard.set(keyId, forKey: Self.keyPrefName)
-            return keyId
+            let assertion = try await _assert()
+            let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
+            STPAnalyticsClient.sharedClient.log(analytic: successAnalytic)
+            return assertion
         } catch {
-            print(error)
-            return nil
+            let errorAnalytic = ErrorAnalytic(event: .assertionFailed, error: error)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            throw error
         }
+    }
+    
+    // MARK: Public structs
+    
+    /// Contains the signed data and various information used to sign the request.
+    @_spi(STP) public struct Assertion {
+        /// The signed assertion data.
+        @_spi(STP) public var assertionData: Data
+        /// The `identifierForVendor` for the current app/device pair.
+        @_spi(STP) public var deviceID: String
+        /// The App ID (not fully qualified, it's missing the Team ID prefix)
+        @_spi(STP) public var appID: String
+        /// The key ID
+        @_spi(STP) public var keyID: String
+        
+        /// A convenience function to return the fields used in an asserted request.
+        @_spi(STP) public var requestFields: [String: String] {
+            return [ "deviceId": deviceID,
+                     "appID": appID,
+                     "keyID": keyID,
+                     "assertionData": assertionData.base64EncodedString() ]
+        }
+    }
+    
+    @_spi(STP) public enum AttestationError: Error {
+        /// Attestation is not supported on this device.
+        case attestationNotSupported
+        /// Device ID is unavailable.
+        case noDeviceID
+        /// App ID is unavailable.
+        case noAppID
+        /// Retried assertion, but it failed.
+        case secondAssertionFailureAfterRetryingAttestation
+        /// Can't generate any more keys today.
+        case keygenRateLimitExceeded
+        /// The challenge couldn't be converted to UTF-8 data.
+        case invalidChallengeData
+    }
+
+    // MARK: - Device-local settings
+    private enum DefaultsKeys: String {
+        /// The ID of the attestation key stored in the keychain.
+        case keyID = "STPAttestKeyID"
+        /// The last date we generated an attestation key, used for rate limiting.
+        case lastGeneratedDate = "STPAttestKeyLastGenerated"
+        /// Whether the current keyID key has been attested successfully.
+        case successfullyAttested = "STPAttestKeySuccessfullyAttested"
+    }
+    
+    private static var keyID: String? {
+        get {
+            UserDefaults.standard.string(forKey: DefaultsKeys.keyID.rawValue)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: DefaultsKeys.keyID.rawValue)
+        }
+    }
+    
+    private static var successfullyAttested: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: DefaultsKeys.successfullyAttested.rawValue)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: DefaultsKeys.successfullyAttested.rawValue)
+        }
+    }
+    
+    private static var lastGeneratedDate: Date? {
+        get {
+            UserDefaults.standard.object(forKey: DefaultsKeys.lastGeneratedDate.rawValue) as? Date
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: DefaultsKeys.lastGeneratedDate.rawValue)
+        }
+    }
+    
+    // MARK: - Internal
+    
+    /// The minimum time between key generation attempts.
+    /// This is a safeguard against generating keys too often, as each key generation
+    /// permanently increases a counter for the device/app pair.
+    /// We expect each device/app pair to generate one key *ever*.
+    /// If this rate limit is being hit, something is wrong.
+    private static let minDurationBetweenKeyGenerationAttempts: TimeInterval = 60 * 60 * 24 // 24 hours
+
+    /// Attest the current device key. Only perform this once per device key.
+    /// You should not call this directly, it'll be called automatically during assert.
+    /// Returns nothing on success, throws on failure.
+    func attest() async throws {
+        do {
+            try await _attest()
+            let successAnalytic = GenericAnalytic(event: .attestationSucceeded, params: [:])
+            STPAnalyticsClient.sharedClient.log(analytic: successAnalytic)
+        } catch {
+            let errorAnalytic = ErrorAnalytic(event: .attestationFailed, error: error)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            throw error
+        }
+    }
+    
+    func _assert() async throws -> Assertion {
+        let keyId = try await self.getOrCreateKeyID()
+        
+        if !Self.successfullyAttested {
+            // We haven't attested yet, so do that first.
+            try await self.attest()
+        }
+        
+        let challenge = try await getChallenge()
+        
+        let deviceId = try getDeviceID()
+        let appId = try getAppID()
+        
+        let assertion = try await generateAssertion(keyId: keyId, challenge: challenge)
+        return Assertion(assertionData: assertion, deviceID: deviceId, appID: appId, keyID: keyId)
+    }
+    
+    func _attest() async throws {
+        let keyId = try await self.getOrCreateKeyID()
+        let challenge = try await getChallenge()
+        guard let challengeData = challenge.data(using: .utf8) else {
+            throw AttestationError.invalidChallengeData
+        }
+        let hash = Data(SHA256.hash(data: challengeData))
+        
+        do {
+            let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
+            print(attestation)
+            guard let deviceId = await UIDevice.current.identifierForVendor?.uuidString,
+            let appId = Bundle.main.bundleIdentifier else {
+                // Error, could not get appID/deviceID
+                return
+            }
+            try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
+        } catch {
+            // If error is DCErrorInvalidKey (3) and the domain is DCErrorDomain,
+            // we need to generate a new key as the key has already been attested or is otherwise corrupt.
+            let error = error as NSError
+            if error.domain == DCErrorDomain && error.code == DCError.invalidKey.rawValue {
+                resetKey()
+            }
+            // For other errors, just report them as an analytic and throw. We'll want to retry attestation with the same key.
+            throw error
+        }
+        // Store the successful attestation
+        Self.successfullyAttested = true
+    }
+    
+    /// Returns the device's current key ID, creating one if needed.
+    /// Throw an error if the device doesn't support attestation, or if key generation fails.
+    private func getOrCreateKeyID() async throws -> String {
+        guard appAttestService.isSupported else {
+            throw AttestationError.attestationNotSupported
+        }
+        if let keyId = Self.keyID {
+            return keyId
+        }
+        // If we don't have a key, generate one.
+        return try await self.createKeyIfAllowed()
     }
     
     @_spi(STP) public func resetKey() {
-        UserDefaults.standard.set(nil, forKey: Self.keyPrefName)
+        Self.keyID = nil
+        Self.successfullyAttested = false
     }
     
-    @_spi(STP) public func genKeys() {
-
-        // Continue with server access.
-        
-    }
-    
-    func getChallenge() async -> Data {
-        let url = URL(string: "https://funny-observant-antler.glitch.me/challenge")!
-        let deviceId = await UIDevice.current.identifierForVendor!.uuidString
-        let requestParams = [ "deviceId": deviceId ]
-        let clientData = try! JSONSerialization.data(withJSONObject: requestParams)
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = clientData
-
-        let (data, _) = try! await URLSession.shared.data(for: request)
-        Swift.assert(data.count == 16)
-        return data
-    }
-    
-    @_spi(STP) public func attest() async {
-        guard #available(iOS 14.0, *),
-              DCAppAttestService.shared.isSupported,
-              let keyId = await self.getKeyID()
-        else {
-            return // Don't do anything
+    private func createKeyIfAllowed() async throws -> String {
+        // Perform key generation and attestation.
+        // It's dangerous to call this, as it increments a permanent counter for the device.
+        // First, make sure we the last time we called this is more than 24 hours away from now.
+        // (Either in the future or the past, who knows what people are doing with their clocks)
+        if let lastGenerated = StripeAttest.lastGeneratedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
+            throw AttestationError.keygenRateLimitExceeded
         }
-        let service = DCAppAttestService.shared
+        let keyId = try await appAttestService.generateKey()
+        // Save the last time we generated a key, the Key ID, and that the key is not attested.
+        Self.lastGeneratedDate = Date()
+        Self.keyID = keyId
+        Self.successfullyAttested = false
+        return keyId
+    }
+    
+    func getAppID() throws -> String {
+        if let appID = Bundle.main.bundleIdentifier {
+            return appID
+        }
+        throw AttestationError.noAppID
+    }
+    
+    func getDeviceID() throws -> String {
+        if let deviceID = UIDevice.current.identifierForVendor?.uuidString {
+            return deviceID
+        }
+        throw AttestationError.noDeviceID
+    }
+    
+    /// Get a challenge from the backend.
+    func getChallenge() async throws -> String {
+        let keyID = try await self.getOrCreateKeyID()
+        return try await appAttestBackend.getChallenge(appId: getAppID(), deviceId: getDeviceID(), keyId: keyID)
+    }
+    
 
-        let challenge = await getChallenge()
-        let hash = Data(SHA256.hash(data: challenge))
-
+    /// Generate the assertion data from a key and challenge.
+    private func generateAssertion(keyId: String, challenge: String, retryIfNeeded: Bool = true) async throws -> Data {
+        // We're just signing the challenge for now.
+        // The expected format is the SHA256 hash of the JSON-encoded dictionary.
+        let assertionDictionary = [ "challenge": challenge ]
+        let assertionData = try JSONSerialization.data(withJSONObject: assertionDictionary,
+                                                       // Sort our keys: It's important that the JSON is
+                                                       // the same on the backend and frontend!
+                                                       options: [.sortedKeys])
+        let assertionDataHash = Data(SHA256.hash(data: assertionData))
         do {
-            let attestation = try await service.attestKey(keyId, clientDataHash: hash)
-            print(attestation)
-            // Send the attestation object to your server for verification.
-            let deviceId = await UIDevice.current.identifierForVendor!.uuidString
-            let requestParams = [ "deviceId": deviceId,
-                                  "challenge": challenge.base64EncodedString(),
-                            "attestation": attestation.base64EncodedString() ]
-            let clientData = try! JSONSerialization.data(withJSONObject: requestParams)
-            let url = URL(string: "https://funny-observant-antler.glitch.me/attest")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.httpBody = clientData
-            print("Request to /attest: \(String(data: clientData, encoding: .utf8)!)")
-            let (data, _) = try! await URLSession.shared.data(for: request)
-            print(data)
+            return try await appAttestService.generateAssertion(keyId, clientDataHash: assertionDataHash)
         } catch {
-//             If error is 3, we need to generate a new key, as the key has already been attested or is otherwise corrupt.
-            // Rate limit these attempts
-            resetKey()
-            print(error)
-            // Failed
+            // If error is DCErrorInvalidKey (3) and the domain is DCErrorDomain,
+            // then the key is either unattested or corrupted.
+            let error = error as NSError
+            if error.domain == DCErrorDomain && error.code == DCError.invalidKey.rawValue {
+                // We'll try to attest again, maybe our initial attestation was unsuccessful?
+                // `DCError.invalidKey` could mean a lot of things, unfortunately.
+                // If this doesn't work, then in `attest()` we'll deem the key to be corrupted
+                // and throw it out.
+                try await attest()
+                // Once we've successfully re-attested, we'll try one more time to do the assertion.
+                if retryIfNeeded {
+                    return try await generateAssertion(keyId: keyId, challenge: challenge, retryIfNeeded: false)
+                } else {
+                    // If it *still* fails, something is super broken.
+                    // Give up for now, we'll try again tomorrow.
+                    throw AttestationError.secondAssertionFailureAfterRetryingAttestation
+                }
+            }
+            // For other errors, we'll want to retry attestation later with the same key.
+            throw error
         }
-//        await self.assert()
     }
-    
-    @_spi(STP) public func assert() async {
-        guard #available(iOS 14.0, *),
-              DCAppAttestService.shared.isSupported,
-              let keyId = await self.getKeyID()
-        else {
-            return // Don't do anything
-        }
-        let service = DCAppAttestService.shared
-
-        let challenge = await getChallenge()
-        let deviceId = await UIDevice.current.identifierForVendor!.uuidString
-        let request = [ "deviceId": deviceId,
-                        "challenge": challenge.base64EncodedString() ]
-        let requestFieldsToHash = [ "challenge": request["challenge"] ]
-        let clientData = try! JSONSerialization.data(withJSONObject: request)
-        let clientDataToHash = try! JSONSerialization.data(withJSONObject: requestFieldsToHash)
-        print(String(data: clientDataToHash, encoding: .utf8)!)
-        let clientDataHash = Data(SHA256.hash(data: clientDataToHash))
-        do {
-            let assertion = try await service.generateAssertion(keyId, clientDataHash: clientDataHash)
-            print(assertion)
-            let url = URL(string: "https://funny-observant-antler.glitch.me/assert")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue(assertion.base64EncodedString(), forHTTPHeaderField: "X-Stripe-Apple-Assertion")
-            request.httpBody = clientData
-            print("Request to /assert: \(String(data: clientData, encoding: .utf8)!)")
-            print("Request to /assert X-Stripe-Apple-Assertion header: \(assertion.base64EncodedString())")
-            let (data, _) = try! await URLSession.shared.data(for: request)
-            print(String(data: data, encoding: .utf8)!)
-
-            // Send the attestation object to your server for verification.
-        } catch {
-            print(error)
-            // Failed
-        }
-        
-    }
-}
-
-struct AttestationRequest: Codable {
-    let attestation: String
 }

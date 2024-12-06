@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Task {
 //            StripeAttest.shared.resetKey()
 //            await StripeAttest.shared.attest()
-            await StripeAttest.shared.assert()
+            try await StripeAttest.shared.assert()
         }
         
         // Override point for customization after application launch.
