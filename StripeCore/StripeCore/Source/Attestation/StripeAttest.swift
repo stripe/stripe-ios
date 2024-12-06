@@ -61,8 +61,8 @@ import UIKit
         case noAppID
         /// Retried assertion, but it failed.
         case secondAssertionFailureAfterRetryingAttestation
-        /// Can't generate any more keys today.
-        case keygenRateLimitExceeded
+        /// Can't attest any more keys today.
+        case attestationRateLimitExceeded
         /// The challenge couldn't be converted to UTF-8 data.
         case invalidChallengeData
     }
@@ -163,7 +163,7 @@ import UIKit
         // First, make sure we the last time we called this is more than 24 hours away from now.
         // (Either in the future or the past, who knows what people are doing with their clocks)
         if let lastGenerated = StripeAttest.lastAttestedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
-            throw AttestationError.keygenRateLimitExceeded
+            throw AttestationError.attestationRateLimitExceeded
         }
 
         let keyId = try await self.getOrCreateKeyID()
