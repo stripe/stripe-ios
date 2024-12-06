@@ -33,7 +33,7 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            chevronButton.isHidden = !canUpdate
+            chevronButton.isHidden = !canUpdate && !canRemove
         }
     }
 
