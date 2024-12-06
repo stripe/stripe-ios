@@ -24,7 +24,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
-    var isDefaultPM: Bool = false
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -42,13 +41,11 @@ class VerticalPaymentMethodListViewController: UIViewController {
         currency: String?,
         amount: Int?,
         incentive: PaymentMethodIncentive?,
-        delegate: VerticalPaymentMethodListViewControllerDelegate,
-        isDefaultPM: Bool = false
+        delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.delegate = delegate
         self.appearance = appearance
         self.delegate = delegate
-        self.isDefaultPM = isDefaultPM
         super.init(nibName: nil, bundle: nil)
 
         // Add the header - either the passed in `header` or "Select payment method"
