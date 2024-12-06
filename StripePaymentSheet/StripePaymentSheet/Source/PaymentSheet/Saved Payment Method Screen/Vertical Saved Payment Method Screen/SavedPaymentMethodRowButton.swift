@@ -13,7 +13,6 @@ import UIKit
 
 protocol SavedPaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
-    func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
@@ -33,8 +32,7 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            chevronButton.isHidden = !canUpdate
-            chevronButton.isUserInteractionEnabled = isEditing
+            chevronButton.isHidden = !canUpdate && !canRemove
         }
     }
 
@@ -92,7 +90,7 @@ final class SavedPaymentMethodRowButton: UIView {
 
     private lazy var rowButton: RowButton = {
         let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
-        button.isEnabled = true
+
         return button
     }()
 
@@ -112,10 +110,6 @@ final class SavedPaymentMethodRowButton: UIView {
     // MARK: Tap handlers
     @objc private func handleUpdateButtonTapped() {
         delegate?.didSelectUpdateButton(self, with: paymentMethod)
-    }
-
-    @objc private func handleRemoveButtonTapped() {
-        delegate?.didSelectRemoveButton(self, with: paymentMethod)
     }
 
     @objc private func handleRowButtonTapped(_: RowButton) {

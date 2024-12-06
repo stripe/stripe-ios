@@ -330,6 +330,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
+        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
+
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
         removeButton.tap()
@@ -1169,6 +1171,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
+        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
+
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
         removeButton.tap()
@@ -1177,8 +1181,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        // Should still show "+ Add" and Link
-        XCTAssertEqual(app.cells.count, 2)
+        // Should still show "+ Add". Should show Link for a split second, but then it fades out because there is no wallet or other saved pm
+        XCTAssertTrue(app.staticTexts["+ Add"].waitForExistence(timeout: 3))
     }
 }
 
@@ -1451,7 +1455,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
         // Remove one saved PM
-        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Edit")?.tap())
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Should be kicked out of edit mode now that we have one saved PM
@@ -1533,7 +1538,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
         // Remove one saved PM
-        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Edit")?.tap())
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Should be kicked out of edit mode now that we have one saved PM

@@ -30,6 +30,8 @@
 
 "Bank account" = "Banka hesabı";
 
+"Bank account details cannot be changed." = "Banka hesabı ayrıntıları değiştirilemiyor.";
+
 "Buy now or pay later with <img/>" = "Şimdi satın alın veya daha sonra <img/> ile ödeyin.";
 
 "Buy now or pay later with Afterpay" = "Şimdi satın alın veya daha sonra Afterpay ile ödeyin";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Link'ten çıkış yap";
 
+"Manage SEPA debit" = "SEPA bankamatik hesabını yönet";
+
+"Manage US bank account" = "ABD banka hesabını yönet";
+
 "Manage card" = "Kartı yönetin";
 
 "Manage payment method" = "Ödeme yöntemini yönetin";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Ödeme yöntemini kaldır";
 
 "Resend code" = "Kodu tekrar gönder";
+
+"SEPA debit details cannot be changed." = "SEPA bankamatik ayrıntıları değiştirilemiyor.";
 
 "Save" = "Kaydet";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Bu satın alım için kullanılamaz";
 
 "Update card" = "Kartı güncelle";
+
+"Update payment method" = "Ödeme yöntemini güncelleyin";
 
 "Use your saved info to check out faster" = "Kayıtlı bilgilerinizi kullanarak daha hızlı ödeme yapabilirsiniz";
 

@@ -30,6 +30,8 @@
 
 "Bank account" = "Account sa bangko";
 
+"Bank account details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng account sa bangko.";
+
 "Buy now or pay later with <img/>" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang <img/>";
 
 "Buy now or pay later with Afterpay" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Mag-log out sa Link";
 
+"Manage SEPA debit" = "Pangasiwaan ang SEPA debit";
+
+"Manage US bank account" = "Pangasiwaan ang account sa bangko sa US";
+
 "Manage card" = "Pangasiwaan ang kard";
 
 "Manage payment method" = "Pangasiwaan ang paraan ng pagbabayad";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Alisin ang paraan ng pagbabayad";
 
 "Resend code" = "Ipadala muli ang code";
+
+"SEPA debit details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng SEPA debit.";
 
 "Save" = "I-save";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Hindi magamit sa pagbiling ito";
 
 "Update card" = "I-update ang kard";
+
+"Update payment method" = "I-update ang paraan ng pagbabayad";
 
 "Use your saved info to check out faster" = "Gamitin ang iyong naka-save na impormayon para mas mabilis na mag-check out";
 

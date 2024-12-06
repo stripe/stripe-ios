@@ -30,6 +30,8 @@
 
 "Bank account" = "银行账户";
 
+"Bank account details cannot be changed." = "无法更改银行账户详情。";
+
 "Buy now or pay later with <img/>" = "用 <img/> 先买后付";
 
 "Buy now or pay later with Afterpay" = "用 Afterpay 先买后付";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "退出 Link";
 
+"Manage SEPA debit" = "管理 SEPA 借记";
+
+"Manage US bank account" = "管理美国银行账户";
+
 "Manage card" = "管理卡";
 
 "Manage payment method" = "管理支付方式";
@@ -177,6 +183,8 @@
 "Remove payment method" = "移除支付方式";
 
 "Resend code" = "重新发送验证码";
+
+"SEPA debit details cannot be changed." = "无法更改 SEPA 借记详情。";
 
 "Save" = "保存";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "无法完成这笔订单";
 
 "Update card" = "更新卡";
+
+"Update payment method" = "更新支付方式";
 
 "Use your saved info to check out faster" = "用您保存的信息，更快结账";
 
