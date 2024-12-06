@@ -44,21 +44,21 @@ extension SavedPaymentMethodFormFactory {
 
         let panElement: TextFieldElement = {
             let panElement = TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.card?.brand, cardBrandDropDown: cardBrandDropDown).makeElement(theme: viewModel.appearance.asElementsTheme)
-            panElement.view.layer.backgroundColor = viewModel.appearance.asElementsTheme.colors.disabledBackground.cgColor
+            panElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
             return panElement
         }()
 
         let expiryDateElement: TextFieldElement = {
             let expiryDate = CardExpiryDate(month: viewModel.paymentMethod.card?.expMonth ?? 0, year: viewModel.paymentMethod.card?.expYear ?? 0)
             let expiryDateElement = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)
-            expiryDateElement.view.layer.backgroundColor = viewModel.appearance.asElementsTheme.colors.disabledBackground.cgColor
+            expiryDateElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
             return expiryDateElement
         }()
 
         let cvcElement: TextFieldElement = {
             let cvcConfiguration = TextFieldElement.CensoredCVCConfiguration(brand: self.viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown)
             let cvcElement = cvcConfiguration.makeElement(theme: viewModel.appearance.asElementsTheme)
-            cvcElement.view.layer.backgroundColor = viewModel.appearance.asElementsTheme.colors.disabledBackground.cgColor
+            cvcElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
             return cvcElement
         }()
         let cardSection: SectionElement = {
@@ -79,4 +79,5 @@ extension SavedPaymentMethodFormFactory {
         let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
         viewModel.selectedCardBrand = cardBrands[index]
     }
+
 }
