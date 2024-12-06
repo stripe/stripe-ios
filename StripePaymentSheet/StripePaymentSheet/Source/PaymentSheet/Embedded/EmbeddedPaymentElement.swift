@@ -189,6 +189,24 @@ public final class EmbeddedPaymentElement {
     public func confirm() async -> EmbeddedPaymentElementResult {        
         return await _confirm().result
     }
+    
+    /// Sets the currently selected payment option to `nil`.
+    public func clearCurrentSelection() {
+        // Early exit for a nil payment option, don't notify delegate since no change in payment option can occur
+        guard paymentOption != nil else { return }
+        
+        // Clear out the form controller to clear any payment option
+        formViewController = nil
+        
+        // Reset the selection on the `embeddedPaymentMethodsView`
+        embeddedPaymentMethodsView.resetSelection()
+        
+        // Clear the testable payment option (only populated during unit testing)
+        _test_paymentOption = nil
+        
+        // Notify the delegate that the payment option has changed
+        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+    }
 
     // MARK: - Internal
 

@@ -948,6 +948,50 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Submit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
+    
+    func testClearCurrentSelection() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        // As a returning customer, a saved payment method should be automatically selected.
+        // Verify that a payment method (e.g. "•••• 4242") is displayed right away.
+        let paymentMethodLabel = app.staticTexts["Payment method"]
+        XCTAssertTrue(paymentMethodLabel.waitForExistence(timeout: 10))
+        let initiallySelectedPM = paymentMethodLabel.label
+        XCTAssertTrue(initiallySelectedPM.contains("••••"), "Expected a saved card to be selected, but got: \(initiallySelectedPM)")
+
+        // Clear the selection
+        let clearButton = app.buttons["Clear selection"]
+        XCTAssertTrue(clearButton.waitForExistence(timeout: 10))
+        clearButton.tap()
+
+        // After clearing, there should be no "Payment method" label.
+        XCTAssertFalse(paymentMethodLabel.exists)
+
+        // Now select a different payment method, "Cash App Pay"
+        let cashAppPayButton = app.buttons["Cash App Pay"]
+        XCTAssertTrue(cashAppPayButton.waitForExistence(timeout: 10))
+        cashAppPayButton.tap()
+
+        // Verify that "Cash App Pay" is now selected and displayed
+        XCTAssertTrue(paymentMethodLabel.waitForExistence(timeout: 10))
+        XCTAssertEqual(paymentMethodLabel.label, "Cash App Pay")
+        XCTAssertTrue(cashAppPayButton.isSelected)
+        
+        // Clear selection again
+        clearButton.tap()
+
+        // Verify that no payment method is selected after the second reset
+        XCTAssertFalse(paymentMethodLabel.exists)
+        XCTAssertFalse(cashAppPayButton.isSelected)
+    }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {
         let alertText = app.staticTexts[alertBody]
