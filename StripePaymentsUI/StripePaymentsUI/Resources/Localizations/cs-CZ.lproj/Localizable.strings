@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "PSČ je neplatné.";
 
+"Your card has expired." = "Platnost vaší karty vypršela.";
+
 "Your card number is incomplete." = "Číslo karty je neúplné.";
 
 "Your card number is invalid." = "Číslo karty je neplatné.";

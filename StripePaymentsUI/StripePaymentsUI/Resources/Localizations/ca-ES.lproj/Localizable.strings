@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "El teu ZIP no és vàlid.";
 
+"Your card has expired." = "La targeta ha caducat.";
+
 "Your card number is incomplete." = "El número de la teva targeta no està complet.";
 
 "Your card number is invalid." = "El número de la teva targeta no és vàlid.";

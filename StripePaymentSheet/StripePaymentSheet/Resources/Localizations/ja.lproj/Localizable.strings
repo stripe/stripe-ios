@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "キャンセルして別の方法で支払う";
 
+"Card details cannot be changed." = "カードの詳細は変更できません。";
+
 "Change email" = "メールアドレスを変更";
 
 "Choose a payment method" = "支払い方法を選択";
@@ -111,6 +113,8 @@
 "Join Link" = "Link に申し込む";
 
 "Log out of Link" = "Link からログアウト";
+
+"Manage card" = "カードの管理";
 
 "Manage payment method" = "支払い方法の管理";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "この購入には利用できません";
 
 "Update card" = "カードを更新";
-
-"Update card brand" = "カードブランドを更新する";
 
 "Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
 

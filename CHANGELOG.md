@@ -1,3 +1,15 @@
+## 24.1.1 2024-12-02
+### PaymentSheet
+* [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+* [Fixed] Fixed an issue in Instant Bank Payments that occurred when using a connected account.
+
+## 24.1.0 2024-11-25
+### Payments
+* [Added] Support for Crypto bindings.
+
+### PaymentSheet
+* [Fixed] US Bank Account now shows the correct mandate when using the `instant_or_skip` verification method.
+
 ## 24.0.2 2024-11-21
 ### PaymentSheet
 * [Fixed] A bug where PaymentSheet would cause layout issues when nested within certain navigation stacks.

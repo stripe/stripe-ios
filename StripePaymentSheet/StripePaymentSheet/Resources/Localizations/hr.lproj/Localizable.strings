@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Otkaži i plati na drugi način";
 
+"Card details cannot be changed." = "Podaci o kartici ne mogu se mijenjati.";
+
 "Change email" = "Izmijeni e-poštu";
 
 "Choose a payment method" = "Odaberite način plaćanja";
@@ -111,6 +113,8 @@
 "Join Link" = "Pridružite se na Link";
 
 "Log out of Link" = "Odjavite se s Linka";
+
+"Manage card" = "Upravljajte karticom";
 
 "Manage payment method" = "Upravljajte načinom plaćanja";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Nije dostupno za ovu kupnju";
 
 "Update card" = "Ažuriraj karticu";
-
-"Update card brand" = "Ažurirajte robnu marku kartice";
 
 "Use your saved info to check out faster" = "Upotrijebite svoje spremljene podatke za brže plaćanje";
 

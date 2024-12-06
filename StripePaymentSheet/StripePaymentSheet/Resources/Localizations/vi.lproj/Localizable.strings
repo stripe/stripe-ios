@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Hủy và thanh toán theo cách khác";
 
+"Card details cannot be changed." = "Không thể thay đổi thông tin thẻ.";
+
 "Change email" = "Đổi email";
 
 "Choose a payment method" = "Chọn phương thức thanh toán";
@@ -111,6 +113,8 @@
 "Join Link" = "Tham gia Link";
 
 "Log out of Link" = "Đăng xuất khỏi Link";
+
+"Manage card" = "Quản lý thẻ";
 
 "Manage payment method" = "Quản lý phương thức thanh toán";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
 
 "Update card" = "Cập nhật thẻ";
-
-"Update card brand" = "Cập nhật thương hiệu thẻ";
 
 "Use your saved info to check out faster" = "Sử dụng thông tin đã lưu của bạn để thanh toán nhanh hơn";
 

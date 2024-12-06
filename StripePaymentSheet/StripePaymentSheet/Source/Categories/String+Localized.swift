@@ -77,10 +77,45 @@ extension String.Localized {
         STPLocalizedString("Back", "Text for back button")
     }
 
+    static var manage_us_bank_account: String {
+        STPLocalizedString(
+            "Manage US bank account",
+            "Title shown above a view containing the customer's bank account that they can delete or update"
+        )
+    }
+
+    static var manage_sepa_debit: String {
+        STPLocalizedString(
+            "Manage SEPA debit",
+            "Title shown above a view containing the customer's SEPA debit that they can delete or update"
+        )
+    }
+
     static var manage_card: String {
         STPLocalizedString(
             "Manage card",
             "Title shown above a view containing the customer's card that they can delete or update"
+        )
+    }
+
+    static var bank_account_details_cannot_be_changed: String {
+        STPLocalizedString(
+            "Bank account details cannot be changed.",
+            "Text on a screen that indicates bank account details cannot be changed."
+        )
+    }
+
+    static var sepa_debit_details_cannot_be_changed: String {
+        STPLocalizedString(
+            "SEPA debit details cannot be changed.",
+            "Text on a screen that indicates SEPA debit details cannot be changed."
+        )
+    }
+
+    static var card_details_cannot_be_changed: String {
+        STPLocalizedString(
+            "Card details cannot be changed.",
+            "Text on a screen that indicates card details cannot be changed."
         )
     }
 
@@ -101,10 +136,12 @@ extension String.Localized {
         )
     }
 
-    static var update_card_brand: String {
+    static var update_payment_method: String {
         STPLocalizedString(
-            "Update card brand",
-            "Title for a screen for updating a card brand."
+            "Update payment method",
+            """
+            Accessibility label for a button that leads to a screen for updating a payment method.
+            """
         )
     }
 

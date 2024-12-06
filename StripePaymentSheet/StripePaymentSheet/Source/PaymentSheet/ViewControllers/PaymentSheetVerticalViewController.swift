@@ -573,13 +573,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
            let paymentMethod = savedPaymentMethods.first,
            paymentMethod.isCoBrandedCard,
            elementsSession.isCardBrandChoiceEligible || configuration.alternateUpdatePaymentMethodNavigation {
-            let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
+            let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+                                                               appearance: configuration.appearance,
+                                                               hostedSurface: .paymentSheet,
+                                                               cardBrandFilter: configuration.cardBrandFilter,
+                                                               canEdit: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
+                                                               canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet())
+            let updateViewController = UpdatePaymentMethodViewController(
                                                                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                                appearance: configuration.appearance,
-                                                                hostedSurface: .paymentSheet,
-                                                                canRemoveCard: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                 isTestMode: configuration.apiClient.isTestmode,
-                                                                cardBrandFilter: configuration.cardBrandFilter)
+                                                                viewModel: updateViewModel)
             updateViewController.delegate = self
             bottomSheetController?.pushContentViewController(updateViewController)
             return
@@ -791,9 +794,9 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
     }
 }
 
-// MARK: UpdateCardViewControllerDelegate
-extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
-    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
+// MARK: UpdatePaymentMethodViewControllerDelegate
+extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
         // Detach the payment method from the customer
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
@@ -806,7 +809,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    func didUpdate(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         // Update the payment method
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
@@ -820,7 +823,7 @@ extension PaymentSheetVerticalViewController: UpdateCardViewControllerDelegate {
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didDismiss(viewController: UpdateCardViewController) {
+    func didDismiss(_: UpdatePaymentMethodViewController) {
         // No-op
     }
 }

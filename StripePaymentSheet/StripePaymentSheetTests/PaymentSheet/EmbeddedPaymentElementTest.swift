@@ -58,7 +58,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.view.autosizeHeight(width: 320)
         // ...with cash app selected...
         let cashAppPayRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay")
-        sut.embeddedPaymentMethodsView.didTap(selectedRowButton: cashAppPayRowButton, selection: .new(paymentMethodType: .stripe(.cashApp)))
+        sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
         delegateDidUpdatePaymentOptionCalled = false // This gets set to true when we select cash app ^
         XCTAssertNil(sut.paymentOption?.mandateText)
         // ...its intent should match the initial intent config...

@@ -114,7 +114,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
                 subtitle: Self.subtitleText(for: paymentMethodType),
-                savedPaymentMethodType: savedPaymentMethod?.type,
+                hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708) 
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
                 shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)
@@ -210,7 +210,7 @@ protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
 }
 
 // MARK: - VerticalPaymentMethodListSelection
-enum VerticalPaymentMethodListSelection: Equatable {
+enum VerticalPaymentMethodListSelection: Equatable, Hashable {
     case new(paymentMethodType: PaymentSheet.PaymentMethodType)
     case saved(paymentMethod: STPPaymentMethod)
     case applePay
@@ -228,6 +228,21 @@ enum VerticalPaymentMethodListSelection: Equatable {
             return lhsPM.stripeId == rhsPM.stripeId && lhsPM.calculateCardBrandToDisplay() == rhsPM.calculateCardBrandToDisplay()
         default:
             return false
+        }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case .new(let paymentMethodType):
+            hasher.combine(0)
+            hasher.combine(paymentMethodType.identifier)
+        case .saved(let paymentMethod):
+            hasher.combine(1)
+            hasher.combine(paymentMethod.stripeId)
+        case .applePay:
+            hasher.combine(2)
+        case .link:
+            hasher.combine(3)
         }
     }
 

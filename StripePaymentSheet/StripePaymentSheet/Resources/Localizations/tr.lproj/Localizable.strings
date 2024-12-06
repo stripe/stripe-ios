@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "İptal edip başka bir yöntemle ödeyin";
 
+"Card details cannot be changed." = "Kart ayrıntıları değiştirilemiyor.";
+
 "Change email" = "E-posta adresini değiştir";
 
 "Choose a payment method" = "Yeni bir ödeme yöntemi seçin";
@@ -111,6 +113,8 @@
 "Join Link" = "Link'e katıl";
 
 "Log out of Link" = "Link'ten çıkış yap";
+
+"Manage card" = "Kartı yönetin";
 
 "Manage payment method" = "Ödeme yöntemini yönetin";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Bu satın alım için kullanılamaz";
 
 "Update card" = "Kartı güncelle";
-
-"Update card brand" = "Kart markasını güncelle";
 
 "Use your saved info to check out faster" = "Kayıtlı bilgilerinizi kullanarak daha hızlı ödeme yapabilirsiniz";
 

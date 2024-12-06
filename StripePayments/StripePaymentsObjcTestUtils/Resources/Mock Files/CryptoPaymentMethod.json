@@ -1,0 +1,24 @@
+{
+    "id": "pm_1QO42LFY0qyl6XeWuK9FjZq5",
+    "object": "payment_method",
+    "allow_redisplay": "unspecified",
+    "billing_details": {
+      "address": {
+        "city": null,
+        "country": null,
+        "line1": null,
+        "line2": null,
+        "postal_code": null,
+        "state": null
+      },
+      "email": null,
+      "name": null,
+      "phone": null
+    },
+    "created": 1732309509,
+    "crypto": {},
+    "customer": null,
+    "livemode": false,
+    "metadata": {},
+    "type": "crypto"
+}

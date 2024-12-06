@@ -179,6 +179,24 @@ extension TextFieldElement {
             }
         }
     }
+
+    struct LastFourIBANConfiguration: TextFieldElementConfiguration {
+        let label: String = "IBAN"
+        let lastFour: String
+        let isEditable = false
+
+        private var lastFourFormatted: String {
+            "•••• \(lastFour)"
+        }
+
+        init(lastFour: String) {
+            self.lastFour = lastFour
+        }
+
+        func makeDisplayText(for text: String) -> NSAttributedString {
+            return NSAttributedString(string: lastFourFormatted)
+        }
+    }
 }
 
 private let asciiValueOfA: Int = Int(Character("A").asciiValue!)

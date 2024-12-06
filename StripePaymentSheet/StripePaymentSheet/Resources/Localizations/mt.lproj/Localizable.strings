@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Ikkanċella u ħallas mod ieħor";
 
+"Card details cannot be changed." = "Id-dettalji tal-karta ma jistgħux jinbidlu.";
+
 "Change email" = "Ibdel l-indirizz tal-email";
 
 "Choose a payment method" = "Agħżel metodu tal-ħlas";
@@ -111,6 +113,8 @@
 "Join Link" = "Ingħaqad ma' Link";
 
 "Log out of Link" = "Oħroġ minn Link";
+
+"Manage card" = "Ħu ħsieb il-karta";
 
 "Manage payment method" = "Ħu ħsieb il-metodu tal-pagament";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
 
 "Update card" = "Aġġorna l-karta";
-
-"Update card brand" = "Ibdel id-ditta tal-karta";
 
 "Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
 

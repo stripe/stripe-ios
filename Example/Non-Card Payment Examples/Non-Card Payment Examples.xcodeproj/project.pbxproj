@@ -68,6 +68,7 @@
 		E25C6341B4F787932711D689 /* SofortSourcesExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E87A8E1AE06AA97A3310C1 /* SofortSourcesExampleViewController.m */; };
 		E29BEECD69C041C085EFDEA9 /* BlikExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD4A8C07A1D8B651413DF43 /* BlikExampleViewController.swift */; };
 		E88340F6DFAA14F6772159E7 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CA51E7BD0D4D1E0B94075FE /* Stripe.framework */; };
+		F60858F22CEF052100D62278 /* CryptoExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60858F12CEF052100D62278 /* CryptoExampleViewController.swift */; };
 		F635434F095301C541789E1C /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ADDFFDCAC5AF682FC6648E8 /* StripePaymentSheet.framework */; };
 /* End PBXBuildFile section */
 
@@ -183,6 +184,7 @@
 		F185553AA1B3E2D0C80B8424 /* SEPADebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEPADebitExampleViewController.h; sourceTree = "<group>"; };
 		F1A0CF82AB6742C41BA5C19C /* WeChatPayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeChatPayExampleViewController.m; sourceTree = "<group>"; };
 		F2F0E1A3A75AC9C2C8E9C01B /* OXXOExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OXXOExampleViewController.h; sourceTree = "<group>"; };
+		F60858F12CEF052100D62278 /* CryptoExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoExampleViewController.swift; sourceTree = "<group>"; };
 		F74D08CE9A94C0D55EB3618A /* KlarnaSourcesExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaSourcesExampleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -312,6 +314,7 @@
 				CAC3A0312C2F1184007BC888 /* SunbitExampleViewController.swift */,
 				CAC3A0392C2F2AB5007BC888 /* BillieExampleViewController.swift */,
 				CAC80EBA2C333164001E3D0D /* SatispayExampleViewController.swift */,
+				F60858F12CEF052100D62278 /* CryptoExampleViewController.swift */,
 			);
 			path = "Non-Card Payment Examples";
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				61E1CA232BD6B9DF00A421AE /* MultibancoExampleViewController.swift in Sources */,
+				F60858F22CEF052100D62278 /* CryptoExampleViewController.swift in Sources */,
 				09470488B2A3383D39A9445C /* AUBECSDebitExampleViewController.m in Sources */,
 				11E6BDE8B898A7215AE679F6 /* AffirmExampleViewController.swift in Sources */,
 				2BFF43283D3D33B24CCCB073 /* AfterpayClearpayExampleViewController.swift in Sources */,

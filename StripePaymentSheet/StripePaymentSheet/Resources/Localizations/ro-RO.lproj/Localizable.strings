@@ -72,6 +72,8 @@
 
 "Cancel and pay another way" = "Anulați și folosiți altă metodă de plată";
 
+"Card details cannot be changed." = "Detaliile cardului nu pot fi modificate.";
+
 "Change email" = "Schimbați adresa de e-mail";
 
 "Choose a payment method" = "Alegeți o metodă de plată";
@@ -111,6 +113,8 @@
 "Join Link" = "Înscrieți-vă în Link";
 
 "Log out of Link" = "Deconectare de la Link";
+
+"Manage card" = "Gestionare card";
 
 "Manage payment method" = "Gestionare metodă de plată";
 
@@ -241,8 +245,6 @@
 "Unavailable for this purchase" = "Nu este disponibilă pentru această achiziție";
 
 "Update card" = "Actualizare card";
-
-"Update card brand" = "Actualizarea mărcii de card";
 
 "Use your saved info to check out faster" = "Folosiți informațiile dvs. salvate pentru a finaliza comanda mai rapid";
 

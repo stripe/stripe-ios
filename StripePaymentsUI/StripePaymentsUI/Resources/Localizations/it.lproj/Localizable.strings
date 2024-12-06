@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Il CAP non è valido.";
 
+"Your card has expired." = "La tua carta è scaduta.";
+
 "Your card number is incomplete." = "Il numero della carta è incompleto.";
 
 "Your card number is invalid." = "Il numero della carta non è valido.";

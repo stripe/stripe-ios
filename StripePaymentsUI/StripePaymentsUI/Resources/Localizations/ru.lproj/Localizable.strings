@@ -42,6 +42,8 @@
 
 "Your ZIP is invalid." = "Введенный почтовый индекс неверен.";
 
+"Your card has expired." = "Срок действия карты истек.";
+
 "Your card number is incomplete." = "Номер карты введен не полностью.";
 
 "Your card number is invalid." = "Номер карты недействителен.";
