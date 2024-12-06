@@ -172,6 +172,8 @@ import UIKit
         do {
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
+            // Store the successful attestation
+            Self.successfullyAttested = true
         } catch {
             // If error is DCErrorInvalidKey (3) and the domain is DCErrorDomain,
             // we need to generate a new key as the key has already been attested or is otherwise corrupt.
@@ -182,8 +184,6 @@ import UIKit
             // For other errors, just report them as an analytic and throw. We'll want to retry attestation with the same key.
             throw error
         }
-        // Store the successful attestation
-        Self.successfullyAttested = true
     }
 
     /// Returns the device's current key ID, creating one if needed.
