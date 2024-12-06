@@ -477,13 +477,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
-            XCTFail("Unexpected availability: \(availability)")
-            return
-        }
-
-        XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .instantBankPaymentRequirement(.missingLink))
+        XCTAssertEqual(availability, .notSupported)
     }
 
     func testSupportsInstantBankPayments_unexpectedUsBankAccount() {
@@ -501,13 +495,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .primaryRequirementMetButMissingOtherRequirements(_, let requirements) = availability else {
+        guard case .missingRequirements(let requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
 
         XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .instantBankPaymentRequirement(.unexpectedUsBankAccount))
+        XCTAssertEqual(requirements.first, .unexpectedUsBankAccount)
     }
 
     func testSupportsInstantBankPayments_linkFundingSourcesMissingBankAccount() {
@@ -525,13 +519,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .primaryRequirementMetButMissingOtherRequirements(_, let requirements) = availability else {
+        guard case .missingRequirements(let requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
 
         XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount))
+        XCTAssertEqual(requirements.first, .linkFundingSourcesMissingBankAccount)
     }
 
     func testSupportsInstantBankPayments_invalidEmailCollectionConfiguration() {
@@ -551,13 +545,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .primaryRequirementMetButMissingOtherRequirements(_, let requirements) = availability else {
+        guard case .missingRequirements(let requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
 
         XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .instantBankPaymentRequirement(.invalidEmailCollectionConfiguration))
+        XCTAssertEqual(requirements.first, .invalidEmailCollectionConfiguration)
     }
 
     func testSupportsInstantBankPayments_multipleMissingNonPrimaryRequirements() {
@@ -577,15 +571,15 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .primaryRequirementMetButMissingOtherRequirements(_, let requirements) = availability else {
+        guard case .missingRequirements(let requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
 
         let expectedMissingRequirements: Set<PaymentSheet.PaymentMethodTypeRequirement> = [
-            .instantBankPaymentRequirement(.unexpectedUsBankAccount),
-            .instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount),
-            .instantBankPaymentRequirement(.invalidEmailCollectionConfiguration),
+            .unexpectedUsBankAccount,
+            .linkFundingSourcesMissingBankAccount,
+            .invalidEmailCollectionConfiguration,
         ]
         XCTAssertEqual(requirements.count, 3)
         XCTAssertEqual(requirements, expectedMissingRequirements)
@@ -608,19 +602,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
-            XCTFail("Unexpected availability: \(availability)")
-            return
-        }
-
-        let expectedMissingRequirements: Set<PaymentSheet.PaymentMethodTypeRequirement> = [
-            .instantBankPaymentRequirement(.missingLink),
-            .instantBankPaymentRequirement(.unexpectedUsBankAccount),
-            .instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount),
-            .instantBankPaymentRequirement(.invalidEmailCollectionConfiguration),
-        ]
-        XCTAssertEqual(requirements.count, 4)
-        XCTAssertEqual(requirements, expectedMissingRequirements)
+        XCTAssertEqual(availability, .notSupported)
     }
 
     func testSupportsInstantBankPayments_primaryRequirementPresent_debugDescription() {
@@ -639,9 +621,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let expectedDebugDescription = """
-        Link was specified as a payment method, but other requirements were not met for Instant Bank Payments. See https://docs.stripe.com/payments/link/instant-bank-payments
-        Missing requirements:
-        \t* Link funding sources must contain bank account
+        \t* Your account isn't set up to process Instant Bank Payments. Reach out to Stripe support.
         """
         XCTAssertEqual(availability.debugDescription, expectedDebugDescription)
     }
@@ -662,7 +642,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let expectedDebugDescription = """
-        \t* Specified payment methods must contain link
+        This payment method is not currently supported by PaymentSheet.
         """
         XCTAssertEqual(availability.debugDescription, expectedDebugDescription)
     }
@@ -701,13 +681,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
-            XCTFail("Unexpected availability: \(availability)")
-            return
-        }
-
-        XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .instantBankPaymentRequirement(.unexpectedLinkMode))
+        XCTAssertEqual(availability, .notSupported)
     }
 
     func testSupportsLinkCardIntegration_unexpectedUsBankAccount() {
@@ -725,13 +699,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .primaryRequirementMetButMissingOtherRequirements(_, let requirements) = availability else {
+        guard case .missingRequirements(let requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
 
         XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .instantBankPaymentRequirement(.unexpectedUsBankAccount))
+        XCTAssertEqual(requirements.first, .unexpectedUsBankAccount)
     }
 
     func testSupportsLinkCardIntegration_linkFundingSourcesMissingBankAccount() {
@@ -749,13 +723,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .primaryRequirementMetButMissingOtherRequirements(_, let requirements) = availability else {
+        guard case .missingRequirements(let requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
 
         XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount))
+        XCTAssertEqual(requirements.first, .linkFundingSourcesMissingBankAccount)
     }
 
     func testSupportsLinkCardIntegration_invalidEmailCollectionConfiguration() {
@@ -775,13 +749,13 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .primaryRequirementMetButMissingOtherRequirements(_, let requirements) = availability else {
+        guard case .missingRequirements(let requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
 
         XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .instantBankPaymentRequirement(.invalidEmailCollectionConfiguration))
+        XCTAssertEqual(requirements.first, .invalidEmailCollectionConfiguration)
     }
 
     func testSupportsLinkCardIntegration_multipleMissingNonPrimaryRequirements() {
@@ -801,15 +775,15 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .primaryRequirementMetButMissingOtherRequirements(_, let requirements) = availability else {
+        guard case .missingRequirements(let requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
 
         let expectedMissingRequirements: Set<PaymentSheet.PaymentMethodTypeRequirement> = [
-            .instantBankPaymentRequirement(.unexpectedUsBankAccount),
-            .instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount),
-            .instantBankPaymentRequirement(.invalidEmailCollectionConfiguration),
+            .unexpectedUsBankAccount,
+            .linkFundingSourcesMissingBankAccount,
+            .invalidEmailCollectionConfiguration,
         ]
         XCTAssertEqual(requirements.count, 3)
         XCTAssertEqual(requirements, expectedMissingRequirements)
@@ -832,19 +806,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
-            XCTFail("Unexpected availability: \(availability)")
-            return
-        }
-
-        let expectedMissingRequirements: Set<PaymentSheet.PaymentMethodTypeRequirement> = [
-            .instantBankPaymentRequirement(.unexpectedLinkMode),
-            .instantBankPaymentRequirement(.unexpectedUsBankAccount),
-            .instantBankPaymentRequirement(.linkFundingSourcesMissingBankAccount),
-            .instantBankPaymentRequirement(.invalidEmailCollectionConfiguration),
-        ]
-        XCTAssertEqual(requirements.count, 4)
-        XCTAssertEqual(requirements, expectedMissingRequirements)
+        XCTAssertEqual(availability, .notSupported)
     }
 
     func testSupportsLinkCardIntegration_primaryRequirementPresent_debugDescription() {
@@ -863,9 +825,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let expectedDebugDescription = """
-        The Link mode was set to Link Card Brand, but other requirements were not met for the Link Card integration. See https://docs.stripe.com/payments/link/link-payment-integrations?link-integrations=link-card-integrations
-        Missing requirements:
-        \t* Link funding sources must contain bank account
+        \t* Your account isn't set up to process Instant Bank Payments. Reach out to Stripe support.
         """
         XCTAssertEqual(availability.debugDescription, expectedDebugDescription)
     }
@@ -886,7 +846,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let expectedDebugDescription = """
-        \t* The Link Mode received is not Link Card Brand
+        This payment method is not currently supported by PaymentSheet.
         """
         XCTAssertEqual(availability.debugDescription, expectedDebugDescription)
     }
