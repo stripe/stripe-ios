@@ -211,7 +211,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Remove last card while selected state is NOT on the card
         app.buttons["Edit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 3.0))
-        app.buttons["chevron"].waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
@@ -279,7 +278,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Remove last card while selected state is on the card
         app.buttons["Edit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 3.0))
-        app.buttons["chevron"].waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Cartes Bancaires •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
