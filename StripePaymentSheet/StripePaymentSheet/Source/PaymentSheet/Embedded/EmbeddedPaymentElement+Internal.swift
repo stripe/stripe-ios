@@ -226,7 +226,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         presentingViewController?.dismiss(animated: true)
     }
 
-    func didDismiss(_: UpdatePaymentMethodViewController) {
+    func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
         presentingViewController?.dismiss(animated: true)
     }
 

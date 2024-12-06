@@ -30,6 +30,8 @@
 
 "Bank account" = "Rekening bank";
 
+"Bank account details cannot be changed." = "Detail rekening bank tidak dapat diubah.";
+
 "Buy now or pay later with <img/>" = "Beli sekarang atau bayar nanti dengan <img/>";
 
 "Buy now or pay later with Afterpay" = "Beli sekarang atau bayar nanti dengan Afterpay";
@@ -114,6 +116,10 @@
 
 "Log out of Link" = "Keluar dari Link";
 
+"Manage SEPA debit" = "Kelola debit SEPA";
+
+"Manage US bank account" = "Kelola rekening bank AS";
+
 "Manage card" = "Kelola kartu";
 
 "Manage payment method" = "Kelola metode pembayaran";
@@ -177,6 +183,8 @@
 "Remove payment method" = "Hapus metode pembayaran";
 
 "Resend code" = "Kirim ulang kode";
+
+"SEPA debit details cannot be changed." = "Detail debit SEPA tidak dapat diubah.";
 
 "Save" = "Simpan";
 
@@ -245,6 +253,8 @@
 "Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
 
 "Update card" = "Perbarui kartu";
+
+"Update payment method" = "Perbarui metode pembayaran";
 
 "Use your saved info to check out faster" = "Gunakan info yang tersimpan untuk memproses pembayaran dengan lebih cepat";
 

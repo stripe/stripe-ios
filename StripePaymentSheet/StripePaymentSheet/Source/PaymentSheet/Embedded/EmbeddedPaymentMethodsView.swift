@@ -224,6 +224,10 @@ class EmbeddedPaymentMethodsView: UIView {
     func resetSelectionToLastSelection() {
         self.selection = previousSelection
     }
+    
+    func resetSelection() {
+        selection = nil
+    }
 
     // MARK: Tap handling
     func didTap(selection: Selection) {

@@ -57,6 +57,19 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.addTarget(self, action: #selector(pay), for: .touchUpInside)
         return checkoutButton
     }()
+    
+    private lazy var clearPaymentOptionButton: UIButton = {
+        let resetButton = UIButton(type: .system)
+        resetButton.backgroundColor = .systemGray5
+        resetButton.layer.cornerRadius = 5.0
+        resetButton.clipsToBounds = true
+        resetButton.setTitle("Clear payment option", for: .normal)
+        resetButton.setTitleColor(.label, for: .normal)
+        resetButton.accessibilityIdentifier = "Clear payment option"
+        resetButton.translatesAutoresizingMaskIntoConstraints = false
+        resetButton.addTarget(self, action: #selector(clearSelection), for: .touchUpInside)
+        return resetButton
+    }()
 
     private let settingsViewContainer = UIStackView()
 
@@ -125,7 +138,13 @@ class EmbeddedPlaygroundViewController: UIViewController {
         view.addSubview(scrollView)
 
         // All our content is in a stack view
-        let stackView = UIStackView(arrangedSubviews: [settingsViewContainer, embeddedPaymentElement.view, paymentOptionView, checkoutButton])
+        let stackView = UIStackView(arrangedSubviews: [
+            settingsViewContainer,
+            embeddedPaymentElement.view,
+            paymentOptionView,
+            checkoutButton,
+            clearPaymentOptionButton
+        ])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -145,6 +164,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
             checkoutButton.heightAnchor.constraint(equalToConstant: 45),
+            clearPaymentOptionButton.heightAnchor.constraint(equalToConstant: 45)
         ])
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
@@ -206,6 +226,10 @@ class EmbeddedPlaygroundViewController: UIViewController {
                 break
             }
         }
+    }
+
+    @objc func clearSelection() {
+        embeddedPaymentElement?.clearPaymentOption()
     }
 
 }

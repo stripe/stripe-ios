@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.1.2 2024-12-05
 ### PaymentSheet
 * [Fixed] Fixed an issue where FlowController returned incorrect `PaymentOptionDisplayData` for Link card brand transactions.
 

@@ -835,8 +835,8 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didDismiss(_: UpdatePaymentMethodViewController) {
-        // No-op
+    func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
+        didCancel()
     }
 }
 
