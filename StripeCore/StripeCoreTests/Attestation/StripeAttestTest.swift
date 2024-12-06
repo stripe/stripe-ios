@@ -15,7 +15,7 @@ class StripeAttestTest: XCTestCase {
     override func setUp() {
         self.mockAttestBackend = MockAttestBackend()
         self.mockAttestService = MockAppAttestService()
-        self.stripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend)
+        self.stripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: .shared)
 
         // Reset storage
         UserDefaults.standard.removeObject(forKey: "STPAttestKeyLastGenerated")

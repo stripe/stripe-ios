@@ -102,7 +102,6 @@ class MockAppAttestService: AppAttestService {
             throw NSError(domain: "com.stripe.internal-error", code: 403, userInfo: ["error": "No challenge available"])
         }
 
-        let request = assertion.requestFields
         let requestFieldsToHash = [ "challenge": challenge ]
         let clientDataToHash = try JSONSerialization.data(withJSONObject: requestFieldsToHash)
         print(String(data: clientDataToHash, encoding: .utf8)!)

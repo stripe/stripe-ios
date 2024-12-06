@@ -12,7 +12,7 @@ import UIKit
     /// Initialize a new StripeAttest object with the specified STPAPIClient.
     @_spi(STP) public convenience init(apiClient: STPAPIClient = .shared) {
         self.init(appAttestService: AppleAppAttestService.shared,
-                  appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient))
+                  appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient), apiClient: apiClient)
     }
 
     /// Sign an assertion.
@@ -21,11 +21,11 @@ import UIKit
         do {
             let assertion = try await _assert()
             let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
-            STPAnalyticsClient.sharedClient.log(analytic: successAnalytic)
+            STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
             return assertion
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .assertionFailed, error: error)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
             throw error
         }
     }
@@ -106,15 +106,18 @@ import UIKit
         }
     }
 
-    init(appAttestService: AppAttestService = AppleAppAttestService.shared, appAttestBackend: StripeAttestBackend = StripeAPIAttestationBackend(apiClient: STPAPIClient.shared)) {
+    init(appAttestService: AppAttestService, appAttestBackend: StripeAttestBackend?, apiClient: STPAPIClient) {
         self.appAttestService = appAttestService
-        self.appAttestBackend = appAttestBackend
+        self.appAttestBackend = appAttestBackend ?? StripeAPIAttestationBackend(apiClient: apiClient)
+        self.apiClient = STPAPIClient.shared
     }
 
     /// A wrapper for the DCAppAttestService service.
     var appAttestService: AppAttestService
     /// A network backend for the /challenge and /attest endpoints.
     var appAttestBackend: StripeAttestBackend
+    /// The API client to use for network requests
+    var apiClient: STPAPIClient
 
     /// The minimum time between key generation attempts.
     /// This is a safeguard against generating keys too often, as each key generation
@@ -130,10 +133,10 @@ import UIKit
         do {
             try await _attest()
             let successAnalytic = GenericAnalytic(event: .attestationSucceeded, params: [:])
-            STPAnalyticsClient.sharedClient.log(analytic: successAnalytic)
+            STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .attestationFailed, error: error)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
             throw error
         }
     }
@@ -165,7 +168,6 @@ import UIKit
 
         do {
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
-            print(attestation)
             guard let deviceId = await UIDevice.current.identifierForVendor?.uuidString,
             let appId = Bundle.main.bundleIdentifier else {
                 // Error, could not get appID/deviceID
