@@ -191,7 +191,7 @@ public final class EmbeddedPaymentElement {
     }
     
     /// Sets the currently selected payment option to `nil`.
-    public func clearCurrentSelection() {
+    public func clearPaymentOption() {
         // Early exit for a nil payment option, don't notify delegate since no change in payment option can occur
         guard paymentOption != nil else { return }
         

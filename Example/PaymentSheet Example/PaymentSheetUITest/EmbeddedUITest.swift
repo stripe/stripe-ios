@@ -949,7 +949,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
     
-    func testClearCurrentSelection() {
+    func testClearPaymentOption() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.mode = .payment

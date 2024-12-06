@@ -275,7 +275,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
     }
     
-    func testClearCurrentSelectionAfterSelection() async throws {
+    func testClearPaymentOptionAfterSelection() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.delegate = self
@@ -296,7 +296,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         delegateDidUpdateHeightCalled = false
 
         // Reset the selection
-        sut.clearCurrentSelection()
+        sut.clearPaymentOption()
 
         // The paymentOption should now be nil after reset
         XCTAssertNil(sut.paymentOption)
@@ -305,7 +305,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
     }
 
-    func testClearCurrentSelectionWhenNoSelection() async throws {
+    func testClearPaymentOptionWhenNoSelection() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.delegate = self
@@ -320,7 +320,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         delegateDidUpdateHeightCalled = false
 
         // Call reset when no selection is made
-        sut.clearCurrentSelection()
+        sut.clearPaymentOption()
 
         // Confirm that paymentOption is still nil and no delegate calls were made
         XCTAssertNil(sut.paymentOption)

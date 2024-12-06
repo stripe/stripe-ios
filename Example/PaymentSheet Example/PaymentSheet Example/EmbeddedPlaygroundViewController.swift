@@ -229,7 +229,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }
 
     @objc func clearSelection() {
-        embeddedPaymentElement?.clearCurrentSelection()
+        embeddedPaymentElement?.clearPaymentOption()
     }
 
 }
