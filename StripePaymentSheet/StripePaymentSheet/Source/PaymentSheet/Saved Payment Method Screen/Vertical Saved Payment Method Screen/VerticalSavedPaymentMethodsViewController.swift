@@ -83,6 +83,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return (paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod) && paymentMethodRemove
     }
 
+    var canEditPaymentMethods: Bool {
+        return hasCoBrandedCards && isCBCEligible
+    }
+
     /// Indicates whether the chevron should be shown
     /// True if any saved payment methods can be removed or edited (will update this to include allowing set as default)
     var canRemoveOrEdit: Bool {
@@ -90,7 +94,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         guard hasSupportedSavedPaymentMethods else {
             fatalError("Saved payment methods contain unsupported payment methods.")
         }
-        return canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)
+        return canRemovePaymentMethods || canEditPaymentMethods
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {

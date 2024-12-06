@@ -108,7 +108,9 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
 
     func testCanEdit_singlePaymentMethod_returnsFalse() {
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
-        let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+        var noRemovalConfiguration = PaymentSheet.Configuration()
+        noRemovalConfiguration.allowsRemovalOfLastSavedPaymentMethod = false
+        let viewController = VerticalSavedPaymentMethodsViewController(configuration: noRemovalConfiguration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -123,7 +125,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
-        XCTAssertFalse(viewController.canRemoveOrEdit) // Can't edit, merchant is not eligible for CBC
+        XCTAssertFalse(viewController.canEditPaymentMethods) // Can't edit, merchant is not eligible for CBC
     }
 
     func testCanEdit_singlePaymentMethod_disallowsLastRemoval_returnsFalse() {
