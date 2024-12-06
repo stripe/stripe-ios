@@ -32,6 +32,7 @@ class RowButton: UIView {
     let imageView: UIImageView
     let label: UILabel
     let sublabel: UILabel?
+    let defaultBadge: UILabel?
     let rightAccessoryView: UIView?
     let promoBadge: PromoBadgeView?
     private var promoBadgeConstraintToCheckmark: NSLayoutConstraint?
@@ -69,6 +70,7 @@ class RowButton: UIView {
         imageView: UIImageView,
         text: String,
         subtext: String? = nil,
+        showDefaultPMBadge: Bool = false,
         promoText: String? = nil,
         rightAccessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
@@ -95,6 +97,19 @@ class RowButton: UIView {
         } else {
             self.sublabel = nil
         }
+
+        if showDefaultPMBadge {
+            let defaultBadge = UILabel()
+            defaultBadge.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            defaultBadge.textColor = appearance.colors.textSecondary
+            defaultBadge.adjustsFontForContentSizeCategory = true
+            defaultBadge.text = STPLocalizedString("Default", "Label for identifying the default payment method.")
+            self.defaultBadge = defaultBadge
+        }
+        else {
+            self.defaultBadge = nil
+        }
+
         if let promoText {
             self.promoBadge = PromoBadgeView(
                 appearance: appearance,
@@ -114,6 +129,11 @@ class RowButton: UIView {
         ].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
+
+        let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView, defaultBadge].compactMap { $0 })
+        horizontalStackView.axis = .horizontal
+        horizontalStackView.alignment = .leading
+        horizontalStackView.setCustomSpacing(8, after: labelsStackView)
 
         addAndPinSubview(shadowRoundedRect)
 
@@ -175,11 +195,29 @@ class RowButton: UIView {
             }
         }
 
-        for view in [radioButton, imageView, labelsStackView].compactMap({ $0 }) {
+        for view in [radioButton, imageView, horizontalStackView].compactMap({ $0 }) {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.isUserInteractionEnabled = false
             view.isAccessibilityElement = false
             addSubview(view)
+        }
+
+        if let defaultBadge = defaultBadge {
+            for view in [labelsStackView, defaultBadge].compactMap({ $0 }) {
+                view.translatesAutoresizingMaskIntoConstraints = false
+                view.isUserInteractionEnabled = false
+                view.isAccessibilityElement = false
+                addSubview(view)
+            }
+            let stackViewConstraints = [
+                labelsStackView.leadingAnchor.constraint(equalTo: horizontalStackView.leadingAnchor),
+                labelsStackView.topAnchor.constraint(equalTo: horizontalStackView.topAnchor),
+                labelsStackView.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
+                defaultBadge.centerYAnchor.constraint(equalTo: centerYAnchor),
+                defaultBadge.leadingAnchor.constraint(equalTo: labelsStackView.trailingAnchor, constant: 8),
+                defaultBadge.trailingAnchor.constraint(lessThanOrEqualTo: horizontalStackView.trailingAnchor)
+            ]
+            NSLayoutConstraint.activate(stackViewConstraints)
         }
 
         // Resolve ambiguous height warning by setting these constraints w/ low priority
@@ -225,11 +263,11 @@ class RowButton: UIView {
             radioButton?.heightAnchor.constraint(equalToConstant: 18),
             radioButton?.widthAnchor.constraint(equalToConstant: 18),
 
-            labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            labelsStackView.trailingAnchor.constraint(equalTo: promoBadge?.leadingAnchor ?? labelTrailingConstant, constant: -12),
-            labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
-            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
+            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
+            horizontalStackView.trailingAnchor.constraint(equalTo: promoBadge?.leadingAnchor ?? labelTrailingConstant, constant: -12),
+            horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
+            horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
 
             imageViewBottomConstraint,
             imageViewTopConstraint,
@@ -435,10 +473,10 @@ extension RowButton {
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, rightAccessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, showDefaultPMBadge: Bool = false, rightAccessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
+        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, showDefaultPMBadge: showDefaultPMBadge, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }

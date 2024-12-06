@@ -15,7 +15,7 @@ import UIKit
 
 // MARK: - Constants
 /// Entire cell size
-private let cellSize: CGSize = CGSize(width: 106, height: 94)
+private let cellSize: CGSize = CGSize(width: 106, height: 106)
 /// Size of the rounded rectangle that contains the PM logo
 let roundedRectangleSize = CGSize(width: 100, height: 64)
 private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
@@ -49,7 +49,7 @@ class SavedPaymentMethodCollectionView: UICollectionView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: 100)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 112)
     }
 }
 
@@ -91,8 +91,21 @@ extension SavedPaymentMethodCollectionView {
             button.accessibilityLabel = String.Localized.edit
             return button
         }()
+        lazy var defaultBadge: UILabel = {
+            let label = UILabel()
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.textColor = appearance.colors.textSecondary
+            label.adjustsFontForContentSizeCategory = true
+            label.text = STPLocalizedString("Default", "Label for identifying the default payment method.")
+            return label
+        }()
 
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
+        var isDefaultPM: Bool = false {
+            didSet {
+                update()
+            }
+        }
 
         var isRemovingPaymentMethods: Bool = false {
             didSet {
@@ -110,6 +123,7 @@ extension SavedPaymentMethodCollectionView {
 
         var cbcEligible: Bool = false
         var allowsPaymentMethodRemoval: Bool = true
+        var allowsSetAsDefaultPM: Bool = false
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited (will update this to include allowing set as default)
@@ -142,7 +156,7 @@ extension SavedPaymentMethodCollectionView {
             paymentMethodLogo.contentMode = .scaleAspectFit
             accessoryButton.addTarget(self, action: #selector(didSelectAccessory), for: .touchUpInside)
             let views = [
-                label, shadowRoundedRectangle, paymentMethodLogo, plus, selectedIcon, accessoryButton,
+                label, shadowRoundedRectangle, paymentMethodLogo, plus, selectedIcon, accessoryButton, defaultBadge,
             ]
             views.forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -159,9 +173,14 @@ extension SavedPaymentMethodCollectionView {
 
                 label.topAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: 4),
-                label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
                 label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+
+                defaultBadge.topAnchor.constraint(
+                    equalTo: label.bottomAnchor, constant: 4),
+                defaultBadge.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+                defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
+                defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 
                 paymentMethodLogo.centerXAnchor.constraint(
                     equalTo: shadowRoundedRectangle.centerXAnchor),
@@ -188,6 +207,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: contentView.trailingAnchor, constant: 0),
                 accessoryButton.topAnchor.constraint(
                     equalTo: contentView.topAnchor, constant: 0),
+                
             ])
         }
 
@@ -209,14 +229,14 @@ extension SavedPaymentMethodCollectionView {
         }
 
         // MARK: - Internal Methods
-
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allows
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
             self.cbcEligible = cbcEligible
             self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
+            self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             update()
         }
 
@@ -323,10 +343,15 @@ extension SavedPaymentMethodCollectionView {
                     selectedIcon.isHidden = true
                     layer.shadowOpacity = 0
                 }
+                
+                defaultBadge.isHidden = true
 
                 if isRemovingPaymentMethods {
                     if case .saved = viewModel, showEditIcon {
                         accessoryButton.isHidden = false
+                        if allowsSetAsDefaultPM && isDefaultPM {
+                            defaultBadge.isHidden = false
+                        }
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
 

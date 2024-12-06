@@ -107,8 +107,14 @@ extension CustomerSessionAdapter {
         return stripePaymentMethodId
     }
 
-    func fetchSelectedPaymentOption(for customerId: String) -> CustomerPaymentOption? {
-        return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
+    func fetchSelectedPaymentOption(for customerId: String, customer: ElementsCustomer? = nil) -> CustomerPaymentOption? {
+        guard configuration.allowsSetAsDefaultPM,
+              let customer = customer,
+              let defaultPaymentMethod = customer.defaultPaymentMethod else {
+            return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
+        }
+
+        return CustomerPaymentOption.stripeId(defaultPaymentMethod)
     }
 
     func detachPaymentMethod(paymentMethodId: String) async throws {

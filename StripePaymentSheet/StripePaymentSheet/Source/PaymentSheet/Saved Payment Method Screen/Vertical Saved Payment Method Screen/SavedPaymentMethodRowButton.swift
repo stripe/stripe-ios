@@ -47,6 +47,8 @@ final class SavedPaymentMethodRowButton: UIView {
         }
     }
 
+    var showDefaultPMBadge: Bool = false
+
     private var isEditing: Bool {
         switch state {
         case .selected, .unselected:
@@ -90,15 +92,17 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, showDefaultPMBadge: showDefaultPMBadge, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
 
         return button
     }()
 
     init(paymentMethod: STPPaymentMethod,
-         appearance: PaymentSheet.Appearance) {
+         appearance: PaymentSheet.Appearance,
+         showDefaultPMBadge: Bool = false) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
+        self.showDefaultPMBadge = showDefaultPMBadge
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)
