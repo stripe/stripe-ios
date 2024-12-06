@@ -232,7 +232,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Done"].waitForExistenceAndTap()
         // Tap out of FlowController
         app.tapCoordinate(at: .init(x: 200, y: 100))
-
+        // Sleep to allow animation to finish
+        sleep(1)
         // The next card should be selected now
         XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card")
 
