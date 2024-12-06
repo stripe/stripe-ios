@@ -124,7 +124,7 @@ import UIKit
     /// permanently increases a counter for the device/app pair.
     /// We expect each device/app pair to generate one key *ever*.
     /// If this rate limit is being hit, something is wrong.
-    private static let minDurationBetweenKeyGenerationAttempts: TimeInterval = 60 * 60 * 24 // 24 hours
+    private static let minDurationBetweenKeyGenerationAttempts: TimeInterval = 1 // 1 second, for testing
 
     /// Attest the current device key. Only perform this once per device key.
     /// You should not call this directly, it'll be called automatically during assert.
