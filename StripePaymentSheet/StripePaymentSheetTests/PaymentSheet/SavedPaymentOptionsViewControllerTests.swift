@@ -303,8 +303,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isCVCRecollectionEnabled: true,
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                               allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods,
-                                                               alternateUpdatePaymentMethodNavigation: false)
+                                                               allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods)
     }
 
     func savedPaymentOptionsController(_ configuration: SavedPaymentOptionsViewController.Configuration,
