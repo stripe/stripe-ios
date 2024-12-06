@@ -160,7 +160,7 @@ import UIKit
 
     func _attest() async throws {
         // It's dangerous to attest, as it increments a permanent counter for the device.
-        // First, make sure we the last time we called this is more than 24 hours away from now.
+        // First, make sure the last time we called this is more than 24 hours away from now.
         // (Either in the future or the past, who knows what people are doing with their clocks)
         if let lastGenerated = StripeAttest.lastAttestedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
             throw AttestationError.attestationRateLimitExceeded
