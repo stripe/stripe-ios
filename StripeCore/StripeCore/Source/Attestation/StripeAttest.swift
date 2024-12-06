@@ -2,8 +2,6 @@
 //  StripeAttest.swift
 //  StripeCore
 //
-//  Created by David Estes on 7/29/24.
-//
 
 import CryptoKit
 import DeviceCheck
@@ -24,7 +22,8 @@ import UIKit
 
     // MARK: - Public functions
 
-    /// Sign an assertion using the current device key.
+    /// Sign an assertion.
+    /// Will create and attest a new device key if needed.
     @_spi(STP) public func assert() async throws -> Assertion {
         do {
             let assertion = try await _assert()
