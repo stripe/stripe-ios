@@ -44,7 +44,7 @@ class StripeAttestTest: XCTestCase {
             XCTFail("Should not succeed")
         } catch {
             // Should get a rate limiting error when we try to generate the second key:
-            XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.keygenRateLimitExceeded)
+            XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.attestationRateLimitExceeded)
         }
     }
 
