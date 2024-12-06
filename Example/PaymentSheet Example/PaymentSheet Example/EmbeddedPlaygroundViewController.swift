@@ -148,7 +148,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = .init(top: 0, left: 16, bottom: 0, right: 16)
+        stackView.layoutMargins = .init(top: 0, left: 16, bottom: 16, right: 16)
         stackView.spacing = 16
         scrollView.addSubview(stackView)
 
