@@ -349,7 +349,12 @@ extension PaymentSheet {
             intent: Intent,
             elementsSession: STPElementsSession
         ) -> PaymentMethodAvailabilityStatus {
-            var primaryRequirementMet: Bool = false
+            // Primary requirement:
+            // - Link is an available payment method.
+            guard elementsSession.orderedPaymentMethodTypes.contains(.link) else {
+                return .notSupported
+            }
+
             var missingRequirements: Set<PaymentMethodTypeRequirement> = []
 
             // Instant Debits is supported when:
@@ -362,14 +367,6 @@ extension PaymentSheet {
 
             if case .missingRequirements(let requirements) = configurationAvailabilityStatus {
                 missingRequirements.formUnion(requirements)
-            }
-
-            // Primary requirement:
-            // - Link is an available payment method.
-            if elementsSession.orderedPaymentMethodTypes.contains(.link) {
-                primaryRequirementMet = true
-            } else {
-                missingRequirements.insert(.unsupported)
             }
 
             // - US Bank Account is *not* an available payment method.
@@ -388,13 +385,7 @@ extension PaymentSheet {
             }
 
             let hasMissingRequirements = !missingRequirements.isEmpty
-            if primaryRequirementMet, hasMissingRequirements {
-                return .missingRequirements(missingRequirements)
-            } else if hasMissingRequirements {
-                return .notSupported
-            }
-
-            return .supported
+            return hasMissingRequirements ? .missingRequirements(missingRequirements) : .supported
         }
 
         /// We support Link Card Brand as a payment method when:
@@ -408,7 +399,12 @@ extension PaymentSheet {
             intent: Intent,
             elementsSession: STPElementsSession
         ) -> PaymentMethodAvailabilityStatus {
-            var primaryRequirementMet: Bool = false
+            // Primary:
+            // - Link Mode is set to Link Card Brand.
+            guard elementsSession.isLinkCardBrand else {
+                return .notSupported
+            }
+
             var missingRequirements: Set<PaymentMethodTypeRequirement> = []
 
             // Instant Debits is supported when:
@@ -421,14 +417,6 @@ extension PaymentSheet {
 
             if case .missingRequirements(let requirements) = configurationAvailabilityStatus {
                 missingRequirements.formUnion(requirements)
-            }
-
-            // Primary:
-            // - Link Mode is set to Link Card Brand.
-            if elementsSession.isLinkCardBrand {
-                primaryRequirementMet = true
-            } else {
-                missingRequirements.insert(.unsupported)
             }
 
             // - Link Funding Sources contains Bank Account.
@@ -447,13 +435,7 @@ extension PaymentSheet {
             }
 
             let hasMissingRequirements = !missingRequirements.isEmpty
-            if primaryRequirementMet, hasMissingRequirements {
-                return .missingRequirements(missingRequirements)
-            } else if hasMissingRequirements {
-                return .notSupported
-            }
-
-            return .supported
+            return hasMissingRequirements ? .missingRequirements(missingRequirements) : .supported
         }
 
         /// Returns whether or not we can show a "☑️ Save for future use" checkbox to the customer
