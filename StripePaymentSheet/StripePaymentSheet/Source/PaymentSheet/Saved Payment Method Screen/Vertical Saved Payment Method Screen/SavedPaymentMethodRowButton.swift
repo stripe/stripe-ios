@@ -81,6 +81,7 @@ final class SavedPaymentMethodRowButton: UIView {
     private let appearance: PaymentSheet.Appearance
 
     // MARK: Private views
+
     private lazy var chevronButton: RowButton.RightAccessoryButton = {
         let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: appearance, didTap: handleUpdateButtonTapped)
         chevronButton.isHidden = true
