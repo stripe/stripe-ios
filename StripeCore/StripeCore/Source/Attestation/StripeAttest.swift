@@ -166,13 +166,11 @@ import UIKit
         }
         let hash = Data(SHA256.hash(data: challengeData))
 
+        let deviceId = try getDeviceID()
+        let appId = try getAppID()
+
         do {
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
-            guard let deviceId = await UIDevice.current.identifierForVendor?.uuidString,
-            let appId = Bundle.main.bundleIdentifier else {
-                // Error, could not get appID/deviceID
-                return
-            }
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
         } catch {
             // If error is DCErrorInvalidKey (3) and the domain is DCErrorDomain,
