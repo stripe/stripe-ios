@@ -89,8 +89,7 @@ extension EmbeddedPaymentElement {
             savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
             incentive: loadResult.elementsSession.incentive,
-            delegate: delegate,
-            isDefaultPM: loadResult.savedPaymentMethods.first?.stripeId == loadResult.elementsSession.customer?.defaultPaymentMethod
+            delegate: delegate
         )
     }
 }
