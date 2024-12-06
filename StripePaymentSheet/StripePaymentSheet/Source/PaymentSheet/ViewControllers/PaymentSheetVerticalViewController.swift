@@ -365,8 +365,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             currency: loadResult.intent.currency,
             amount: loadResult.intent.amount,
             incentive: loadResult.elementsSession.incentive,
-            delegate: self,
-            isDefaultPM: savedPaymentMethods.first?.stripeId == elementsSession.customer?.defaultPaymentMethod
+            delegate: self
         )
     }
 
