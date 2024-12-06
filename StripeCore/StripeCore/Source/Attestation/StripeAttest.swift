@@ -9,18 +9,11 @@ import Foundation
 import UIKit
 
 @_spi(STP) public class StripeAttest {
-    /// A wrapper for the DCAppAttestService service.
-    @_spi(STP) public var appAttestService: AppAttestService
-    /// A network backend for the /challenge and /attest endpoints.
-    @_spi(STP) public var appAttestBackend: StripeAttestBackend
-
-    /// Initialize a new StripeAttest object.
-    @_spi(STP) public init(appAttestService: AppAttestService = AppleAppAttestService.shared, appAttestBackend: StripeAttestBackend = StripeAPIAttestationBackend(apiClient: STPAPIClient.shared)) {
-        self.appAttestService = appAttestService
-        self.appAttestBackend = appAttestBackend
+    /// Initialize a new StripeAttest object with the specified STPAPIClient.
+    @_spi(STP) public convenience init(apiClient: STPAPIClient = .shared) {
+        self.init(appAttestService: AppleAppAttestService.shared,
+                  appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient))
     }
-
-    // MARK: - Public functions
 
     /// Sign an assertion.
     /// Will create and attest a new device key if needed.
@@ -74,6 +67,8 @@ import UIKit
         case invalidChallengeData
     }
 
+    // MARK: - Internal
+
     // MARK: - Device-local settings
     private enum DefaultsKeys: String {
         /// The ID of the attestation key stored in the keychain.
@@ -111,7 +106,15 @@ import UIKit
         }
     }
 
-    // MARK: - Internal
+    init(appAttestService: AppAttestService = AppleAppAttestService.shared, appAttestBackend: StripeAttestBackend = StripeAPIAttestationBackend(apiClient: STPAPIClient.shared)) {
+        self.appAttestService = appAttestService
+        self.appAttestBackend = appAttestBackend
+    }
+
+    /// A wrapper for the DCAppAttestService service.
+    var appAttestService: AppAttestService
+    /// A network backend for the /challenge and /attest endpoints.
+    var appAttestBackend: StripeAttestBackend
 
     /// The minimum time between key generation attempts.
     /// This is a safeguard against generating keys too often, as each key generation
