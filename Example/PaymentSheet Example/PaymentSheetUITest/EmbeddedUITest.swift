@@ -968,7 +968,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(initiallySelectedPM.contains("••••"), "Expected a saved card to be selected, but got: \(initiallySelectedPM)")
 
         // Clear the selection
-        let clearButton = app.buttons["Clear selection"]
+        let clearButton = app.buttons["Clear payment option"]
         XCTAssertTrue(clearButton.waitForExistence(timeout: 10))
         clearButton.tap()
 

@@ -58,14 +58,14 @@ class EmbeddedPlaygroundViewController: UIViewController {
         return checkoutButton
     }()
     
-    private lazy var clearSelectionButton: UIButton = {
+    private lazy var clearPaymentOptionButton: UIButton = {
         let resetButton = UIButton(type: .system)
         resetButton.backgroundColor = .systemGray5
         resetButton.layer.cornerRadius = 5.0
         resetButton.clipsToBounds = true
-        resetButton.setTitle("Clear selection", for: .normal)
+        resetButton.setTitle("Clear payment option", for: .normal)
         resetButton.setTitleColor(.label, for: .normal)
-        resetButton.accessibilityIdentifier = "Clear selection"
+        resetButton.accessibilityIdentifier = "Clear payment option"
         resetButton.translatesAutoresizingMaskIntoConstraints = false
         resetButton.addTarget(self, action: #selector(clearSelection), for: .touchUpInside)
         return resetButton
@@ -143,7 +143,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             embeddedPaymentElement.view,
             paymentOptionView,
             checkoutButton,
-            clearSelectionButton
+            clearPaymentOptionButton
         ])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -164,7 +164,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
             checkoutButton.heightAnchor.constraint(equalToConstant: 45),
-            clearSelectionButton.heightAnchor.constraint(equalToConstant: 45)
+            clearPaymentOptionButton.heightAnchor.constraint(equalToConstant: 45)
         ])
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
