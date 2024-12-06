@@ -326,7 +326,17 @@ extension CustomerSheet {
         switch customerSheetDataSource.dataSource {
         case .customerSession(let customerSessionAdapter):
             let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
-            let selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+
+            var selectedPaymentOption: CustomerPaymentOption?
+
+            // get default payment method from elements session
+            if configuration.allowsSetAsDefaultPM,
+               let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: elementsSession.customer) {
+                selectedPaymentOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+            }
+            else {
+                selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+            }
 
             switch selectedPaymentOption {
             case .applePay:
