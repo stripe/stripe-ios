@@ -930,4 +930,9 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
         }
         return try await customerSheetDataSource.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
     }
+
+    func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController) {
+        self.processingInFlight = false
+        self.handleDismissSheet(shouldDismissImmediately: true)
+    }
 }

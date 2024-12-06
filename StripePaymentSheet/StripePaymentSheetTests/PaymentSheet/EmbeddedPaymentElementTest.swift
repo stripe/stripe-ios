@@ -274,6 +274,59 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTFail("Expected confirm to fail, but it was canceled")
         }
     }
+    
+    func testClearPaymentOptionAfterSelection() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Select the "Card" payment method
+        sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        // The delegate should have been notified
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+        XCTAssertNotNil(sut.paymentOption)
+
+        // Reset flags
+        delegateDidUpdatePaymentOptionCalled = false
+        delegateDidUpdateHeightCalled = false
+
+        // Reset the selection
+        sut.clearPaymentOption()
+
+        // The paymentOption should now be nil after reset
+        XCTAssertNil(sut.paymentOption)
+
+        // The delegate should have been notified again after reset
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+    }
+
+    func testClearPaymentOptionWhenNoSelection() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Reset flags
+        delegateDidUpdatePaymentOptionCalled = false
+        delegateDidUpdateHeightCalled = false
+
+        // Call reset when no selection is made
+        sut.clearPaymentOption()
+
+        // Confirm that paymentOption is still nil and no delegate calls were made
+        XCTAssertNil(sut.paymentOption)
+        XCTAssertFalse(delegateDidUpdatePaymentOptionCalled)
+        XCTAssertFalse(delegateDidUpdateHeightCalled)
+    }
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
