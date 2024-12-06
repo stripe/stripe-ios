@@ -330,8 +330,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        let circularEditButton = app.buttons["CircularButton.Edit"]
-        circularEditButton.waitForExistenceAndTap()
+        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
 
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
@@ -1172,8 +1171,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
-        let circularEditButton = app.buttons["CircularButton.Edit"]
-        circularEditButton.waitForExistenceAndTap()
+        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
 
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))

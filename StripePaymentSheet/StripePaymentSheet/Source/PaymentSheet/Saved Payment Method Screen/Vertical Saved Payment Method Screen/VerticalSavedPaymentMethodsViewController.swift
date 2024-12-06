@@ -70,10 +70,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private var headerText: String {
-        if isRemoveOnlyMode {
-            return .Localized.remove_payment_method
-        }
-
         if isEditingPaymentMethods {
             return paymentMethods.count == 1 ?  .Localized.manage_payment_method : .Localized.manage_payment_methods
         }
@@ -87,10 +83,14 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return (paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod) && paymentMethodRemove
     }
 
-    var canEdit: Bool {
-        // We can edit if there are removable or editable payment methods and we are not in remove only mode
-        // Or, under the new navigation flow, if any of the payment methods are cards, US bank accounts, or SEPA debit
-        return !isRemoveOnlyMode && paymentMethods.contains { UpdatePaymentMethodViewModel.supportedPaymentMethods.contains($0.type) }
+    /// Indicates whether the chevron should be shown
+    /// True if any saved payment methods can be removed or edited (will update this to include allowing set as default)
+    var canRemoveOrEdit: Bool {
+        let hasSupportedSavedPaymentMethods = paymentMethods.allSatisfy{ UpdatePaymentMethodViewModel.supportedPaymentMethods.contains($0.type) }
+        guard hasSupportedSavedPaymentMethods else {
+            fatalError("Saved payment methods contain unsupported payment methods.")
+        }
+        return canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
@@ -108,12 +108,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
-
-    /// Determines if the we should operate in "Remove Only Mode". This mode is enabled under the following conditions:
-    /// - There is exactly one payment method available at init time.
-    /// - The single available payment method is not a co-branded card.
-    /// In this mode, the user can only delete the payment method; updating or selecting other payment methods is disabled.
-    let isRemoveOnlyMode: Bool
 
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
@@ -171,10 +165,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
-        // Put in remove only mode and don't show the option to update PMs if:
-        // 1. We only have 1 payment method
-        // 2. The customer can't update the card brand
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
@@ -191,9 +181,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private func setInitialState(selectedPaymentMethod: STPPaymentMethod?) {
         paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId }?.state = .selected
-        if isRemoveOnlyMode {
-            paymentMethodRows.first?.state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: false)
-        }
     }
 
     required init?(coder: NSCoder) {
@@ -216,9 +203,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private func navigationBarStyle() -> SheetNavigationBar.Style {
         if let bottomSheet = self.bottomSheetController,
            bottomSheet.contentStack.count > 1 {
-            return .back(showAdditionalButton: canEdit)
+            return .back(showAdditionalButton: canRemoveOrEdit)
         } else {
-            return .close(showAdditionalButton: canEdit)
+            return .close(showAdditionalButton: canRemoveOrEdit)
         }
     }
 
@@ -244,7 +231,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         }
 
         // Update the editing state if needed
-        isEditingPaymentMethods = canEdit
+        isEditingPaymentMethods = canRemoveOrEdit
 
         // If we deleted the last payment method kick back out to the main screen
         if paymentMethodRows.isEmpty {
@@ -325,16 +312,6 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         self.navigationBar.isUserInteractionEnabled = false
 
         self.complete()
-    }
-
-    func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
-                                                                          removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage) { [weak self] in
-            guard let self else { return }
-            self.remove(paymentMethod: paymentMethod)
-        }
-
-        present(alertController, animated: true, completion: nil)
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {

@@ -114,13 +114,13 @@ extension SavedPaymentMethodCollectionView {
         var cbcEligible: Bool = false
         var allowsPaymentMethodRemoval: Bool = true
 
-        /// Indicates whether the cell should display the edit icon.
-        /// True if supported saved pm (card, US bank account, or SEPA debit)
-        var shouldAllowEditing: Bool {
+        /// Indicates whether the cell for a saved payment method should display the edit icon.
+        /// True if payment methods can be removed or edited (will update this to include allowing set as default)
+        var showEditIcon: Bool {
             guard UpdatePaymentMethodViewModel.supportedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
                 fatalError("Payment method does not match supported saved payment methods.")
             }
-            return true
+            return allowsPaymentMethodRemoval || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
         }
 
         // MARK: - UICollectionViewCell
@@ -241,7 +241,7 @@ extension SavedPaymentMethodCollectionView {
         // MARK: - Private Methods
         @objc
         private func didSelectAccessory() {
-            if shouldAllowEditing {
+            if showEditIcon {
                 delegate?.paymentOptionCellDidSelectEdit(self)
             }
         }
@@ -328,7 +328,7 @@ extension SavedPaymentMethodCollectionView {
                 }
 
                 if isRemovingPaymentMethods {
-                    if case .saved = viewModel, shouldAllowEditing {
+                    if case .saved = viewModel, showEditIcon {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()

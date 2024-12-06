@@ -34,7 +34,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         case collectionViewDidSelectItemAtAdd
         case unableToDequeueReusableCell
         case paymentOptionCellDidSelectEditOnNonSavedItem
-        case paymentOptionCellDidSelectRemoveOnNonSavedItem
         case removePaymentMethodOnNonSavedItem
     }
     // MARK: - Types
@@ -572,7 +571,11 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId })
         else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.removePaymentMethodOnNonSavedItem)
+                                              error: Error.removePaymentMethodOnNonSavedItem,
+                                              additionalNonPIIParams: [
+                                                "viewModels": viewModels.map { $0.analyticsValue },
+                                                ]
+                                              )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
             return

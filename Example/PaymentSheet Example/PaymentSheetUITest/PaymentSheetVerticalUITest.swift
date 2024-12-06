@@ -225,7 +225,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["View more"].waitForExistenceAndTap()
         XCTAssertTrue(firstPaymentMethod.isSelected)
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         app.alerts.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertFalse(firstPaymentMethod.exists)
@@ -244,18 +244,18 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
 
         // Remove the 4242 card
-        app.otherElements["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        app.otherElements["•••• 4242"].buttons["chevron"].waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Exit edit mode, remove button should be hidden
         XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
-        XCTAssertFalse(app.buttons["CircularButton.Edit"].waitForExistence(timeout: 2.0))
+        XCTAssertFalse(app.buttons["chevron"].waitForExistence(timeout: 2.0))
 
         // Update the card brand on the last card
         XCTAssertTrue(app.buttons["Cartes Bancaires ending in 1 0 0 1"].waitForExistence(timeout: 1.0)) // Cartes Bancaires card should be selected now that 4242 card is removed
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
 
         // Should present the update card view controller
         XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 2.0))
@@ -278,7 +278,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         // Reselect edit icon and delete the card from the update view controller
         app.buttons["Edit"].firstMatch.waitForExistenceAndTap()
-        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        app.buttons["chevron"].waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 

@@ -211,7 +211,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Remove last card while selected state is NOT on the card
         app.buttons["Edit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 3.0))
-        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        app.buttons["chevron"].waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
@@ -279,7 +279,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Remove last card while selected state is on the card
         app.buttons["Edit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 3.0))
-        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        app.buttons["chevron"].waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Cartes Bancaires •••• 1001", alertTitle: "Remove card?", buttonToTap: "Remove")
 
@@ -311,7 +311,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Switch from 1001 to 4242
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        app.buttons["chevron"].waitForExistenceAndTap()
         app.otherElements["Card Brand Dropdown"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.swipeUp()
         app.buttons["Done"].waitForExistenceAndTap()
@@ -357,7 +357,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Remove selected 4242 card
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
         app.buttons["Done"].waitForExistenceAndTap()
@@ -370,7 +370,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Remove 6789 & verify
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Bank account •••• 6789", alertTitle: "Remove bank account?", buttonToTap: "Remove")
 
@@ -429,7 +429,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Remove bank acct. while it isn't selected
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Bank account •••• 6789", alertTitle: "Remove bank account?", buttonToTap: "Remove")
         app.buttons["Done"].waitForExistenceAndTap()
@@ -443,7 +443,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Remove 4242
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
 
@@ -488,7 +488,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Delete one payment method so we only have one left, we should not auto select the last remaining saved PM
         XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["chevron"].firstMatch.waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
         XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())

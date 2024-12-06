@@ -444,39 +444,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         self.bottomSheetController?.pushContentViewController(editVc)
     }
 
-    func paymentOptionCellDidSelectRemove(
-        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
-    ) {
-        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-              case .saved(let paymentMethod) = viewModels[indexPath.row]
-        else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
-                                              error: Error.didSelectRemoveOnInvalidItem)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-            return
-        }
-        let alert = UIAlertAction(
-            title: String.Localized.remove, style: .destructive
-        ) { (_) in
-            self.removePaymentMethod(indexPath: indexPath, paymentMethod: paymentMethod)
-        }
-        let cancel = UIAlertAction(
-            title: String.Localized.cancel,
-            style: .cancel, handler: nil
-        )
-
-        let alertController = UIAlertController(
-            title: paymentMethod.removalMessage.title,
-            message: self.savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
-            preferredStyle: .alert
-        )
-
-        alertController.addAction(cancel)
-        alertController.addAction(alert)
-        present(alertController, animated: true, completion: nil)
-    }
-
     private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod) {
         Task {
             guard let delegate = self.delegate else {
