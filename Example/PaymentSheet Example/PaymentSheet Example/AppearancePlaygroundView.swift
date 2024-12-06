@@ -262,6 +262,11 @@ struct AppearancePlaygroundView: View {
                 self.appearance.embeddedPaymentElement.row.flat.separatorInsets = UIEdgeInsets(top: 0, left: prevInsets.left, bottom: 0, right: $0)
             }
         )
+        
+        let embeddedPaymentElementCheckmarkColorBinding = Binding(
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.checkmark.color ?? self.appearance.colors.primary) },
+            set: { self.appearance.embeddedPaymentElement.row.flat.checkmark.color = UIColor($0) }
+        )
 
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
 
@@ -403,6 +408,11 @@ struct AppearancePlaygroundView: View {
 
                             } label: {
                                 Text("FloatingButton")
+                            }
+                            DisclosureGroup {
+                                ColorPicker("checkmarkColor", selection: embeddedPaymentElementCheckmarkColorBinding)
+                            } label: {
+                                Text("FlatWithCheckmark")
                             }
                         } label: {
                             Text("Row")
