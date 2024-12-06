@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/4/24.
 //
 
+import Foundation
+
 extension URL {
     /// Removes query and hashtag params from the absolute URL.
     /// - Note: Used for logging sanitized URLs to analytics or to compare URLs without query args

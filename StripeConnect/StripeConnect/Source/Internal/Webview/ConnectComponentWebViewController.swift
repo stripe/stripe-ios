@@ -97,7 +97,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         if loadContent {
             activityIndicator.startAnimating()
             do {
-                let url = try ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url()
+                let url = try ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url(baseURL: componentManager.baseURL)
                 analyticsClient.loadStart = .now
                 webView.load(.init(url: url))
             } catch {

@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 10/1/24.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 
 typealias ComponentAnalyticsClientFactory = (ComponentAnalyticsClient.CommonFields) -> ComponentAnalyticsClient

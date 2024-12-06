@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 5/3/24.
 //
 
+import Foundation
 import SafariServices
 @_spi(STP) import StripeCore
 import WebKit

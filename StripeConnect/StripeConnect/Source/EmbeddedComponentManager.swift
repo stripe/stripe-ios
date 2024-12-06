@@ -60,6 +60,9 @@ public class EmbeddedComponentManager {
                "Embedded components require camera access. Add `NSCameraUsageDescription` to your app's Info.plist file to enable camera access.")
     }
 
+    @_spi(DashboardOnly)
+    public var baseURL: URL = URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!
+    
     /// Updates the appearance of components created from this EmbeddedComponentManager
     /// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components#customize-the-look-of-connect-embedded-components
     public func update(appearance: Appearance) {

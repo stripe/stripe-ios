@@ -12,7 +12,7 @@ import Foundation
 struct ConnectJSURLParams: Encodable {
     /// The component type
     let component: ComponentType
-
+    
     /// The platform publishable key. Required for non-dashboard accounts
     private(set) var publicKey: String?
 
@@ -41,7 +41,7 @@ extension ConnectJSURLParams {
 
         // Validate that publishable key has been set
         STPAPIClient.validateKey(apiClient.publishableKey)
-
+        
         if apiClient.publishableKeyIsUserKey {
             // Dashboard app overrides
             self.apiKeyOverride = apiClient.publishableKey
@@ -53,10 +53,10 @@ extension ConnectJSURLParams {
         }
     }
 
-    func url() throws -> URL {
+    func url(baseURL: URL) throws -> URL {
         let dict = try jsonDictionary(with: .connectEncoder)
 
         // Append as hash params
-        return URL(string: "#\(URLEncoder.queryString(from: dict))", relativeTo: StripeConnectConstants.connectJSBaseURL)!
+        return URL(string: "#\(URLEncoder.queryString(from: dict))", relativeTo: baseURL)!
     }
 }

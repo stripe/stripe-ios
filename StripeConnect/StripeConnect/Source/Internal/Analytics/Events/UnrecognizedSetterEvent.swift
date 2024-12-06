@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/4/24.
 //
 
+import Foundation
+
 /// If the web view calls `onSetterFunctionCalled` with a `setter` argument the SDK doesn’t know how to handle.
 struct UnrecognizedSetterEvent: ConnectAnalyticEvent {
     struct Metadata: Encodable, Equatable {

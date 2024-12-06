@@ -5,7 +5,7 @@ let package = Package(
     name: "Stripe",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v15)
     ],
     products: [
         .library(
@@ -39,6 +39,10 @@ let package = Package(
         .library(
             name: "StripeFinancialConnections",
             targets: ["StripeFinancialConnections"]
+        ),
+        .library(
+            name: "StripeConnect",
+            targets: ["StripeConnect"]
         )
     ],
     targets: [
@@ -152,6 +156,11 @@ let package = Package(
                 .process("Resources/Images"),
                 .process("PrivacyInfo.xcprivacy")
             ]
+        ),
+        .target(
+            name: "StripeConnect",
+            dependencies: ["StripeCore", "StripeUICore"],
+            path: "StripeConnect/StripeConnect"
         )
     ]
 )
