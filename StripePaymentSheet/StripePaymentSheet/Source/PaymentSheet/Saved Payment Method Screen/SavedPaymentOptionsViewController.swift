@@ -35,7 +35,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         case collectionViewDidSelectItemAtAdd
         case unableToDequeueReusableCell
         case paymentOptionCellDidSelectEditOnNonSavedItem
-        case paymentOptionCellDidSelectRemoveOnNonSavedItem
         case removePaymentMethodOnNonSavedItem
     }
     // MARK: - Types
@@ -104,7 +103,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
-        let alternateUpdatePaymentMethodNavigation: Bool
         let allowsSetAsDefaultPM: Bool
     }
 
@@ -372,7 +370,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             showApplePay: configuration.showApplePay,
             showLink: configuration.showLink,
             allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
-            elementsSession: elementsSession
+            customer: elementsSession.customer
         )
 
         collectionView.reloadData()
@@ -446,17 +444,12 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
-    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, allowsSetAsDefaultPM: Bool, elementsSession: STPElementsSession) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, allowsSetAsDefaultPM: Bool, customer: ElementsCustomer?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
         var defaultPaymentMethodOption: CustomerPaymentOption?
-        // read from back end
+        // get default payment method from elements session
         if allowsSetAsDefaultPM,
-           let customer =  elementsSession.customer,
-           let customerDefault = customer.defaultPaymentMethod {
-            let defaultPaymentMethod = customer.paymentMethods.filter {
-                $0.stripeId == customerDefault
-            }.first
-            guard let defaultPaymentMethod = defaultPaymentMethod else { fatalError("default payment method does not exist in saved payment methods") }
+           let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: customer) {
             defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
         }
         else {
@@ -514,7 +507,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, alternateUpdatePaymentMethodNavigation: self.configuration.alternateUpdatePaymentMethodNavigation, allowsSetAsDefaultPM: self.configuration.allowsSetAsDefaultPM)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: self.configuration.allowsSetAsDefaultPM)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         if self.configuration.allowsSetAsDefaultPM {
@@ -593,38 +586,15 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         self.bottomSheetController?.pushContentViewController(editVc)
     }
 
-    func paymentOptionCellDidSelectRemove(
-        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
-    ) {
-        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-              case .saved(let paymentMethod) = viewModels[indexPath.row]
-        else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.paymentOptionCellDidSelectRemoveOnNonSavedItem,
-                                              additionalNonPIIParams: [
-                                                "indexPathRow": collectionView.indexPath(for: paymentOptionCell)?.row ?? "nil",
-                                                "viewModels": viewModels.map { $0.analyticsValue },
-                                              ]
-            )
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-            return
-        }
-
-        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
-                                                                          removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage) { [weak self] in
-            guard let self = self else { return }
-            self.removePaymentMethod(paymentMethod)
-        }
-
-        present(alertController, animated: true, completion: nil)
-    }
-
     private func removePaymentMethod(_ paymentMethod: STPPaymentMethod) {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId })
         else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.removePaymentMethodOnNonSavedItem)
+                                              error: Error.removePaymentMethodOnNonSavedItem,
+                                              additionalNonPIIParams: [
+                                                "viewModels": viewModels.map { $0.analyticsValue },
+                                                ]
+                                              )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
             return

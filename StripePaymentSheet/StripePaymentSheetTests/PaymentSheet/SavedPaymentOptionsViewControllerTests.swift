@@ -304,7 +304,6 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods,
-                                                               alternateUpdatePaymentMethodNavigation: false,
                                                                allowsSetAsDefaultPM: false)
     }
 

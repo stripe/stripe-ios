@@ -104,8 +104,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
-                isTestMode: configuration.apiClient.isTestmode,
-                alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
+                isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
@@ -658,8 +657,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: isApplePayEnabled,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
-                isTestMode: configuration.apiClient.isTestmode,
-                alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
+                isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,

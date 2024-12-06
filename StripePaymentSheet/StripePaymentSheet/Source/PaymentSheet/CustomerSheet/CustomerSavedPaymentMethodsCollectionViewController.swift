@@ -41,7 +41,6 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
 @objc(STP_Internal_SavedPaymentMethodsCollectionViewController)
 class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     enum Error: Swift.Error {
-        case didSelectRemoveOnInvalidItem
         case didSelectEditOnInvalidItem
         case removedInvalidItemWithUpdateCardFlow
         case unableToDequeueReusableCell
@@ -83,7 +82,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
         let isTestMode: Bool
-        let alternateUpdatePaymentMethodNavigation: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -389,7 +387,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
                           cbcEligible: cbcEligible,
                           allowsPaymentMethodRemoval: configuration.paymentMethodRemove,
-                          alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation,
                           allowsSetAsDefaultPM: false)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
@@ -446,39 +443,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                               viewModel: updateViewModel)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
-    }
-
-    func paymentOptionCellDidSelectRemove(
-        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
-    ) {
-        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-              case .saved(let paymentMethod) = viewModels[indexPath.row]
-        else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
-                                              error: Error.didSelectRemoveOnInvalidItem)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-            return
-        }
-        let alert = UIAlertAction(
-            title: String.Localized.remove, style: .destructive
-        ) { (_) in
-            self.removePaymentMethod(indexPath: indexPath, paymentMethod: paymentMethod)
-        }
-        let cancel = UIAlertAction(
-            title: String.Localized.cancel,
-            style: .cancel, handler: nil
-        )
-
-        let alertController = UIAlertController(
-            title: paymentMethod.removalMessage.title,
-            message: self.savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
-            preferredStyle: .alert
-        )
-
-        alertController.addAction(cancel)
-        alertController.addAction(alert)
-        present(alertController, animated: true, completion: nil)
     }
 
     private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod) {

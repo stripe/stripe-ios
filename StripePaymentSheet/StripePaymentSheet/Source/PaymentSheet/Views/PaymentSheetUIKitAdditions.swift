@@ -158,17 +158,3 @@ extension UIFont {
         return UIFont(descriptor: descriptor, size: pointSize)
     }
 }
-
-extension UIStackView {
-    /// Convenience DRY method that creates a stackview for use in horizontal "row button" content
-    static func makeRowButtonContentStackView(arrangedSubviews: [UIView]) -> UIStackView {
-        let margin = 12.0
-        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.directionalLayoutMargins = .init(top: margin, leading: margin, bottom: margin, trailing: margin)
-        stackView.spacing = margin
-        stackView.isLayoutMarginsRelativeArrangement = true
-        return stackView
-    }
-}

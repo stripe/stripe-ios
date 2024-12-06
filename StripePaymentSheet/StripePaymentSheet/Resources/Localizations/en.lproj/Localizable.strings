@@ -277,9 +277,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for a button that when tapped removes a linked bank account. */
 "Remove linked account" = "Remove linked account";
 
-/* Title shown above a view containing a customer's payment method that they can delete */
-"Remove payment method" = "Remove payment method";
-
 /* Label for a button that re-sends the a login code when tapped */
 "Resend code" = "Resend code";
 

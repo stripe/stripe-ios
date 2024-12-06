@@ -24,10 +24,6 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, appearance: ._testMSPaintTheme)
     }
 
-    func test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsRemoveOnlyMode() {
-        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, isRemoveOnlyMode: true)
-    }
-
     func test_Embedded_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode() {
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: true, isEmbedded: true)
     }
@@ -40,21 +36,13 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, appearance: ._testMSPaintTheme, isEmbedded: true)
     }
 
-    func test_Embedded_VerticalSavedPaymentMethodsViewControllerSnapshotTestsRemoveOnlyMode() {
-        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, isEmbedded: true, isRemoveOnlyMode: true)
-    }
-
-    func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDefaultBadge() {
-        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, showDefaultPMBadge: true)
-    }
-
-    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, isRemoveOnlyMode: Bool = false, showDefaultPMBadge: Bool = false) {
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
         if showDefaultPMBadge {
             configuration.allowsSetAsDefaultPM = true
         }
-        let paymentMethods = isRemoveOnlyMode ? [STPPaymentMethod._testCardAmex()] : generatePaymentMethods()
+        let paymentMethods = generatePaymentMethods()
 
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,

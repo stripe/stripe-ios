@@ -42,7 +42,7 @@ class CustomerSheetDataSource {
                 await loadFormSpecs()
                 let customerId = try await customerSessionClientSecret.customerId
                 let elementSession = try await elementsSessionResult
-                let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, elementsSession: elementSession)
+                let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, customer: elementSession.customer)
 
                 // Override with specs from elementSession
                 _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
