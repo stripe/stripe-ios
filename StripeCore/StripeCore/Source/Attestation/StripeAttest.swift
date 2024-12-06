@@ -241,7 +241,7 @@ import UIKit
     }
 
     /// Generate the assertion data from a key and challenge.
-    private func generateAssertion(keyId: String, challenge: String, retryIfNeeded: Bool = true) async throws -> Data {
+    private func generateAssertion(keyId: String, challenge: String, retryAfterReattestingIfNeeded: Bool = true) async throws -> Data {
         // We're just signing the challenge for now.
         // The expected format is the SHA256 hash of the JSON-encoded dictionary.
         let assertionDictionary = [ "challenge": challenge ]
@@ -257,14 +257,14 @@ import UIKit
             // then the key is either unattested or corrupted.
             let error = error as NSError
             if error.domain == DCErrorDomain && error.code == DCError.invalidKey.rawValue {
-                if retryIfNeeded {
+                if retryAfterReattestingIfNeeded {
                     // We'll try to attest again, maybe our initial attestation was unsuccessful?
                     // `DCError.invalidKey` could mean a lot of things, unfortunately.
                     // If this doesn't work, then in `attest()` we'll deem the key to be corrupted
                     // and throw it out.
                     try await attest()
                     // Once we've successfully re-attested, we'll try one more time to do the assertion.
-                    return try await generateAssertion(keyId: keyId, challenge: challenge, retryIfNeeded: false)
+                    return try await generateAssertion(keyId: keyId, challenge: challenge, retryAfterReattestingIfNeeded: false)
                 } else {
                     // If it *still* fails, something is super broken.
                     // Give up for now, we'll try again tomorrow.
