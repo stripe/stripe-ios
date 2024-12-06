@@ -547,6 +547,12 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         updateBottomNotice()
     }
 
+    func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController) {
+        if isDismissable {
+            didDismiss(didCancel: true)
+        }
+    }
+
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
         navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
