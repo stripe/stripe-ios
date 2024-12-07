@@ -20,6 +20,12 @@ Section header for address fields */
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
 "Bank account •••• %@" = "Bank account •••• %@";
 
+/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+"Get %@ back when you pay with your bank. <terms>See\U00A0terms</terms>" = "Get %@ back when you pay with your bank. <terms>See\U00A0terms</terms>";
+
+/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+"Get %@ back when you pay for the first time with your bank. <terms>See\U00A0terms</terms>" = "Get %@ back when you pay for the first time with your bank. <terms>See\U00A0terms</terms>";
+
 /* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "Billing address is same as shipping";
 
