@@ -189,7 +189,7 @@ public final class EmbeddedPaymentElement {
     public func confirm() async -> EmbeddedPaymentElementResult {        
         return await _confirm().result
     }
-    
+
     /// Sets the currently selected payment option to `nil`.
     public func clearPaymentOption() {
         // Early exit for a nil payment option, don't notify delegate since no change in payment option can occur
@@ -208,6 +208,16 @@ public final class EmbeddedPaymentElement {
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
 
+    #if DEBUG
+    public func testGrow() {
+        stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
+        self.embeddedPaymentMethodsView.testGrow()
+    }
+    public func testShrink() {
+        stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
+        self.embeddedPaymentMethodsView.testShrink()
+    }
+    #endif
     // MARK: - Internal
 
     internal private(set) var containerView: EmbeddedPaymentElementContainerView

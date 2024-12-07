@@ -344,6 +344,10 @@ class EmbeddedPaymentMethodsView: UIView {
             savedPaymentMethod: selection?.savedPaymentMethod,
             bottomNoticeAttributedString: nil
         )
+        _updateMandate(mandateText: mandateText, animated: animated)
+    }
+
+    private func _updateMandate(mandateText: NSAttributedString?, animated: Bool = true) {
         let shouldDisplayMandate: Bool = {
             guard let mandateText else {
                 return false
@@ -379,6 +383,25 @@ class EmbeddedPaymentMethodsView: UIView {
             button.isSelected = key == selection
         }
     }
+#if DEBUG
+    func testGrow() {
+        let testMandateString = "This is an example of a long string that may appear based on selecting a payment method that has a mandate. Please ensure that your view can properly grow and shrink by calling testGrow() and testShrink() on embedded payment element and manually verify your view responds well to growing and shrinking"
+        let formattedString = NSMutableAttributedString(string: testMandateString)
+        let style = NSMutableParagraphStyle()
+        style.alignment = .left
+        formattedString.addAttributes([.paragraphStyle: style,
+                                       .font: UIFont.preferredFont(forTextStyle: .footnote),
+                                       .foregroundColor: appearance.asElementsTheme.colors.secondaryText,
+                                      ],
+                                      range: NSRange(location: 0, length: formattedString.length))
+
+        _updateMandate(mandateText: formattedString)
+    }
+
+    func testShrink() {
+        _updateMandate(mandateText: nil)
+    }
+#endif
 }
 
 extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
