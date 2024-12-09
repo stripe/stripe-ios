@@ -351,4 +351,28 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
     }
+
+    func testLoadPaymentMethodInfo_CustomerSession_NoDefaultPMNoSavedPaymentMethod() throws {
+        let stubbedAPIClient = stubbedAPIClient()
+        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheet_200)
+        var configuration = CustomerSheet.Configuration()
+        configuration.apiClient = stubbedAPIClient
+        configuration.allowsSetAsDefaultPM = true
+
+        let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
+        let customerSheet = CustomerSheet(configuration: configuration,
+                                          intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
+                                          customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
+        let csDataSource = customerSheet.createCustomerSheetDataSource()!
+        csDataSource.loadPaymentMethodInfo { result in
+            guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
+                XCTFail()
+                return
+            }
+            XCTAssertTrue(paymentMethods.isEmpty)
+            XCTAssertNil(selectedPaymentMethod)
+            loadPaymentMethodInfo.fulfill()
+        }
+        wait(for: [loadPaymentMethodInfo], timeout: 5.0)
+    }
 }
