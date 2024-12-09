@@ -288,6 +288,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             if let selection {
                 return selection
             }
+            // get default payment method from elements session
+            if configuration.allowsSetAsDefaultPM,
+               let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: elementsSession.customer) {
+                return .saved(paymentMethod: defaultPaymentMethod)
+            }
 
             switch previousPaymentOption {
             case .applePay:
