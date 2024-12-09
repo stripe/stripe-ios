@@ -325,9 +325,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                        let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
                         customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
                     }
-                    else {
-                        customerDefault = nil
-                    }
                 }
                 else {
                     customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
