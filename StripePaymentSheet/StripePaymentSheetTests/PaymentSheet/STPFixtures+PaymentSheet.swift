@@ -45,7 +45,7 @@ extension STPElementsSession {
         return _testValue(paymentMethodTypes: ["card"])
     }
 
-    static func _testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod) -> STPElementsSession {
+    static func _testDefaultCardValue(defaultPaymentMethod: String?, paymentMethods: [[AnyHashable: Any]]? = nil) -> STPElementsSession {
         return _testValue(paymentMethodTypes: ["card"], customerSessionData: [
             "mobile_payment_element": [
                 "enabled": true,
@@ -55,7 +55,7 @@ extension STPElementsSession {
             ],
             "customer_sheet": [
                 "enabled": false,
-            ]], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod)
+            ]], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
     }
 
     static func _testValue(
@@ -68,7 +68,8 @@ extension STPElementsSession {
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         disableLinkSignup: Bool? = nil,
         allowsSetAsDefaultPM: Bool = false,
-        defaultPaymentMethod: STPPaymentMethod? = nil
+        defaultPaymentMethod: String? = nil,
+        paymentMethods: [[AnyHashable: Any]]? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -81,30 +82,21 @@ extension STPElementsSession {
             ]
         }
         if let customerSessionData {
-            if allowsSetAsDefaultPM {
-                json["customer"] = ["payment_methods": [],
-                                    "customer_session": [
-                                        "id": "id123",
-                                        "livemode": false,
-                                        "api_key": "ek_12345",
-                                        "api_key_expiry": 12345,
-                                        "customer": "cus_123",
-                                        "components": customerSessionData,
-                                        ],
-                                    "default_payment_method": defaultPaymentMethod?.stripeId ?? "nil"
+            json["customer"] = ["payment_methods": [],
+                                "customer_session": [
+                                    "id": "id123",
+                                    "livemode": false,
+                                    "api_key": "ek_12345",
+                                    "api_key_expiry": 12345,
+                                    "customer": "cus_123",
+                                    "components": customerSessionData,
                                     ]
+                                ]
+            if allowsSetAsDefaultPM, let defaultPaymentMethod {
+                json[jsonDict: "customer"]?["default_payment_method"] = defaultPaymentMethod
             }
-            else {
-                json["customer"] = ["payment_methods": [],
-                                    "customer_session": [
-                                        "id": "id123",
-                                        "livemode": false,
-                                        "api_key": "ek_12345",
-                                        "api_key_expiry": 12345,
-                                        "customer": "cus_123",
-                                        "components": customerSessionData,
-                                        ]
-                                    ]
+            if let paymentMethods {
+                json[jsonDict: "customer"]?["payment_methods"] = paymentMethods
             }
         }
 

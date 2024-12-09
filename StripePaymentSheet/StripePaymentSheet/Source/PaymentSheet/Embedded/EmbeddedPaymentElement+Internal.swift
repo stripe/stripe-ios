@@ -37,12 +37,6 @@ extension EmbeddedPaymentElement {
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
         let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
-            // get default payment method from elements session
-            if configuration.allowsSetAsDefaultPM,
-               let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: loadResult.elementsSession.customer) {
-                    return .saved(paymentMethod: defaultPaymentMethod)
-            }
-
             // Select the previous payment option
             switch previousPaymentOption {
             case .applePay:
@@ -60,7 +54,19 @@ extension EmbeddedPaymentElement {
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
-            let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+            var customerDefault: CustomerPaymentOption?
+            // if opted in to the "set as default" feature, try to get default payment method from elements session
+            if configuration.allowsSetAsDefaultPM {
+                if let defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
+                    customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                }
+                else {
+                    customerDefault = nil
+                }
+            }
+            else {
+                customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+            }
             switch customerDefault {
             case .applePay:
                 return .applePay

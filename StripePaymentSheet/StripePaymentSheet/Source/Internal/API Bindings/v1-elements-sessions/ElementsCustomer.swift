@@ -36,15 +36,17 @@ struct ElementsCustomer: Equatable, Hashable {
         }
 
         // Optional
-        // to test default payment methods reading from back end, hard-code a valid default payment method
-        // later, when API calls to get and update default payment method are available, that will no longer be needed
-//        let defaultPaymentMethod = response["default_payment_method"] as? String
-        let defaultPaymentMethod = "pm_1QT9oDLu5o3P18ZpuYfoTQIX"
+        let defaultPaymentMethod = response["default_payment_method"] as? String
         return ElementsCustomer(paymentMethods: paymentMethods, defaultPaymentMethod: defaultPaymentMethod, customerSession: customerSession)
     }
 
-    static func getDefaultPaymentMethod(from customer: ElementsCustomer?) -> STPPaymentMethod? {
-        guard let customer = customer else { return nil }
-        return customer.paymentMethods.first { $0.stripeId == customer.defaultPaymentMethod }
+    func getDefaultOrFirstPaymentMethod() -> STPPaymentMethod? {
+        // if customer has a default payment method from the elements session, return the default payment method
+        let defaultSavedPaymentMethod = paymentMethods.first { $0.stripeId == defaultPaymentMethod }
+        if let defaultSavedPaymentMethod = defaultSavedPaymentMethod {
+            return defaultSavedPaymentMethod
+        }
+        // otherwise, return the first payment method from the customer's list of saved payment methods
+        return paymentMethods.first
     }
 }

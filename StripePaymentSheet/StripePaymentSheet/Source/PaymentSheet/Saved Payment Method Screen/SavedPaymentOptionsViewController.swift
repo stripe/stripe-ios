@@ -447,10 +447,15 @@ class SavedPaymentOptionsViewController: UIViewController {
     static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, allowsSetAsDefaultPM: Bool, customer: ElementsCustomer?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
         var defaultPaymentMethodOption: CustomerPaymentOption?
-        // get default payment method from elements session
-        if allowsSetAsDefaultPM,
-           let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: customer) {
-            defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+        // if opted in to the "set as default" feature, try to get default payment method from elements session
+        if allowsSetAsDefaultPM {
+           if let customer = customer,
+              let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
+               defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+           }
+            else {
+                defaultPaymentMethodOption = nil
+            }
         }
         else {
             defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
