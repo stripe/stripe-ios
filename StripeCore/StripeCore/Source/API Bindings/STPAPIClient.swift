@@ -48,8 +48,7 @@ import UIKit
             return nil
         }
 
-        return (publishableKey.isSecretKey || publishableKeyIsUserKey)
-            ? "[REDACTED_LIVE_KEY]" : publishableKey
+        return publishableKey.sanitizedKey
     }
 
     // Stored STPPaymentConfiguration: Type checking handled in STPAPIClient+Payments.swift.

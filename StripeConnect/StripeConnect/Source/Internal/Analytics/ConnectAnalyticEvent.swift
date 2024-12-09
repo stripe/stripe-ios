@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/1/24.
 //
 
+import Foundation
+
 /// Represents an analytics event logged from the Connect SDK
 protocol ConnectAnalyticEvent: Equatable {
     associatedtype Metadata: Encodable & Equatable

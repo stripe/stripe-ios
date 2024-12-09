@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 10/4/24.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 
 extension AnalyticsClientV2 {

@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 11/6/24.
 //
 
+import Foundation
+
 /// The user closed the authenticated web view before getting redirected back to the app.
 struct AuthenticatedWebViewCanceledEvent: ConnectAnalyticEvent {
     struct Metadata: Encodable, Equatable {

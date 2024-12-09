@@ -27,6 +27,10 @@ class ConnectWebViewControllerTests: XCTestCase {
         mockAnalyticsClient = .init(commonFields: .mock)
         webVC = .init(configuration: .init(),
                       analyticsClient: mockAnalyticsClient,
+                      allowedHosts: [
+                        "connect-js.stripe.com",
+                        "connect.stripe.com"
+                      ],
                       urlOpener: mockURLOpener,
                       fileManager: mockFileManager,
                       sdkVersion: "1.2.3")
