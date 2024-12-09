@@ -318,7 +318,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     }
                 }
                 // Default to the customer's default or the first saved payment method, if any
-                let customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+                var customerDefault: CustomerPaymentOption?
+                // if opted in to the "set as default" feature, try to get default payment method from elements session
+                if configuration.allowsSetAsDefaultPM {
+                    if let customer = elementsSession.customer,
+                       let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
+                        customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                    }
+                }
+                else {
+                    customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+                }
                 switch customerDefault {
                 case .applePay:
                     return isFlowController ? .applePay : nil // Only default to Apple Pay in flow controller mode

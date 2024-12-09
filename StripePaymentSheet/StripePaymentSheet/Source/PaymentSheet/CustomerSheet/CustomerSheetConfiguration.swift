@@ -81,6 +81,11 @@ extension CustomerSheet {
         /// Note: Card brand filtering is not currently supported by Link.
         @_spi(CardBrandFilteringBeta) public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
+        /// This is an experimental feature that may be removed at any time.
+        /// If true, users can set a payment method as default and sync their default payment method across web and mobile
+        /// If false (default), users cannot set default payment methods.
+        @_spi(AllowsSetAsDefaultPM) public var allowsSetAsDefaultPM = false
+
         public init () {
         }
     }

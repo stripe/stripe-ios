@@ -103,6 +103,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
+        let allowsSetAsDefaultPM: Bool
     }
 
     // MARK: - Internal Properties
@@ -216,6 +217,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
     weak var delegate: SavedPaymentOptionsViewControllerDelegate?
     var appearance = PaymentSheet.Appearance.default
+    var elementsSession: STPElementsSession
 
     // MARK: - Private Properties
     private var selectedViewModelIndex: Int?
@@ -311,6 +313,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         paymentSheetConfiguration: PaymentSheet.Configuration,
         intent: Intent,
         appearance: PaymentSheet.Appearance,
+        elementsSession: STPElementsSession,
         cbcEligible: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
@@ -320,6 +323,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.paymentSheetConfiguration = paymentSheetConfiguration
         self.intent = intent
         self.appearance = appearance
+        self.elementsSession = elementsSession
         self.cbcEligible = cbcEligible
         self.delegate = delegate
         self.analyticsHelper = analyticsHelper
@@ -363,7 +367,9 @@ class SavedPaymentOptionsViewController: UIViewController {
             savedPaymentMethods: savedPaymentMethods,
             customerID: configuration.customerID,
             showApplePay: configuration.showApplePay,
-            showLink: configuration.showLink
+            showLink: configuration.showLink,
+            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+            customer: elementsSession.customer
         )
 
         collectionView.reloadData()
@@ -437,9 +443,19 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
-    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, allowsSetAsDefaultPM: Bool, customer: ElementsCustomer?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
-        let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+        var defaultPaymentMethodOption: CustomerPaymentOption?
+        // if opted in to the "set as default" feature, try to get default payment method from elements session
+        if allowsSetAsDefaultPM {
+           if let customer = customer,
+              let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
+               defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+           }
+        }
+        else {
+            defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+        }
 
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
@@ -460,7 +476,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let firstPaymentMethodIsLink = !showApplePay && showLink
         let defaultIndex = firstPaymentMethodIsLink ? 2 : 1
 
-        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod }) ?? defaultIndex
+        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethodOption }) ?? defaultIndex
         return (defaultSelectedIndex, viewModels)
     }
 }
