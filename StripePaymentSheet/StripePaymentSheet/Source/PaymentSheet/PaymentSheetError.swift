@@ -56,6 +56,7 @@ public enum PaymentSheetError: Error, LocalizedError {
 
     // MARK: - Confirmation errors
     case unexpectedNewPaymentMethod
+    case embeddedPaymentElementAlreadyConfirmedIntent
 
     public var errorDescription: String? {
         return NSError.stp_unexpectedErrorMessage()
@@ -126,6 +127,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "New payment method should not have been created yet"
             case .intentConfigurationValidationFailed(message: let message):
                 return message
+            case .embeddedPaymentElementAlreadyConfirmedIntent:
+                return "This instance of EmbeddedPaymentElement has already confirmed an intent successfully. Create a new instance of EmbeddedPaymentElement to confirm a new intent."
             }
         }()
 

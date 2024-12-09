@@ -327,6 +327,9 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
 extension EmbeddedPaymentElement {
 
     func _confirm() async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
+        guard !hasConfirmedIntent else {
+            return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), STPAnalyticsClient.DeferredIntentConfirmationType.none)
+        }
         // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
         if let latestUpdateTask {
             switch await latestUpdateTask.value {
@@ -386,6 +389,13 @@ extension EmbeddedPaymentElement {
         analyticsHelper.logPayment(paymentOption: paymentOption,
                                    result: result,
                                    deferredIntentConfirmationType: deferredIntentConfirmationType)
+        
+        // If the confirmation was successful, disable user interaction
+        if case .completed = result {
+            hasConfirmedIntent = true
+            containerView.isUserInteractionEnabled = false
+        }
+        
         return (result, deferredIntentConfirmationType)
     }
 
