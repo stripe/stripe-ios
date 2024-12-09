@@ -552,7 +552,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Open card and cancel, should reset selection to saved card
         app.buttons["New card"].waitForExistenceAndTap()
-        app.buttons["Close"].waitForExistenceAndTap()
+        let _ = app.buttons["Close"].waitForExistence(timeout: 10)
+        XCTAssertTrue(app.buttons["New card"].isSelected)
+        app.buttons["Close"].tap()
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
         XCTAssertTrue(app.buttons["•••• 4242"].isSelected)

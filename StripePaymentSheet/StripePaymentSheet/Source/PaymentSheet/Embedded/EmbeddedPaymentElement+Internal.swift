@@ -95,7 +95,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
 
-    func updateSelectionState(isNewSelection: Bool) -> Bool {
+    func updateSelectionState(isNewSelection: Bool) {
         // Deferring notifying delegate until the exit of this function guarantees the new payment option comes from the new instance of `EmbeddedFormViewController`
         defer {
             if isNewSelection {
@@ -109,12 +109,12 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
             // This can occur when selection is being reset to nothing selected or to a saved payment method, so don't assert.
             self.formViewController = nil
-            return true
+            return
         }
 
         guard let presentingViewController else {
             stpAssertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
-            return true
+            return
         }
 
         let formViewController = EmbeddedFormViewController(
@@ -132,15 +132,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Only show forms that require user input
         guard formViewController.collectsUserInput else {
             self.formViewController = nil  // Clear out any previous form view controller to update self._paymentOption
-            return true
+            return
         }
 
         let bottomSheet = bottomSheetController(with: formViewController)
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
         self.formViewController = formViewController
-        let formHasValidPaymentOption = formViewController.selectedPaymentOption != nil
-        return formHasValidPaymentOption // Show row selected only if payment option is valid
     }
 
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
