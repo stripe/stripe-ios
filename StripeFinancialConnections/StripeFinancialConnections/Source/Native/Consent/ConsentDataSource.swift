@@ -14,7 +14,12 @@ protocol ConsentDataSource: AnyObject {
     var merchantLogo: [String]? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
-    func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest>
+    func markConsentAcquired() -> Future<ConsentAcquiredResult>
+}
+
+struct ConsentAcquiredResult {
+    var manifest: FinancialConnectionsSessionManifest
+    var customNextPane: FinancialConnectionsSessionManifest.NextPane?
 }
 
 final class ConsentDataSourceImplementation: ConsentDataSource {
@@ -25,6 +30,11 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    private let elementsSessionContext: ElementsSessionContext?
+    
+    private var isLinkWithStripe: Bool {
+        manifest.isLinkWithStripe ?? false
+    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -32,7 +42,8 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         merchantLogo: [String]?,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
         self.consent = consent
@@ -40,9 +51,45 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.elementsSessionContext = elementsSessionContext
     }
 
-    func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest> {
-        return apiClient.markConsentAcquired(clientSecret: clientSecret)
+    func markConsentAcquired() -> Future<ConsentAcquiredResult> {
+        return apiClient.markConsentAcquired(clientSecret: clientSecret).chained { [weak self] manifest in
+            let promise = Promise<ConsentAcquiredResult>()
+            
+            guard let self, self.isLinkWithStripe, self.manifest.accountholderCustomerEmailAddress == nil else {
+                let result = ConsentAcquiredResult(manifest: manifest, customNextPane: nil)
+                return Promise(value: result)
+            }
+            
+            guard let email = elementsSessionContext?.prefillDetails?.email else {
+                let result = ConsentAcquiredResult(manifest: manifest, customNextPane: nil)
+                return Promise(value: result)
+            }
+            
+            apiClient.consumerSessionLookup(
+                emailAddress: email,
+                clientSecret: clientSecret
+            ).observe { lookupResult in
+                let customNextPane = lookupResult.hasConsumer ? FinancialConnectionsSessionManifest.NextPane.networkingLinkLoginWarmup : nil
+                let result = ConsentAcquiredResult(manifest: manifest, customNextPane: customNextPane)
+                promise.resolve(with: result)
+            }
+            
+            return promise
+        }
+    }
+}
+
+private extension Swift.Result<LookupConsumerSessionResponse, any Error> {
+    
+    var hasConsumer: Bool {
+        switch self {
+        case .success(let lookup):
+            return lookup.exists
+        case .failure:
+            return false
+        }
     }
 }
