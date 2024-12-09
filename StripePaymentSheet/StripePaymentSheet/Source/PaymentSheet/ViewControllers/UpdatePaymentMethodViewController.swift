@@ -125,7 +125,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var footnoteLabel: UITextView? = {
-        if viewModel.canEdit || viewModel.errorState {
+        if viewModel.errorState {
             return nil
         }
         let label = ElementsUI.makeSmallFootnote(theme: viewModel.appearance.asElementsTheme)
