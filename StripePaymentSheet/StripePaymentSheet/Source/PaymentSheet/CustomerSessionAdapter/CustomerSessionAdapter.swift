@@ -108,13 +108,14 @@ extension CustomerSessionAdapter {
     }
 
     func fetchSelectedPaymentOption(for customerId: String, customer: ElementsCustomer? = nil) -> CustomerPaymentOption? {
-        guard configuration.allowsSetAsDefaultPM,
-              let customer = customer,
-              let defaultPaymentMethod = customer.defaultPaymentMethod else {
-            return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
+        // if opted in to the "set as default" feature, try to get default payment method from elements session
+        if configuration.allowsSetAsDefaultPM {
+            guard let customer = customer,
+                 let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return nil }
+            return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
         }
 
-        return CustomerPaymentOption.stripeId(defaultPaymentMethod)
+        return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
     }
 
     func detachPaymentMethod(paymentMethodId: String) async throws {

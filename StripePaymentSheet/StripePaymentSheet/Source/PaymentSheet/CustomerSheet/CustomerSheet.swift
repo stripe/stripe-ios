@@ -329,9 +329,10 @@ extension CustomerSheet {
 
             var selectedPaymentOption: CustomerPaymentOption?
 
-            // get default payment method from elements session
-            if configuration.allowsSetAsDefaultPM,
-               let defaultPaymentMethod = ElementsCustomer.getDefaultPaymentMethod(from: elementsSession.customer) {
+            // if opted in to the "set as default" feature, try to get default payment method from elements session
+            if configuration.allowsSetAsDefaultPM {
+                guard let customer = elementsSession.customer,
+                    let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return nil }
                 selectedPaymentOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
             }
             else {
