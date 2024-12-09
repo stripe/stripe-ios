@@ -33,7 +33,33 @@ public class EmbeddedComponentManager {
         ComponentAnalyticsClient(client: AnalyticsClientV2.sharedConnect,
                                  commonFields: $0)
     }
+    
+    @_spi(DashboardOnly)
+    var baseURL: URL = StripeConnectConstants.connectJSBaseURL
 
+    @_spi(DashboardOnly)
+    var publicKeyOverride: String? = nil
+    
+    @_spi(DashboardOnly)
+    public convenience init(apiClient: STPAPIClient = STPAPIClient.shared,
+                            appearance: EmbeddedComponentManager.Appearance = .default,
+                            publicKeyOverride: String,
+                            baseURLOverride: URL? = nil,
+                            fonts: [EmbeddedComponentManager.CustomFontSource] = []) {
+        self.init(apiClient: apiClient,
+                  appearance: appearance,
+                  fonts: fonts,
+                  fetchClientSecret: {
+            stpAssertionFailure("Client secret should not be fetched when using a dashboard initializer")
+            return nil
+        })
+        self.publicKeyOverride = publicKeyOverride
+        if let baseURLOverride {
+            baseURL = baseURLOverride
+        }
+    }
+    
+    
     /**
      Initializes a StripeConnect instance.
 

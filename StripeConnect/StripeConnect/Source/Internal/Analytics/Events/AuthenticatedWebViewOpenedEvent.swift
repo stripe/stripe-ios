@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 11/6/24.
 //
 
+import Foundation
+
 /// An authenticated web view was opened
 struct AuthenticatedWebViewOpenedEvent: ConnectAnalyticEvent {
     struct Metadata: Encodable, Equatable {

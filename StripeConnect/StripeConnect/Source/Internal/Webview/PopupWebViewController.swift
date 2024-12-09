@@ -18,10 +18,12 @@ class PopupWebViewController: ConnectWebViewController {
     init(configuration: WKWebViewConfiguration,
          analyticsClient: ComponentAnalyticsClient,
          navigationAction: WKNavigationAction,
+         allowedHosts: [String],
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
         super.init(configuration: configuration,
                    analyticsClient: analyticsClient,
+                   allowedHosts: allowedHosts,
                    urlOpener: urlOpener,
                    sdkVersion: sdkVersion)
         webView.load(navigationAction.request)
