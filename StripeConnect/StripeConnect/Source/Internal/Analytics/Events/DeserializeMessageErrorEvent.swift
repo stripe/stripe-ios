@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/4/24.
 //
 
+import Foundation
+
 /// An error occurred deserializing the JSON payload from a web message.
 struct DeserializeMessageErrorEvent: ConnectAnalyticEvent {
     struct Metadata: Encodable, Equatable {

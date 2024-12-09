@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/4/24.
 //
 
+import Foundation
+
 /// The web page finished loading (`didFinish navigation` event).
 struct ComponentWebPageLoadedEvent: ConnectAnalyticEvent {
     struct Metadata: Encodable, Equatable {
