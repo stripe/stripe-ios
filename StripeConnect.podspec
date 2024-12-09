@@ -1,0 +1,21 @@
+Pod::Spec.new do |s|
+  s.name                           = 'StripeConnect'
+
+  # Do not update s.version directly.
+  # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
+  s.version                        = '23.30.0'
+
+  s.summary                        = 'Use Connect embedded components to add connected account dashboard functionality to your app.'
+  s.license                        = { type: 'MIT', file: 'LICENSE' }
+  s.homepage                       = 'https://docs.stripe.com/connect/get-started-connect-embedded-components'
+  s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
+  s.source                         = { git: 'https://github.com/stripe/stripe-ios.git', tag: "#{s.version}" }
+  s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
+  s.requires_arc                   = true
+  s.platform                       = :ios
+  s.swift_version = '5.0'
+  s.ios.deployment_target          = '13.0'
+  s.source_files                   = 'StripeConnect/StripeConnect/**/*.swift'
+  s.dependency                       'StripeCore', s.version.to_s
+  s.dependency                       'StripeUICore', s.version.to_s
+end
