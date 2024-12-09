@@ -446,7 +446,7 @@ extension EmbeddedPaymentMethodsView {
     }
 }
 
-extension PaymentSheetResult: @retroactive Equatable {
+extension PaymentSheetResult: Equatable {
     public static func == (lhs: StripePaymentSheet.PaymentSheetResult, rhs: StripePaymentSheet.PaymentSheetResult) -> Bool {
         switch (lhs, rhs) {
         case (.completed, .completed): return true
