@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 11/12/24.
 //
 
+import Foundation
+
 /// The component web page navigated away from the component page to another URL
 struct UnexpectedNavigationEvent: ConnectAnalyticEvent {
     struct Metadata: Codable, Equatable {

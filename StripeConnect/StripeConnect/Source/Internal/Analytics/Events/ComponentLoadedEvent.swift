@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/4/24.
 //
 
+import Foundation
+
 /// The component is successfully loaded within the web view.
 /// Triggered from `componentDidLoad` message handler from the web view.
 struct ComponentLoadedEvent: ConnectAnalyticEvent {

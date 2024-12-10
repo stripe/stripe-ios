@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/15/24.
 //
 
+import Foundation
+
 enum AuthenticatedWebViewError: Int, Error {
 
     // NOTE: These integer values should remain stable as they are used as

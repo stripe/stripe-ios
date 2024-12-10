@@ -8,6 +8,7 @@
 import AuthenticationServices
 
 /// Manages authenticated web views for a single component
+@available(iOS 15, *)
 class AuthenticatedWebViewManager: NSObject {
     typealias SessionFactory = (
         _ url: URL,
