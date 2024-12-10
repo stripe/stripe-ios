@@ -139,6 +139,7 @@ platform :ios do
         end
         emerge(file_path: archive_path + 'Stripe.xcarchive', **arguments)
         emerge(file_path: archive_path + 'StripeApplePay.xcarchive', **arguments)
+        emerge(file_path: archive_path + 'StripeConnect.xcarchive', **arguments)
         emerge(file_path: archive_path + 'StripeFinancialConnections.xcarchive', **arguments)
         emerge(file_path: archive_path + 'StripeIdentity.xcarchive', **arguments)
         emerge(file_path: archive_path + 'StripePayments.xcarchive', **arguments)
