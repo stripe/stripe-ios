@@ -39,6 +39,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.delegate = self
+        sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 300)
 
         let loadResult = await sut.update(intentConfiguration: setupIntentConfig)

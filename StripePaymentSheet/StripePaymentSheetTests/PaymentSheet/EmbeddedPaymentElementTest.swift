@@ -112,6 +112,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateFails() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
         // ...updating w/ an invalid intent config should fail...
         var intentConfig = paymentIntentConfig
         intentConfig.mode = .setup(currency: "Invalid currency", setupFutureUsage: .offSession)
@@ -137,6 +139,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCancelsInFlightUpdate() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
         // ...updating...
         async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately updating again, before the 1st update finishes...
@@ -152,6 +156,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmHandlesInflightUpdateThatSucceeds() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
         
@@ -182,6 +187,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmHandlesInflightUpdateThatFails() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         async let _ = sut.update(intentConfiguration: brokenConfig)
@@ -199,6 +206,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmHandlesCompletedUpdateThatFailed() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         _ = await sut.update(intentConfiguration: brokenConfig)
@@ -331,6 +340,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmThenUpdateFails() async throws {
         // Given an EmbeddedPaymentElement that can confirm
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
 
@@ -361,6 +371,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmThenClearPaymentOptionDoesNothing() async throws {
         // Given an EmbeddedPaymentElement that can confirm
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
 
@@ -387,6 +398,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmTwiceFails() async throws {
         // Given an EmbeddedPaymentElement that can confirm
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
 
