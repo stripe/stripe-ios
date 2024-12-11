@@ -71,7 +71,7 @@ final class MLModelLoader {
 
             // Check if we've already started downloading the model
             if let cachedPromise = self.loadPromiseCache[remoteURL] {
-                return cachedPromise.observe { returnedPromise.fullfill(with: $0) }
+                return cachedPromise.observe(on: loadPromiseCacheQueue) { returnedPromise.fullfill(with: $0) }
             }
 
             // Check if model is already cached to file system
@@ -80,14 +80,10 @@ final class MLModelLoader {
                 return returnedPromise.resolve(with: mlModel)
             }
 
-            self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained {
+            self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained(on: loadPromiseCacheQueue) {
                 [weak self] tmpFileURL -> Promise<MLModel> in
                 let compilePromise = Promise<MLModel>()
                 compilePromise.fulfill { [weak self] in
-                    // Note: The model must be compiled synchronously immediately
-                    // after the file is downloaded, otherwise the system will
-                    // delete the temporary file url before we've had a chance to
-                    // compile it.
                     let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
                     let compiledURL =
                         self?.cache(
@@ -97,7 +93,7 @@ final class MLModelLoader {
                     return try MLModel(contentsOf: compiledURL)
                 }
                 return compilePromise
-            }.observe { [weak self] result in
+            }.observe(on: loadPromiseCacheQueue) { [weak self] result in
                 returnedPromise.fullfill(with: result)
 
                 // Remove from promise cache
@@ -126,7 +122,7 @@ final class MLModelLoader {
     func loadVisionModel(
         fromRemote remoteURL: URL
     ) -> Future<VNCoreMLModel> {
-        return loadModel(fromRemote: remoteURL).chained { mlModel in
+        return loadModel(fromRemote: remoteURL).chained(on: loadPromiseCacheQueue) { mlModel in
             let promise = Promise<VNCoreMLModel>()
             promise.fulfill {
                 return try VNCoreMLModel(for: mlModel)
