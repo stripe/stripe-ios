@@ -327,6 +327,92 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertFalse(delegateDidUpdatePaymentOptionCalled)
         XCTAssertFalse(delegateDidUpdateHeightCalled)
     }
+    
+    func testConfirmThenUpdateFails() async throws {
+        // Given an EmbeddedPaymentElement that can confirm
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Create test confirmParams with valid card details
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
+        
+        // Inject the test payment option and confirm the payment successfully
+        sut._test_paymentOption = .new(confirmParams: confirmParams)
+        let confirmResult = await sut.confirm()
+        XCTAssertEqual(confirmResult, .completed)
+
+        // Now that the payment is confirmed, attempting to update should fail
+        let updateResult = await sut.update(intentConfiguration: paymentIntentConfig2)
+        guard case let .failed(error) = updateResult else {
+            XCTFail("Expected the update to fail after confirming the intent.")
+            return
+        }
+        
+        XCTAssertEqual((error as! PaymentSheetError).debugDescription, PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription)
+    }
+
+    func testConfirmThenClearPaymentOptionDoesNothing() async throws {
+        // Given an EmbeddedPaymentElement that can confirm
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Create test confirmParams with valid card details
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
+        
+        // Inject the test payment option and confirm the payment successfully
+        sut._test_paymentOption = .new(confirmParams: confirmParams)
+        let confirmResult = await sut.confirm()
+        XCTAssertEqual(confirmResult, .completed)
+
+        // Once confirmed, attempting to clear the payment option should do nothing
+        let previousPaymentOption = sut.paymentOption
+        sut.clearPaymentOption()
+        XCTAssertEqual(sut.paymentOption, previousPaymentOption, "Clearing payment option after confirmation should have no effect.")
+    }
+
+    func testConfirmTwiceFails() async throws {
+        // Given an EmbeddedPaymentElement that can confirm
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Create test confirmParams with valid card details
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
+        
+        // Inject the test payment option and confirm the payment successfully once
+        sut._test_paymentOption = .new(confirmParams: confirmParams)
+        let firstConfirmResult = await sut.confirm()
+        XCTAssertEqual(firstConfirmResult, .completed)
+        
+        // Attempting to confirm again should fail
+        let secondConfirmResult = await sut.confirm()
+        guard case let .failed(error) = secondConfirmResult else {
+            XCTFail("Expected second confirm to fail after the intent has already been confirmed.")
+            return
+        }
+        XCTAssertEqual((error as! PaymentSheetError).debugDescription, PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription)
+    }
+
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
@@ -357,5 +443,16 @@ extension EmbeddedPaymentMethodsView {
 
     func getRowButton(accessibilityIdentifier: String) -> RowButton {
         return rowButtons.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
+    }
+}
+
+extension PaymentSheetResult: Equatable {
+    public static func == (lhs: StripePaymentSheet.PaymentSheetResult, rhs: StripePaymentSheet.PaymentSheetResult) -> Bool {
+        switch (lhs, rhs) {
+        case (.completed, .completed): return true
+        case let (.failed(lhsError), .failed(rhsError)): return lhsError.nonGenericDescription == rhsError.nonGenericDescription
+        case (.canceled, .canceled): return true
+        default: return false
+        }
     }
 }
