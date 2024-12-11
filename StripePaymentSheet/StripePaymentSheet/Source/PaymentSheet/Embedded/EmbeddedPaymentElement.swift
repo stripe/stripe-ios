@@ -209,8 +209,10 @@ public final class EmbeddedPaymentElement {
         // Reset the selection on the `embeddedPaymentMethodsView`
         embeddedPaymentMethodsView.resetSelection()
         
+#if DEBUG
         // Clear the testable payment option (only populated during unit testing)
         _test_paymentOption = nil
+#endif
         
         // Notify the delegate that the payment option has changed
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
