@@ -67,8 +67,6 @@ For help with Apple's App Privacy Details form in App Store Connect, visit [Stri
 
 ## Modules
 
-Stripe offers several iOS SDK modules which can be included in your app.
-
 <!-- When adding an EmergeTools size badge:
   - Follow [docs](https://docs.emergetools.com/docs/shareable-links#creating-custom-badges-using-shieldsio)
   - Use the "Download and Intall Size" option
