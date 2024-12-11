@@ -104,6 +104,8 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        verifyIntegration()
+        
         // Do not process any update calls if we have already successfully confirmed an intent
         guard !hasConfirmedIntent else {
             return .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
@@ -197,6 +199,8 @@ public final class EmbeddedPaymentElement {
 
     /// Sets the currently selected payment option to `nil`.
     public func clearPaymentOption() {
+        verifyIntegration()
+        
         // If a payment has been successfully completed, we don't allow clearing the payment option.
         guard !hasConfirmedIntent else { return }
         
@@ -220,10 +224,12 @@ public final class EmbeddedPaymentElement {
 
     #if DEBUG
     public func testGrow() {
+        verifyIntegration()
         stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
         self.embeddedPaymentMethodsView.testGrow()
     }
     public func testShrink() {
+        verifyIntegration()
         stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
         self.embeddedPaymentMethodsView.testShrink()
     }
