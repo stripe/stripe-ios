@@ -475,7 +475,7 @@
 			buildSettings = {
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example79";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;
 				SDKROOT = iphoneos;
 			};
@@ -487,7 +487,7 @@
 			buildSettings = {
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example79";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
 				PRODUCT_NAME = IdentityVerificationExample;
 				SDKROOT = iphoneos;
 			};
