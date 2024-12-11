@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 5/3/24.
 //
 
+import Foundation
 import SafariServices
 @_spi(STP) import StripeCore
 import WebKit
@@ -41,8 +42,13 @@ class ConnectWebViewController: UIViewController {
     /// The current version for the SDK
     let sdkVersion: String?
 
+    /// Popups with an allowed host will open in a PopupViewController and all others will open in a SafariVC.
+    /// Camera permission requests from allowed hosts use the app's camera permissions while all other requests will explicitly ask for user permission.
+    let allowedHosts: [String]
+    
     init(configuration: WKWebViewConfiguration,
          analyticsClient: ComponentAnalyticsClient,
+         allowedHosts: [String],
          // Only override for tests
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          fileManager: FileManager = .default,
@@ -53,6 +59,7 @@ class ConnectWebViewController: UIViewController {
         self.sdkVersion = sdkVersion
         configuration.applicationNameForUserAgent = "- stripe-ios/\(sdkVersion ?? "")"
         webView = .init(frame: .zero, configuration: configuration)
+        self.allowedHosts = allowedHosts
         super.init(nibName: nil, bundle: nil)
 
         // Allow the web view to be inspected for debug builds on 16.4+
@@ -116,6 +123,7 @@ private extension ConnectWebViewController {
         let popupVC = PopupWebViewController(configuration: configuration,
                                              analyticsClient: analyticsClient,
                                              navigationAction: navigationAction,
+                                             allowedHosts: allowedHosts,
                                              urlOpener: urlOpener,
                                              sdkVersion: sdkVersion)
         let navController = UINavigationController(rootViewController: popupVC)
@@ -179,11 +187,10 @@ extension ConnectWebViewController: WKUIDelegate {
                 openOnSystem(url: url)
                 return nil
             }
-
             // Only open popups to known hosts inside PopupWebViewController,
             // otherwise use an SFSafariViewController
             guard let host = url.host,
-                    StripeConnectConstants.allowedHosts.contains(host) else {
+                    allowedHosts.contains(host) else {
                 openInAppSafari(url: url)
                 return nil
             }
@@ -198,7 +205,7 @@ extension ConnectWebViewController: WKUIDelegate {
                  type: WKMediaCaptureType) async -> WKPermissionDecision {
         // Don't prompt the user for camera permissions from a Connect host
         // https://developer.apple.com/videos/play/wwdc2021/10032/?time=754
-        StripeConnectConstants.allowedHosts.contains(origin.host) ? .grant : .deny
+        allowedHosts.contains(origin.host) ? .grant : .deny
     }
 
     func webViewDidClose(_ webView: WKWebView) {

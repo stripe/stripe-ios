@@ -36,14 +36,14 @@ struct ConnectJSURLParams: Encodable {
 }
 
 extension ConnectJSURLParams {
-    init(component: ComponentType, apiClient: STPAPIClient) {
+    init(component: ComponentType, apiClient: STPAPIClient, publicKeyOverride: String?) {
         self.component = component
 
         // Validate that publishable key has been set
         STPAPIClient.validateKey(apiClient.publishableKey)
-
         if apiClient.publishableKeyIsUserKey {
             // Dashboard app overrides
+            self.publicKey = publicKeyOverride
             self.apiKeyOverride = apiClient.publishableKey
             self.merchantIdOverride = apiClient.stripeAccount
             self.platformIdOverride = apiClient.stripeAccount
@@ -51,12 +51,13 @@ extension ConnectJSURLParams {
         } else {
             self.publicKey = apiClient.publishableKey
         }
+
     }
 
-    func url() throws -> URL {
+    func url(baseURL: URL) throws -> URL {
         let dict = try jsonDictionary(with: .connectEncoder)
 
         // Append as hash params
-        return URL(string: "#\(URLEncoder.queryString(from: dict))", relativeTo: StripeConnectConstants.connectJSBaseURL)!
+        return URL(string: "#\(URLEncoder.queryString(from: dict))", relativeTo: baseURL)!
     }
 }
