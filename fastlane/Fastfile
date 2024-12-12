@@ -140,7 +140,7 @@ platform :ios do
           arguments[:base_sha] = `git rev-parse master`.to_s
         end
 
-        modules = YAML.load_file('modules.yaml')['modules'].reject { |m| m['size_report'].nil? }
+        modules = YAML.load_file('modules.yaml')['modules'].select { |m| m.key?('size_report') }
 
         modules.each do |m|
           sdk = m['framework_name']

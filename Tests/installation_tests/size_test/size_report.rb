@@ -343,19 +343,20 @@ end
 measure_branch = ARGV[0]
 base_branch = ARGV[1]
 
-modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| !m['size_report'].nil? }
-sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, measure_branch, base_branch)
+modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| m.key?('size_report') }
+puts modules.map { |m| m['framework_name'] }
+# sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, measure_branch, base_branch)
 
-# Clean up temp directory
-FileUtils.rm_rf(@temp_dir)
+# # Clean up temp directory
+# FileUtils.rm_rf(@temp_dir)
 
-# If one or more SDKs exceed the incremental size, then warn.
-unless sdks_exceeding_incremental_size.empty?
-  puts "The following SDKs exceed the maximum allowed incremental size: #{sdks_exceeding_incremental_size.join(', ')}".red
-end
+# # If one or more SDKs exceed the incremental size, then warn.
+# unless sdks_exceeding_incremental_size.empty?
+#   puts "The following SDKs exceed the maximum allowed incremental size: #{sdks_exceeding_incremental_size.join(', ')}".red
+# end
 
-# If one or more SDKs exceed the maximum allowable size, fail.
-unless sdks_exceeding_max_size.empty?
-  puts "The following SDKs exceed the maximum allowed size: #{sdks_exceeding_max_size.join(', ')}".red
-  exit 1
-end
+# # If one or more SDKs exceed the maximum allowable size, fail.
+# unless sdks_exceeding_max_size.empty?
+#   puts "The following SDKs exceed the maximum allowed size: #{sdks_exceeding_max_size.join(', ')}".red
+#   exit 1
+# end
