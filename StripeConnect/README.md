@@ -1,4 +1,4 @@
-# <img src="../readme-images/Connect.svg" width="40" /> StripeConnect iOS SDK
+# <img src="../readme-images/Connect.svg" width="40" /> Stripe Connect iOS SDK
 
 Use Connect embedded components to add connected account dashboard functionality to your app. The Stripe Connect iOS SDK and supporting API allow you to grant your users access to Stripe products directly in your dashboard.
 
