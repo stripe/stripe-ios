@@ -13,6 +13,8 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+require 'yaml'
+
 default_platform(:ios)
 
 DEFAULT_TEST_DEVICE = 'iPhone 12 mini'.freeze
@@ -137,14 +139,13 @@ platform :ios do
           arguments[:pr_number] = ENV['BITRISE_PULL_REQUEST']
           arguments[:base_sha] = `git rev-parse master`.to_s
         end
-        emerge(file_path: archive_path + 'Stripe.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripeApplePay.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripeConnect.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripeFinancialConnections.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripeIdentity.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripePayments.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripePaymentsUI.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripePaymentSheet.xcarchive', **arguments)
+
+        modules = YAML.load_file('modules.yaml')['modules'].reject { |m| m['size_report'].nil? }
+
+        modules.each do |m|
+          sdk = m['framework_name']
+          emerge(file_path: archive_path + sdk + '.xcarchive', **arguments)
+        end
       end
     end
   end
