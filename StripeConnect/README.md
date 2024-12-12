@@ -22,7 +22,7 @@ Use Connect embedded components to add connected account dashboard functionality
 
 The following Connect embedded components are supported in the iOS SDK:
 
-* [**Account onboarding**](https://docs.stripe.com/connect/supported-embedded-components/account-management?platform=ios): Show account details and allow them to be edited.
+* [**Account onboarding**](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios): Show a localized onboarding form that validates data.
 * [**Payouts**](https://docs.stripe.com/connect/supported-embedded-components/payouts): Show payout information and allow your users to perform payouts.
 
 ## Requirements
