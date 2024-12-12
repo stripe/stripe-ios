@@ -21,6 +21,8 @@ class FinancialConnectionsPresenter {
         let financialConnectionsSheet = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: clientSecret
         )
+        // FC needs the connected account ID to be configured on the API Client
+        // Make a copy before modifying so we don't unexpectedly modify the shared API client
         financialConnectionsSheet.apiClient = apiClient.makeCopy()
         financialConnectionsSheet.apiClient.stripeAccount = connectedAccountId
         return await withCheckedContinuation { continuation in
