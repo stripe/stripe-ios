@@ -227,6 +227,25 @@ import UIKit
         }
         return publishableKey.lowercased().hasPrefix("pk_test") || (publishableKeyIsUserKey && !userKeyLiveMode)
     }
+
+    /**
+     Copies the api client.
+     - Note: This should be used in cases where you need to make a request
+     using the same configuration as a given STPAPIClient , but need to make a
+     modification such as overriding beta headers or `stripeAccount`.
+     */
+    @_spi(STP) public func makeCopy() -> STPAPIClient {
+        let client = STPAPIClient()
+        client._publishableKey = _publishableKey
+        client._stored_configuration = _stored_configuration
+        client.stripeAccount = stripeAccount
+        client.appInfo = appInfo
+        client.apiURL = apiURL
+        client.urlSession = urlSession
+        client.betas = betas
+        client.userKeyLiveMode = userKeyLiveMode
+        return client
+    }
 }
 
 private let APIVersion = "2020-08-27"
@@ -419,7 +438,7 @@ extension STPAPIClient {
         for (k, v) in authorizationHeader(using: ephemeralKeySecret ?? consumerPublishableKey) {
             request.setValue(v, forHTTPHeaderField: k)
         }
-        
+
         if consumerPublishableKey != nil {
             // If we now have a consumer publishable key, we no longer send the connected account
             // in the header, as otherwise the request will justifiably fail.
