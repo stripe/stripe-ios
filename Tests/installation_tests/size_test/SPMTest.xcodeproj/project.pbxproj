@@ -11,6 +11,7 @@
 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
 		C176899020616C7E003DE895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C176898F20616C7E003DE895 /* Assets.xcassets */; };
 		C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176899120616C7E003DE895 /* LaunchScreen.storyboard */; };
+		E670FB972D0AC65A00A1753F /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E670FB962D0AC65A00A1753F /* Version.xcconfig */; };
 		E6E0262526BA187800CE4304 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E0262426BA187800CE4304 /* ViewController.swift */; };
 		E6E0262726BA195D00CE4304 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E0262626BA195D00CE4304 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		C176898F20616C7E003DE895 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C176899220616C7E003DE895 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C176899420616C7E003DE895 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E670FB962D0AC65A00A1753F /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Version.xcconfig; path = "/Users/mludowise/stripe/stripe-ios/BuildConfigurations/Version.xcconfig"; sourceTree = "<absolute>"; };
 		E6E0262426BA187800CE4304 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E6E0262626BA195D00CE4304 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +103,7 @@
 		C176898520616C7E003DE895 /* SPMTest */ = {
 			isa = PBXGroup;
 			children = (
+				E670FB962D0AC65A00A1753F /* Version.xcconfig */,
 				31B4A100271F841C00832DBD /* SPMTest.entitlements */,
 				E6E0262626BA195D00CE4304 /* AppDelegate.swift */,
 				E6E0262426BA187800CE4304 /* ViewController.swift */,
@@ -214,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */,
+				E670FB972D0AC65A00A1753F /* Version.xcconfig in Resources */,
 				C176899020616C7E003DE895 /* Assets.xcassets in Resources */,
 				C176898E20616C7E003DE895 /* Main.storyboard in Resources */,
 			);
@@ -425,6 +429,7 @@
 		};
 		C176899A20616C7E003DE895 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E670FB962D0AC65A00A1753F /* Version.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -444,6 +449,7 @@
 		};
 		C176899B20616C7E003DE895 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E670FB962D0AC65A00A1753F /* Version.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

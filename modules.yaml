@@ -146,7 +146,7 @@ modules:
   docs:
     output: docs/stripeidentity
     readme: StripeIdentity/README.md
-  size_report:
+  size_report: true
 
 - podspec: StripeApplePay.podspec
   scheme: StripeApplePay
@@ -188,11 +188,6 @@ modules:
   localization_dir: StripeUICore/StripeUICore
   custom_string_convertible_dir: StripeUICore/StripeUICore/Source/Categories
   supports_catalyst: true
-
-- scheme: StripeConnect
-  framework_name: StripeConnect
-  supports_catalyst: false
-  size_report:
 
 # All podspecs that get pushed to Cocoapods in the order of dependencies such
 # that a pods dependencies must appear before it in the list.
