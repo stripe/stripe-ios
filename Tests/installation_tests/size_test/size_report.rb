@@ -241,9 +241,11 @@ def check_size(modules, measure_branch, base_branch)
 
   modules.each do |m|
     sdk = m['framework_name']
-    max_compressed_size = m['size_report']['max_compressed_size']
-    max_uncompressed_size = m['size_report']['max_uncompressed_size']
-    max_incremental_uncompressed_size = m['size_report']['max_incremental_uncompressed_size']
+    unless m['size_report'].nil?
+      max_compressed_size = m['size_report']['max_compressed_size'] 
+      max_uncompressed_size = m['size_report']['max_uncompressed_size']
+      max_incremental_uncompressed_size = m['size_report']['max_incremental_uncompressed_size']
+    end
 
     begin
       # Setup project to include SDK
