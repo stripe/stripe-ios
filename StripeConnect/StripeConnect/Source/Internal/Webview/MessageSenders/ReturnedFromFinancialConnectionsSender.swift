@@ -4,6 +4,7 @@
 //
 //  Created by Mel Ludowise on 10/17/24.
 //
+@_spi(STP) import StripeCore
 
 /// Notifies that the user finished the FinancialConnections flow
 struct ReturnedFromFinancialConnectionsSender: MessageSender {
@@ -13,6 +14,9 @@ struct ReturnedFromFinancialConnectionsSender: MessageSender {
         let bankToken: String?
         /// Unique identifier (UUID) originally passed from the web layer in `openFinancialConnections`
         let id: String
+        // Need the session here somehow
+        // let session: StripeAPI.FinancialConnectionsSession.AccountList
+        // We only need public let id: String
     }
     let name: String = "returnedFromFinancialConnections"
     let payload: Payload
