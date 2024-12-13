@@ -196,6 +196,8 @@ modules:
   docs:
     output: docs/stripeconnect
     readme: StripeConnect/README.md
+    include:
+      - StripeCore
   size_report: true
 
 # All podspecs that get pushed to Cocoapods in the order of dependencies such
