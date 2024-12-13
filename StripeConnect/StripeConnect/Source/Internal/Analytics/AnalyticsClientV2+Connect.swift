@@ -10,7 +10,7 @@ import Foundation
 
 extension AnalyticsClientV2 {
     static let sharedConnect = AnalyticsClientV2(
-        clientId: "mobile_connect_sdk",
+        clientId: "mobile-connect-sdk",
         origin: "stripe-connect-ios"
     )
 }
