@@ -324,6 +324,8 @@ private extension ConnectComponentWebViewController {
                 connectedAccountId: args.connectedAccountId,
                 from: self
             )
+            
+            debugPrint(result);
 
             var token: String?
             // TODO: MXMOBILE-2491 Log these as errors instead of printing to console
@@ -340,8 +342,14 @@ private extension ConnectComponentWebViewController {
                 // No-op
                 break
             }
+            
+            let fcSender = ReturnedFromFinancialConnectionsSender(payload: .init(bankToken: token, id: args.id))
+            debugPrint(fcSender.payload)
 
-            sendMessage(ReturnedFromFinancialConnectionsSender(payload: .init(bankToken: token, id: args.id)))
+            sendMessage(CallSetterWithSerializableValueSender(payload: .init(
+                setter: "setCollectMobileFinancialConnectionsResult",
+                value: fcSender.payload
+            )))
         }
     }
 }
