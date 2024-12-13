@@ -18,4 +18,5 @@ Pod::Spec.new do |s|
   s.source_files                   = 'StripeConnect/StripeConnect/**/*.swift'
   s.dependency                       'StripeCore', s.version.to_s
   s.dependency                       'StripeUICore', s.version.to_s
+  s.dependency                       'StripeFinancialConnections', s.version.to_s
 end

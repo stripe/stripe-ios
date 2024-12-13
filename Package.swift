@@ -159,7 +159,7 @@ let package = Package(
         ),
         .target(
             name: "StripeConnect",
-            dependencies: ["StripeCore", "StripeUICore"],
+            dependencies: ["StripeCore", "StripeUICore", "StripeFinancialConnections"],
             path: "StripeConnect/StripeConnect"
         )
     ]
