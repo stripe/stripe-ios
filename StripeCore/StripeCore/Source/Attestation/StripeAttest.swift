@@ -65,6 +65,10 @@ import UIKit
         case attestationRateLimitExceeded
         /// The challenge couldn't be converted to UTF-8 data.
         case invalidChallengeData
+        /// The backend asked us not to attest
+        case shouldNotAttest
+        /// The backend asked us to attest, but the key is already attested
+        case shouldAttestButKeyIsAlreadyAttested
     }
 
     // MARK: - Internal
@@ -151,10 +155,18 @@ import UIKit
 
         let challenge = try await getChallenge()
 
+        // If the backend claims that attestation is required, but we already have an attested key,
+        // something has gone wrong.
+        if challenge.initial_attestation_required {
+            // Reset the key, we'll try again next time:
+            resetKey()
+            throw AttestationError.shouldAttestButKeyIsAlreadyAttested
+        }
+
         let deviceId = try getDeviceID()
         let appId = try getAppID()
 
-        let assertion = try await generateAssertion(keyId: keyId, challenge: challenge)
+        let assertion = try await generateAssertion(keyId: keyId, challenge: challenge.challenge)
         return Assertion(assertionData: assertion, deviceID: deviceId, appID: appId, keyID: keyId)
     }
 
@@ -168,7 +180,14 @@ import UIKit
 
         let keyId = try await self.getOrCreateKeyID()
         let challenge = try await getChallenge()
-        guard let challengeData = challenge.data(using: .utf8) else {
+        // If the backend claims that attestation isn't required, we should not attempt it.
+        guard challenge.initial_attestation_required else {
+            // And reset the key, as something has gone wrong.
+            // The server thinks we've attested, but we think we haven't.
+            resetKey()
+            throw AttestationError.shouldNotAttest
+        }
+        guard let challengeData = challenge.challenge.data(using: .utf8) else {
             throw AttestationError.invalidChallengeData
         }
         let hash = Data(SHA256.hash(data: challengeData))
@@ -235,7 +254,7 @@ import UIKit
     }
 
     /// Get a challenge from the backend.
-    func getChallenge() async throws -> String {
+    func getChallenge() async throws -> StripeChallengeResponse {
         let keyID = try await self.getOrCreateKeyID()
         return try await appAttestBackend.getChallenge(appId: getAppID(), deviceId: getDeviceID(), keyId: keyID)
     }
