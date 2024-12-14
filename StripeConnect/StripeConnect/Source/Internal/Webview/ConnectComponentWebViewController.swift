@@ -324,32 +324,23 @@ private extension ConnectComponentWebViewController {
                 connectedAccountId: args.connectedAccountId,
                 from: self
             )
-            
-            debugPrint(result);
 
-            var token: String?
-            // TODO: MXMOBILE-2491 Log these as errors instead of printing to console
+            var value: SetCollectMobileFinancialConnectionsResult.Value?
 
             switch result {
-            case .completed(result: (_, let returnedToken)):
-                token = returnedToken?.id
-                if returnedToken == nil {
+            case .completed(result: (let session, let token)):
+                guard let token else {
+                    analyticsClient.logClientError(<#T##error: any Error##any Error#>)
                     debugPrint("Error using FinancialConnections: no bank token returned")
                 }
+                value = .init(financialConnectionsSession: session, token: token)
             case .failed(let error):
-                debugPrint("Error using FinancialConnections: \(error)")
+                analyticsClient.logClientError(error)
             case .canceled:
-                // No-op
-                break
+                value = .init(financialConnectionsSession: .init, token: <#T##StripeAPI.BankAccountToken#>)
             }
-            
-            let fcSender = ReturnedFromFinancialConnectionsSender(payload: .init(bankToken: token, id: args.id))
-            debugPrint(fcSender.payload)
 
-            sendMessage(CallSetterWithSerializableValueSender(payload: .init(
-                setter: "setCollectMobileFinancialConnectionsResult",
-                value: fcSender.payload
-            )))
+            sendMessage(SetCollectMobileFinancialConnectionsResult.sender(value: value))
         }
     }
 }

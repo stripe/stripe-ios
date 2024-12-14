@@ -10,12 +10,12 @@ import XCTest
 
 class ReturnedFromFinancialConnectionsSenderTests: ScriptWebTestBase {
     func testSendMessage() throws {
-        try validateMessageSent(sender: ReturnedFromFinancialConnectionsSender(payload: .init(bankToken: "bank_token", id: "1234")))
+        try validateMessageSent(sender: SetCollectMobileFinancialConnectionsResultSender(payload: .init(bankToken: "bank_token", id: "1234")))
     }
 
     func testSenderSignature() throws {
         XCTAssertEqual(
-            try ReturnedFromFinancialConnectionsSender(payload: .init(bankToken: "bank_token", id: "1234")).javascriptMessage(),
+            try SetCollectMobileFinancialConnectionsResultSender(payload: .init(bankToken: "bank_token", id: "1234")).javascriptMessage(),
             """
             window.returnedFromFinancialConnections({"bankToken":"bank_token","id":"1234"});
             """

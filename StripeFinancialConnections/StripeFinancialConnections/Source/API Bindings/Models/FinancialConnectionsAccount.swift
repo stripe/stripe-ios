@@ -129,10 +129,10 @@ public extension StripeAPI {
 
 }
 
-// MARK: - Decodable
+// MARK: - Codable & Equatable
 
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.BalanceRefresh: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CreditBalance: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.Balance: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.BalanceRefresh: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CreditBalance: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.Balance: Codable, Equatable {}

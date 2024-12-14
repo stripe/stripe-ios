@@ -480,7 +480,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
 
         let expectation = try webVC.webView.expectationForMessageReceived(
-            sender: ReturnedFromFinancialConnectionsSender(payload: .init(
+            sender: SetCollectMobileFinancialConnectionsResultSender(payload: .init(
                 bankToken: "bank_token",
                 id: "5678"
             ))
@@ -503,7 +503,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
         let expectation = try webVC.webView.expectationForMessageReceived(
-            sender: ReturnedFromFinancialConnectionsSender(payload: .init(
+            sender: SetCollectMobileFinancialConnectionsResultSender(payload: .init(
                 bankToken: nil,
                 id: "5678"
             ))
@@ -526,7 +526,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
         let expectation = try webVC.webView.expectationForMessageReceived(
-            sender: ReturnedFromFinancialConnectionsSender(payload: .init(
+            sender: SetCollectMobileFinancialConnectionsResultSender(payload: .init(
                 bankToken: nil,
                 id: "5678"
             ))

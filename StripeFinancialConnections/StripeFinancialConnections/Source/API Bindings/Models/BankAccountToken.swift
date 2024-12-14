@@ -34,7 +34,7 @@ public extension StripeAPI {
     }
 }
 
-// MARK: - Decodable
+// MARK: - Codable & Equatable
 
-@_spi(STP) extension StripeAPI.BankAccountToken: Decodable {}
-@_spi(STP) extension StripeAPI.BankAccountToken.BankAccount: Decodable {}
+@_spi(STP) extension StripeAPI.BankAccountToken: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.BankAccountToken.BankAccount: Codable, Equatable {}
