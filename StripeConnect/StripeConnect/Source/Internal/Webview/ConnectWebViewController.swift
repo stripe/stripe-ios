@@ -59,6 +59,8 @@ class ConnectWebViewController: UIViewController {
         self.sdkVersion = sdkVersion
         configuration.applicationNameForUserAgent = "- stripe-ios/\(sdkVersion ?? "")"
         webView = .init(frame: .zero, configuration: configuration)
+        webView.allowsLinkPreview = false
+        
         self.allowedHosts = allowedHosts
         super.init(nibName: nil, bundle: nil)
 
