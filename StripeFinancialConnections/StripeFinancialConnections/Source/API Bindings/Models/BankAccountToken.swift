@@ -24,6 +24,14 @@ public extension StripeAPI {
             public let last4: String
             public let routingNumber: String?
             public let status: String
+
+            // MARK: Internal
+
+            // StripeConnect needs to retain these API properties so they
+            // can be re-encoded and forwarded to Javascript
+
+            let object: String
+            let accountHolderType: String?
         }
 
         public let id: String
@@ -31,6 +39,15 @@ public extension StripeAPI {
         public let clientIp: String?
         public let livemode: Bool
         public let used: Bool
+
+        // MARK: Internal
+
+        // StripeConnect needs to retain these API properties so they
+        // can be re-encoded and forwarded to Javascript
+
+        let object: String
+        let created: Int
+        let type: String
     }
 }
 

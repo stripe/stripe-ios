@@ -23,7 +23,3 @@ class OpenFinancialConnectionsMessageHandler: ScriptMessageHandler<OpenFinancial
                    didReceiveMessage: didReceiveMessage)
     }
 }
-
-enum OpenFinancialConnectionsError: Error {
-    case noBankToken
-}

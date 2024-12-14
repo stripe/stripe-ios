@@ -125,6 +125,13 @@ public extension StripeAPI {
         public let subcategory: Subcategory
         /** The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this FinancialConnectionsAccount. */
         public let supportedPaymentMethodTypes: [SupportedPaymentMethodTypes]
+
+        // MARK: Internal
+
+        // StripeConnect needs to retain these API properties so they
+        // can be re-encoded and forwarded to Javascript
+
+        let object: String
     }
 
 }

@@ -325,22 +325,7 @@ private extension ConnectComponentWebViewController {
                 from: self
             )
 
-            var value: SetCollectMobileFinancialConnectionsResult.Value?
-
-            switch result {
-            case .completed(result: (let session, let token)):
-                guard let token else {
-                    analyticsClient.logClientError(<#T##error: any Error##any Error#>)
-                    debugPrint("Error using FinancialConnections: no bank token returned")
-                }
-                value = .init(financialConnectionsSession: session, token: token)
-            case .failed(let error):
-                analyticsClient.logClientError(error)
-            case .canceled:
-                value = .init(financialConnectionsSession: .init, token: <#T##StripeAPI.BankAccountToken#>)
-            }
-
-            sendMessage(SetCollectMobileFinancialConnectionsResult.sender(value: value))
+            sendMessage(SetCollectMobileFinancialConnectionsResult.sender(value: result.toSenderValue(analyticsClient: analyticsClient)))
         }
     }
 }
