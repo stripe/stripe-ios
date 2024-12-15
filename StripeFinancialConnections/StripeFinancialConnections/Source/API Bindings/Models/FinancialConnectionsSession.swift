@@ -35,11 +35,11 @@ public extension StripeAPI {
             }
         }
 
-        @_spi(STP) public enum PaymentAccount: SafeEnumCodable, Equatable {
+        @_spi(STP) public enum PaymentAccount: Decodable {
 
             // MARK: - Types
 
-            @_spi(STP) public struct BankAccount: Codable, Equatable {
+            @_spi(STP) public struct BankAccount: Decodable {
                 public let bankName: String?
                 public let id: String
                 public let last4: String
@@ -74,19 +74,6 @@ public extension StripeAPI {
                     self = .unparsable
                 }
             }
-
-            // MARK: - Encodable
-
-            @_spi(STP) public func encode(to encoder: any Encoder) throws {
-                switch self {
-                case .linkedAccount(let value):
-                    try value.encode(to: encoder)
-                case .bankAccount(let value):
-                    try value.encode(to: encoder)
-                case .unparsable:
-                    break
-                }
-            }
         }
 
         enum Status: String, SafeEnumCodable, Equatable {
@@ -97,8 +84,8 @@ public extension StripeAPI {
             case unparsable
         }
 
-        struct StatusDetails: Codable, Equatable {
-            struct CancelledStatusDetails: Codable, Equatable {
+        struct StatusDetails: Decodable {
+            struct CancelledStatusDetails: Decodable {
                 enum TerminalStateReason: String, SafeEnumCodable, Equatable {
                     case other
                     case customManualEntry = "custom_manual_entry"
@@ -158,7 +145,7 @@ public extension StripeAPI {
             case statusDetails = "status_details"
         }
 
-        @_spi(STP) public init(from decoder: Decoder) throws {
+        public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let accounts: FinancialConnectionsSession.AccountList
             do {
@@ -177,32 +164,10 @@ public extension StripeAPI {
                 statusDetails: try? container.decode(StatusDetails.self, forKey: .statusDetails)
             )
         }
-
-        @_spi(STP) public func encode(to encoder: any Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(clientSecret, forKey: .clientSecret)
-            try container.encode(id, forKey: .id)
-            try container.encode(livemode, forKey: .livemode)
-            try container.encode(paymentAccount, forKey: .paymentAccount)
-            try container.encode(bankAccountToken, forKey: .bankAccountToken)
-            try container.encode(status, forKey: .status)
-            try container.encode(statusDetails, forKey: .statusDetails)
-
-            // All the accounts should already be loaded before encoding.
-            // Encode the accounts as an array since this is what StripeJS expects.
-            switch paymentAccount {
-            case .linkedAccount:
-                try container.encode(accounts.data, forKey: .linkedAccounts)
-            case .bankAccount:
-                try container.encode(accounts.data, forKey: .accounts)
-            default:
-                break
-            }
-        }
     }
 }
 
-// MARK: - Codable & Equatable
+// MARK: - Codable
 
-@_spi(STP) extension StripeAPI.FinancialConnectionsSession: Codable, Equatable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsSession.AccountList: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsSession: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsSession.AccountList: Codable {}

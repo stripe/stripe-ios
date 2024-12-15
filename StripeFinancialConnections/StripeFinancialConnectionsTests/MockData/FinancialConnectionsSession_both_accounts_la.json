@@ -82,7 +82,7 @@
     "data": [
       {
         "id": "fca_1KtwJsdsdfdsf",
-        "object": "linked_account",
+        "object": "financial_connections.account",
         "balance": null,
         "balance_refresh": null,
         "category": "cash",
@@ -104,7 +104,7 @@
       },
       {
         "id": "fca_1KtwJsdfadfsdf",
-        "object": "linked_account",
+        "object": "financial_connections.account",
         "balance": null,
         "balance_refresh": null,
         "category": "cash",
@@ -127,7 +127,7 @@
       },
       {
         "id": "fca_1asdfe23dsdfs",
-        "object": "linked_account",
+        "object": "financial_connections.account",
         "balance": null,
         "balance_refresh": null,
         "category": "credit",
@@ -149,7 +149,7 @@
       },
       {
         "id": "fca_asdfasdfe",
-        "object": "linked_account",
+        "object": "financial_connections.account",
         "balance": null,
         "balance_refresh": null,
         "category": "cash",
@@ -171,7 +171,7 @@
       },
       {
         "id": "fca_1sdfwedfsdf",
-        "object": "linked_account",
+        "object": "financial_connections.account",
         "balance": null,
         "balance_refresh": null,
         "category": "cash",
