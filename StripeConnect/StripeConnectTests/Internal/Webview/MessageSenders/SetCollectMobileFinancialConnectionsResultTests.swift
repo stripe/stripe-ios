@@ -19,6 +19,13 @@ enum FinancialConnectionsSessionMock: String, MockData {
     case `default` = "FinancialConnectionsSession"
 }
 
+enum StripeErrorMock: String, MockData {
+    typealias ResponseType = StripeAPIError
+    var bundle: Bundle { return Bundle(for: SetCollectMobileFinancialConnectionsResultTests.self) }
+
+    case `default` = "StripeAPIError"
+}
+
 class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
     func testSendMessage() throws {
         try validateMessageSent(sender: SetCollectMobileFinancialConnectionsResult.sender(
@@ -33,7 +40,7 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
     let mockAnalyticsClient = MockComponentAnalyticsClient(commonFields: .mock)
     let bundle = Bundle(for: SetCollectMobileFinancialConnectionsResultTests.self)
 
-    func testEncodingValue() throws {
+    func testEncodingValue_success() throws {
         let session = try FinancialConnectionsSessionMock.default.make()
         let sheetResult = FinancialConnectionsSheet.TokenResult.completed(session: session)
         let payloadValue = sheetResult.toSenderValue(analyticsClient: mockAnalyticsClient)
@@ -62,10 +69,39 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
             )
         )
 
-        // Cast Swift types to Objc types so CustomDump comparison passes
         expectNoDifference(encodedJsonDict, [
             "setter": "setCollectMobileFinancialConnectionsResult",
             "value": expectedSessionJsonDict,
+        ])
+    }
+
+    func testEncodingValue_apiError() throws {
+        let apiError = try StripeErrorMock.default.make()
+
+        let sheetResult = FinancialConnectionsSheet.TokenResult.failed(
+            error: StripeError.apiError(apiError)
+        )
+        let payloadValue = sheetResult.toSenderValue(analyticsClient: mockAnalyticsClient)
+
+        XCTAssertNil(payloadValue.financialConnectionsSession)
+        XCTAssertNil(payloadValue.token)
+        XCTAssertNotNil(payloadValue.error)
+
+        // Encode to JSON dictionary using Connect encoder
+        let encodedJsonDict = try dictionary(
+            fromJsonData: try SetCollectMobileFinancialConnectionsResult
+                .sender(value: payloadValue)
+                .jsonData()
+        )
+        let apiErrorJsonDict = try dictionary(
+            fromJsonData: try StripeErrorMock.default.data()
+        )
+
+        expectNoDifference(encodedJsonDict, [
+            "setter": "setCollectMobileFinancialConnectionsResult",
+            "value": [
+                "error": apiErrorJsonDict
+            ],
         ])
     }
 
@@ -92,15 +128,7 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
     }
 
     func testPayloadValue_apiError() throws {
-        let apiError = try StripeJSONDecoder().decode(
-            StripeAPIError.self,
-            from: try Data(
-                contentsOf: bundle.url(
-                    forResource: "StripeAPIError",
-                    withExtension: "json"
-                )!
-            )
-        )
+        let apiError = try StripeErrorMock.default.make()
         let sheetResult = FinancialConnectionsSheet.TokenResult.failed(error: StripeError.apiError(apiError))
         let payloadValue = sheetResult.toSenderValue(analyticsClient: mockAnalyticsClient)
         XCTAssertNil(payloadValue.financialConnectionsSession)

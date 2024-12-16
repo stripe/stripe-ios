@@ -65,8 +65,8 @@ extension WKWebView {
         evaluateMessage(name: "openFinancialConnections",
                         json: """
                         {
-                            "clientSecret": "\(clientSecret)", 
-                            "connectedAccountId": "\(connectedAccountId)" 
+                            "clientSecret": "\(clientSecret)",
+                            "connectedAccountId": "\(connectedAccountId)"
                         }
                         """)
     }

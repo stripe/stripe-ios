@@ -20,7 +20,16 @@ enum SetCollectMobileFinancialConnectionsResult {
         /// Bank account token, if there is one
         let token: StripeAPI.BankAccountToken?
         /// Stripe API error if an error occurred of this error type
-        let error: StripeAPIError?
+        private(set) var error: StripeAPIError?
+
+        init(financialConnectionsSession: FinancialConnectionsSession?, token: StripeAPI.BankAccountToken?, error: StripeAPIError?) {
+            self.financialConnectionsSession = financialConnectionsSession
+            self.token = token
+            self.error = error
+
+            // Remove excess fields that we don't want to encode
+            self.error?._allResponseFieldsStorage = nil
+        }
 
         // Use explicit CodingKeys instead of synthesizing so we can reference
         // them in `keyEncodingStrategy(forKeys:)`
