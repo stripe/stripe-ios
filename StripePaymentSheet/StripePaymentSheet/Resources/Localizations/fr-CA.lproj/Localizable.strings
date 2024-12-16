@@ -136,6 +136,8 @@
 
 "Not %@?" = "Vous n'êtes pas %@?";
 
+"Only card brand can be changed." = "Vous pouvez uniquement modifier la marque de la carte.";
+
 "Open your UPI app to approve your payment within %@" = "Ouvrez votre application d'UPI pour autoriser votre paiement dans %@";
 
 "Or" = "Ou";
@@ -179,8 +181,6 @@
 "Remove card?" = "Voulez-vous retirer la carte?";
 
 "Remove linked account" = "Supprimer le compte associé";
-
-"Remove payment method" = "Supprimer le moyen de paiement";
 
 "Resend code" = "Renvoyer le code";
 

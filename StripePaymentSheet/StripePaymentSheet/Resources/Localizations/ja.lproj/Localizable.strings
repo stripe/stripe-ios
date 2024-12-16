@@ -136,6 +136,8 @@
 
 "Not %@?" = "%@ ではありませんか？";
 
+"Only card brand can be changed." = "カードブランドのみ変更できます。";
+
 "Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
 
 "Or" = "または";
@@ -179,8 +181,6 @@
 "Remove card?" = "カードを削除しますか？";
 
 "Remove linked account" = "関連付けられた口座を削除";
-
-"Remove payment method" = "決済手段の削除";
 
 "Resend code" = "コードを再送信";
 

@@ -136,6 +136,8 @@
 
 "Not %@?" = "Bukan %@?";
 
+"Only card brand can be changed." = "Hanya jenama kad boleh diubah.";
+
 "Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI untuk meluluskan pembayaran anda dalam masa %@";
 
 "Or" = "Atau";
@@ -179,8 +181,6 @@
 "Remove card?" = "Alih keluar kad?";
 
 "Remove linked account" = "Alih keluar akaun yang dipautkan";
-
-"Remove payment method" = "Alih keluar kaedah pembayaran";
 
 "Resend code" = "Hantar semula kod";
 

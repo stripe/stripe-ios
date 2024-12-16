@@ -136,6 +136,8 @@
 
 "Not %@?" = "%@ doğru değil mi?";
 
+"Only card brand can be changed." = "Yalnızca kart markası değiştirilebilir.";
+
 "Open your UPI app to approve your payment within %@" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
 
 "Or" = "Veya";
@@ -179,8 +181,6 @@
 "Remove card?" = "Kart kaldırılsın mı?";
 
 "Remove linked account" = "Bağlı hesabı kaldır";
-
-"Remove payment method" = "Ödeme yöntemini kaldır";
 
 "Resend code" = "Kodu tekrar gönder";
 
