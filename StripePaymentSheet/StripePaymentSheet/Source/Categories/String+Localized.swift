@@ -119,6 +119,13 @@ extension String.Localized {
         )
     }
 
+    static var only_card_brand_can_be_changed: String {
+        STPLocalizedString(
+            "Only card brand can be changed.",
+            "Text on a screen for updating a cobranded card that indicates only card brand can be changed."
+        )
+    }
+
     static var save: String {
        STPLocalizedString(
            "Save",

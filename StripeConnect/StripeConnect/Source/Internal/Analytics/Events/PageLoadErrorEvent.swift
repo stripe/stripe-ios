@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/4/24.
 //
 
+import Foundation
+
 /// The SDK receives a non-200 status code or error loading the web view, other than “Internet connectivity” errors.
 struct PageLoadErrorEvent: ConnectAnalyticEvent {
     struct Metadata: Encodable, Equatable {

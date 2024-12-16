@@ -7,8 +7,9 @@
 
 import Foundation
 import SafariServices
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@_spi(DashboardOnly) @_spi(PrivateBetaConnect) @testable import StripeConnect
 @_spi(STP) import StripeCore
+@testable import StripeFinancialConnections
 @_spi(STP) import StripeUICore
 import WebKit
 import XCTest
@@ -417,6 +418,29 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testAllowedHosts() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+        XCTAssertEqual(webVC.allowedHosts, StripeConnectConstants.allowedHosts + ["connect-js.stripe.com"])
+    }
+
+    @MainActor
+    func testAllowedHostsWithModifiedBaseURL() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        componentManager.baseURL = URL(string: "https://test.stripe.com")!
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in })
+        XCTAssertEqual(webVC.allowedHosts, StripeConnectConstants.allowedHosts + ["test.stripe.com"])
+    }
+
+    @MainActor
     func testUnexpectedPageLoadAnalytic() async throws {
         let componentManager = componentManagerAssertingOnFetch()
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
@@ -431,6 +455,86 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
         let event = try analyticsClient.lastEvent(ofType: UnexpectedNavigationEvent.self)
         XCTAssertEqual(event.metadata.url, "https://stripe.com")
+    }
+
+   // MARK: - openFinancialConnections
+
+    func testOpenFinancialConnections_success() throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let financialConnectionsPresenter = MockFinancialConnectionsPresenter { apiClient, secret, connectedAccountId, vc in
+            XCTAssert(apiClient === componentManager.apiClient)
+            XCTAssertEqual(secret, "client_secret_123")
+            XCTAssertEqual(connectedAccountId, "acct_1234")
+            XCTAssert(vc is ConnectComponentWebViewController)
+
+            return .completed(result: (
+                session: StripeAPI.FinancialConnectionsSession(clientSecret: "", id: "", accounts: .init(data: [], hasMore: false), livemode: false, paymentAccount: nil, bankAccountToken: nil, status: nil, statusDetails: nil),
+                token: StripeAPI.BankAccountToken(id: "bank_token", bankAccount: nil, clientIp: nil, livemode: false, used: false)
+            ))
+        }
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      financialConnectionsPresenter: financialConnectionsPresenter)
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: ReturnedFromFinancialConnectionsSender(payload: .init(
+                bankToken: "bank_token",
+                id: "5678"
+            ))
+        )
+
+        webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", id: "5678", connectedAccountId: "acct_1234")
+
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    func testOpenFinancialConnections_canceled() throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let financialConnectionsPresenter = MockFinancialConnectionsPresenter { _, _, _, _ in
+            return .canceled
+        }
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      financialConnectionsPresenter: financialConnectionsPresenter)
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: ReturnedFromFinancialConnectionsSender(payload: .init(
+                bankToken: nil,
+                id: "5678"
+            ))
+        )
+
+        webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", id: "5678", connectedAccountId: "acct_1234")
+
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    func testOpenFinancialConnections_error() throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let financialConnectionsPresenter = MockFinancialConnectionsPresenter { _, _, _, _ in
+            return .failed(error: NSError(domain: "mock_error", code: 0))
+        }
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      financialConnectionsPresenter: financialConnectionsPresenter)
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: ReturnedFromFinancialConnectionsSender(payload: .init(
+                bankToken: nil,
+                id: "5678"
+            ))
+        )
+
+        webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", id: "5678", connectedAccountId: "acct_1234")
+
+        wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }
 
@@ -459,5 +563,32 @@ private class MockAuthenticatedWebViewManager: AuthenticatedWebViewManager {
     @MainActor
     override func present(with url: URL, from view: UIView) async throws -> URL? {
         try await overridePresent(url, view)
+    }
+}
+
+private class MockFinancialConnectionsPresenter: FinancialConnectionsPresenter {
+    var overridePresentForToken: (
+        _ apiClient: STPAPIClient,
+        _ clientSecret: String,
+        _ connectedAccountId: String,
+        _ presentingViewController: UIViewController
+    ) async -> FinancialConnectionsSheet.TokenResult
+
+    init(overridePresentForToken: @escaping (
+        _ apiClient: STPAPIClient,
+        _ clientSecret: String,
+        _ connectedAccountId: String,
+        _ presentingViewController: UIViewController
+    ) -> FinancialConnectionsSheet.TokenResult) {
+        self.overridePresentForToken = overridePresentForToken
+    }
+
+    override func presentForToken(
+        apiClient: STPAPIClient,
+        clientSecret: String,
+        connectedAccountId: String,
+        from presentingViewController: UIViewController
+    ) async -> FinancialConnectionsSheet.TokenResult {
+        await overridePresentForToken(apiClient, clientSecret, connectedAccountId, presentingViewController)
     }
 }

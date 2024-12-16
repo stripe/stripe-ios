@@ -248,7 +248,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             isSettingUp: true,
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
-            analyticsHelper: nil
+            analyticsHelper: nil,
+            paymentMethodIncentive: nil
         ).make()
         formElement.delegate = self
         return formElement
