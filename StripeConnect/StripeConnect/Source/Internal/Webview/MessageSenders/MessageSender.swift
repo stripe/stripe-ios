@@ -22,23 +22,23 @@ protocol MessageSender {
     /// Function param
     var payload: Payload { get }
     /// JSON key-encoding encoding strategy for payload
-    var keyEncodingStrategy: CustomKeyCodingStrategy? { get }
+    var customKeyEncodingStrategy: CustomKeyCodingStrategy? { get }
 }
 
 extension MessageSender {
     // Default to nil
-    var keyEncodingStrategy: CustomKeyCodingStrategy? { nil }
+    var customKeyEncodingStrategy: CustomKeyCodingStrategy? { nil }
 }
 
 extension MessageSender {
     var jsonEncoder: JSONEncoder {
         // Use default encoder unless we should use custom key encoding
-        guard let keyEncodingStrategy else {
+        guard let customKeyEncodingStrategy else {
             return .connectEncoder
         }
 
         let encoder = JSONEncoder.makeConnectEncoder()
-        encoder.keyEncodingStrategy = .custom(keyEncodingStrategy)
+        encoder.keyEncodingStrategy = .custom(customKeyEncodingStrategy)
         return encoder
     }
 

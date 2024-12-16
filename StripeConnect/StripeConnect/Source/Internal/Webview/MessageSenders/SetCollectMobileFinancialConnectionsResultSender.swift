@@ -10,7 +10,7 @@
 enum SetCollectMobileFinancialConnectionsResult {
     struct PayloadValue: Codable, Equatable {
         /// Simplified version of `StripeAPI.FinancialConnectionsSession`
-        /// containing minimal properties needed by StripeJS
+        /// containing minimal properties needed by Stripe.js
         struct FinancialConnectionsSession: Codable, Equatable {
             let accounts: [StripeAPI.FinancialConnectionsAccount]
         }
@@ -35,13 +35,13 @@ enum SetCollectMobileFinancialConnectionsResult {
     static func sender(value: PayloadValue) -> CallSetterWithSerializableValueSender<PayloadValue?> {
         .init(payload: .init(setter: "setCollectMobileFinancialConnectionsResult",
                              value: value),
-              keyEncodingStrategy: keyEncodingStrategy)
+              customKeyEncodingStrategy: keyEncodingStrategy)
     }
 
     static func keyEncodingStrategy(forKeys keys: [any CodingKey]) -> any CodingKey {
         /*
          The `financialConnectionsSession` and `token` properties should encode
-         to StripeJS types, which use snake_case.
+         to Stripe.js types, which use snake_case.
          Top-level payload properties should retain their camelCase encoding.
          */
         let lastKey = keys.last!
@@ -60,7 +60,7 @@ enum SetCollectMobileFinancialConnectionsResult {
 }
 
 extension FinancialConnectionsSheet.TokenResult {
-    /// Converts the result into one that can be sent to StripeJS.
+    /// Converts the result into one that can be sent to Stripe.js.
     /// If an error was returned by FinancialConnections, it will be logged to analytics.
     func toSenderValue(id: String, analyticsClient: ComponentAnalyticsClient) -> SetCollectMobileFinancialConnectionsResult.PayloadValue {
         switch self {
