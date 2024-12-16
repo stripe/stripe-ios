@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 private enum MessageSenderError: Int, Error {
     /// Error encoding the json to utf-8
