@@ -739,7 +739,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 )
             }
         }()
-        return PaymentMethodFormViewController(
+        let viewController = PaymentMethodFormViewController(
             type: paymentMethodType,
             intent: intent,
             elementsSession: elementsSession,
@@ -750,6 +750,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             analyticsHelper: analyticsHelper,
             delegate: self
         )
+        viewController.presentingViewControllerDelegate = self
+        return viewController
     }
 
     private func shouldDisplayForm(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
@@ -879,5 +881,13 @@ extension PaymentSheetVerticalViewController: ElementDelegate {
     func didUpdate(element: Element) {
         self.error = nil
         updateUI()
+    }
+}
+
+// MARK: - PresentingViewControllerDelegate
+
+extension PaymentSheetVerticalViewController: PresentingViewControllerDelegate {
+    func presentViewController(viewController: UIViewController, completion: (() -> Void)?) {
+        self.present(viewController, animated: true, completion: completion)
     }
 }

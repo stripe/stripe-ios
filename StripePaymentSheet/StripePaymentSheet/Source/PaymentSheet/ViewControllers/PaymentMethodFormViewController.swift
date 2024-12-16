@@ -76,6 +76,16 @@ class PaymentMethodFormViewController: UIViewController {
         return stackView
     }()
     let headerView: UIView?
+    
+    var presentingViewControllerDelegate: PresentingViewControllerDelegate? {
+        didSet {
+            if let form = form as? InstantDebitsPaymentMethodElement {
+                form.presentingViewControllerDelegate = presentingViewControllerDelegate
+            } else if let form = form as? USBankAccountPaymentMethodElement {
+                form.presentingViewControllerDelegate = presentingViewControllerDelegate
+            }
+        }
+    }
 
     /// This caches forms for payment methods so that customers don't have to re-enter details
     /// This assumes the form generated for a given PM type _does not change_ at any point after load.

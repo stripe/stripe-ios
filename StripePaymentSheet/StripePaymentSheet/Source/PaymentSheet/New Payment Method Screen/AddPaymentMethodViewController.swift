@@ -63,6 +63,7 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
         let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, delegate: self)
+        pmFormVC.presentingViewControllerDelegate = self
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -161,6 +162,7 @@ class AddPaymentMethodViewController: UIViewController {
                 analyticsHelper: analyticsHelper,
                 delegate: self
             )
+            paymentMethodFormViewController.presentingViewControllerDelegate = self
         }
         updateUI()
     }
@@ -198,5 +200,26 @@ extension AddPaymentMethodViewController: PaymentMethodFormViewControllerDelegat
 
     func updateErrorLabel(for error: Swift.Error?) {
         delegate?.updateErrorLabel(for: error)
+    }
+}
+
+// MARK: - ElementDelegate
+
+extension AddPaymentMethodViewController: ElementDelegate {
+    func continueToNextField(element: Element) {
+        delegate?.didUpdate(self)
+    }
+    
+    func didUpdate(element: Element) {
+        delegate?.didUpdate(self)
+        animateHeightChange()
+    }
+}
+
+// MARK: - PresentingViewControllerDelegate
+    
+extension AddPaymentMethodViewController: PresentingViewControllerDelegate {
+    func presentViewController(viewController: UIViewController, completion: (() -> Void)?) {
+        self.present(viewController, animated: true, completion: completion)
     }
 }
