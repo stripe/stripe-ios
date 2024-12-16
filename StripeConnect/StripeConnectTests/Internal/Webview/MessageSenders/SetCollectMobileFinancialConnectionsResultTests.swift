@@ -128,9 +128,13 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
     }
 
     func testPayloadValue_apiError() throws {
-        let apiError = try StripeErrorMock.default.make()
+        var apiError = try StripeErrorMock.default.make()
+
         let sheetResult = FinancialConnectionsSheet.TokenResult.failed(error: StripeError.apiError(apiError))
         let payloadValue = sheetResult.toSenderValue(analyticsClient: mockAnalyticsClient)
+
+        apiError._allResponseFieldsStorage = nil
+
         XCTAssertNil(payloadValue.financialConnectionsSession)
         XCTAssertNil(payloadValue.token)
         XCTAssertEqual(payloadValue.error, apiError)
