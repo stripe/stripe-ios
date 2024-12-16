@@ -481,13 +481,18 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SetCollectMobileFinancialConnectionsResult
                 .sender(value: .init(
+                    id: "5678",
                     financialConnectionsSession: .init(accounts: session.accounts.data),
                     token: session.bankAccountToken,
                     error: nil
                 ))
         )
 
-        webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", connectedAccountId: "acct_1234")
+        webVC.webView.evaluateOpenFinancialConnectionsWebView(
+            clientSecret: "client_secret_123",
+            id: "5678",
+            connectedAccountId: "acct_1234"
+        )
 
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
@@ -506,13 +511,18 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SetCollectMobileFinancialConnectionsResult
                 .sender(value: .init(
+                    id: "5678",
                     financialConnectionsSession: .init(accounts: []),
                     token: nil,
                     error: nil
                 ))
         )
 
-        webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", connectedAccountId: "acct_1234")
+        webVC.webView.evaluateOpenFinancialConnectionsWebView(
+            clientSecret: "client_secret_123",
+            id: "5678",
+            connectedAccountId: "acct_1234"
+        )
 
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
@@ -531,13 +541,18 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SetCollectMobileFinancialConnectionsResult
                 .sender(value: .init(
+                    id: "5678",
                     financialConnectionsSession: nil,
                     token: nil,
                     error: nil
                 ))
         )
 
-        webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", connectedAccountId: "acct_1234")
+        webVC.webView.evaluateOpenFinancialConnectionsWebView(
+            clientSecret: "client_secret_123",
+            id: "5678",
+            connectedAccountId: "acct_1234"
+        )
 
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
