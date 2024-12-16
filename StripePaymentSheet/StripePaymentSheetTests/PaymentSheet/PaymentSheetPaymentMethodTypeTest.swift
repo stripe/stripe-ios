@@ -409,6 +409,36 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types, [.stripe(.card)])
     }
 
+    func testPaymentMethodTypesInstantDebits() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.link])
+        let configuration = PaymentSheet.Configuration()
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(
+                intent: intent,
+                linkMode: .linkCardBrand,
+                linkFundingSources: [.card, .bankAccount]
+            ),
+            configuration: configuration
+        )
+        XCTAssertEqual(types, [.instantDebits])
+    }
+
+    func testPaymentMethodTypesInstantDebitsWithOrderedPaymentMethodTypes() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .amazonPay, .link, .klarna])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(
+                intent: intent,
+                linkFundingSources: [.bankAccount]
+            ),
+            configuration: configuration
+        )
+        XCTAssertEqual(types, [.stripe(.card), .stripe(.cashApp), .stripe(.amazonPay), .instantDebits, .stripe(.klarna)])
+    }
+
     func testPaymentMethodTypesLinkCardBrand() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let configuration = PaymentSheet.Configuration()
@@ -422,6 +452,22 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             configuration: configuration
         )
         XCTAssertEqual(types, [.stripe(.card), .linkCardBrand])
+    }
+
+    func testPaymentMethodTypesLinkCardBrandWithOrderedPaymentMethodTypes() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.cashApp, .amazonPay, .card, .klarna])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(
+                intent: intent,
+                linkMode: .linkCardBrand,
+                linkFundingSources: [.card, .bankAccount]
+            ),
+            configuration: configuration
+        )
+        XCTAssertEqual(types, [.stripe(.cashApp), .stripe(.amazonPay), .stripe(.card), .stripe(.klarna), .linkCardBrand])
     }
 
     func testPaymentMethodTypesLinkCardBrand_noDefaults() {
