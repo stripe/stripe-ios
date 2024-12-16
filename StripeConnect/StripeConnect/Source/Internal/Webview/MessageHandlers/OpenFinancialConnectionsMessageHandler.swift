@@ -10,13 +10,10 @@ class OpenFinancialConnectionsMessageHandler: ScriptMessageHandler<OpenFinancial
     struct Payload: Codable, Equatable {
         /// The Financial Connections Session client secret used to open the FinancialConnectionsSheet
         let clientSecret: String
-        /// FinancialConnectionsSession ID associated with the client secret.
-        /// Used for analytics purposes only.
-        let sessionId: String
         /// The id of the Connected Account that requested the Financial Connections Session client secret
         let connectedAccountId: String
     }
-    
+
     init(analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (Payload) -> Void) {
         super.init(name: "openFinancialConnections",

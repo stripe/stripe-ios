@@ -24,7 +24,8 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
         try validateMessageSent(sender: SetCollectMobileFinancialConnectionsResult.sender(
             value: .init(
                 financialConnectionsSession: .init(accounts: []),
-                token: nil
+                token: nil,
+                error: nil
             )
         ))
     }
@@ -35,13 +36,14 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
     func testEncodingValue() throws {
         let session = try FinancialConnectionsSessionMock.default.make()
         let sheetResult = FinancialConnectionsSheet.TokenResult.completed(session: session)
-        let payloadValue = sheetResult.toSenderValue(sessionId: "fcsess_testststststm", analyticsClient: mockAnalyticsClient)
+        let payloadValue = sheetResult.toSenderValue(analyticsClient: mockAnalyticsClient)
 
-        XCTAssertNotNil(payloadValue?.financialConnectionsSession)
-        XCTAssertNotNil(payloadValue?.token)
+        XCTAssertNotNil(payloadValue.financialConnectionsSession)
+        XCTAssertNotNil(payloadValue.token)
+        XCTAssertNil(payloadValue.error)
 
         // No errors should be logged
-        XCTAssertEqual(mockAnalyticsClient.loggedEvents, [])
+        XCTAssertEqual(mockAnalyticsClient.loggedClientErrors.count, 0)
 
         // Encode to JSON dictionary using Connect encoder
         let encodedJsonDict = try dictionary(
@@ -51,7 +53,7 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
         )
 
         // Load expected
-        var expectedSessionJsonDict = try dictionary(
+        let expectedSessionJsonDict = try dictionary(
             fromJsonData: try Data(
                 contentsOf: bundle.url(
                     forResource: "FinancialConnectionsSession_encodedJS",
@@ -69,28 +71,42 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
 
     func testPayloadValue_canceled() throws {
         let sheetResult = FinancialConnectionsSheet.TokenResult.canceled
-        let payloadValue = sheetResult.toSenderValue(
-            sessionId: "fcsess_testststststm",
-            analyticsClient: mockAnalyticsClient
-        )
-        XCTAssertEqual(payloadValue?.financialConnectionsSession.accounts, [])
-        XCTAssertNil(payloadValue?.token)
-        XCTAssertEqual(mockAnalyticsClient.loggedEvents, [])
+        let payloadValue = sheetResult.toSenderValue(analyticsClient: mockAnalyticsClient)
+        XCTAssertEqual(payloadValue.financialConnectionsSession?.accounts, [])
+        XCTAssertNil(payloadValue.token)
+        XCTAssertNil(payloadValue.error)
+        XCTAssertEqual(mockAnalyticsClient.loggedClientErrors.count, 0)
     }
 
-    func testPayloadValue_error() throws {
-        let sheetResult = FinancialConnectionsSheet.TokenResult.failed(error: NSError(domain: "MockError", code: 0, userInfo: [NSDebugDescriptionErrorKey: "description"]))
-        let payloadValue = sheetResult.toSenderValue(
-            sessionId: "fcsess_123",
-            analyticsClient: mockAnalyticsClient
-        )
-        XCTAssertNil(payloadValue)
-        XCTAssertEqual(mockAnalyticsClient.loggedEvents.count, 1)
+    func testPayloadValue_clientError() throws {
+        let sheetResult = FinancialConnectionsSheet.TokenResult.failed(error: NSError(domain: "MockError", code: 5))
+        let payloadValue = sheetResult.toSenderValue(analyticsClient: mockAnalyticsClient)
+        XCTAssertNil(payloadValue.financialConnectionsSession)
+        XCTAssertNil(payloadValue.token)
+        XCTAssertNil(payloadValue.error)
+        XCTAssertEqual(mockAnalyticsClient.loggedClientErrors.count, 1)
 
-        let event = try XCTUnwrap(mockAnalyticsClient.loggedEvents.first as? FinancialConnectionsErrorEvent)
-        XCTAssertEqual(event.metadata.error, "MockError:0")
-        XCTAssertEqual(event.metadata.errorDescription, "description")
-        XCTAssertEqual(event.metadata.sessionId, "fcsess_123")
+        let error = try XCTUnwrap(mockAnalyticsClient.loggedClientErrors.first)
+        XCTAssertEqual(error.domain, "MockError")
+        XCTAssertEqual(error.code, 5)
+    }
+
+    func testPayloadValue_apiError() throws {
+        let apiError = try StripeJSONDecoder().decode(
+            StripeAPIError.self,
+            from: try Data(
+                contentsOf: bundle.url(
+                    forResource: "StripeAPIError",
+                    withExtension: "json"
+                )!
+            )
+        )
+        let sheetResult = FinancialConnectionsSheet.TokenResult.failed(error: StripeError.apiError(apiError))
+        let payloadValue = sheetResult.toSenderValue(analyticsClient: mockAnalyticsClient)
+        XCTAssertNil(payloadValue.financialConnectionsSession)
+        XCTAssertNil(payloadValue.token)
+        XCTAssertEqual(payloadValue.error, apiError)
+        XCTAssertEqual(mockAnalyticsClient.loggedClientErrors.count, 0)
     }
 
     func testSenderSignature() throws {
@@ -98,7 +114,8 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
             try SetCollectMobileFinancialConnectionsResult.sender(
                 value: .init(
                     financialConnectionsSession: .init(accounts: []),
-                    token: nil
+                    token: nil,
+                    error: nil
                 )
             ).javascriptMessage(),
             """

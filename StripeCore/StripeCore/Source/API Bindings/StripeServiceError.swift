@@ -11,7 +11,7 @@ import Foundation
 /// An error returned from the Stripe API.
 ///
 /// https://stripe.com/docs/api/errors
-@_spi(STP) public struct StripeAPIError: UnknownFieldsDecodable {
+@_spi(STP) public struct StripeAPIError: UnknownFieldsCodable, Equatable {
     /// The type of error returned.
     @_spi(STP) public var type: ErrorType
     /// For some errors that could be handled programmatically,
@@ -47,6 +47,7 @@ import Foundation
     }
 
     public var _allResponseFieldsStorage: NonEncodableParameters?
+    public var _additionalParametersStorage: NonEncodableParameters?
 }
 
 @_spi(STP) public struct StripeAPIErrorResponse: UnknownFieldsDecodable {

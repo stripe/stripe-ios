@@ -16,20 +16,23 @@ enum SetCollectMobileFinancialConnectionsResult {
         }
 
         /// Contains list of accounts
-        let financialConnectionsSession: FinancialConnectionsSession
+        let financialConnectionsSession: FinancialConnectionsSession?
         /// Bank account token, if there is one
         let token: StripeAPI.BankAccountToken?
+        /// Stripe API error if an error occurred of this error type
+        let error: StripeAPIError?
 
         // Use explicit CodingKeys instead of synthesizing so we can reference
         // them in `keyEncodingStrategy(forKeys:)`
         enum CodingKeys: CodingKey {
             case financialConnectionsSession
             case token
+            case error
         }
     }
 
     /// Sends the result returned from the FinancialConnectionsSheet back to the web view
-    static func sender(value: PayloadValue?) -> CallSetterWithSerializableValueSender<PayloadValue?> {
+    static func sender(value: PayloadValue) -> CallSetterWithSerializableValueSender<PayloadValue> {
         .init(payload: .init(setter: "setCollectMobileFinancialConnectionsResult",
                              value: value),
               customKeyEncodingStrategy: keyEncodingStrategy)
@@ -60,25 +63,37 @@ enum SetCollectMobileFinancialConnectionsResult {
 extension FinancialConnectionsSheet.TokenResult {
     /// Converts the result into one that can be sent to Stripe.js.
     /// If an error was returned by FinancialConnections, it will be logged to analytics.
-    func toSenderValue(sessionId: String, analyticsClient: ComponentAnalyticsClient) -> SetCollectMobileFinancialConnectionsResult.PayloadValue? {
+    func toSenderValue(analyticsClient: ComponentAnalyticsClient) -> SetCollectMobileFinancialConnectionsResult.PayloadValue {
         switch self {
         case .completed(result: (let session, let token)):
             return .init(
                 financialConnectionsSession: .init(accounts: session.accounts.data),
-                token: token
+                token: token,
+                error: nil
+            )
+
+        case .failed(error: StripeError.apiError((let apiError))):
+            // API Error
+            return .init(
+                financialConnectionsSession: nil,
+                token: nil,
+                error: apiError
             )
 
         case .failed(error: let error):
-            analyticsClient.logFinancialConnectionsErrorEvent(
-                sessionId: sessionId,
-                error: error
+            // Client error
+            analyticsClient.logClientError(error)
+            return .init(
+                financialConnectionsSession: nil,
+                token: nil,
+                error: nil
             )
-            return nil
 
         case .canceled:
             return .init(
                 financialConnectionsSession: .init(accounts: []),
-                token: nil
+                token: nil,
+                error: nil
             )
         }
     }
