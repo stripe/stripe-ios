@@ -173,7 +173,6 @@ extension SavedPaymentMethodCollectionView {
 
                 label.topAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: 4),
-//                label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
                 label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 

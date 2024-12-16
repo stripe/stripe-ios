@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/4/24.
 //
 
+import Foundation
+
 private enum JSONSerializationError: Int, Error {
     /// The encoded object was expected to be a dictionary but turned out to be a single value
     case expectedDictionary = 0

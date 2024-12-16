@@ -453,9 +453,6 @@ class SavedPaymentOptionsViewController: UIViewController {
               let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
                defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
            }
-            else {
-                defaultPaymentMethodOption = nil
-            }
         }
         else {
             defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
