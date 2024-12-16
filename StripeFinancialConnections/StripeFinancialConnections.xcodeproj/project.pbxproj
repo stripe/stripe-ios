@@ -209,7 +209,6 @@
 		E3F62D2F9C344A1178030E8E /* AttachLinkedPaymentAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA62F9B77C6A1D1B12F02CF5 /* AttachLinkedPaymentAccountViewController.swift */; };
 		E4D00DB842047E595DD85BEF /* CheckboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EE2BCD7B861ACA49DB56CD /* CheckboxView.swift */; };
 		E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EA7801B85973F10F65DDB6 /* UIImage+Extensions.swift */; };
-		E6CB285C2D0F5C5F00226796 /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = E6CB285B2D0F5C5F00226796 /* CustomDump */; };
 		E760C94B619A8934D1D5E1D0 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC23DAC91962D0D8A713D37 /* UIColor+Extensions.swift */; };
 		E85DCFCA61299EF27B3201CF /* FinancialConnectionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D8397DB43DEC09BDF66E8A /* FinancialConnectionsSheet.swift */; };
 		E9866D5CA186A242BBEA69E1 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AAB10AEE7A8EC5C9C53FFA /* ConsentViewController.swift */; };
@@ -543,7 +542,6 @@
 				3BF4BBF7E722B961E037286C /* XCTest.framework in Frameworks */,
 				9CE29EA549C4BFA447AB82E0 /* StripeCore.framework in Frameworks */,
 				D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */,
-				E6CB285C2D0F5C5F00226796 /* CustomDump in Frameworks */,
 				864C5159C62C562C655B53F7 /* StripeFinancialConnections.framework in Frameworks */,
 				971E6F5E78BC3265CD80D0C6 /* StripeUICore.framework in Frameworks */,
 			);
@@ -1232,8 +1230,6 @@
 				"zh-Hant",
 			);
 			mainGroup = 7879CBA341D7E807714A831B;
-			packageReferences = (
-			);
 			productRefGroup = 820BF9CF057CF92872BC3C15 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1661,25 +1657,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		E6CB285A2D0F5C5F00226796 /* XCRemoteSwiftPackageReference "swift-custom-dump" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-custom-dump";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.3;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		E6CB285B2D0F5C5F00226796 /* CustomDump */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E6CB285A2D0F5C5F00226796 /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
-			productName = CustomDump;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D00B888AF0B02587576A83F /* Project object */;
 }

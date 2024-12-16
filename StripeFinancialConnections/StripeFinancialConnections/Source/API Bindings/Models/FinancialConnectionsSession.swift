@@ -44,11 +44,11 @@ public extension StripeAPI {
                 public let id: String
                 public let last4: String
                 public let routingNumber: String?
-
+                
                 /// Whether the account should be considered instantly verified. This field isn't part of the API response 
                 /// and is being set later on.
                 public var instantlyVerified: Bool = false
-
+                
                 private enum CodingKeys: String, CodingKey {
                     case bankName, id, last4, routingNumber
                 }
@@ -167,7 +167,7 @@ public extension StripeAPI {
     }
 }
 
-// MARK: - Codable
+// MARK: - Decodable
 
 @_spi(STP) extension StripeAPI.FinancialConnectionsSession: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsSession.AccountList: Codable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsSession.AccountList: Decodable {}

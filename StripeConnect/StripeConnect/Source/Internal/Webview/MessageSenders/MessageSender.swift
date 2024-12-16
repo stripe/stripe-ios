@@ -26,11 +26,13 @@ protocol MessageSender {
 }
 
 extension MessageSender {
+    // Default to nil
     var keyEncodingStrategy: CustomKeyCodingStrategy? { nil }
 }
 
 extension MessageSender {
     var jsonEncoder: JSONEncoder {
+        // Use default encoder unless we should use custom key encoding
         guard let keyEncodingStrategy else {
             return .connectEncoder
         }

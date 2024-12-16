@@ -49,4 +49,5 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     func testBothAccountsAndLinkedAccountsMissingFailsToParse() {
         XCTAssertThrowsError(try FinancialConnectionsSessionMock.bothAccountsAndLinkedAccountsMissing.make())
     }
+
 }

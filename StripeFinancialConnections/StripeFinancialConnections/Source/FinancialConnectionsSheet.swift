@@ -38,7 +38,7 @@ final public class FinancialConnectionsSheet {
         /// User canceled out of the financialConnections session
         case canceled
 
-        // Convenience initializer that extracts token from session
+        /// Convenience initializer that extracts token from session
         static func completed(session: StripeAPI.FinancialConnectionsSession) -> Self {
             .completed(result: (session: session, token: session.bankAccountToken))
         }

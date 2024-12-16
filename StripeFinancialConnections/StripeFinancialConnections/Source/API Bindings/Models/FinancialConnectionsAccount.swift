@@ -131,7 +131,7 @@ public extension StripeAPI {
         // StripeConnect needs to retain these API properties so they
         // can be re-encoded and forwarded to Javascript
 
-        private(set) var object = ""
+        let object: String
     }
 
 }

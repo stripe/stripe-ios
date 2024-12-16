@@ -49,7 +49,7 @@ enum SetCollectMobileFinancialConnectionsResult {
         // Determine if the key is for a sub-property of
         // `financialConnectionsSession` or `token`
         guard !(lastKey is PayloadValue.CodingKeys),
-            keys.contains(where: {$0 is PayloadValue.CodingKeys}) else {
+            keys.contains(where: { $0 is PayloadValue.CodingKeys }) else {
             return lastKey
         }
 

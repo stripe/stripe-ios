@@ -6,9 +6,9 @@
 //
 
 import CustomDump
+@testable import StripeConnect
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@testable import StripeConnect
 @testable import StripeFinancialConnections
 import XCTest
 
@@ -66,7 +66,7 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
         // Cast Swift types to Objc types so CustomDump comparison passes
         expectNoDifference(encodedJsonDict, [
             "setter": "setCollectMobileFinancialConnectionsResult",
-            "value": expectedSessionJsonDict
+            "value": expectedSessionJsonDict,
         ])
     }
 
