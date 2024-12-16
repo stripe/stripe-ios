@@ -51,7 +51,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
-                                                            elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first ?? STPPaymentMethod._testCard()) : ._testCardValue(),
+                                                            elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId) : ._testCardValue(),
                                                             analyticsHelper: ._testValue()
         )
         let bottomSheet: BottomSheetViewController
