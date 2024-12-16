@@ -5,6 +5,7 @@
 //  Created by Mel Ludowise on 10/17/24.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeFinancialConnections
 
 enum SetCollectMobileFinancialConnectionsResult {
