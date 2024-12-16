@@ -95,18 +95,18 @@
 		E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */; };
 		E65691252CA52F9D00E0DB00 /* NotificationBannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */; };
 		E65691272CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */; };
+		E6660CF92CC2F343002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CF82CC2F340002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift */; };
+		E6660CFB2CC2F438002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CFA2CC2F436002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift */; };
+		E6660CFD2CC2F9A7002A7631 /* FinancialConnectionsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CFC2CC2F99C002A7631 /* FinancialConnectionsPresenter.swift */; };
+		E6660D052CC3115D002A7631 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660D042CC3115D002A7631 /* StripeCore.framework */; };
+		E6660D092CC31165002A7631 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660D082CC31165002A7631 /* StripeUICore.framework */; };
+		E6660D0C2CC3116F002A7631 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660D0B2CC3116F002A7631 /* StripeFinancialConnections.framework */; };
 		E6660D8F2CDC418C002A7631 /* ConnectAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D8E2CDC418C002A7631 /* ConnectAnalyticEvent.swift */; };
 		E6660D902CDC418C002A7631 /* ComponentAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D8D2CDC418C002A7631 /* ComponentAnalyticsClient.swift */; };
 		E6660D912CDC418C002A7631 /* AnalyticsClientV2+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D8C2CDC418C002A7631 /* AnalyticsClientV2+Connect.swift */; };
 		E6660D9A2CDC4194002A7631 /* PageLoadErrorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D972CDC4194002A7631 /* PageLoadErrorEvent.swift */; };
 		E6660D9B2CDC4194002A7631 /* ComponentViewedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D942CDC4194002A7631 /* ComponentViewedEvent.swift */; };
 		E6660D9C2CDC4194002A7631 /* ComponentCreatedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D922CDC4194002A7631 /* ComponentCreatedEvent.swift */; };
-		E6660CF92CC2F343002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CF82CC2F340002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift */; };
-		E6660CFB2CC2F438002A7631 /* ReturnedFromFinancialConnectionsSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CFA2CC2F436002A7631 /* ReturnedFromFinancialConnectionsSenderTests.swift */; };
-		E6660CFD2CC2F9A7002A7631 /* FinancialConnectionsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CFC2CC2F99C002A7631 /* FinancialConnectionsPresenter.swift */; };
-		E6660D052CC3115D002A7631 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660D042CC3115D002A7631 /* StripeCore.framework */; };
-		E6660D092CC31165002A7631 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660D082CC31165002A7631 /* StripeUICore.framework */; };
-		E6660D0C2CC3116F002A7631 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660D0B2CC3116F002A7631 /* StripeFinancialConnections.framework */; };
 		E6660D9D2CDC4194002A7631 /* DeserializeMessageErrorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D962CDC4194002A7631 /* DeserializeMessageErrorEvent.swift */; };
 		E6660D9E2CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D982CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift */; };
 		E6660D9F2CDC4194002A7631 /* UnrecognizedSetterEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660D992CDC4194002A7631 /* UnrecognizedSetterEvent.swift */; };
@@ -123,16 +123,20 @@
 		E6660DB32CDD8F6E002A7631 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6660DB22CDD8F6E002A7631 /* StripeCoreTestUtils.framework */; };
 		E6660DB72CDD99EF002A7631 /* MockComponentAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DB62CDD99E7002A7631 /* MockComponentAnalyticsClient.swift */; };
 		E6660DBC2CDDC5C7002A7631 /* ComponentAnalyticsClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DBB2CDDC5C2002A7631 /* ComponentAnalyticsClientTests.swift */; };
-		E6695A182CC1AFD7008049D1 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6695A172CC1AFD7008049D1 /* StripeFinancialConnections.framework */; };
-		E6695A1D2CC1C895008049D1 /* OpenFinancialConnectionsMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6695A1C2CC1C88E008049D1 /* OpenFinancialConnectionsMessageHandler.swift */; };
-		E6695A1F2CC1CB99008049D1 /* ReturnedFromFinancialConnectionsSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6695A1E2CC1CB94008049D1 /* ReturnedFromFinancialConnectionsSender.swift */; };
 		E6660DBE2CDDCC3A002A7631 /* AnalyticsCommonFieldsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DBD2CDDCC29002A7631 /* AnalyticsCommonFieldsTests.swift */; };
 		E6660DC22CDE7D66002A7631 /* URL+ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC12CDE7D56002A7631 /* URL+ExtensionTests.swift */; };
 		E6660DC42CDE7F47002A7631 /* ApplicationURLOpenerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC32CDE7F41002A7631 /* ApplicationURLOpenerTests.swift */; };
 		E6660DC72CDE8F28002A7631 /* ScriptMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC62CDE8F28002A7631 /* ScriptMessageHandlerTests.swift */; };
 		E6660DC92CE43BE6002A7631 /* UnexpectedNavigationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660DC82CE43BDF002A7631 /* UnexpectedNavigationEvent.swift */; };
+		E6695A182CC1AFD7008049D1 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6695A172CC1AFD7008049D1 /* StripeFinancialConnections.framework */; };
+		E6695A1D2CC1C895008049D1 /* OpenFinancialConnectionsMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6695A1C2CC1C88E008049D1 /* OpenFinancialConnectionsMessageHandler.swift */; };
+		E6695A1F2CC1CB99008049D1 /* SetCollectMobileFinancialConnectionsResultSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6695A1E2CC1CB94008049D1 /* SetCollectMobileFinancialConnectionsResultSender.swift */; };
 		E688AE002CADD8C400951D97 /* NotificationBannerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */; };
 		E688AE032CADE36C00951D97 /* OnNotificationsChangeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */; };
+		E6B1C2AD2D0F8464001A0A81 /* FinancialConnectionsSession_encodedJS.json in Resources */ = {isa = PBXBuildFile; fileRef = E6B1C2AA2D0F8464001A0A81 /* FinancialConnectionsSession_encodedJS.json */; };
+		E6B1C2B12D0F84DD001A0A81 /* FinancialConnectionsSession.json in Resources */ = {isa = PBXBuildFile; fileRef = E6B1C2B02D0F84DD001A0A81 /* FinancialConnectionsSession.json */; };
+		E6B1C2B42D0F8924001A0A81 /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = E6B1C2B32D0F8924001A0A81 /* CustomDump */; };
+		E6B1C2B82D0FF204001A0A81 /* StripeAPIError.json in Resources */ = {isa = PBXBuildFile; fileRef = E6B1C2B72D0FF1F7001A0A81 /* StripeAPIError.json */; };
 		E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */; };
 		E6D3C8EE2CBE1404003CE967 /* HTTPStatusError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D3C8ED2CBE1404003CE967 /* HTTPStatusError.swift */; };
 		E6D3C8F02CBE1459003CE967 /* HTTPURLResponse+StripeConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */; };
@@ -245,6 +249,12 @@
 		E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeConnect+Exports.swift"; sourceTree = "<group>"; };
 		E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewController.swift; sourceTree = "<group>"; };
 		E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandler.swift; sourceTree = "<group>"; };
+		E6660CF82CC2F340002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFinancialConnectionsMessageHandlerTests.swift; sourceTree = "<group>"; };
+		E6660CFA2CC2F436002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCollectMobileFinancialConnectionsResultTests.swift; sourceTree = "<group>"; };
+		E6660CFC2CC2F99C002A7631 /* FinancialConnectionsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPresenter.swift; sourceTree = "<group>"; };
+		E6660D042CC3115D002A7631 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6660D082CC31165002A7631 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6660D0B2CC3116F002A7631 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6660D8C2CDC418C002A7631 /* AnalyticsClientV2+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnalyticsClientV2+Connect.swift"; sourceTree = "<group>"; };
 		E6660D8D2CDC418C002A7631 /* ComponentAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentAnalyticsClient.swift; sourceTree = "<group>"; };
 		E6660D8E2CDC418C002A7631 /* ConnectAnalyticEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAnalyticEvent.swift; sourceTree = "<group>"; };
@@ -252,13 +262,6 @@
 		E6660D932CDC4194002A7631 /* ComponentLoadedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentLoadedEvent.swift; sourceTree = "<group>"; };
 		E6660D942CDC4194002A7631 /* ComponentViewedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentViewedEvent.swift; sourceTree = "<group>"; };
 		E6660D952CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentWebPageLoadedEvent.swift; sourceTree = "<group>"; };
-		E6660CF82CC2F340002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFinancialConnectionsMessageHandlerTests.swift; sourceTree = "<group>"; };
-		E6660CFA2CC2F436002A7631 /* ReturnedFromFinancialConnectionsSenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnedFromFinancialConnectionsSenderTests.swift; sourceTree = "<group>"; };
-		E6660CFC2CC2F99C002A7631 /* FinancialConnectionsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPresenter.swift; sourceTree = "<group>"; };
-		E6660D042CC3115D002A7631 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6660D082CC31165002A7631 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6660D0B2CC3116F002A7631 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6695A132CC1AFBB008049D1 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6660D962CDC4194002A7631 /* DeserializeMessageErrorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeserializeMessageErrorEvent.swift; sourceTree = "<group>"; };
 		E6660D972CDC4194002A7631 /* PageLoadErrorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageLoadErrorEvent.swift; sourceTree = "<group>"; };
 		E6660D982CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnexpectedLoadErrorTypeEvent.swift; sourceTree = "<group>"; };
@@ -274,16 +277,20 @@
 		E6660DB22CDD8F6E002A7631 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6660DB62CDD99E7002A7631 /* MockComponentAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockComponentAnalyticsClient.swift; sourceTree = "<group>"; };
 		E6660DBB2CDDC5C2002A7631 /* ComponentAnalyticsClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentAnalyticsClientTests.swift; sourceTree = "<group>"; };
-		E6695A172CC1AFD7008049D1 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6695A1C2CC1C88E008049D1 /* OpenFinancialConnectionsMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFinancialConnectionsMessageHandler.swift; sourceTree = "<group>"; };
-		E6695A1E2CC1CB94008049D1 /* ReturnedFromFinancialConnectionsSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnedFromFinancialConnectionsSender.swift; sourceTree = "<group>"; };
 		E6660DBD2CDDCC29002A7631 /* AnalyticsCommonFieldsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsCommonFieldsTests.swift; sourceTree = "<group>"; };
 		E6660DC12CDE7D56002A7631 /* URL+ExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+ExtensionTests.swift"; sourceTree = "<group>"; };
 		E6660DC32CDE7F41002A7631 /* ApplicationURLOpenerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationURLOpenerTests.swift; sourceTree = "<group>"; };
 		E6660DC62CDE8F28002A7631 /* ScriptMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandlerTests.swift; sourceTree = "<group>"; };
 		E6660DC82CE43BDF002A7631 /* UnexpectedNavigationEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnexpectedNavigationEvent.swift; sourceTree = "<group>"; };
+		E6695A132CC1AFBB008049D1 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6695A172CC1AFD7008049D1 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6695A1C2CC1C88E008049D1 /* OpenFinancialConnectionsMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFinancialConnectionsMessageHandler.swift; sourceTree = "<group>"; };
+		E6695A1E2CC1CB94008049D1 /* SetCollectMobileFinancialConnectionsResultSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCollectMobileFinancialConnectionsResultSender.swift; sourceTree = "<group>"; };
 		E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewControllerTests.swift; sourceTree = "<group>"; };
 		E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandlerTests.swift; sourceTree = "<group>"; };
+		E6B1C2AA2D0F8464001A0A81 /* FinancialConnectionsSession_encodedJS.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_encodedJS.json; sourceTree = "<group>"; };
+		E6B1C2B02D0F84DD001A0A81 /* FinancialConnectionsSession.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession.json; sourceTree = "<group>"; };
+		E6B1C2B72D0FF1F7001A0A81 /* StripeAPIError.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StripeAPIError.json; sourceTree = "<group>"; };
 		E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
 		E6D3C8ED2CBE1404003CE967 /* HTTPStatusError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPStatusError.swift; sourceTree = "<group>"; };
 		E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPURLResponse+StripeConnect.swift"; sourceTree = "<group>"; };
@@ -310,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6660DB32CDD8F6E002A7631 /* StripeCoreTestUtils.framework in Frameworks */,
+				E6B1C2B42D0F8924001A0A81 /* CustomDump in Frameworks */,
 				E6660D052CC3115D002A7631 /* StripeCore.framework in Frameworks */,
 				41D17A4B2C5A73A7007C6EE6 /* StripeConnect.framework in Frameworks */,
 				E6660D092CC31165002A7631 /* StripeUICore.framework in Frameworks */,
@@ -325,7 +333,7 @@
 			children = (
 				410D0FDA2C6D21B0009B0E26 /* CallSetterWithSerializableValueSenderTests.swift */,
 				410D0FDC2C6D23AD009B0E26 /* ReturnedFromAuthenticatedWebViewSenderTests.swift */,
-				E6660CFA2CC2F436002A7631 /* ReturnedFromFinancialConnectionsSenderTests.swift */,
+				E6660CFA2CC2F436002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift */,
 				410D0FD82C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift */,
 			);
 			path = MessageSenders;
@@ -357,7 +365,7 @@
 				413987D32C640848001D375E /* CallSetterWithSerializableValueSender.swift */,
 				413987BE2C63F34B001D375E /* MessageSender.swift */,
 				413987D52C64088E001D375E /* ReturnedFromAuthenticatedWebViewSender.swift */,
-				E6695A1E2CC1CB94008049D1 /* ReturnedFromFinancialConnectionsSender.swift */,
+				E6695A1E2CC1CB94008049D1 /* SetCollectMobileFinancialConnectionsResultSender.swift */,
 				413987BF2C63F34B001D375E /* UpdateConnectInstanceSender.swift */,
 			);
 			path = MessageSenders;
@@ -573,6 +581,9 @@
 		41BCCFFC2C8BA44700797E01 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E6B1C2B72D0FF1F7001A0A81 /* StripeAPIError.json */,
+				E6B1C2B02D0F84DD001A0A81 /* FinancialConnectionsSession.json */,
+				E6B1C2AA2D0F8464001A0A81 /* FinancialConnectionsSession_encodedJS.json */,
 				41BCCFFD2C8BA45F00797E01 /* FakeFont.txt */,
 			);
 			path = Resources;
@@ -807,7 +818,7 @@
 			);
 			mainGroup = 41D17A362C5A73A6007C6EE6;
 			packageReferences = (
-				41A2A5652C5AC0290077FC74 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				E6B1C2B22D0F8924001A0A81 /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
 			);
 			productRefGroup = 41D17A412C5A73A6007C6EE6 /* Products */;
 			projectDirPath = "";
@@ -842,6 +853,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6B1C2B12D0F84DD001A0A81 /* FinancialConnectionsSession.json in Resources */,
+				E6B1C2AD2D0F8464001A0A81 /* FinancialConnectionsSession_encodedJS.json in Resources */,
+				E6B1C2B82D0FF204001A0A81 /* StripeAPIError.json in Resources */,
 				41BCCFFE2C8BA45F00797E01 /* FakeFont.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -885,7 +899,7 @@
 				E65691272CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift in Sources */,
 				E640C9CF2CBF26DE009D0C6E /* AuthenticatedWebViewError.swift in Sources */,
 				413987DD2C640A29001D375E /* FetchInitParamsMessageHandler.swift in Sources */,
-				E6695A1F2CC1CB99008049D1 /* ReturnedFromFinancialConnectionsSender.swift in Sources */,
+				E6695A1F2CC1CB99008049D1 /* SetCollectMobileFinancialConnectionsResultSender.swift in Sources */,
 				413987D42C640848001D375E /* CallSetterWithSerializableValueSender.swift in Sources */,
 				416E9E742C751A1A00A0B917 /* ConnectComponentWebViewController.swift in Sources */,
 				413D18462C7FB75B0051AA42 /* EmbeddedComponentManager+Appearance.swift in Sources */,
@@ -948,7 +962,7 @@
 				41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */,
 				4161C2732C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift in Sources */,
 				E6F485FE2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift in Sources */,
-				E6660CFB2CC2F438002A7631 /* ReturnedFromFinancialConnectionsSenderTests.swift in Sources */,
+				E6660CFB2CC2F438002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift in Sources */,
 				416E9E782C753B7900A0B917 /* ConnectComponentWebViewControllerTests.swift in Sources */,
 				410D0FD42C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift in Sources */,
 				E640C9D32CBF479E009D0C6E /* AuthenticatedWebViewManagerTests.swift in Sources */,
@@ -1125,15 +1139,23 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		41A2A5652C5AC0290077FC74 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+		E6B1C2B22D0F8924001A0A81 /* XCRemoteSwiftPackageReference "swift-custom-dump" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
+			repositoryURL = "https://github.com/pointfreeco/swift-custom-dump";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
+				minimumVersion = 1.3.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E6B1C2B32D0F8924001A0A81 /* CustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E6B1C2B22D0F8924001A0A81 /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
+			productName = CustomDump;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 41D17A372C5A73A6007C6EE6 /* Project object */;
 }
