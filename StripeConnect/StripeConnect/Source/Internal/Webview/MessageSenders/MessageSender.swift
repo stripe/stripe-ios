@@ -14,17 +14,38 @@ private enum MessageSenderError: Int, Error {
 
 /// Sends a message to the webview by calling a function on `window`
 protocol MessageSender {
+    typealias CustomKeyCodingStrategy = (_ keys: [any CodingKey]) -> any CodingKey
+
     associatedtype Payload: Encodable
     /// Name of the method (e.g. `updateConnectInstance`)
     var name: String { get }
     /// Function param
     var payload: Payload { get }
+    /// JSON key-encoding encoding strategy for payload
+    var keyEncodingStrategy: CustomKeyCodingStrategy? { get }
 }
 
 extension MessageSender {
+    var keyEncodingStrategy: CustomKeyCodingStrategy? { nil }
+}
+
+extension MessageSender {
+    var jsonEncoder: JSONEncoder {
+        guard let keyEncodingStrategy else {
+            return .connectEncoder
+        }
+
+        let encoder = JSONEncoder.makeConnectEncoder()
+        encoder.keyEncodingStrategy = .custom(keyEncodingStrategy)
+        return encoder
+    }
+
+    func jsonData() throws -> Data {
+        try jsonEncoder.encode(payload)
+    }
+
     func javascriptMessage() throws -> String {
-        let jsonData = try JSONEncoder.connectEncoder.encode(payload)
-        guard let jsonString = String(data: jsonData, encoding: .utf8) else {
+        guard let jsonString = String(data: try jsonData(), encoding: .utf8) else {
             throw MessageSenderError.stringEncoding
         }
         return "window.\(name)(\(jsonString));"

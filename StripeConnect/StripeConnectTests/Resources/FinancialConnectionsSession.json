@@ -50,7 +50,7 @@
       },
       {
         "id": "fca_1KtwJsdfadfsdf",
-        "object": "financial_connections.account",
+        "object": "linked_account",
         "balance": {
             "as_of": 1651248322,
             "current": {

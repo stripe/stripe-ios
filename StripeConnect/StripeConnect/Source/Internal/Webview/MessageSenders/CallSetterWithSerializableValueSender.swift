@@ -16,4 +16,5 @@ struct CallSetterWithSerializableValueSender<Value: Codable & Equatable>: Messag
     }
     let name: String = "callSetterWithSerializableValue"
     let payload: Payload
+    private(set) var keyEncodingStrategy: CustomKeyCodingStrategy?
 }

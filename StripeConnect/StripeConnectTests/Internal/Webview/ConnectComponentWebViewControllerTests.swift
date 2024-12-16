@@ -9,7 +9,7 @@ import Foundation
 import SafariServices
 @_spi(DashboardOnly) @_spi(PrivateBetaConnect) @testable import StripeConnect
 @_spi(STP) import StripeCore
-@testable import StripeFinancialConnections
+@testable @_spi(STP) import StripeFinancialConnections
 @_spi(STP) import StripeUICore
 import WebKit
 import XCTest
@@ -461,16 +461,15 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
     func testOpenFinancialConnections_success() throws {
         let componentManager = componentManagerAssertingOnFetch()
+        let session = try FinancialConnectionsSessionMock.default.make()
+
         let financialConnectionsPresenter = MockFinancialConnectionsPresenter { apiClient, secret, connectedAccountId, vc in
             XCTAssert(apiClient === componentManager.apiClient)
             XCTAssertEqual(secret, "client_secret_123")
             XCTAssertEqual(connectedAccountId, "acct_1234")
             XCTAssert(vc is ConnectComponentWebViewController)
 
-            return .completed(result: (
-                session: StripeAPI.FinancialConnectionsSession(clientSecret: "", id: "", accounts: .init(data: [], hasMore: false), livemode: false, paymentAccount: nil, bankAccountToken: nil, status: nil, statusDetails: nil),
-                token: StripeAPI.BankAccountToken(id: "bank_token", bankAccount: nil, clientIp: nil, livemode: false, used: false)
-            ))
+            return .completed(session: session)
         }
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .payouts,
@@ -480,10 +479,12 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
 
         let expectation = try webVC.webView.expectationForMessageReceived(
-            sender: SetCollectMobileFinancialConnectionsResultSender(payload: .init(
-                bankToken: "bank_token",
-                id: "5678"
-            ))
+            sender: SetCollectMobileFinancialConnectionsResult
+                .sender(value: .init(
+                    id: "5678",
+                    financialConnectionsSession: .init(accounts: session.accounts.data),
+                    token: session.bankAccountToken
+                ))
         )
 
         webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", id: "5678", connectedAccountId: "acct_1234")
@@ -503,10 +504,12 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
         let expectation = try webVC.webView.expectationForMessageReceived(
-            sender: SetCollectMobileFinancialConnectionsResultSender(payload: .init(
-                bankToken: nil,
-                id: "5678"
-            ))
+            sender: SetCollectMobileFinancialConnectionsResult
+                .sender(value: .init(
+                    id: "5678",
+                    financialConnectionsSession: .init(accounts: []),
+                    token: nil
+                ))
         )
 
         webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", id: "5678", connectedAccountId: "acct_1234")
@@ -526,10 +529,12 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
         let expectation = try webVC.webView.expectationForMessageReceived(
-            sender: SetCollectMobileFinancialConnectionsResultSender(payload: .init(
-                bankToken: nil,
-                id: "5678"
-            ))
+            sender: SetCollectMobileFinancialConnectionsResult
+                .sender(value: .init(
+                    id: "5678",
+                    financialConnectionsSession: nil,
+                    token: nil
+                ))
         )
 
         webVC.webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "client_secret_123", id: "5678", connectedAccountId: "acct_1234")
