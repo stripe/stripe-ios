@@ -12,11 +12,11 @@ class OpenFinancialConnectionsMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() {
         let expectation = self.expectation(description: "Message received")
         webView.addMessageHandler(messageHandler: OpenFinancialConnectionsMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock)) { payload in
-            XCTAssertEqual(payload, .init(clientSecret: "secret_123", id: "1234", connectedAccountId: "acct_1234"))
+            XCTAssertEqual(payload, .init(clientSecret: "secret_123", sessionId: "fcsess_123", connectedAccountId: "acct_1234"))
             expectation.fulfill()
         })
 
-        webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "secret_123", id: "1234", connectedAccountId: "acct_1234")
+        webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "secret_123", sessionId: "fcsess_123", connectedAccountId: "acct_1234")
 
         waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
     }

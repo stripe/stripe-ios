@@ -327,7 +327,7 @@ private extension ConnectComponentWebViewController {
 
             sendMessage(SetCollectMobileFinancialConnectionsResult.sender(
                 value: result.toSenderValue(
-                    id: args.id,
+                    sessionId: args.sessionId,
                     analyticsClient: analyticsClient
                 )
             ))

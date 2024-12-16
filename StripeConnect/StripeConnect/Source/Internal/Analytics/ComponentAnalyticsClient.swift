@@ -162,6 +162,18 @@ class ComponentAnalyticsClient {
         )))
     }
 
+    /// An error occurred during the FinancialConnections flow.
+    /// - Parameters:
+    ///   - sessionId: The FinancialConnectionsSession ID
+    ///   - error: The error thrown deserializing the message
+    func logFinancialConnectionsErrorEvent(sessionId: String, error: Error) {
+        log(event: FinancialConnectionsErrorEvent(metadata: .init(
+            sessionId: sessionId,
+            error: error,
+            pageViewId: pageViewId
+        )))
+    }
+
     /// An authenticated web view was opened
     /// - Parameter id: ID for the authenticated web view session (sent in `openAuthenticatedWebView` message
     func logAuthenticatedWebViewOpenedEvent(id: String) {

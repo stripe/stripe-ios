@@ -136,6 +136,7 @@
 		E6B1C2AD2D0F8464001A0A81 /* FinancialConnectionsSession_encodedJS.json in Resources */ = {isa = PBXBuildFile; fileRef = E6B1C2AA2D0F8464001A0A81 /* FinancialConnectionsSession_encodedJS.json */; };
 		E6B1C2B12D0F84DD001A0A81 /* FinancialConnectionsSession.json in Resources */ = {isa = PBXBuildFile; fileRef = E6B1C2B02D0F84DD001A0A81 /* FinancialConnectionsSession.json */; };
 		E6B1C2B42D0F8924001A0A81 /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = E6B1C2B32D0F8924001A0A81 /* CustomDump */; };
+		E6B1C2B62D0FDFBB001A0A81 /* FinancialConnectionsErrorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B1C2B52D0FDFB3001A0A81 /* FinancialConnectionsErrorEvent.swift */; };
 		E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */; };
 		E6D3C8EE2CBE1404003CE967 /* HTTPStatusError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D3C8ED2CBE1404003CE967 /* HTTPStatusError.swift */; };
 		E6D3C8F02CBE1459003CE967 /* HTTPURLResponse+StripeConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */; };
@@ -289,6 +290,7 @@
 		E688AE022CADE36900951D97 /* OnNotificationsChangeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandlerTests.swift; sourceTree = "<group>"; };
 		E6B1C2AA2D0F8464001A0A81 /* FinancialConnectionsSession_encodedJS.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession_encodedJS.json; sourceTree = "<group>"; };
 		E6B1C2B02D0F84DD001A0A81 /* FinancialConnectionsSession.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FinancialConnectionsSession.json; sourceTree = "<group>"; };
+		E6B1C2B52D0FDFB3001A0A81 /* FinancialConnectionsErrorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsErrorEvent.swift; sourceTree = "<group>"; };
 		E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementViewController.swift; sourceTree = "<group>"; };
 		E6D3C8ED2CBE1404003CE967 /* HTTPStatusError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPStatusError.swift; sourceTree = "<group>"; };
 		E6D3C8EF2CBE1455003CE967 /* HTTPURLResponse+StripeConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPURLResponse+StripeConnect.swift"; sourceTree = "<group>"; };
@@ -688,6 +690,7 @@
 				E6660D942CDC4194002A7631 /* ComponentViewedEvent.swift */,
 				E6660D952CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift */,
 				E6660D962CDC4194002A7631 /* DeserializeMessageErrorEvent.swift */,
+				E6B1C2B52D0FDFB3001A0A81 /* FinancialConnectionsErrorEvent.swift */,
 				E6660D972CDC4194002A7631 /* PageLoadErrorEvent.swift */,
 				E6660D982CDC4194002A7631 /* UnexpectedLoadErrorTypeEvent.swift */,
 				E6660DC82CE43BDF002A7631 /* UnexpectedNavigationEvent.swift */,
@@ -880,6 +883,7 @@
 				E6165CBF2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift in Sources */,
 				413D18482C7FBAA70051AA42 /* CSSHelpers.swift in Sources */,
 				413987CD2C63F34B001D375E /* MessageSender.swift in Sources */,
+				E6B1C2B62D0FDFBB001A0A81 /* FinancialConnectionsErrorEvent.swift in Sources */,
 				41BCCFF52C8B5A0A00797E01 /* CustomFontSourceWrapper.swift in Sources */,
 				4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */,
 				413987CE2C63F34B001D375E /* UpdateConnectInstanceSender.swift in Sources */,

@@ -23,7 +23,6 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
     func testSendMessage() throws {
         try validateMessageSent(sender: SetCollectMobileFinancialConnectionsResult.sender(
             value: .init(
-                id: "1234",
                 financialConnectionsSession: .init(accounts: []),
                 token: nil
             )
@@ -36,11 +35,10 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
     func testEncodingValue() throws {
         let session = try FinancialConnectionsSessionMock.default.make()
         let sheetResult = FinancialConnectionsSheet.TokenResult.completed(session: session)
-        let payloadValue = sheetResult.toSenderValue(id: "1234", analyticsClient: mockAnalyticsClient)
+        let payloadValue = sheetResult.toSenderValue(sessionId: "fcsess_testststststm", analyticsClient: mockAnalyticsClient)
 
-        XCTAssertNotNil(payloadValue.financialConnectionsSession)
-        XCTAssertNotNil(payloadValue.token)
-        XCTAssertEqual(payloadValue.id, "1234")
+        XCTAssertNotNil(payloadValue?.financialConnectionsSession)
+        XCTAssertNotNil(payloadValue?.token)
 
         // No errors should be logged
         XCTAssertEqual(mockAnalyticsClient.loggedEvents, [])
@@ -50,7 +48,7 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
             fromJsonData: try SetCollectMobileFinancialConnectionsResult
                 .sender(value: payloadValue)
                 .jsonData()
-        ) as NSDictionary
+        )
 
         // Load expected
         var expectedSessionJsonDict = try dictionary(
@@ -61,7 +59,6 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
                 )!
             )
         )
-        expectedSessionJsonDict["id"] = "1234"
 
         // Cast Swift types to Objc types so CustomDump comparison passes
         expectNoDifference(encodedJsonDict, [
@@ -73,44 +70,47 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
     func testPayloadValue_canceled() throws {
         let sheetResult = FinancialConnectionsSheet.TokenResult.canceled
         let payloadValue = sheetResult.toSenderValue(
-            id: "1234",
+            sessionId: "fcsess_testststststm",
             analyticsClient: mockAnalyticsClient
         )
-        XCTAssertEqual(payloadValue.id, "1234")
-        XCTAssertEqual(payloadValue.financialConnectionsSession?.accounts, [])
-        XCTAssertNil(payloadValue.token)
+        XCTAssertEqual(payloadValue?.financialConnectionsSession.accounts, [])
+        XCTAssertNil(payloadValue?.token)
+        XCTAssertEqual(mockAnalyticsClient.loggedEvents, [])
     }
 
     func testPayloadValue_error() throws {
-        let sheetResult = FinancialConnectionsSheet.TokenResult.failed(error: NSError(domain: "mockError", code: 0))
+        let sheetResult = FinancialConnectionsSheet.TokenResult.failed(error: NSError(domain: "MockError", code: 0, userInfo: [NSDebugDescriptionErrorKey: "description"]))
         let payloadValue = sheetResult.toSenderValue(
-            id: "1234",
+            sessionId: "fcsess_123",
             analyticsClient: mockAnalyticsClient
         )
-        XCTAssertEqual(payloadValue.id, "1234")
-        XCTAssertNil(payloadValue.financialConnectionsSession)
-        XCTAssertNil(payloadValue.token)
+        XCTAssertNil(payloadValue)
+        XCTAssertEqual(mockAnalyticsClient.loggedEvents.count, 1)
+
+        let event = try XCTUnwrap(mockAnalyticsClient.loggedEvents.first as? FinancialConnectionsErrorEvent)
+        XCTAssertEqual(event.metadata.error, "MockError:0")
+        XCTAssertEqual(event.metadata.errorDescription, "description")
+        XCTAssertEqual(event.metadata.sessionId, "fcsess_123")
     }
 
     func testSenderSignature() throws {
         XCTAssertEqual(
             try SetCollectMobileFinancialConnectionsResult.sender(
                 value: .init(
-                    id: "1234",
                     financialConnectionsSession: .init(accounts: []),
                     token: nil
                 )
             ).javascriptMessage(),
             """
-            window.callSetterWithSerializableValue({"setter":"setCollectMobileFinancialConnectionsResult","value":{"financialConnectionsSession":{"accounts":[]},"id":"1234"}});
+            window.callSetterWithSerializableValue({"setter":"setCollectMobileFinancialConnectionsResult","value":{"financialConnectionsSession":{"accounts":[]}}});
             """
         )
     }
 }
 
 private extension SetCollectMobileFinancialConnectionsResultTests {
-    func dictionary(fromJsonData data: Data) throws -> [String: Any] {
+    func dictionary(fromJsonData data: Data) throws -> NSDictionary {
         let json = try JSONSerialization.jsonObject(with: data)
-        return try XCTUnwrap(json as? [String: Any])
+        return try XCTUnwrap(json as? NSDictionary)
     }
 }

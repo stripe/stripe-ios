@@ -61,10 +61,10 @@ extension WKWebView {
                                   """)
     }
 
-    func evaluateOpenFinancialConnectionsWebView(clientSecret: String, id: String, connectedAccountId: String) {
+    func evaluateOpenFinancialConnectionsWebView(clientSecret: String, sessionId: String, connectedAccountId: String) {
         evaluateMessage(name: "openFinancialConnections",
                         json: """
-                        {"clientSecret": "\(clientSecret)", "id": "\(id)",  "connectedAccountId": "\(connectedAccountId)", }
+                        {"clientSecret": "\(clientSecret)", "sessionId": "\(sessionId)",  "connectedAccountId": "\(connectedAccountId)", }
                         """)
     }
 
