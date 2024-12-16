@@ -136,6 +136,8 @@
 
 "Not %@?" = "Hindi %@?";
 
+"Only card brand can be changed." = "Ang brand ng kard lamang ang puwedeng palitan.";
+
 "Open your UPI app to approve your payment within %@" = "Buksan ang iyong UPI app para aprubahan ang iyong pagbabayad sa loob ng  %@";
 
 "Or" = "O";
@@ -179,8 +181,6 @@
 "Remove card?" = "Alisin ang kard?";
 
 "Remove linked account" = "Alisin ang naka-link na account";
-
-"Remove payment method" = "Alisin ang paraan ng pagbabayad";
 
 "Resend code" = "Ipadala muli ang code";
 

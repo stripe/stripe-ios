@@ -136,6 +136,8 @@
 
 "Not %@?" = "Pole %@?";
 
+"Only card brand can be changed." = "Muuta saab ainult kaardi tootemarki.";
+
 "Open your UPI app to approve your payment within %@" = "Makse kinnitamiseks avage oma UPI rakendus %@ jooksul";
 
 "Or" = "Või";
@@ -179,8 +181,6 @@
 "Remove card?" = "Kas soovite kaardi eemaldada?";
 
 "Remove linked account" = "Eemalda lingitud konto";
-
-"Remove payment method" = "Makseviisi eemaldamine";
 
 "Resend code" = "Saada kood uuesti";
 

@@ -1,4 +1,4 @@
-## X.X.X 
+## 24.1.3 2024-12-16
 ### PaymentSheet, CustomerSheet
 * [Changed] Changed the edit and remove saved payment method flow so that tapping 'Edit' displays an icon that leads to a new update payment method screen that displays payment method details for card (last 4 digits of card number, cvc and expiry date fields), US Bank account (name, email, last 4 digits of bank acocunt), and SEPA debit (name, email, last 4 digits of IBAN).
 
