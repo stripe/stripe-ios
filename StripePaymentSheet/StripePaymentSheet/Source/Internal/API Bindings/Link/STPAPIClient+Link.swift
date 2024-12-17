@@ -58,6 +58,10 @@ extension STPAPIClient {
                 parameters: parameters,
                 ephemeralKeySecret: publishableKey
             ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
+                // If there's an error, send it to StripeAttest
+                if useModernMobileEndpoints, case .failure(let error) = result {
+                    StripeAttest(apiClient: self).receivedAssertionError(error)
+                }
                 completion(result)
             }
         }
@@ -112,6 +116,11 @@ extension STPAPIClient {
                 resource: useModernMobileEndpoints ? modernEndpoint : legacyEndpoint,
                 parameters: parameters
             ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
+                // If there's an error, send it to StripeAttest
+                if useModernMobileEndpoints, case .failure(let error) = result {
+                    StripeAttest(apiClient: self).receivedAssertionError(error)
+                }
+
                 completion(result)
             }
         }

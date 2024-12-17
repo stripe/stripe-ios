@@ -466,13 +466,16 @@ extension PaymentSheet {
             switch confirmOption {
             case .wallet:
                 Task {
-                    if await shouldUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
-                        let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
-                        linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
-                    } else {
-                        let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
-                        linkController.present(from: authenticationContext.authenticationPresentingViewController(),
-                                               completion: completion)
+                    let useNativeLink = await shouldUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+                    Task.detached { @MainActor in
+                        if useNativeLink {
+                            let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+                            linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
+                        } else {
+                            let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+                            linkController.present(from: authenticationContext.authenticationPresentingViewController(),
+                                                   completion: completion)
+                        }
                     }
                 }
             case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let intentConfirmParams):

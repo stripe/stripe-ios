@@ -338,21 +338,24 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         Task {
-            if await shouldUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration) {
-                self.presentPayWithNativeLinkController(
-                    from: paymentSheetViewController,
-                    intent: paymentSheetViewController.intent,
-                    elementsSession: paymentSheetViewController.elementsSession,
-                    shouldOfferApplePay: false,
-                    shouldFinishOnClose: false,
-                    completion: nil
-                )
-            } else {
-                self.presentPayWithLinkController(
-                    from: paymentSheetViewController,
-                    intent: paymentSheetViewController.intent,
-                    elementsSession: paymentSheetViewController.elementsSession
-                )
+            let useNativeLink = await shouldUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
+            Task.detached { @MainActor in
+                if useNativeLink {
+                    self.presentPayWithNativeLinkController(
+                        from: paymentSheetViewController,
+                        intent: paymentSheetViewController.intent,
+                        elementsSession: paymentSheetViewController.elementsSession,
+                        shouldOfferApplePay: false,
+                        shouldFinishOnClose: false,
+                        completion: nil
+                    )
+                } else {
+                    self.presentPayWithLinkController(
+                        from: paymentSheetViewController,
+                        intent: paymentSheetViewController.intent,
+                        elementsSession: paymentSheetViewController.elementsSession
+                    )
+                }
             }
         }
     }

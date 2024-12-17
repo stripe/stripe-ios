@@ -45,6 +45,21 @@ import UIKit
             return false
         }
     }
+    
+    /// Inform StripeAttest of an error received in response to an assertion.
+    /// The key may be reset if needed.
+    @_spi(STP) public func receivedAssertionError(_ error: Error) {
+        // If the backend responds with this specific error, we should reset the key.
+        if let error = error as? StripeCore.StripeError,
+           case let .apiError(apiError) = error,
+           apiError.code == "invalid_parameter",
+           apiError.type == .invalidRequestError,
+           apiError.param == nil {
+            let resetKeyAnalytic = ErrorAnalytic(event: .resetKeyForAssertionError, error: error)
+            STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
+            resetKey()
+        }
+    }
 
     // MARK: Public structs
 
@@ -144,7 +159,7 @@ import UIKit
     /// permanently increases a counter for the device/app pair.
     /// We expect each device/app pair to generate one key *ever*.
     /// If this rate limit is being hit, something is wrong.
-    private static let minDurationBetweenKeyGenerationAttempts: TimeInterval = 1 // 1 second, for testing
+    private static let minDurationBetweenKeyGenerationAttempts: TimeInterval = 60 * 60 * 24 // 24 hours
 
     /// Attest the current device key. Only perform this once per device key.
     /// You should not call this directly, it'll be called automatically during assert.
@@ -223,6 +238,8 @@ import UIKit
             let error = error as NSError
             if error.domain == DCErrorDomain && error.code == DCError.invalidKey.rawValue {
                 resetKey()
+                let resetKeyAnalytic = ErrorAnalytic(event: .resetKeyForAttestationError, error: error)
+                STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
             }
             // For other errors, just report them as an analytic and throw. We'll want to retry attestation with the same key.
             throw error
