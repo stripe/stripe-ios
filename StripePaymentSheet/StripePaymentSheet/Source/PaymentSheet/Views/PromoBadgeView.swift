@@ -14,21 +14,32 @@ class PromoBadgeView: UIView {
     private let labelBackground = UIView()
     private let label = UILabel()
     
+    private var appearance: PaymentSheet.Appearance
+    private var cornerRadius: CGFloat?
+    private var text: String
+    private var eligible: Bool
+    
+    override var intrinsicContentSize: CGSize {
+        CGSize(
+            width: labelBackground.layoutMargins.left + label.intrinsicContentSize.width + labelBackground.layoutMargins.right,
+            height: labelBackground.layoutMargins.top + label.intrinsicContentSize.height + labelBackground.layoutMargins.bottom
+        )
+    }
+    
     init(
         appearance: PaymentSheet.Appearance,
         cornerRadius: CGFloat? = nil,
         tinyMode: Bool,
         text: String? = nil
     ) {
+        self.appearance = appearance
+        self.cornerRadius = cornerRadius
+        self.eligible = true
+        self.text = text ?? ""
         super.init(frame: .zero)
-        setupView(tinyMode: tinyMode)
-        setAppearance(appearance)
         
-        if let cornerRadius {
-            // In embedded mode with checkmarks, the `appearance` corner radius might not be what the
-            // merchant has specified. We use the original corner radius instead.
-            labelBackground.layer.cornerRadius = cornerRadius
-        }
+        setupView(tinyMode: tinyMode)
+        updateAppearance()
         
         if let text {
             setText(text)
@@ -39,12 +50,47 @@ class PromoBadgeView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        invalidateIntrinsicContentSize()
+    }
+    
     func setAppearance(_ appearance: PaymentSheet.Appearance) {
-        let backgroundColor = appearance.primaryButton.successBackgroundColor
-        let foregroundColor = appearance.primaryButton.successTextColor ?? appearance.primaryButton.textColor ?? backgroundColor.contrastingColor
+        self.appearance = appearance
+        updateAppearance()
+    }
+    
+    func setText(_ text: String) {
+        self.text = text
+        updateText()
+    }
+    
+    func setEligible(_ eligible: Bool) {
+        self.eligible = eligible
+        updateText()
+    }
+    
+    private func updateText() {
+        label.text = formatPromoText(text, eligible: eligible)
+        updateAppearance()
+        invalidateIntrinsicContentSize()
+    }
+    
+    private func updateAppearance() {
+        let backgroundColor = if eligible {
+            appearance.primaryButton.successBackgroundColor
+        } else {
+            appearance.colors.componentBorder
+        }
+        
+        let foregroundColor = if eligible {
+            appearance.primaryButton.successTextColor ?? appearance.primaryButton.textColor ?? backgroundColor.contrastingColor
+        } else {
+            appearance.colors.componentText
+        }
         
         labelBackground.backgroundColor = backgroundColor
-        labelBackground.layer.cornerRadius = appearance.cornerRadius
+        labelBackground.layer.cornerRadius = cornerRadius ?? appearance.cornerRadius
         label.font = appearance.scaledFont(
             for: appearance.font.base.medium,
             style: .caption1,
@@ -52,10 +98,12 @@ class PromoBadgeView: UIView {
         )
         label.numberOfLines = 1
         label.textColor = foregroundColor
-    }
-    
-    func setText(_ text: String) {
-        label.text = formatPromoText(text)
+        
+        if let cornerRadius {
+            // In embedded mode with checkmarks, the `appearance` corner radius might not be what the
+            // merchant has specified. We use the original corner radius instead.
+            labelBackground.layer.cornerRadius = cornerRadius
+        }
     }
     
     private func setupView(tinyMode: Bool) {
@@ -89,7 +137,15 @@ class PromoBadgeView: UIView {
         ])
     }
     
-    private func formatPromoText(_ text: String) -> String {
+    private func formatPromoText(_ text: String, eligible: Bool) -> String {
+        guard eligible else {
+            let baseString = STPLocalizedString(
+                "No %@ promo",
+                "Label for when the user is not eligible for a promo."
+            )
+            return String(format: baseString, text)
+        }
+        
         // We have limited screen real estate, so we only show the "Get" prefix in English
         let isEnglish = Locale.current.isEnglishLanguage
         return isEnglish ? "Get \(text)" : text
