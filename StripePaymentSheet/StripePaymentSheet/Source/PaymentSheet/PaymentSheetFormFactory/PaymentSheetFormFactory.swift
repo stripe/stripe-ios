@@ -82,6 +82,12 @@ class PaymentSheetFormFactory {
             guard isLinkEnabled && !elementsSession.disableLinkSignup && elementsSession.supportsLinkCard else {
                 return false
             }
+            
+            // If attestation is enabled for this app but the specific device doesn't support attestation, don't show inline signup: It's unlikely to provide a good experience. We'll only allow the web popup flow.
+            let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
+            if useAttestationEndpoints && !deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
+                return false
+            }
 
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
             return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink

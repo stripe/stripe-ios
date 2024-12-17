@@ -338,7 +338,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         Task {
-            let useNativeLink = await shouldUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
+            let useNativeLink = await prepareNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
             Task.detached { @MainActor in
                 if useNativeLink {
                     self.presentPayWithNativeLinkController(

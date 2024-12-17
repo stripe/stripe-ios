@@ -168,11 +168,29 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
     }
 }
 
-func shouldUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async -> Bool {
+// MARK: - Native Link helpers
+
+/// Prepares a device for native Link and returns whether the device is ready
+func prepareNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async -> Bool {
+    guard deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
+        return false
+    }
+    
+    let stripeAttest = StripeAttest(apiClient: configuration.apiClient)
+    return await stripeAttest.prepareAttestation()
+}
+
+/// Check if native Link is available on this device
+func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
     let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
     guard useAttestationEndpoints else {
         return false
     }
-    let stripeAttest = StripeAttest(apiClient: configuration.apiClient)
-    return await stripeAttest.prepareAttestation()
+    
+    // If we're in testmode, we don't need to attest for native Link
+    if configuration.apiClient.isTestmode {
+        return true
+    }
+    
+    return StripeAttest(apiClient: configuration.apiClient).isSupported
 }

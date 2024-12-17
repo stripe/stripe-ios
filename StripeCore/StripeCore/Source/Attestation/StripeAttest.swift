@@ -60,6 +60,11 @@ import UIKit
             resetKey()
         }
     }
+    
+    /// Returns whether the device is capable of performing attestation.
+    @_spi(STP) public var isSupported: Bool {
+        return appAttestService.isSupported
+    }
 
     // MARK: Public structs
 
