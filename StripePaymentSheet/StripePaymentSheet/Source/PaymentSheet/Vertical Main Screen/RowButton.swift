@@ -130,11 +130,6 @@ class RowButton: UIView {
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
-        let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView, defaultBadge].compactMap { $0 })
-        horizontalStackView.axis = .horizontal
-        horizontalStackView.alignment = .leading
-        horizontalStackView.setCustomSpacing(8, after: labelsStackView)
-
         addAndPinSubview(shadowRoundedRect)
 
         if let rightAccessoryView, !isFlatWithCheckmarkStyle {
@@ -195,29 +190,11 @@ class RowButton: UIView {
             }
         }
 
-        for view in [radioButton, imageView, horizontalStackView].compactMap({ $0 }) {
+        for view in [radioButton, imageView, labelsStackView, defaultBadge].compactMap({ $0 }) {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.isUserInteractionEnabled = false
             view.isAccessibilityElement = false
             addSubview(view)
-        }
-
-        if let defaultBadge = defaultBadge {
-            for view in [labelsStackView, defaultBadge].compactMap({ $0 }) {
-                view.translatesAutoresizingMaskIntoConstraints = false
-                view.isUserInteractionEnabled = false
-                view.isAccessibilityElement = false
-                addSubview(view)
-            }
-            let stackViewConstraints = [
-                labelsStackView.leadingAnchor.constraint(equalTo: horizontalStackView.leadingAnchor),
-                labelsStackView.topAnchor.constraint(equalTo: horizontalStackView.topAnchor),
-                labelsStackView.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
-                defaultBadge.centerYAnchor.constraint(equalTo: centerYAnchor),
-                defaultBadge.leadingAnchor.constraint(equalTo: labelsStackView.trailingAnchor, constant: 8),
-                defaultBadge.trailingAnchor.constraint(lessThanOrEqualTo: horizontalStackView.trailingAnchor)
-            ]
-            NSLayoutConstraint.activate(stackViewConstraints)
         }
 
         // Resolve ambiguous height warning by setting these constraints w/ low priority
@@ -262,13 +239,16 @@ class RowButton: UIView {
             radioButton?.centerYAnchor.constraint(equalTo: centerYAnchor),
             radioButton?.heightAnchor.constraint(equalToConstant: 18),
             radioButton?.widthAnchor.constraint(equalToConstant: 18),
+            
+            labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
+            labelsStackView.trailingAnchor.constraint(equalTo: promoBadge?.leadingAnchor ?? labelTrailingConstant, constant: -12),
+            labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
+            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
 
-            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: promoBadge?.leadingAnchor ?? labelTrailingConstant, constant: -12),
-            horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
-            horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
-
+            defaultBadge?.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
+            defaultBadge?.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
             imageViewBottomConstraint,
             imageViewTopConstraint,
         ].compactMap({ $0 }))
@@ -352,7 +332,7 @@ class RowButton: UIView {
 
     /// Sets icon, text, and sublabel alpha
     func setContentViewAlpha(_ alpha: CGFloat) {
-        [imageView, label, sublabel, promoBadge].compactMap { $0 }.forEach {
+        [imageView, label, sublabel, defaultBadge, promoBadge].compactMap { $0 }.forEach {
             $0.alpha = alpha
         }
     }

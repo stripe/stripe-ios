@@ -436,7 +436,6 @@ extension SavedPaymentMethodCollectionView {
         }
 
         private func activateDefaultBadge() {
-            contentView.addSubview(defaultBadge)
             NSLayoutConstraint.activate([
                 defaultBadge.topAnchor.constraint(
                     equalTo: label.bottomAnchor, constant: 4),
@@ -444,7 +443,6 @@ extension SavedPaymentMethodCollectionView {
                 defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
                 defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
             ])
-            contentView.layoutIfNeeded()
         }
 
     }
