@@ -44,6 +44,8 @@ extension STPAPIClient {
         }
 
         Task {
+            // Explicitly capture the parameters within the task:
+            var parameters = parameters
             if useModernMobileEndpoints {
                 do {
                     let attest = StripeAttest(apiClient: self)
@@ -102,6 +104,8 @@ extension STPAPIClient {
         }
 
         Task {
+            // Explicitly capture the parameters within the task:
+            var parameters = parameters
             if useModernMobileEndpoints {
                 do {
                     let attest = StripeAttest(apiClient: self)
