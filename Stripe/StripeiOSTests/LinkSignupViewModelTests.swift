@@ -12,7 +12,6 @@ import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 import StripePaymentsTestUtils
@@ -208,6 +207,7 @@ extension LinkInlineSignupViewModelTests {
             configuration: PaymentSheet.Configuration(),
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
+            previousCustomerInput: nil,
             linkAccount: linkAccount,
             country: country
         )
