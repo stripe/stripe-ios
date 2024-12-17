@@ -186,17 +186,20 @@ let JSONKeyObject = "object"
         }
         // END OF STPEmptyStripeResponse HACK
 
+        #if DEBUG
+        if let httpResponse,
+           let requestId = httpResponse.value(forHTTPHeaderField: "request-id"),
+           let url = httpResponse.value(forKey: "URL") as? URL {
+            print("[Stripe SDK]: Request \(requestId), \(url.relativePath)")
+        }
+        #endif
+
         if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
             safeCompletion(responseObject, nil)
         } else {
-            let nsError: NSError? = NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
-            let error: Error = nsError ?? NSError.stp_genericFailedToParseResponseError()
-
-            #if DEBUG
-            if let nsError, let requestId = nsError.userInfo[STPError.stripeRequestIDKey] {
-                print("[Stripe SDK]: Failed request \(requestId)")
-            }
-            #endif
+            let error: Error =
+                NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
+                ?? NSError.stp_genericFailedToParseResponseError()
             safeCompletion(nil, error)
         }
     }
