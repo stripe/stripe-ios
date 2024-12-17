@@ -2469,7 +2469,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
-    
+
     func testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
@@ -2696,7 +2696,7 @@ extension PaymentSheetUITestCase {
         }
 
         loadPlayground(app, settings)
-        
+
         if uiStyle == .flowController {
             app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
             app.buttons["+ Add"].waitForExistenceAndTap()
@@ -2733,7 +2733,7 @@ extension PaymentSheetUITestCase {
             XCTAssertTrue(app.staticTexts["•••• 6789"].waitForExistence(timeout: 10))
             app.buttons["Confirm"].waitForExistenceAndTap(timeout: 10)
         }
-        
+
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 

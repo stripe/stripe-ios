@@ -34,7 +34,7 @@ import UIKit
             }
         }
     }
-    
+
     /// Determines if the current device is able to sign requests.
     /// If the device has not attested previously, we will create a key and attest it.
     /// If `true`, the device is ready for attestation. If `false`, attestation is not possible.
@@ -50,7 +50,7 @@ import UIKit
             return false
         }
     }
-    
+
     /// Inform StripeAttest of an error received in response to an assertion.
     /// The key may be reset if needed.
     @_spi(STP) public func receivedAssertionError(_ error: Error) {
@@ -65,7 +65,7 @@ import UIKit
             resetKey()
         }
     }
-    
+
     /// Returns whether the device is capable of performing attestation.
     @_spi(STP) public var isSupported: Bool {
         return appAttestService.isSupported
@@ -337,7 +337,7 @@ import UIKit
             throw error
         }
     }
-    
+
     private var testmodeAssertion: Assertion {
         Assertion(assertionData: Data(bytes: [0x01, 0x02, 0x03], count: 3),
                   deviceID: (try? getDeviceID()) ?? "test-device-id",

@@ -52,7 +52,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     // Dependencies
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
-    
+
     let useModernMobileEndpoints: Bool
     // The session ID associated with the current Elements Session
     let elementsSessionID: String

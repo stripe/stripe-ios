@@ -10,8 +10,8 @@ import SafariServices
 import UIKit
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 @_exported @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 extension PayWithLinkViewController {
 

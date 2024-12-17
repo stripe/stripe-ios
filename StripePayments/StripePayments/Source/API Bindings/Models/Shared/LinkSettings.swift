@@ -77,7 +77,7 @@ import Foundation
         let useAttestationEndpoints = response["link_mobile_use_attestation_endpoints"] as? Bool ?? false
         let suppress2FAModal = response["link_mobile_suppress_2fa_modal"] as? Bool ?? false
         let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
-        
+
         let linkIncentivesEnabled = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
         let linkConsumerIncentive: LinkConsumerIncentive? = if linkIncentivesEnabled {
             LinkConsumerIncentive.decodedObject(

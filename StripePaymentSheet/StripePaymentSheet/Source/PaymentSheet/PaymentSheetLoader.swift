@@ -324,8 +324,7 @@ final class PaymentSheetLoader {
                 guard let customer = elementsSession.customer,
                   let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return [] }
                 defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-            }
-            else {
+            } else {
                 defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
             }
             if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {

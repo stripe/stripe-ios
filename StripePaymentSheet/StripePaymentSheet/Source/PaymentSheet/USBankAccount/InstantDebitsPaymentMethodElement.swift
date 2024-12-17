@@ -191,7 +191,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.linkedBank = nil
         self.linkedBankInfoSectionElement.view.isHidden = true
         self.theme = theme
-        
+
         let promoDisclaimerElement = incentive.flatMap {
             let label = ElementsUI.makeNoticeTextField(theme: theme)
             label.attributedText = $0.promoDisclaimerText(with: theme, isPaymentIntent: isPaymentIntent)
@@ -332,7 +332,7 @@ private extension PaymentSheet.Address {
 }
 
 private extension PaymentMethodIncentive {
-    
+
     func promoDisclaimerText(
         with appearance: ElementsAppearance,
         isPaymentIntent: Bool
@@ -348,15 +348,15 @@ private extension PaymentMethodIncentive {
                 "Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]'"
             )
         }
-        
+
         let string = String(format: baseString, displayText)
-        
+
         let links = [
             "terms": URL(string: "https://link.com/promotion-terms")!,
         ]
-        
+
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
-        
+
         let style = NSMutableParagraphStyle()
         style.alignment = .left
         formattedString.addAttributes(

@@ -24,7 +24,7 @@ extension STPAPIClient {
         Task {
             let legacyEndpoint = "consumers/sessions/lookup"
             let modernEndpoint = "consumers/mobile/sessions/lookup"
-            
+
             var parameters: [String: Any] = [
                 "request_surface": "ios_payment_element",
             ]
@@ -80,7 +80,7 @@ extension STPAPIClient {
         Task {
             let legacyEndpoint = "consumers/accounts/sign_up"
             let modernEndpoint = "consumers/mobile/sign_up"
-            
+
             var parameters: [String: Any] = [
                 "request_surface": "ios_payment_element",
                 "email_address": email.lowercased(),
@@ -88,19 +88,19 @@ extension STPAPIClient {
                 "locale": locale.toLanguageTag(),
                 "country_inferring_method": "PHONE_NUMBER",
             ]
-            
+
             if let legalName = legalName {
                 parameters["legal_name"] = legalName
             }
-            
+
             if let countryCode = countryCode {
                 parameters["country"] = countryCode
             }
-            
+
             if let consentAction = consentAction {
                 parameters["consent_action"] = consentAction
             }
-            
+
             if useModernMobileEndpoints {
                 do {
                     let attest = StripeAttest(apiClient: self)
@@ -110,7 +110,7 @@ extension STPAPIClient {
                     // If we can't get an assertion, we'll try the request anyway. It may fail.
                 }
             }
-            
+
             post(
                 resource: useModernMobileEndpoints ? modernEndpoint : legacyEndpoint,
                 parameters: parameters
@@ -119,7 +119,7 @@ extension STPAPIClient {
                 if useModernMobileEndpoints, case .failure(let error) = result {
                     StripeAttest(apiClient: self).receivedAssertionError(error)
                 }
-                
+
                 completion(result)
             }
         }

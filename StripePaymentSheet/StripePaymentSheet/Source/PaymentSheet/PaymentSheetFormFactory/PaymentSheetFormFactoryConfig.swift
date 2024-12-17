@@ -102,7 +102,7 @@ enum PaymentSheetFormFactoryConfig {
             return config.cardBrandFilter
         }
     }
-    
+
     var apiClient: STPAPIClient {
         switch self {
         case .paymentSheet(let config):

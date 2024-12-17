@@ -294,27 +294,27 @@ extension FinancialConnectionsWebFlowViewController {
 }
 
 private extension URL {
-    
+
     /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
     /// we can parse it back in StripeCore.
     func extractLinkBankPaymentMethod() -> LinkBankPaymentMethod? {
         guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
             return nil
         }
-        
+
         guard let data = Data(base64Encoded: encodedPaymentMethod) else {
             return nil
         }
-        
+
         let result: Result<LinkBankPaymentMethod, Error> = STPAPIClient.decodeResponse(
             data: data,
             error: nil,
             response: nil
         )
-        
+
         return try? result.get()
     }
-    
+
     func extractValue(forKey key: String) -> String? {
         guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
             assertionFailure("Invalid URL")

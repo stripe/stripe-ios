@@ -49,7 +49,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     ) {
         self.init(apiClient: apiClient, cookieStore: cookieStore, useModernMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false, sessionID: elementsSession.sessionID)
     }
-    
+
     init(
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = defaultCookieStore,

@@ -136,7 +136,7 @@ extension PayWithLinkViewController {
         private let configuration: PaymentElementConfiguration
 
         private let country: String?
-        
+
         let useModernMobileEndpoints: Bool
 
         // MARK: Initializer
