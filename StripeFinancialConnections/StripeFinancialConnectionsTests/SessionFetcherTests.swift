@@ -42,7 +42,8 @@ class NoMoreAccountSessionAPIClient: EmptyFinancialConnectionsAPIClient {
             permissions: nil,
             status: .active,
             subcategory: .checking,
-            supportedPaymentMethodTypes: [.usBankAccount]
+            supportedPaymentMethodTypes: [.usBankAccount],
+            object: "financial_connections.account"
         )
         let fullList = StripeAPI.FinancialConnectionsSession.AccountList(data: [account], hasMore: false)
         return Promise(value: fullList)

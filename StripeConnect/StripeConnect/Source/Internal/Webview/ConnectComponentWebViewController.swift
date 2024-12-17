@@ -325,23 +325,9 @@ private extension ConnectComponentWebViewController {
                 from: self
             )
 
-            var token: String?
-            // TODO: MXMOBILE-2491 Log these as errors instead of printing to console
-
-            switch result {
-            case .completed(result: (_, let returnedToken)):
-                token = returnedToken?.id
-                if returnedToken == nil {
-                    debugPrint("Error using FinancialConnections: no bank token returned")
-                }
-            case .failed(let error):
-                debugPrint("Error using FinancialConnections: \(error)")
-            case .canceled:
-                // No-op
-                break
-            }
-
-            sendMessage(ReturnedFromFinancialConnectionsSender(payload: .init(bankToken: token, id: args.id)))
+            sendMessage(SetCollectMobileFinancialConnectionsResult.sender(
+                value: result.toSenderValue(id: args.id, analyticsClient: analyticsClient)
+            ))
         }
     }
 }

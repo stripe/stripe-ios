@@ -311,6 +311,7 @@ extension SavedPaymentMethodCollectionView {
         private func update() {
             // Setting the image ends up implicitly using UITraitCollection.current, which is undefined in this context, so wrap this in `traitCollection.performAsCurrent` to ensure it uses this view's trait collection
             traitCollection.performAsCurrent {
+                let overrideUserInterfaceStyle: UIUserInterfaceStyle = appearance.colors.componentBackground.isDark ? .dark : .light
                 if let viewModel = viewModel {
                     switch viewModel {
                     case .saved(let paymentMethod):
@@ -322,20 +323,20 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage()
+                        paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
                         label.text = String.Localized.apple_pay
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage()
+                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage()
+                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                         paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )

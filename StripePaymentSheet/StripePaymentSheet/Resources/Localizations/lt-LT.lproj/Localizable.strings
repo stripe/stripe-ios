@@ -136,6 +136,8 @@
 
 "Not %@?" = "Ne %@?";
 
+"Only card brand can be changed." = "Galima keisti tik kortelės prekės ženklą.";
+
 "Open your UPI app to approve your payment within %@" = "Atidarykite savo UPI programą mokėjimui patvirtinti per %@";
 
 "Or" = "Arba";
@@ -179,8 +181,6 @@
 "Remove card?" = "Ištraukti kortelę?";
 
 "Remove linked account" = "Pašalinti susietą paskyrą";
-
-"Remove payment method" = "Pašalinti mokėjimo būdą";
 
 "Resend code" = "Pakartotinai siųsti kodą";
 

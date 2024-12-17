@@ -136,6 +136,8 @@
 
 "Not %@?" = "E-mailová adresa %@ nie je vaša?";
 
+"Only card brand can be changed." = "Je možné zmeniť len značku banky.";
+
 "Open your UPI app to approve your payment within %@" = "Otvorte si aplikáciu UPI za účelom schválenia platby v rámci %@";
 
 "Or" = "Alebo";
@@ -179,8 +181,6 @@
 "Remove card?" = "Odstrániť kartu?";
 
 "Remove linked account" = "Odstrániť prepojený účet";
-
-"Remove payment method" = "Odstrániť spôsob platby";
 
 "Resend code" = "Znovu odoslať kód";
 

@@ -136,6 +136,8 @@
 
 "Not %@?" = "Không phải %@?";
 
+"Only card brand can be changed." = "Chỉ có thể thay đổi thương hiệu thẻ.";
+
 "Open your UPI app to approve your payment within %@" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
 
 "Or" = "Hoặc";
@@ -179,8 +181,6 @@
 "Remove card?" = "Xóa thẻ?";
 
 "Remove linked account" = "Xóa tài khoản liên kết";
-
-"Remove payment method" = "Gỡ bỏ phương thức thanh toán";
 
 "Resend code" = "Gửi lại mã";
 

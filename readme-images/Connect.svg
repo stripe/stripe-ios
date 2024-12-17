@@ -1,0 +1,44 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path class="paint0_linear" d="M12.4662 0.0100476C5.61677 0.302318 0.167363 5.8458 0.00377084 12.6876C-0.159822 19.5294 5.01843 25.3261 11.8461 25.9443C12.2181 25.9752 12.5902 26 12.9716 26H23.5196C24.8895 26 26 24.8914 26 23.5239V13.0097C26.0027 9.47162 24.5607 6.0853 22.0068 3.63217C19.4529 1.17904 16.0076 -0.128948 12.4662 0.0100476Z"/>
+  <path d="M27.5338 39.99C34.3832 39.6977 39.8326 34.1542 39.9962 27.3124C40.1598 20.4706 34.9816 14.6739 28.1539 14.0557C27.7819 14.0248 27.4098 14 27.0284 14L16.4804 14C15.1105 14 14 15.1086 14 16.4761L14 26.9903C13.9973 30.5284 15.4393 33.9147 17.9932 36.3678C20.5471 38.821 23.9924 40.1289 27.5338 39.99Z" fill="#0073E6"/>
+  <path class="paint1_linear" d="M26 14V23.5239C26 24.8914 24.8895 26 23.5196 26H14V16.4761C14 15.1633 15.0235 14.0891 16.3173 14.0053L16.4804 14H26Z"/>
+
+  <defs>
+    <linearGradient id="paint0_linear_light" x1="13" y1="1.70742" x2="13" y2="15.2542" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#11EFE3"/>
+      <stop offset="0.33" stop-color="#15E8E2"/>
+      <stop offset="0.74" stop-color="#1FD3E0"/>
+      <stop offset="1" stop-color="#21CFE0"/>
+    </linearGradient>
+    <linearGradient id="paint1_linear_light" x1="20" y1="15.7239" x2="20" y2="27.241" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00299C"/>
+      <stop offset="1" stop-color="#0073E6"/>
+    </linearGradient>
+    <linearGradient id="paint0_linear_dark" x1="13.0172" y1="9.65172" x2="13.0172" y2="26.2207" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#11EFE3"/>
+      <stop offset="0.73619" stop-color="#19E0E2"/>
+      <stop offset="1" stop-color="#21CFE0"/>
+    </linearGradient>
+    <linearGradient id="paint1_linear_dark" x1="20.0599" y1="25.2494" x2="20.0599" y2="11.6091" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B3FFFF"/>
+      <stop offset="1" stop-color="#4EF0E6"/>
+    </linearGradient>
+
+    <style>
+      .paint0_linear {
+        fill: url(#paint0_linear_light);
+      }
+      .paint1_linear {
+        fill: url(#paint1_linear_light);
+      }
+      @media (prefers-color-scheme: dark) {
+        .paint0_linear {
+          fill: url(#paint0_linear_dark);
+        }
+        .paint1_linear {
+          fill: url(#paint1_linear_dark);
+        }
+      }
+    </style>
+  </defs>
+</svg>

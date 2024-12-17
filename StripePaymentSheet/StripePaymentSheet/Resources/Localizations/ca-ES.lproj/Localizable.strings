@@ -136,6 +136,8 @@
 
 "Not %@?" = "No ets %@?";
 
+"Only card brand can be changed." = "Només es pot canviar la marca de la targeta.";
+
 "Open your UPI app to approve your payment within %@" = "Obriu l'aplicació UPI per aprovar el pagament en un termini de %@";
 
 "Or" = "O";
@@ -179,8 +181,6 @@
 "Remove card?" = "Voleu eliminar la targeta?";
 
 "Remove linked account" = "Elimina el compte vinculat";
-
-"Remove payment method" = "Elimina el mètode de pagament";
 
 "Resend code" = "Reenvia'm el codi";
 
