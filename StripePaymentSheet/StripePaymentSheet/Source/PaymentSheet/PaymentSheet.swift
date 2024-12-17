@@ -177,7 +177,7 @@ public class PaymentSheet {
                     }()
                     self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                 }
-                if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount, configuration: self.configuration) {
+                if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
                     let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
                     verificationController.present(from: self.bottomSheetViewController) { result in
                         switch result {

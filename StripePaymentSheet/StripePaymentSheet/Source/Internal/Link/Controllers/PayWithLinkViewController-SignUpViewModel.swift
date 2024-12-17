@@ -137,16 +137,13 @@ extension PayWithLinkViewController {
 
         private let country: String?
 
-        let useModernMobileEndpoints: Bool
-
         // MARK: Initializer
 
         init(
             configuration: PaymentElementConfiguration,
             accountService: LinkAccountServiceProtocol,
             linkAccount: PaymentSheetLinkAccount?,
-            country: String?,
-            useModernMobileEndpoints: Bool
+            country: String?
         ) {
             self.configuration = configuration
             self.accountService = accountService
@@ -154,7 +151,6 @@ extension PayWithLinkViewController {
             self.emailAddress = linkAccount?.email
             self.legalName = configuration.defaultBillingDetails.name
             self.country = country
-            self.useModernMobileEndpoints = useModernMobileEndpoints
         }
 
         // MARK: Methods
