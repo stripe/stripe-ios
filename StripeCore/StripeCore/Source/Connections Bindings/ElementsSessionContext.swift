@@ -16,8 +16,8 @@ import Foundation
         
         @_spi(STP) public var id: String {
             switch self {
-            case let .payment(string), let .setup(string), let .deferred(string):
-                return string
+            case let .payment(id), let .setup(id), let .deferred(id):
+                return id
             }
         }
     }
