@@ -43,10 +43,12 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
+        var paymentMethods = generatePaymentMethods()
         if showDefaultPMBadge {
             configuration.allowsSetAsDefaultPM = true
+            let card = STPPaymentMethod._testCard()
+            paymentMethods.insert(card, at: 0)
         }
-        let paymentMethods = generatePaymentMethods()
 
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,
@@ -80,8 +82,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     }
 
     private func generatePaymentMethods() -> [STPPaymentMethod] {
-        let card = STPPaymentMethod._testCard()
-        return [card,
+        return [
                 STPFixtures.paymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "BANK OF AMERICA"),
