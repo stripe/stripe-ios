@@ -131,6 +131,10 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
         set {
             collectionView.isRemovingPaymentMethods = newValue
+            collectionView.performBatchUpdates({
+                animateHeightChange{self.collectionView.updateLayout()}
+                collectionView.reloadSections(IndexSet(integer: 0))
+            })
             UIView.transition(with: collectionView,
                               duration: 0.3,
                               options: .transitionCrossDissolve,
@@ -268,7 +272,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Views
     private lazy var collectionView: SavedPaymentMethodCollectionView = {
-        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance)
+        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, showDefaultPMBadge: configuration.allowsSetAsDefaultPM)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -511,10 +515,10 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         }
         cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: self.configuration.allowsSetAsDefaultPM)
         cell.delegate = self
-        cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         if self.configuration.allowsSetAsDefaultPM {
             cell.isDefaultPM = viewModel.savedPaymentMethod?.stripeId == elementsSession.customer?.defaultPaymentMethod
         }
+        cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
 
         return cell
