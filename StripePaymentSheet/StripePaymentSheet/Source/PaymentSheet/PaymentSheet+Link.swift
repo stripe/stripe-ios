@@ -5,6 +5,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 import UIKit
 
 // MARK: - Webview Link
@@ -165,4 +166,13 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
 
         return nil
     }
+}
+
+func shouldUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async -> Bool {
+    let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
+    guard useAttestationEndpoints else {
+        return false
+    }
+    let stripeAttest = StripeAttest(apiClient: configuration.apiClient)
+    return await stripeAttest.prepareAttestation()
 }

@@ -2093,7 +2093,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
-        settings.useNativeLink = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2114,7 +2113,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
         settings.uiStyle = .flowController
-        settings.useNativeLink = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)

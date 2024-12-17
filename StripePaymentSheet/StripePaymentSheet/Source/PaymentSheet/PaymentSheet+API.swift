@@ -465,13 +465,15 @@ extension PaymentSheet {
 
             switch confirmOption {
             case .wallet:
-                if configuration.forceNativeLinkEnabled {
-                    let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
-                    linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
-                } else {
-                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
-                    linkController.present(from: authenticationContext.authenticationPresentingViewController(),
-                                           completion: completion)
+                Task {
+                    if await shouldUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
+                        let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+                        linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
+                    } else {
+                        let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+                        linkController.present(from: authenticationContext.authenticationPresentingViewController(),
+                                               completion: completion)
+                    }
                 }
             case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let intentConfirmParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in

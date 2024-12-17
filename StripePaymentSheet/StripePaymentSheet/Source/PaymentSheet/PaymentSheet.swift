@@ -337,21 +337,23 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     }
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
-        if configuration.forceNativeLinkEnabled {
-            self.presentPayWithNativeLinkController(
-                from: paymentSheetViewController,
-                intent: paymentSheetViewController.intent,
-                elementsSession: paymentSheetViewController.elementsSession,
-                shouldOfferApplePay: false,
-                shouldFinishOnClose: false,
-                completion: nil
-            )
-        } else {
-            self.presentPayWithLinkController(
-                from: paymentSheetViewController,
-                intent: paymentSheetViewController.intent,
-                elementsSession: paymentSheetViewController.elementsSession
-            )
+        Task {
+            if await shouldUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration) {
+                self.presentPayWithNativeLinkController(
+                    from: paymentSheetViewController,
+                    intent: paymentSheetViewController.intent,
+                    elementsSession: paymentSheetViewController.elementsSession,
+                    shouldOfferApplePay: false,
+                    shouldFinishOnClose: false,
+                    completion: nil
+                )
+            } else {
+                self.presentPayWithLinkController(
+                    from: paymentSheetViewController,
+                    intent: paymentSheetViewController.intent,
+                    elementsSession: paymentSheetViewController.elementsSession
+                )
+            }
         }
     }
 }

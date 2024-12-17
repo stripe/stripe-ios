@@ -39,10 +39,10 @@ extension STPElementsSession {
     }
 
     func shouldShowLink2FABeforePaymentSheet(for linkAccount: PaymentSheetLinkAccount, configuration: PaymentSheet.Configuration) -> Bool {
-        return configuration.forceNativeLinkEnabled &&
-        self.supportsLink &&
+        return self.supportsLink &&
         linkAccount.sessionState == .requiresVerification &&
         !linkAccount.hasStartedSMSVerification &&
+        linkAccount.useModernMobileEndpoints &&
         self.linkSettings?.suppress2FAModal != true
     }
 

@@ -29,6 +29,22 @@ import UIKit
             throw error
         }
     }
+    
+    /// Determines if the current device is able to sign requests.
+    /// If the device has not attested previously, we will create a key and attest it.
+    /// If `true`, the device is ready for attestation. If `false`, attestation is not possible.
+    @_spi(STP) public func prepareAttestation() async -> Bool {
+        do {
+            if !Self.successfullyAttested {
+                // We haven't attested yet, so do that first.
+                try await self.attest()
+            }
+
+            return Self.successfullyAttested
+        } catch {
+            return false
+        }
+    }
 
     // MARK: Public structs
 
