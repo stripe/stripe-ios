@@ -17,7 +17,7 @@ extension STPPaymentMethod {
         case .card:
             return "•••• \(card?.last4 ?? "")"
         case .SEPADebit:
-            return "••••\(sepaDebit?.last4 ?? "")"
+            return "•••• \(sepaDebit?.last4 ?? "")"
         case .USBankAccount:
             return "•••• \(usBankAccount?.last4 ?? "")"
         default:
