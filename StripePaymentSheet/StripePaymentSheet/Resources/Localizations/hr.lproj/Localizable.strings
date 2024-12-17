@@ -136,6 +136,8 @@
 
 "Not %@?" = "Niste %@?";
 
+"Only card brand can be changed." = "Samo se marka kartice može promijeniti.";
+
 "Open your UPI app to approve your payment within %@" = "Otvorite svoju aplikaciju UPI da biste odobrili svoje plaćanje unutar %@";
 
 "Or" = "Ili";
@@ -179,8 +181,6 @@
 "Remove card?" = "Ukloniti karticu?";
 
 "Remove linked account" = "Ukloni povezani račun";
-
-"Remove payment method" = "Ukloni način plaćanja";
 
 "Resend code" = "Ponovo pošalji kod";
 

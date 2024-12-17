@@ -13,7 +13,6 @@ import UIKit
 
 protocol SavedPaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
-    func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
@@ -33,11 +32,7 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            rowButton.isEnabled = !isEditing || alternateUpdatePaymentMethodNavigation
-            chevronButton.isHidden = !canUpdate || !alternateUpdatePaymentMethodNavigation
-            updateButton.isHidden = !canUpdate || alternateUpdatePaymentMethodNavigation
-            removeButton.isHidden = !canRemove || alternateUpdatePaymentMethodNavigation
-            stackView.isUserInteractionEnabled = isEditing
+            chevronButton.isHidden = !canUpdate && !canRemove
         }
     }
 
@@ -87,50 +82,23 @@ final class SavedPaymentMethodRowButton: UIView {
 
     // MARK: Private views
 
-    private lazy var removeButton: CircularButton = {
-        let removeButton = CircularButton(style: .remove, iconColor: .white)
-        removeButton.backgroundColor = appearance.colors.danger
-        removeButton.isHidden = true
-        removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
-        return removeButton
-    }()
-
-    private lazy var updateButton: CircularButton = {
-        let updateButton = CircularButton(style: .edit, iconColor: .white)
-        updateButton.backgroundColor = appearance.colors.icon
-        updateButton.isHidden = true
-        updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
-        return updateButton
-    }()
-
     private lazy var chevronButton: RowButton.RightAccessoryButton = {
         let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: appearance, didTap: handleUpdateButtonTapped)
         chevronButton.isHidden = true
+        chevronButton.isUserInteractionEnabled = isEditing
         return chevronButton
     }()
 
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [chevronButton, updateButton, removeButton])
-        // margins handled by the `RowButton`
-        stackView.directionalLayoutMargins = .zero
-        stackView.isUserInteractionEnabled = isEditing
-        return stackView
-    }()
-
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView, didTap: handleRowButtonTapped)
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
 
         return button
     }()
 
-    private let alternateUpdatePaymentMethodNavigation: Bool
-
     init(paymentMethod: STPPaymentMethod,
-         appearance: PaymentSheet.Appearance,
-         alternateUpdatePaymentMethodNavigation: Bool = false) {
+         appearance: PaymentSheet.Appearance) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
-        self.alternateUpdatePaymentMethodNavigation = alternateUpdatePaymentMethodNavigation
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)
@@ -145,12 +113,8 @@ final class SavedPaymentMethodRowButton: UIView {
         delegate?.didSelectUpdateButton(self, with: paymentMethod)
     }
 
-    @objc private func handleRemoveButtonTapped() {
-        delegate?.didSelectRemoveButton(self, with: paymentMethod)
-    }
-
     @objc private func handleRowButtonTapped(_: RowButton) {
-        if alternateUpdatePaymentMethodNavigation && isEditing {
+        if isEditing {
             delegate?.didSelectUpdateButton(self, with: paymentMethod)
         }
         else {

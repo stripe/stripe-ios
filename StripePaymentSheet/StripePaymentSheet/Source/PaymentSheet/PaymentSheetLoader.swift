@@ -116,7 +116,9 @@ final class PaymentSheetLoader {
                     savedPaymentMethods: filteredSavedPaymentMethods,
                     customerID: configuration.customer?.id,
                     showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
-                    showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false
+                    showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
+                    allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+                    customer: elementsSession.customer
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
 
@@ -316,9 +318,18 @@ final class PaymentSheetLoader {
 
         // Move default PM to front
         if let customerID = configuration.customer?.id {
-            let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+            var defaultPaymentMethodOption: CustomerPaymentOption?
+            // if opted in to the "set as default" feature, try to get default payment method from elements session
+            if configuration.allowsSetAsDefaultPM {
+                guard let customer = elementsSession.customer,
+                  let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return [] }
+                defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+            }
+            else {
+                defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
+            }
             if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
-                $0.stripeId == defaultPaymentMethod?.value
+                $0.stripeId == defaultPaymentMethodOption?.value
             }) {
                 let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
                 savedPaymentMethods.insert(defaultPM, at: 0)

@@ -26,17 +26,22 @@ final public class FinancialConnectionsSheet {
     }
 
     @frozen public enum TokenResult {
-        // User completed the financialConnections session
+        /// User completed the financialConnections session
         case completed(
             result: (
                 session: StripeAPI.FinancialConnectionsSession,
                 token: StripeAPI.BankAccountToken?
             )
         )
-        // Failed with error
+        /// Failed with error
         case failed(error: Error)
-        // User canceled out of the financialConnections session
+        /// User canceled out of the financialConnections session
         case canceled
+
+        /// Convenience initializer that extracts token from session
+        static func completed(session: StripeAPI.FinancialConnectionsSession) -> Self {
+            .completed(result: (session: session, token: session.bankAccountToken))
+        }
     }
 
     // MARK: - Properties
@@ -119,7 +124,7 @@ final public class FinancialConnectionsSheet {
         present(from: presentingViewController) { result in
             switch result {
             case .completed(let session):
-                completion(.completed(result: (session: session, token: session.bankAccountToken)))
+                completion(.completed(session: session))
             case .failed(let error):
                 completion(.failed(error: error))
             case .canceled:

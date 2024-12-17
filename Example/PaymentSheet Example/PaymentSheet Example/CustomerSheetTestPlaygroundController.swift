@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) @_spi(AlternateUpdatePaymentMethodNavigation) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) @_spi(AllowsSetAsDefaultPM) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -147,7 +147,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-        configuration.alternateUpdatePaymentMethodNavigation = settings.alternateUpdatePaymentMethodNavigation == .on
+        configuration.allowsSetAsDefaultPM = settings.allowsSetAsDefaultPM == .on
         return configuration
     }
 

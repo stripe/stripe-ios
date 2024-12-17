@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 11/6/24.
 //
 
+import Foundation
+
 /// The authenticated web view threw an error and was not successfully redirected back to the app.
 struct AuthenticatedWebViewErrorEvent: ConnectAnalyticEvent {
     struct Metadata: Encodable, Equatable {

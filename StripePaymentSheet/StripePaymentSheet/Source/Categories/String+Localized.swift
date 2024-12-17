@@ -119,6 +119,13 @@ extension String.Localized {
         )
     }
 
+    static var only_card_brand_can_be_changed: String {
+        STPLocalizedString(
+            "Only card brand can be changed.",
+            "Text on a screen for updating a cobranded card that indicates only card brand can be changed."
+        )
+    }
+
     static var save: String {
        STPLocalizedString(
            "Save",
@@ -346,13 +353,6 @@ extension String.Localized {
         STPLocalizedString(
             "Manage payment method",
             "Title shown above a view containing the customer's payment method that they can delete or update"
-        )
-    }
-
-    static var remove_payment_method: String {
-        STPLocalizedString(
-            "Remove payment method",
-            "Title shown above a view containing a customer's payment method that they can delete"
         )
     }
 

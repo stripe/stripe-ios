@@ -103,19 +103,19 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        paymentMethods: paymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
-        XCTAssertTrue(viewController.canEdit)
+        XCTAssertTrue(viewController.canRemoveOrEdit)
     }
 
     func testCanEdit_singlePaymentMethod_returnsFalse() {
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
-        let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+        var noRemovalConfiguration = PaymentSheet.Configuration()
+        noRemovalConfiguration.allowsRemovalOfLastSavedPaymentMethod = false
+        let viewController = VerticalSavedPaymentMethodsViewController(configuration: noRemovalConfiguration,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
-        XCTAssertFalse(viewController.canEdit)
-        // Should be in remove only mode
-        XCTAssertTrue(viewController.isRemoveOnlyMode)
+        XCTAssertFalse(viewController.canRemoveOrEdit)
     }
 
     func testCanEdit_singleRemovableCoBrandedCard_returnsFalse() {
@@ -125,8 +125,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
-        XCTAssertFalse(viewController.canEdit) // Can't edit, merchant is not eligible for CBC
-        XCTAssertTrue(viewController.isRemoveOnlyMode) // Only operation we can make with a single payment method in this case is remove
+        XCTAssertFalse(viewController.canEditPaymentMethods) // Can't edit, merchant is not eligible for CBC
     }
 
     func testCanEdit_singlePaymentMethod_disallowsLastRemoval_returnsFalse() {
@@ -137,7 +136,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
-        XCTAssertFalse(viewController.canEdit)
+        XCTAssertFalse(viewController.canRemoveOrEdit)
     }
 
     func testCanEdit_oneEditablePaymentMethod_disallowsLastRemoval_notCBCEligible_returnsFalse() {
@@ -148,7 +147,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                                                                        analyticsHelper: ._testValue())
-        XCTAssertFalse(viewController.canEdit)
+        XCTAssertFalse(viewController.canRemoveOrEdit)
     }
 
     func testCanEdit_oneEditablePaymentMethod_disallowsLastRemoval_isCBCEligible_returnsFalse() {
@@ -163,69 +162,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                             "eligible": true]),
             analyticsHelper: ._testValue()
         )
-        XCTAssertTrue(viewController.canEdit)
-    }
-
-    // MARK: Remove only mode
-
-    func testIsRemoveOnlyMode_singlePaymentMethod_isNotCBCEligible_returnsTrue() {
-        configuration.allowsRemovalOfLastSavedPaymentMethod = true
-        let singlePaymentMethods = [STPPaymentMethod._testCard()]
-        let viewController = VerticalSavedPaymentMethodsViewController(
-            configuration: configuration,
-            selectedPaymentMethod: singlePaymentMethods.first,
-            paymentMethods: singlePaymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            analyticsHelper: ._testValue()
-        )
-        // The card is NOT co-branded and, we can't edit, enter remove only mode
-        XCTAssertTrue(viewController.isRemoveOnlyMode)
-    }
-
-    func testIsRemoveOnlyMode_singlePaymentMethod_isCBCEligible_returnsTrue() {
-        configuration.allowsRemovalOfLastSavedPaymentMethod = true
-        let singlePaymentMethods = [STPPaymentMethod._testCard()]
-        let viewController = VerticalSavedPaymentMethodsViewController(
-            configuration: configuration,
-            selectedPaymentMethod: singlePaymentMethods.first,
-            paymentMethods: singlePaymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"],
-                                         cardBrandChoiceData: ["eligible": true]),
-            analyticsHelper: ._testValue()
-        )
-        // The card is NOT co-branded and, we can't edit, enter remove only mode
-        XCTAssertTrue(viewController.isRemoveOnlyMode)
-    }
-
-    func testIsRemoveOnlyMode_singleCobrandedPaymentMethod_isCBCEligible_returnsFalse() {
-        configuration.allowsRemovalOfLastSavedPaymentMethod = true
-        let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
-        let viewController = VerticalSavedPaymentMethodsViewController(
-            configuration: configuration,
-            selectedPaymentMethod: singlePaymentMethods.first,
-            paymentMethods: singlePaymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"],
-                                         cardBrandChoiceData: ["eligible": true]),
-            analyticsHelper: ._testValue()
-        )
-
-        // The card is co-branded and the merchant is CBC eligible, we can edit, don't enter remove only mode
-        XCTAssertFalse(viewController.isRemoveOnlyMode)
-    }
-
-    func testIsRemoveOnlyMode_singleCobrandedPaymentMethod_isNotCBCEligible_returnsFalse() {
-        configuration.allowsRemovalOfLastSavedPaymentMethod = true
-        let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
-        let viewController = VerticalSavedPaymentMethodsViewController(
-            configuration: configuration,
-            selectedPaymentMethod: singlePaymentMethods.first,
-            paymentMethods: singlePaymentMethods,
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            analyticsHelper: ._testValue()
-        )
-
-        // The card is co-branded but the merchant is NOT CBC eligible, we can't edit, enter remove only mode
-        XCTAssertTrue(viewController.isRemoveOnlyMode)
+        XCTAssertTrue(viewController.canRemoveOrEdit)
     }
 
 }

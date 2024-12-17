@@ -136,6 +136,8 @@
 
 "Not %@?" = "Ei %@?";
 
+"Only card brand can be changed." = "Vain kortin brändi voidaan vaihtaa.";
+
 "Open your UPI app to approve your payment within %@" = "Avaa UPI-sovellus ja hyväksy maksu kohteessa %@";
 
 "Or" = "Tai";
@@ -179,8 +181,6 @@
 "Remove card?" = "Poista kortti?";
 
 "Remove linked account" = "Poista linkitetty tili";
-
-"Remove payment method" = "Poista maksutapa";
 
 "Resend code" = "Lähetä koodi uudelleen";
 

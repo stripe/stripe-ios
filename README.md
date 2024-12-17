@@ -66,13 +66,16 @@ The Stripe iOS SDK collects data to help us improve our products and prevent fra
 For help with Apple's App Privacy Details form in App Store Connect, visit [Stripe iOS SDK Privacy Details](https://support.stripe.com/questions/stripe-ios-sdk-privacy-details).
 
 ## Modules
-|Module|Description|Compressed|Uncompressed|
-|------|-----------|----------|------------|
-|StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|2.7MB|6.3MB|
-|Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS).|2.3MB|5.1MB|
-|StripeApplePay|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|0.4MB|1.0MB|
-|StripePayments|Bindings for the Stripe Payments API.|1.0MB|2.6MB|
-|StripePaymentsUI|Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements.|1.7MB|3.9MB|
+<!-- Pad `Size` col with &nbsp; to prevent table from shrinking badge images and maintain readability -->
+| Module | Description | Size&nbsp;([Download&nbsp;→&nbsp;Install](https://docs.emergetools.com/docs/ios-app-size#download-vs-install-size))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+|--------|-------------|------|
+| [StripePaymentSheet](StripePaymentSheet) | Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet). | [![StripePaymentSheet size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripePaymentSheetSize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=StripePaymentSheet&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripePaymentSheetSize/release?utm_campaign=badge-data) |
+| [StripeIdentity](StripeIdentity) | Securely capture ID documents and selfies on iOS for use with [Stripe's Identity API](https://docs.stripe.com/identity) to confirm the identity of global users. | [![StripeIdentity size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripeIdentitySize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=StripeIdentity&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripeIdentitySize/release?utm_campaign=badge-data) |
+| [StripeFinancialConnections](StripeFinancialConnections) | Securely connect financial accounts to Stripe's merchant account with [Stripe Financial Connections](https://docs.stripe.com/financial-connections). | [![StripeFinancialConnections size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripeFinancialConnectionsSize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=StripeFinancialConnections&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripeFinancialConnectionsSize/release?utm_campaign=badge-data) |
+| Stripe | Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS). | [![Stripe size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripeSize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=Stripe&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripeSize/release?utm_campaign=badge-data) |
+| [StripeApplePay](StripeApplePay) | [Apple Pay support](/docs/apple-pay), including `STPApplePayContext`. | [![StripeApplePay size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripeApplePaySize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=StripeApplePay&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripeApplePaySize/release?utm_campaign=badge-data) |
+| [StripePayments](StripePayments) | Bindings for the Stripe Payments API. | [![StripePayments size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripePaymentsSize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=StripePayments&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripePaymentsSize/release?utm_campaign=badge-data) |
+| [StripePaymentsUI](StripePaymentsUI) | Bindings for the Stripe Payments API, [STPPaymentCardTextField](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom), STPCardFormView, and other UI elements. | [![StripePaymentsUI size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripePaymentsUISize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=StripePaymentsUI&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripePaymentsUISize/release?utm_campaign=badge-data) |
 
 ## Releases
 
@@ -90,11 +93,12 @@ For the `Stripe` module, link the following frameworks:
 - `StripeUICore.xcframework`
 
 For other modules, follow the instructions below:
+- [StripeApplePay](StripeApplePay/README.md#manual-linking)
+- [StripeFinancialConnections](StripeFinancialConnections/README.md#manual-linking)
+- [StripeIdentity](StripeIdentity/README.md#manual-linking)
 - [StripePaymentSheet](StripePaymentSheet/README.md#manual-linking)
 - [StripePayments](StripePayments/README.md#manual-linking)
 - [StripePaymentsUI](StripePaymentsUI/README.md#manual-linking)
-- [StripeApplePay](StripeApplePay/README.md#manual-linking)
-- [StripeIdentity](StripeIdentity/README.md#manual-linking)
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy.
 

@@ -37,6 +37,7 @@ class PaymentSheetFormFactory {
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let analyticsHelper: PaymentSheetAnalyticsHelper?
+    let paymentMethodIncentive: PaymentMethodIncentive?
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
@@ -105,7 +106,8 @@ class PaymentSheetFormFactory {
                   isSettingUp: intent.isSettingUp,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
-                  analyticsHelper: analyticsHelper)
+                  analyticsHelper: analyticsHelper,
+                  paymentMethodIncentive: elementsSession.incentive)
     }
 
     required init(
@@ -121,7 +123,8 @@ class PaymentSheetFormFactory {
         isSettingUp: Bool,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        analyticsHelper: PaymentSheetAnalyticsHelper?
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodIncentive: PaymentMethodIncentive?
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -141,6 +144,7 @@ class PaymentSheetFormFactory {
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.analyticsHelper = analyticsHelper
+        self.paymentMethodIncentive = paymentMethodIncentive
     }
 
     func make() -> PaymentMethodElement {
@@ -674,6 +678,8 @@ extension PaymentSheetFormFactory {
         let shouldHideEmailField = billingConfiguration.email == .never &&
             configuration.defaultBillingDetails.email?.isEmpty == false
         let emailElement = shouldHideEmailField ? nil : makeEmail()
+        
+        let incentive = paymentMethodIncentive?.takeIfAppliesTo(paymentMethod)
 
         return InstantDebitsPaymentMethodElement(
             configuration: configuration,
@@ -682,6 +688,8 @@ extension PaymentSheetFormFactory {
             emailElement: emailElement,
             phoneElement: phoneElement,
             addressElement: addressElement,
+            incentive: incentive,
+            isPaymentIntent: isPaymentIntent,
             theme: theme
         )
     }

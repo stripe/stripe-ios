@@ -136,6 +136,8 @@
 
 "Not %@?" = "Nu este %@?";
 
+"Only card brand can be changed." = "Doar marca cardului poate fi modificată.";
+
 "Open your UPI app to approve your payment within %@" = "Deschideți aplicația UPI pentru a aproba plata în termen de %@";
 
 "Or" = "Sau";
@@ -179,8 +181,6 @@
 "Remove card?" = "Eliminați cardul?";
 
 "Remove linked account" = "Eliminare cont asociat";
-
-"Remove payment method" = "Eliminare metodă de plată";
 
 "Resend code" = "Retrimitere cod";
 

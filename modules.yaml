@@ -146,6 +146,7 @@ modules:
   docs:
     output: docs/stripeidentity
     readme: StripeIdentity/README.md
+  size_report: true
 
 - podspec: StripeApplePay.podspec
   scheme: StripeApplePay

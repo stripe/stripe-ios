@@ -14,11 +14,10 @@ import UIKit
 protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func heightDidChange()
     
-    /// Updates the selection state and determines visual feedback
+    /// Updates the selection state
     /// - Parameters:
     ///   - isNewSelection: Indicates if this is a newly selected item
-    /// - Returns: A boolean indicating whether to display a visual selection indicator
-    func updateSelectionState(isNewSelection: Bool) -> Bool
+    func updateSelectionState(isNewSelection: Bool)
     func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
 }
 
@@ -36,9 +35,9 @@ class EmbeddedPaymentMethodsView: UIView {
         didSet {
             previousSelection = oldValue
             updateMandate()
-            let shouldShowSelection = delegate?.updateSelectionState(isNewSelection: oldValue != selection) ?? true
+            delegate?.updateSelectionState(isNewSelection: oldValue != selection)
             selectionButtonMapping.forEach { (key, button) in
-                button.isSelected = key == selection && shouldShowSelection
+                button.isSelected = key == selection
             }
         }
     }
@@ -344,6 +343,10 @@ class EmbeddedPaymentMethodsView: UIView {
             savedPaymentMethod: selection?.savedPaymentMethod,
             bottomNoticeAttributedString: nil
         )
+        _updateMandate(mandateText: mandateText, animated: animated)
+    }
+
+    private func _updateMandate(mandateText: NSAttributedString?, animated: Bool = true) {
         let shouldDisplayMandate: Bool = {
             guard let mandateText else {
                 return false
@@ -379,6 +382,25 @@ class EmbeddedPaymentMethodsView: UIView {
             button.isSelected = key == selection
         }
     }
+#if DEBUG
+    func testGrow() {
+        let testMandateString = "This is an example of a long string that may appear based on selecting a payment method that has a mandate. Please ensure that your view can properly grow and shrink by calling testGrow() and testShrink() on embedded payment element and manually verify your view responds well to growing and shrinking"
+        let formattedString = NSMutableAttributedString(string: testMandateString)
+        let style = NSMutableParagraphStyle()
+        style.alignment = .left
+        formattedString.addAttributes([.paragraphStyle: style,
+                                       .font: UIFont.preferredFont(forTextStyle: .footnote),
+                                       .foregroundColor: appearance.asElementsTheme.colors.secondaryText,
+                                      ],
+                                      range: NSRange(location: 0, length: formattedString.length))
+
+        _updateMandate(mandateText: formattedString)
+    }
+
+    func testShrink() {
+        _updateMandate(mandateText: nil)
+    }
+#endif
 }
 
 extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {

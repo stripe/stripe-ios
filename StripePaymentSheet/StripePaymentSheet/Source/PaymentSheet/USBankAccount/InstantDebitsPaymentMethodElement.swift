@@ -171,6 +171,8 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
+        incentive: PaymentMethodIncentive?,
+        isPaymentIntent: Bool,
         theme: ElementsAppearance = .default
     ) {
         self.configuration = configuration
@@ -189,6 +191,14 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.linkedBank = nil
         self.linkedBankInfoSectionElement.view.isHidden = true
         self.theme = theme
+        
+        let promoDisclaimerElement = incentive.flatMap {
+            let label = ElementsUI.makeNoticeTextField(theme: theme)
+            label.attributedText = $0.promoDisclaimerText(with: theme, isPaymentIntent: isPaymentIntent)
+            label.textContainerInset = .zero
+            label.textContainer.lineFragmentPadding = 0
+            return StaticElement(view: label)
+        }
 
         let allElements: [Element?] = [
             titleElement,
@@ -197,6 +207,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             phoneElement,
             addressElement,
             linkedBankInfoSectionElement,
+            promoDisclaimerElement,
         ]
         let autoSectioningElements = allElements.compactMap { $0 }
         self.formElement = FormElement(
@@ -317,5 +328,46 @@ private extension PaymentSheet.Address {
         line1?.isEmpty == false &&
         postalCode?.isEmpty == false &&
         state?.isEmpty == false
+    }
+}
+
+private extension PaymentMethodIncentive {
+    
+    func promoDisclaimerText(
+        with appearance: ElementsAppearance,
+        isPaymentIntent: Bool
+    ) -> NSAttributedString {
+        let baseString = if isPaymentIntent {
+            STPLocalizedString(
+                "Get %@ back when you pay with your bank. <terms>See terms</terms>",
+                "Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]'"
+            )
+        } else {
+            STPLocalizedString(
+                "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>",
+                "Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]'"
+            )
+        }
+        
+        let string = String(format: baseString, displayText)
+        
+        let links = [
+            "terms": URL(string: "https://link.com/promotion-terms")!,
+        ]
+        
+        let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
+        
+        let style = NSMutableParagraphStyle()
+        style.alignment = .left
+        formattedString.addAttributes(
+            [
+                .paragraphStyle: style,
+                .font: UIFont.preferredFont(forTextStyle: .footnote),
+                .foregroundColor: appearance.colors.secondaryText,
+            ],
+            range: NSRange(location: 0, length: formattedString.length)
+        )
+
+        return formattedString
     }
 }

@@ -136,6 +136,8 @@
 
 "Not %@?" = "Ikkje %@?";
 
+"Only card brand can be changed." = "Berre kortdetaljar kan ikkje endrast.";
+
 "Open your UPI app to approve your payment within %@" = "Opne UPI-appen for å godkjenne betalinga di innan %@";
 
 "Or" = "Eller";
@@ -179,8 +181,6 @@
 "Remove card?" = "Fjerne kort?";
 
 "Remove linked account" = "Fjern tilknytt konto";
-
-"Remove payment method" = "Fjern betalingsmåte";
 
 "Resend code" = "Send kode på nytt";
 
