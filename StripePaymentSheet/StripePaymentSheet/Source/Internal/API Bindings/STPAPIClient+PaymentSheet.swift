@@ -22,7 +22,7 @@ extension STPAPIClient {
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
         ]
         if let appId = Bundle.main.bundleIdentifier {
-            parameters["app_id"] = appId
+            parameters["mobile_app_id"] = appId
         }
         if case .customerSession(let clientSecret) = customerAccessProvider {
             parameters["customer_session_client_secret"] = clientSecret
