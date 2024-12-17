@@ -26,7 +26,12 @@ import UIKit
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .assertionFailed, error: error)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
-            throw error
+            if apiClient.isTestmode {
+                // In testmode, we can provide a test assertion even if the real assertion fails
+                return testmodeAssertion
+            } else {
+                throw error
+            }
         }
     }
     
@@ -331,5 +336,12 @@ import UIKit
             // For other errors, we'll want to retry attestation later with the same key.
             throw error
         }
+    }
+    
+    private var testmodeAssertion: Assertion {
+        Assertion(assertionData: Data(bytes: [0x01, 0x02, 0x03], count: 3),
+                  deviceID: (try? getDeviceID()) ?? "test-device-id",
+                  appID: (try? getAppID()) ?? "com.example.test",
+                  keyID: "TestKeyID")
     }
 }

@@ -176,6 +176,11 @@ func prepareNativeLink(elementsSession: STPElementsSession, configuration: Payme
         return false
     }
     
+    // If we're in testmode, we don't need to attest for native Link
+    if configuration.apiClient.isTestmode {
+        return true
+    }
+    
     let stripeAttest = StripeAttest(apiClient: configuration.apiClient)
     return await stripeAttest.prepareAttestation()
 }
