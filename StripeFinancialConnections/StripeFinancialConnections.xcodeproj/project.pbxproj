@@ -193,6 +193,7 @@
 		CB734C25A19D38A87876FB2B /* FinancialConnectionsAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AB8A480620B5C3567F453C /* FinancialConnectionsAnalyticsTest.swift */; };
 		CBEAB081DD7353928F485071 /* APIPollingHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710183EE587F6FDA077FC150 /* APIPollingHelperTests.swift */; };
 		CBF7BE2271D309F2B1E794CC /* FinancialConnectionsDataAccessNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32ED8A7E94822F14AD94A698 /* FinancialConnectionsDataAccessNotice.swift */; };
+		CBF7BE602D11DA5E00A4C172 /* AvailableIncentives.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBF7BE5F2D11DA5E00A4C172 /* AvailableIncentives.swift */; };
 		CF47070B2A4CA27FEE9AE5FA /* generic_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A764CF4DB5B5F6F488132A8 /* generic_error@3x.png */; };
 		D0C1EF46A418A8F8774B7418 /* FinancialConnectionsSession_both_accounts_la.json in Resources */ = {isa = PBXBuildFile; fileRef = F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */; };
 		D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */; };
@@ -483,6 +484,7 @@
 		C93F7139E9BFB044902962D0 /* FinancialConnectionsImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsImage.swift; sourceTree = "<group>"; };
 		CA2DA47ECE153F888FA675CE /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
 		CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+KeyboardAvoiding.swift"; sourceTree = "<group>"; };
+		CBF7BE5F2D11DA5E00A4C172 /* AvailableIncentives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableIncentives.swift; sourceTree = "<group>"; };
 		CDD861E4EB8BA294545B7651 /* NetworkingLinkVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkVerificationViewController.swift; sourceTree = "<group>"; };
 		CE10909F3FC7D60E13B65226 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CEC1BC95816DAD5AE9680662 /* FinancialConnectionsAccountFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAccountFetcher.swift; sourceTree = "<group>"; };
@@ -745,6 +747,7 @@
 			isa = PBXGroup;
 			children = (
 				32249762D11692D5B34BBF38 /* ConsumerSession */,
+				CBF7BE5F2D11DA5E00A4C172 /* AvailableIncentives.swift */,
 				D890BD770F4E33D23ABA37EA /* BankAccountToken.swift */,
 				359BF8ACFB35A16EBD96C4F0 /* FinancialConnectionsAccount.swift */,
 				5C837C27C2577391B91FF0E5 /* FinancialConnectionsAuthSession.swift */,
@@ -1337,6 +1340,7 @@
 				C59DBA5A86A3331113D6ED7E /* LoadingView.swift in Sources */,
 				9B2CAE99344C26D524EDCF26 /* ModalPresentationWrapperViewController.swift in Sources */,
 				6ABFE5522B72BE630037437C /* PrepaneViews.swift in Sources */,
+				CBF7BE602D11DA5E00A4C172 /* AvailableIncentives.swift in Sources */,
 				FE268512851E63E4E111DECD /* FinancialConnectionsSDKImplementation.swift in Sources */,
 				E85DCFCA61299EF27B3201CF /* FinancialConnectionsSheet.swift in Sources */,
 				F22DE4B785D51B318A1A3D08 /* FinancialConnectionsSheetError.swift in Sources */,
