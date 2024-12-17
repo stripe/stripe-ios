@@ -47,7 +47,7 @@ final class SavedPaymentMethodRowButton: UIView {
         }
     }
 
-    var showDefaultPMBadge: Bool = false
+    let showDefaultPMBadge: Bool
 
     private var isEditing: Bool {
         switch state {

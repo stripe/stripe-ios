@@ -437,4 +437,11 @@ extension String.Localized {
             "Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm"
         )
     }
+
+    static var default_text: String {
+        STPLocalizedString(
+            "Default",
+            "Label for identifying the default payment method."
+       )
+    }
 }

@@ -151,6 +151,12 @@ class SavedPaymentOptionsViewController: UIViewController {
             }
         }
     }
+
+    var hasDefault: Bool {
+        guard configuration.allowsSetAsDefaultPM, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
+        return viewModels.contains(where: { $0.savedPaymentMethod?.stripeId == defaultPaymentMethod.stripeId })
+    }
+
     var bottomNoticeAttributedString: NSAttributedString? {
         if case .saved(let paymentMethod, _) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
@@ -271,7 +277,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Views
     private lazy var collectionView: SavedPaymentMethodCollectionView = {
-        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, showDefaultPMBadge: configuration.allowsSetAsDefaultPM)
+        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, showDefaultPMBadge: hasDefault)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -512,10 +518,12 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: self.configuration.allowsSetAsDefaultPM)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, showDefaultPMBadge: hasDefault)
         cell.delegate = self
-        if self.configuration.allowsSetAsDefaultPM {
-            cell.isDefaultPM = viewModel.savedPaymentMethod?.stripeId == elementsSession.customer?.defaultPaymentMethod
+        if hasDefault,
+           let savedPMId = viewModel.savedPaymentMethod?.stripeId,
+           let defaultPMId = elementsSession.customer?.defaultPaymentMethod {
+            cell.isDefaultPM = savedPMId == defaultPMId
         }
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
