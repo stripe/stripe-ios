@@ -11,6 +11,7 @@ import Foundation
 protocol NetworkingLinkLoginWarmupDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var email: String? { get }
 
     func disableNetworking() -> Future<FinancialConnectionsSessionManifest>
 }
@@ -22,19 +23,26 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let nextPaneOrDrawerOnSecondaryCta: String?
+    private let elementsSessionContext: ElementsSessionContext?
+    
+    var email: String? {
+        manifest.accountholderCustomerEmailAddress ?? elementsSessionContext?.prefillDetails?.email
+    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
-        nextPaneOrDrawerOnSecondaryCta: String?
+        nextPaneOrDrawerOnSecondaryCta: String?,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
         self.nextPaneOrDrawerOnSecondaryCta = nextPaneOrDrawerOnSecondaryCta
+        self.elementsSessionContext = elementsSessionContext
     }
 
     func disableNetworking() -> Future<FinancialConnectionsSessionManifest> {

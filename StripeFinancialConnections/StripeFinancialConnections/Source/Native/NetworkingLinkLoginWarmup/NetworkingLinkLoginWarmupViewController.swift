@@ -70,10 +70,8 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     "The subtitle/description of a screen where users are informed that they can sign-in-to Link."
                 ),
                 contentView: NetworkingLinkLoginWarmupBodyView(
-                    // `accountholderCustomerEmailAddress` should always be non-null, and
-                    // since the email is only used as a visual, it's not worth to throw an error
-                    // if it is null
-                    email: dataSource.manifest.accountholderCustomerEmailAddress ?? "you"
+                    // `email` should always be non-null, and since the email is only used as a visual, it's not worth to throw an error if it is null
+                    email: dataSource.email ?? "you"
                 )
             ),
             footerView: PaneLayoutView.createFooterView(
