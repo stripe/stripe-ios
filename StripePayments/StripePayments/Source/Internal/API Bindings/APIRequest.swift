@@ -189,9 +189,14 @@ let JSONKeyObject = "object"
         if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
             safeCompletion(responseObject, nil)
         } else {
-            let error: Error =
-                NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
-                ?? NSError.stp_genericFailedToParseResponseError()
+            let nsError: NSError? = NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
+            let error: Error = nsError ?? NSError.stp_genericFailedToParseResponseError()
+
+            #if DEBUG
+            if let nsError, let requestId = nsError.userInfo[STPError.stripeRequestIDKey] {
+                print("[Stripe SDK]: Failed request \(requestId)")
+            }
+            #endif
             safeCompletion(nil, error)
         }
     }
