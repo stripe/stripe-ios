@@ -36,9 +36,7 @@ struct ElementsCustomer: Equatable, Hashable {
         }
 
         // Optional
-//        let defaultPaymentMethod = response["default_payment_method"] as? String
-        let defaultPaymentMethod = "pm_1QWjS4Lu5o3P18ZpkmaUzx3O"
-//        print(defaultPaymentMethod ?? "No default payment method")
+        let defaultPaymentMethod = response["default_payment_method"] as? String
         return ElementsCustomer(paymentMethods: paymentMethods, defaultPaymentMethod: defaultPaymentMethod, customerSession: customerSession)
     }
 

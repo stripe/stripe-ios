@@ -132,8 +132,8 @@ class SavedPaymentOptionsViewController: UIViewController {
         set {
             collectionView.isRemovingPaymentMethods = newValue
             collectionView.performBatchUpdates({
-                animateHeightChange{self.collectionView.updateLayout()}
                 collectionView.reloadSections(IndexSet(integer: 0))
+                animateHeightChange{self.collectionView.updateLayout()}
             })
             UIView.transition(with: collectionView,
                               duration: 0.3,
@@ -151,7 +151,6 @@ class SavedPaymentOptionsViewController: UIViewController {
             }
         }
     }
-
     var bottomNoticeAttributedString: NSAttributedString? {
         if case .saved(let paymentMethod, _) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
