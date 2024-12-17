@@ -1467,6 +1467,15 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
         XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
+        app.buttons["Close"].waitForExistenceAndTap()
+
+        // Reload w/ same customer & ensure 5555 card was detached
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 1))
+        XCTAssertFalse(app.staticTexts["•••• 5555"].waitForExistence(timeout: 1))
     }
 
     func test_RemoveLastSavedPaymentMethodFlowController_clientConfig() throws {
@@ -2471,7 +2480,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
-    
+
     func testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
@@ -2698,7 +2707,7 @@ extension PaymentSheetUITestCase {
         }
 
         loadPlayground(app, settings)
-        
+
         if uiStyle == .flowController {
             app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
             app.buttons["+ Add"].waitForExistenceAndTap()
@@ -2735,7 +2744,7 @@ extension PaymentSheetUITestCase {
             XCTAssertTrue(app.staticTexts["•••• 6789"].waitForExistence(timeout: 10))
             app.buttons["Confirm"].waitForExistenceAndTap(timeout: 10)
         }
-        
+
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 

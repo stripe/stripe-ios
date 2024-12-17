@@ -206,6 +206,76 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: timeout))
     }
 
+    func testRemoveCardPaymentMethod_customerSessions() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.customerKeyType = .customerSession
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        presentCSAndAddCardFrom(buttonLabel: "None")
+
+        app.staticTexts["•••• 4242"].waitForExistenceAndTap(timeout: timeout)
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: timeout))
+        editButton.tap()
+
+        removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+        let selectButtonFinal = app.staticTexts["None"]
+        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: timeout))
+
+        // Reload customer sheet and ensure removal of payment method
+        app.buttons["Reload"].tap()
+        XCTAssertTrue(app.staticTexts["None"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Manage your payment methods"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["•••• 4242"].waitForExistence(timeout: 5))
+    }
+
+    func testRemoveSepaPaymentMethod_customerSessions() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.customerKeyType = .customerSession
+        settings.applePay = .on
+        loadPlayground(
+            app,
+            settings
+        )
+
+        presentCSAndAddSepaFrom(buttonLabel: "None")
+
+        app.staticTexts["••••3000"].waitForExistenceAndTap(timeout: timeout)
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: timeout))
+        editButton.tap()
+
+        removeFirstPaymentMethodInList(alertBody: "Bank account •••• 3000", alertTitle: "Remove bank account?")
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
+        closeButton.tap()
+
+        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
+        let selectButtonFinal = app.staticTexts["None"]
+        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: timeout))
+
+        // Reload customer sheet and ensure removal of payment method
+        app.buttons["Reload"].tap()
+        XCTAssertTrue(app.staticTexts["None"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Manage your payment methods"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["••••3000"].waitForExistence(timeout: 5))
+    }
+
     func testPrevPM_AddPM_canceled() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -695,12 +765,32 @@ class CustomerSheetUITest: XCTestCase {
             dismissAlertView(alertBody: "Success: •••• 4242, selected", alertTitle: "Complete", buttonToTap: "OK")
         }
     }
+    func presentCSAndAddSepaFrom(buttonLabel: String, tapAdd: Bool = true) {
+        let selectButton = app.staticTexts[buttonLabel]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
+        selectButton.tap()
 
-    func removeFirstPaymentMethodInList(alertBody: String = "Visa •••• 4242") {
+        if tapAdd {
+            app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
+        }
+        let sepaSelector = app.staticTexts["SEPA Debit"]
+        XCTAssertTrue(sepaSelector.waitForExistenceAndTap(timeout: timeout))
+
+        try! fillSepaData(app)
+
+        app.buttons["Save"].tap()
+
+        let confirmButton = app.buttons["Confirm"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
+        confirmButton.tap()
+        dismissAlertView(alertBody: "Success: ••••3000, selected", alertTitle: "Complete", buttonToTap: "OK")
+    }
+
+    func removeFirstPaymentMethodInList(alertBody: String = "Visa •••• 4242", alertTitle: String = "Remove card?") {
         let editButton = app.buttons["Edit"].firstMatch
         editButton.tap()
         app.buttons["Remove"].waitForExistenceAndTap()
-        dismissAlertView(alertBody: alertBody, alertTitle: "Remove card?", buttonToTap: "Remove")
+        dismissAlertView(alertBody: alertBody, alertTitle: alertTitle, buttonToTap: "Remove")
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {

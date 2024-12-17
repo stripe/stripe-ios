@@ -1280,6 +1280,21 @@ extension STPAPIClient {
             completion(error)
         }
     }
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            detachPaymentMethod(paymentMethodID, fromCustomerUsing: ephemeralKeySecret, withCustomerSessionClientSecret: customerSessionClientSecret) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
 
     @_spi(STP) public func detachPaymentMethod(
         _ paymentMethodID: String,
