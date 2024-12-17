@@ -94,19 +94,23 @@ extension WKWebView {
         }
     }
 
-    func expectationForMessageReceived<Sender: MessageSender>(sender: Sender) throws -> XCTestExpectation {
+    func expectationForMessageReceived<Sender: MessageSender>(
+        sender: Sender,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> XCTestExpectation {
         let expectation = XCTestExpectation(description: "JavaScript execution")
         let messageHandler = MessageHandler()
         messageHandler.messageReceived = { (payload: Any) in
             guard let payloadData = try? JSONSerialization.connectData(withJSONObject: payload) else {
-                XCTFail("Failed to encode payload")
+                XCTFail("Failed to encode payload", file: file, line: line)
                 return
             }
-            guard let responseData = try? JSONEncoder.connectEncoder.encode(sender.payload) else {
-                XCTFail("Failed to encode response data")
+            guard let responseData = try? sender.jsonData() else {
+                XCTFail("Failed to encode response data", file: file, line: line)
                 return
             }
-            XCTAssertEqual(String(data: responseData, encoding: .utf8), String(data: payloadData, encoding: .utf8))
+            XCTAssertEqual(String(data: responseData, encoding: .utf8), String(data: payloadData, encoding: .utf8), file: file, line: line)
             expectation.fulfill()
         }
 

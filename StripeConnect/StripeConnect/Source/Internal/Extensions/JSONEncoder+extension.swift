@@ -9,12 +9,14 @@ import Foundation
 
 extension JSONEncoder {
     /// Encoder used for JS Messaging and URL param encoding
-    static let connectEncoder: JSONEncoder = {
+    static let connectEncoder = makeConnectEncoder()
+
+    static func makeConnectEncoder() -> JSONEncoder {
         let encoder = JSONEncoder()
         // Ensure keys are sorted for test stability.
         encoder.outputFormatting = .sortedKeys
         return encoder
-    }()
+    }
 
     /// Encoder used for analytics
     static let analyticsEncoder: JSONEncoder = {

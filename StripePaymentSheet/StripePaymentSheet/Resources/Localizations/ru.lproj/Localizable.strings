@@ -136,6 +136,8 @@
 
 "Not %@?" = "Не %@?";
 
+"Only card brand can be changed." = "Изменить можно только бренд карты.";
+
 "Open your UPI app to approve your payment within %@" = "Откройте приложение UPI, чтобы подтвердить платеж, не позднее чем через %@";
 
 "Or" = "Или";
@@ -179,8 +181,6 @@
 "Remove card?" = "Удалить карту?";
 
 "Remove linked account" = "Удалить привязанный счет";
-
-"Remove payment method" = "Удалить способ оплаты";
 
 "Resend code" = "Послать код вторично";
 

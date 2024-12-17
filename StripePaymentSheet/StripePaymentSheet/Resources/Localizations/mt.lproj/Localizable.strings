@@ -136,6 +136,8 @@
 
 "Not %@?" = "M'intix %@?";
 
+"Only card brand can be changed." = "Tista' tibdel biss ix-xorta tal-karta.";
+
 "Open your UPI app to approve your payment within %@" = "Iftaħ l-app ta' UPI biex tapprova l-pagamenti tiegħek fi żmien %@";
 
 "Or" = "Jew";
@@ -179,8 +181,6 @@
 "Remove card?" = "Tixtieq tneħħi l-karta?";
 
 "Remove linked account" = "Neħħi l-kont marbut";
-
-"Remove payment method" = "Neħħi l-metodu tal-pagament";
 
 "Resend code" = "Erġa' ibgħat il-kodiċi";
 

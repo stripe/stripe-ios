@@ -320,7 +320,8 @@ import UIKit
             prefillDetails: makePrefillDetails(),
             intentId: nil,
             linkMode: nil,
-            billingDetails: billingDetails
+            billingDetails: billingDetails,
+            eligibleForIncentive: false
         )
     }
 
