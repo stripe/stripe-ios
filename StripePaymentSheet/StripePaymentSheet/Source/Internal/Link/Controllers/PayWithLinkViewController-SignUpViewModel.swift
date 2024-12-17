@@ -136,6 +136,8 @@ extension PayWithLinkViewController {
         private let configuration: PaymentElementConfiguration
 
         private let country: String?
+        
+        let useModernMobileEndpoints: Bool
 
         // MARK: Initializer
 
@@ -143,7 +145,8 @@ extension PayWithLinkViewController {
             configuration: PaymentElementConfiguration,
             accountService: LinkAccountServiceProtocol,
             linkAccount: PaymentSheetLinkAccount?,
-            country: String?
+            country: String?,
+            useModernMobileEndpoints: Bool
         ) {
             self.configuration = configuration
             self.accountService = accountService
@@ -151,6 +154,7 @@ extension PayWithLinkViewController {
             self.emailAddress = linkAccount?.email
             self.legalName = configuration.defaultBillingDetails.name
             self.country = country
+            self.useModernMobileEndpoints = useModernMobileEndpoints
         }
 
         // MARK: Methods
@@ -197,7 +201,7 @@ private extension PayWithLinkViewController.SignUpViewModel {
         accountLookupDebouncer.enqueue { [weak self] in
             self?.isLookingUpLinkAccount = true
 
-            self?.accountService.lookupAccount(withEmail: emailAddress) { result in
+            self?.accountService.lookupAccount(withEmail: emailAddress, emailSource: .userAction) { result in
                 guard let self = self else { return }
 
                 // Check the requested email address against the current one. Handle

@@ -11,6 +11,7 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_exported @_spi(STP) import StripePayments
 
 extension PayWithLinkViewController {
 
@@ -123,11 +124,13 @@ extension PayWithLinkViewController {
             linkAccount: PaymentSheetLinkAccount?,
             context: Context
         ) {
+            let useModernMobileEndpoints = context.elementsSession.linkSettings?.useAttestationEndpoints ?? false
             self.viewModel = SignUpViewModel(
                 configuration: context.configuration,
-                accountService: LinkAccountService(apiClient: context.configuration.apiClient),
+                accountService: LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession),
                 linkAccount: linkAccount,
-                country: context.elementsSession.countryCode
+                country: context.elementsSession.countryCode,
+                useModernMobileEndpoints: useModernMobileEndpoints
             )
             super.init(context: context)
         }

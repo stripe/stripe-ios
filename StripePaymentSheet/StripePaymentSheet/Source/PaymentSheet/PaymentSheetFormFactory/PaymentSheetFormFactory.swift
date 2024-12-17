@@ -28,6 +28,7 @@ class PaymentSheetFormFactory {
     let addressSpecProvider: AddressSpecProvider
     let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
+    let accountService: LinkAccountServiceProtocol?
     let previousCustomerInput: IntentConfirmParams?
 
     let isPaymentIntent: Bool
@@ -67,6 +68,7 @@ class PaymentSheetFormFactory {
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
+        accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?
     ) {
 
@@ -84,12 +86,14 @@ class PaymentSheetFormFactory {
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
             return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
         }()
+        let accountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
                   addressSpecProvider: addressSpecProvider,
                   showLinkInlineCardSignup: showLinkInlineCardSignup,
                   linkAccount: linkAccount,
+                  accountService: accountService,
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
@@ -105,6 +109,7 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         showLinkInlineCardSignup: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
+        accountService: LinkAccountServiceProtocol?,
         cardBrandChoiceEligible: Bool = false,
         isPaymentIntent: Bool,
         isSettingUp: Bool,
@@ -117,6 +122,7 @@ class PaymentSheetFormFactory {
         self.addressSpecProvider = addressSpecProvider
         self.showLinkInlineCardSignup = showLinkInlineCardSignup
         self.linkAccount = linkAccount
+        self.accountService = accountService
         // Restore the previous customer input if its the same type
         if previousCustomerInput?.paymentMethodType == paymentMethod {
             self.previousCustomerInput = previousCustomerInput

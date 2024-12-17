@@ -757,6 +757,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,
+            accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
             analyticsHelper: analyticsHelper
         ).make().collectsUserInput
     }

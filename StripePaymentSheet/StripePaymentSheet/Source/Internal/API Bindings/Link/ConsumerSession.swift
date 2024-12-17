@@ -78,11 +78,14 @@ extension ConsumerSession {
 extension ConsumerSession {
     class func lookupSession(
         for email: String?,
+        emailSource: EmailSource?,
+        sessionID: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        useModernMobileEndpoints: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
-        apiClient.lookupConsumerSession(for: email, cookieStore: cookieStore, completion: completion)
+        apiClient.lookupConsumerSession(for: email, emailSource: emailSource, sessionID: sessionID, cookieStore: cookieStore, useModernMobileEndpoints: useModernMobileEndpoints, completion: completion)
     }
 
     class func signUp(
@@ -92,6 +95,7 @@ extension ConsumerSession {
         legalName: String?,
         countryCode: String?,
         consentAction: String?,
+        useModernMobileEndpoints: Bool,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
     ) {
@@ -102,6 +106,7 @@ extension ConsumerSession {
             legalName: legalName,
             countryCode: countryCode,
             consentAction: consentAction,
+            useModernMobileEndpoints: useModernMobileEndpoints,
             completion: completion
         )
     }

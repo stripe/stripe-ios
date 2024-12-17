@@ -15,16 +15,23 @@ import Foundation
 extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
+        emailSource: EmailSource?,
+        sessionID: String,
         cookieStore: LinkCookieStore,
+        useModernMobileEndpoints: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
-        let endpoint: String = "consumers/sessions/lookup"
+        let legacyEndpoint = "consumers/sessions/lookup"
+        let modernEndpoint = "consumers/mobile/sessions/lookup"
+        
         var parameters: [String: Any] = [
             "request_surface": "ios_payment_element",
         ]
-        if let email = email {
+        if let email, let emailSource {
             parameters["email_address"] = email.lowercased()
+            parameters["email_source"] = emailSource.rawValue
         }
+        parameters["session_id"] = sessionID
 
         guard parameters.keys.contains("email_address") else {
             // no request to make if we don't have an email
@@ -36,13 +43,25 @@ extension STPAPIClient {
             return
         }
 
-        post(
-            resource: endpoint,
-            parameters: parameters,
-            ephemeralKeySecret: publishableKey
-        ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
-            completion(result)
+        Task {
+            if useModernMobileEndpoints {
+                do {
+                    let attest = StripeAttest(apiClient: self)
+                    let assertion = try await attest.assert()
+                    parameters = parameters.merging(assertion.requestFields) { (_, new) in new }
+                } catch {
+                    // If we can't get an assertion, we'll try the request anyway. It may fail.
+                }
+            }
+            post(
+                resource: useModernMobileEndpoints ? modernEndpoint : legacyEndpoint,
+                parameters: parameters,
+                ephemeralKeySecret: publishableKey
+            ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
+                completion(result)
+            }
         }
+
     }
 
     func createConsumer(
@@ -52,9 +71,11 @@ extension STPAPIClient {
         legalName: String?,
         countryCode: String?,
         consentAction: String?,
+        useModernMobileEndpoints: Bool,
         completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
-        let endpoint: String = "consumers/accounts/sign_up"
+        let legacyEndpoint = "consumers/accounts/sign_up"
+        let modernEndpoint = "consumers/mobile/sign_up"
 
         var parameters: [String: Any] = [
             "request_surface": "ios_payment_element",
@@ -76,11 +97,23 @@ extension STPAPIClient {
             parameters["consent_action"] = consentAction
         }
 
-        post(
-            resource: endpoint,
-            parameters: parameters
-        ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
-            completion(result)
+        Task {
+            if useModernMobileEndpoints {
+                do {
+                    let attest = StripeAttest(apiClient: self)
+                    let assertion = try await attest.assert()
+                    parameters = parameters.merging(assertion.requestFields) { (_, new) in new }
+                } catch {
+                    // If we can't get an assertion, we'll try the request anyway. It may fail.
+                }
+            }
+            
+            post(
+                resource: useModernMobileEndpoints ? modernEndpoint : legacyEndpoint,
+                parameters: parameters
+            ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
+                completion(result)
+            }
         }
     }
 
@@ -555,4 +588,11 @@ extension STPPaymentMethodAddress {
         }
         return .init(uniqueKeysWithValues: tupleArray)
     }
+}
+
+enum EmailSource: String {
+    case prefilledEmail = "prefilled_email"
+    case userAction = "user_action"
+    case customerObject = "customer_object"
+    case customerEmail = "customer_email"
 }

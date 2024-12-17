@@ -45,10 +45,10 @@ import UIKit
 
         /// A convenience function to return the fields used in an asserted request.
         @_spi(STP) public var requestFields: [String: String] {
-            return [ "deviceId": deviceID,
-                     "appID": appID,
-                     "keyID": keyID,
-                     "assertionData": assertionData.base64EncodedString(), ]
+            return [ "device_id": deviceID,
+                     "app_id": appID,
+                     "key_id": keyID,
+                     "ios_assertion_object": assertionData.base64EncodedString(), ]
         }
     }
 
