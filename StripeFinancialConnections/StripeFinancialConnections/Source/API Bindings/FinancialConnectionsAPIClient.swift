@@ -235,7 +235,7 @@ protocol FinancialConnectionsAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        intentId: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?
     ) -> Future<LinkSignUpResponse>
 
     func attachLinkConsumerToLinkAccountSession(
@@ -928,7 +928,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        intentId: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?
     ) -> Future<LinkSignUpResponse> {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -947,8 +947,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             parameters["currency"] = currency
         }
 
-        if let intentId {
-            switch intentId {
+        if let incentiveEligibilitySession {
+            switch incentiveEligibilitySession {
             case .payment(let paymentIntentId):
                 parameters["financial_incentive"] = [
                     "payment_intent": paymentIntentId,
@@ -956,6 +956,10 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             case .setup(let setupIntentId):
                 parameters["financial_incentive"] = [
                     "setup_intent": setupIntentId,
+                ]
+            case .deferred(let elementsSessionId):
+                parameters["financial_incentive"] = [
+                    "elements_session_id": elementsSessionId,
                 ]
             }
         }
