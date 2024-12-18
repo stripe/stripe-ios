@@ -37,7 +37,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
     let sessionID: String
-    let useModernMobileEndpoints: Bool
+    let useMobileEndpoints: Bool
 
     /// The default cookie store used by new instances of the service.
     static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
@@ -47,18 +47,18 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         cookieStore: LinkCookieStore = defaultCookieStore,
         elementsSession: STPElementsSession
     ) {
-        self.init(apiClient: apiClient, cookieStore: cookieStore, useModernMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false, sessionID: elementsSession.sessionID)
+        self.init(apiClient: apiClient, cookieStore: cookieStore, useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false, sessionID: elementsSession.sessionID)
     }
 
     init(
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = defaultCookieStore,
-        useModernMobileEndpoints: Bool,
+        useMobileEndpoints: Bool,
         sessionID: String
     ) {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
-        self.useModernMobileEndpoints = useModernMobileEndpoints
+        self.useMobileEndpoints = useMobileEndpoints
         self.sessionID = sessionID
     }
 
@@ -72,7 +72,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             emailSource: emailSource,
             sessionID: sessionID,
             with: apiClient,
-            useModernMobileEndpoints: useModernMobileEndpoints
+            useMobileEndpoints: useMobileEndpoints
         ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):
@@ -85,7 +85,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             session: session.consumerSession,
                             publishableKey: session.publishableKey,
                             apiClient: apiClient,
-                            useModernMobileEndpoints: self.useModernMobileEndpoints,
+                            useMobileEndpoints: self.useMobileEndpoints,
                             elementsSessionID: self.sessionID
                         )
                     ))
@@ -97,7 +97,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 session: nil,
                                 publishableKey: nil,
                                 apiClient: self.apiClient,
-                                useModernMobileEndpoints: self.useModernMobileEndpoints,
+                                useMobileEndpoints: self.useMobileEndpoints,
                                 elementsSessionID: self.sessionID
                             )
                         ))

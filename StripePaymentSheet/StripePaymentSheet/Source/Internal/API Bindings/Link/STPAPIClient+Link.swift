@@ -18,7 +18,7 @@ extension STPAPIClient {
         emailSource: EmailSource?,
         sessionID: String,
         cookieStore: LinkCookieStore,
-        useModernMobileEndpoints: Bool,
+        useMobileEndpoints: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         Task {
@@ -42,7 +42,7 @@ extension STPAPIClient {
                 return
             }
 
-            if useModernMobileEndpoints {
+            if useMobileEndpoints {
                 do {
                     let attest = StripeAttest(apiClient: self)
                     let assertion = try await attest.assert()
@@ -52,12 +52,12 @@ extension STPAPIClient {
                 }
             }
             post(
-                resource: useModernMobileEndpoints ? modernEndpoint : legacyEndpoint,
+                resource: useMobileEndpoints ? modernEndpoint : legacyEndpoint,
                 parameters: parameters,
                 ephemeralKeySecret: publishableKey
             ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
                 // If there's an error, send it to StripeAttest
-                if useModernMobileEndpoints, case .failure(let error) = result {
+                if useMobileEndpoints, case .failure(let error) = result {
                     StripeAttest(apiClient: self).receivedAssertionError(error)
                 }
                 completion(result)
@@ -72,7 +72,7 @@ extension STPAPIClient {
         legalName: String?,
         countryCode: String?,
         consentAction: String?,
-        useModernMobileEndpoints: Bool,
+        useMobileEndpoints: Bool,
         completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
         Task {
@@ -99,7 +99,7 @@ extension STPAPIClient {
                 parameters["consent_action"] = consentAction
             }
 
-            if useModernMobileEndpoints {
+            if useMobileEndpoints {
                 do {
                     let attest = StripeAttest(apiClient: self)
                     let assertion = try await attest.assert()
@@ -110,11 +110,11 @@ extension STPAPIClient {
             }
 
             post(
-                resource: useModernMobileEndpoints ? modernEndpoint : legacyEndpoint,
+                resource: useMobileEndpoints ? modernEndpoint : legacyEndpoint,
                 parameters: parameters
             ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
                 // If there's an error, send it to StripeAttest
-                if useModernMobileEndpoints, case .failure(let error) = result {
+                if useMobileEndpoints, case .failure(let error) = result {
                     StripeAttest(apiClient: self).receivedAssertionError(error)
                 }
 

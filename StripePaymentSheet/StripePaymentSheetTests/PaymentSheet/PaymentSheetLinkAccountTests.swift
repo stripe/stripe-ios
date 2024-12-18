@@ -67,7 +67,7 @@ extension PaymentSheetLinkAccountTests {
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            useModernMobileEndpoints: false,
+            useMobileEndpoints: false,
             elementsSessionID: "abc123"
         )
     }

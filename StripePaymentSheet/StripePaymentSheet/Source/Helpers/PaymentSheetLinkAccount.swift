@@ -53,7 +53,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
 
-    let useModernMobileEndpoints: Bool
+    let useMobileEndpoints: Bool
     // The session ID associated with the current Elements Session
     let elementsSessionID: String
 
@@ -96,7 +96,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         publishableKey: String?,
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        useModernMobileEndpoints: Bool,
+        useMobileEndpoints: Bool,
         elementsSessionID: String
     ) {
         self.email = email
@@ -104,7 +104,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         self.publishableKey = publishableKey
         self.apiClient = apiClient
         self.cookieStore = cookieStore
-        self.useModernMobileEndpoints = useModernMobileEndpoints
+        self.useMobileEndpoints = useMobileEndpoints
         self.elementsSessionID = elementsSessionID
     }
 
@@ -148,7 +148,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             legalName: legalName,
             countryCode: countryCode,
             consentAction: consentAction.rawValue,
-            useModernMobileEndpoints: useModernMobileEndpoints,
+            useMobileEndpoints: useMobileEndpoints,
             with: apiClient
         ) { [weak self] result in
             switch result {
@@ -456,7 +456,7 @@ private extension PaymentSheetLinkAccount {
             emailSource: nil, // No source
             sessionID: elementsSessionID,
             with: apiClient,
-            useModernMobileEndpoints: useModernMobileEndpoints
+            useMobileEndpoints: useMobileEndpoints
         ) { [weak self] result in
             switch result {
             case .success(let response):

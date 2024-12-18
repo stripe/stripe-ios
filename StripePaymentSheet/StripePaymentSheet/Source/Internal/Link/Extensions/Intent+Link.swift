@@ -42,7 +42,7 @@ extension STPElementsSession {
         return self.supportsLink &&
         linkAccount.sessionState == .requiresVerification &&
         !linkAccount.hasStartedSMSVerification &&
-        linkAccount.useModernMobileEndpoints &&
+        linkAccount.useMobileEndpoints &&
         self.linkSettings?.suppress2FAModal != true
     }
 

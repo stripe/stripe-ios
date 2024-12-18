@@ -29,7 +29,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
 
-        ConsumerSession.lookupSession(for: nil, emailSource: .customerEmail, sessionID: "abc123", with: apiClient, useModernMobileEndpoints: false) {
+        ConsumerSession.lookupSession(for: nil, emailSource: .customerEmail, sessionID: "abc123", with: apiClient, useMobileEndpoints: false) {
             result in
             switch result {
             case .success(let lookupResponse):
@@ -60,7 +60,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             emailSource: .customerEmail,
             sessionID: "abc123",
             with: apiClient,
-            useModernMobileEndpoints: false
+            useMobileEndpoints: false
         ) { result in
             switch result {
             case .success(let lookupResponse):
@@ -91,7 +91,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             emailSource: .customerEmail,
             sessionID: "abc123",
             with: apiClient,
-            useModernMobileEndpoints: false
+            useMobileEndpoints: false
         ) { result in
             switch result {
             case .success(let lookupResponse):
@@ -127,7 +127,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             legalName: nil,
             countryCode: "US",
             consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
-            useModernMobileEndpoints: false,
+            useMobileEndpoints: false,
             with: apiClient
         ) { result in
             switch result {
@@ -233,7 +233,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             legalName: nil,
             countryCode: "US",
             consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
-            useModernMobileEndpoints: false,
+            useMobileEndpoints: false,
             with: apiClient
         ) { result in
             switch result {
