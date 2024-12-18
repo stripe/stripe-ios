@@ -1162,6 +1162,7 @@ extension STPAPIClient {
         _ paymentMethodID: String,
         customerId: String,
         fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String,
         completion: @escaping STPErrorBlock
     ) {
         let fetchPaymentMethods: (String) async throws -> [STPPaymentMethod] = { customerId in
@@ -1180,12 +1181,12 @@ extension STPAPIClient {
         }
         let detachPaymentMethod: (String) async throws -> Void = { paymentMethodID in
             try await withCheckedThrowingContinuation { continuation in
-                let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+                let endpoint = "\(APIEndpointElementsPaymentMethods)/\(paymentMethodID)/detach"
                 APIRequest<STPPaymentMethod>.post(
                     with: self,
                     endpoint: endpoint,
                     additionalHeaders: self.authorizationHeader(using: ephemeralKeySecret),
-                    parameters: [:]
+                    parameters: ["customer_session_client_secret": customerSessionClientSecret]
                 ) { _, _, error in
                     if let error {
                         continuation.resume(throwing: error)
@@ -1246,12 +1247,46 @@ extension STPAPIClient {
     @_spi(STP) public func detachPaymentMethodRemoveDuplicates(
         _ paymentMethodID: String,
         customerId: String,
-        fromCustomerUsing ephemeralKeySecret: String
+        fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String
     ) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             detachPaymentMethodRemoveDuplicates(paymentMethodID,
                                                 customerId: customerId,
-                                                fromCustomerUsing: ephemeralKeySecret) { error in
+                                                fromCustomerUsing: ephemeralKeySecret,
+                                                withCustomerSessionClientSecret: customerSessionClientSecret) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let endpoint = "\(APIEndpointElementsPaymentMethods)/\(paymentMethodID)/detach"
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: ["customer_session_client_secret": customerSessionClientSecret]
+        ) { _, _, error in
+            completion(error)
+        }
+    }
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            detachPaymentMethod(paymentMethodID, fromCustomerUsing: ephemeralKeySecret, withCustomerSessionClientSecret: customerSessionClientSecret) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1368,6 +1403,7 @@ private let APIEndpointSources = "sources"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 @_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointElementsPaymentMethods = "elements/payment_methods"
 private let APIEndpoint3DS2 = "3ds2"
 private let PaymentMethodDataHash = "payment_method_data"
 private let SourceDataHash = "source_data"
