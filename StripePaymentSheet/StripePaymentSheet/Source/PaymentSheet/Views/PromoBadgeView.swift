@@ -89,8 +89,11 @@ class PromoBadgeView: UIView {
             appearance.colors.componentText
         }
         
-        labelBackground.backgroundColor = backgroundColor
+        // In embedded mode with checkmarks, the `appearance` corner radius might not be what the
+        // merchant has specified. We use the original corner radius instead.
         labelBackground.layer.cornerRadius = cornerRadius ?? appearance.cornerRadius
+        
+        labelBackground.backgroundColor = backgroundColor
         label.font = appearance.scaledFont(
             for: appearance.font.base.medium,
             style: .caption1,
@@ -98,12 +101,6 @@ class PromoBadgeView: UIView {
         )
         label.numberOfLines = 1
         label.textColor = foregroundColor
-        
-        if let cornerRadius {
-            // In embedded mode with checkmarks, the `appearance` corner radius might not be what the
-            // merchant has specified. We use the original corner radius instead.
-            labelBackground.layer.cornerRadius = cornerRadius
-        }
     }
     
     private func setupView(tinyMode: Bool) {
