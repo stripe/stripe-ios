@@ -121,12 +121,11 @@ extension SavedPaymentMethodCollectionView {
             didSet {
                 if showDefaultPMBadge {
                     if isRemovingPaymentMethods {
-                        deactivateBottomConstraint()
                         activateDefaultBadge()
                         defaultBadge.isHidden = !isDefaultPM
                     }
                     else {
-                        reactivateBottomConstraint()
+                        deactivateDefaultBadge()
                         defaultBadge.isHidden = true
                     }
                 }
@@ -249,6 +248,7 @@ extension SavedPaymentMethodCollectionView {
 
         private var labelBottomConstraint: NSLayoutConstraint?
         private var labelHeightConstraint: NSLayoutConstraint?
+        private var defaultBadgeConstraints: [NSLayoutConstraint] = []
 
         // MARK: - Internal Methods
         func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsSetAsDefaultPM: Bool, showDefaultPMBadge: Bool) {
@@ -414,7 +414,7 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
-        private func deactivateBottomConstraint() {
+        private func activateDefaultBadge() {
             labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 20)
             guard let labelBottomConstraint, let labelHeightConstraint else { return }
             NSLayoutConstraint.deactivate([
@@ -423,25 +423,24 @@ extension SavedPaymentMethodCollectionView {
             NSLayoutConstraint.activate([
                 labelHeightConstraint
             ])
-        }
-
-        private func reactivateBottomConstraint() {
-            guard let labelHeightConstraint, let labelBottomConstraint else { return }
-            NSLayoutConstraint.deactivate([
-                labelHeightConstraint
-            ])
-            NSLayoutConstraint.activate([
-                labelBottomConstraint
-            ])
-        }
-
-        private func activateDefaultBadge() {
-            NSLayoutConstraint.activate([
+            defaultBadgeConstraints = [
                 defaultBadge.topAnchor.constraint(
                     equalTo: label.bottomAnchor, constant: 4),
                 defaultBadge.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
                 defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            ]
+            NSLayoutConstraint.activate(defaultBadgeConstraints)
+        }
+
+        private func deactivateDefaultBadge() {
+            guard let labelHeightConstraint, let labelBottomConstraint else { return }
+            NSLayoutConstraint.deactivate(defaultBadgeConstraints)
+            NSLayoutConstraint.deactivate([
+                labelHeightConstraint
+            ])
+            NSLayoutConstraint.activate([
+                labelBottomConstraint
             ])
         }
 

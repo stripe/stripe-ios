@@ -106,9 +106,6 @@ class RowButton: UIView {
             defaultBadge.text = String.Localized.default_text
             self.defaultBadge = defaultBadge
         }
-        else {
-            self.defaultBadge = nil
-        }
 
         if let promoText {
             self.promoBadge = PromoBadgeView(
@@ -239,7 +236,7 @@ class RowButton: UIView {
             radioButton?.centerYAnchor.constraint(equalTo: centerYAnchor),
             radioButton?.heightAnchor.constraint(equalToConstant: 18),
             radioButton?.widthAnchor.constraint(equalToConstant: 18),
-            
+
             labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             labelsStackView.trailingAnchor.constraint(equalTo: promoBadge?.leadingAnchor ?? labelTrailingConstant, constant: -12),
             labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
