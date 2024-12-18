@@ -140,6 +140,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
 
         APIRequest<STPCard>.parseResponse(
             httpURLResponse,
+            method: "GET",
             body: body,
             error: errorParameter
         ) { (object: STPCard?, response, error) in
@@ -173,6 +174,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
 
         APIRequest<STPCard>.parseResponse(
             httpURLResponse,
+            method: "GET",
             body: body,
             error: errorParameter
         ) { (object: STPCard?, response, error) in
@@ -200,6 +202,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
 
         APIRequest<STPCard>.parseResponse(
             httpURLResponse,
+            method: "GET",
             body: body,
             error: errorParameter
         ) { (object: STPCard?, response, error) in
@@ -230,6 +233,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
 
         APIRequest<STPCard>.parseResponse(
             httpURLResponse,
+            method: "GET",
             body: body,
             error: errorParameter
         ) { (object: STPCard?, response, error) in
