@@ -1,22 +1,23 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_QnINed3dyqy6p6&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RPvTdxv98F9G30&type=card$
 200
 application/json
-access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
-content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_methods; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=kfHQcz5yiu1E8qIqzgb4ZW2IYir64ZSuF5Jg8APA3GgZLvG-FlxoEq38x_-kQ3FNn148jnETNg%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+reporting-endpoints: coop="https://q.stripe.com/coop-report"
+x-wc: AB
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_0HdjdbIEN9vFB3
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+request-id: req_KklvRcrGq3V1qu
 Content-Length: 2451
 Vary: Origin
-Date: Thu, 05 Sep 2024 15:40:19 GMT
+Date: Tue, 17 Dec 2024 18:36:07 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -30,7 +31,7 @@ x-content-type-options: nosniff
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1PvhnBFY0qyl6XeWuTiGb7An",
+      "id" : "pm_1QX5cnFY0qyl6XeWDlV7MQAq",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -71,14 +72,14 @@ x-content-type-options: nosniff
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1725550817,
+      "created" : 1734460565,
       "allow_redisplay" : "unspecified",
       "type" : "card",
-      "customer" : "cus_QnINed3dyqy6p6"
+      "customer" : "cus_RPvTdxv98F9G30"
     },
     {
       "object" : "payment_method",
-      "id" : "pm_1PvhnAFY0qyl6XeWJhOV2gTR",
+      "id" : "pm_1QX5cmFY0qyl6XeWNsaZhyOK",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -119,10 +120,10 @@ x-content-type-options: nosniff
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1725550816,
+      "created" : 1734460564,
       "allow_redisplay" : "unspecified",
       "type" : "card",
-      "customer" : "cus_QnINed3dyqy6p6"
+      "customer" : "cus_RPvTdxv98F9G30"
     }
   ],
   "url" : "\/v1\/payment_methods"

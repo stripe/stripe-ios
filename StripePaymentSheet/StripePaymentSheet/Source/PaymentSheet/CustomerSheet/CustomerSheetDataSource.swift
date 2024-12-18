@@ -163,12 +163,12 @@ extension CustomerSheetDataSource {
         }
     }
 
-    func detachPaymentMethod(paymentMethodId: String) async throws {
+    func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {
         switch dataSource {
         case .customerAdapter(let customerAdapter):
-            try await customerAdapter.detachPaymentMethod(paymentMethodId: paymentMethodId)
+            try await customerAdapter.detachPaymentMethod(paymentMethodId: paymentMethod.stripeId)
         case .customerSession(let customerSessionAdapter):
-            try await customerSessionAdapter.detachPaymentMethod(paymentMethodId: paymentMethodId)
+            try await customerSessionAdapter.detachPaymentMethod(paymentMethod: paymentMethod)
         }
     }
 
