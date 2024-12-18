@@ -41,16 +41,16 @@ class SavedPaymentMethodFormFactory {
     }()
 
     func transparentMaskViewBackgroundColor() -> UIColor {
-            let alpha: CGFloat = 0.075
-            let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
-            let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
+        let alpha: CGFloat = 0.075
+        let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
+        let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
 
-            return viewModel.appearance.colors.componentBackground.isBright
-            ? UIColor.dynamic(light: colorMaskForLight,
-                              dark: colorMaskForDark)
-            : UIColor.dynamic(light: colorMaskForDark,
-                              dark: colorMaskForLight)
-        }
+        return viewModel.appearance.colors.componentBackground.isBright
+        ? UIColor.dynamic(light: colorMaskForLight,
+                          dark: colorMaskForDark)
+        : UIColor.dynamic(light: colorMaskForDark,
+                          dark: colorMaskForLight)
+    }
 }
 
 // MARK: ElementDelegate

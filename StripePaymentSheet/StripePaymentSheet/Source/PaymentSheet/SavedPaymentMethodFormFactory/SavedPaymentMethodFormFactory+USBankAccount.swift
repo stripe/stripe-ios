@@ -15,17 +15,17 @@ extension SavedPaymentMethodFormFactory {
     func makeUSBankAccount() -> UIView {
         let nameElement: SectionElement = {
             let nameElement = SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)])
-            nameElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
+            nameElement.view.backgroundColor = transparentMaskViewBackgroundColor()
             return nameElement
         }()
         let emailElement: SectionElement = {
             let emailElement = SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)])
-            emailElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
+            emailElement.view.backgroundColor = transparentMaskViewBackgroundColor()
             return emailElement
         }()
         let bankAccountElement: SectionElement = {
             let bankAccountElement = SectionElement(elements: [TextFieldElement.USBankNumberConfiguration(bankName: viewModel.paymentMethod.usBankAccount?.bankName ?? "Bank name", lastFour: viewModel.paymentMethod.usBankAccount?.last4 ?? "").makeElement(theme: viewModel.appearance.asElementsTheme)])
-            bankAccountElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
+            bankAccountElement.view.backgroundColor = transparentMaskViewBackgroundColor()
             return bankAccountElement
         }()
         let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, bankAccountElement.view])

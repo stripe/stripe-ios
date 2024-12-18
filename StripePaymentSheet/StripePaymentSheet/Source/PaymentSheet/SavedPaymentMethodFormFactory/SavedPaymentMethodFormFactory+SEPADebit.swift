@@ -15,17 +15,17 @@ extension SavedPaymentMethodFormFactory {
     func makeSEPADebit() -> UIView {
         let nameElement: SectionElement = {
             let nameElement = SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)])
-            nameElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
+            nameElement.view.backgroundColor = transparentMaskViewBackgroundColor()
             return nameElement
         }()
         let emailElement: SectionElement = {
             let emailElement = SectionElement(elements: [TextFieldElement.EmailConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.email, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)])
-            emailElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
+            emailElement.view.backgroundColor = transparentMaskViewBackgroundColor()
             return emailElement
         }()
         let ibanElement: SectionElement = {
             let ibanElement = SectionElement(elements: [TextFieldElement.LastFourIBANConfiguration(lastFour: viewModel.paymentMethod.sepaDebit?.last4 ?? "0000").makeElement(theme: viewModel.appearance.asElementsTheme)])
-            ibanElement.view.layer.backgroundColor = transparentMaskViewBackgroundColor().cgColor
+            ibanElement.view.backgroundColor = transparentMaskViewBackgroundColor()
             return ibanElement
         }()
         let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, ibanElement.view])
