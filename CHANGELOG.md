@@ -1,4 +1,4 @@
-## X.X.X
+## 24.2.0 2024-12-19
 
 ### Connect
 * [Added] `StripeConnect` SDK to add connected account dashboard functionality to your app using [Connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios).
