@@ -260,7 +260,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         checkoutButton.tap()
 
         // Close the Link sheet
-        let closeButton = app.buttons["Close"]
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
         closeButton.waitForExistenceAndTap()
 
         let cell = try XCTUnwrap(scroll(

@@ -2059,7 +2059,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Close the Link sheet
-        let closeButton = app.buttons["Close"]
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
         closeButton.waitForExistenceAndTap()
 
         // Ensure Link wallet button is shown in SPM view
@@ -2096,7 +2096,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Close the Link sheet
-        let closeButton = app.buttons["Close"]
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
         closeButton.waitForExistenceAndTap()
 
         // Ensure Link wallet button is shown in SPM view
@@ -2208,7 +2208,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Close the Link sheet
-        let closeButton = app.buttons["Close"]
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
         closeButton.waitForExistenceAndTap()
 
         // Setup a saved card to simulate having saved payment methods

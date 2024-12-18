@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 import StripePaymentSheet
 import UIKit
 
