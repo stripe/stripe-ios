@@ -49,7 +49,6 @@ import UIKit
         textView.isScrollEnabled = false
         textView.isEditable = false
         textView.font = theme.fonts.smallFootnote
-        print("font size \(textView.font!.pointSize)")
         textView.backgroundColor = .clear
         textView.textColor = theme.colors.secondaryText
         textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
