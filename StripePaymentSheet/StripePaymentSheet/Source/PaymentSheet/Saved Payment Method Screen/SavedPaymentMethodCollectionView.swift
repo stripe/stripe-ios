@@ -84,7 +84,6 @@ extension SavedPaymentMethodCollectionView {
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             label.textColor = appearance.colors.text
             label.adjustsFontForContentSizeCategory = true
-            label.numberOfLines = 0
             return label
         }()
         let paymentMethodLogo: UIImageView = UIImageView()
