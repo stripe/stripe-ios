@@ -23,7 +23,7 @@ extension STPAPIClient {
     ) {
         Task {
             let legacyEndpoint = "consumers/sessions/lookup"
-            let modernEndpoint = "consumers/mobile/sessions/lookup"
+            let mobileEndpoint = "consumers/mobile/sessions/lookup"
 
             var parameters: [String: Any] = [
                 "request_surface": "ios_payment_element",
@@ -52,7 +52,7 @@ extension STPAPIClient {
                 }
             }
             post(
-                resource: useMobileEndpoints ? modernEndpoint : legacyEndpoint,
+                resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
                 parameters: parameters,
                 ephemeralKeySecret: publishableKey
             ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
