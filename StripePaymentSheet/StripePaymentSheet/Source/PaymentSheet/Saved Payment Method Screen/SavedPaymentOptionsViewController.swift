@@ -520,11 +520,13 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         }
         cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, showDefaultPMBadge: hasDefault)
         cell.delegate = self
-        if hasDefault,
-           let savedPMId = viewModel.savedPaymentMethod?.stripeId,
-           let defaultPMId = elementsSession.customer?.defaultPaymentMethod {
-            cell.isDefaultPM = savedPMId == defaultPMId
-        }
+        let isDefaultPM: Bool = {
+            guard self.hasDefault,
+                  let savedPMId = viewModel.savedPaymentMethod?.stripeId,
+                  let defaultPMId = self.elementsSession.customer?.defaultPaymentMethod else { return false }
+            return savedPMId == defaultPMId
+        }()
+        cell.isDefaultPM = isDefaultPM
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
 
