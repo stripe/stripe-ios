@@ -366,6 +366,7 @@ extension SavedPaymentMethodCollectionView {
                     selectedIcon.isHidden = true
                     layer.shadowOpacity = 0
                 }
+
                 if isRemovingPaymentMethods {
                     if case .saved = viewModel, showEditIcon {
                         accessoryButton.isHidden = false
@@ -381,6 +382,7 @@ extension SavedPaymentMethodCollectionView {
                         plus.alpha = 0.6
                         label.textColor = appearance.colors.text.disabledColor
                     }
+
                 } else if isSelected {
                     accessoryButton.isHidden = true
                     shadowRoundedRectangle.isEnabled = true
