@@ -106,6 +106,9 @@ class RowButton: UIView {
             defaultBadge.text = String.Localized.default_text
             self.defaultBadge = defaultBadge
         }
+        else {
+            self.defaultBadge = nil
+        }
 
         if let promoText {
             self.promoBadge = PromoBadgeView(
