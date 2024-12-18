@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-struct PaymentMethodIncentive {
+struct PaymentMethodIncentive: Equatable {
 
     let identifier: String
     let displayText: String

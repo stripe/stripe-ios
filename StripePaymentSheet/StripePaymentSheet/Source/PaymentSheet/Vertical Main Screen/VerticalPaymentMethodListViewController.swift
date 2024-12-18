@@ -23,7 +23,10 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private(set) var currentSelection: VerticalPaymentMethodListSelection?
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
+    private var incentive: PaymentMethodIncentive?
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
+    
+    private var refreshContent: () -> Void = {}
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -43,16 +46,47 @@ class VerticalPaymentMethodListViewController: UIViewController {
         incentive: PaymentMethodIncentive?,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
-        self.delegate = delegate
         self.appearance = appearance
+        self.incentive = incentive
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-
+        
+        self.refreshContent = { [weak self] in
+            guard let self else {
+                return
+            }
+            
+            stackView.arrangedSubviews.forEach { subview in
+                subview.removeFromSuperview()
+            }
+            
+            renderContent(
+                overrideHeaderView: overrideHeaderView,
+                savedPaymentMethod: savedPaymentMethod,
+                initialSelection: initialSelection,
+                savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
+                shouldShowApplePay: shouldShowApplePay,
+                shouldShowLink: shouldShowLink,
+                paymentMethodTypes: paymentMethodTypes
+            )
+        }
+        self.refreshContent()
+    }
+    
+    private func renderContent(
+        overrideHeaderView: UIView?,
+        savedPaymentMethod: STPPaymentMethod?,
+        initialSelection: VerticalPaymentMethodListSelection?,
+        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
+        shouldShowApplePay: Bool,
+        shouldShowLink: Bool,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    ) {
         // Add the header - either the passed in `header` or "Select payment method"
         let header = overrideHeaderView ?? PaymentSheetUI.makeHeaderLabel(title: .Localized.select_payment_method, appearance: appearance)
         stackView.addArrangedSubview(header)
         stackView.setCustomSpacing(24, after: header)
-
+        
         // Create stack view views after super.init so that we can reference `self`
         var views = [UIView]()
         // Saved payment method:
@@ -65,7 +99,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                     return nil
                 }
             }()
-
+            
             let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance, rightAccessoryView: accessoryButton) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
@@ -80,7 +114,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 Self.makeSectionLabel(text: .Localized.new_payment_method, appearance: appearance),
             ]
         }
-
+        
         // Build Apple Pay and Link rows
         let applePay: RowButton? = {
             guard shouldShowApplePay else { return nil }
@@ -106,7 +140,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             }
             return rowButton
         }()
-
+        
         // Payment methods
         var indexAfterCards: Int?
         let paymentMethodTypes = paymentMethodTypes
@@ -119,7 +153,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
-                shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)
+                shouldAnimateOnPress: delegate?.shouldSelectPaymentMethod(selection) == true
             ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
@@ -132,10 +166,10 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 currentSelection = selection
             }
         }
-
+        
         // Insert Apple Pay/Link after card or, if cards aren't present, first
         views.insert(contentsOf: [applePay, link].compactMap({ $0 }), at: indexAfterCards ?? 0)
-
+        
         for view in views {
             stackView.addArrangedSubview(view)
         }
@@ -169,6 +203,15 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     @objc func didTapAccessoryButton() {
         delegate?.didTapSavedPaymentMethodAccessoryButton()
+    }
+    
+    func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        guard self.incentive != incentive else {
+            return
+        }
+        
+        self.incentive = incentive
+        self.refreshContent()
     }
 
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
