@@ -2226,6 +2226,9 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
+        // Close the Link sheet
+        closeButton.waitForExistenceAndTap()
+
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         let addCardButton = app.buttons["+ Add"]
