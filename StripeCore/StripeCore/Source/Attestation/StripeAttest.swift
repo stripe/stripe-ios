@@ -52,18 +52,11 @@ import UIKit
     }
 
     /// Inform StripeAttest of an error received in response to an assertion.
-    /// The key may be reset if needed.
+    /// The key will be reset.
     @_spi(STP) public func receivedAssertionError(_ error: Error) {
-        // If the backend responds with this specific error, we should reset the key.
-        if let error = error as? StripeCore.StripeError,
-           case let .apiError(apiError) = error,
-           apiError.code == "invalid_parameter",
-           apiError.type == .invalidRequestError,
-           apiError.param == nil {
-            let resetKeyAnalytic = ErrorAnalytic(event: .resetKeyForAssertionError, error: error)
-            STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
-            resetKey()
-        }
+        let resetKeyAnalytic = ErrorAnalytic(event: .resetKeyForAssertionError, error: error)
+        STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
+        resetKey()
     }
 
     /// Returns whether the device is capable of performing attestation.
