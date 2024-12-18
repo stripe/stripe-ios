@@ -325,8 +325,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                        let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
                         customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
                     }
-                }
-                else {
+                } else {
                     customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
                 }
                 switch customerDefault {
@@ -757,7 +756,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             // We need to show the form for bank payments (even if we don't collect user input) so that we can launch the auth flow.
             return true
         }
-        
+
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: elementsSession,
@@ -765,6 +764,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,
+            accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
             analyticsHelper: analyticsHelper
         ).make().collectsUserInput
     }

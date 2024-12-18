@@ -55,7 +55,7 @@ extension STPElementsSession {
             ],
             "customer_sheet": [
                 "enabled": false,
-            ]], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
+            ], ], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
     }
 
     static func _testValue(
@@ -90,7 +90,7 @@ extension STPElementsSession {
                                     "api_key_expiry": 12345,
                                     "customer": "cus_123",
                                     "components": customerSessionData,
-                                    ]
+                                    ],
                                 ]
             if allowsSetAsDefaultPM, let defaultPaymentMethod {
                 json[jsonDict: "customer"]?["default_payment_method"] = defaultPaymentMethod
@@ -184,7 +184,7 @@ extension STPPaymentMethod {
                 "fingerprint": "B8XXs2y2JsVBtB9f",
                 "networks": ["available": ["visa"]],
                 "exp_month": "01",
-                "exp_year": Calendar.current.component(.year, from: Date()) + 1
+                "exp_year": Calendar.current.component(.year, from: Date()) + 1,
             ],
         ])!
     }
@@ -209,7 +209,7 @@ extension STPPaymentMethod {
                 "brand": brand,
                 "networks": ["available": networks],
                 "exp_month": "01",
-                "exp_year": Calendar.current.component(.year, from: Date()) + 1
+                "exp_year": Calendar.current.component(.year, from: Date()) + 1,
             ],
         ]
         if let displayBrand {
@@ -337,7 +337,14 @@ extension PaymentSheetFormFactory {
             previousCustomerInput: previousCustomerInput,
             addressSpecProvider: addressSpecProvider,
             linkAccount: linkAccount,
+            accountService: LinkAccountService._testValue(),
             analyticsHelper: ._testValue()
         )
+    }
+}
+
+extension LinkAccountService {
+    static func _testValue() -> Self {
+        .init(apiClient: STPAPIClient(publishableKey: "pk_test"), elementsSession: .emptyElementsSession)
     }
 }

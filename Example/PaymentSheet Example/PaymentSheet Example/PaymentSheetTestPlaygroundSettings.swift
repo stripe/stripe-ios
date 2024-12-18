@@ -475,7 +475,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
     var linkMode: LinkMode
-    var useNativeLink: LinkNativeMode
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -523,7 +522,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             defaultBillingAddress: .off,
             customEmail: nil,
             linkMode: .passthrough,
-            useNativeLink: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,

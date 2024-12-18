@@ -89,12 +89,13 @@ extension PaymentSheetFormFactory {
             shouldDisplaySaveCheckbox ? saveCheckbox : nil,
         ]
 
-        if case .paymentSheet(let configuration) = configuration, showLinkInlineSignup {
+        if case .paymentSheet(let configuration) = configuration, let accountService, showLinkInlineSignup {
             let inlineSignupElement = LinkInlineSignupElement(
                 configuration: configuration,
                 linkAccount: linkAccount,
                 country: countryCode,
-                showCheckbox: !shouldDisplaySaveCheckbox
+                showCheckbox: !shouldDisplaySaveCheckbox,
+                accountService: accountService
             )
             elements.append(inlineSignupElement)
         }
