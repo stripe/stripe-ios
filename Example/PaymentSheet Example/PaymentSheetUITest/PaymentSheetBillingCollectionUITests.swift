@@ -230,6 +230,8 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_MinimalFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        // Use the GB merchant to use web-based Link
+        settings.merchantCountryCode = .GB
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US

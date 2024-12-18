@@ -55,7 +55,7 @@ extension STPElementsSession {
             ],
             "customer_sheet": [
                 "enabled": false,
-            ],], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
+            ], ], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
     }
 
     static func _testValue(

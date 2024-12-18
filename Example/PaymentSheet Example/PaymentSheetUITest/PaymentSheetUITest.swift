@@ -1870,6 +1870,8 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
     }
     func testLinkOnlyFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        // Using GB for web-based Link merchant account
+        settings.merchantCountryCode = .GB
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.applePayEnabled = .off
@@ -2048,6 +2050,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #2 flow in PaymentSheet where the merchant disable saved payment methods and returning Link user
     func testLinkPaymentSheet_disabledSPM_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        // Use the GB merchant to use web-based Link
+        settings.merchantCountryCode = .GB
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
@@ -2080,6 +2084,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #4 flow in PaymentSheet where the merchant enables saved payment methods, buyer has no SPMs and returning Link user
     func testLinkPaymentSheet_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        // Use the GB merchant to use web-based Link
+        settings.merchantCountryCode = .GB
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
@@ -2100,6 +2106,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests Native Link with a returning user, 2FA prompt shows first
     func testLinkPaymentSheet_native_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        // Use the GB merchant to use web-based Link
+        settings.merchantCountryCode = .GB
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
@@ -2119,6 +2127,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests Native Link in Flow Controller with a returning user
     func testLinkPaymentSheetFC_native_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        // Use the GB merchant to use web-based Link
+        settings.merchantCountryCode = .GB
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm

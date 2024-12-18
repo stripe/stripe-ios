@@ -74,7 +74,7 @@ class MockAppAttestService: AppAttestService {
 
 @_spi(STP) public class MockAttestBackend: StripeAttestBackend {
     var storedChallenge: String?
-    var keyHasBeenAttested: Bool = false
+    var keyHasBeenAttested: [String: Bool] = [:]
 
     public func attest(appId: String, deviceId: String, keyId: String, attestation: Data) async throws {
         // Decode the attestation data (it's a JSON dictionary)
@@ -93,7 +93,7 @@ class MockAppAttestService: AppAttestService {
             throw NSError(domain: "com.stripe.internal-error", code: 403, userInfo: ["error": "Incorrect hash"])
         }
 
-        keyHasBeenAttested = true
+        keyHasBeenAttested[keyId] = true
 
         // Remove the challenge
         storedChallenge = nil
@@ -130,6 +130,6 @@ class MockAppAttestService: AppAttestService {
         // Generate a random challenge:
         let challenge = UUID().uuidString.data(using: .utf8)!.base64EncodedString()
         storedChallenge = challenge
-        return .init(challenge: challenge, initial_attestation_required: keyHasBeenAttested)
+        return .init(challenge: challenge, initial_attestation_required: !(keyHasBeenAttested[keyId] ?? false))
     }
 }
