@@ -179,7 +179,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         let theme = appearance.asElementsTheme
         
         self.configuration = configuration
-        self.linkedBankInfoView = BankAccountInfoView(frame: .zero, theme: appearance, incentive: incentive)
+        self.linkedBankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance, incentive: incentive)
         self.linkedBankInfoSectionElement = SectionElement(
             title: String.Localized.bank_account_sentence_case,
             elements: [StaticElement(view: linkedBankInfoView)],

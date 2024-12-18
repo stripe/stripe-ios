@@ -103,10 +103,10 @@ class BankAccountInfoView: UIView {
 
     init(
         frame: CGRect,
-        theme: PaymentSheet.Appearance = .default,
+        appearance: PaymentSheet.Appearance = .default,
         incentive: PaymentMethodIncentive? = nil
     ) {
-        self.appearance = theme
+        self.appearance = appearance
         self.incentive = incentive
         super.init(frame: frame)
         addViewComponents()

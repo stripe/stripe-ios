@@ -16,7 +16,7 @@ final class BankAccountInfoViewSnapshotTests : STPSnapshotTestCase {
     func test_noPromoBadge() {
         let view = BankAccountInfoView(
             frame: Self.frame,
-            theme: .default,
+            appearance: .default,
             incentive: nil
         )
         view.setBankName(text: "Stripe Bank")
@@ -29,7 +29,7 @@ final class BankAccountInfoViewSnapshotTests : STPSnapshotTestCase {
     func test_eligibleForPromo() {
         let view = BankAccountInfoView(
             frame: Self.frame,
-            theme: .default,
+            appearance: .default,
             incentive: .init(identifier: "link_instant_debits", displayText: "$5")
         )
         view.setBankName(text: "Stripe Bank")
@@ -39,10 +39,23 @@ final class BankAccountInfoViewSnapshotTests : STPSnapshotTestCase {
         verify(view)
     }
     
+    func test_eligibleForPromo_longName() {
+        let view = BankAccountInfoView(
+            frame: Self.frame,
+            appearance: .default,
+            incentive: .init(identifier: "link_instant_debits", displayText: "$5")
+        )
+        view.setBankName(text: "The Official Stripe Bank")
+        view.setLastFourOfBank(text: "•••• 4242")
+        view.setIncentiveEligible(true)
+        
+        verify(view)
+    }
+    
     func test_ineligibleForPromo() {
         let view = BankAccountInfoView(
             frame: Self.frame,
-            theme: .default,
+            appearance: .default,
             incentive: .init(identifier: "link_instant_debits", displayText: "$5")
         )
         view.setBankName(text: "Stripe Bank")

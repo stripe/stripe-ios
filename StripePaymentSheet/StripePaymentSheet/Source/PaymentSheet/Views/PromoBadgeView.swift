@@ -16,7 +16,7 @@ class PromoBadgeView: UIView {
     
     private var appearance: PaymentSheet.Appearance
     private var cornerRadius: CGFloat?
-    private var text: String
+    private var text: String?
     private var eligible: Bool
     
     override var intrinsicContentSize: CGSize {
@@ -35,14 +35,14 @@ class PromoBadgeView: UIView {
         self.appearance = appearance
         self.cornerRadius = cornerRadius
         self.eligible = true
-        self.text = text ?? ""
+        self.text = text
         super.init(frame: .zero)
         
         setupView(tinyMode: tinyMode)
         updateAppearance()
         
         if let text {
-            setText(text)
+            updateText(text)
         }
     }
     
@@ -62,15 +62,19 @@ class PromoBadgeView: UIView {
     
     func setText(_ text: String) {
         self.text = text
-        updateText()
+        updateText(text)
     }
     
     func setEligible(_ eligible: Bool) {
         self.eligible = eligible
-        updateText()
+        updateText(text)
     }
     
-    private func updateText() {
+    private func updateText(_ text: String?) {
+        guard let text else {
+            return
+        }
+        
         label.text = formatPromoText(text, eligible: eligible)
         updateAppearance()
         invalidateIntrinsicContentSize()

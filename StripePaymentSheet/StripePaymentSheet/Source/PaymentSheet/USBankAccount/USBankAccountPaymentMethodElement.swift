@@ -111,7 +111,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 
         self.configuration = configuration
         self.linkedBank = initialLinkedBank
-        self.bankInfoView = BankAccountInfoView(frame: .zero, theme: appearance)
+        self.bankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance)
         self.bankInfoSectionElement = SectionElement(title: String.Localized.bank_account_sentence_case,
                                                      elements: [StaticElement(view: bankInfoView)], theme: theme)
         self.bankInfoSectionElement.view.isHidden = true
