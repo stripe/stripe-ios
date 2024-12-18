@@ -27,14 +27,12 @@ extension STPAPIClient {
 
             var parameters: [String: Any] = [
                 "request_surface": "ios_payment_element",
+                "session_id": sessionID,
             ]
             if let email, let emailSource {
                 parameters["email_address"] = email.lowercased()
                 parameters["email_source"] = emailSource.rawValue
-            }
-            parameters["session_id"] = sessionID
-
-            guard parameters.keys.contains("email_address") else {
+            } else {
                 // no request to make if we don't have an email
                 DispatchQueue.main.async {
                     completion(.success(
