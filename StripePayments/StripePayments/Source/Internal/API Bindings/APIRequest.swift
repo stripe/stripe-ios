@@ -39,7 +39,7 @@ let JSONKeyObject = "object"
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
-                self.parseResponse(response, body: body, error: error, completion: completion)
+                self.parseResponse(response, method: "POST", body: body, error: error, completion: completion)
             }
         )
     }
@@ -81,7 +81,7 @@ let JSONKeyObject = "object"
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
-                self.parseResponse(response, body: body, error: error, completion: completion)
+                self.parseResponse(response, method: "GET", body: body, error: error, completion: completion)
             }
         )
     }
@@ -123,13 +123,14 @@ let JSONKeyObject = "object"
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
-                self.parseResponse(response, body: body, error: error, completion: completion)
+                self.parseResponse(response, method: "DELETE" ,body: body, error: error, completion: completion)
             }
         )
     }
 
     class func parseResponse(
         _ response: URLResponse?,
+        method: String,
         body: Data?,
         error: Error?,
         completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
@@ -190,7 +191,7 @@ let JSONKeyObject = "object"
         if let httpResponse,
            let requestId = httpResponse.value(forHTTPHeaderField: "request-id"),
            let url = httpResponse.value(forKey: "URL") as? URL {
-            print("[Stripe SDK]: Request \(requestId), \(url.relativePath)")
+            print("[Stripe SDK]: \(method) \"\(url.relativePath)\" \(httpResponse.statusCode) \(requestId)")
         }
         #endif
 
