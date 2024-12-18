@@ -1870,7 +1870,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
     }
     func testLinkOnlyFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        // Using GB for web-based Link merchant account
+        // Use the GB merchant to use web-based Link
         settings.merchantCountryCode = .GB
         settings.uiStyle = .flowController
         settings.customerMode = .new
@@ -2050,8 +2050,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #2 flow in PaymentSheet where the merchant disable saved payment methods and returning Link user
     func testLinkPaymentSheet_disabledSPM_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        // Use the GB merchant to use web-based Link
-        settings.merchantCountryCode = .GB
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
@@ -2059,6 +2057,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Close the Link sheet
+        let closeButton = app.buttons["Close"]
+        closeButton.waitForExistenceAndTap()
+
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         assertLinkInlineSignupNotShown()
@@ -2084,8 +2087,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #4 flow in PaymentSheet where the merchant enables saved payment methods, buyer has no SPMs and returning Link user
     func testLinkPaymentSheet_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        // Use the GB merchant to use web-based Link
-        settings.merchantCountryCode = .GB
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
@@ -2093,6 +2094,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Close the Link sheet
+        let closeButton = app.buttons["Close"]
+        closeButton.waitForExistenceAndTap()
+
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         assertLinkInlineSignupNotShown()
@@ -2106,8 +2112,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests Native Link with a returning user, 2FA prompt shows first
     func testLinkPaymentSheet_native_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        // Use the GB merchant to use web-based Link
-        settings.merchantCountryCode = .GB
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
@@ -2127,8 +2131,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests Native Link in Flow Controller with a returning user
     func testLinkPaymentSheetFC_native_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        // Use the GB merchant to use web-based Link
-        settings.merchantCountryCode = .GB
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
@@ -2204,6 +2206,10 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Close the Link sheet
+        let closeButton = app.buttons["Close"]
+        closeButton.waitForExistenceAndTap()
 
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address

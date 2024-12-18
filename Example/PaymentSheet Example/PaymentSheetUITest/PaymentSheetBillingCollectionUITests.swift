@@ -230,8 +230,6 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_MinimalFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        // Use the GB merchant to use web-based Link
-        settings.merchantCountryCode = .GB
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -260,6 +258,10 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         saveAddressButton.tap()
 
         checkoutButton.tap()
+
+        // Close the Link sheet
+        let closeButton = app.buttons["Close"]
+        closeButton.waitForExistenceAndTap()
 
         let cell = try XCTUnwrap(scroll(
             collectionView: app.collectionViews.firstMatch,
