@@ -121,11 +121,11 @@ extension SavedPaymentMethodCollectionView {
                 if showDefaultPMBadge {
                     if isRemovingPaymentMethods {
                         activateDefaultBadge()
-                        defaultBadge.isHidden = !isDefaultPM
+                        defaultBadge.setHiddenIfNecessary(!isDefaultPM)
                     }
                     else {
                         deactivateDefaultBadge()
-                        defaultBadge.isHidden = true
+                        defaultBadge.setHiddenIfNecessary(true)
                     }
                 }
                 update()
@@ -183,7 +183,7 @@ extension SavedPaymentMethodCollectionView {
                 contentView.addSubview($0)
             }
             labelBottomConstraint = label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-            guard let labelBottomConstraint else { return }
+            labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 20)
             NSLayoutConstraint.activate([
                 shadowRoundedRectangle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
                 shadowRoundedRectangle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -245,12 +245,12 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
-        private var labelBottomConstraint: NSLayoutConstraint?
-        private var labelHeightConstraint: NSLayoutConstraint?
+        private var labelBottomConstraint: NSLayoutConstraint = NSLayoutConstraint()
+        private var labelHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
         private var defaultBadgeConstraints: [NSLayoutConstraint] = []
 
         // MARK: - Internal Methods
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsSetAsDefaultPM: Bool, showDefaultPMBadge: Bool) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsSetAsDefaultPM: Bool = false, showDefaultPMBadge: Bool = false) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
@@ -416,8 +416,6 @@ extension SavedPaymentMethodCollectionView {
         }
 
         private func activateDefaultBadge() {
-            labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 20)
-            guard let labelBottomConstraint, let labelHeightConstraint else { return }
             NSLayoutConstraint.deactivate([
                 labelBottomConstraint
             ])
@@ -435,7 +433,6 @@ extension SavedPaymentMethodCollectionView {
         }
 
         private func deactivateDefaultBadge() {
-            guard let labelHeightConstraint, let labelBottomConstraint else { return }
             NSLayoutConstraint.deactivate(defaultBadgeConstraints)
             NSLayoutConstraint.deactivate([
                 labelHeightConstraint
