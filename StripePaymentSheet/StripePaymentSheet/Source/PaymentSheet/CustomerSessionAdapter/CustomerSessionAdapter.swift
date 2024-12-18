@@ -118,17 +118,33 @@ extension CustomerSessionAdapter {
         return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
     }
 
-    func detachPaymentMethod(paymentMethodId: String) async throws {
+    func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {
+
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
         return try await withCheckedThrowingContinuation({ continuation in
-            self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(paymentMethodId,
-                                                                             customerId: cachedCustomerSessionClientSecret.customerId,
-                                                                             fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey) { error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
+            if paymentMethod.type == .card {
+                self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                    paymentMethod.stripeId,
+                    customerId: cachedCustomerSessionClientSecret.customerId,
+                    fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey,
+                    withCustomerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret.clientSecret) { error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                            return
+                        }
+                        continuation.resume()
                 }
-                continuation.resume()
+            } else {
+                configuration.apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey,
+                    withCustomerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret.clientSecret) { error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                            return
+                        }
+                        continuation.resume()
+                    }
             }
         })
     }
