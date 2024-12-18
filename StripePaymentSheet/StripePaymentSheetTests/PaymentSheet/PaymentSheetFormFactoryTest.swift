@@ -1555,6 +1555,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["ideal", "card"]),
             configuration: .paymentSheet(configuration),
             paymentMethod: .stripe(.cardPresent), // A payment method that doesn't have LUXE specs and in-code form definition
+            accountService: LinkAccountService._testValue(),
             analyticsHelper: ._testValue(analyticsClient: analyticsClient)
         )
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
@@ -1585,6 +1586,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentSheet(configuration),
                 paymentMethod: .stripe(.card),
+                accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
         }

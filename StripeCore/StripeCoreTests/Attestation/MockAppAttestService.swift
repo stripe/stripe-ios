@@ -7,7 +7,7 @@
 
 import CryptoKit
 import DeviceCheck
-@_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCore
 import UIKit
 
 class MockAppAttestService: AppAttestService {
@@ -74,6 +74,7 @@ class MockAppAttestService: AppAttestService {
 
 @_spi(STP) public class MockAttestBackend: StripeAttestBackend {
     var storedChallenge: String?
+    var keyHasBeenAttested: Bool = false
 
     public func attest(appId: String, deviceId: String, keyId: String, attestation: Data) async throws {
         // Decode the attestation data (it's a JSON dictionary)
@@ -91,6 +92,8 @@ class MockAppAttestService: AppAttestService {
             // Hash is incorrect, throw an error
             throw NSError(domain: "com.stripe.internal-error", code: 403, userInfo: ["error": "Incorrect hash"])
         }
+
+        keyHasBeenAttested = true
 
         // Remove the challenge
         storedChallenge = nil
@@ -116,7 +119,7 @@ class MockAppAttestService: AppAttestService {
         storedChallenge = nil
     }
 
-    public func getChallenge(appId: String, deviceId: String, keyId: String) async throws -> String {
+    public func getChallenge(appId: String, deviceId: String, keyId: String) async throws -> StripeCore.StripeChallengeResponse {
         // Confirm the AppID and DeviceID are correct
         let currentDeviceId = await UIDevice.current.identifierForVendor!.uuidString
 
@@ -127,6 +130,6 @@ class MockAppAttestService: AppAttestService {
         // Generate a random challenge:
         let challenge = UUID().uuidString.data(using: .utf8)!.base64EncodedString()
         storedChallenge = challenge
-        return challenge
+        return .init(challenge: challenge, initial_attestation_required: keyHasBeenAttested)
     }
 }

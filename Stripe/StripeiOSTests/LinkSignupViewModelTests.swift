@@ -171,6 +171,7 @@ extension LinkInlineSignupViewModelTests {
 
         func lookupAccount(
             withEmail email: String?,
+            emailSource: StripePaymentSheet.EmailSource,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             if shouldFailLookup {
@@ -181,7 +182,9 @@ extension LinkInlineSignupViewModelTests {
                         PaymentSheetLinkAccount(
                             email: "user@example.com",
                             session: nil,
-                            publishableKey: nil
+                            publishableKey: nil,
+                            useModernMobileEndpoints: false,
+                            elementsSessionID: "abc123"
                         )
                     )
                 )
@@ -201,7 +204,7 @@ extension LinkInlineSignupViewModelTests {
         shouldFailLookup: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
-            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
+            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil, useModernMobileEndpoints: false, elementsSessionID: "abc123")
             : nil
 
         return LinkInlineSignupViewModel(
