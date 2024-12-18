@@ -159,7 +159,8 @@ extension FinancialConnectionsWebFlowViewController {
             isInstantDebits: manifest.isProductInstantDebits,
             linkMode: elementsSessionContext?.linkMode,
             prefillDetails: elementsSessionContext?.prefillDetails,
-            billingDetails: elementsSessionContext?.billingDetails
+            billingDetails: elementsSessionContext?.billingDetails,
+            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession
         )
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
@@ -450,7 +451,8 @@ extension FinancialConnectionsWebFlowViewController {
         isInstantDebits: Bool,
         linkMode: LinkMode?,
         prefillDetails: ElementsSessionContext.PrefillDetails?,
-        billingDetails: ElementsSessionContext.BillingDetails?
+        billingDetails: ElementsSessionContext.BillingDetails?,
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?
     ) -> String? {
         var parameters: [String] = []
 
@@ -461,6 +463,12 @@ extension FinancialConnectionsWebFlowViewController {
         if isInstantDebits {
             parameters.append("return_payment_method=true")
             parameters.append("expand_payment_method=true")
+            
+            if let incentiveEligibilitySession {
+                parameters.append("instantDebitsIncentive=true")
+                parameters.append("incentiveEligibilitySession=\(incentiveEligibilitySession.id)")
+            }
+            
             if let linkMode {
                 parameters.append("link_mode=\(linkMode.rawValue)")
             }

@@ -271,7 +271,8 @@ extension PaymentMethodFormViewController {
             prefillDetails: prefillDetails,
             intentId: intentId,
             linkMode: linkMode,
-            billingDetails: billingDetails
+            billingDetails: billingDetails,
+            eligibleForIncentive: instantDebitsFormElement?.incentive != nil
         )
     }
 

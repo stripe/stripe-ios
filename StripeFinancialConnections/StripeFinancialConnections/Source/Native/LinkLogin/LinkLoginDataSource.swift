@@ -81,8 +81,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             country: country,
             amount: elementsSessionContext?.amount,
             currency: elementsSessionContext?.currency,
-            // TODO(tillh): Only pass `intentId` when the session is eligible for incentives.
-            intentId: nil
+            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession
         )
     }
 
