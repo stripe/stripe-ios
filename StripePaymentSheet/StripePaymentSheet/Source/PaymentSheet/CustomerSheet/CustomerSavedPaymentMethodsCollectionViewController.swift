@@ -28,6 +28,7 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
+    func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController)
 }
 /*
  This class is largely a copy of SavedPaymentOptionsViewController, however a couple of exceptions
@@ -40,7 +41,6 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
 @objc(STP_Internal_SavedPaymentMethodsCollectionViewController)
 class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     enum Error: Swift.Error {
-        case didSelectRemoveOnInvalidItem
         case didSelectEditOnInvalidItem
         case removedInvalidItemWithUpdateCardFlow
         case unableToDequeueReusableCell
@@ -82,7 +82,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
         let isTestMode: Bool
-        let alternateUpdatePaymentMethodNavigation: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -387,8 +386,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
 
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
                           cbcEligible: cbcEligible,
-                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove,
-                          alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation)
+                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -444,39 +442,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                               viewModel: updateViewModel)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
-    }
-
-    func paymentOptionCellDidSelectRemove(
-        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
-    ) {
-        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-              case .saved(let paymentMethod) = viewModels[indexPath.row]
-        else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
-                                              error: Error.didSelectRemoveOnInvalidItem)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-            return
-        }
-        let alert = UIAlertAction(
-            title: String.Localized.remove, style: .destructive
-        ) { (_) in
-            self.removePaymentMethod(indexPath: indexPath, paymentMethod: paymentMethod)
-        }
-        let cancel = UIAlertAction(
-            title: String.Localized.cancel,
-            style: .cancel, handler: nil
-        )
-
-        let alertController = UIAlertController(
-            title: paymentMethod.removalMessage.title,
-            message: self.savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
-            preferredStyle: .alert
-        )
-
-        alertController.addAction(cancel)
-        alertController.addAction(alert)
-        present(alertController, animated: true, completion: nil)
     }
 
     private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod) {
@@ -564,7 +529,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didDismiss(_: UpdatePaymentMethodViewController) {
-        // No-op
+    func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
+        delegate?.shouldCloseSheet(viewController: self)
     }
 }

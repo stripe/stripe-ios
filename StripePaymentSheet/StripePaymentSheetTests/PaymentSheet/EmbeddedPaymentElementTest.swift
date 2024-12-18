@@ -112,6 +112,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateFails() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
         // ...updating w/ an invalid intent config should fail...
         var intentConfig = paymentIntentConfig
         intentConfig.mode = .setup(currency: "Invalid currency", setupFutureUsage: .offSession)
@@ -137,6 +139,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCancelsInFlightUpdate() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
         // ...updating...
         async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately updating again, before the 1st update finishes...
@@ -152,6 +156,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmHandlesInflightUpdateThatSucceeds() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
         
@@ -182,6 +187,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmHandlesInflightUpdateThatFails() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         async let _ = sut.update(intentConfiguration: brokenConfig)
@@ -199,6 +206,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testConfirmHandlesCompletedUpdateThatFailed() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         _ = await sut.update(intentConfiguration: brokenConfig)
@@ -274,6 +283,148 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTFail("Expected confirm to fail, but it was canceled")
         }
     }
+    
+    func testClearPaymentOptionAfterSelection() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Select the "Card" payment method
+        sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        // The delegate should have been notified
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+        XCTAssertNotNil(sut.paymentOption)
+
+        // Reset flags
+        delegateDidUpdatePaymentOptionCalled = false
+        delegateDidUpdateHeightCalled = false
+
+        // Reset the selection
+        sut.clearPaymentOption()
+
+        // The paymentOption should now be nil after reset
+        XCTAssertNil(sut.paymentOption)
+
+        // The delegate should have been notified again after reset
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+    }
+
+    func testClearPaymentOptionWhenNoSelection() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Reset flags
+        delegateDidUpdatePaymentOptionCalled = false
+        delegateDidUpdateHeightCalled = false
+
+        // Call reset when no selection is made
+        sut.clearPaymentOption()
+
+        // Confirm that paymentOption is still nil and no delegate calls were made
+        XCTAssertNil(sut.paymentOption)
+        XCTAssertFalse(delegateDidUpdatePaymentOptionCalled)
+        XCTAssertFalse(delegateDidUpdateHeightCalled)
+    }
+    
+    func testConfirmThenUpdateFails() async throws {
+        // Given an EmbeddedPaymentElement that can confirm
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Create test confirmParams with valid card details
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
+        
+        // Inject the test payment option and confirm the payment successfully
+        sut._test_paymentOption = .new(confirmParams: confirmParams)
+        let confirmResult = await sut.confirm()
+        XCTAssertEqual(confirmResult, .completed)
+
+        // Now that the payment is confirmed, attempting to update should fail
+        let updateResult = await sut.update(intentConfiguration: paymentIntentConfig2)
+        guard case let .failed(error) = updateResult else {
+            XCTFail("Expected the update to fail after confirming the intent.")
+            return
+        }
+        
+        XCTAssertEqual((error as! PaymentSheetError).debugDescription, PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription)
+    }
+
+    func testConfirmThenClearPaymentOptionDoesNothing() async throws {
+        // Given an EmbeddedPaymentElement that can confirm
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Create test confirmParams with valid card details
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
+        
+        // Inject the test payment option and confirm the payment successfully
+        sut._test_paymentOption = .new(confirmParams: confirmParams)
+        let confirmResult = await sut.confirm()
+        XCTAssertEqual(confirmResult, .completed)
+
+        // Once confirmed, attempting to clear the payment option should do nothing
+        let previousPaymentOption = sut.paymentOption
+        sut.clearPaymentOption()
+        XCTAssertEqual(sut.paymentOption, previousPaymentOption, "Clearing payment option after confirmation should have no effect.")
+    }
+
+    func testConfirmTwiceFails() async throws {
+        // Given an EmbeddedPaymentElement that can confirm
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Create test confirmParams with valid card details
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = NSNumber(value: Calendar.current.component(.year, from: Date()) + 5)
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
+        
+        // Inject the test payment option and confirm the payment successfully once
+        sut._test_paymentOption = .new(confirmParams: confirmParams)
+        let firstConfirmResult = await sut.confirm()
+        XCTAssertEqual(firstConfirmResult, .completed)
+        
+        // Attempting to confirm again should fail
+        let secondConfirmResult = await sut.confirm()
+        guard case let .failed(error) = secondConfirmResult else {
+            XCTFail("Expected second confirm to fail after the intent has already been confirmed.")
+            return
+        }
+        XCTAssertEqual((error as! PaymentSheetError).debugDescription, PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription)
+    }
+
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
@@ -304,5 +455,16 @@ extension EmbeddedPaymentMethodsView {
 
     func getRowButton(accessibilityIdentifier: String) -> RowButton {
         return rowButtons.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
+    }
+}
+
+extension PaymentSheetResult: Equatable {
+    public static func == (lhs: StripePaymentSheet.PaymentSheetResult, rhs: StripePaymentSheet.PaymentSheetResult) -> Bool {
+        switch (lhs, rhs) {
+        case (.completed, .completed): return true
+        case let (.failed(lhsError), .failed(rhsError)): return lhsError.nonGenericDescription == rhsError.nonGenericDescription
+        case (.canceled, .canceled): return true
+        default: return false
+        }
     }
 }

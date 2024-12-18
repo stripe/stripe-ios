@@ -45,6 +45,33 @@ class EmbeddedPlaygroundViewController: UIViewController {
         return indicator
     }()
 
+#if DEBUG
+    private lazy var growButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
+        button.layer.cornerRadius = 5.0
+        button.clipsToBounds = true
+        button.setTitle("Test Grow", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isEnabled = true
+        button.addTarget(self, action: #selector(testGrow), for: .touchUpInside)
+        return button
+    }()
+    private lazy var shrinkButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
+        button.layer.cornerRadius = 5.0
+        button.clipsToBounds = true
+        button.setTitle("Test Shrink", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isEnabled = true
+        button.addTarget(self, action: #selector(testShrink), for: .touchUpInside)
+        return button
+    }()
+#endif
+
     private lazy var checkoutButton: UIButton = {
         let checkoutButton = UIButton(type: .system)
         checkoutButton.backgroundColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
@@ -56,6 +83,19 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.isEnabled = embeddedPaymentElement?.paymentOption != nil
         checkoutButton.addTarget(self, action: #selector(pay), for: .touchUpInside)
         return checkoutButton
+    }()
+    
+    private lazy var clearPaymentOptionButton: UIButton = {
+        let resetButton = UIButton(type: .system)
+        resetButton.backgroundColor = .systemGray5
+        resetButton.layer.cornerRadius = 5.0
+        resetButton.clipsToBounds = true
+        resetButton.setTitle("Clear payment option", for: .normal)
+        resetButton.setTitleColor(.label, for: .normal)
+        resetButton.accessibilityIdentifier = "Clear payment option"
+        resetButton.translatesAutoresizingMaskIntoConstraints = false
+        resetButton.addTarget(self, action: #selector(clearSelection), for: .touchUpInside)
+        return resetButton
     }()
 
     private let settingsViewContainer = UIStackView()
@@ -125,13 +165,29 @@ class EmbeddedPlaygroundViewController: UIViewController {
         view.addSubview(scrollView)
 
         // All our content is in a stack view
-        let stackView = UIStackView(arrangedSubviews: [settingsViewContainer, embeddedPaymentElement.view, paymentOptionView, checkoutButton])
+        let stackView = UIStackView(arrangedSubviews: [
+            settingsViewContainer,
+            embeddedPaymentElement.view,
+            paymentOptionView,
+            checkoutButton,
+            clearPaymentOptionButton
+        ])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = .init(top: 0, left: 16, bottom: 0, right: 16)
+        stackView.layoutMargins = .init(top: 0, left: 16, bottom: 16, right: 16)
         stackView.spacing = 16
         scrollView.addSubview(stackView)
+
+#if DEBUG
+        let hStack = UIStackView(arrangedSubviews: [shrinkButton, growButton])
+        hStack.axis = .horizontal
+        hStack.translatesAutoresizingMaskIntoConstraints = false
+        hStack.isLayoutMarginsRelativeArrangement = true
+        hStack.spacing = 16
+        hStack.distribution = .fillEqually
+        stackView.addArrangedSubview(hStack)
+#endif
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -145,6 +201,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
             checkoutButton.heightAnchor.constraint(equalToConstant: 45),
+            clearPaymentOptionButton.heightAnchor.constraint(equalToConstant: 45)
         ])
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
@@ -190,7 +247,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
-    
+
     @objc func pay() {
         Task { @MainActor in
             guard let embeddedPaymentElement else { return }
@@ -206,6 +263,18 @@ class EmbeddedPlaygroundViewController: UIViewController {
                 break
             }
         }
+    }
+#if DEBUG
+    @objc func testGrow() {
+        self.embeddedPaymentElement?.testGrow()
+    }
+    @objc func testShrink() {
+        self.embeddedPaymentElement?.testShrink()
+    }
+#endif
+
+    @objc func clearSelection() {
+        embeddedPaymentElement?.clearPaymentOption()
     }
 
 }

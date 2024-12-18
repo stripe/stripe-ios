@@ -107,21 +107,44 @@ extension CustomerSessionAdapter {
         return stripePaymentMethodId
     }
 
-    func fetchSelectedPaymentOption(for customerId: String) -> CustomerPaymentOption? {
+    func fetchSelectedPaymentOption(for customerId: String, customer: ElementsCustomer? = nil) -> CustomerPaymentOption? {
+        // if opted in to the "set as default" feature, try to get default payment method from elements session
+        if configuration.allowsSetAsDefaultPM {
+            guard let customer = customer,
+                 let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return nil }
+            return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+        }
+
         return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
     }
 
-    func detachPaymentMethod(paymentMethodId: String) async throws {
+    func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {
+
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
         return try await withCheckedThrowingContinuation({ continuation in
-            self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(paymentMethodId,
-                                                                             customerId: cachedCustomerSessionClientSecret.customerId,
-                                                                             fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey) { error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
+            if paymentMethod.type == .card {
+                self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                    paymentMethod.stripeId,
+                    customerId: cachedCustomerSessionClientSecret.customerId,
+                    fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey,
+                    withCustomerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret.clientSecret) { error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                            return
+                        }
+                        continuation.resume()
                 }
-                continuation.resume()
+            } else {
+                configuration.apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey,
+                    withCustomerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret.clientSecret) { error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                            return
+                        }
+                        continuation.resume()
+                    }
             }
         })
     }

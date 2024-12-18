@@ -941,6 +941,34 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
+    
+    func testPaymentSheet_LPM_InstantDebits_only_promotion() {
+        UserDefaults.standard.setValue(true, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"link\"",
+                        "<currency>": "\"USD\"",
+                    ]
+                )
+            }
+        )
+        stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+        stubConsumerSession()
+
+        preparePaymentSheet(
+            currency: "usd",
+            override_payment_methods_types: ["link"],
+            automaticPaymentMethods: false,
+            useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
 
     func testPaymentSheet_LPM_upi_only() {
         stubSessions(

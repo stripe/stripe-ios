@@ -136,6 +136,8 @@
 
 "Not %@?" = "Ne %@?";
 
+"Only card brand can be changed." = "Var mainīt tikai kartes zīmolu.";
+
 "Open your UPI app to approve your payment within %@" = "Atveriet UPI lietotni, lai apstiprinātu savu maksājumu %@";
 
 "Or" = "Vai";
@@ -179,8 +181,6 @@
 "Remove card?" = "Noņemt karti?";
 
 "Remove linked account" = "Noņemt piesaistītu kontu";
-
-"Remove payment method" = "Noņemt maksājumu veidu";
 
 "Resend code" = "Nosūtīt kodu vēlreiz";
 

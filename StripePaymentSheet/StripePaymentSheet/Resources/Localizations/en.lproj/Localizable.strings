@@ -164,6 +164,12 @@ re-entering the security code (CVV/CVC). */
 /* Select a bank dropdown for FPX */
 "FPX Bank" = "FPX Bank";
 
+/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>";
+
+/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Get %@ back when you pay with your bank. <terms>See terms</terms>";
+
 /* Bacs Debit mandate text */
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
@@ -208,6 +214,9 @@ re-entering the security code (CVV/CVC). */
 
 /* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
 "Not %@?" = "Not %@?";
+
+/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+"Only card brand can be changed." = "Only card brand can be changed.";
 
 /* Countdown timer text on a screen asking the user to approve a payment */
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
@@ -276,9 +285,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Title for a button that when tapped removes a linked bank account. */
 "Remove linked account" = "Remove linked account";
-
-/* Title shown above a view containing a customer's payment method that they can delete */
-"Remove payment method" = "Remove payment method";
 
 /* Label for a button that re-sends the a login code when tapped */
 "Resend code" = "Resend code";

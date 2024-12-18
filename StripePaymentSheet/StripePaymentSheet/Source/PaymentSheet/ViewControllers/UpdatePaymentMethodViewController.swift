@@ -17,7 +17,7 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams) async throws
-    func didDismiss(_: UpdatePaymentMethodViewController)
+    func shouldCloseSheet(_: UpdatePaymentMethodViewController)
 }
 
 /// For internal SDK use only
@@ -192,7 +192,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
-        delegate?.didDismiss(_: self)
+        delegate?.shouldCloseSheet(_: self)
     }
 
     private func navigationBarStyle() -> SheetNavigationBar.Style {
@@ -266,7 +266,9 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_: SheetNavigationBar) {
-        dismiss()
+        guard let bottomVc = parent as? BottomSheetViewController else { return }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .closeEditScreen))
+        _ = bottomVc.popContentViewController()
     }
 
 }

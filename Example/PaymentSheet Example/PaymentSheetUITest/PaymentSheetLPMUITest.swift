@@ -1027,7 +1027,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
 
     func testCardBrandChoiceUpdateAndRemove() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .on
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning

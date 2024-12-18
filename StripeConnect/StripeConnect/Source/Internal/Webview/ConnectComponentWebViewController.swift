@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+import StripeFinancialConnections
 @_spi(STP) import StripeUICore
 import UIKit
 import WebKit
@@ -28,6 +29,9 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     /// Manages authenticated web views
     private let authenticatedWebViewManager: AuthenticatedWebViewManager
 
+    /// Presents the FinancialConnectionsSheet
+    private let financialConnectionsPresenter: FinancialConnectionsPresenter
+
     private lazy var setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init(analyticsClient: analyticsClient)
 
     private var didFailLoadWithError: (Error) -> Void
@@ -49,13 +53,15 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         // Should only be overridden for tests
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
-        authenticatedWebViewManager: AuthenticatedWebViewManager = .init()
+        authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
+        financialConnectionsPresenter: FinancialConnectionsPresenter = .init()
     ) {
         self.componentManager = componentManager
         self.notificationCenter = notificationCenter
         self.webLocale = webLocale
         self.authenticatedWebViewManager = authenticatedWebViewManager
         self.didFailLoadWithError = didFailLoadWithError
+        self.financialConnectionsPresenter = financialConnectionsPresenter
 
         let config = WKWebViewConfiguration()
 
@@ -66,13 +72,13 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         // embedded in the web view instead of full screen. Also works for
         // embedded YouTube videos.
         config.allowsInlineMediaPlayback = true
-
+        let allowedHosts = (StripeConnectConstants.allowedHosts + [self.componentManager.baseURL.host]).compactMap({ $0 })
+        let analyticsClient = analyticsClientFactory(.init(
+            params: ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient, publicKeyOverride: componentManager.publicKeyOverride)))
         super.init(
             configuration: config,
-            analyticsClient: analyticsClientFactory(.init(
-                apiClient: componentManager.apiClient,
-                component: componentType
-            ))
+            analyticsClient: analyticsClient,
+            allowedHosts: allowedHosts
         )
 
         // Setup views
@@ -97,7 +103,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         if loadContent {
             activityIndicator.startAnimating()
             do {
-                let url = try ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient).url()
+                let url = try ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient, publicKeyOverride: componentManager.publicKeyOverride).url(baseURL: componentManager.baseURL)
                 analyticsClient.loadStart = .now
                 webView.load(.init(url: url))
             } catch {
@@ -115,7 +121,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                      // Should only be overridden for tests
                      notificationCenter: NotificationCenter = NotificationCenter.default,
                      webLocale: Locale = Locale.autoupdatingCurrent,
-                     authenticatedWebViewManager: AuthenticatedWebViewManager = .init()) {
+                     authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
+                     financialConnectionsPresenter: FinancialConnectionsPresenter = .init()) {
         self.init(componentManager: componentManager,
                   componentType: componentType,
                   loadContent: loadContent,
@@ -124,7 +131,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                   didFailLoadWithError: didFailLoadWithError,
                   notificationCenter: notificationCenter,
                   webLocale: webLocale,
-                  authenticatedWebViewManager: authenticatedWebViewManager)
+                  authenticatedWebViewManager: authenticatedWebViewManager,
+                  financialConnectionsPresenter: financialConnectionsPresenter)
     }
 
     required init?(coder: NSCoder) {
@@ -151,7 +159,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         super.webViewDidFinishNavigation(to: url)
 
         guard let url,
-              url.absoluteStringRemovingParams == StripeConnectConstants.connectJSBaseURL.absoluteString else {
+              url.absoluteStringRemovingParams == componentManager.baseURL.absoluteString else {
             analyticsClient.log(event: UnexpectedNavigationEvent(metadata: .init(url: url)))
             return
         }
@@ -172,7 +180,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         // If the component web page fails to load with an HTTP error, send a
         // load failure to event
         if let response = navigationResponse.response as? HTTPURLResponse,
-           response.url?.absoluteStringRemovingParams == StripeConnectConstants.connectJSBaseURL.absoluteString,
+           response.url?.absoluteStringRemovingParams == componentManager.baseURL.absoluteString,
            response.hasErrorStatus {
             let error = HTTPStatusError(errorCode: response.statusCode)
             didFailLoad(error: error)
@@ -262,6 +270,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(OpenAuthenticatedWebViewMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
             self?.openAuthenticatedWebView(payload)
         })
+        addMessageHandler(OpenFinancialConnectionsMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
+            self?.openFinancialConnections(payload)
+        })
     }
 
     /// Adds NotificationCenter observers
@@ -302,6 +313,21 @@ private extension ConnectComponentWebViewController {
             } catch {
                 analyticsClient.logAuthenticatedWebViewEventComplete(id: payload.id, error: error)
             }
+        }
+    }
+
+    func openFinancialConnections(_ args: OpenFinancialConnectionsMessageHandler.Payload) {
+        Task { @MainActor in
+            let result = await financialConnectionsPresenter.presentForToken(
+                apiClient: componentManager.apiClient,
+                clientSecret: args.clientSecret,
+                connectedAccountId: args.connectedAccountId,
+                from: self
+            )
+
+            sendMessage(SetCollectMobileFinancialConnectionsResult.sender(
+                value: result.toSenderValue(id: args.id, analyticsClient: analyticsClient)
+            ))
         }
     }
 }

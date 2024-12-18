@@ -1,5 +1,5 @@
 {
-  "originHash" : "2ad13697f5d60ad400147e34535361f52e72d2f7a280df77bb3c3521cc5623bc",
+  "originHash" : "f16dd06a8f672ea0982887741f3e9e8b32d2e926529cffefd0ba4f377c7018ab",
   "pins" : [
     {
       "identity" : "capture-core-sp",
@@ -35,7 +35,25 @@
         "branch" : "stripe-mock",
         "revision" : "5e90dfd42873ab8de026735d0725ad618b8ca7dd"
       }
+    },
+    {
+      "identity" : "swift-custom-dump",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-custom-dump",
+      "state" : {
+        "revision" : "82645ec760917961cfa08c9c0c7104a57a0fa4b1",
+        "version" : "1.3.3"
+      }
+    },
+    {
+      "identity" : "xctest-dynamic-overlay",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
+      "state" : {
+        "revision" : "a3f634d1a409c7979cabc0a71b3f26ffa9fc8af1",
+        "version" : "1.4.3"
+      }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

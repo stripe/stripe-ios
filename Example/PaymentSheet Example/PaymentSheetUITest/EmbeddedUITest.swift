@@ -309,7 +309,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Switch from 1001 to 4242
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.otherElements["Card Brand Dropdown"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.swipeUp()
         app.buttons["Done"].waitForExistenceAndTap()
@@ -355,7 +355,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Remove selected 4242 card
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
         app.buttons["Done"].waitForExistenceAndTap()
 
@@ -367,7 +368,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Remove 6789 & verify
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Bank account •••• 6789", alertTitle: "Remove bank account?", buttonToTap: "Remove")
 
         XCTAssertFalse(card4242Button.waitForExistence(timeout: 3.0))
@@ -375,13 +376,13 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
         let events = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ !$0.starts(with: "luxe") })
-            .suffix(5)
+            .suffix(7)
 
         XCTAssertEqual(
             events,
             ["mc_embedded_paymentoption_savedpm_select",
-             "mc_carousel_payment_method_tapped", "mc_embedded_paymentoption_removed",
-             "mc_carousel_payment_method_tapped", "mc_embedded_paymentoption_removed",
+             "mc_carousel_payment_method_tapped", "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
+             "mc_carousel_payment_method_tapped", "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
             ]
         )
     }
@@ -425,7 +426,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Remove bank acct. while it isn't selected
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Bank account •••• 6789", alertTitle: "Remove bank account?", buttonToTap: "Remove")
         app.buttons["Done"].waitForExistenceAndTap()
 
@@ -438,7 +440,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Remove 4242
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
 
         XCTAssertFalse(card4242Button.waitForExistence(timeout: 3.0))
@@ -482,7 +484,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Delete one payment method so we only have one left, we should not auto select the last remaining saved PM
         XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["chevron"].firstMatch.waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         dismissAlertView(alertBody: "Visa •••• 4242", alertTitle: "Remove card?", buttonToTap: "Remove")
         XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
         
@@ -549,7 +552,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Open card and cancel, should reset selection to saved card
         app.buttons["New card"].waitForExistenceAndTap()
-        app.buttons["Close"].waitForExistenceAndTap()
+        let _ = app.buttons["Close"].waitForExistence(timeout: 10)
+        XCTAssertTrue(app.buttons["New card"].isSelected)
+        app.buttons["Close"].tap()
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
         XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
@@ -947,6 +952,50 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         challengeCodeTextField.typeText("424242" + XCUIKeyboardKey.return.rawValue)
         app.buttons["Submit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+    
+    func testClearPaymentOption() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        // As a returning customer, a saved payment method should be automatically selected.
+        // Verify that a payment method (e.g. "•••• 4242") is displayed right away.
+        let paymentMethodLabel = app.staticTexts["Payment method"]
+        XCTAssertTrue(paymentMethodLabel.waitForExistence(timeout: 10))
+        let initiallySelectedPM = paymentMethodLabel.label
+        XCTAssertTrue(initiallySelectedPM.contains("••••"), "Expected a saved card to be selected, but got: \(initiallySelectedPM)")
+
+        // Clear the selection
+        let clearButton = app.buttons["Clear payment option"]
+        XCTAssertTrue(clearButton.waitForExistence(timeout: 10))
+        clearButton.tap()
+
+        // After clearing, there should be no "Payment method" label.
+        XCTAssertFalse(paymentMethodLabel.exists)
+
+        // Now select a different payment method, "Cash App Pay"
+        let cashAppPayButton = app.buttons["Cash App Pay"]
+        XCTAssertTrue(cashAppPayButton.waitForExistence(timeout: 10))
+        cashAppPayButton.tap()
+
+        // Verify that "Cash App Pay" is now selected and displayed
+        XCTAssertTrue(paymentMethodLabel.waitForExistence(timeout: 10))
+        XCTAssertEqual(paymentMethodLabel.label, "Cash App Pay")
+        XCTAssertTrue(cashAppPayButton.isSelected)
+        
+        // Clear selection again
+        clearButton.tap()
+
+        // Verify that no payment method is selected after the second reset
+        XCTAssertFalse(paymentMethodLabel.exists)
+        XCTAssertFalse(cashAppPayButton.isSelected)
     }
 
     func dismissAlertView(alertBody: String, alertTitle: String, buttonToTap: String) {

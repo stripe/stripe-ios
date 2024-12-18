@@ -56,8 +56,6 @@ class SavedPaymentMethodCollectionView: UICollectionView {
 // MARK: - Cells
 
 protocol PaymentOptionCellDelegate: AnyObject {
-    func paymentOptionCellDidSelectRemove(
-        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
     func paymentOptionCellDidSelectEdit(
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell)
 }
@@ -85,12 +83,12 @@ extension SavedPaymentMethodCollectionView {
             return ShadowedRoundedRectangle(appearance: appearance)
         }()
         lazy var accessoryButton: CircularButton = {
-            let button = CircularButton(style: .remove,
-                                        dangerColor: appearance.colors.danger)
-            button.backgroundColor = appearance.colors.danger
+            let button = CircularButton(style: .edit)
+            button.backgroundColor = UIColor.dynamic(
+                light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
+            button.iconColor = appearance.colors.icon
             button.isAccessibilityElement = true
-            button.accessibilityLabel = String.Localized.remove
-            button.accessibilityIdentifier = "Remove"
+            button.accessibilityLabel = String.Localized.edit
             return button
         }()
 
@@ -112,20 +110,14 @@ extension SavedPaymentMethodCollectionView {
 
         var cbcEligible: Bool = false
         var allowsPaymentMethodRemoval: Bool = true
-        var alternateUpdatePaymentMethodNavigation: Bool = false
 
-        /// Indicates whether the cell should be editable or just removable.
-        /// If the card is a co-branded card and the merchant is eligible for card brand choice, then
-        /// the cell should be editable. Otherwise, it should be just removable.
-        var shouldAllowEditing: Bool {
-            if alternateUpdatePaymentMethodNavigation {
-                return UpdatePaymentMethodViewModel.supportedPaymentMethods.contains { type in
-                    viewModel?.savedPaymentMethod?.type == type
-                }
+        /// Indicates whether the cell for a saved payment method should display the edit icon.
+        /// True if payment methods can be removed or edited (will update this to include allowing set as default)
+        var showEditIcon: Bool {
+            guard UpdatePaymentMethodViewModel.supportedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
+                fatalError("Payment method does not match supported saved payment methods.")
             }
-            else {
-                return (viewModel?.isCoBrandedCard ?? false) && cbcEligible
-            }
+            return allowsPaymentMethodRemoval || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
         }
 
         // MARK: - UICollectionViewCell
@@ -218,14 +210,13 @@ extension SavedPaymentMethodCollectionView {
 
         // MARK: - Internal Methods
 
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, alternateUpdatePaymentMethodNavigation: Bool) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
             self.cbcEligible = cbcEligible
             self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
-            self.alternateUpdatePaymentMethodNavigation = alternateUpdatePaymentMethodNavigation
             update()
         }
 
@@ -247,10 +238,8 @@ extension SavedPaymentMethodCollectionView {
         // MARK: - Private Methods
         @objc
         private func didSelectAccessory() {
-            if shouldAllowEditing {
+            if showEditIcon {
                 delegate?.paymentOptionCellDidSelectEdit(self)
-            } else if allowsPaymentMethodRemoval {
-                delegate?.paymentOptionCellDidSelectRemove(self)
             }
         }
 
@@ -285,6 +274,7 @@ extension SavedPaymentMethodCollectionView {
         private func update() {
             // Setting the image ends up implicitly using UITraitCollection.current, which is undefined in this context, so wrap this in `traitCollection.performAsCurrent` to ensure it uses this view's trait collection
             traitCollection.performAsCurrent {
+                let overrideUserInterfaceStyle: UIUserInterfaceStyle = appearance.colors.componentBackground.isDark ? .dark : .light
                 if let viewModel = viewModel {
                     switch viewModel {
                     case .saved(let paymentMethod):
@@ -296,20 +286,20 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage()
+                        paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
                         label.text = String.Localized.apple_pay
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage()
+                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage()
+                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                         paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )
@@ -336,19 +326,8 @@ extension SavedPaymentMethodCollectionView {
                 }
 
                 if isRemovingPaymentMethods {
-                    if case .saved = viewModel {
-                        if shouldAllowEditing {
-                            accessoryButton.isHidden = false
-                            accessoryButton.set(style: .edit, with: appearance.colors.danger)
-                            accessoryButton.backgroundColor = UIColor.dynamic(
-                                light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
-                            accessoryButton.iconColor = appearance.colors.icon
-                        } else if allowsPaymentMethodRemoval {
-                            accessoryButton.isHidden = false
-                            accessoryButton.set(style: .remove, with: appearance.colors.danger)
-                            accessoryButton.backgroundColor = appearance.colors.danger
-                            accessoryButton.iconColor = appearance.colors.danger.contrastingColor
-                        }
+                    if case .saved = viewModel, showEditIcon {
+                        accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
 

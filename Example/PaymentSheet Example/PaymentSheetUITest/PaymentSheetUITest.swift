@@ -330,6 +330,11 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
+        // circularEditButton shows up in the view hierarchy, but it's not actually on the screen or tappable so we scroll a little
+        let startCoordinate = app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
+        startCoordinate.press(forDuration: 0.1, thenDragTo: app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
+
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
         removeButton.tap()
@@ -338,6 +343,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
+        XCTAssertTrue(app.staticTexts["Select your payment method"].waitForExistence(timeout: 3.0))
         XCTAssertEqual(app.cells.count, 3) // Should be "Add", "Apple Pay", "Link"
 
         // Give time for analyticsLog to receive mc_custom_paymentoption_removed
@@ -1169,6 +1175,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
         editButton.tap()
 
+        app.buttons["CircularButton.Edit"].waitForExistenceAndTap()
+
         let removeButton = app.buttons["Remove"]
         XCTAssertTrue(removeButton.waitForExistence(timeout: 60.0))
         removeButton.tap()
@@ -1177,8 +1185,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        // Should still show "+ Add" and Link
-        XCTAssertEqual(app.cells.count, 2)
+        // Should still show "+ Add". Should show Link for a split second, but then it fades out because there is no wallet or other saved pm
+        XCTAssertTrue(app.staticTexts["+ Add"].waitForExistence(timeout: 3))
     }
 }
 
@@ -1451,13 +1459,23 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
         // Remove one saved PM
-        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Edit")?.tap())
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Should be kicked out of edit mode now that we have one saved PM
         XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
         XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
+        app.buttons["Close"].waitForExistenceAndTap()
+
+        // Reload w/ same customer & ensure 5555 card was detached
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Pay $50.99"].isEnabled)
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 1))
+        XCTAssertFalse(app.staticTexts["•••• 5555"].waitForExistence(timeout: 1))
     }
 
     func test_RemoveLastSavedPaymentMethodFlowController_clientConfig() throws {
@@ -1533,7 +1551,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
 
         // Remove one saved PM
-        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
+        XCTAssertNotNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Edit")?.tap())
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Should be kicked out of edit mode now that we have one saved PM
@@ -2461,7 +2480,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
-    
+
     func testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
@@ -2566,7 +2585,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
     func testDefaultSPMHorizontalNavigation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .on
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning
@@ -2582,7 +2600,6 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
     }
     func testDefaultSPMVerticalNavigation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .on
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning
@@ -2595,22 +2612,6 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Edit"].waitForExistenceAndTap()
 
         XCTAssertEqual(app.buttons.matching(identifier: "chevron").count, 2)
-    }
-    func testDefaultSPMNavigationFlagOff() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.alternateUpdatePaymentMethodNavigation = .off
-        settings.merchantCountryCode = .FR
-        settings.currency = .eur
-        settings.customerMode = .returning
-        settings.layout = .horizontal
-
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-
-        app.buttons["Edit"].waitForExistenceAndTap()
-
-        XCTAssertEqual(app.buttons.matching(identifier: "CircularButton.Edit").count, 1)
     }
 }
 
@@ -2706,7 +2707,7 @@ extension PaymentSheetUITestCase {
         }
 
         loadPlayground(app, settings)
-        
+
         if uiStyle == .flowController {
             app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
             app.buttons["+ Add"].waitForExistenceAndTap()
@@ -2743,7 +2744,7 @@ extension PaymentSheetUITestCase {
             XCTAssertTrue(app.staticTexts["•••• 6789"].waitForExistence(timeout: 10))
             app.buttons["Confirm"].waitForExistenceAndTap(timeout: 10)
         }
-        
+
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 

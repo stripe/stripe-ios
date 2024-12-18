@@ -104,6 +104,13 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        verifyIntegration()
+        
+        // Do not process any update calls if we have already successfully confirmed an intent
+        guard !hasConfirmedIntent else {
+            return .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
+        }
+        
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
         // Cancel the old task and let it finish so that merchants receive update results in order
         latestUpdateTask?.cancel()
@@ -190,6 +197,43 @@ public final class EmbeddedPaymentElement {
         return await _confirm().result
     }
 
+    /// Sets the currently selected payment option to `nil`.
+    public func clearPaymentOption() {
+        verifyIntegration()
+        
+        // If a payment has been successfully completed, we don't allow clearing the payment option.
+        guard !hasConfirmedIntent else { return }
+        
+        // Early exit for a nil payment option, don't notify delegate since no change in payment option can occur
+        guard paymentOption != nil else { return }
+        
+        // Clear out the form controller to clear any payment option
+        formViewController = nil
+        
+        // Reset the selection on the `embeddedPaymentMethodsView`
+        embeddedPaymentMethodsView.resetSelection()
+        
+#if DEBUG
+        // Clear the testable payment option (only populated during unit testing)
+        _test_paymentOption = nil
+#endif
+        
+        // Notify the delegate that the payment option has changed
+        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+    }
+
+    #if DEBUG
+    public func testGrow() {
+        verifyIntegration()
+        stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
+        self.embeddedPaymentMethodsView.testGrow()
+    }
+    public func testShrink() {
+        verifyIntegration()
+        stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
+        self.embeddedPaymentMethodsView.testShrink()
+    }
+    #endif
     // MARK: - Internal
 
     internal private(set) var containerView: EmbeddedPaymentElementContainerView
@@ -201,6 +245,8 @@ public final class EmbeddedPaymentElement {
     internal var savedPaymentMethods: [STPPaymentMethod]
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     internal var formViewController: EmbeddedFormViewController?
+    /// Indicates if a payment has been successfully completed.
+    internal var hasConfirmedIntent = false
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif

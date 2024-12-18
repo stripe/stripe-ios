@@ -41,8 +41,8 @@ class CustomerSheetDataSource {
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
                 let customerId = try await customerSessionClientSecret.customerId
-                let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId)
                 let elementSession = try await elementsSessionResult
+                let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, customer: elementSession.customer)
 
                 // Override with specs from elementSession
                 _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
@@ -163,12 +163,12 @@ extension CustomerSheetDataSource {
         }
     }
 
-    func detachPaymentMethod(paymentMethodId: String) async throws {
+    func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {
         switch dataSource {
         case .customerAdapter(let customerAdapter):
-            try await customerAdapter.detachPaymentMethod(paymentMethodId: paymentMethodId)
+            try await customerAdapter.detachPaymentMethod(paymentMethodId: paymentMethod.stripeId)
         case .customerSession(let customerSessionAdapter):
-            try await customerSessionAdapter.detachPaymentMethod(paymentMethodId: paymentMethodId)
+            try await customerSessionAdapter.detachPaymentMethod(paymentMethod: paymentMethod)
         }
     }
 

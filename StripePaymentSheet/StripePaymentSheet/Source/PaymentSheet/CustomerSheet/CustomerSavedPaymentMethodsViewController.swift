@@ -104,8 +104,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
-                isTestMode: configuration.apiClient.isTestmode,
-                alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
+                isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
@@ -658,8 +657,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: isApplePayEnabled,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
-                isTestMode: configuration.apiClient.isTestmode,
-                alternateUpdatePaymentMethodNavigation: configuration.alternateUpdatePaymentMethodNavigation
+                isTestMode: configuration.apiClient.isTestmode
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
@@ -882,7 +880,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                 return false
             }
             do {
-                try await customerSheetDataSource.detachPaymentMethod(paymentMethodId: paymentMethod.stripeId)
+                try await customerSheetDataSource.detachPaymentMethod(paymentMethod: paymentMethod)
             } catch {
                 // Communicate error to consumer
                 self.set(error: error)
@@ -931,5 +929,10 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method")
         }
         return try await customerSheetDataSource.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
+    }
+
+    func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController) {
+        self.processingInFlight = false
+        self.handleDismissSheet(shouldDismissImmediately: true)
     }
 }
