@@ -44,6 +44,14 @@ $TEMP_DIR = Dir.mktmpdir('stripe-docs')
 $TEMP_BUILD_DIR = Dir.mktmpdir('stripe-docs-build')
 $TEMP_PUBLISH_DIR = Dir.mktmpdir('stripe-docs-publish')
 $ALL_MODULES = YAML.load_file(File.join_if_safe($ROOT_DIR, 'modules.yaml'))['modules']
+
+# Generates docs for anything gated behind `@_spi(SpiName)` in the source code.
+# NOTE: You must manually call out in any affected docstrings that the content 
+# is experimental or beta and should be imported using `@_spi(SpiName)`.
+$SPI_ALLOWLIST = [
+  'PrivateBetaConnect'
+]
+
 # The base path for the generated docs: e.g. https://stripe.dev/stripe-ios
 $HOSTING_BASE_PATH = '/stripe-ios/'
 
@@ -155,6 +163,16 @@ def build_module_docs(modules, release_version, docs_root_directory)
       `mv '#{readme_temp_file_generated}' '#{readme_temp_file}'`
     end
 
+    # Remove allow-listed SPI gates
+    swift_files = Dir.glob("#{docs_root_directory}/**/*.swift")
+    swift_files.each do |f|
+      content = File.read(f)
+      $SPI_ALLOWLIST.each do |spi|
+        content = content.gsub(/@_spi(#{spi})/, '')
+      end
+      File.open(jsf, 'w') { |file| file.puts content }
+    end
+
     info "Executing xcodebuild for #{m['framework_name']}..."
 
     # Build the docs
@@ -216,15 +234,6 @@ def build_index_page(modules, release_version, docs_root_directory)
   `rsync -av "#{temp_docc_dir}/build/"* "#{docs_root_directory}/docs/"`
   # Copy 404 redirect page
   `cp "#{$SCRIPT_DIR}/docs/404.html" "#{docs_root_directory}/docs/404.html"`
-
-  # HACK: Remove all deprecation warnings.
-  # Remove this once DocC is fixed: https://github.com/apple/swift-docc/issues/450
-  js_files = Dir.glob("#{docs_root_directory}/docs/**/*.json")
-  js_files.each do |jsf|
-    content = File.read(jsf)
-    content = content.gsub(/"deprecated":true/, '"deprecated":false')
-    File.open(jsf, 'w') { |file| file.puts content }
-  end
 
   # Clean up the bogus index.html file created by DocC
   File.delete("#{docs_root_directory}/docs/index.html")
