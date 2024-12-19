@@ -223,15 +223,10 @@ public final class EmbeddedPaymentElement {
     }
 
     #if DEBUG
-    public func testGrow() {
+    public func testHeightChange() {
         verifyIntegration()
         stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
-        self.embeddedPaymentMethodsView.testGrow()
-    }
-    public func testShrink() {
-        verifyIntegration()
-        stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
-        self.embeddedPaymentMethodsView.testShrink()
+        self.embeddedPaymentMethodsView.testHeightChange()
     }
     #endif
     // MARK: - Internal
