@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_RPw8M7sFSoX247ssKnPdC85B8ZHlSPSl0bywhLAj5AieOQF&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt&locale=en-US&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_RQJbf8JzqDNJArZFz3LafrzzB9SmM3jvfnLSHFH0lHGvoCr&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&type=deferred_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=hR8atR6hCGAt_an6EQ3_LXPEmi8Wvaaa_en_Yy3BTT5bFkDfp36MqmLoKSLmW7_tHornRM1-DA%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=h_0Ol_HFLVeGzhA38qEj3CORnmVswRVxguCkH-jQ95XYRHh728CcAaRWaSi8iHvHKT_bubKi5g%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_ToRt1Pi1tuwxYU
-Content-Length: 26528
+request-id: req_oznW7CBQqCVT9K
+Content-Length: 26581
 Vary: Origin
-Date: Tue, 17 Dec 2024 19:16:31 GMT
+Date: Wed, 18 Dec 2024 19:31:55 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -95,7 +95,7 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_payrexx" : false,
     "elements_appearance_payment_accordion_overrides" : false,
     "elements_enable_cb_apple_pay_for_connect_platforms" : true,
-    "link_purchase_protections_rollout" : true,
+    "link_purchase_protections_rollout" : false,
     "elements_enable_external_payment_method_walley" : false,
     "elements_enable_external_payment_method_mb_way" : false,
     "id_bank_transfers_v1_integration" : false,
@@ -196,7 +196,7 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_mybank" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1auGSvswxn8",
+  "session_id" : "elements_session_1aptoY9Mc7Y",
   "card_installments_enabled" : false,
   "account_id" : "acct_1JtgfQKG6vc7r7YC",
   "merchant_id" : "acct_1JtgfQKG6vc7r7YC",
@@ -229,9 +229,9 @@ x-content-type-options: nosniff
     "paypal_merchant_id" : "AGPH92J9HME62"
   },
   "experiments_data" : {
-    "arb_id" : "cb03e1d3-9531-4db0-8ed6-617f914a2de4",
+    "arb_id" : "ac214725-f980-425c-8768-7a55ccd7083d",
     "experiment_metadata" : {
-      "seed" : "f3448deec372427399ebdbd2c04cb02d0df3f69e08c5847cd5bb2ce97dd32fdb",
+      "seed" : "f1916bb31dc7c0ad1ca6f26d4e0f71be1e8b53eb984021cca15450dded788c5d",
       "semi_dominant_payment_methods" : [
 
       ]
@@ -291,6 +291,7 @@ x-content-type-options: nosniff
     "link_session_storage_login_enabled" : true,
     "link_payment_element_enable_webauthn_login" : true,
     "link_payment_element_smart_defaults_enabled" : false,
+    "link_mobile_use_attestation_endpoints" : false,
     "link_authenticated_change_event_enabled" : false,
     "link_bank_onboarding_enabled" : false,
     "link_hcaptcha_rqdata" : null,
@@ -664,7 +665,7 @@ x-content-type-options: nosniff
           },
           "branch_code" : ""
         },
-        "id" : "pm_1QX6FtKG6vc7r7YCtX4w1yWa",
+        "id" : "pm_1QXSyKKG6vc7r7YCur7xQJM5",
         "billing_details" : {
           "email" : "email@email.com",
           "phone" : "555-555-5555",
@@ -679,10 +680,10 @@ x-content-type-options: nosniff
           }
         },
         "livemode" : false,
-        "created" : 1734462989,
+        "created" : 1734550312,
         "allow_redisplay" : "unspecified",
         "type" : "sepa_debit",
-        "customer" : "cus_RPw8MHNeK0Iwtn"
+        "customer" : "cus_RQJbQ3CNo3Zb6Q"
       }
     ],
     "payment_methods_with_link_details" : [
@@ -700,7 +701,7 @@ x-content-type-options: nosniff
             },
             "branch_code" : ""
           },
-          "id" : "pm_1QX6FtKG6vc7r7YCtX4w1yWa",
+          "id" : "pm_1QXSyKKG6vc7r7YCur7xQJM5",
           "billing_details" : {
             "email" : "email@email.com",
             "phone" : "555-555-5555",
@@ -715,10 +716,10 @@ x-content-type-options: nosniff
             }
           },
           "livemode" : false,
-          "created" : 1734462989,
+          "created" : 1734550312,
           "allow_redisplay" : "unspecified",
           "type" : "sepa_debit",
-          "customer" : "cus_RPw8MHNeK0Iwtn"
+          "customer" : "cus_RQJbQ3CNo3Zb6Q"
         },
         "link_payment_details" : null
       }
@@ -726,8 +727,8 @@ x-content-type-options: nosniff
     "default_payment_method" : null,
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1734464791,
-      "id" : "cuss_1QX6FuKG6vc7r7YCniYkEQhB",
+      "api_key_expiry" : 1734552114,
+      "id" : "cuss_1QXSyMKG6vc7r7YC1NSw7IKA",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -760,8 +761,8 @@ x-content-type-options: nosniff
           "enabled" : false
         }
       },
-      "customer" : "cus_RPw8MHNeK0Iwtn",
-      "api_key" : "ek_test_YWNjdF8xSnRnZlFLRzZ2YzdyN1lDLGIwQ0VSME9zSFhwVllTNHdCaTBJNW41TUtiRW5HUWs_00jIEwaIfg"
+      "customer" : "cus_RQJbQ3CNo3Zb6Q",
+      "api_key" : "ek_test_YWNjdF8xSnRnZlFLRzZ2YzdyN1lDLHRhb2FyU3hSVG1SeE5KY05JV050MDdkbXZ6MHp4Qmc_00l61y0OQp"
     }
   },
   "klarna_express_config" : {
