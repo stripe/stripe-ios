@@ -143,7 +143,7 @@ import UIKit
             UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.lastAttestedDate))
         }
     }
-    
+
     /// The key to use for storing an attestation key in NSUserDefaults.
     func defaultsKeyForSetting(_ setting: SettingsKeys) -> String {
         var key = "\(setting.rawValue):\(apiClient.publishableKey ?? "unknown")"
