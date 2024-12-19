@@ -46,28 +46,16 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }()
 
 #if DEBUG
-    private lazy var growButton: UIButton = {
+    private lazy var testHeightChangeButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
         button.layer.cornerRadius = 5.0
         button.clipsToBounds = true
-        button.setTitle("Test Grow", for: .normal)
+        button.setTitle("Test Height Change", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = true
-        button.addTarget(self, action: #selector(testGrow), for: .touchUpInside)
-        return button
-    }()
-    private lazy var shrinkButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
-        button.layer.cornerRadius = 5.0
-        button.clipsToBounds = true
-        button.setTitle("Test Shrink", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.isEnabled = true
-        button.addTarget(self, action: #selector(testShrink), for: .touchUpInside)
+        button.addTarget(self, action: #selector(testHeightChange), for: .touchUpInside)
         return button
     }()
 #endif
@@ -180,13 +168,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         scrollView.addSubview(stackView)
 
 #if DEBUG
-        let hStack = UIStackView(arrangedSubviews: [shrinkButton, growButton])
-        hStack.axis = .horizontal
-        hStack.translatesAutoresizingMaskIntoConstraints = false
-        hStack.isLayoutMarginsRelativeArrangement = true
-        hStack.spacing = 16
-        hStack.distribution = .fillEqually
-        stackView.addArrangedSubview(hStack)
+        stackView.addArrangedSubview(testHeightChangeButton)
 #endif
 
         NSLayoutConstraint.activate([
@@ -265,11 +247,8 @@ class EmbeddedPlaygroundViewController: UIViewController {
         }
     }
 #if DEBUG
-    @objc func testGrow() {
-        self.embeddedPaymentElement?.testGrow()
-    }
-    @objc func testShrink() {
-        self.embeddedPaymentElement?.testShrink()
+    @objc func testHeightChange() {
+        self.embeddedPaymentElement?.testHeightChange()
     }
 #endif
 
