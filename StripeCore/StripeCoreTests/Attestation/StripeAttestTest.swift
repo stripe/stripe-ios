@@ -18,9 +18,14 @@ class StripeAttestTest: XCTestCase {
         self.mockAttestService = MockAppAttestService()
         self.stripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: apiClient)
 
+        let expectation = self.expectation(description: "Wait for setup")
         // Reset storage
-        UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
-        stripeAttest.resetKey()
+        Task { @MainActor in
+            await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
+            await stripeAttest.resetKey()
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5)
     }
 
     func testAppAttestService() async {
@@ -39,7 +44,7 @@ class StripeAttestTest: XCTestCase {
         try! await stripeAttest.attest()
         let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
         // But fail the assertion, causing the key to be reset
-        mockAttestService.shouldFailAssertionWithError = invalidKeyError
+        await mockAttestService.setShouldFailAssertionWithError(invalidKeyError)
         do {
             _ = try await stripeAttest.assert()
             XCTFail("Should not succeed")
@@ -51,11 +56,11 @@ class StripeAttestTest: XCTestCase {
 
     func testCanAttestAsMuchAsNeededInDev() async {
         // Create and attest a key in the dev environment
-        mockAttestService.attestationUsingDevelopmentEnvironment = true
+        await mockAttestService.setAttestationUsingDevelopmentEnvironment(true)
         try! await stripeAttest.attest()
         let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
         // But fail the assertion, which will cause us to try to re-attest the key
-        mockAttestService.shouldFailAssertionWithError = invalidKeyError
+        await mockAttestService.setShouldFailAssertionWithError(invalidKeyError)
         do {
             _ = try await stripeAttest.assert()
             XCTFail("Should not succeed")
@@ -74,10 +79,10 @@ class StripeAttestTest: XCTestCase {
             // Create and attest a key
             try! await stripeAttest.attest()
             // But it's an old key, so we'll be allowed to attest a new one
-            UserDefaults.standard.set(Date.distantPast, forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
+            await UserDefaults.standard.set(Date.distantPast, forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
             // Always fail the assertions and don't remember attestations:
             let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
-            mockAttestService.shouldFailAssertionWithError = invalidKeyError
+            await mockAttestService.setShouldFailAssertionWithError(invalidKeyError)
 
             _ = try await stripeAttest.assert()
             XCTFail("Should not succeed")
@@ -108,5 +113,17 @@ class StripeAttestTest: XCTestCase {
         mockAttestService.shouldFailAssertionWithError = invalidKeyError
         let assertion = try! await stripeAttest.assert()
         XCTAssertEqual(assertion.keyID, "TestKeyID")
+    }
+    
+    func testConcurrentAssertionsAndAttestations() async {
+        let iterations = 500
+        try! await withThrowingTaskGroup(of: Void.self) { group in
+            for _ in 0..<iterations {
+                group.addTask {
+                    try await self.stripeAttest.assert()
+                }
+            }
+            try await group.waitForAll()
+        }
     }
 }

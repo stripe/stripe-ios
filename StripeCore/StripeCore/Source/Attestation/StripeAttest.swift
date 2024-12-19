@@ -8,9 +8,9 @@ import DeviceCheck
 import Foundation
 import UIKit
 
-@_spi(STP) public class StripeAttest {
+@_spi(STP) public actor StripeAttest {
     /// Initialize a new StripeAttest object with the specified STPAPIClient.
-    @_spi(STP) public convenience init(apiClient: STPAPIClient = .shared) {
+    @_spi(STP) public init(apiClient: STPAPIClient = .shared) {
         self.init(appAttestService: AppleAppAttestService.shared,
                   appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient),
                   apiClient: apiClient)
@@ -29,7 +29,7 @@ import UIKit
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
             if apiClient.isTestmode {
                 // In testmode, we can provide a test assertion even if the real assertion fails
-                return testmodeAssertion
+                return await testmodeAssertion()
             } else {
                 throw error
             }
@@ -61,7 +61,7 @@ import UIKit
     }
 
     /// Returns whether the device is capable of performing attestation.
-    @_spi(STP) public var isSupported: Bool {
+    @_spi(STP) nonisolated public var isSupported: Bool {
         return appAttestService.isSupported
     }
 
@@ -163,9 +163,9 @@ import UIKit
     }
 
     /// A wrapper for the DCAppAttestService service.
-    var appAttestService: AppAttestService
+    nonisolated let appAttestService: AppAttestService
     /// A network backend for the /challenge and /attest endpoints.
-    var appAttestBackend: StripeAttestBackend
+    let appAttestBackend: StripeAttestBackend
     /// The API client to use for network requests
     var apiClient: STPAPIClient
 
@@ -180,17 +180,27 @@ import UIKit
     /// You should not call this directly, it'll be called automatically during assert.
     /// Returns nothing on success, throws on failure.
     func attest() async throws {
-        do {
+        if let existingTask = attestationTask {
+            return try await existingTask.value
+        }
+        
+        let task = Task<Void, Error> {
             try await _attest()
             let successAnalytic = GenericAnalytic(event: .attestationSucceeded, params: [:])
             STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
+        }
+        attestationTask = task
+        defer { attestationTask = nil } // Clear the task after it's done
+        do {
+            try await task.value
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .attestationFailed, error: error)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
             throw error
         }
     }
-
+    private var attestationTask: Task<Void, Error>?
+    
     func _assert() async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
@@ -209,7 +219,7 @@ import UIKit
             throw AttestationError.shouldAttestButKeyIsAlreadyAttested
         }
 
-        let deviceId = try getDeviceID()
+        let deviceId = try await getDeviceID()
         let appId = try getAppID()
 
         let assertion = try await generateAssertion(keyId: keyId, challenge: challenge.challenge)
@@ -238,7 +248,7 @@ import UIKit
         }
         let hash = Data(SHA256.hash(data: challengeData))
 
-        let deviceId = try getDeviceID()
+        let deviceId = try await getDeviceID()
         let appId = try getAppID()
 
         do {
@@ -303,8 +313,8 @@ import UIKit
         throw AttestationError.noAppID
     }
 
-    func getDeviceID() throws -> String {
-        if let deviceID = UIDevice.current.identifierForVendor?.uuidString {
+    func getDeviceID() async throws -> String {
+        if let deviceID = await UIDevice.current.identifierForVendor?.uuidString {
             return deviceID
         }
         throw AttestationError.noDeviceID
@@ -352,9 +362,9 @@ import UIKit
         }
     }
 
-    private var testmodeAssertion: Assertion {
+    private func testmodeAssertion() async -> Assertion {
         Assertion(assertionData: Data(bytes: [0x01, 0x02, 0x03], count: 3),
-                  deviceID: (try? getDeviceID()) ?? "test-device-id",
+                  deviceID: (try? await getDeviceID()) ?? "test-device-id",
                   appID: (try? getAppID()) ?? "com.example.test",
                   keyID: "TestKeyID")
     }
