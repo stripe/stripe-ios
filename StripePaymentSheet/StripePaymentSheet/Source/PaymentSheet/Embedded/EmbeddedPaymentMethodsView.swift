@@ -383,22 +383,22 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
 #if DEBUG
-    func testGrow() {
-        let testMandateString = "This is an example of a long string that may appear based on selecting a payment method that has a mandate. Please ensure that your view can properly grow and shrink by calling testGrow() and testShrink() on embedded payment element and manually verify your view responds well to growing and shrinking"
-        let formattedString = NSMutableAttributedString(string: testMandateString)
-        let style = NSMutableParagraphStyle()
-        style.alignment = .left
-        formattedString.addAttributes([.paragraphStyle: style,
-                                       .font: UIFont.preferredFont(forTextStyle: .footnote),
-                                       .foregroundColor: appearance.asElementsTheme.colors.secondaryText,
-                                      ],
-                                      range: NSRange(location: 0, length: formattedString.length))
+    func testHeightChange() {
+        if self.mandateView.isHidden {
+            let testMandateString = "This is an example of a long string that may appear based on selecting a payment method that has a mandate. Please ensure that your view can properly adapt to height changes by calling testHeightChange() on embedded payment element and manually verify that your view responds well to height changes"
+            let formattedString = NSMutableAttributedString(string: testMandateString)
+            let style = NSMutableParagraphStyle()
+            style.alignment = .left
+            formattedString.addAttributes([.paragraphStyle: style,
+                                           .font: UIFont.preferredFont(forTextStyle: .footnote),
+                                           .foregroundColor: appearance.asElementsTheme.colors.secondaryText,
+            ],
+                                          range: NSRange(location: 0, length: formattedString.length))
 
-        _updateMandate(mandateText: formattedString)
-    }
-
-    func testShrink() {
-        _updateMandate(mandateText: nil)
+            _updateMandate(mandateText: formattedString)
+        } else {
+            _updateMandate(mandateText: nil)
+        }
     }
 #endif
 }
