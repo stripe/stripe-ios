@@ -427,23 +427,13 @@ extension SavedPaymentMethodCollectionView {
         }
 
         private func activateDefaultBadgeConstraints() {
-            NSLayoutConstraint.deactivate([
-                labelBottomConstraint
-            ])
-            NSLayoutConstraint.activate([
-                labelHeightConstraint
-            ])
-            NSLayoutConstraint.activate(defaultBadgeConstraints)
+            NSLayoutConstraint.deactivate([labelBottomConstraint])
+            NSLayoutConstraint.activate([labelHeightConstraint] + defaultBadgeConstraints)
         }
 
         private func deactivateDefaultBadgeConstraints() {
-            NSLayoutConstraint.deactivate(defaultBadgeConstraints)
-            NSLayoutConstraint.deactivate([
-                labelHeightConstraint
-            ])
-            NSLayoutConstraint.activate([
-                labelBottomConstraint
-            ])
+            NSLayoutConstraint.deactivate(defaultBadgeConstraints + [labelHeightConstraint])
+            NSLayoutConstraint.activate([labelBottomConstraint])
         }
 
     }
