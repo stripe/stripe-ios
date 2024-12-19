@@ -259,6 +259,10 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         checkoutButton.tap()
 
+        // Close the Link sheet
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
+        closeButton.waitForExistenceAndTap()
+
         let cell = try XCTUnwrap(scroll(
             collectionView: app.collectionViews.firstMatch,
             toFindCellWithId: "afterpay_clearpay")
