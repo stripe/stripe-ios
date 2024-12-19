@@ -314,7 +314,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.requireCVCRecollection = .on
         loadPlayground(app, settings)
 

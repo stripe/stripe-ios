@@ -756,7 +756,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         loadPlayground(app, settings)
 
         let paymentMethodButton = app.buttons["Payment method"]
@@ -1120,7 +1120,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         // This test case is testing a feature not available when Link is on,
         // so we must manually turn off Link.
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.integrationType = .deferred_ssc
         settings.uiStyle = .flowController
 
@@ -1264,7 +1264,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
@@ -1328,7 +1328,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
@@ -1400,7 +1400,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
 
         try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings)
@@ -1413,7 +1413,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
 
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
         settings.customerKeyType = .customerSession
@@ -1486,7 +1486,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
 
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
@@ -1501,7 +1501,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
 
         settings.customerKeyType = .customerSession
         settings.paymentMethodRemoveLast = .disabled
@@ -1714,7 +1714,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.requireCVCRecollection = .on
 
         loadPlayground(app, settings)
@@ -1760,7 +1760,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.requireCVCRecollection = .on
 
         loadPlayground(app, settings)
@@ -1799,7 +1799,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.requireCVCRecollection = .on
 
         loadPlayground(app, settings)
@@ -1844,7 +1844,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.requireCVCRecollection = .on
 
         loadPlayground(app, settings)
@@ -1884,7 +1884,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.applePayEnabled = .off
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
 
         loadPlayground(app, settings)
         app.buttons["Payment method"].waitForExistenceAndTap()
@@ -2049,7 +2049,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2061,7 +2061,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2086,7 +2086,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2098,7 +2098,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2123,7 +2123,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2142,7 +2142,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.uiStyle = .flowController
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2165,7 +2165,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2210,7 +2210,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2255,7 +2255,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2269,7 +2269,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2293,7 +2293,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2307,7 +2307,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2331,7 +2331,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.applePayEnabled = .off
 
         loadPlayground(app, settings)
@@ -2369,7 +2369,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.applePayEnabled = .on
 
         loadPlayground(app, settings)
@@ -2399,7 +2399,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.applePayEnabled = .off
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2434,7 +2434,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.applePayEnabled = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
@@ -2450,7 +2450,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.userOverrideCountry = .GB
 
         loadPlayground(app, settings)
@@ -2487,7 +2487,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
         settings.apmsEnabled = .on
-        settings.linkMode = .link_pm
+        settings.linkPassthroughMode = .pm
         settings.integrationType = .deferred_ssc
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
