@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
   s.summary                        = 'UI elements and API bindings for building a custom payment flow using Stripe.'
   s.license                        = { type: 'MIT', file: 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
+  s.readme                         = 'StripePaymentsUI/README.md'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { git: 'https://github.com/stripe/stripe-ios.git', tag: s.version.to_s }
   s.frameworks                     = 'Foundation', 'UIKit'

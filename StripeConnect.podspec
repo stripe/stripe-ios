@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
   s.summary                        = 'Use Connect embedded components to add connected account dashboard functionality to your app.'
   s.license                        = { type: 'MIT', file: 'LICENSE' }
   s.homepage                       = 'https://docs.stripe.com/connect/get-started-connect-embedded-components'
+  s.readme                         = 'StripeConnect/README.md'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { git: 'https://github.com/stripe/stripe-ios.git', tag: "#{s.version}" }
   s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
