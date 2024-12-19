@@ -25,13 +25,13 @@ private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 /// For internal SDK use only
 @objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
-    init(appearance: PaymentSheet.Appearance, showDefaultPMBadge: Bool = false) {
+    init(appearance: PaymentSheet.Appearance, needsVerticalPaddingForBadge: Bool = false) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
             top: -6, left: PaymentSheetUI.defaultPadding, bottom: 0,
             right: PaymentSheetUI.defaultPadding)
-        self.showDefaultPMBadge = showDefaultPMBadge
+        self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
         layout.itemSize = cellSize
         layout.minimumInteritemSpacing = 12
         layout.minimumLineSpacing = 4
@@ -45,21 +45,21 @@ class SavedPaymentMethodCollectionView: UICollectionView {
     }
 
     var isRemovingPaymentMethods: Bool = false
-    let showDefaultPMBadge: Bool
+    let needsVerticalPaddingForBadge: Bool
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override var intrinsicContentSize: CGSize {
-        return showDefaultPMBadge && isRemovingPaymentMethods ? CGSize(width: UIView.noIntrinsicMetric, height: 118) : CGSize(width: UIView.noIntrinsicMetric, height: 100)
+        return needsVerticalPaddingForBadge && isRemovingPaymentMethods ? CGSize(width: UIView.noIntrinsicMetric, height: 118) : CGSize(width: UIView.noIntrinsicMetric, height: 100)
     }
 
     func updateLayout() {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return }
-        let newItemSize = showDefaultPMBadge && isRemovingPaymentMethods ? cellSizeWithDefaultBadge : cellSize
-        guard newItemSize != layout.itemSize else { return }
-        layout.itemSize = newItemSize
+        let newCellSize = needsVerticalPaddingForBadge && isRemovingPaymentMethods ? cellSizeWithDefaultBadge : cellSize
+        guard newCellSize != layout.itemSize else { return }
+        layout.itemSize = newCellSize
         collectionViewLayout.invalidateLayout()
         invalidateIntrinsicContentSize()
     }
@@ -120,11 +120,11 @@ extension SavedPaymentMethodCollectionView {
             didSet {
                 if showDefaultPMBadge {
                     if isRemovingPaymentMethods {
-                        activateDefaultBadge()
+                        activateDefaultBadgeConstraints()
                         defaultBadge.setHiddenIfNecessary(!isDefaultPM)
                     }
                     else {
-                        deactivateDefaultBadge()
+                        deactivateDefaultBadgeConstraints()
                         defaultBadge.setHiddenIfNecessary(true)
                     }
                 }
@@ -182,8 +182,6 @@ extension SavedPaymentMethodCollectionView {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 contentView.addSubview($0)
             }
-            labelBottomConstraint = label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-            labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 20)
             NSLayoutConstraint.activate([
                 shadowRoundedRectangle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
                 shadowRoundedRectangle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -245,9 +243,21 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
-        private var labelBottomConstraint: NSLayoutConstraint = NSLayoutConstraint()
-        private var labelHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-        private var defaultBadgeConstraints: [NSLayoutConstraint] = []
+        private lazy var labelBottomConstraint: NSLayoutConstraint = {
+            return label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        }()
+        private lazy var labelHeightConstraint: NSLayoutConstraint = {
+            return label.heightAnchor.constraint(equalToConstant: 20)
+        }()
+        private lazy var defaultBadgeConstraints: [NSLayoutConstraint] = {
+            return [
+                defaultBadge.topAnchor.constraint(
+                    equalTo: label.bottomAnchor, constant: 4),
+                defaultBadge.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+                defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
+                defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            ]
+        }()
 
         // MARK: - Internal Methods
         func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsSetAsDefaultPM: Bool = false, showDefaultPMBadge: Bool = false) {
@@ -415,24 +425,17 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
-        private func activateDefaultBadge() {
+        private func activateDefaultBadgeConstraints() {
             NSLayoutConstraint.deactivate([
                 labelBottomConstraint
             ])
             NSLayoutConstraint.activate([
                 labelHeightConstraint
             ])
-            defaultBadgeConstraints = [
-                defaultBadge.topAnchor.constraint(
-                    equalTo: label.bottomAnchor, constant: 4),
-                defaultBadge.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-                defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
-                defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
-            ]
             NSLayoutConstraint.activate(defaultBadgeConstraints)
         }
 
-        private func deactivateDefaultBadge() {
+        private func deactivateDefaultBadgeConstraints() {
             NSLayoutConstraint.deactivate(defaultBadgeConstraints)
             NSLayoutConstraint.deactivate([
                 labelHeightConstraint

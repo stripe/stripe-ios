@@ -153,8 +153,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     var hasDefault: Bool {
-        guard configuration.allowsSetAsDefaultPM, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
-        return viewModels.contains(where: { $0.savedPaymentMethod?.stripeId == defaultPaymentMethod.stripeId })
+        return viewModels.contains(where: { isDefaultPaymentMethod(savedPaymentMethodId: $0.savedPaymentMethod?.stripeId) })
     }
 
     var bottomNoticeAttributedString: NSAttributedString? {
@@ -277,7 +276,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Views
     private lazy var collectionView: SavedPaymentMethodCollectionView = {
-        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, showDefaultPMBadge: hasDefault)
+        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, needsVerticalPaddingForBadge: hasDefault)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -449,6 +448,11 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadItems(at: [selectedIndexPath])
     }
 
+    private func isDefaultPaymentMethod(savedPaymentMethodId: String?) -> Bool {
+        guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
+        return savedPaymentMethodId == defaultPaymentMethod.stripeId
+    }
+
     // MARK: - Helpers
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
@@ -520,13 +524,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         }
         cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, showDefaultPMBadge: hasDefault)
         cell.delegate = self
-        let isDefaultPM: Bool = {
-            guard self.hasDefault,
-                  let savedPMId = viewModel.savedPaymentMethod?.stripeId,
-                  let defaultPMId = self.elementsSession.customer?.defaultPaymentMethod else { return false }
-            return savedPMId == defaultPMId
-        }()
-        cell.isDefaultPM = isDefaultPM
+        cell.isDefaultPM = isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId)
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
 

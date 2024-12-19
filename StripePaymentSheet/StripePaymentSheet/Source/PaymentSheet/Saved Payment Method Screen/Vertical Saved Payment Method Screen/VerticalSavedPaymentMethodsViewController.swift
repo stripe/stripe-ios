@@ -174,11 +174,16 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
     }
 
+    private func isDefaultPaymentMethod(paymentMethodId: String) -> Bool {
+        guard configuration.allowsSetAsDefaultPM, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
+        return configuration.allowsSetAsDefaultPM && paymentMethodId == defaultPaymentMethod.stripeId
+    }
+
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [SavedPaymentMethodRowButton] {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
                                                      appearance: configuration.appearance,
-                                                     showDefaultPMBadge: configuration.allowsSetAsDefaultPM && paymentMethod.stripeId == elementsSession.customer?.defaultPaymentMethod)
+                                                     showDefaultPMBadge: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
             button.delegate = self
             return button
         }
@@ -364,7 +369,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         }
 
         // Create the new button
-        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance, showDefaultPMBadge: configuration.allowsSetAsDefaultPM && updatedPaymentMethod.stripeId == elementsSession.customer?.defaultPaymentMethod)
+        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance, showDefaultPMBadge: isDefaultPaymentMethod(paymentMethodId: updatedPaymentMethod.stripeId))
 
         newButton.delegate = self
         newButton.previousSelectedState = oldButton.previousSelectedState
