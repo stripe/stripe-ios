@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -20,6 +20,7 @@
 		C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176899120616C7E003DE895 /* LaunchScreen.storyboard */; };
 		E63B8ED227DDBA91000A7243 /* StripeIdentityAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63B8ED127DDBA91000A7243 /* StripeIdentityAssetTests.swift */; };
 		E6A36A5A26BA4C34002A4427 /* StripeIdentity in Frameworks */ = {isa = PBXBuildFile; productRef = E6A36A5926BA4C34002A4427 /* StripeIdentity */; };
+		E6C5F5FA2CA0FAC100861709 /* StripeConnect in Frameworks */ = {isa = PBXBuildFile; productRef = E6C5F5F92CA0FAC100861709 /* StripeConnect */; };
 		E6E0262526BA187800CE4304 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E0262426BA187800CE4304 /* ViewController.swift */; };
 		E6E0262726BA195D00CE4304 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E0262626BA195D00CE4304 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -78,6 +79,7 @@
 				3BD980892743194F00B09BCD /* StripeCardScan in Frameworks */,
 				3137B6922743799C00CE7F5C /* StripeApplePay in Frameworks */,
 				31DC3DB12537D02000623028 /* Stripe in Frameworks */,
+				E6C5F5FA2CA0FAC100861709 /* StripeConnect in Frameworks */,
 				E6A36A5A26BA4C34002A4427 /* StripeIdentity in Frameworks */,
 				31138ECF28DE66F5008AF554 /* StripePaymentSheet in Frameworks */,
 				3C4D20A9273C644500BC6444 /* StripeFinancialConnections in Frameworks */,
@@ -180,6 +182,7 @@
 				3BD980882743194F00B09BCD /* StripeCardScan */,
 				3137B6912743799C00CE7F5C /* StripeApplePay */,
 				31138ECE28DE66F5008AF554 /* StripePaymentSheet */,
+				E6C5F5F92CA0FAC100861709 /* StripeConnect */,
 			);
 			productName = CocoapodsTest;
 			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
@@ -558,6 +561,10 @@
 		E6A36A5926BA4C34002A4427 /* StripeIdentity */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StripeIdentity;
+		};
+		E6C5F5F92CA0FAC100861709 /* StripeConnect */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StripeConnect;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

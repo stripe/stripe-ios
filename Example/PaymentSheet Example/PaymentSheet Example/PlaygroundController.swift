@@ -116,7 +116,6 @@ class PlaygroundController: ObservableObject {
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
-        configuration.forceNativeLinkEnabled = settings.useNativeLink == .on
         if settings.userOverrideCountry != .off {
             configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
         }
@@ -613,7 +612,8 @@ extension PlaygroundController {
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
-            "use_link": settings.linkMode == .link_pm,
+            "use_link": settings.linkPassthroughMode == .pm,
+            "link_mode": settings.linkEnabledMode.rawValue,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
             "customer_session_component_name": "mobile_payment_element",

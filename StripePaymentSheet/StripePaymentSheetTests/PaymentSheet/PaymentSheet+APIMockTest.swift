@@ -83,7 +83,9 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         verificationSessions: [.init(type: .sms, state: .verified)],
                         supportedPaymentDetailsTypes: [.card]
                     ),
-                    publishableKey: "pk_xxx_for_link_account_xxx"
+                    publishableKey: "pk_xxx_for_link_account_xxx",
+                    useMobileEndpoints: false,
+                    elementsSessionID: "abc123"
                 ),
                 paymentDetails: .init(
                     stripeID: "pd1",
@@ -168,7 +170,22 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             authenticationContext: self,
             intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.paymentIntentClientSecret)),
             elementsSession: elementsSession,
-            paymentOption: .link(option: .withPaymentDetails(account: .init(email: "test@example.com", session: .init(clientSecret: "cs_xxx", emailAddress: "test@example.com", redactedPhoneNumber: "+1-555-xxx-xxxx", verificationSessions: [.init(type: .sms, state: .verified)], supportedPaymentDetailsTypes: [.card]), publishableKey: MockParams.publicKey), paymentDetails: .init(stripeID: "pd1", details: .card(card: .init(expiryYear: 2055, expiryMonth: 12, brand: "visa", last4: "1234", checks: nil)), billingAddress: nil, billingEmailAddress: nil, isDefault: true))),
+            paymentOption: .link(
+                option: .withPaymentDetails(
+                    account: .init(
+                        email: "test@example.com",
+                        session: .init(clientSecret: "cs_xxx", emailAddress: "test@example.com", redactedPhoneNumber: "+1-555-xxx-xxxx", verificationSessions: [.init(type: .sms, state: .verified)], supportedPaymentDetailsTypes: [.card]),
+                        publishableKey: MockParams.publicKey,
+                        useMobileEndpoints: false,
+                        elementsSessionID: "abc123"),
+                    paymentDetails: .init(
+                        stripeID: "pd1",
+                        details: .card(card: .init(expiryYear: 2055, expiryMonth: 12, brand: "visa", last4: "1234", checks: nil)),
+                        billingAddress: nil,
+                        billingEmailAddress: nil,
+                        isDefault: true)
+                )
+            ),
             paymentHandler: paymentHandler,
             analyticsHelper: ._testValue(),
             completion: { _, _ in

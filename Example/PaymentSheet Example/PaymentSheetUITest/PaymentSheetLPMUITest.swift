@@ -526,6 +526,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
     func testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.merchantCountryCode = .FR
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.applePayEnabled = .off // disable Apple Pay

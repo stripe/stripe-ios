@@ -113,6 +113,7 @@ class PaymentMethodFormViewController: UIViewController {
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
                 linkAccount: LinkAccountContext.shared.account,
+                accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
                 analyticsHelper: analyticsHelper
             ).make()
             self.formCache[type] = form
@@ -270,7 +271,8 @@ extension PaymentMethodFormViewController {
             prefillDetails: prefillDetails,
             intentId: intentId,
             linkMode: linkMode,
-            billingDetails: billingDetails
+            billingDetails: billingDetails,
+            eligibleForIncentive: instantDebitsFormElement?.incentive != nil
         )
     }
 

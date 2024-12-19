@@ -29,7 +29,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
 
-        ConsumerSession.lookupSession(for: nil, with: apiClient) {
+        ConsumerSession.lookupSession(for: nil, emailSource: .customerEmail, sessionID: "abc123", with: apiClient, useMobileEndpoints: false) {
             result in
             switch result {
             case .success(let lookupResponse):
@@ -57,7 +57,10 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
 
         ConsumerSession.lookupSession(
             for: "mobile-payments-sdk-ci+a-consumer@stripe.com",
-            with: apiClient
+            emailSource: .customerEmail,
+            sessionID: "abc123",
+            with: apiClient,
+            useMobileEndpoints: false
         ) { result in
             switch result {
             case .success(let lookupResponse):
@@ -85,7 +88,10 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
 
         ConsumerSession.lookupSession(
             for: "mobile-payments-sdk-ci+not-a-consumer+\(UUID())@stripe.com",
-            with: apiClient
+            emailSource: .customerEmail,
+            sessionID: "abc123",
+            with: apiClient,
+            useMobileEndpoints: false
         ) { result in
             switch result {
             case .success(let lookupResponse):
@@ -121,6 +127,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             legalName: nil,
             countryCode: "US",
             consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
+            useMobileEndpoints: false,
             with: apiClient
         ) { result in
             switch result {
@@ -226,6 +233,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             legalName: nil,
             countryCode: "US",
             consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
+            useMobileEndpoints: false,
             with: apiClient
         ) { result in
             switch result {

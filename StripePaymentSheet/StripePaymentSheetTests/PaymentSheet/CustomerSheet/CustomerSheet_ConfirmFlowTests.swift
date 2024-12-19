@@ -340,6 +340,7 @@ extension CustomerSheet_ConfirmFlowTests {
                                                   addressSpecProvider: .shared,
                                                   showLinkInlineCardSignup: false,
                                                   linkAccount: nil,
+                                                  accountService: LinkAccountService._testValue(),
                                                   cardBrandChoiceEligible: false,
                                                   isPaymentIntent: false,
                                                   isSettingUp: true,

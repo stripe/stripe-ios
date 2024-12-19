@@ -243,6 +243,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             addressSpecProvider: .shared,
             showLinkInlineCardSignup: false,
             linkAccount: nil,
+            accountService: nil,
             cardBrandChoiceEligible: cbcEligible,
             isPaymentIntent: false,
             isSettingUp: true,

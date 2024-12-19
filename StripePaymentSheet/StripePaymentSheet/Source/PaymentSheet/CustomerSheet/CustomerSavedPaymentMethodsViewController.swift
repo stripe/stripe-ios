@@ -880,7 +880,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
                 return false
             }
             do {
-                try await customerSheetDataSource.detachPaymentMethod(paymentMethodId: paymentMethod.stripeId)
+                try await customerSheetDataSource.detachPaymentMethod(paymentMethod: paymentMethod)
             } catch {
                 // Communicate error to consumer
                 self.set(error: error)

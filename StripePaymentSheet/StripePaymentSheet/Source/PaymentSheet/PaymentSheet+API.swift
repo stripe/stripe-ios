@@ -315,7 +315,9 @@ extension PaymentSheet {
                         with: authenticationContext,
                         completion: { actionStatus, _, error in
                             paymentHandlerCompletion(actionStatus, error)
-                            linkAccount?.logout()
+                            if actionStatus == .succeeded {
+                                linkAccount?.logout()
+                            }
                         }
                     )
                 case .setupIntent(let setupIntent):
@@ -327,7 +329,9 @@ extension PaymentSheet {
                         with: authenticationContext,
                         completion: { actionStatus, _, error in
                             paymentHandlerCompletion(actionStatus, error)
-                            linkAccount?.logout()
+                            if actionStatus == .succeeded {
+                                linkAccount?.logout()
+                            }
                         }
                     )
                 case .deferredIntent(let intentConfig):
@@ -343,7 +347,9 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            linkAccount?.logout()
+                            if case .completed = psResult {
+                                linkAccount?.logout()
+                            }
                             completion(psResult, confirmationType)
                         }
                     )
@@ -371,7 +377,9 @@ extension PaymentSheet {
                         paymentIntentParams,
                         with: authenticationContext,
                         completion: { actionStatus, _, error in
-                            linkAccount?.logout()
+                            if actionStatus == .succeeded {
+                                linkAccount?.logout()
+                            }
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
@@ -384,7 +392,9 @@ extension PaymentSheet {
                         setupIntentParams,
                         with: authenticationContext,
                         completion: { actionStatus, _, error in
-                            linkAccount?.logout()
+                            if actionStatus == .succeeded {
+                                linkAccount?.logout()
+                            }
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
@@ -397,7 +407,9 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            linkAccount?.logout()
+                            if case .completed = psResult {
+                                linkAccount?.logout()
+                            }
                             completion(psResult, confirmationType)
                         }
                     )
@@ -465,13 +477,18 @@ extension PaymentSheet {
 
             switch confirmOption {
             case .wallet:
-                if configuration.forceNativeLinkEnabled {
-                    let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
-                    linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
-                } else {
-                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
-                    linkController.present(from: authenticationContext.authenticationPresentingViewController(),
-                                           completion: completion)
+                Task {
+                    let useNativeLink = await prepareNativeLink(elementsSession: elementsSession, configuration: configuration)
+                    Task.detached { @MainActor in
+                        if useNativeLink {
+                            let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+                            linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
+                        } else {
+                            let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+                            linkController.present(from: authenticationContext.authenticationPresentingViewController(),
+                                                   completion: completion)
+                        }
+                    }
                 }
             case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let intentConfirmParams):
                 linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in

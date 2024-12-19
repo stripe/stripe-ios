@@ -335,7 +335,7 @@ private extension LinkInlineSignupViewModel {
         accountLookupDebouncer.enqueue { [weak self] in
             self?.isLookingUpLinkAccount = true
 
-            self?.accountService.lookupAccount(withEmail: emailAddress) { result in
+            self?.accountService.lookupAccount(withEmail: emailAddress, emailSource: .userAction) { result in
                 // Check the requested email address against the current one. Handle
                 // email address changes while a lookup is in-flight.
                 guard emailAddress == self?.emailAddress else {

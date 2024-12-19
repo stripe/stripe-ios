@@ -48,20 +48,20 @@ class StripeAttestTest: XCTestCase {
         }
     }
 
-    func testAssertionGivesUpAfterMultipleTries() async {
+    func testAssertionDoesNotAttestIfAlreadyAttested() async {
         do {
             // Create and attest a key
             try! await stripeAttest.attest()
             // But it's an old key, so we'll be allowed to attest a new one
             UserDefaults.standard.set(Date.distantPast, forKey: StripeAttest.DefaultsKeys.lastAttestedDate.rawValue)
-            // Always fail the assertions:
+            // Always fail the assertions and don't remember attestations:
             let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
             mockAttestService.shouldFailAssertionWithError = invalidKeyError
 
             _ = try await stripeAttest.assert()
             XCTFail("Should not succeed")
         } catch {
-            XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.secondAssertionFailureAfterRetryingAttestation)
+            XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.shouldNotAttest)
         }
     }
 }

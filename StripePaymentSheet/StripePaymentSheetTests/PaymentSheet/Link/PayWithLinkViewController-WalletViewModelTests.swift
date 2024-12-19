@@ -131,7 +131,9 @@ extension PayWithLinkViewController_WalletViewModelTests {
             linkAccount: .init(
                 email: "user@example.com",
                 session: LinkStubs.consumerSession(),
-                publishableKey: nil
+                publishableKey: nil,
+                useMobileEndpoints: false,
+                elementsSessionID: "abc123"
             ),
             context: .init(
                 intent: .paymentIntent(paymentIntent),

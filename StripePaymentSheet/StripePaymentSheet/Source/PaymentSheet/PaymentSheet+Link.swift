@@ -5,6 +5,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 import UIKit
 
 // MARK: - Webview Link
@@ -165,4 +166,36 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
 
         return nil
     }
+}
+
+// MARK: - Native Link helpers
+
+/// Prepares a device for native Link and returns whether the device is ready
+func prepareNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async -> Bool {
+    guard deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
+        return false
+    }
+
+    // If we're in testmode, we don't need to attest for native Link
+    if configuration.apiClient.isTestmode {
+        return true
+    }
+
+    let stripeAttest = StripeAttest(apiClient: configuration.apiClient)
+    return await stripeAttest.prepareAttestation()
+}
+
+/// Check if native Link is available on this device
+func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+    let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
+    guard useAttestationEndpoints else {
+        return false
+    }
+
+    // If we're in testmode, we don't need to attest for native Link
+    if configuration.apiClient.isTestmode {
+        return true
+    }
+
+    return StripeAttest(apiClient: configuration.apiClient).isSupported
 }

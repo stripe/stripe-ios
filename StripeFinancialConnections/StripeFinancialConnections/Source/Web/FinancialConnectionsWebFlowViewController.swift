@@ -159,7 +159,8 @@ extension FinancialConnectionsWebFlowViewController {
             isInstantDebits: manifest.isProductInstantDebits,
             linkMode: elementsSessionContext?.linkMode,
             prefillDetails: elementsSessionContext?.prefillDetails,
-            billingDetails: elementsSessionContext?.billingDetails
+            billingDetails: elementsSessionContext?.billingDetails,
+            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession
         )
         authSessionManager?
             .start(additionalQueryParameters: additionalQueryParameters)
@@ -294,27 +295,27 @@ extension FinancialConnectionsWebFlowViewController {
 }
 
 private extension URL {
-    
+
     /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
     /// we can parse it back in StripeCore.
     func extractLinkBankPaymentMethod() -> LinkBankPaymentMethod? {
         guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
             return nil
         }
-        
+
         guard let data = Data(base64Encoded: encodedPaymentMethod) else {
             return nil
         }
-        
+
         let result: Result<LinkBankPaymentMethod, Error> = STPAPIClient.decodeResponse(
             data: data,
             error: nil,
             response: nil
         )
-        
+
         return try? result.get()
     }
-    
+
     func extractValue(forKey key: String) -> String? {
         guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
             assertionFailure("Invalid URL")
@@ -450,7 +451,8 @@ extension FinancialConnectionsWebFlowViewController {
         isInstantDebits: Bool,
         linkMode: LinkMode?,
         prefillDetails: ElementsSessionContext.PrefillDetails?,
-        billingDetails: ElementsSessionContext.BillingDetails?
+        billingDetails: ElementsSessionContext.BillingDetails?,
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?
     ) -> String? {
         var parameters: [String] = []
 
@@ -461,6 +463,12 @@ extension FinancialConnectionsWebFlowViewController {
         if isInstantDebits {
             parameters.append("return_payment_method=true")
             parameters.append("expand_payment_method=true")
+            
+            if let incentiveEligibilitySession {
+                parameters.append("instantDebitsIncentive=true")
+                parameters.append("incentiveEligibilitySession=\(incentiveEligibilitySession.id)")
+            }
+            
             if let linkMode {
                 parameters.append("link_mode=\(linkMode.rawValue)")
             }

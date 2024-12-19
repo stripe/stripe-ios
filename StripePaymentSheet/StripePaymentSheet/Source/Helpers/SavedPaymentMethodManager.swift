@@ -53,15 +53,24 @@ final class SavedPaymentMethodManager {
         }
 
         if let customerAccessProvider = configuration.customer?.customerAccessProvider,
-           case .customerSession = customerAccessProvider,
-           paymentMethod.type == .card,
+           case .customerSession(let customerSessionClientSecret) = customerAccessProvider,
            let customerId = configuration.customer?.id {
-            configuration.apiClient.detachPaymentMethodRemoveDuplicates(
-                paymentMethod.stripeId,
-                customerId: customerId,
-                fromCustomerUsing: ephemeralKey
-            ) { (_) in
-                // no-op
+            if paymentMethod.type == .card {
+                configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                    paymentMethod.stripeId,
+                    customerId: customerId,
+                    fromCustomerUsing: ephemeralKey,
+                    withCustomerSessionClientSecret: customerSessionClientSecret
+                ) { (_) in
+                    // no-op
+                }
+            } else {
+                configuration.apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: ephemeralKey,
+                    withCustomerSessionClientSecret: customerSessionClientSecret) { (_) in
+                    // no-op
+                }
             }
         } else {
             configuration.apiClient.detachPaymentMethod(

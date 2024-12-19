@@ -196,7 +196,7 @@ private extension PayWithLinkViewController.SignUpViewModel {
         accountLookupDebouncer.enqueue { [weak self] in
             self?.isLookingUpLinkAccount = true
 
-            self?.accountService.lookupAccount(withEmail: emailAddress) { result in
+            self?.accountService.lookupAccount(withEmail: emailAddress, emailSource: .userAction) { result in
                 guard let self = self else { return }
 
                 // Check the requested email address against the current one. Handle

@@ -299,4 +299,6 @@ import Foundation
     case attestationSucceeded = "stripeios.attest.attestation.succeeded"
     case assertionFailed = "stripeios.attest.assertion.failed"
     case assertionSucceeded = "stripeios.attest.assertion.succeeded"
+    case resetKeyForAssertionError = "stripeios.attest.reset_key_for_assertion_error"
+    case resetKeyForAttestationError = "stripeios.attest.reset_key_for_attestation_error"
 }
