@@ -48,6 +48,7 @@ class RowButton: UIView {
             radioButton?.isOn = isSelected
             checkmarkImageView?.isHidden = !isSelected
             updateAccessibilityTraits()
+            updateDefaultBadgeFont()
             if isFlatWithCheckmarkStyle {
                 alignBadgeAndCheckmark()
             }
@@ -64,13 +65,22 @@ class RowButton: UIView {
     }
     var heightConstraint: NSLayoutConstraint?
 
+    
+    private var selectedDefaultBadgeFont: UIFont {
+        return appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
+    }
+
+    private var defaultBadgeFont: UIFont {
+        return appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+    }
+
     init(
         appearance: PaymentSheet.Appearance,
         originalCornerRadius: CGFloat? = nil,
         imageView: UIImageView,
         text: String,
         subtext: String? = nil,
-        defaultBadge: UILabel? = nil,
+        badgeText: String? = nil,
         promoText: String? = nil,
         rightAccessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
@@ -97,9 +107,16 @@ class RowButton: UIView {
         } else {
             self.sublabel = nil
         }
-
-        self.defaultBadge = defaultBadge
-
+        if let badgeText {
+            let defaultBadge = UILabel()
+            defaultBadge.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
+            defaultBadge.textColor = appearance.colors.textSecondary
+            defaultBadge.adjustsFontForContentSizeCategory = true
+            defaultBadge.text = badgeText
+            self.defaultBadge = defaultBadge
+        } else {
+            self.defaultBadge = nil
+        }
         if let promoText {
             self.promoBadge = PromoBadgeView(
                 appearance: appearance,
@@ -279,6 +296,13 @@ class RowButton: UIView {
         promoBadgeConstraintToCheckmark?.isActive = isSelected
     }
 
+    private func updateDefaultBadgeFont() {
+        guard let defaultBadge else {
+            return
+        }
+        defaultBadge.font = isSelected ? selectedDefaultBadgeFont : defaultBadgeFont
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -443,10 +467,10 @@ extension RowButton {
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, defaultBadge: UILabel? = nil, rightAccessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, rightAccessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, defaultBadge: defaultBadge, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
+        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }

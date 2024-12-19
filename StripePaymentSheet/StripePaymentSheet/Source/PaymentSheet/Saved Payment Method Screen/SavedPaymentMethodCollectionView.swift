@@ -117,17 +117,21 @@ extension SavedPaymentMethodCollectionView {
 
         var isRemovingPaymentMethods: Bool = false {
             didSet {
-                if needsVerticalPaddingForBadge {
-                    if isRemovingPaymentMethods {
-                        activateDefaultBadgeConstraints()
-                        defaultBadge.setHiddenIfNecessary(!showDefaultPMBadge)
-                    }
-                    else {
-                        deactivateDefaultBadgeConstraints()
-                        defaultBadge.setHiddenIfNecessary(true)
-                    }
-                }
+                updateVerticalConstraintsIfNeeded()
                 update()
+            }
+        }
+
+        func updateVerticalConstraintsIfNeeded() {
+            guard needsVerticalPaddingForBadge else {
+                return
+            }
+            if isRemovingPaymentMethods {
+                activateDefaultBadgeConstraints()
+                defaultBadge.setHiddenIfNecessary(!showDefaultPMBadge)
+            } else {
+                deactivateDefaultBadgeConstraints()
+                defaultBadge.setHiddenIfNecessary(true)
             }
         }
 
