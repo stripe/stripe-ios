@@ -13,7 +13,7 @@ class StripeAttestTest: XCTestCase {
     var stripeAttest: StripeAttest!
 
     override func setUp() {
-        let apiClient = STPAPIClient(publishableKey: "pk_test_abc123")
+        let apiClient = STPAPIClient(publishableKey: "pk_live_abc123")
         self.mockAttestBackend = MockAttestBackend()
         self.mockAttestService = MockAppAttestService()
         self.stripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: apiClient)
@@ -87,6 +87,7 @@ class StripeAttestTest: XCTestCase {
     }
 
     func testNoPublishableKey() async {
+        stripeAttest.apiClient.publishableKey = nil
         do {
             // Create and attest a key
             try await stripeAttest.attest()
