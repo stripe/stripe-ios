@@ -36,15 +36,24 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, appearance: ._testMSPaintTheme, isEmbedded: true)
     }
 
-    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false) {
+    func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDefaultBadge() {
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, showDefaultPMBadge: true)
+    }
+
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
-        let paymentMethods = generatePaymentMethods()
+        var paymentMethods = generatePaymentMethods()
+        if showDefaultPMBadge {
+            configuration.allowsSetAsDefaultPM = true
+            let card = STPPaymentMethod._testCard()
+            paymentMethods.insert(card, at: 0)
+        }
 
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
-                                                            elementsSession: ._testCardValue(),
+                                                            elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId) : ._testCardValue(),
                                                             analyticsHelper: ._testValue()
         )
         let bottomSheet: BottomSheetViewController
@@ -73,7 +82,8 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     }
 
     private func generatePaymentMethods() -> [STPPaymentMethod] {
-        return [STPFixtures.paymentMethod(),
+        return [
+                STPFixtures.paymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "BANK OF AMERICA"),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "STRIPE"),

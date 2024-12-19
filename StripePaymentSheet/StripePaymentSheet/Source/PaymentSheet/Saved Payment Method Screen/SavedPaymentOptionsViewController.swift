@@ -131,6 +131,10 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
         set {
             collectionView.isRemovingPaymentMethods = newValue
+            collectionView.performBatchUpdates({
+                collectionView.reloadSections(IndexSet(integer: 0))
+                animateHeightChange{self.collectionView.updateLayout()}
+            })
             UIView.transition(with: collectionView,
                               duration: 0.3,
                               options: .transitionCrossDissolve,
@@ -147,6 +151,12 @@ class SavedPaymentOptionsViewController: UIViewController {
             }
         }
     }
+
+    var hasDefault: Bool {
+        guard configuration.allowsSetAsDefaultPM, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
+        return viewModels.contains(where: { $0.savedPaymentMethod?.stripeId == defaultPaymentMethod.stripeId })
+    }
+
     var bottomNoticeAttributedString: NSAttributedString? {
         if case .saved(let paymentMethod, _) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
@@ -267,7 +277,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Views
     private lazy var collectionView: SavedPaymentMethodCollectionView = {
-        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance)
+        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, showDefaultPMBadge: hasDefault)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -508,8 +518,15 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, showDefaultPMBadge: hasDefault)
         cell.delegate = self
+        let isDefaultPM: Bool = {
+            guard self.hasDefault,
+                  let savedPMId = viewModel.savedPaymentMethod?.stripeId,
+                  let defaultPMId = self.elementsSession.customer?.defaultPaymentMethod else { return false }
+            return savedPMId == defaultPMId
+        }()
+        cell.isDefaultPM = isDefaultPM
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
 

@@ -88,13 +88,13 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     /// Indicates whether the chevron should be shown
-    /// True if any saved payment methods can be removed or edited (will update this to include allowing set as default)
+    /// True if any saved payment methods can be removed or edited
     var canRemoveOrEdit: Bool {
         let hasSupportedSavedPaymentMethods = paymentMethods.allSatisfy{ UpdatePaymentMethodViewModel.supportedPaymentMethods.contains($0.type) }
         guard hasSupportedSavedPaymentMethods else {
             fatalError("Saved payment methods contain unsupported payment methods.")
         }
-        return canRemovePaymentMethods || canEditPaymentMethods
+        return configuration.allowsSetAsDefaultPM || canRemovePaymentMethods || canEditPaymentMethods
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
@@ -177,7 +177,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [SavedPaymentMethodRowButton] {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
-                                                     appearance: configuration.appearance)
+                                                     appearance: configuration.appearance,
+                                                     showDefaultPMBadge: configuration.allowsSetAsDefaultPM && paymentMethod.stripeId == elementsSession.customer?.defaultPaymentMethod)
             button.delegate = self
             return button
         }
@@ -363,7 +364,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         }
 
         // Create the new button
-        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
+        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance, showDefaultPMBadge: configuration.allowsSetAsDefaultPM && updatedPaymentMethod.stripeId == elementsSession.customer?.defaultPaymentMethod)
+
         newButton.delegate = self
         newButton.previousSelectedState = oldButton.previousSelectedState
         newButton.state = oldButton.state
