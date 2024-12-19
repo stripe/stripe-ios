@@ -19,7 +19,7 @@ extension TextFieldElement {
         let isEditable = false
 
         private var lastFourFormatted: String {
-            "\(bankName) ••••\(lastFour)"
+            "\(bankName) •••• \(lastFour)"
         }
 
         public init(bankName:String, lastFour: String) {
