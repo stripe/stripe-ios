@@ -12,7 +12,8 @@ import UIKit
     /// Initialize a new StripeAttest object with the specified STPAPIClient.
     @_spi(STP) public convenience init(apiClient: STPAPIClient = .shared) {
         self.init(appAttestService: AppleAppAttestService.shared,
-                  appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient), apiClient: apiClient)
+                  appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient),
+                  apiClient: apiClient)
     }
 
     /// Sign an assertion.
@@ -40,12 +41,12 @@ import UIKit
     /// If `true`, the device is ready for attestation. If `false`, attestation is not possible.
     @_spi(STP) public func prepareAttestation() async -> Bool {
         do {
-            if !Self.successfullyAttested {
+            if !successfullyAttested {
                 // We haven't attested yet, so do that first.
                 try await self.attest()
             }
 
-            return Self.successfullyAttested
+            return successfullyAttested
         } catch {
             return false
         }
@@ -103,12 +104,14 @@ import UIKit
         case shouldNotAttest
         /// The backend asked us to attest, but the key is already attested
         case shouldAttestButKeyIsAlreadyAttested
+        /// A publishable key was not set
+        case noPublishableKey
     }
 
     // MARK: - Internal
 
     // MARK: - Device-local settings
-    enum DefaultsKeys: String {
+    enum SettingsKeys: String {
         /// The ID of the attestation key stored in the keychain.
         case keyID = "STPAttestKeyID"
         /// The last date we generated an attestation key, used for rate limiting.
@@ -117,37 +120,46 @@ import UIKit
         case successfullyAttested = "STPAttestKeySuccessfullyAttested"
     }
 
-    private static var keyID: String? {
+    private var storedKeyID: String? {
         get {
-            UserDefaults.standard.string(forKey: DefaultsKeys.keyID.rawValue)
+            UserDefaults.standard.string(forKey: defaultsKeyForSetting(.keyID))
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: DefaultsKeys.keyID.rawValue)
+            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.keyID))
         }
     }
 
-    private static var successfullyAttested: Bool {
+    private var successfullyAttested: Bool {
         get {
-            UserDefaults.standard.bool(forKey: DefaultsKeys.successfullyAttested.rawValue)
+            UserDefaults.standard.bool(forKey: defaultsKeyForSetting(.successfullyAttested))
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: DefaultsKeys.successfullyAttested.rawValue)
+            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.successfullyAttested))
         }
     }
 
-    private static var lastAttestedDate: Date? {
+    private var lastAttestedDate: Date? {
         get {
-            UserDefaults.standard.object(forKey: DefaultsKeys.lastAttestedDate.rawValue) as? Date
+            UserDefaults.standard.object(forKey: defaultsKeyForSetting(.lastAttestedDate)) as? Date
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: DefaultsKeys.lastAttestedDate.rawValue)
+            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.lastAttestedDate))
         }
+    }
+
+    /// The key to use for storing an attestation key in NSUserDefaults.
+    func defaultsKeyForSetting(_ setting: SettingsKeys) -> String {
+        var key = "\(setting.rawValue):\(apiClient.publishableKey ?? "unknown")"
+        if let stripeAccount = apiClient.stripeAccount {
+            key += ":\(stripeAccount)"
+        }
+        return key
     }
 
     init(appAttestService: AppAttestService, appAttestBackend: StripeAttestBackend?, apiClient: STPAPIClient) {
         self.appAttestService = appAttestService
         self.appAttestBackend = appAttestBackend ?? StripeAPIAttestationBackend(apiClient: apiClient)
-        self.apiClient = STPAPIClient.shared
+        self.apiClient = apiClient
     }
 
     /// A wrapper for the DCAppAttestService service.
@@ -182,7 +194,7 @@ import UIKit
     func _assert() async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
-        if !Self.successfullyAttested {
+        if !successfullyAttested {
             // We haven't attested yet, so do that first.
             try await self.attest()
         }
@@ -208,7 +220,7 @@ import UIKit
         // It's dangerous to attest, as it increments a permanent counter for the device.
         // First, make sure the last time we called this is more than 24 hours away from now.
         // (Either in the future or the past, who knows what people are doing with their clocks)
-        if let lastGenerated = StripeAttest.lastAttestedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
+        if let lastGenerated = lastAttestedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
             throw AttestationError.attestationRateLimitExceeded
         }
 
@@ -230,11 +242,17 @@ import UIKit
         let appId = try getAppID()
 
         do {
-            Self.lastAttestedDate = Date()
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
+            if !appAttestService.attestationDataIsDevelopmentEnvironment(attestation) {
+                // We only need to limit attestations in production.
+                // Being more relaxed about this also helps with users switching between
+                // a developer-signed app (which may be in the development attest environment)
+                // and a TestFlight/App Store/Enterprise app (which is always in the production attest environment)
+                lastAttestedDate = Date()
+            }
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
             // Store the successful attestation
-            Self.successfullyAttested = true
+            successfullyAttested = true
         } catch {
             // If error is DCErrorInvalidKey (3) and the domain is DCErrorDomain,
             // we need to generate a new key as the key has already been attested or is otherwise corrupt.
@@ -255,7 +273,10 @@ import UIKit
         guard appAttestService.isSupported else {
             throw AttestationError.attestationNotSupported
         }
-        if let keyId = Self.keyID {
+        guard apiClient.publishableKey != nil else {
+            throw AttestationError.noPublishableKey
+        }
+        if let keyId = storedKeyID {
             return keyId
         }
         // If we don't have a key, generate one.
@@ -263,15 +284,15 @@ import UIKit
     }
 
     @_spi(STP) public func resetKey() {
-        Self.keyID = nil
-        Self.successfullyAttested = false
+        storedKeyID = nil
+        successfullyAttested = false
     }
 
     private func createKey() async throws -> String {
         let keyId = try await appAttestService.generateKey()
         // Save the Key ID, and that the key is not attested.
-        Self.keyID = keyId
-        Self.successfullyAttested = false
+        storedKeyID = keyId
+        successfullyAttested = false
         return keyId
     }
 
