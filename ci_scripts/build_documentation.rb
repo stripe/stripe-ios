@@ -197,10 +197,12 @@ def build_index_page(modules, release_version, docs_root_directory)
 
   "''
   # Add the modules to the docc template
-  modules.each do |m|
-    # Load podspec to get module name and summary
-    podspec = Pod::Specification.from_file(File.join_if_safe($ROOT_DIR, m['podspec']))
-    index_content += "**[#{podspec.name}](../../#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
+  modules
+    .sort_by { |m| m['framework_name'] }
+    .each do |m|
+      # Load podspec to get module name and summary
+      podspec = Pod::Specification.from_file(File.join_if_safe($ROOT_DIR, m['podspec']))
+      index_content += "**[#{podspec.name}](../../#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
   end
 
   File.write(index_path, index_content)
@@ -230,7 +232,7 @@ end
 
 def publish(release_version, docs_root_directory)
   git_publish_dir = Dir.mktmpdir('stripe-docs-git')
-  docs_branchname = "docs-publish/#{release_version}"
+  docs_branchname = "docs-publish/#{release_version}_fix"
   `cp -a "#{$ROOT_DIR}/.git" "#{git_publish_dir}"`
   Dir.chdir(git_publish_dir) do
     `git checkout docs`
