@@ -25,19 +25,19 @@ actor MockAppAttestService: AppAttestService {
     var shouldFailAssertionWithError: Error?
     var shouldFailAttestationWithError: Error?
     var attestationUsingDevelopmentEnvironment: Bool = false
-    
+
     func setShouldFailKeygenWithError(_ error: Error?) async {
         shouldFailKeygenWithError = error
     }
-    
+
     func setShouldFailAssertionWithError(_ error: Error?) async {
         shouldFailAssertionWithError = error
     }
-    
+
     func setShouldFailAttestationWithError(_ error: Error?) async {
         shouldFailAttestationWithError = error
     }
-    
+
     func setAttestationUsingDevelopmentEnvironment(_ value: Bool) async {
         attestationUsingDevelopmentEnvironment = value
     }

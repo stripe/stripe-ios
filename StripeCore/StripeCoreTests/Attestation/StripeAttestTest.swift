@@ -92,7 +92,7 @@ class StripeAttestTest: XCTestCase {
     }
 
     func testNoPublishableKey() async {
-        stripeAttest.apiClient.publishableKey = nil
+        await stripeAttest.apiClient.publishableKey = nil
         do {
             // Create and attest a key
             try await stripeAttest.attest()
@@ -104,17 +104,17 @@ class StripeAttestTest: XCTestCase {
 
     func testAssertionsNotRequiredInTestMode() async {
         // Configure a test merchant PK:
-        stripeAttest.apiClient.publishableKey = "pk_test_abc123"
+        await stripeAttest.apiClient.publishableKey = "pk_test_abc123"
         // And reset the last attestation date:
-        UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
+        await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
         // Fail the assertion, which will cause us to try to re-attest the key, but then the
         // assertions still won't work, so we'll send the testmode data instead.
         let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
-        mockAttestService.shouldFailAssertionWithError = invalidKeyError
+        await mockAttestService.setShouldFailAssertionWithError(invalidKeyError)
         let assertion = try! await stripeAttest.assert()
         XCTAssertEqual(assertion.keyID, "TestKeyID")
     }
-    
+
     func testConcurrentAssertionsAndAttestations() async {
         let iterations = 500
         try! await withThrowingTaskGroup(of: Void.self) { group in

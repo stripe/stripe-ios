@@ -186,7 +186,7 @@ import UIKit
         if let existingTask = attestationTask {
             return try await existingTask.value
         }
-        
+
         let task = Task<Void, Error> {
             try await _attest()
             let successAnalytic = GenericAnalytic(event: .attestationSucceeded, params: [:])
@@ -203,7 +203,7 @@ import UIKit
         }
     }
     private var attestationTask: Task<Void, Error>?
-    
+
     func _assert() async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
