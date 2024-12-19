@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
   s.summary                        = "Stripe's prebuilt payment UI."
   s.license                        = { type: 'MIT', file: 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
+  s.readme                         = 'StripePaymentSheet/README.md'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { git: 'https://github.com/stripe/stripe-ios.git', tag: s.version.to_s }
   s.frameworks                     = 'Foundation', 'UIKit'
