@@ -33,6 +33,7 @@ final class SavedPaymentMethodRowButton: UIView {
 
             rowButton.isSelected = isSelected
             chevronButton.isHidden = !canUpdate && !canRemove
+            defaultBadge?.font = state == .selected ? selectedDefaultBadgeFont : unselectedDefaultBadgeFont
         }
     }
 
@@ -48,6 +49,14 @@ final class SavedPaymentMethodRowButton: UIView {
     }
 
     let showDefaultPMBadge: Bool
+
+    private lazy var selectedDefaultBadgeFont: UIFont = {
+        appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
+    }()
+
+    private lazy var unselectedDefaultBadgeFont: UIFont = {
+        appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+    }()
 
     private var isEditing: Bool {
         switch state {
@@ -91,8 +100,18 @@ final class SavedPaymentMethodRowButton: UIView {
         return chevronButton
     }()
 
+    private lazy var defaultBadge: UILabel? = {
+        guard showDefaultPMBadge else { return nil }
+        let defaultBadge = UILabel()
+        defaultBadge.font = selectedDefaultBadgeFont
+        defaultBadge.textColor = appearance.colors.textSecondary
+        defaultBadge.adjustsFontForContentSizeCategory = true
+        defaultBadge.text = String.Localized.default_text
+        return defaultBadge
+    }()
+
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, showDefaultPMBadge: showDefaultPMBadge, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, defaultBadge: defaultBadge, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
 
         return button
     }()

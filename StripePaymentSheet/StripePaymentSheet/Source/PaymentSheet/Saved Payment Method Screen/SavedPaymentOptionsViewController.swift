@@ -522,9 +522,8 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, showDefaultPMBadge: hasDefault)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, needsVerticalPaddingForBadge: hasDefault, showDefaultPMBadge: isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId))
         cell.delegate = self
-        cell.isDefaultPM = isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId)
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
 

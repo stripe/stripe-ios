@@ -105,7 +105,7 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var defaultBadge: UILabel = {
             let label = UILabel()
-            label.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
             label.textColor = appearance.colors.textSecondary
             label.adjustsFontForContentSizeCategory = true
             label.text = String.Localized.default_text
@@ -114,14 +114,13 @@ extension SavedPaymentMethodCollectionView {
         }()
 
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
-        var isDefaultPM: Bool = false
 
         var isRemovingPaymentMethods: Bool = false {
             didSet {
                 if showDefaultPMBadge {
                     if isRemovingPaymentMethods {
                         activateDefaultBadgeConstraints()
-                        defaultBadge.setHiddenIfNecessary(!isDefaultPM)
+                        defaultBadge.setHiddenIfNecessary(!showDefaultPMBadge)
                     }
                     else {
                         deactivateDefaultBadgeConstraints()
@@ -143,6 +142,7 @@ extension SavedPaymentMethodCollectionView {
         var cbcEligible: Bool = false
         var allowsPaymentMethodRemoval: Bool = true
         var allowsSetAsDefaultPM: Bool = false
+        var needsVerticalPaddingForBadge: Bool = false
         var showDefaultPMBadge: Bool = false
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
@@ -260,7 +260,7 @@ extension SavedPaymentMethodCollectionView {
         }()
 
         // MARK: - Internal Methods
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsSetAsDefaultPM: Bool = false, showDefaultPMBadge: Bool = false) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
@@ -268,6 +268,7 @@ extension SavedPaymentMethodCollectionView {
             self.cbcEligible = cbcEligible
             self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
             self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
+            self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
             self.showDefaultPMBadge = showDefaultPMBadge
             update()
         }

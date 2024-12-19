@@ -70,7 +70,7 @@ class RowButton: UIView {
         imageView: UIImageView,
         text: String,
         subtext: String? = nil,
-        showDefaultPMBadge: Bool = false,
+        defaultBadge: UILabel? = nil,
         promoText: String? = nil,
         rightAccessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
@@ -98,17 +98,7 @@ class RowButton: UIView {
             self.sublabel = nil
         }
 
-        if showDefaultPMBadge {
-            let defaultBadge = UILabel()
-            defaultBadge.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
-            defaultBadge.textColor = appearance.colors.textSecondary
-            defaultBadge.adjustsFontForContentSizeCategory = true
-            defaultBadge.text = String.Localized.default_text
-            self.defaultBadge = defaultBadge
-        }
-        else {
-            self.defaultBadge = nil
-        }
+        self.defaultBadge = defaultBadge
 
         if let promoText {
             self.promoBadge = PromoBadgeView(
@@ -453,10 +443,10 @@ extension RowButton {
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, showDefaultPMBadge: Bool = false, rightAccessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, defaultBadge: UILabel? = nil, rightAccessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, showDefaultPMBadge: showDefaultPMBadge, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
+        let button = RowButton(appearance: appearance, imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, defaultBadge: defaultBadge, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }
