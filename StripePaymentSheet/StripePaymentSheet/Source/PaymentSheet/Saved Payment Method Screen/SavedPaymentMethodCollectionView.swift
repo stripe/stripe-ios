@@ -117,7 +117,7 @@ extension SavedPaymentMethodCollectionView {
 
         var isRemovingPaymentMethods: Bool = false {
             didSet {
-                if showDefaultPMBadge {
+                if needsVerticalPaddingForBadge {
                     if isRemovingPaymentMethods {
                         activateDefaultBadgeConstraints()
                         defaultBadge.setHiddenIfNecessary(!showDefaultPMBadge)
