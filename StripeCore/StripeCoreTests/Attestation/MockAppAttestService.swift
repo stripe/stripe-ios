@@ -25,7 +25,7 @@ class MockAppAttestService: AppAttestService {
     var shouldFailAssertionWithError: Error?
     var shouldFailAttestationWithError: Error?
     var attestationUsingDevelopmentEnvironment: Bool = false
-    
+
     var keys: [String: FakeKey] = [:]
 
     struct FakeKey: Codable {
@@ -137,5 +137,5 @@ class MockAppAttestService: AppAttestService {
         storedChallenge = challenge
         return .init(challenge: challenge, initial_attestation_required: !(keyHasBeenAttested[keyId] ?? false))
     }
-    
+
 }

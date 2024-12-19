@@ -47,7 +47,7 @@ class StripeAttestTest: XCTestCase {
             XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.attestationRateLimitExceeded)
         }
     }
-    
+
     func testCanAttestAsMuchAsNeededInDev() async {
         // Create and attest a key in the dev environment
         mockAttestService.attestationUsingDevelopmentEnvironment = true
