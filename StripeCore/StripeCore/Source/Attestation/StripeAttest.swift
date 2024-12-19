@@ -239,8 +239,14 @@ import UIKit
         let appId = try getAppID()
 
         do {
-            lastAttestedDate = Date()
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
+            if !appAttestService.attestationDataIsDevelopmentEnvironment(attestation) {
+                // We only need to limit attestations in production.
+                // Being more relaxed about this also helps with users switching between
+                // a developer-signed app (which may be in the development attest environment)
+                // and a TestFlight/App Store/Enterprise app (which is always in the production attest environment)
+                lastAttestedDate = Date()
+            }
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
             // Store the successful attestation
             successfullyAttested = true

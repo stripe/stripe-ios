@@ -33,7 +33,7 @@ class StripeAttestTest: XCTestCase {
         try! await self.mockAttestBackend.assertionTest(assertion: assertionResponse)
     }
 
-    func testCanOnlyAttestOncePerDay() async {
+    func testCanOnlyAttestOncePerDayInProd() async {
         // Create and attest a key
         try! await stripeAttest.attest()
         let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
@@ -46,6 +46,26 @@ class StripeAttestTest: XCTestCase {
             // Should get a rate limiting error when we try to generate the second key:
             XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.attestationRateLimitExceeded)
         }
+    }
+    
+    func testCanAttestAsMuchAsNeededInDev() async {
+        // Create and attest a key in the dev environment
+        mockAttestService.attestationUsingDevelopmentEnvironment = true
+        try! await stripeAttest.attest()
+        let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
+        // But fail the assertion, which will cause us to try to re-attest the key
+        mockAttestService.shouldFailAssertionWithError = invalidKeyError
+        do {
+            _ = try await stripeAttest.assert()
+            XCTFail("Should not succeed")
+        } catch {
+            // Should get a shouldNotAttest error from the server, as we're re-attesting an already-attested key
+            XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.shouldNotAttest)
+        }
+        // Now that we've failed assertion and re-attestation, the key will be reset.
+        // Attesting again should now work, because we're in the dev environment
+        // and not constrained by the 24 hour timeout:
+        _ = try! await stripeAttest.attest()
     }
 
     func testAssertionDoesNotAttestIfAlreadyAttested() async {

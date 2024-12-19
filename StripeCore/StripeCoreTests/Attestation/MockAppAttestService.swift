@@ -24,7 +24,8 @@ class MockAppAttestService: AppAttestService {
     var shouldFailKeygenWithError: Error?
     var shouldFailAssertionWithError: Error?
     var shouldFailAttestationWithError: Error?
-
+    var attestationUsingDevelopmentEnvironment: Bool = false
+    
     var keys: [String: FakeKey] = [:]
 
     struct FakeKey: Codable {
@@ -66,10 +67,14 @@ class MockAppAttestService: AppAttestService {
         key.counter += 1
         keys[key.id] = key
         // Generate a fake attestion
-        let attestation = ["keyID": key.id, "counter": key.counter, "clientDataHash": clientDataHash.base64EncodedString()] as [String: Any]
+        let attestation = ["keyID": key.id, "counter": key.counter, "clientDataHash": clientDataHash.base64EncodedString(), "isDevelopmentEnvironment": attestationUsingDevelopmentEnvironment] as [String: Any]
         return try JSONSerialization.data(withJSONObject: attestation)
     }
 
+    @_spi(STP) public func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool {
+        let decodedKey = try! JSONSerialization.jsonObject(with: data) as! [String: Any]
+        return decodedKey["isDevelopmentEnvironment"] as! Bool
+    }
 }
 
 @_spi(STP) public class MockAttestBackend: StripeAttestBackend {
@@ -132,4 +137,5 @@ class MockAppAttestService: AppAttestService {
         storedChallenge = challenge
         return .init(challenge: challenge, initial_attestation_required: !(keyHasBeenAttested[keyId] ?? false))
     }
+    
 }
