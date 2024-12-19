@@ -1879,6 +1879,8 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
     }
     func testLinkOnlyFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        // Use the GB merchant to use web-based Link
+        settings.merchantCountryCode = .GB
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.applePayEnabled = .off
@@ -2064,6 +2066,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Close the Link sheet
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
+        closeButton.waitForExistenceAndTap()
+
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         assertLinkInlineSignupNotShown()
@@ -2096,6 +2103,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Close the Link sheet
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
+        closeButton.waitForExistenceAndTap()
+
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
         assertLinkInlineSignupNotShown()
@@ -2112,7 +2124,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
-        settings.useNativeLink = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2133,7 +2144,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .on
         settings.linkMode = .link_pm
         settings.uiStyle = .flowController
-        settings.useNativeLink = .on
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2206,6 +2216,10 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
+        // Close the Link sheet
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
+        closeButton.waitForExistenceAndTap()
+
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
 
@@ -2220,6 +2234,9 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // reload w/ same customer
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Close the Link sheet
+        closeButton.waitForExistenceAndTap()
 
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
