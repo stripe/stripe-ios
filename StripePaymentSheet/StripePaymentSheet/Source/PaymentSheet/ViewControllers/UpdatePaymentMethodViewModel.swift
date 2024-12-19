@@ -12,8 +12,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-
-private func transparentMaskViewBackgroundColor(componentBackground: UIColor) -> UIColor {
+// calculate the resulting color of the mask overlaying the component background
+private func disabledBackgroundColor(componentBackground: UIColor) -> UIColor {
     let alpha: CGFloat = 0.075
     let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
     let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
@@ -47,11 +47,6 @@ private func overlayColor(overlayColor: UIColor, baseColor: UIColor) -> UIColor 
     let bResult = (b1 * alpha1 + b2 * alpha2 * (1 - alpha1)) / alphaResult
 
     return UIColor(red: rResult, green: gResult, blue: bResult, alpha: alphaResult)
-}
-
-// calculate the resulting color of the mask overlaying the component background
-private func disabledBackgroundColor(componentBackground: UIColor) -> UIColor {
-    return transparentMaskViewBackgroundColor(componentBackground: componentBackground)
 }
 
 class UpdatePaymentMethodViewModel {
