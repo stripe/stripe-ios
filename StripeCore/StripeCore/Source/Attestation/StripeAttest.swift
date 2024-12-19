@@ -163,6 +163,9 @@ import UIKit
     }
 
     /// A wrapper for the DCAppAttestService service.
+    /// Marked as nonisolated as it can not be reassigned during the lifetime
+    /// of StripeAttest, and isolation is handled by the AppAttestService itself
+    /// (Either DCAppAttestService or our MockAppAttestService)
     nonisolated let appAttestService: AppAttestService
     /// A network backend for the /challenge and /attest endpoints.
     let appAttestBackend: StripeAttestBackend
