@@ -92,9 +92,13 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: showDefaultPMBadge ? String.Localized.default_text : nil, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: badgeText, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
 
         return button
+    }()
+
+    private lazy var badgeText: String? = {
+        return showDefaultPMBadge ? String.Localized.default_text : nil
     }()
 
     init(paymentMethod: STPPaymentMethod,
