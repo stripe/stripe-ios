@@ -559,7 +559,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         // Reload w/ same customer
         reload(app, settings: settings)
         // This time, expect SEPA to be pre-selected as the default
-        XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
+        XCTAssert(paymentMethodButton.label.hasPrefix("•••• 3201, sepa_debit"))
 
         // Tapping confirm without presenting flowcontroller should show the mandate
         app.buttons["Confirm"].tap()
@@ -575,7 +575,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         // Reload w/ same customer
         reload(app, settings: settings)
         // If you present the flowcontroller and see the mandate...
-        XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
+        XCTAssert(paymentMethodButton.label.hasPrefix("•••• 3201, sepa_debit"))
         paymentMethodButton.waitForExistenceAndTap()
 
         XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)

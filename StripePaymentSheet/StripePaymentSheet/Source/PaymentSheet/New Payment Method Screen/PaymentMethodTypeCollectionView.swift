@@ -195,8 +195,7 @@ extension PaymentMethodTypeCollectionView {
             return paymentMethodLogo
         }()
         private lazy var promoBadge: PromoBadgeView = {
-            let font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-            return PromoBadgeView(appearance: appearance, tinyMode: true)
+            PromoBadgeView(appearance: appearance, tinyMode: true)
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
             return ShadowedRoundedRectangle(appearance: appearance)

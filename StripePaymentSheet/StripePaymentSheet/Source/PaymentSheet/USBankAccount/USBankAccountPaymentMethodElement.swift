@@ -91,8 +91,9 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         savingAccount: BoolReference,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
-        theme: ElementsAppearance = .default
+        appearance: PaymentSheet.Appearance = .default
     ) {
+        let theme = appearance.asElementsTheme
         let collectingName = configuration.billingDetailsCollectionConfiguration.name != .never
         let collectingEmail = configuration.billingDetailsCollectionConfiguration.email != .never
         let hasDefaultName = configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
@@ -110,7 +111,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 
         self.configuration = configuration
         self.linkedBank = initialLinkedBank
-        self.bankInfoView = BankAccountInfoView(frame: .zero, theme: theme)
+        self.bankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance)
         self.bankInfoSectionElement = SectionElement(title: String.Localized.bank_account_sentence_case,
                                                      elements: [StaticElement(view: bankInfoView)], theme: theme)
         self.bankInfoSectionElement.view.isHidden = true
@@ -148,7 +149,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         if let last4ofBankAccount = linkedBank?.last4,
            let bankName = linkedBank?.bankName {
             bankInfoView.setBankName(text: bankName)
-            bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
+            bankInfoView.setLastFourOfBank(text: "•••• \(last4ofBankAccount)")
             formElement.toggleElements(linkedAccountElements, hidden: false, animated: animated)
         } else {
             formElement.toggleElements(linkedAccountElements, hidden: true, animated: animated)
