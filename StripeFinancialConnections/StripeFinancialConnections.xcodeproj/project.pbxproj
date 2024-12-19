@@ -60,8 +60,15 @@
 		492039952CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492039942CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift */; };
 		492651662C24C9E7001DDBCA /* TestModeAutofillBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */; };
 		492651682C25C0C2001DDBCA /* info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 492651672C25C0C2001DDBCA /* info@3x.png */; };
+		494D32162CC7FCE500C5EFAF /* FinancialConnectionsSentryClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494D32152CC7FCE500C5EFAF /* FinancialConnectionsSentryClient.swift */; };
+		494D32182CC819F000C5EFAF /* SentryContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494D32172CC819F000C5EFAF /* SentryContext.swift */; };
+		494D321A2CC8237F00C5EFAF /* SentryPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494D32192CC8237F00C5EFAF /* SentryPayload.swift */; };
+		494D321C2CC8264D00C5EFAF /* SentryStacktrace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494D321B2CC8264D00C5EFAF /* SentryStacktrace.swift */; };
+		494D322A2CC85E9000C5EFAF /* TraceSymbolsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494D32292CC85E9000C5EFAF /* TraceSymbolsParser.swift */; };
+		494D322C2CC85FE100C5EFAF /* TraceSymbolsParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494D322B2CC85FE100C5EFAF /* TraceSymbolsParserTests.swift */; };
 		494D62072C45B9B700106519 /* link_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 494D62062C45B9B700106519 /* link_logo@3x.png */; };
 		495539EE2C484DC200543D18 /* FinancialConnectionsTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */; };
+		4967A0EA2CC971AB002513AC /* SentryException.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4967A0E92CC971AB002513AC /* SentryException.swift */; };
 		496A6AE72C29E0BB00D34F8E /* testmode@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496A6AE62C29E0BB00D34F8E /* testmode@3x.png */; };
 		497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497142BB2C514B08000DFA64 /* FlowRouterTests.swift */; };
 		49A0B5862C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */; };
@@ -322,8 +329,15 @@
 		492039942CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsWebFlowTests.swift; sourceTree = "<group>"; };
 		492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeAutofillBannerView.swift; sourceTree = "<group>"; };
 		492651672C25C0C2001DDBCA /* info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@3x.png"; sourceTree = "<group>"; };
+		494D32152CC7FCE500C5EFAF /* FinancialConnectionsSentryClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSentryClient.swift; sourceTree = "<group>"; };
+		494D32172CC819F000C5EFAF /* SentryContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryContext.swift; sourceTree = "<group>"; };
+		494D32192CC8237F00C5EFAF /* SentryPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryPayload.swift; sourceTree = "<group>"; };
+		494D321B2CC8264D00C5EFAF /* SentryStacktrace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryStacktrace.swift; sourceTree = "<group>"; };
+		494D32292CC85E9000C5EFAF /* TraceSymbolsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraceSymbolsParser.swift; sourceTree = "<group>"; };
+		494D322B2CC85FE100C5EFAF /* TraceSymbolsParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraceSymbolsParserTests.swift; sourceTree = "<group>"; };
 		494D62062C45B9B700106519 /* link_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "link_logo@3x.png"; sourceTree = "<group>"; };
 		495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsTheme.swift; sourceTree = "<group>"; };
+		4967A0E92CC971AB002513AC /* SentryException.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryException.swift; sourceTree = "<group>"; };
 		496A6AE62C29E0BB00D34F8E /* testmode@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testmode@3x.png"; sourceTree = "<group>"; };
 		497142BB2C514B08000DFA64 /* FlowRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowRouterTests.swift; sourceTree = "<group>"; };
 		49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClientTests.swift; sourceTree = "<group>"; };
@@ -636,6 +650,7 @@
 		328390D72E3911449BB9FD0B /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
+				494D32132CC7FCCF00C5EFAF /* Sentry */,
 				DBBF5CEE2C9030B2D374BC76 /* FinancialConnectionsAnalyticsClient.swift */,
 				A6038978C79785C18257CD74 /* FinancialConnectionsSheetAnalytics.swift */,
 			);
@@ -669,6 +684,19 @@
 				248D51F7AADE404E49957DDA /* FinancialConnectionsSDKImplementation.swift */,
 			);
 			path = FinancialConnectionsSDK;
+			sourceTree = "<group>";
+		};
+		494D32132CC7FCCF00C5EFAF /* Sentry */ = {
+			isa = PBXGroup;
+			children = (
+				494D32152CC7FCE500C5EFAF /* FinancialConnectionsSentryClient.swift */,
+				494D32172CC819F000C5EFAF /* SentryContext.swift */,
+				494D32192CC8237F00C5EFAF /* SentryPayload.swift */,
+				494D321B2CC8264D00C5EFAF /* SentryStacktrace.swift */,
+				494D32292CC85E9000C5EFAF /* TraceSymbolsParser.swift */,
+				4967A0E92CC971AB002513AC /* SentryException.swift */,
+			);
+			path = Sentry;
 			sourceTree = "<group>";
 		};
 		49C911362C597EAF00589E0D /* LinkLogin */ = {
@@ -1083,6 +1111,7 @@
 				CF731140836AE438C7F4F6AB /* StringExtensionsTests.swift */,
 				497142BB2C514B08000DFA64 /* FlowRouterTests.swift */,
 				492039942CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift */,
+				494D322B2CC85FE100C5EFAF /* TraceSymbolsParserTests.swift */,
 			);
 			path = StripeFinancialConnectionsTests;
 			sourceTree = "<group>";
@@ -1230,6 +1259,8 @@
 				"zh-Hant",
 			);
 			mainGroup = 7879CBA341D7E807714A831B;
+			packageReferences = (
+			);
 			productRefGroup = 820BF9CF057CF92872BC3C15 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1299,6 +1330,7 @@
 				6A3DA1F52C34A37F005C3F6E /* GenericInfoViewController.swift in Sources */,
 				FBF513C7F73002FA30CC7C21 /* ConsumerSessionModels.swift in Sources */,
 				6A3739142C40558900D1F765 /* GenericInfoBodyView.swift in Sources */,
+				494D321A2CC8237F00C5EFAF /* SentryPayload.swift in Sources */,
 				EC74B719F0FA1A977EF4708C /* FinancialConnectionsAccount.swift in Sources */,
 				460C7685096AA6C693309647 /* FinancialConnectionsAuthSession.swift in Sources */,
 				AB5AFAC3C70D6195075DE5AE /* FinancialConnectionsBulletPoint.swift in Sources */,
@@ -1308,8 +1340,10 @@
 				F67624595BD2CD7B6793BFDA /* FinancialConnectionsImage.swift in Sources */,
 				07712610C7D2F484AAB96982 /* FinancialConnectionsInstitution.swift in Sources */,
 				7386E1F9256B23CE29BF996D /* FinancialConnectionsInstitutionSearchResultResource.swift in Sources */,
+				494D321C2CC8264D00C5EFAF /* SentryStacktrace.swift in Sources */,
 				C7D2763ACCE2CC71E788E18F /* FinancialConnectionsLegalDetailsNotice.swift in Sources */,
 				B271AAF41C9FE6AE392B88D3 /* FinancialConnectionsMixedOAuthParams.swift in Sources */,
+				4967A0EA2CC971AB002513AC /* SentryException.swift in Sources */,
 				DAA51ABB496551074DBA1A20 /* FinancialConnectionsNetworkedAccountsResponse.swift in Sources */,
 				6A732CA62B69A46D00828CB1 /* PhoneTextField.swift in Sources */,
 				6FE9F171CF9A5D0EDB2035AA /* FinancialConnectionsNetworkingLinkSignup.swift in Sources */,
@@ -1374,6 +1408,7 @@
 				3446145FCA3278D51A9D4B80 /* AttachLinkedPaymentAccountDataSource.swift in Sources */,
 				E3F62D2F9C344A1178030E8E /* AttachLinkedPaymentAccountViewController.swift in Sources */,
 				707C265C4179A8FEC98913FE /* ConsentBodyView.swift in Sources */,
+				494D322A2CC85E9000C5EFAF /* TraceSymbolsParser.swift in Sources */,
 				465AE8A58AD2183E1E2042FE /* ConsentDataSource.swift in Sources */,
 				97C528CE821C6A55D58F68A4 /* ConsentFooterView.swift in Sources */,
 				8927328EE28A0C94B5AB69DB /* ConsentLogoView.swift in Sources */,
@@ -1431,6 +1466,7 @@
 				9AF6EC34D666BEB3C1397092 /* BulletPointLabelView.swift in Sources */,
 				313F5F7F2B0BE5D100BD98A9 /* Docs.docc in Sources */,
 				F65E8D16DE691EB6C99C4521 /* Button+Extensions.swift in Sources */,
+				494D32162CC7FCE500C5EFAF /* FinancialConnectionsSentryClient.swift in Sources */,
 				33FA1684CE79F21271D14F23 /* HitTestStackView.swift in Sources */,
 				691619AE9A989548ABA36535 /* HitTestView.swift in Sources */,
 				91A3583A0BDE0F8F0C4AD3E2 /* InstitutionIconView.swift in Sources */,
@@ -1440,6 +1476,7 @@
 				49C911372C597EAF00589E0D /* LinkLoginDataSource.swift in Sources */,
 				6A7814182B361C5000168992 /* PaneLayoutView+Extensions.swift in Sources */,
 				99F41681B77ECB0090F34E31 /* SFSafariViewController+Extensions.swift in Sources */,
+				494D32182CC819F000C5EFAF /* SentryContext.swift in Sources */,
 				AA80602323C28AFAC391358D /* TimeInterval+Extensions.swift in Sources */,
 				E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */,
 				495539EE2C484DC200543D18 /* FinancialConnectionsTheme.swift in Sources */,
@@ -1471,6 +1508,7 @@
 				492039952CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift in Sources */,
 				700B745FEF43088D9E34C0E4 /* AccountPickerHelpersTests.swift in Sources */,
 				6744CB1B182C5F7220B0B804 /* AuthFlowHelpersTests.swift in Sources */,
+				494D322C2CC85FE100C5EFAF /* TraceSymbolsParserTests.swift in Sources */,
 				39E5D4531961150E9CB3262F /* EmptyFinancialConnectionsAPIClient.swift in Sources */,
 				CB734C25A19D38A87876FB2B /* FinancialConnectionsAnalyticsTest.swift in Sources */,
 				497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */,

@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum InstallMethod: String {
+@_spi(STP) public enum InstallMethod: String {
     case cocoapods = "C"
     case spm = "S"
     case binary = "B"  // Built via export_builds.sh
     case xcode = "X"  // Directly built via Xcode or xcodebuild
 
-    static let current: InstallMethod = {
+    @_spi(STP) public static let current: InstallMethod = {
         #if COCOAPODS
             return .cocoapods
         #elseif SWIFT_PACKAGE
