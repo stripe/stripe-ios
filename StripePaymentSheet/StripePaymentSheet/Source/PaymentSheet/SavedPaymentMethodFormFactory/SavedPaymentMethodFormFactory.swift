@@ -14,7 +14,7 @@ import UIKit
 protocol SavedPaymentMethodFormFactoryDelegate: AnyObject {
     func didUpdate(_: Element, shouldEnableSaveButton: Bool)
 }
-//return .dynamic(light: .systemBackground, dark: .secondarySystemBackground)
+
 private func transparentMaskViewBackgroundColor(componentBackground: UIColor) -> UIColor {
     let alpha: CGFloat = 0.075
     let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
