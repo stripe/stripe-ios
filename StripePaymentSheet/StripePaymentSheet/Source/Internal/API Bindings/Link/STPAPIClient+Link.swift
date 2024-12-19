@@ -56,13 +56,15 @@ extension STPAPIClient {
                 parameters: parameters,
                 ephemeralKeySecret: publishableKey
             ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
-                // If there's an assertion error, send it to StripeAttest
-                if useMobileEndpoints,
-                   case .failure(let error) = result,
-                   Self.isLinkAssertionError(error: error) {
-                    StripeAttest(apiClient: self).receivedAssertionError(error)
+                Task { @MainActor in
+                    // If there's an assertion error, send it to StripeAttest
+                    if useMobileEndpoints,
+                       case .failure(let error) = result,
+                       Self.isLinkAssertionError(error: error) {
+                        await StripeAttest(apiClient: self).receivedAssertionError(error)
+                    }
+                    completion(result)
                 }
-                completion(result)
             }
         }
     }
@@ -115,14 +117,16 @@ extension STPAPIClient {
                 resource: useMobileEndpoints ? modernEndpoint : legacyEndpoint,
                 parameters: parameters
             ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
-                // If there's an assertion error, send it to StripeAttest
-                if useMobileEndpoints,
-                   case .failure(let error) = result,
-                   Self.isLinkAssertionError(error: error) {
-                    StripeAttest(apiClient: self).receivedAssertionError(error)
-                }
+                Task { @MainActor in
+                    // If there's an assertion error, send it to StripeAttest
+                    if useMobileEndpoints,
+                       case .failure(let error) = result,
+                       Self.isLinkAssertionError(error: error) {
+                        await StripeAttest(apiClient: self).receivedAssertionError(error)
+                    }
 
-                completion(result)
+                    completion(result)
+                }
             }
         }
     }
