@@ -319,7 +319,7 @@ private extension ConnectComponentWebViewController {
     func openFinancialConnections(_ args: OpenFinancialConnectionsMessageHandler.Payload) {
         Task { @MainActor in
             let result = await financialConnectionsPresenter.presentForToken(
-                apiClient: componentManager.apiClient,
+                componentManager: componentManager,
                 clientSecret: args.clientSecret,
                 connectedAccountId: args.connectedAccountId,
                 from: self
