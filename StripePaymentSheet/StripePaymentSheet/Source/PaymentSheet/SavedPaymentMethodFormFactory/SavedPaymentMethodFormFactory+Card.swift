@@ -52,8 +52,7 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let cvcElement: TextFieldElement = {
-            let cvcConfiguration = TextFieldElement.CensoredCVCConfiguration(brand: self.viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown)
-            return cvcConfiguration.makeElement(theme: viewModel.appearance.asElementsTheme)
+            return TextFieldElement.CensoredCVCConfiguration(brand: self.viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown).makeElement(theme: viewModel.appearance.asElementsTheme)
         }()
 
         let cardSection: SectionElement = {

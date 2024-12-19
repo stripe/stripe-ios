@@ -14,17 +14,19 @@ import UIKit
 protocol SavedPaymentMethodFormFactoryDelegate: AnyObject {
     func didUpdate(_: Element, shouldEnableSaveButton: Bool)
 }
-
+//return .dynamic(light: .systemBackground, dark: .secondarySystemBackground)
 private func transparentMaskViewBackgroundColor(componentBackground: UIColor) -> UIColor {
     let alpha: CGFloat = 0.075
     let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
     let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
 
+    let lightModeComponentBackground = componentBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+    let darkModeComponentBackground = componentBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .dark))
     return componentBackground.isBright
-    ? UIColor.dynamic(light: colorMaskForLight,
-                      dark: colorMaskForDark)
-    : UIColor.dynamic(light: colorMaskForDark,
-                      dark: colorMaskForLight)
+        ? UIColor.dynamic(light: overlayColor(overlayColor: colorMaskForLight, baseColor: lightModeComponentBackground),
+                          dark: overlayColor(overlayColor: colorMaskForDark, baseColor: darkModeComponentBackground))
+        : UIColor.dynamic(light: overlayColor(overlayColor: colorMaskForDark, baseColor: darkModeComponentBackground),
+                          dark: overlayColor(overlayColor: colorMaskForLight, baseColor: lightModeComponentBackground))
 }
 
 private func overlayColor(overlayColor: UIColor, baseColor: UIColor) -> UIColor {
@@ -51,8 +53,7 @@ private func overlayColor(overlayColor: UIColor, baseColor: UIColor) -> UIColor 
 
 // calculate the resulting color of the mask overlaying the component background
 private func disabledBackgroundColor(componentBackground: UIColor) -> UIColor {
-    let mask = transparentMaskViewBackgroundColor(componentBackground: componentBackground)
-    return overlayColor(overlayColor: mask, baseColor: componentBackground)
+    return transparentMaskViewBackgroundColor(componentBackground: componentBackground)
 }
 
 class SavedPaymentMethodFormFactory {
