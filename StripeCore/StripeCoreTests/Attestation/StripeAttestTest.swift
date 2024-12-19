@@ -96,4 +96,17 @@ class StripeAttestTest: XCTestCase {
             XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.noPublishableKey)
         }
     }
+
+    func testAssertionsNotRequiredInTestMode() async {
+        // Configure a test merchant PK:
+        stripeAttest.apiClient.publishableKey = "pk_test_abc123"
+        // And reset the last attestation date:
+        UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
+        // Fail the assertion, which will cause us to try to re-attest the key, but then the
+        // assertions still won't work, so we'll send the testmode data instead.
+        let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
+        mockAttestService.shouldFailAssertionWithError = invalidKeyError
+        let assertion = try! await stripeAttest.assert()
+        XCTAssertEqual(assertion.keyID, "TestKeyID")
+    }
 }
