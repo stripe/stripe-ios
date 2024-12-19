@@ -18,7 +18,7 @@ class StripeAttestTest: XCTestCase {
         self.stripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: .shared)
 
         // Reset storage
-        UserDefaults.standard.removeObject(forKey: StripeAttest.DefaultsKeys.lastAttestedDate.rawValue)
+        UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
         stripeAttest.resetKey()
     }
 
@@ -53,7 +53,7 @@ class StripeAttestTest: XCTestCase {
             // Create and attest a key
             try! await stripeAttest.attest()
             // But it's an old key, so we'll be allowed to attest a new one
-            UserDefaults.standard.set(Date.distantPast, forKey: StripeAttest.DefaultsKeys.lastAttestedDate.rawValue)
+            UserDefaults.standard.set(Date.distantPast, forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
             // Always fail the assertions and don't remember attestations:
             let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
             mockAttestService.shouldFailAssertionWithError = invalidKeyError
