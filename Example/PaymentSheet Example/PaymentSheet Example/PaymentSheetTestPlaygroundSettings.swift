@@ -245,17 +245,19 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum LinkMode: String, PickerEnum {
-        static var enumName: String { "Link mode" }
+    enum LinkPassthroughMode: String, PickerEnum {
+        static var enumName: String { "Link passthrough mode" }
 
-        case link_pm = "Link PM"
+        case pm = "PaymentMethod"
         case passthrough
     }
 
-    enum LinkNativeMode: String, PickerEnum {
-        static var enumName: String { "Native Link" }
+    enum LinkEnabledMode: String, PickerEnum {
+        static var enumName: String { "Enable Link" }
 
-        case on
+        case native
+        case nativeWithAttestation = "attest"
+        case web
         case off
     }
 
@@ -474,7 +476,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
-    var linkMode: LinkMode
+    var linkPassthroughMode: LinkPassthroughMode
+    var linkEnabledMode: LinkEnabledMode
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -521,7 +524,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodAllowRedisplayFilters: .always,
             defaultBillingAddress: .off,
             customEmail: nil,
-            linkMode: .passthrough,
+            linkPassthroughMode: .passthrough,
+            linkEnabledMode: .native,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
