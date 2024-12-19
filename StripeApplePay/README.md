@@ -3,15 +3,15 @@
 StripeApplePay is a lightweight Apple Pay SDK intended for building App Clips or other size-constrained apps.
 
 ## Table of contents
-
+<!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
 <!--ts-->
-- [Stripe Apple Pay iOS SDK](#stripe-apple-pay-ios-sdk)
-- [Table of contents](#table-of-contents)
-  - [Requirements](#requirements)
-  - [Getting started](#getting-started)
-    - [Integration](#integration)
-    - [Example](#example)
-  - [Manual linking](#manual-linking)
+- [Stripe Apple Pay iOS SDK](#Stripe-Apple-Pay-iOS-SDK)
+- [Table of contents](#Table-of-contents)
+  - [Requirements](#Requirements)
+  - [Getting started](#Getting-started)
+    - [Integration](#Integration)
+    - [Example](#Example)
+  - [Manual linking](#Manual-linking)
 
 <!--te-->
 
