@@ -66,7 +66,12 @@ The Stripe iOS SDK collects data to help us improve our products and prevent fra
 For help with Apple's App Privacy Details form in App Store Connect, visit [Stripe iOS SDK Privacy Details](https://support.stripe.com/questions/stripe-ios-sdk-privacy-details).
 
 ## Modules
-<!-- Pad `Size` col with &nbsp; to prevent table from shrinking badge images and maintain readability -->
+<!-- 
+  EmergeTools project must be made public before adding to this table:
+  https://www.emergetools.com/settings?tab=app-display-options&cards=public_org_apps
+
+  NOTE: Pad `Size` col with &nbsp; to prevent table from shrinking badge images and maintain readability  
+ -->
 | Module | Description | Size&nbsp;([Download&nbsp;→&nbsp;Install](https://docs.emergetools.com/docs/ios-app-size#download-vs-install-size))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
 |--------|-------------|------|
 | [StripePaymentSheet](StripePaymentSheet) | Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet). | [![StripePaymentSheet size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripePaymentSheetSize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=StripePaymentSheet&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripePaymentSheetSize/release?utm_campaign=badge-data) |
