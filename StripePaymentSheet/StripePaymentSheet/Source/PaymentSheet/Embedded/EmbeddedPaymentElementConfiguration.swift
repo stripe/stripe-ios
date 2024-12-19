@@ -144,12 +144,12 @@ extension EmbeddedPaymentElement {
                 completion: (EmbeddedPaymentElementResult) -> Void
             )
 
-            /// The button says “Continue”. When tapped, the form sheet closes.
+            /// The button says “Continue”. When tapped, the form sheet closes. The customer can confirm payment or setup back in your app.
             case `continue`
         }
 
         /// The view can display payment methods like “Card” that, when tapped, open a sheet where customers enter their payment method details. The sheet has a button at the bottom. `formSheetAction` controls the action the button performs.
-        public var formSheetAction: FormSheetAction
+        public var formSheetAction: FormSheetAction = .continue
 
         /// Controls whether the view displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
         /// - Note: This doesn't affect mandates displayed in the form sheet.
@@ -161,8 +161,6 @@ extension EmbeddedPaymentElement {
         internal var linkPaymentMethodsOnly: Bool = false
 
         /// Initializes a Configuration with default values
-        public init(formSheetAction: FormSheetAction) {
-            self.formSheetAction = formSheetAction
-        }
+        public init() {}
     }
 }
