@@ -103,6 +103,8 @@ import UIKit
         case shouldNotAttest
         /// The backend asked us to attest, but the key is already attested
         case shouldAttestButKeyIsAlreadyAttested
+        /// A publishable key was not set
+        case noPublishableKey
     }
 
     // MARK: - Internal
@@ -269,6 +271,9 @@ import UIKit
     private func getOrCreateKeyID() async throws -> String {
         guard appAttestService.isSupported else {
             throw AttestationError.attestationNotSupported
+        }
+        guard apiClient.publishableKey != nil else {
+            throw AttestationError.noPublishableKey
         }
         if let keyId = keyID {
             return keyId

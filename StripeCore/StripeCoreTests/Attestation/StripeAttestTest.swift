@@ -84,4 +84,14 @@ class StripeAttestTest: XCTestCase {
             XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.shouldNotAttest)
         }
     }
+
+    func testNoPublishableKey() async {
+        do {
+            // Create and attest a key
+            try await stripeAttest.attest()
+            XCTFail("Should not succeed")
+        } catch {
+            XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.noPublishableKey)
+        }
+    }
 }
