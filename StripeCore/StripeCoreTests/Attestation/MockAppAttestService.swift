@@ -10,10 +10,10 @@ import DeviceCheck
 @testable @_spi(STP) import StripeCore
 import UIKit
 
-class MockAppAttestService: AppAttestService {
+actor MockAppAttestService: AppAttestService {
     @_spi(STP) public static var shared = MockAppAttestService()
 
-    @_spi(STP) public var isSupported: Bool {
+    @_spi(STP) public nonisolated var isSupported: Bool {
         if #available(iOS 14.0, *) {
             return true
         } else {
@@ -25,6 +25,22 @@ class MockAppAttestService: AppAttestService {
     var shouldFailAssertionWithError: Error?
     var shouldFailAttestationWithError: Error?
     var attestationUsingDevelopmentEnvironment: Bool = false
+
+    func setShouldFailKeygenWithError(_ error: Error?) async {
+        shouldFailKeygenWithError = error
+    }
+
+    func setShouldFailAssertionWithError(_ error: Error?) async {
+        shouldFailAssertionWithError = error
+    }
+
+    func setShouldFailAttestationWithError(_ error: Error?) async {
+        shouldFailAttestationWithError = error
+    }
+
+    func setAttestationUsingDevelopmentEnvironment(_ value: Bool) async {
+        attestationUsingDevelopmentEnvironment = value
+    }
 
     var keys: [String: FakeKey] = [:]
 
@@ -71,7 +87,7 @@ class MockAppAttestService: AppAttestService {
         return try JSONSerialization.data(withJSONObject: attestation)
     }
 
-    @_spi(STP) public func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool {
+    @_spi(STP) public nonisolated func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool {
         let decodedKey = try! JSONSerialization.jsonObject(with: data) as! [String: Any]
         return decodedKey["isDevelopmentEnvironment"] as! Bool
     }
