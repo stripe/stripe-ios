@@ -12,7 +12,8 @@ import UIKit
     /// Initialize a new StripeAttest object with the specified STPAPIClient.
     @_spi(STP) public convenience init(apiClient: STPAPIClient = .shared) {
         self.init(appAttestService: AppleAppAttestService.shared,
-                  appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient), apiClient: apiClient)
+                  appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient),
+                  apiClient: apiClient)
     }
 
     /// Sign an assertion.
@@ -119,7 +120,7 @@ import UIKit
         case successfullyAttested = "STPAttestKeySuccessfullyAttested"
     }
 
-    private var keyID: String? {
+    private var storedKeyID: String? {
         get {
             UserDefaults.standard.string(forKey: defaultsKeyForSetting(.keyID))
         }
@@ -158,7 +159,7 @@ import UIKit
     init(appAttestService: AppAttestService, appAttestBackend: StripeAttestBackend?, apiClient: STPAPIClient) {
         self.appAttestService = appAttestService
         self.appAttestBackend = appAttestBackend ?? StripeAPIAttestationBackend(apiClient: apiClient)
-        self.apiClient = STPAPIClient.shared
+        self.apiClient = apiClient
     }
 
     /// A wrapper for the DCAppAttestService service.
@@ -275,7 +276,7 @@ import UIKit
         guard apiClient.publishableKey != nil else {
             throw AttestationError.noPublishableKey
         }
-        if let keyId = keyID {
+        if let keyId = storedKeyID {
             return keyId
         }
         // If we don't have a key, generate one.
@@ -283,14 +284,14 @@ import UIKit
     }
 
     @_spi(STP) public func resetKey() {
-        keyID = nil
+        storedKeyID = nil
         successfullyAttested = false
     }
 
     private func createKey() async throws -> String {
         let keyId = try await appAttestService.generateKey()
         // Save the Key ID, and that the key is not attested.
-        keyID = keyId
+        storedKeyID = keyId
         successfullyAttested = false
         return keyId
     }
