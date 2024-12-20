@@ -15,9 +15,7 @@ extension EmbeddedComponentManager {
     /**
      Use a `CustomFontSource` pass custom fonts embedded in your app's binary when initializing a
      `EmbeddedComponentManager`.
-     - Seealso:
-       - [Customizing the look of connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios#customize-the-look-of-connect-embedded-components)
-       - [Adding custom fonts to your app](     https://developer.apple.com/documentation/uikit/text_display_and_fonts/adding_a_custom_font_to_your_app)
+     - Seealso: [Customizing the look of connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios#customize-the-look-of-connect-embedded-components) and [Adding custom fonts to your app](     https://developer.apple.com/documentation/uikit/text_display_and_fonts/adding_a_custom_font_to_your_app)
      */
     @_documentation(visibility: public)
     public struct CustomFontSource {
