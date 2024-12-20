@@ -62,10 +62,6 @@
 #     of the docs for this module. Used as the `--readme` argument to Jazzy.
 #     If omitted, uses Jazzy default (the root directory's README.md file).
 #
-#     NOTE: You must add a placeholder file to the module's project in the 
-#     following location for the README to be included in docs:
-#       [ModuleName]/[ModuleName]/Docs.docc/[ModuleName].md
-#
 #   - include (optional):
 #     An array of modules to be combined with this module, for the purpose of documentation.
 #
