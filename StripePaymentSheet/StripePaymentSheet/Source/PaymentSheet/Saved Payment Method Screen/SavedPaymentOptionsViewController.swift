@@ -131,6 +131,10 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
         set {
             collectionView.isRemovingPaymentMethods = newValue
+            collectionView.performBatchUpdates({
+                collectionView.reloadSections(IndexSet(integer: 0))
+                animateHeightChange{self.collectionView.updateLayout()}
+            })
             UIView.transition(with: collectionView,
                               duration: 0.3,
                               options: .transitionCrossDissolve,
@@ -147,6 +151,11 @@ class SavedPaymentOptionsViewController: UIViewController {
             }
         }
     }
+
+    var hasDefault: Bool {
+        return viewModels.contains(where: { isDefaultPaymentMethod(savedPaymentMethodId: $0.savedPaymentMethod?.stripeId) })
+    }
+
     var bottomNoticeAttributedString: NSAttributedString? {
         if case .saved(let paymentMethod, _) = selectedPaymentOption {
             if paymentMethod.usBankAccount != nil {
@@ -267,7 +276,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Views
     private lazy var collectionView: SavedPaymentMethodCollectionView = {
-        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance)
+        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance, needsVerticalPaddingForBadge: hasDefault)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -439,6 +448,11 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.reloadItems(at: [selectedIndexPath])
     }
 
+    private func isDefaultPaymentMethod(savedPaymentMethodId: String?) -> Bool {
+        guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
+        return savedPaymentMethodId == defaultPaymentMethod.stripeId
+    }
+
     // MARK: - Helpers
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
@@ -508,7 +522,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods)
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, needsVerticalPaddingForBadge: hasDefault, showDefaultPMBadge: isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId))
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

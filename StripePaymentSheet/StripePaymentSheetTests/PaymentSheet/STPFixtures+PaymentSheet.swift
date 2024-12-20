@@ -29,7 +29,7 @@ public extension PaymentSheet.Configuration {
 public extension EmbeddedPaymentElement.Configuration {
     /// Provides a Configuration that allows all pm types available
     static func _testValue_MostPermissive(isApplePayEnabled: Bool = true) -> Self {
-        var configuration = EmbeddedPaymentElement.Configuration(formSheetAction: .continue)
+        var configuration = EmbeddedPaymentElement.Configuration()
         configuration.returnURL = "https://foo.com"
         configuration.allowsDelayedPaymentMethods = true
         configuration.allowsPaymentMethodsRequiringShippingAddress = true
