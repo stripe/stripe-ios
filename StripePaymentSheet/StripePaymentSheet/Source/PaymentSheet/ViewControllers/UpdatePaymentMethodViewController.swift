@@ -92,7 +92,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
             configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
             configuration.baseBackgroundColor = .clear
             configuration.background.cornerRadius = viewModel.appearance.cornerRadius
-            configuration.background.strokeWidth = viewModel.appearance.selectedBorderWidth ?? viewModel.appearance.borderWidth + 1
+            configuration.background.strokeWidth = viewModel.appearance.selectedBorderWidth ?? viewModel.appearance.borderWidth * 1.5
             configuration.background.strokeColor = viewModel.appearance.colors.danger
             configuration.titleAlignment = .center
             configuration.attributedTitle = AttributedString(.Localized.remove, attributes: AttributeContainer([.font: font, .foregroundColor: viewModel.appearance.colors.danger]))
@@ -102,7 +102,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
             button.setTitleColor(viewModel.appearance.colors.danger, for: .normal)
             button.setTitleColor(viewModel.appearance.colors.danger.disabledColor, for: .highlighted)
             button.layer.borderColor = viewModel.appearance.colors.danger.cgColor
-            button.layer.borderWidth = viewModel.appearance.selectedBorderWidth ?? viewModel.appearance.borderWidth + 1
+            button.layer.borderWidth = viewModel.appearance.selectedBorderWidth ?? viewModel.appearance.borderWidth * 1.5
             button.layer.cornerRadius = viewModel.appearance.cornerRadius
             button.setTitle(.Localized.remove, for: .normal)
             button.titleLabel?.textAlignment = .center
