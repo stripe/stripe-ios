@@ -164,14 +164,14 @@ def build_module_docs(modules, release_version, docs_root_directory)
     end
 
     # Remove allow-listed SPI gates
-    swift_files = Dir.glob("#{docs_root_directory}/**/*.swift")
-    swift_files.each do |f|
-      content = File.read(f)
-      $SPI_ALLOWLIST.each do |spi|
-        content = content.gsub(/@_spi(#{spi})/, '')
-      end
-      File.open(jsf, 'w') { |file| file.puts content }
-    end
+    # swift_files = Dir.glob("#{docs_root_directory}/**/*.swift")
+    # swift_files.each do |f|
+    #   content = File.read(f)
+    #   $SPI_ALLOWLIST.each do |spi|
+    #     content = content.gsub(/@_spi(#{spi})/, '')
+    #   end
+    #   File.open(jsf, 'w') { |file| file.puts content }
+    # end
 
     info "Executing xcodebuild for #{m['framework_name']}..."
 
