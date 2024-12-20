@@ -217,22 +217,13 @@ def build_index_page(modules, release_version, docs_root_directory)
   # Copy 404 redirect page
   `cp "#{$SCRIPT_DIR}/docs/404.html" "#{docs_root_directory}/docs/404.html"`
 
-  # HACK: Remove all deprecation warnings.
-  # Remove this once DocC is fixed: https://github.com/apple/swift-docc/issues/450
-  js_files = Dir.glob("#{docs_root_directory}/docs/**/*.json")
-  js_files.each do |jsf|
-    content = File.read(jsf)
-    content = content.gsub(/"deprecated":true/, '"deprecated":false')
-    File.open(jsf, 'w') { |file| file.puts content }
-  end
-
   # Clean up the bogus index.html file created by DocC
   File.delete("#{docs_root_directory}/docs/index.html")
 end
 
 def publish(release_version, docs_root_directory)
   git_publish_dir = Dir.mktmpdir('stripe-docs-git')
-  docs_branchname = "docs-publish/#{release_version}_fix"
+  docs_branchname = "docs-publish/#{release_version}"
   `cp -a "#{$ROOT_DIR}/.git" "#{git_publish_dir}"`
   Dir.chdir(git_publish_dir) do
     `git checkout docs`
