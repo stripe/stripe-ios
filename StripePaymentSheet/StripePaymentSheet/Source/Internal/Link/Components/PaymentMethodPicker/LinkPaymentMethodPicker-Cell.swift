@@ -73,7 +73,7 @@ extension LinkPaymentMethodPicker {
 
         private let defaultBadge = LinkBadgeView(
             type: .neutral,
-            text: STPLocalizedString("Default", "Label for identifying the default payment method.")
+            text: String.Localized.default_text
         )
 
         private let alertIconView: UIImageView = {

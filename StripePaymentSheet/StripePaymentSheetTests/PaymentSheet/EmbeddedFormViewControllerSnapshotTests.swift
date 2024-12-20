@@ -73,11 +73,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
     // MARK: - Tests
 
     func testDisplayCard_confirmFormSheetAction() {
-        let configuration = EmbeddedPaymentElement.Configuration(
-            formSheetAction: .confirm(completion: { _ in
-                // no-op
-            })
-        )
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.formSheetAction = .confirm(completion: { _ in })
         let sut = makeEmbeddedFormViewController(
             configuration: configuration,
             paymentMethodType: .card
@@ -86,9 +83,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 
     func testDisplayCard_continueFormSheetAction() {
-        let configuration = EmbeddedPaymentElement.Configuration(
-            formSheetAction: .continue
-        )
+        var configuration = EmbeddedPaymentElement.Configuration()
         let sut = makeEmbeddedFormViewController(
             configuration: configuration,
             paymentMethodType: .card
@@ -102,11 +97,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
                 return "Mock error description"
             }
         }
-        let configuration = EmbeddedPaymentElement.Configuration(
-            formSheetAction: .confirm(completion: { _ in
-                // no-op
-            })
-        )
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.formSheetAction = .confirm(completion: { _ in })
         let sut = makeEmbeddedFormViewController(
             configuration: configuration,
             paymentMethodType: .card
@@ -116,11 +108,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 
     func testRestoresPreviousCustomerInput() {
-        let configuration = EmbeddedPaymentElement.Configuration(
-            formSheetAction: .confirm(completion: { _ in
-                // no-op
-            })
-        )
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.formSheetAction = .confirm(completion: { _ in })
         let previousPaymentOption = PaymentOption.new(
             confirmParams: IntentConfirmParams(
                 params: ._testValidCardValue(),
@@ -136,11 +125,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 
     func testDisabledState() {
-        let configuration = EmbeddedPaymentElement.Configuration(
-            formSheetAction: .confirm(completion: { _ in
-                // no-op
-            })
-        )
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.formSheetAction = .confirm(completion: { _ in })
         let sut = makeEmbeddedFormViewController(
             configuration: configuration,
             paymentMethodType: .card
@@ -150,11 +136,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 
     func testBillingCollectionConfiguration() {
-        var configuration = EmbeddedPaymentElement.Configuration(
-            formSheetAction: .confirm(completion: { _ in
-                // no-op
-            })
-        )
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.formSheetAction = .confirm(completion: { _ in })
         configuration.billingDetailsCollectionConfiguration = .init(name: .always, phone: .always)
         let sut = makeEmbeddedFormViewController(
             configuration: configuration,
@@ -164,11 +147,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 
     func testMandateView() {
-        let configuration = EmbeddedPaymentElement.Configuration(
-            formSheetAction: .confirm(completion: { _ in
-                // no-op
-            })
-        )
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.formSheetAction = .confirm(completion: { _ in })
         let sut = makeEmbeddedFormViewController(
             configuration: configuration,
             paymentMethodType: .SEPADebit
@@ -177,18 +157,15 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         sut.updateMandate()
         verify(sut)
     }
-    
+
     func testDisplaysErrorAndMandate() {
         struct MockError: LocalizedError {
             var errorDescription: String? {
                 return "Mock error description"
             }
         }
-        let configuration = EmbeddedPaymentElement.Configuration(
-            formSheetAction: .confirm(completion: { _ in
-                // no-op
-            })
-        )
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.formSheetAction = .confirm(completion: { _ in })
         let sut = makeEmbeddedFormViewController(
             configuration: configuration,
             paymentMethodType: .SEPADebit
