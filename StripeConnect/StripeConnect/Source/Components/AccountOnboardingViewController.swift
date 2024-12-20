@@ -11,7 +11,7 @@ import UIKit
  - Seealso: https://docs.stripe.com/connect/supported-embedded-components/account-onboarding
  - Important: This is important
  */
-@available(swift, introduced: 0.0.1, message: "Beta: Import using @_spi(PrivateBetaConnect)")
+@available(iOS, deprecated: 999, message: "Beta: Import using @_spi(PrivateBetaConnect)")
 @available(iOS 15, *)
 public class AccountOnboardingViewController: UIViewController {
 
@@ -70,7 +70,7 @@ public class AccountOnboardingViewController: UIViewController {
 }
 
 /// Delegate of an `AccountOnboardingViewController`
-@available(swift, introduced: 0.0.1, message: "Beta: Import using @_spi(PrivateBetaConnect)")
+@available(iOS, deprecated: 999, message: "Beta: Import using @_spi(PrivateBetaConnect)")
 @available(iOS 15, *)
 public protocol AccountOnboardingViewControllerDelegate: AnyObject {
     /**
