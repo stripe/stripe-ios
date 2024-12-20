@@ -9,6 +9,7 @@
 import Combine
 import Foundation
 import StripeFinancialConnections
+import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -23,6 +24,26 @@ final class PlaygroundViewModel: ObservableObject {
 
     let playgroundConfiguration = PlaygroundConfiguration.shared
 
+    var integrationType: Binding<PlaygroundConfiguration.IntegrationType> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.integrationType
+            },
+            set: { newValue in
+                self.playgroundConfiguration.integrationType = newValue
+
+                if newValue == .paymentElement, self.playgroundConfiguration.merchant.customId == .default {
+                    // Set to Netowrking merchant when switching to Payment Element.
+                    if let networkingMerchant = self.playgroundConfiguration.merchants.first(where: { $0.customId == .networking }) {
+                        self.playgroundConfiguration.merchant = networkingMerchant
+                    }
+                }
+
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     var experience: Binding<PlaygroundConfiguration.Experience> {
         Binding(
             get: {
@@ -30,7 +51,7 @@ final class PlaygroundViewModel: ObservableObject {
             },
             set: { newValue in
                 self.playgroundConfiguration.experience = newValue
-                if newValue == .instantDebits {
+                if newValue == .instantBankPayment {
                     // Instant debits only supports the payment intent use case.
                     self.playgroundConfiguration.useCase = .paymentIntent
                 }
@@ -217,10 +238,66 @@ final class PlaygroundViewModel: ObservableObject {
     }
 
     func didSelectShow() {
-        setup()
+        switch playgroundConfiguration.integrationType {
+        case .standalone:
+            setupStandalone()
+        case .paymentElement:
+            setupPaymentElement()
+        }
     }
 
-    private func setup() {
+    private func setupPaymentElement() {
+        func presentAlert(for error: PaymentSheetError) {
+            var title: String = "Error"
+            let message: String?
+
+            switch error {
+            case .invalidResponse:
+                message = "Invalid server response"
+            case .decodingError(let error):
+                message = "Decoding error: \(error)"
+            case .paymentSheetCanceled:
+                title = "Canceled"
+                message = nil
+            case .paymentSheetError(let error):
+                message = "Error from payment sheet: \(error)"
+            }
+
+            DispatchQueue.main.async {
+                UIAlertController.showAlert(title: title, message: message)
+            }
+        }
+
+        isLoading = true
+        CreatePaymentIntent(
+            configuration: playgroundConfiguration.configurationDictionary
+        ) { [weak self] createPaymentIntentResult in
+            guard let self else { return }
+            switch createPaymentIntentResult {
+            case .success(let paymentIntent):
+                PresentPaymentSheet(
+                    paymentIntent: paymentIntent,
+                    config: self.playgroundConfiguration,
+                    completion: { paymentSheetResult in
+                        switch paymentSheetResult {
+                        case .success:
+                            UIAlertController.showAlert(title: "Payment success")
+                        case .failure(let error):
+                            presentAlert(for: error)
+                        }
+                    }
+                )
+            case .failure(let error):
+                presentAlert(for: error)
+            }
+
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+
+    private func setupStandalone() {
         isLoading = true
         SetupPlayground(
             configurationDictionary: playgroundConfiguration.configurationDictionary
@@ -450,6 +527,105 @@ private func PresentFinancialConnectionsSheet(
             completion: { result in
                 completionHandler(result)
                 _ = financialConnectionsSheet  // retain the sheet
+            }
+        )
+    }
+}
+
+private func CreatePaymentIntent(
+    configuration: [String: Any],
+    completion: @escaping (Result<CreatePaymentIntentResponse, PaymentSheetError>) -> Void
+) {
+    let baseURL = "https://financial-connections-playground-ios.glitch.me"
+    let endpoint = "/create_payment_intent"
+    let url = URL(string: baseURL + endpoint)!
+
+    var urlRequest = URLRequest(url: url)
+    urlRequest.httpMethod = "POST"
+    urlRequest.httpBody = try! JSONSerialization.data(
+        withJSONObject: configuration,
+        options: .prettyPrinted
+    )
+    urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+    urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    URLSession.shared.dataTask(
+        with: urlRequest,
+        completionHandler: { data, _, error in
+            guard error == nil, let data else {
+                completion(.failure(.invalidResponse))
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let paymentIntent = try decoder.decode(CreatePaymentIntentResponse.self, from: data)
+                completion(.success(paymentIntent))
+            } catch {
+                completion(.failure(.decodingError(error)))
+            }
+        }
+    )
+    .resume()
+}
+
+struct CreatePaymentIntentResponse: Decodable {
+    let id: String
+    let clientSecret: String
+    let publishableKey: String
+    let customerId: String
+    let ephemeralKey: String
+    let amount: Int
+    let currency: String
+}
+
+enum PaymentSheetError: Error {
+    case invalidResponse
+    case decodingError(Error)
+    case paymentSheetCanceled
+    case paymentSheetError(Error)
+}
+
+private func PresentPaymentSheet(
+    paymentIntent: CreatePaymentIntentResponse,
+    config: PlaygroundConfiguration,
+    completion: @escaping (Result<String, PaymentSheetError>) -> Void
+) {
+    /// https://docs.stripe.com/payments/accept-a-payment?platform=ios&ui=payment-sheet
+    STPAPIClient.shared.publishableKey = paymentIntent.publishableKey
+
+    var configuration = PaymentSheet.Configuration()
+    configuration.merchantDisplayName = "Financial Connections Example"
+    configuration.customer = .init(
+        id: paymentIntent.customerId,
+        ephemeralKeySecret: paymentIntent.ephemeralKey
+    )
+    configuration.allowsDelayedPaymentMethods = true
+    configuration.defaultBillingDetails.email = config.email
+    configuration.defaultBillingDetails.phone = config.phone
+
+    let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
+    // disable app-to-app for UI tests
+    configuration.returnURL = isUITest ? nil : "financial-connections-example://redirect"
+
+    let paymentSheet = PaymentSheet(
+        paymentIntentClientSecret: paymentIntent.clientSecret,
+        configuration: configuration
+    )
+
+    DispatchQueue.main.async {
+        let topMostViewController = UIViewController.topMostViewController()!
+        paymentSheet.present(
+            from: topMostViewController,
+            completion: { paymentSheetResult in
+                switch paymentSheetResult {
+                case .completed:
+                    completion(.success("Payment completed"))
+                case .canceled:
+                    completion(.failure(.paymentSheetCanceled))
+                case .failed(let error):
+                    completion(.failure(.paymentSheetError(error)))
+                }
             }
         )
     }
