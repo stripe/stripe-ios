@@ -63,6 +63,7 @@ public protocol PayoutsViewControllerDelegate: AnyObject {
 }
 
 @available(iOS 15, *)
+@_documentation(visibility: public)
 public extension PayoutsViewControllerDelegate {
     // Default implementation to make optional
     @_documentation(visibility: public)

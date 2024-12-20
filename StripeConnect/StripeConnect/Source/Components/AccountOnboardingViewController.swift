@@ -96,6 +96,7 @@ public protocol AccountOnboardingViewControllerDelegate: AnyObject {
 }
 
 @available(iOS 15, *)
+@_documentation(visibility: public)
 public extension AccountOnboardingViewControllerDelegate {
     // Add default implementation of delegate methods to make them optional
 
