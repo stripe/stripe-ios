@@ -3,14 +3,14 @@
 PaymentSheet is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment - into a single sheet that displays on top of your app.
 
 ## Table of contents
-
+<!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
 <!--ts-->
-* [Features](#features)
-* [Requirements](#requirements)
-* [Getting started](#getting-started)
-   * [Integration](#integration)
-   * [Example](#example)
-* [Manual linking](#manual-linking)
+* [Features](#Features)
+* [Requirements](#Requirements)
+* [Getting started](#Getting-started)
+   * [Integration](#Integration)
+   * [Example](#Example)
+* [Manual linking](#Manual-linking)
 
 <!--te-->
 
