@@ -118,7 +118,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Reload
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10))
-        XCTAssertEqual(paymentMethodButton.label, "•••• 3000, sepa_debit, John Doe, test@example.com, 123 Main, San Francisco, CA, 94016, US")
+        XCTAssertEqual(paymentMethodButton.label, "••••3000, sepa_debit, John Doe, test@example.com, 123 Main, San Francisco, CA, 94016, US")
         paymentMethodButton.tap()
 
         // Switch to the saved card...
