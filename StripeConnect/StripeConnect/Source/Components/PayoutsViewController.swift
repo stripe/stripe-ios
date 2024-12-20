@@ -9,8 +9,10 @@ import UIKit
 
 /**
  The balance summary, the payout schedule, and a list of payouts for the connected account. It can also allow the user to perform instant or manual payouts.
+ - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
  */
 @_spi(PrivateBetaConnect)
+@_documentation(visibility: public)
 @available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
@@ -40,7 +42,9 @@ public class PayoutsViewController: UIViewController {
 }
 
 /// Delegate of an `PayoutsViewController`
+///  - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
 @_spi(PrivateBetaConnect)
+@_documentation(visibility: public)
 @available(iOS 15, *)
 public protocol PayoutsViewControllerDelegate: AnyObject {
 
