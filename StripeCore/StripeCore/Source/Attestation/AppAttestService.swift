@@ -7,7 +7,7 @@ import DeviceCheck
 import Foundation
 
 @_spi(STP) public protocol AppAttestService {
-    var isSupported: Bool { get }
+    nonisolated var isSupported: Bool { get }
     func generateKey() async throws -> String
     func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data
     func attestKey(_ keyId: String, clientDataHash: Data) async throws -> Data
