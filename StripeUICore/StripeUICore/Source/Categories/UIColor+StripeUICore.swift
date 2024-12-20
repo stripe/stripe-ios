@@ -237,6 +237,7 @@ private extension UIColor {
     ///   - baseColor: The base color
     /// - Returns: The computed color of the overlay color on the base color.
     func overlayColor(overlayColor: UIColor, baseColor: UIColor) -> UIColor {
+        // https://en.wikipedia.org/wiki/Alpha_compositing
         // Get the components of the overlay color
         var r1: CGFloat = 0, g1: CGFloat = 0, b1: CGFloat = 0, alpha1: CGFloat = 0
         overlayColor.getRed(&r1, green: &g1, blue: &b1, alpha: &alpha1)
