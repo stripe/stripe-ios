@@ -35,7 +35,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         STPAnalyticsClient.sharedClient.productUsage = Set()
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.isEmpty)
         let e = expectation(description: "callback")
-        EmbeddedPaymentElement.create(intentConfiguration: intentConfig, configuration: EmbeddedPaymentElement.Configuration(formSheetAction: .continue)) { _ in
+        EmbeddedPaymentElement.create(intentConfiguration: intentConfig, configuration: EmbeddedPaymentElement.Configuration()) { _ in
             e.fulfill()
         }
         wait(for: [e], timeout: 1.0)
@@ -377,7 +377,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             config.customer = customer
             return config
         case .embedded:
-            var config = EmbeddedPaymentElement.Configuration(formSheetAction: .continue)
+            var config = EmbeddedPaymentElement.Configuration()
             config.applePay = applePay
             config.customer = customer
             return config
