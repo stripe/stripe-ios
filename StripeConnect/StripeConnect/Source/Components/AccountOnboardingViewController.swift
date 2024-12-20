@@ -98,7 +98,11 @@ public protocol AccountOnboardingViewControllerDelegate: AnyObject {
 @available(iOS 15, *)
 public extension AccountOnboardingViewControllerDelegate {
     // Add default implementation of delegate methods to make them optional
+
+    @_documentation(visibility: public)
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingViewController) { }
+
+    @_documentation(visibility: public)
     func accountOnboarding(_ accountOnboarding: AccountOnboardingViewController,
                            didFailLoadWithError error: Error) { }
 }

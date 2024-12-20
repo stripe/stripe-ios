@@ -65,6 +65,7 @@ public protocol PayoutsViewControllerDelegate: AnyObject {
 @available(iOS 15, *)
 public extension PayoutsViewControllerDelegate {
     // Default implementation to make optional
+    @_documentation(visibility: public)
     func payouts(_ payouts: PayoutsViewController,
                  didFailLoadWithError error: Error) { }
 }
