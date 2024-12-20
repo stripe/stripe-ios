@@ -62,6 +62,10 @@
 #     of the docs for this module. Used as the `--readme` argument to Jazzy.
 #     If omitted, uses Jazzy default (the root directory's README.md file).
 #
+#     NOTE: You must add a placeholder file to the module's project in the 
+#     following location for the README to be included in docs:
+#       [ModuleName]/[ModuleName]/Docs.docc/[ModuleName].md
+#
 #   - include (optional):
 #     An array of modules to be combined with this module, for the purpose of documentation.
 #
@@ -73,14 +77,14 @@ modules:
   framework_name: Stripe
   custom_string_convertible_dir: Stripe/StripeiOS/Source
   supports_catalyst: true
-  docs:
-    output: docs/docs
-    readme: README.md
-    include:
-      - StripeCore
-      - StripeApplePay
-      - StripePayments
-      - StripePaymentsUI
+  # docs:
+  #   output: docs/docs
+  #   readme: README.md
+  #   include:
+  #     - StripeCore
+  #     - StripeApplePay
+  #     - StripePayments
+  #     - StripePaymentsUI
   size_report:
     max_incremental_uncompressed_size: 100
 
@@ -90,11 +94,11 @@ modules:
   framework_name: StripePayments
   supports_catalyst: true
   custom_string_convertible_dir: StripePayments/StripePayments/Categories
-  docs:
-    output: docs/stripepayments
-    readme: StripePayments/README.md
-    include:
-      - StripeCore
+  # docs:
+  #   output: docs/stripepayments
+  #   readme: StripePayments/README.md
+  #   include:
+  #     - StripeCore
   size_report:
     max_incremental_uncompressed_size: 100
 
@@ -104,10 +108,10 @@ modules:
   localization_dir: StripePaymentsUI/StripePaymentsUI
   custom_string_convertible_dir: StripePaymentsUI/StripePaymentsUI/Categories
   docs:
-    output: docs/stripepaymentsui
-    readme: StripePaymentsUI/README.md
-    include:
-      - StripeCore
+    # output: docs/stripepaymentsui
+    # readme: StripePaymentsUI/README.md
+    # include:
+    #   - StripeCore
   supports_catalyst: true
   size_report:
     max_incremental_uncompressed_size: 100
@@ -118,10 +122,10 @@ modules:
   localization_dir: StripePaymentSheet/StripePaymentSheet
   supports_catalyst: true
   docs:
-    output: docs/stripepaymentsheet
-    readme: StripePaymentSheet/README.md
-    include:
-      - StripeCore
+    # output: docs/stripepaymentsheet
+    # readme: StripePaymentSheet/README.md
+    # include:
+    #   - StripeCore
   size_report:
     max_incremental_uncompressed_size: 100
 
@@ -143,18 +147,18 @@ modules:
   localization_dir: StripeIdentity/StripeIdentity
   custom_string_convertible_dir: StripeIdentity/StripeIdentity/Source
   supports_catalyst: false
-  docs:
-    output: docs/stripeidentity
-    readme: StripeIdentity/README.md
+  # docs:
+    # output: docs/stripeidentity
+    # readme: StripeIdentity/README.md
   size_report: true
 
 - podspec: StripeApplePay.podspec
   scheme: StripeApplePay
   framework_name: StripeApplePay
   supports_catalyst: true
-  docs:
-    output: docs/stripeapplepay
-    readme: StripeApplePay/README.md
+  # docs:
+  #   output: docs/stripeapplepay
+  #   readme: StripeApplePay/README.md
   size_report:
     max_compressed_size: 700
     max_uncompressed_size: 1700
@@ -164,19 +168,19 @@ modules:
   scheme: StripeCardScan
   framework_name: StripeCardScan
   supports_catalyst: false
-  docs:
-    output: docs/stripecardscan
-    readme: StripeCardScan/README.md
+  # docs:
+  #   output: docs/stripecardscan
+  #   readme: StripeCardScan/README.md
   localization_dir: StripeCardScan/StripeCardScan
 
 - podspec: StripeFinancialConnections.podspec
   scheme: StripeFinancialConnections
   framework_name: StripeFinancialConnections
-  docs:
-    output: docs/stripefinancialconnections
-    readme: StripeFinancialConnections/README.md
-    include:
-      - StripeCore
+  # docs:
+  #   output: docs/stripefinancialconnections
+  #   readme: StripeFinancialConnections/README.md
+  #   include:
+  #     - StripeCore
   size_report:
     max_compressed_size: 3000
     max_uncompressed_size: 5000
