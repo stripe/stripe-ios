@@ -100,7 +100,7 @@ import UIKit
                                             withTextStyle: .caption1,
                                             maximumPointSize: 20)
         public var footnote = UIFont.preferredFont(forTextStyle: .footnote, weight: .regular, maximumPointSize: 20)
-        public var error = UIFontMetrics(forTextStyle: .footnote).scaledFont(for: .systemFont(ofSize: 10.5, weight: .regular))
+        public var error = UIFont.preferredFont(forTextStyle: .caption2, weight: .regular)
         public var smallFootnote = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 10)
         public var footnoteEmphasis = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
     }
