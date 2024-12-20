@@ -12,7 +12,9 @@ import UIKit
 /// Manages Connect embedded components
 /// - Seealso: https://docs.stripe.com/connect/get-started-connect-embedded-components
 /// - Note: Connect embedded components are only available in private beta.
+/// - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
 @_spi(PrivateBetaConnect)
+@_documentation(visibility: public)
 @available(iOS 15, *)
 public class EmbeddedComponentManager {
     let apiClient: STPAPIClient
@@ -33,11 +35,11 @@ public class EmbeddedComponentManager {
         ComponentAnalyticsClient(client: AnalyticsClientV2.sharedConnect,
                                  commonFields: $0)
     }
-    
+
     var baseURL: URL = StripeConnectConstants.connectJSBaseURL
 
-    var publicKeyOverride: String? = nil
-    
+    var publicKeyOverride: String?
+
     @_spi(DashboardOnly)
     public convenience init(apiClient: STPAPIClient = STPAPIClient.shared,
                             appearance: EmbeddedComponentManager.Appearance = .default,
@@ -56,8 +58,7 @@ public class EmbeddedComponentManager {
             baseURL = baseURLOverride
         }
     }
-    
-    
+
     /**
      Initializes an EmbeddedComponentManager instance.
 

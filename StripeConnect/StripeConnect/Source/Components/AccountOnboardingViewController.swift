@@ -8,8 +8,10 @@
 import UIKit
 
 /// A view controller representing an account-onboarding component
+/// - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
 /// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/account-onboarding
 @_spi(PrivateBetaConnect)
+@_documentation(visibility: public)
 @available(iOS 15, *)
 public class AccountOnboardingViewController: UIViewController {
 
@@ -68,7 +70,9 @@ public class AccountOnboardingViewController: UIViewController {
 }
 
 /// Delegate of an `AccountOnboardingViewController`
+/// - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
 @_spi(PrivateBetaConnect)
+@_documentation(visibility: public)
 @available(iOS 15, *)
 public protocol AccountOnboardingViewControllerDelegate: AnyObject {
     /**
