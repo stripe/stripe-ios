@@ -8,12 +8,11 @@
 import Foundation
 
 struct AvailableIncentives: Decodable {
-    public let hasAny: Bool
+    public let incentives: [LinkConsumerIncentive]
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let data = try container.decode([LinkConsumerIncentive].self, forKey: .data)
-        hasAny = !data.isEmpty
+        incentives = try container.decode([LinkConsumerIncentive].self, forKey: .data)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -22,5 +21,5 @@ struct AvailableIncentives: Decodable {
     
     // We don't care about the incentives, we just need to know that there are
     // *any* incentives.
-    private struct LinkConsumerIncentive: Decodable {}
+    struct LinkConsumerIncentive: Decodable {}
 }
