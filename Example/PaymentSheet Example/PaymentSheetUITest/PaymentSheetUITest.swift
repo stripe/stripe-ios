@@ -2699,7 +2699,7 @@ extension PaymentSheetUITestCase {
         // Reload and pay with the now-saved US bank account
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].tap()
-        XCTAssertTrue(app.buttons["••••6789"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["•••• 6789"].waitForExistenceAndTap())
 
         // Make sure bottom notice mandate is visible
         XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].exists)

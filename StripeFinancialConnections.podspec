@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
     s.summary                        = 'Securely connect financial accounts to Stripe\'s merchant account.'
     s.license                        = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage                       = 'https://stripe.com/docs/mobile/ios'
+    s.readme                         = 'StripeFinancialConnections/README.md'
     s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
     s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" }
     s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
