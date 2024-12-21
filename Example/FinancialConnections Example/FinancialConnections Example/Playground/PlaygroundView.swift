@@ -17,17 +17,32 @@ struct PlaygroundView: View {
         ZStack {
             VStack {
                 Form {
-                    Section(header: Text("Experience")) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Picker("Select Experience", selection: viewModel.experience) {
-                                ForEach(PlaygroundConfiguration.Experience.allCases) {
-                                    Text($0.displayName)
-                                        .tag($0)
-                                }
+                    Section(header: Text("Integration Type")) {
+                        Picker("Integration Type", selection: viewModel.integrationType) {
+                            ForEach(PlaygroundConfiguration.IntegrationType.allCases) {
+                                Text($0.displayName)
+                                    .tag($0)
                             }
-                            .pickerStyle(.segmented)
+                        }
+                        .pickerStyle(.segmented)
+                    }
+
+                    Picker("Experience", selection: viewModel.experience) {
+                        ForEach(PlaygroundConfiguration.Experience.allCases) {
+                            Text($0.displayName)
+                                .tag($0)
+                        }
+
+                        if viewModel.integrationType.wrappedValue == .standalone && viewModel.experience.wrappedValue == .linkCardBrand {
+                            Text("'Link Card Brand' in the standalone integration will launch the Instant Bank Payment flow.")
+                                .font(.caption)
+                                .italic()
+                        } else if viewModel.integrationType.wrappedValue == .paymentElement {
+                            Text("Payment methods requested will be: `\(viewModel.experience.wrappedValue.paymentMethods)`")
+                                .font(.caption)
                         }
                     }
+                    .pickerStyle(.inline)
 
                     Section(header: Text("Select SDK Type")) {
                         VStack(alignment: .leading, spacing: 4) {

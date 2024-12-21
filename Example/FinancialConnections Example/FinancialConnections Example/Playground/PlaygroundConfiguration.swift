@@ -31,16 +31,16 @@ final class PlaygroundConfiguration {
         }
     }
 
-    // MARK: - Experience
+    // MARK: - Integration Type
 
-    enum Experience: String, CaseIterable, Identifiable, Hashable {
-        case financialConnections = "financial_connections"
-        case instantDebits = "instant_debits"
+    enum IntegrationType: String, CaseIterable, Identifiable, Hashable {
+        case standalone = "standalone"
+        case paymentElement = "payment_element"
 
         var displayName: String {
             switch self {
-            case .financialConnections: "Financial Connections"
-            case .instantDebits: "Instant Debits"
+            case .standalone: "Standalone"
+            case .paymentElement: "Payment Element"
             }
         }
 
@@ -49,15 +49,61 @@ final class PlaygroundConfiguration {
         }
     }
 
+    private static let integrationTypeKey = "integration_type"
+
+    var integrationType: IntegrationType {
+        get {
+            if
+                let integrationTypeString = configurationStore[Self.integrationTypeKey] as? String,
+                let integrationType = IntegrationType(rawValue: integrationTypeString)
+            {
+                return integrationType
+            } else {
+                return .standalone
+            }
+        }
+        set {
+            configurationStore[Self.integrationTypeKey] = newValue.rawValue
+        }
+    }
+
+    // MARK: - Experience
+
+    enum Experience: String, CaseIterable, Identifiable, Hashable {
+        case financialConnections = "financial_connections"
+        case instantBankPayment = "instant_debits"
+        case linkCardBrand = "link_card_brand"
+
+        var displayName: String {
+            switch self {
+            case .financialConnections: "Financial Connections"
+            case .instantBankPayment: "Instant Bank Payment"
+            case .linkCardBrand: "Link Card Brand"
+            }
+        }
+
+        var id: String {
+            return rawValue
+        }
+
+        var paymentMethods: String {
+            switch self {
+            case .financialConnections: return "['card', 'link', 'us_bank_account']"
+            case .instantBankPayment: return "['card', 'link']"
+            case .linkCardBrand: return "['card']"
+            }
+        }
+    }
+
     private static let experienceKey = "experience"
 
     var experience: Experience {
         get {
             if
-                let sdkTypeString = configurationStore[Self.experienceKey] as? String,
-                let sdkType = Experience(rawValue: sdkTypeString)
+                let experienceString = configurationStore[Self.experienceKey] as? String,
+                let experience = Experience(rawValue: experienceString)
             {
-                return sdkType
+                return experience
             } else {
                 return .financialConnections
             }
