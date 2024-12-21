@@ -61,7 +61,7 @@ extension SavedPaymentMethodFormFactory {
                 SectionElement.HiddenElement(cardBrandDropDown),
                 SectionElement.MultiElementRow([expiryDateElement, cvcElement])
             ]
-            let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: viewModel.appearance.asElementsTheme)
+            let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: viewModel.appearance.asElementsTheme, setMask: true)
             section.delegate = self
             viewModel.errorState = !expiryDateElement.validationState.isValid
             return section

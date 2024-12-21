@@ -56,9 +56,7 @@ class UpdatePaymentMethodViewModel {
             fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
         self.paymentMethod = paymentMethod
-        var disabledAppearance = appearance
-        disabledAppearance.colors.componentBackground = disabledAppearance.colors.componentBackground.disabledBackgroundColor
-        self.appearance = disabledAppearance
+        self.appearance = appearance
         self.hostedSurface = hostedSurface
         self.cardBrandFilter = cardBrandFilter
         self.canEdit = canEdit

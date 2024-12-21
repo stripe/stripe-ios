@@ -26,12 +26,14 @@ final class SectionView: UIView {
     }()
 
     let viewModel: SectionViewModel
+    let setMask: Bool
 
     // MARK: - Initializers
 
-    init(viewModel: SectionViewModel) {
+    init(viewModel: SectionViewModel, setMask: Bool) {
         self.viewModel = viewModel
-        self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme)
+        self.setMask = setMask
+        self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme, setMask: setMask)
         super.init(frame: .zero)
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorOrSubLabel])

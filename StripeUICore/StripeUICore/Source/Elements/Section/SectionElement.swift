@@ -17,7 +17,7 @@ import UIKit
     weak public var delegate: ElementDelegate?
     lazy var sectionView: SectionView = {
         isViewInitialized = true
-        return SectionView(viewModel: viewModel)
+        return SectionView(viewModel: viewModel, setMask: setMask)
     }()
     var isViewInitialized: Bool = false
     var errorText: String? {
@@ -56,6 +56,7 @@ import UIKit
     }
 
     let theme: ElementsAppearance
+    let setMask: Bool
 
     // MARK: - ViewModel
 
@@ -69,10 +70,11 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(title: String? = nil, elements: [Element], theme: ElementsAppearance = .default) {
+    public init(title: String? = nil, elements: [Element], theme: ElementsAppearance = .default, setMask: Bool = false) {
         self.title = title
         self.elements = elements
         self.theme = theme
+        self.setMask = setMask
         elements.forEach {
             $0.delegate = self
         }

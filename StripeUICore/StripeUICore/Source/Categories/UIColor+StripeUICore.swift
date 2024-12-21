@@ -139,19 +139,17 @@ import UIKit
         return self.withAlphaComponent(alpha * 0.4)
     }
 
-    /// Returns this color in a "disabled" state by overlaying a translucent mask
-    var disabledBackgroundColor: UIColor {
+    /// Returns a translucent mask based on the brightness of the color
+    var translucentMaskColor: UIColor {
         let alpha: CGFloat = 0.075
         let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
         let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
 
-        let lightModeComponentBackground = self.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
-        let darkModeComponentBackground = self.resolvedColor(with: UITraitCollection(userInterfaceStyle: .dark))
         return isBright
-            ? UIColor.dynamic(light: overlayColor(overlayColor: colorMaskForLight, baseColor: lightModeComponentBackground),
-                              dark: overlayColor(overlayColor: colorMaskForDark, baseColor: darkModeComponentBackground))
-            : UIColor.dynamic(light: overlayColor(overlayColor: colorMaskForDark, baseColor: darkModeComponentBackground),
-                              dark: overlayColor(overlayColor: colorMaskForLight, baseColor: lightModeComponentBackground))
+            ? UIColor.dynamic(light: colorMaskForLight,
+                              dark: colorMaskForDark)
+            : UIColor.dynamic(light: colorMaskForDark,
+                              dark: colorMaskForLight)
     }
 
     /// Returns this color in a "disabled" state by reducing the alpha by 40% if `isDisabled` is `true`,
