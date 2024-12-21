@@ -547,7 +547,7 @@ extension PaymentSheetFormFactory {
             savingAccount: isSaving,
             merchantName: merchantName,
             initialLinkedBank: previousCustomerInput?.financialConnectionsLinkedBank,
-            theme: theme
+            appearance: configuration.appearance
         )
     }
 
@@ -689,7 +689,7 @@ extension PaymentSheetFormFactory {
             addressElement: addressElement,
             incentive: incentive,
             isPaymentIntent: isPaymentIntent,
-            theme: theme
+            appearance: configuration.appearance
         )
     }
 
