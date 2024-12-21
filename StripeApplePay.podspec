@@ -9,6 +9,7 @@ Pod::Spec.new do |s|
                                      'or other size-constrained apps.' 
   s.license                        = { :type => 'MIT', :file => 'LICENSE' } 
   s.homepage                       = 'https://stripe.com/docs/apple-pay' 
+  s.readme                         = 'StripeApplePay/README.md'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' } 
   s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" } 
   s.frameworks                     = 'Foundation', 'Security', 'WebKit', 'PassKit', 'Contacts', 'CoreLocation' 

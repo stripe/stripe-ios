@@ -260,11 +260,10 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
 
             // MARK: - Create a EmbeddedPaymentElement instance
-            var configuration = EmbeddedPaymentElement.Configuration(
-                formSheetAction: .confirm(completion: { [weak self] result in
-                    self?.handlePaymentResult(result)
-                })
-            )
+            var configuration = EmbeddedPaymentElement.Configuration()
+            configuration.formSheetAction = .confirm(completion: { [weak self] result in
+                self?.handlePaymentResult(result)
+            })
             // This example displays the buy button in a screen that is separate from screen that displays the embedded view, so we disable the mandate text in the embedded view and show it near our buy button.
             configuration.embeddedViewDisplaysMandateText = false
             configuration.merchantDisplayName = "Example, Inc."

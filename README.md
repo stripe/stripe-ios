@@ -10,26 +10,26 @@
 
 The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details. We also expose the low-level APIs that power those UIs so that you can build fully custom experiences.
 
-Get started with our [📚 integration guides](https://stripe.com/docs/payments/accept-a-payment?platform=ios) and [example projects](#examples), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html).
+Get started with our [📚 integration guides](https://stripe.com/docs/payments/accept-a-payment?platform=ios) and [example projects](#Examples), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html).
 
 > Updating to a newer version of the SDK? See our [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and [changelog](https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md).
 
 Table of contents
 =================
-
+<!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
 <!--ts-->
-   * [Features](#features)
-   * [Releases](#releases)
-   * [Requirements](#requirements)
-   * [Getting started](#getting-started)
-      * [Integration](#integration)
-      * [Examples](#examples)
-      * [Building from source](#building-from-source)
-   * [Card scanning](#card-scanning)
-   * [Contributing](#contributing)
-   * [Migrating](#migrating-from-older-versions)
-   * [Code Stye](#code-style)
-   * [Licenses](#licenses)
+   * [Features](#Features)
+   * [Releases](#Releases)
+   * [Requirements](#Requirements)
+   * [Getting started](#Getting-started)
+      * [Integration](#Integration)
+      * [Examples](#Examples)
+      * [Building from source](#Building-from-source)
+   * [Card scanning](#Card-scanning)
+   * [Contributing](#Contributing)
+   * [Migrating](#Migrating-from-older-versions)
+   * [Code Stye](#Code-style)
+   * [Licenses](#Licenses)
 
 <!--te-->
 
@@ -47,7 +47,7 @@ Table of contents
 
 **Stripe API**: [StripePayments](StripePayments/README.md) provides [low-level APIs](https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html) that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like [STPCardValidator](https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html) to validate your user’s input.
 
-**Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning) section.
+**Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#Card-scanning) section.
 
 **App Clips**: The `StripeApplePay` module provides a [lightweight SDK for offering Apple Pay in an App Clip](https://stripe.com/docs/apple-pay#app-clips).
 
@@ -66,7 +66,12 @@ The Stripe iOS SDK collects data to help us improve our products and prevent fra
 For help with Apple's App Privacy Details form in App Store Connect, visit [Stripe iOS SDK Privacy Details](https://support.stripe.com/questions/stripe-ios-sdk-privacy-details).
 
 ## Modules
-<!-- Pad `Size` col with &nbsp; to prevent table from shrinking badge images and maintain readability -->
+<!-- 
+  EmergeTools project must be made public before adding to this table:
+  https://www.emergetools.com/settings?tab=app-display-options&cards=public_org_apps
+
+  NOTE: Pad `Size` col with &nbsp; to prevent table from shrinking badge images and maintain readability  
+ -->
 | Module | Description | Size&nbsp;([Download&nbsp;→&nbsp;Install](https://docs.emergetools.com/docs/ios-app-size#download-vs-install-size))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
 |--------|-------------|------|
 | [StripePaymentSheet](StripePaymentSheet) | Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet). | [![StripePaymentSheet size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.emergetools.com%2Fapi%2Fv2%2Fpublic_new_build%3FexampleId%3Dcom.stripe.StripePaymentSheetSize%26platform%3Dios%26badgeOption%3Ddownload_and_install_size%26buildType%3Drelease&query=$.badgeMetadata&label=StripePaymentSheet&logo=apple)](https://www.emergetools.com/app/example/ios/com.stripe.StripePaymentSheetSize/release?utm_campaign=badge-data) |
