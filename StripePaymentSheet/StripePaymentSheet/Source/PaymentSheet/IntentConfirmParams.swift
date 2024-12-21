@@ -39,7 +39,7 @@ final class IntentConfirmParams {
 
     var paymentSheetLabel: String {
         if let last4 = (financialConnectionsLinkedBank?.last4 ?? instantDebitsLinkedBank?.last4) {
-            return "•••• \(last4)"
+            return "••••\(last4)"
         } else {
             return paymentMethodParams.paymentSheetLabel
         }
