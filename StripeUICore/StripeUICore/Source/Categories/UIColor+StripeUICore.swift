@@ -228,31 +228,4 @@ private extension UIColor {
         })
     }
 
-    /// Applies a mask over a base color
-    ///
-    /// - Parameters:
-    ///   - overlayColor: The color to overlay
-    ///   - baseColor: The base color
-    /// - Returns: The computed color of the overlay color on the base color.
-    func overlayColor(overlayColor: UIColor, baseColor: UIColor) -> UIColor {
-        // https://en.wikipedia.org/wiki/Alpha_compositing
-        // Get the components of the overlay color
-        var r1: CGFloat = 0, g1: CGFloat = 0, b1: CGFloat = 0, alpha1: CGFloat = 0
-        overlayColor.getRed(&r1, green: &g1, blue: &b1, alpha: &alpha1)
-
-        // Get the components of the background color
-        var r2: CGFloat = 0, g2: CGFloat = 0, b2: CGFloat = 0, alpha2: CGFloat = 0
-        baseColor.getRed(&r2, green: &g2, blue: &b2, alpha: &alpha2)
-
-        // Calculate the resulting alpha
-        let alphaResult = alpha1 + alpha2 * (1 - alpha1)
-
-        // Calculate the resulting RGB components
-        let rResult = (r1 * alpha1 + r2 * alpha2 * (1 - alpha1)) / alphaResult
-        let gResult = (g1 * alpha1 + g2 * alpha2 * (1 - alpha1)) / alphaResult
-        let bResult = (b1 * alpha1 + b2 * alpha2 * (1 - alpha1)) / alphaResult
-
-        return UIColor(red: rResult, green: gResult, blue: bResult, alpha: alphaResult)
-    }
-
 }
