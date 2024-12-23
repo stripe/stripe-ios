@@ -230,6 +230,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.mode = .paymentWithSetup
         settings.uiStyle = .embedded
         settings.integrationType = .deferred_csc
+        settings.formSheetAction = .confirm
         settings.customerKeyType = .legacy
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
@@ -528,6 +529,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
+        settings.layout = .horizontal
         settings.customerKeyType = .legacy
         settings.formSheetAction = .continue
         settings.customerMode = .new
