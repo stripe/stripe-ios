@@ -117,13 +117,12 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let app = XCUIApplication()
         app.launch()
 
-        app.staticTexts[
-            "PaymentSheet"
-        ].tap()
+        app.staticTexts["PaymentSheet"].tap()
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
-
+        
+        app.buttons["Card"].waitForExistenceAndTap()
         let numberField = app.textFields["Card number"]
         XCTAssertTrue(numberField.waitForExistence(timeout: 60.0))
         numberField.tap()
