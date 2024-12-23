@@ -18,18 +18,28 @@ import UIKit
 
     /// Sign an assertion.
     /// Will create and attest a new device key if needed.
-    @_spi(STP) public func assert() async throws -> Assertion {
+    /// Returns an AssertionHandle, which must be called after the network request completes (with success or failure) in order to unblock future assertions.
+    @_spi(STP) public func assert() async throws -> AssertionHandle {
+        // Make sure we only process one assertion at a time, until the latest 
+        if assertionInProgress {
+            try await withCheckedThrowingContinuation { continuation in
+                assertionWaiters.append(continuation)
+            }
+        }
+        // Lock the asserter:
+        assertionInProgress = true
+
         do {
             let assertion = try await _assert()
             let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
             STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
-            return assertion
+            return AssertionHandle(assertion: assertion, stripeAttest: self)
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .assertionFailed, error: error)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
             if apiClient.isTestmode {
                 // In testmode, we can provide a test assertion even if the real assertion fails
-                return await testmodeAssertion()
+                return await AssertionHandle(assertion: testmodeAssertion(), stripeAttest: self)
             } else {
                 throw error
             }
@@ -204,6 +214,9 @@ import UIKit
     }
     private var attestationTask: Task<Void, Error>?
 
+    private var assertionInProgress: Bool = false
+    private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
+
     func _assert() async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
@@ -365,10 +378,43 @@ import UIKit
         }
     }
 
+    // MARK: Assertion concurrency
+
+    // Called when an assertion handle is completed or times out
+    private func assertionCompleted() {
+        assertionInProgress = false
+
+        // Resume the next waiter if there is one
+        if !assertionWaiters.isEmpty {
+            let nextContinuation = assertionWaiters.removeFirst()
+            nextContinuation.resume()
+        }
+    }
+
     private func testmodeAssertion() async -> Assertion {
         Assertion(assertionData: Data(bytes: [0x01, 0x02, 0x03], count: 3),
                   deviceID: (try? await getDeviceID()) ?? "test-device-id",
                   appID: (try? getAppID()) ?? "com.example.test",
                   keyID: "TestKeyID")
+    }
+}
+
+extension StripeAttest {
+    public class AssertionHandle {
+        public let assertion: Assertion
+        private weak var stripeAttest: StripeAttest?
+
+        init(assertion: Assertion, stripeAttest: StripeAttest) {
+            self.assertion = assertion
+            self.stripeAttest = stripeAttest
+        }
+
+        // Must be called by the caller when done with the assertion
+        public func complete() {
+            guard let stripeAttest = stripeAttest else { return }
+            Task {
+                await stripeAttest.assertionCompleted()
+            }
+        }
     }
 }

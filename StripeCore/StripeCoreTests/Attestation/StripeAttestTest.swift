@@ -30,13 +30,13 @@ class StripeAttestTest: XCTestCase {
 
     func testAppAttestService() async {
         try! await stripeAttest.attest()
-        let assertionResponse = try! await stripeAttest.assert()
-        try! await self.mockAttestBackend.assertionTest(assertion: assertionResponse)
+        let assertionHandle = try! await stripeAttest.assert()
+        try! await self.mockAttestBackend.assertionTest(assertion: assertionHandle.assertion)
     }
 
     func testCanAssertWithoutAttestation() async {
-        let assertionResponse = try! await stripeAttest.assert()
-        try! await self.mockAttestBackend.assertionTest(assertion: assertionResponse)
+        let assertionHandle = try! await stripeAttest.assert()
+        try! await self.mockAttestBackend.assertionTest(assertion: assertionHandle.assertion)
     }
 
     func testCanOnlyAttestOncePerDayInProd() async {
@@ -111,16 +111,20 @@ class StripeAttestTest: XCTestCase {
         // assertions still won't work, so we'll send the testmode data instead.
         let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
         await mockAttestService.setShouldFailAssertionWithError(invalidKeyError)
-        let assertion = try! await stripeAttest.assert()
-        XCTAssertEqual(assertion.keyID, "TestKeyID")
+        let assertionHandle = try! await stripeAttest.assert()
+        XCTAssertEqual(assertionHandle.assertion.keyID, "TestKeyID")
     }
 
-    func testConcurrentAssertionsAndAttestations() async {
+    func testConcurrentAssertionsOccurSequentially() async {
         let iterations = 500
         try! await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<iterations {
                 group.addTask {
-                    try await self.stripeAttest.assert()
+                    let assertionHandle = try! await self.stripeAttest.assert()
+                    // Check the assertion against the mock backend (which will enforce that the counter value has incremented since the last assertion)
+                    try! await self.mockAttestBackend.assertionTest(assertion: assertionHandle.assertion)
+                    // Then complete the assertion
+                    assertionHandle.complete()
                 }
             }
             try await group.waitForAll()

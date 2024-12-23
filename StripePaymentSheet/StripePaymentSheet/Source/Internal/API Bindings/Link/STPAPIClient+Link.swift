@@ -42,11 +42,13 @@ extension STPAPIClient {
                 return
             }
 
+            var requestAssertionHandle: StripeAttest.AssertionHandle?
             if useMobileEndpoints {
                 do {
                     let attest = StripeAttest(apiClient: self)
-                    let assertion = try await attest.assert()
-                    parameters = parameters.merging(assertion.requestFields) { (_, new) in new }
+                    let assertionHandle = try await attest.assert()
+                    parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
+                    requestAssertionHandle = assertionHandle
                 } catch {
                     // If we can't get an assertion, we'll try the request anyway. It may fail.
                 }
@@ -63,6 +65,8 @@ extension STPAPIClient {
                        Self.isLinkAssertionError(error: error) {
                         await StripeAttest(apiClient: self).receivedAssertionError(error)
                     }
+                    // Mark the assertion handle as completed
+                    requestAssertionHandle?.complete()
                     completion(result)
                 }
             }
@@ -103,11 +107,13 @@ extension STPAPIClient {
                 parameters["consent_action"] = consentAction
             }
 
+            var requestAssertionHandle: StripeAttest.AssertionHandle?
             if useMobileEndpoints {
                 do {
                     let attest = StripeAttest(apiClient: self)
-                    let assertion = try await attest.assert()
-                    parameters = parameters.merging(assertion.requestFields) { (_, new) in new }
+                    let assertionHandle = try await attest.assert()
+                    parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
+                    requestAssertionHandle = assertionHandle
                 } catch {
                     // If we can't get an assertion, we'll try the request anyway. It may fail.
                 }
@@ -124,7 +130,8 @@ extension STPAPIClient {
                        Self.isLinkAssertionError(error: error) {
                         await StripeAttest(apiClient: self).receivedAssertionError(error)
                     }
-
+                    // Mark the assertion handle as completed
+                    requestAssertionHandle?.complete()
                     completion(result)
                 }
             }
