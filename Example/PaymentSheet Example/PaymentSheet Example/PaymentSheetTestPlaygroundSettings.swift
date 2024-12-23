@@ -542,7 +542,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectEmail: .automatic,
             collectPhone: .automatic,
             collectAddress: .automatic,
-            formSheetAction: .confirm,
+            formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
             cardBrandAcceptance: .all,
             allowsSetAsDefaultPM: .off)
