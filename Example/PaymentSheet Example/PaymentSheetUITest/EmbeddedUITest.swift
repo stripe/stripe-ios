@@ -528,6 +528,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
+        settings.layout = .horizontal
         settings.customerKeyType = .legacy
         settings.formSheetAction = .continue
         settings.customerMode = .new
