@@ -29,9 +29,9 @@ final class SectionView: UIView {
 
     // MARK: - Initializers
 
-    init(viewModel: SectionViewModel, setMask: Bool) {
+    init(viewModel: SectionViewModel) {
         self.viewModel = viewModel
-        self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme, setMask: setMask)
+        self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme)
         super.init(frame: .zero)
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorOrSubLabel])

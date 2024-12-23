@@ -22,6 +22,9 @@ extension SavedPaymentMethodFormFactory {
         let ibanElement: SectionElement = {
             return SectionElement(elements: [TextFieldElement.LastFourIBANConfiguration(lastFour: viewModel.paymentMethod.sepaDebit?.last4 ?? "0000").makeElement(theme: viewModel.appearance.asElementsTheme)], theme: viewModel.appearance.asElementsTheme)
         }()
+        nameElement.disableAppearance()
+        emailElement.disableAppearance()
+        ibanElement.disableAppearance()
         let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, ibanElement.view])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical

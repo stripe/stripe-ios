@@ -22,6 +22,9 @@ extension SavedPaymentMethodFormFactory {
         let bankAccountElement: SectionElement = {
             return SectionElement(elements: [TextFieldElement.USBankNumberConfiguration(bankName: viewModel.paymentMethod.usBankAccount?.bankName ?? "Bank name", lastFour: viewModel.paymentMethod.usBankAccount?.last4 ?? "").makeElement(theme: viewModel.appearance.asElementsTheme)], theme: viewModel.appearance.asElementsTheme)
         }()
+        nameElement.disableAppearance()
+        emailElement.disableAppearance()
+        bankAccountElement.disableAppearance()
         let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, bankAccountElement.view])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
