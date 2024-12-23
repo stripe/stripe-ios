@@ -340,10 +340,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
-        ensureSPMSelection("•••• 6789", insteadOf: "•••• 4242")
+        ensureSPMSelection("••••6789", insteadOf: "•••• 4242")
 
         let card4242Button = app.buttons["•••• 4242"]
-        let bank6789Button = app.buttons["•••• 6789"]
+        let bank6789Button = app.buttons["••••6789"]
 
         // Switch from 6789 (Bank account) to 4242
         app.buttons["View more"].waitForExistenceAndTap()
@@ -401,9 +401,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         loadPlayground(app, settings)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
-        ensureSPMSelection("•••• 6789", insteadOf: "•••• 4242")
+        ensureSPMSelection("••••6789", insteadOf: "•••• 4242")
 
-        let bank6789Button = app.buttons["•••• 6789"]
+        let bank6789Button = app.buttons["••••6789"]
         let applePayButton = app.buttons["Apple Pay"]
 
         // Ensure card bank acct. is selected, and apple pay is not.
@@ -491,7 +491,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         
         // Verify we show the bank account in the saved PM row
         XCTAssertTrue(app.buttons["Edit"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.buttons["•••• 6789"].isSelected)
+        XCTAssertFalse(app.buttons["••••6789"].isSelected)
         XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
     }
@@ -508,10 +508,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
 
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
-        ensureSPMSelection("•••• 6789", insteadOf: "•••• 4242")
+        ensureSPMSelection("••••6789", insteadOf: "•••• 4242")
 
-        XCTAssertTrue(app.staticTexts["•••• 6789"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["•••• 6789"].isSelected)
+        XCTAssertTrue(app.staticTexts["••••6789"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["••••6789"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
@@ -639,7 +639,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Add US bank account"].waitForExistence(timeout: 10))
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
-        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 6789")
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "••••6789")
         XCTAssertTrue(app.buttons["US bank account"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
