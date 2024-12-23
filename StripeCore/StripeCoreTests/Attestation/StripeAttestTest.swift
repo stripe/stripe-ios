@@ -11,9 +11,9 @@ class StripeAttestTest: XCTestCase {
     var mockAttestService: MockAppAttestService!
     var mockAttestBackend: MockAttestBackend!
     var stripeAttest: StripeAttest!
+    let apiClient = STPAPIClient(publishableKey: "pk_live_abc123")
 
     override func setUp() {
-        let apiClient = STPAPIClient(publishableKey: "pk_live_abc123")
         self.mockAttestBackend = MockAttestBackend()
         self.mockAttestService = MockAppAttestService()
         self.stripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: apiClient)
