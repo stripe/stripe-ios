@@ -92,7 +92,7 @@ class StripeAttestTest: XCTestCase {
     }
 
     func testNoPublishableKey() async {
-        await stripeAttest.apiClient.publishableKey = nil
+        await stripeAttest.apiClient!.publishableKey = nil
         do {
             // Create and attest a key
             try await stripeAttest.attest()
