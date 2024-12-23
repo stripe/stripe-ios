@@ -26,13 +26,11 @@ final class SectionView: UIView {
     }()
 
     let viewModel: SectionViewModel
-    let setMask: Bool
 
     // MARK: - Initializers
 
     init(viewModel: SectionViewModel, setMask: Bool) {
         self.viewModel = viewModel
-        self.setMask = setMask
         self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme, setMask: setMask)
         super.init(frame: .zero)
 

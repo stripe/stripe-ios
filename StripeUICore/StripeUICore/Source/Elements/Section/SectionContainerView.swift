@@ -41,10 +41,6 @@ class SectionContainerView: UIView {
 
     // MARK: - Initializers
 
-    convenience init(view: UIView, theme: ElementsAppearance = .default, setMask: Bool) {
-        self.init(views: [view], theme: theme, setMask: setMask)
-    }
-
     /**
      - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
      */
@@ -200,11 +196,9 @@ extension SectionContainerView: EventHandler {
 extension SectionContainerView {
     class MultiElementRowView: UIView {
         let views: [UIView]
-        let setMask: Bool
 
         init(views: [UIView], theme: ElementsAppearance = .default, setMask: Bool) {
             self.views = views
-            self.setMask = setMask
             super.init(frame: .zero)
             let stackView = buildStackView(views: views, theme: theme, setMask: setMask)
             stackView.axis = .horizontal
