@@ -104,7 +104,7 @@ class StripeAttestTest: XCTestCase {
 
     func testAssertionsNotRequiredInTestMode() async {
         // Configure a test merchant PK:
-        await stripeAttest.apiClient.publishableKey = "pk_test_abc123"
+        await stripeAttest.apiClient!.publishableKey = "pk_test_abc123"
         // And reset the last attestation date:
         await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
         // Fail the assertion, which will cause us to try to re-attest the key, but then the
