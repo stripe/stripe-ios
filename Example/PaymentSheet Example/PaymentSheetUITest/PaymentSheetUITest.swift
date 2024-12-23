@@ -50,6 +50,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.staticTexts["PaymentSheet"].tap()
         app.staticTexts["Buy"].waitForExistenceAndTap(timeout: 60)
 
+        app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.buttons["Pay €9.73"].tap()
         let successText = app.alerts.staticTexts["Your order is confirmed!"]
@@ -71,8 +72,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let yourCartFrame = yourCartText.frame
 
         // Wait for the sheet to load
-        let numberField = app.textFields["Card number"]
-        _ = numberField.waitForExistence(timeout: 20)
+        let sheetPayButton = app.buttons["Pay €9.73"].waitForExistence(timeout: 60)
 
         // Close PaymentSheet. At this point, if we messed up our presentation
         // logic, the containing UINavigationController will be in a bad state.
@@ -102,8 +102,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.buttons["Buy"].waitForExistenceAndTap(timeout: 60)
 
         // Wait for the sheet to load
-        let numberField = app.textFields["Card number"]
-        _ = numberField.waitForExistence(timeout: 20)
+        _ = app.buttons["Pay €9.73"].waitForExistence(timeout: 60)
 
         // Close the sheet (at this point UINavigationController would be in the bad state)
         app.buttons["Close"].waitForExistenceAndTap()
@@ -159,9 +158,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
+        let addCardButton = app.buttons["Card"].waitForExistenceAndTap()
 
         try! fillCardData(app)
         app.buttons["Continue"].tap()
@@ -204,9 +201,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
+        app.buttons["Card"].waitForExistenceAndTap()
 
         try! fillCardData(app)
 
@@ -368,6 +363,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.forceTapElement()
 
+        app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.buttons["Done"].waitForExistenceAndTap(timeout: 3.0)
         app.buttons["Pay €9.73"].waitForExistenceAndTap(timeout: 3.0)
@@ -384,9 +380,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.forceTapElement()
 
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
+        app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.buttons["Continue"].tap()
 
@@ -441,7 +435,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
-                settings.merchantCountryCode = .IN
+        settings.merchantCountryCode = .IN
         settings.currency = .inr
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -513,6 +507,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
+        app.buttons["Card"].waitForExistenceAndTap()
 
         // Card number from https://docs.stripe.com/testing#regulatory-cards
         try! fillCardData(app, cardNumber: "4000002760003184")
