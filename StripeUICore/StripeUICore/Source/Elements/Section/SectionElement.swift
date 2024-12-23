@@ -73,7 +73,7 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(title: String? = nil, elements: [Element], theme: ElementsAppearance = .default, setDisabledAppearance: Bool = false) {
+    public init(title: String? = nil, elements: [Element], theme: ElementsAppearance = .default) {
         self.title = title
         self.elements = elements
         self.theme = theme
