@@ -251,7 +251,8 @@ final class PaymentSheetAnalyticsHelper {
             event: .paymentSheetConfirmButtonTapped,
             duration: duration,
             selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
-            linkContext: paymentOption.linkContextAnalyticsValue
+            linkContext: paymentOption.linkContextAnalyticsValue,
+            linkUI: paymentOption.linkUIAnalyticsValue
         )
     }
 
@@ -315,7 +316,8 @@ final class PaymentSheetAnalyticsHelper {
             error: result.error,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
             selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
-            linkContext: paymentOption.linkContextAnalyticsValue
+            linkContext: paymentOption.linkContextAnalyticsValue,
+            linkUI: paymentOption.linkUIAnalyticsValue
         )
     }
 
@@ -326,6 +328,7 @@ final class PaymentSheetAnalyticsHelper {
         deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType? = nil,
         selectedLPM: String? = nil,
         linkContext: String? = nil,
+        linkUI: String? = nil,
         params: [String: Any] = [:]
     ) {
         let linkEnabled: Bool? = {
@@ -338,6 +341,8 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
         additionalParams["link_session_type"] = elementsSession?.linkPopupWebviewOption.rawValue
+        additionalParams["link_use_attestation"] = elementsSession?.linkSettings?.useAttestationEndpoints
+        additionalParams["link_suppress_2fa"] = elementsSession?.linkSettings?.suppress2FAModal
         additionalParams["mpe_config"] = configuration.analyticPayload
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
@@ -345,6 +350,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["require_cvc_recollection"] = intent?.cvcRecollectionEnabled
         additionalParams["selected_lpm"] = selectedLPM
         additionalParams["link_context"] = linkContext
+        additionalParams["link_ui"] = linkUI
 
         if let error {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())

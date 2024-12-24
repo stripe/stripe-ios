@@ -67,7 +67,7 @@ extension PaymentSheet {
         // need a "link_context."
         var linkContextAnalyticsValue: String? {
             if case .link = self {
-                return "wallet"
+               return "wallet"
             } else if
                 case .new(let confirmParams) = self,
                 let linkedBank = confirmParams.instantDebitsLinkedBank
@@ -81,6 +81,35 @@ extension PaymentSheet {
                 return nil
             }
         }
+        
+        // The confirmation type used by Link
+        var linkUIAnalyticsValue: String? {
+            if case .link(let option) = self {
+                switch option {
+                case .withPaymentDetails(account: let account, paymentDetails: _):
+                    if account.hasCompletedSMSVerification {
+                        // This was a returning user who logged in
+                        return "native-returning"
+                    } else if account.sessionState == .verified {
+                        return "native-signup"
+                    } else {
+                        // Should never reach this
+                        stpAssertionFailure()
+                        return "native-unknown"
+                    }
+                case .withPaymentMethod(paymentMethod: _):
+                    return "web-popup"
+                case .wallet:
+                    // From the "Link" button in FlowController, a separate Link popup
+                    return "native-popup"
+                case .signUp(account: _, phoneNumber: _, consentAction: _, legalName: _, intentConfirmParams: _):
+                    return "inline-signup"
+                }
+            } else {
+                return nil
+            }
+        }
+        
         var isExternal: Bool {
             if case .external = self {
                 return true
