@@ -173,6 +173,13 @@ extension PayWithLinkViewController {
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -preferredContentMargins.trailing),
 
+                errorLabel.leadingAnchor.constraint(
+                    equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
+                    constant: preferredContentMargins.leading),
+                errorLabel.trailingAnchor.constraint(
+                    equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
+                    constant: -preferredContentMargins.trailing),
+
                 addPaymentMethodVC.view.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 addPaymentMethodVC.view.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
 
