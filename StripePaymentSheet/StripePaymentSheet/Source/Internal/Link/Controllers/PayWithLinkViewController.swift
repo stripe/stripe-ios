@@ -102,7 +102,11 @@ final class PayWithLinkViewController: UINavigationController {
     private var accountContext: LinkAccountContext = .shared
 
     private var linkAccount: PaymentSheetLinkAccount? {
-        get { accountContext.account }
+        get {
+            let account = accountContext.account
+            account?.paymentSheetLinkAccountDelegate = self
+            return account
+        }
         set { accountContext.account = newValue }
     }
 
@@ -362,4 +366,42 @@ extension PayWithLinkViewController: STPAuthenticationContext {
         return self
     }
 
+}
+
+extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
+    func refreshLinkSession(completion: @escaping (Result<ConsumerSession, any Error>) -> Void) {
+        // Tell the LinkAccountService to lookup again
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+        accountService.lookupAccount(withEmail: linkAccount?.email, emailSource: .prefilledEmail) { result in
+            switch result {
+            case .success(let account):
+                DispatchQueue.main.async {
+                    guard let account else {
+                        completion(.failure(PaymentSheetError.unknown(debugDescription: "No account found")))
+                        return
+                    }
+                    let verificationController = LinkVerificationController(mode: .modal, linkAccount: account)
+                    verificationController.present(from: self) { result in
+                        switch result {
+                        case .completed:
+                            // Return the session from the new account
+                            guard let newSession = account.currentSession else {
+                                completion(.failure(PaymentSheetError.unknown(debugDescription: "No session found")))
+                                return
+                            }
+                            completion(.success(newSession))
+                        case .canceled, .failed:
+                            completion(.failure(PaymentSheetError.unknown(debugDescription: "Authentication failed")))
+                        }
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+        
+    }
+    
 }

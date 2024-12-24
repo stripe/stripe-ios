@@ -59,6 +59,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
+    
+    var paymentSheetLinkAccountDelegate: PaymentSheetLinkAccountDelegate?
 
     let email: String
 
@@ -88,7 +90,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         return currentSession?.hasStartedSMSVerification ?? false
     }
 
-    private var currentSession: ConsumerSession?
+    private(set) var currentSession: ConsumerSession?
 
     init(
         email: String,
@@ -256,15 +258,15 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            completion(
-                .failure(PaymentSheetError.savingWithoutValidLinkSession)
-            )
-            return
-        }
-
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                completion(
+                    .failure(PaymentSheetError.savingWithoutValidLinkSession)
+                )
+                return
+            }
+
             session.createPaymentDetails(
                 paymentMethodParams: paymentMethodParams,
                 with: apiClient,
@@ -426,13 +428,20 @@ private extension PaymentSheetLinkAccount {
             case .success:
                 completion(result)
             case .failure(let error as NSError):
-                let isAuthError =
-                    (error.domain == STPError.stripeDomain && error.code == STPErrorCode.authenticationError.rawValue)
+                let isAuthError: Bool = {
+                    if let stripeError = error as? StripeError,
+                    case let .apiError(stripeAPIError) = stripeError,
+                       stripeAPIError.code == "consumer_session_credentials_invalid" {
+                        return true
+                    }
+                    return false
+                }()
 
                 if isAuthError {
                     self?.refreshSession { refreshSessionResult in
                         switch refreshSessionResult {
-                        case .success:
+                        case .success(let refreshedSession):
+                            self?.currentSession = refreshedSession
                             apiCall(completion)
                         case .failure:
                             completion(result)
@@ -446,38 +455,9 @@ private extension PaymentSheetLinkAccount {
     }
 
     func refreshSession(
-        completion: @escaping (Result<Void, Error>) -> Void
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        // The consumer session lookup endpoint currently serves as our endpoint for
-        // refreshing the session. To refresh the session, we need to call this endpoint
-        // without providing an email address.
-        ConsumerSession.lookupSession(
-            for: nil,  // No email address
-            emailSource: nil, // No source
-            sessionID: elementsSessionID,
-            with: apiClient,
-            useMobileEndpoints: useMobileEndpoints
-        ) { [weak self] result in
-            switch result {
-            case .success(let response):
-                switch response.responseType {
-                case .found(let session):
-                    self?.currentSession = session.consumerSession
-                    self?.publishableKey = session.publishableKey
-                    completion(.success(()))
-                case .notFound(let message):
-                    completion(
-                        .failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: message))
-                    )
-                case .noAvailableLookupParams:
-                    completion(
-                        .failure(PaymentSheetError.missingClientSecret)
-                    )
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        paymentSheetLinkAccountDelegate?.refreshLinkSession(completion: completion)
     }
 
 }
@@ -605,4 +585,8 @@ struct UpdatePaymentDetailsParams {
         self.isDefault = isDefault
         self.details = details
     }
+}
+
+protocol PaymentSheetLinkAccountDelegate {
+    func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void)
 }

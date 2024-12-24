@@ -46,7 +46,25 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
             ]
         )
     }
+    
+    func testRefreshesWhenNeeded() {
+        let sut = makeSUT()
+        let session = LinkStubs.consumerSession()
+        let paymentDetails = makePaymentDetailsStub()
+        let exp = expectation(description: "Refreshes when needed")
+        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        sut.paymentSheetLinkAccountDelegate = PaymentSheetLinkAccountDelegateStub()
+        sut.listPaymentDetails { result in
+            exp.fulfill()
+        }
+    }
 
+}
+
+class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
+    func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void) {
+        completion(.success(LinkStubs.consumerSession()))
+    }
 }
 
 extension PaymentSheetLinkAccountTests {
