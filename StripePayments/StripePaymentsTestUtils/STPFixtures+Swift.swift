@@ -108,4 +108,23 @@ public extension STPPaymentMethodParams {
         cardParams.expMonth = 01
         return STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
     }
+
+    static func _testSEPA() -> STPPaymentMethodParams {
+        let sepaDebitParams = STPPaymentMethodSEPADebitParams()
+        sepaDebitParams.iban =  "AT611904300234573201"
+
+        let billingAddress = STPPaymentMethodAddress()
+        billingAddress.city = "London"
+        billingAddress.country = "GB"
+        billingAddress.line1 = "Stripe, 7th Floor The Bower Warehouse"
+        billingAddress.postalCode = "EC1V 9NR"
+
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.address = billingAddress
+        billingDetails.email = "email@email.com"
+        billingDetails.name = "Isaac Asimov"
+        billingDetails.phone = "555-555-5555"
+
+        return STPPaymentMethodParams(sepaDebit: sepaDebitParams, billingDetails: billingDetails, metadata: nil)
+    }
 }

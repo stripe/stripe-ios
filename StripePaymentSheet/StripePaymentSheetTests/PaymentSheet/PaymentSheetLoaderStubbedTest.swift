@@ -152,8 +152,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                 }
                 XCTAssertEqual(paymentIntent.stripeId, "pi_3Kth")
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 2)
-                XCTAssertEqual(loadResult.savedPaymentMethods[0].type, .card)
-                XCTAssertEqual(loadResult.savedPaymentMethods[1].type, .USBankAccount)
+                XCTAssertEqual(loadResult.savedPaymentMethods[0].type, .USBankAccount)
+                XCTAssertEqual(loadResult.savedPaymentMethods[1].type, .card)
 
                 loaded.fulfill()
             case .failure(let error):

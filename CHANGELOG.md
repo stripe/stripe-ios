@@ -1,3 +1,8 @@
+## X.Y.Z 
+### PaymentSheet
+* [Fixed] Fixed a bug where saved payment methods could appear out of order if you have multiple types (e.g. card and bank).
+
+
 ## 24.2.0 2024-12-19
 
 ### Connect
