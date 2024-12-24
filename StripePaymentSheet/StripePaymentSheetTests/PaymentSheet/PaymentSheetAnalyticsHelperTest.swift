@@ -277,6 +277,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertNil(analyticsClient._testLogHistory.last!["deferred_intent_confirmation_type"])
             XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, paymentOption.paymentMethodTypeAnalyticsValue)
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, paymentOption.linkContextAnalyticsValue)
+            XCTAssertEqual(analyticsClient._testLogHistory.last!["link_ui"] as? String, paymentOption.linkUIAnalyticsValue)
         }
     }
 
