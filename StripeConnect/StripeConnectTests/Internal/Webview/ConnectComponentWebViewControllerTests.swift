@@ -463,8 +463,9 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let componentManager = componentManagerAssertingOnFetch()
         let session = try FinancialConnectionsSessionMock.default.make()
 
-        let financialConnectionsPresenter = MockFinancialConnectionsPresenter { apiClient, secret, connectedAccountId, vc in
-            XCTAssert(apiClient === componentManager.apiClient)
+        let financialConnectionsPresenter = MockFinancialConnectionsPresenter { compManager, secret, connectedAccountId, vc in
+            XCTAssert(compManager.apiClient == componentManager.apiClient)
+            XCTAssert(compManager.publicKeyOverride == componentManager.publicKeyOverride)
             XCTAssertEqual(secret, "client_secret_123")
             XCTAssertEqual(connectedAccountId, "acct_1234")
             XCTAssert(vc is ConnectComponentWebViewController)
@@ -588,14 +589,14 @@ private class MockAuthenticatedWebViewManager: AuthenticatedWebViewManager {
 
 private class MockFinancialConnectionsPresenter: FinancialConnectionsPresenter {
     var overridePresentForToken: (
-        _ apiClient: STPAPIClient,
+        _ componentManager: EmbeddedComponentManager,
         _ clientSecret: String,
         _ connectedAccountId: String,
         _ presentingViewController: UIViewController
     ) async -> FinancialConnectionsSheet.TokenResult
 
     init(overridePresentForToken: @escaping (
-        _ apiClient: STPAPIClient,
+        _ componentManager: EmbeddedComponentManager,
         _ clientSecret: String,
         _ connectedAccountId: String,
         _ presentingViewController: UIViewController
@@ -604,11 +605,11 @@ private class MockFinancialConnectionsPresenter: FinancialConnectionsPresenter {
     }
 
     override func presentForToken(
-        apiClient: STPAPIClient,
+        componentManager: EmbeddedComponentManager,
         clientSecret: String,
         connectedAccountId: String,
         from presentingViewController: UIViewController
     ) async -> FinancialConnectionsSheet.TokenResult {
-        await overridePresentForToken(apiClient, clientSecret, connectedAccountId, presentingViewController)
+        await overridePresentForToken(componentManager, clientSecret, connectedAccountId, presentingViewController)
     }
 }

@@ -503,7 +503,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
-            layout: .horizontal,
+            layout: .automatic,
             mode: .payment,
             customerKeyType: .legacy,
             integrationType: .normal,
@@ -542,7 +542,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectEmail: .automatic,
             collectPhone: .automatic,
             collectAddress: .automatic,
-            formSheetAction: .confirm,
+            formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
             cardBrandAcceptance: .all,
             allowsSetAsDefaultPM: .off)

@@ -17,9 +17,11 @@ extension STPPaymentMethod {
         case .card:
             return "•••• \(card?.last4 ?? "")"
         case .SEPADebit:
-            return "•••• \(sepaDebit?.last4 ?? "")"
+            // The missing space is not an oversight, but on purpose
+            return "••••\(sepaDebit?.last4 ?? "")"
         case .USBankAccount:
-            return "•••• \(usBankAccount?.last4 ?? "")"
+            // The missing space is not an oversight, but on purpose
+            return "••••\(usBankAccount?.last4 ?? "")"
         default:
             return type.displayName
         }
@@ -48,7 +50,7 @@ extension STPPaymentMethod {
     
     func paymentOptionLabel(confirmParams: IntentConfirmParams?) -> String {
         if let instantDebitsLinkedBank = confirmParams?.instantDebitsLinkedBank {
-            return "•••• \(instantDebitsLinkedBank.last4 ?? "")"
+            return "••••\(instantDebitsLinkedBank.last4 ?? "")"
         } else {
             return paymentSheetLabel
         }

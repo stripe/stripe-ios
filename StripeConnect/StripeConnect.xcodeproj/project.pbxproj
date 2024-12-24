@@ -61,6 +61,7 @@
 		41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */; };
 		41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */; };
 		41814EF32C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */; };
+		418570562D13CA3700DE3FBE /* FinancialConnectionsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418570552D13CA3400DE3FBE /* FinancialConnectionsPresenterTests.swift */; };
 		4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */; };
 		4186664C2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */; };
 		4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */; };
@@ -214,6 +215,7 @@
 		41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitParamsMessageHandlerTests.swift; sourceTree = "<group>"; };
 		41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnExitMessageHandlerTests.swift; sourceTree = "<group>"; };
 		41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoaderStartMessageHandlerTests.swift; sourceTree = "<group>"; };
+		418570552D13CA3400DE3FBE /* FinancialConnectionsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPresenterTests.swift; sourceTree = "<group>"; };
 		418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSetterFunctionCalledMessageHandler.swift; sourceTree = "<group>"; };
 		4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoaderStartMessageHandler.swift; sourceTree = "<group>"; };
 		4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandler.swift; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 		41814EE62C6BC8690014EB5E /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				418570552D13CA3400DE3FBE /* FinancialConnectionsPresenterTests.swift */,
 				E6660DBA2CDDC5BC002A7631 /* Analytics */,
 				E640C9D12CBF4790009D0C6E /* AuthenticatedWebView */,
 				E6660DBF2CDE7D48002A7631 /* Extensions */,
@@ -966,6 +969,7 @@
 				41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */,
 				4161C2732C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift in Sources */,
 				E6F485FE2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift in Sources */,
+				418570562D13CA3700DE3FBE /* FinancialConnectionsPresenterTests.swift in Sources */,
 				E6660CFB2CC2F438002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift in Sources */,
 				416E9E782C753B7900A0B917 /* ConnectComponentWebViewControllerTests.swift in Sources */,
 				410D0FD42C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift in Sources */,

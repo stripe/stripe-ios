@@ -149,7 +149,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         if let last4ofBankAccount = linkedBank?.last4,
            let bankName = linkedBank?.bankName {
             bankInfoView.setBankName(text: bankName)
-            bankInfoView.setLastFourOfBank(text: "•••• \(last4ofBankAccount)")
+            bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
             formElement.toggleElements(linkedAccountElements, hidden: false, animated: animated)
         } else {
             formElement.toggleElements(linkedAccountElements, hidden: true, animated: animated)

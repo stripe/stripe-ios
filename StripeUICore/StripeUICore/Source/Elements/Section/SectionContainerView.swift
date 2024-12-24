@@ -40,10 +40,6 @@ class SectionContainerView: UIView {
 
     // MARK: - Initializers
 
-    convenience init(view: UIView, theme: ElementsAppearance = .default) {
-        self.init(views: [view], theme: theme)
-    }
-
     /**
      - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
      */
@@ -175,6 +171,11 @@ class SectionContainerView: UIView {
         }
         let shouldAnimate = Int(newStack.frame.size.height) != Int(oldStackHeight)
         viewController.animateHeightChange(duration: shouldAnimate ? 0.5 : 0.0, transition)
+    }
+
+    func disableAppearance() {
+        stackView.customBackgroundColor = theme.colors.componentBackground.translucentMaskColor
+        updateUI()
     }
 }
 

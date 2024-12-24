@@ -18,6 +18,10 @@ protocol PayWithLinkSignUpViewModelDelegate: AnyObject {
         _ viewModel: PayWithLinkViewController.SignUpViewModel,
         didLookupAccount linkAccount: PaymentSheetLinkAccount?
     )
+    func viewModel(
+        _ viewModel: PayWithLinkViewController.SignUpViewModel,
+        didEncounterAttestationError attestionError: Error
+    )
 }
 
 extension PayWithLinkViewController {
@@ -216,6 +220,9 @@ private extension PayWithLinkViewController.SignUpViewModel {
                 case .failure(let error):
                     self.linkAccount = nil
                     self.errorMessage = error.nonGenericDescription
+                    if STPAPIClient.isLinkAssertionError(error: error) {
+                        self.delegate?.viewModel(self, didEncounterAttestationError: error)
+                    }
                 }
             }
         }

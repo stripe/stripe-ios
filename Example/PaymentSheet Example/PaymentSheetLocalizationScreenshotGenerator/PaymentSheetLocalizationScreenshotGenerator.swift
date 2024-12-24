@@ -99,6 +99,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
     func testAllStrings() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
+        settings.layout = .horizontal
         settings.applePayEnabled = .off
         settings.currency = .eur
         settings.mode = .payment

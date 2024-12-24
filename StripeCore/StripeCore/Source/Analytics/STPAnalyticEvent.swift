@@ -149,6 +149,7 @@ import Foundation
     case link2FAComplete = "link.2fa.complete"
     case link2FACancel = "link.2fa.cancel"
     case link2FAFailure = "link.2fa.failure"
+    case linkBailedToWebFlow = "link.native.bailed"
 
     // MARK: - Link Misc
     case linkAccountLookupComplete = "link.account_lookup.complete"
