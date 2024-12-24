@@ -26,7 +26,8 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
 
     func payWithLinkViewControllerDidFinish(
         _ payWithLinkViewController: PayWithLinkViewController,
-        result: PaymentSheetResult
+        result: PaymentSheetResult,
+        deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
     )
 
 }
@@ -35,13 +36,13 @@ protocol PayWithLinkCoordinating: AnyObject {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
         paymentDetails: ConsumerPaymentDetails,
-        completion: @escaping (PaymentSheetResult) -> Void
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
     func confirmWithApplePay()
     func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void)
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
-    func finish(withResult result: PaymentSheetResult)
+    func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?)
     func logout(cancel: Bool)
 }
 
@@ -249,7 +250,9 @@ private extension PayWithLinkViewController {
                 }
             case .failure(let error):
                 self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
-                    self, result: PaymentSheetResult.failed(error: error)
+                    self,
+                    result: PaymentSheetResult.failed(error: error),
+                    deferredIntentConfirmationType: nil
                 )
             }
         }
@@ -292,7 +295,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
         paymentDetails: ConsumerPaymentDetails,
-        completion: @escaping (PaymentSheetResult) -> Void
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         view.isUserInteractionEnabled = false
 
@@ -303,10 +306,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             with: PaymentOption.link(
                 option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
             )
-        ) { [weak self] result, _ in
-//            TODO(link): Log confirmation type here
+        ) { [weak self] result, confirmationType in
             self?.view.isUserInteractionEnabled = true
-            completion(result)
+            completion(result, confirmationType)
         }
     }
 
@@ -316,14 +318,13 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             intent: context.intent,
             elementsSession: context.elementsSession,
             with: .applePay
-        ) { [weak self] result, _ in
-            //            TODO(link): Log confirmation type here
+        ) { [weak self] result, confirmationType in
             switch result {
             case .canceled:
                 // no-op -- we don't dismiss/finish for canceled Apple Pay interactions
                 break
             case .completed, .failed:
-                self?.finish(withResult: result)
+                self?.finish(withResult: result, deferredIntentConfirmationType: confirmationType)
             }
         }
     }
@@ -338,9 +339,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         updateUI()
     }
 
-    func finish(withResult result: PaymentSheetResult) {
+    func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         view.isUserInteractionEnabled = false
-        payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: result)
+        payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
     }
 
     func logout(cancel: Bool) {

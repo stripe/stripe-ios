@@ -91,9 +91,9 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         selfRetainer = nil
     }
 
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
+    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         payWithLinkViewController.dismiss(animated: true)
-        completion?(result, nil)
+        completion?(result, deferredIntentConfirmationType)
         selfRetainer = nil
     }
 
