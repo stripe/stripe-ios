@@ -154,7 +154,7 @@ extension PayWithLinkViewController {
         override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)
             STPAnalyticsClient.sharedClient.logLinkSignupFlowPresented()
-            
+
             // If the email field is empty, select it
             if emailElement.emailAddressString?.isEmpty ?? false {
                 emailElement.beginEditing()
@@ -244,7 +244,6 @@ extension PayWithLinkViewController.SignUpViewController: PayWithLinkSignUpViewM
     func viewModel(_ viewModel: PayWithLinkViewController.SignUpViewModel, didEncounterAttestationError attestionError: any Error) {
         self.coordinator?.bailToWebFlow()
     }
-    
 
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.SignUpViewModel) {
         updateUI(animated: true)

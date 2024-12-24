@@ -116,7 +116,7 @@ final class PayWithLinkViewController: UINavigationController {
 
         return rootViewController is LoaderViewController
     }
-    
+
     private var isBailingToWebFlow: Bool = false
 
     convenience init(
@@ -167,7 +167,6 @@ final class PayWithLinkViewController: UINavigationController {
         updateSupportedPaymentMethods()
         updateUI()
 
-        
         // Prewarm attestation if needed
         Task {
             // Attempt to attest
@@ -369,7 +368,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             updateUI()
         }
     }
-    
+
     func bailToWebFlow() {
         guard !isBailingToWebFlow else {
             // Multiple things can kick off bailing to web flow, but we only want to do it once
@@ -381,7 +380,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             return
         }
         // Set up a web controller with the same settings and swap to it
-        
+
         let payWithLinkVC = PayWithLinkWebController(
             intent: context.intent,
             elementsSession: context.elementsSession,

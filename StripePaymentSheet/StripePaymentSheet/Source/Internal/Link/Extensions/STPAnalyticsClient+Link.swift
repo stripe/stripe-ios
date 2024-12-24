@@ -88,7 +88,7 @@ extension STPAnalyticsClient {
     func logLink2FACancel() {
         self.logPaymentSheetEvent(event: .link2FACancel)
     }
-    
+
     func logLinkBailedToWebFlow() {
         self.logPaymentSheetEvent(event: .linkBailedToWebFlow)
     }
