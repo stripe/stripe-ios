@@ -336,27 +336,23 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
-    func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
-        Task {
-            let useNativeLink = await prepareNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
-            Task.detached { @MainActor in
-                if useNativeLink {
-                    self.presentPayWithNativeLinkController(
-                        from: paymentSheetViewController,
-                        intent: paymentSheetViewController.intent,
-                        elementsSession: paymentSheetViewController.elementsSession,
-                        shouldOfferApplePay: false,
-                        shouldFinishOnClose: false,
-                        completion: nil
-                    )
-                } else {
-                    self.presentPayWithLinkController(
-                        from: paymentSheetViewController,
-                        intent: paymentSheetViewController.intent,
-                        elementsSession: paymentSheetViewController.elementsSession
-                    )
-                }
-            }
+    func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {        
+        let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
+        if useNativeLink {
+            self.presentPayWithNativeLinkController(
+                from: paymentSheetViewController,
+                intent: paymentSheetViewController.intent,
+                elementsSession: paymentSheetViewController.elementsSession,
+                shouldOfferApplePay: false,
+                shouldFinishOnClose: false,
+                completion: nil
+            )
+        } else {
+            self.presentPayWithLinkController(
+                from: paymentSheetViewController,
+                intent: paymentSheetViewController.intent,
+                elementsSession: paymentSheetViewController.elementsSession
+            )
         }
     }
 }

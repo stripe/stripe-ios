@@ -164,6 +164,28 @@ final class PayWithLinkViewController: UINavigationController {
         updateSupportedPaymentMethods()
         updateUI()
 
+        
+        // Kick off attestation if needed
+        Task {
+            // Attempt to attest
+            let canAttest = await context.configuration.apiClient.stripeAttest.prepareAttestation()
+            guard canAttest else {
+                DispatchQueue.main.async {
+                    // If we can't attest, let's bail and switch to the web controller
+                    self.dismiss(animated: false)
+                    let payWithLinkVC = PayWithLinkWebController(
+                        intent: self.context.intent,
+                        elementsSession: self.context.elementsSession,
+                        configuration: self.context.configuration,
+                        alwaysUseEphemeralSession: true
+                    )
+
+                    payWithLinkVC.payWithLinkDelegate = self.payWithLinkDelegate as? PayWithLinkWebControllerDelegate
+                    payWithLinkVC.present(over: self.parent ?? self)
+                }
+                return
+            }
+        }
         // The internal delegate of the interactive pop gesture disables
         // the gesture when the navigation bar is hidden. Use a custom delegate
         // to restore the functionality.

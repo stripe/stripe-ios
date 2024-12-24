@@ -72,6 +72,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         let configuration: PaymentElementConfiguration
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
+        let alwaysUseEphemeralSession: Bool
 
         /// Creates a new Context object.
         /// - Parameters:
@@ -79,16 +80,19 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         ///   - elementsSession: STPElementsSession.
         ///   - configuration: PaymentElementConfiguration configuration.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
+        ///   - alwaysUseEphemeralSession: If `true`, always use an ephemeral session.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
             configuration: PaymentElementConfiguration,
-            callToAction: ConfirmButton.CallToActionType?
+            callToAction: ConfirmButton.CallToActionType?,
+            alwaysUseEphemeralSession: Bool
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
             self.configuration = configuration
             self.callToAction = callToAction ?? intent.callToAction
+            self.alwaysUseEphemeralSession = alwaysUseEphemeralSession
         }
     }
 
@@ -100,14 +104,16 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
-        callToAction: ConfirmButton.CallToActionType? = nil
+        callToAction: ConfirmButton.CallToActionType? = nil,
+        alwaysUseEphemeralSession: Bool = false
     ) {
         self.init(
             context: Context(
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
-                callToAction: callToAction
+                callToAction: callToAction,
+                alwaysUseEphemeralSession: alwaysUseEphemeralSession
             )
         )
     }
@@ -135,7 +141,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             }
 
             // Check if we're in the ephemeral session experiment or we have an email address
-            if self.context.elementsSession.linkPopupWebviewOption == .ephemeral || linkPopupParams.customerInfo.email != nil {
+            if self.context.elementsSession.linkPopupWebviewOption == .ephemeral || linkPopupParams.customerInfo.email != nil || context.alwaysUseEphemeralSession {
                 webAuthSession.prefersEphemeralWebBrowserSession = true
             }
 
