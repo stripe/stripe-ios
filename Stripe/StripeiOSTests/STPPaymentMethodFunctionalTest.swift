@@ -114,7 +114,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         // Clean up, detach the payment method as a customer can only have 400 payment methods saved
         try await client.detachPaymentMethod(paymentMethod.stripeId,
                                              fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret)
-     }
+    }
 
     func testMulitpleCardCreationWithCustomerSessionAndMultiDelete() async throws {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
@@ -269,6 +269,43 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
                                                                     customerId: customerId,
                                                                     ephemeralKey: claimedCustomerSessionAPIKey)
         XCTAssertEqual(reFetchedPaymentMethods.count, 0)
+    }
+
+    func testListPaymentMethodsWithMultipleTypes() async throws {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        // Create a new customer and new key
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
+
+        // Create a new card pm and attach it to the customer
+        let paymentMethod1 = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: []).stripeId
+        try await client.attachPaymentMethod(
+            paymentMethod1,
+            customerID: customerAndEphemeralKey.customer,
+            ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
+        )
+
+        // Create a new SEPA pm and attach it to the customer
+        let paymentMethod2 = try await client.createPaymentMethod(with: ._testSEPA(), additionalPaymentUserAgentValues: []).stripeId
+        try await client.attachPaymentMethod(
+            paymentMethod2,
+            customerID: customerAndEphemeralKey.customer,
+            ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
+        )
+
+        // Fetch the customer's saved PMs
+        let fetchedPaymentMethods = try await fetchPaymentMethods(
+            client: client,
+            types: [.card, .SEPADebit],
+            customerId: customerAndEphemeralKey.customer,
+            ephemeralKey: customerAndEphemeralKey.ephemeralKeySecret
+        )
+
+        // Expect it's [SEPA, card] and in that order (ie newest first)
+        XCTAssertEqual(
+            fetchedPaymentMethods.map({ $0.stripeId }),
+            [paymentMethod2, paymentMethod1]
+        )
     }
 
     func testCreateBacsPaymentMethod() {
