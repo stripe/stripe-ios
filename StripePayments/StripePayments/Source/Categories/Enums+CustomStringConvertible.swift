@@ -313,6 +313,8 @@ extension STPPaymentIntentCaptureMethod: CustomStringConvertible {
             return "manual"
         case .unknown:
             return "unknown"
+        case .automaticAsync:
+            return "automaticAsync"
         }
     }
 }
