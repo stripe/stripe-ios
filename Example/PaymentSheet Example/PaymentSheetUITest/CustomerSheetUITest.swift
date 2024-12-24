@@ -253,7 +253,7 @@ class CustomerSheetUITest: XCTestCase {
 
         presentCSAndAddSepaFrom(buttonLabel: "None")
 
-        app.staticTexts["•••• 3000"].waitForExistenceAndTap(timeout: timeout)
+        app.staticTexts["••••3000"].waitForExistenceAndTap(timeout: timeout)
 
         let editButton = app.staticTexts["Edit"]
         XCTAssertTrue(editButton.waitForExistence(timeout: timeout))
@@ -273,7 +273,7 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Reload"].tap()
         XCTAssertTrue(app.staticTexts["None"].waitForExistenceAndTap(timeout: 5))
         XCTAssertTrue(app.staticTexts["Manage your payment methods"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.staticTexts["•••• 3000"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["••••3000"].waitForExistence(timeout: 5))
     }
 
     func testPrevPM_AddPM_canceled() throws {
@@ -350,7 +350,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
         confirmButton.tap()
 
-        dismissAlertView(alertBody: "Success: •••• 6789, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func testCustomerSheet_addUSBankAccount_MicroDeposit() throws {
@@ -783,7 +783,7 @@ class CustomerSheetUITest: XCTestCase {
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))
         confirmButton.tap()
-        dismissAlertView(alertBody: "Success: •••• 3000, selected", alertTitle: "Complete", buttonToTap: "OK")
+        dismissAlertView(alertBody: "Success: ••••3000, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
     func removeFirstPaymentMethodInList(alertBody: String = "Visa •••• 4242", alertTitle: String = "Remove card?") {

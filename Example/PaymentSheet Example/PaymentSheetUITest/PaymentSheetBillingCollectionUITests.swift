@@ -47,6 +47,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
     func testCard_AllFields_flowController_WithDefaults() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.uiStyle = .flowController
         settings.currency = .usd
@@ -111,6 +112,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     func testLpm_Afterpay_AutomaticFields_WithDefaultAddress() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.merchantCountryCode = .US
         settings.currency = .usd
@@ -175,6 +177,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_AllFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US
@@ -230,6 +233,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_MinimalFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US

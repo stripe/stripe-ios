@@ -20,7 +20,7 @@ final class BankAccountInfoViewSnapshotTests : STPSnapshotTestCase {
             incentive: nil
         )
         view.setBankName(text: "Stripe Bank")
-        view.setLastFourOfBank(text: "•••• 4242")
+        view.setLastFourOfBank(text: "••••4242")
         view.setIncentiveEligible(false)
         
         verify(view)
@@ -33,7 +33,7 @@ final class BankAccountInfoViewSnapshotTests : STPSnapshotTestCase {
             incentive: .init(identifier: "link_instant_debits", displayText: "$5")
         )
         view.setBankName(text: "Stripe Bank")
-        view.setLastFourOfBank(text: "•••• 4242")
+        view.setLastFourOfBank(text: "••••4242")
         view.setIncentiveEligible(true)
         
         verify(view)
@@ -46,7 +46,7 @@ final class BankAccountInfoViewSnapshotTests : STPSnapshotTestCase {
             incentive: .init(identifier: "link_instant_debits", displayText: "$5")
         )
         view.setBankName(text: "The Official Stripe Bank")
-        view.setLastFourOfBank(text: "•••• 4242")
+        view.setLastFourOfBank(text: "••••4242")
         view.setIncentiveEligible(true)
         
         verify(view)
