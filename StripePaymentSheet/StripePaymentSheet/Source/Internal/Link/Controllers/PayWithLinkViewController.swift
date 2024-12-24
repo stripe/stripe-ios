@@ -43,6 +43,7 @@ protocol PayWithLinkCoordinating: AnyObject {
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
     func finish(withResult result: PaymentSheetResult)
     func logout(cancel: Bool)
+    func bailToWebFlow()
 }
 
 /// A view controller for paying with Link.
@@ -115,6 +116,8 @@ final class PayWithLinkViewController: UINavigationController {
 
         return rootViewController is LoaderViewController
     }
+    
+    private var isBailingToWebFlow: Bool = false
 
     convenience init(
         intent: Intent,
@@ -165,23 +168,14 @@ final class PayWithLinkViewController: UINavigationController {
         updateUI()
 
         
-        // Kick off attestation if needed
+        // Prewarm attestation if needed
         Task {
             // Attempt to attest
             let canAttest = await context.configuration.apiClient.stripeAttest.prepareAttestation()
-            guard canAttest else {
+            // If we can't attest and we're in livemode, let's bail and switch to the web controller
+            if !canAttest && !context.configuration.apiClient.isTestmode {
                 DispatchQueue.main.async {
-                    // If we can't attest, let's bail and switch to the web controller
-                    self.dismiss(animated: false)
-                    let payWithLinkVC = PayWithLinkWebController(
-                        intent: self.context.intent,
-                        elementsSession: self.context.elementsSession,
-                        configuration: self.context.configuration,
-                        alwaysUseEphemeralSession: true
-                    )
-
-                    payWithLinkVC.payWithLinkDelegate = self.payWithLinkDelegate as? PayWithLinkWebControllerDelegate
-                    payWithLinkVC.present(over: self.parent ?? self)
+                    self.bailToWebFlow()
                 }
                 return
             }
@@ -374,6 +368,30 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         } else {
             updateUI()
         }
+    }
+    
+    func bailToWebFlow() {
+        guard !isBailingToWebFlow else {
+            // Multiple things can kick off bailing to web flow, but we only want to do it once
+            return
+        }
+        isBailingToWebFlow = true
+        guard let presentingViewController else {
+            // No VC to present over, so don't bail
+            return
+        }
+        // Set up a web controller with the same settings and swap to it
+        
+        let payWithLinkVC = PayWithLinkWebController(
+            intent: context.intent,
+            elementsSession: context.elementsSession,
+            configuration: context.configuration,
+            alwaysUseEphemeralSession: true
+        )
+        payWithLinkVC.payWithLinkDelegate = payWithLinkDelegate as? PayWithLinkWebControllerDelegate
+        self.dismiss(animated: false)
+        payWithLinkVC.present(over: presentingViewController)
+        STPAnalyticsClient.sharedClient.logLinkBailedToWebFlow()
     }
 
 }

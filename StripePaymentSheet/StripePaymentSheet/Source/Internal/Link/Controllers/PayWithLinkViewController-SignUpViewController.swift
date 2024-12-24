@@ -236,6 +236,10 @@ extension PayWithLinkViewController {
 }
 
 extension PayWithLinkViewController.SignUpViewController: PayWithLinkSignUpViewModelDelegate {
+    func viewModel(_ viewModel: PayWithLinkViewController.SignUpViewModel, didEncounterAttestationError attestionError: any Error) {
+        self.coordinator?.bailToWebFlow()
+    }
+    
 
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.SignUpViewModel) {
         updateUI(animated: true)
