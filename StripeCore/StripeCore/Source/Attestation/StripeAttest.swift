@@ -391,7 +391,7 @@ import UIKit
 
     // MARK: Assertion concurrency
 
-    // Called when an assertion handle is completed or times out
+    // Called when an assertion handle is completed
     private func assertionCompleted() {
         assertionInProgress = false
 
