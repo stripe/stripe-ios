@@ -172,7 +172,7 @@ extension PayWithLinkViewController {
                 titleLabel.trailingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -preferredContentMargins.trailing),
-                
+
                 errorLabel.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
                     constant: preferredContentMargins.leading),
