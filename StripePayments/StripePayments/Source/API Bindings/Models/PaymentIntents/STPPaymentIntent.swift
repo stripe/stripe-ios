@@ -9,6 +9,7 @@
 import Foundation
 
 /// Capture methods for a STPPaymentIntent
+/// - seealso: https://docs.stripe.com/api/payment_intents/object#payment_intent_object-capture_method
 @objc public enum STPPaymentIntentCaptureMethod: Int {
     /// Unknown capture method
     case unknown
@@ -17,6 +18,10 @@ import Foundation
     /// The PaymentIntent must be manually captured once it has the status
     /// `STPPaymentIntentStatusRequiresCapture`
     case manual
+    /// Asynchronously capture funds when the customer authorizes the payment.
+    /// - Note: Recommended over `CaptureMethod.automatic` due to improved latency, but may require additional integration changes.
+    /// - Seealso: https://stripe.com/docs/payments/payment-intents/asynchronous-capture-automatic-async
+    case automaticAsync
 
     /// Parse the string and return the correct `STPPaymentIntentCaptureMethod`,
     /// or `STPPaymentIntentCaptureMethodUnknown` if it's unrecognized by this version of the SDK.
@@ -25,6 +30,7 @@ import Foundation
         let map: [String: STPPaymentIntentCaptureMethod] = [
             "manual": .manual,
             "automatic": .automatic,
+            "automatic_async": .automaticAsync,
         ]
 
         let key = string.lowercased()
