@@ -152,7 +152,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
 
     func payWithLinkViewControllerDidFinish(
         _ payWithLinkViewController: PayWithLinkViewController,
-        result: PaymentSheetResult
+        result: PaymentSheetResult,
+        deferredIntentConfirmationType: StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?
     ) {
         completion?(result)
     }
