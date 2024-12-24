@@ -42,15 +42,19 @@ extension STPAPIClient {
                 return
             }
 
-            if useMobileEndpoints {
-                do {
-                    let attest = StripeAttest(apiClient: self)
-                    let assertion = try await attest.assert()
-                    parameters = parameters.merging(assertion.requestFields) { (_, new) in new }
-                } catch {
-                    // If we can't get an assertion, we'll try the request anyway. It may fail.
+            let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
+                if useMobileEndpoints {
+                    do {
+                        let assertionHandle = try await stripeAttest.assert()
+                        parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
+                        return assertionHandle
+                    } catch {
+                        // If we can't get an assertion, we'll try the request anyway. It may fail.
+                    }
                 }
-            }
+                return nil
+            }()
+
             post(
                 resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
                 parameters: parameters,
@@ -61,8 +65,10 @@ extension STPAPIClient {
                     if useMobileEndpoints,
                        case .failure(let error) = result,
                        Self.isLinkAssertionError(error: error) {
-                        await StripeAttest(apiClient: self).receivedAssertionError(error)
+                        await self.stripeAttest.receivedAssertionError(error)
                     }
+                    // Mark the assertion handle as completed
+                    requestAssertionHandle?.complete()
                     completion(result)
                 }
             }
@@ -103,15 +109,18 @@ extension STPAPIClient {
                 parameters["consent_action"] = consentAction
             }
 
-            if useMobileEndpoints {
-                do {
-                    let attest = StripeAttest(apiClient: self)
-                    let assertion = try await attest.assert()
-                    parameters = parameters.merging(assertion.requestFields) { (_, new) in new }
-                } catch {
-                    // If we can't get an assertion, we'll try the request anyway. It may fail.
+            let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
+                if useMobileEndpoints {
+                    do {
+                        let assertionHandle = try await stripeAttest.assert()
+                        parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
+                        return assertionHandle
+                    } catch {
+                        // If we can't get an assertion, we'll try the request anyway. It may fail.
+                    }
                 }
-            }
+                return nil
+            }()
 
             post(
                 resource: useMobileEndpoints ? modernEndpoint : legacyEndpoint,
@@ -122,9 +131,10 @@ extension STPAPIClient {
                     if useMobileEndpoints,
                        case .failure(let error) = result,
                        Self.isLinkAssertionError(error: error) {
-                        await StripeAttest(apiClient: self).receivedAssertionError(error)
+                        await self.stripeAttest.receivedAssertionError(error)
                     }
-
+                    // Mark the assertion handle as completed
+                    requestAssertionHandle?.complete()
                     completion(result)
                 }
             }

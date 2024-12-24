@@ -181,7 +181,7 @@ func prepareNativeLink(elementsSession: STPElementsSession, configuration: Payme
         return true
     }
 
-    let stripeAttest = StripeAttest(apiClient: configuration.apiClient)
+    let stripeAttest = configuration.apiClient.stripeAttest
     return await stripeAttest.prepareAttestation()
 }
 
@@ -197,5 +197,5 @@ func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: 
         return true
     }
 
-    return StripeAttest(apiClient: configuration.apiClient).isSupported
+    return configuration.apiClient.stripeAttest.isSupported
 }
