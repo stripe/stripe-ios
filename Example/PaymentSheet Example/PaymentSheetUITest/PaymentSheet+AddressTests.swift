@@ -19,6 +19,7 @@ class PaymentSheet_AddressTests: XCTestCase {
 
     func testManualAddressEntry() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.shippingInfo = .on
 
@@ -96,6 +97,7 @@ US
 
     func testAddressWithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.shippingInfo = .onWithDefaults
         settings.uiStyle = .flowController
 
@@ -132,6 +134,7 @@ US
 
     func testAddressAutoComplete_UnitedStates() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         loadPlayground(
             app,
@@ -187,6 +190,7 @@ US
     /// This test ensures we don't show auto complete for an unsupported country
     func testAddressAutoComplete_NewZeland() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         loadPlayground(
             app,
@@ -251,9 +255,10 @@ NZ
     func testPaymentSheetFlowControllerUpdatesShipping() {
 
             var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.uiStyle = .flowController
         settings.shippingInfo = .on
             loadPlayground(
@@ -340,6 +345,7 @@ NZ
     func testManualAddressEntry_phoneCountryDoesPersist() throws {
 
             var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
             loadPlayground(
                 app,

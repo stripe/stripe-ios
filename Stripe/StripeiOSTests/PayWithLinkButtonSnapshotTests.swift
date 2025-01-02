@@ -69,6 +69,13 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testAddThenRemoveAccount() {
+        let sut = makeSUT()
+        sut.linkAccount = makeAccountStub(email: longEmailAddress, isRegistered: true)
+        sut.linkAccount = nil
+        verify(sut)
+    }
+
     func verify(
         _ sut: UIView,
         identifier: String? = nil,

@@ -91,8 +91,9 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         savingAccount: BoolReference,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
-        theme: ElementsAppearance = .default
+        appearance: PaymentSheet.Appearance = .default
     ) {
+        let theme = appearance.asElementsTheme
         let collectingName = configuration.billingDetailsCollectionConfiguration.name != .never
         let collectingEmail = configuration.billingDetailsCollectionConfiguration.email != .never
         let hasDefaultName = configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
@@ -110,7 +111,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 
         self.configuration = configuration
         self.linkedBank = initialLinkedBank
-        self.bankInfoView = BankAccountInfoView(frame: .zero, theme: theme)
+        self.bankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance)
         self.bankInfoSectionElement = SectionElement(title: String.Localized.bank_account_sentence_case,
                                                      elements: [StaticElement(view: bankInfoView)], theme: theme)
         self.bankInfoSectionElement.view.isHidden = true

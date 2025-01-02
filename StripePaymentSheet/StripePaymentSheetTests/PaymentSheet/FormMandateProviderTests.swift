@@ -18,7 +18,7 @@ class FormMandateProviderTests: XCTestCase {
     }
 
     func testFormMandateProvider_WhenConfigurationHidesMandateText_ShouldReturnNil() {
-        var embeddedConfiguration = EmbeddedPaymentElement.Configuration(formSheetAction: .continue)
+        var embeddedConfiguration = EmbeddedPaymentElement.Configuration()
         embeddedConfiguration.embeddedViewDisplaysMandateText = false
         embeddedConfiguration.merchantDisplayName = "Test Merchant"
 

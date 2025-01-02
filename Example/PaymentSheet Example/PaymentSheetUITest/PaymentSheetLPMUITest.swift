@@ -10,6 +10,7 @@ import XCTest
 class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
     func testEPS() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.currency = .eur
@@ -32,6 +33,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testP24() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.currency = .eur
@@ -68,6 +70,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
     // Klarna has a text field and country drop down
     func testKlarnaPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new // new customer
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -99,6 +102,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testAffirmPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -116,6 +120,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testAmazonPayPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -133,6 +138,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testAlmaPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.currency = .eur
         settings.merchantCountryCode = .FR
         settings.customerMode = .new
@@ -151,6 +157,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
         func testSunbitPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.currency = .usd
         settings.amount = ._10000
         settings.merchantCountryCode = .US
@@ -168,6 +175,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testBilliePaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.currency = .eur
         settings.merchantCountryCode = .DE
         loadPlayground(app, settings)
@@ -184,6 +192,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testSatispayPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.currency = .eur
         settings.merchantCountryCode = .IT
         loadPlayground(app, settings)
@@ -200,6 +209,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testZipPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new // new customer
         settings.apmsEnabled = .off
         settings.currency = .aud
@@ -219,6 +229,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testCashAppPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         loadPlayground(app, settings)
@@ -257,6 +268,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testCashAppPaymentMethod_setup() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.mode = .setup
@@ -294,6 +306,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
     func testCashAppPaymentMethod_setupFutureUsage() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.mode = .paymentWithSetup
@@ -318,6 +331,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
     func testAmazonPayPaymentMethod_setup() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.mode = .setup
@@ -340,6 +354,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
     func testPayPalPaymentMethod_setup() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.merchantCountryCode = .FR
@@ -362,6 +377,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
     func testRevolutPayPaymentMethod_setup() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.merchantCountryCode = .GB
@@ -390,6 +406,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
             "FinancialConnectionsStubbedResult": "true",
         ]) { (_, new) in new }
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
@@ -436,6 +453,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
     func testGrabPayPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new // new customer
         settings.apmsEnabled = .on
         settings.currency = .sgd
@@ -471,6 +489,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
     func testUPIPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.merchantCountryCode = .IN
         settings.currency = .inr
@@ -502,6 +521,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
     // Other confirmation flows are tested in PaymentSheet+LPMTests.swift
     func testSEPADebitPaymentMethod_PaymentSheet() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.currency = .eur
         settings.allowsDelayedPMs = .on
         loadPlayground(app, settings)
@@ -526,6 +546,8 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
     func testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.merchantCountryCode = .FR
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.applePayEnabled = .off // disable Apple Pay
@@ -586,6 +608,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
     func testAlipayPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.merchantCountryCode = .US
         settings.currency = .usd
@@ -606,6 +629,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
     func testPayNowPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new // new customer
         settings.apmsEnabled = .on
         settings.currency = .sgd
@@ -628,6 +652,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
     func testPromptPayPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new // new customer
         settings.apmsEnabled = .on
         settings.currency = .thb
@@ -654,6 +679,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
 
     func testSwishPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new // new customer
         settings.apmsEnabled = .off
         settings.currency = .sek
@@ -673,6 +699,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
 
     func testBlikPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.apmsEnabled = .on
         settings.currency = .pln
         settings.merchantCountryCode = .FR
@@ -696,6 +723,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
 
     func testBacsDebit() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.apmsEnabled = .on
         settings.currency = .gbp
         settings.merchantCountryCode = .GB
@@ -733,6 +761,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
     /// https://docs.stripe.com/payments/vouchers
     func testMultibancoPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.currency = .eur
         settings.apmsEnabled = .off
@@ -760,6 +789,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
 
     func testOXXOPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.merchantCountryCode = .MX
         settings.currency = .mxn
@@ -793,6 +823,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
 
     func testBoletoPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.merchantCountryCode = .BR
         settings.currency = .brl
@@ -837,6 +868,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     func testCardBrandChoice() throws {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -849,6 +881,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     func testCardBrandChoice_setup() throws {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .setup
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
@@ -862,6 +895,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     func testCardBrandChoice_deferred() throws {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -875,6 +909,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     func testCardBrandChoiceWithPreferredNetworks() throws {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -930,6 +965,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     func testCardBrandChoiceSavedCard() {
         // Currently only our French merchant is eligible for card brand choice
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -1027,6 +1063,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
 
     func testCardBrandChoiceUpdateAndRemove() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning

@@ -55,6 +55,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
 
+    let useMobileEndpoints: Bool
+    // The session ID associated with the current Elements Session
+    let elementsSessionID: String
+
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
 
@@ -93,13 +97,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         session: ConsumerSession?,
         publishableKey: String?,
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared
+        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        useMobileEndpoints: Bool,
+        elementsSessionID: String
     ) {
         self.email = email
         self.currentSession = session
         self.publishableKey = publishableKey
         self.apiClient = apiClient
         self.cookieStore = cookieStore
+        self.useMobileEndpoints = useMobileEndpoints
+        self.elementsSessionID = elementsSessionID
     }
 
     func signUp(
@@ -142,6 +150,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             legalName: legalName,
             countryCode: countryCode,
             consentAction: consentAction.rawValue,
+            useMobileEndpoints: useMobileEndpoints,
             with: apiClient
         ) { [weak self] result in
             switch result {
@@ -446,7 +455,10 @@ private extension PaymentSheetLinkAccount {
         // without providing an email address.
         ConsumerSession.lookupSession(
             for: nil,  // No email address
-            with: apiClient
+            emailSource: nil, // No source
+            sessionID: elementsSessionID,
+            with: apiClient,
+            useMobileEndpoints: useMobileEndpoints
         ) { [weak self] result in
             switch result {
             case .success(let response):

@@ -7,14 +7,14 @@ Use Connect embedded components to add connected account dashboard functionality
 > Access to the StripeConnect iOS SDK is currently invite only and is limited to only certain connected account types. To request an invitation and get the latest information on supported account types, see our [iOS integration guide](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios).
 
 ## Table of contents
-
+<!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
 <!--ts-->
-* [Supported components](#supported-components)
-* [Requirements](#requirements)
-* [Getting started](#getting-started)
-   * [Integration](#integration)
-   * [Example](#example)
-* [Manual linking](#manual-linking)
+* [Supported components](#Supported-components)
+* [Requirements](#Requirements)
+* [Getting started](#Getting-started)
+   * [Integration](#Integration)
+   * [Example](Example)
+* [Manual linking](#Manual-linking)
 
 <!--te-->
 

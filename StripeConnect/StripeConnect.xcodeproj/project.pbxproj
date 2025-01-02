@@ -61,6 +61,7 @@
 		41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */; };
 		41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */; };
 		41814EF32C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */; };
+		418570562D13CA3700DE3FBE /* FinancialConnectionsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418570552D13CA3400DE3FBE /* FinancialConnectionsPresenterTests.swift */; };
 		4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */; };
 		4186664C2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */; };
 		4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */; };
@@ -95,6 +96,7 @@
 		E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */; };
 		E65691252CA52F9D00E0DB00 /* NotificationBannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */; };
 		E65691272CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */; };
+		E65A28822D14009000B606F4 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = E65A28812D14009000B606F4 /* Docs.docc */; };
 		E6660CF92CC2F343002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CF82CC2F340002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift */; };
 		E6660CFB2CC2F438002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CFA2CC2F436002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift */; };
 		E6660CFD2CC2F9A7002A7631 /* FinancialConnectionsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6660CFC2CC2F99C002A7631 /* FinancialConnectionsPresenter.swift */; };
@@ -213,6 +215,7 @@
 		41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitParamsMessageHandlerTests.swift; sourceTree = "<group>"; };
 		41814EF02C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnExitMessageHandlerTests.swift; sourceTree = "<group>"; };
 		41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoaderStartMessageHandlerTests.swift; sourceTree = "<group>"; };
+		418570552D13CA3400DE3FBE /* FinancialConnectionsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPresenterTests.swift; sourceTree = "<group>"; };
 		418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSetterFunctionCalledMessageHandler.swift; sourceTree = "<group>"; };
 		4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoaderStartMessageHandler.swift; sourceTree = "<group>"; };
 		4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandler.swift; sourceTree = "<group>"; };
@@ -249,6 +252,7 @@
 		E65691212CA52D5900E0DB00 /* StripeConnect+Exports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeConnect+Exports.swift"; sourceTree = "<group>"; };
 		E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerViewController.swift; sourceTree = "<group>"; };
 		E65691262CA533CD00E0DB00 /* OnNotificationsChangeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnNotificationsChangeHandler.swift; sourceTree = "<group>"; };
+		E65A28812D14009000B606F4 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		E6660CF82CC2F340002A7631 /* OpenFinancialConnectionsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFinancialConnectionsMessageHandlerTests.swift; sourceTree = "<group>"; };
 		E6660CFA2CC2F436002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCollectMobileFinancialConnectionsResultTests.swift; sourceTree = "<group>"; };
 		E6660CFC2CC2F99C002A7631 /* FinancialConnectionsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPresenter.swift; sourceTree = "<group>"; };
@@ -493,6 +497,7 @@
 		41814EE62C6BC8690014EB5E /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				418570552D13CA3400DE3FBE /* FinancialConnectionsPresenterTests.swift */,
 				E6660DBA2CDDC5BC002A7631 /* Analytics */,
 				E640C9D12CBF4790009D0C6E /* AuthenticatedWebView */,
 				E6660DBF2CDE7D48002A7631 /* Extensions */,
@@ -613,6 +618,7 @@
 		41D17A422C5A73A6007C6EE6 /* StripeConnect */ = {
 			isa = PBXGroup;
 			children = (
+				E65A28812D14009000B606F4 /* Docs.docc */,
 				41A2A5602C5A97130077FC74 /* Source */,
 				41D17A432C5A73A6007C6EE6 /* StripeConnect.h */,
 			);
@@ -875,6 +881,7 @@
 				413987E12C641688001D375E /* PageDidLoadMessageHandler.swift in Sources */,
 				4171B1592C9A5EEC00547F7D /* AccountOnboardingViewController.swift in Sources */,
 				41054E432C989AAD00383C09 /* Font+Extension.swift in Sources */,
+				E65A28822D14009000B606F4 /* Docs.docc in Sources */,
 				E6EF91C72CBA3BED0082DD1B /* UIViewController+StripeConnect.swift in Sources */,
 				E6660DC92CE43BE6002A7631 /* UnexpectedNavigationEvent.swift in Sources */,
 				41542A692C88B6F2004E728E /* JSONEncoder+extension.swift in Sources */,
@@ -962,6 +969,7 @@
 				41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */,
 				4161C2732C9D0A8A005BD67C /* AccountOnboardingViewControllerTests.swift in Sources */,
 				E6F485FE2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift in Sources */,
+				418570562D13CA3700DE3FBE /* FinancialConnectionsPresenterTests.swift in Sources */,
 				E6660CFB2CC2F438002A7631 /* SetCollectMobileFinancialConnectionsResultTests.swift in Sources */,
 				416E9E782C753B7900A0B917 /* ConnectComponentWebViewControllerTests.swift in Sources */,
 				410D0FD42C6D051B009B0E26 /* OpenAuthenticatedWebViewMessageHandlerTests.swift in Sources */,

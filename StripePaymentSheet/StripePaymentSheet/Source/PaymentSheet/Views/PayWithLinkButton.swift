@@ -335,6 +335,7 @@ private extension PayWithLinkButton {
             emailStackView.isHidden = true
             cardStackView.isHidden = true
             payWithStackView.isHidden = false
+            payWithLinkView.isHidden = false
         }
         updateAccessibilityContent()
     }

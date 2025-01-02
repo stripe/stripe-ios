@@ -10,6 +10,7 @@ import SafariServices
 import UIKit
 
 @_spi(STP) import StripeCore
+@_exported @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 extension PayWithLinkViewController {
@@ -125,7 +126,7 @@ extension PayWithLinkViewController {
         ) {
             self.viewModel = SignUpViewModel(
                 configuration: context.configuration,
-                accountService: LinkAccountService(apiClient: context.configuration.apiClient),
+                accountService: LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession),
                 linkAccount: linkAccount,
                 country: context.elementsSession.countryCode
             )
@@ -153,6 +154,11 @@ extension PayWithLinkViewController {
         override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)
             STPAnalyticsClient.sharedClient.logLinkSignupFlowPresented()
+            
+            // If the email field is empty, select it
+            if emailElement.emailAddressString?.isEmpty ?? false {
+                emailElement.beginEditing()
+            }
         }
 
         private func setupBindings() {

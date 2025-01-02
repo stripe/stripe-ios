@@ -8,8 +8,10 @@
 import UIKit
 
 /// A view controller representing an account-onboarding component
-/// - Seealso: https://docs.stripe.com/connect/supported-embedded-components/account-onboarding
+/// - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
+/// - Seealso: [Account onboarding component documentation](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios)
 @_spi(PrivateBetaConnect)
+@_documentation(visibility: public)
 @available(iOS 15, *)
 public class AccountOnboardingViewController: UIViewController {
 
@@ -32,6 +34,7 @@ public class AccountOnboardingViewController: UIViewController {
     }
 
     /// Delegate that receives callbacks for this component
+    @_documentation(visibility: public)
     public weak var delegate: AccountOnboardingViewControllerDelegate?
 
     private(set) var webVC: ConnectComponentWebViewController!
@@ -68,13 +71,16 @@ public class AccountOnboardingViewController: UIViewController {
 }
 
 /// Delegate of an `AccountOnboardingViewController`
+/// - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
 @_spi(PrivateBetaConnect)
+@_documentation(visibility: public)
 @available(iOS 15, *)
 public protocol AccountOnboardingViewControllerDelegate: AnyObject {
     /**
      The connected account has exited the onboarding process
      - Parameters accountOnboarding: The account onboarding component that the account exited
      */
+    @_documentation(visibility: public)
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingViewController)
 
     /**
@@ -83,15 +89,21 @@ public protocol AccountOnboardingViewControllerDelegate: AnyObject {
        - accountOnboarding: The account onboarding component that errored when loading
        - error: The error that occurred when loading the component
      */
+    @_documentation(visibility: public)
     func accountOnboarding(_ accountOnboarding: AccountOnboardingViewController,
                            didFailLoadWithError error: Error)
 
 }
 
 @available(iOS 15, *)
+@_documentation(visibility: public)
 public extension AccountOnboardingViewControllerDelegate {
     // Add default implementation of delegate methods to make them optional
+
+    @_documentation(visibility: public)
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingViewController) { }
+
+    @_documentation(visibility: public)
     func accountOnboarding(_ accountOnboarding: AccountOnboardingViewController,
                            didFailLoadWithError error: Error) { }
 }

@@ -47,13 +47,14 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
     func testCard_AllFields_flowController_WithDefaults() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.uiStyle = .flowController
         settings.currency = .usd
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress = .on
         settings.attachDefaults = .on
         settings.collectName = .always
@@ -111,13 +112,14 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
     func testLpm_Afterpay_AutomaticFields_WithDefaultAddress() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.merchantCountryCode = .US
         settings.currency = .usd
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.attachDefaults = .off
         settings.collectName = .automatic
         settings.collectEmail = .automatic
@@ -175,13 +177,14 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_AllFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
         settings.collectName = .always
@@ -230,13 +233,14 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
     func testLpm_Afterpay_MinimalFields_WithDefaults() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.currency = .usd
         settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
         settings.collectName = .never
@@ -258,6 +262,10 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         saveAddressButton.tap()
 
         checkoutButton.tap()
+
+        // Close the Link sheet
+        let closeButton = app.buttons["LinkVerificationCloseButton"]
+        closeButton.waitForExistenceAndTap()
 
         let cell = try XCTUnwrap(scroll(
             collectionView: app.collectionViews.firstMatch,

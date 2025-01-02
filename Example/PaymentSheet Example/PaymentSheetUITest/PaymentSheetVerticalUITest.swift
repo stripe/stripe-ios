@@ -192,6 +192,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
     func testCanPayWithLinkWallet_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+
+        // Using GB for web-based Link merchant account
+        settings.merchantCountryCode = .GB
         settings.mode = .payment
         settings.layout = .vertical
         loadPlayground(app, settings)
@@ -311,7 +314,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkMode = .passthrough
+        settings.linkPassthroughMode = .passthrough
         settings.requireCVCRecollection = .on
         loadPlayground(app, settings)
 

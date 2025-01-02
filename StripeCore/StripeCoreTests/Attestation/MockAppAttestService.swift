@@ -7,13 +7,13 @@
 
 import CryptoKit
 import DeviceCheck
-@_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCore
 import UIKit
 
-class MockAppAttestService: AppAttestService {
+actor MockAppAttestService: AppAttestService {
     @_spi(STP) public static var shared = MockAppAttestService()
 
-    @_spi(STP) public var isSupported: Bool {
+    @_spi(STP) public nonisolated var isSupported: Bool {
         if #available(iOS 14.0, *) {
             return true
         } else {
@@ -24,6 +24,23 @@ class MockAppAttestService: AppAttestService {
     var shouldFailKeygenWithError: Error?
     var shouldFailAssertionWithError: Error?
     var shouldFailAttestationWithError: Error?
+    var attestationUsingDevelopmentEnvironment: Bool = false
+
+    func setShouldFailKeygenWithError(_ error: Error?) async {
+        shouldFailKeygenWithError = error
+    }
+
+    func setShouldFailAssertionWithError(_ error: Error?) async {
+        shouldFailAssertionWithError = error
+    }
+
+    func setShouldFailAttestationWithError(_ error: Error?) async {
+        shouldFailAttestationWithError = error
+    }
+
+    func setAttestationUsingDevelopmentEnvironment(_ value: Bool) async {
+        attestationUsingDevelopmentEnvironment = value
+    }
 
     var keys: [String: FakeKey] = [:]
 
@@ -66,14 +83,19 @@ class MockAppAttestService: AppAttestService {
         key.counter += 1
         keys[key.id] = key
         // Generate a fake attestion
-        let attestation = ["keyID": key.id, "counter": key.counter, "clientDataHash": clientDataHash.base64EncodedString()] as [String: Any]
+        let attestation = ["keyID": key.id, "counter": key.counter, "clientDataHash": clientDataHash.base64EncodedString(), "isDevelopmentEnvironment": attestationUsingDevelopmentEnvironment] as [String: Any]
         return try JSONSerialization.data(withJSONObject: attestation)
     }
 
+    @_spi(STP) public nonisolated func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool {
+        let decodedKey = try! JSONSerialization.jsonObject(with: data) as! [String: Any]
+        return decodedKey["isDevelopmentEnvironment"] as! Bool
+    }
 }
 
 @_spi(STP) public class MockAttestBackend: StripeAttestBackend {
     var storedChallenge: String?
+    var keyHasBeenAttested: [String: Bool] = [:]
 
     public func attest(appId: String, deviceId: String, keyId: String, attestation: Data) async throws {
         // Decode the attestation data (it's a JSON dictionary)
@@ -91,6 +113,8 @@ class MockAppAttestService: AppAttestService {
             // Hash is incorrect, throw an error
             throw NSError(domain: "com.stripe.internal-error", code: 403, userInfo: ["error": "Incorrect hash"])
         }
+
+        keyHasBeenAttested[keyId] = true
 
         // Remove the challenge
         storedChallenge = nil
@@ -116,7 +140,7 @@ class MockAppAttestService: AppAttestService {
         storedChallenge = nil
     }
 
-    public func getChallenge(appId: String, deviceId: String, keyId: String) async throws -> String {
+    public func getChallenge(appId: String, deviceId: String, keyId: String) async throws -> StripeCore.StripeChallengeResponse {
         // Confirm the AppID and DeviceID are correct
         let currentDeviceId = await UIDevice.current.identifierForVendor!.uuidString
 
@@ -127,6 +151,7 @@ class MockAppAttestService: AppAttestService {
         // Generate a random challenge:
         let challenge = UUID().uuidString.data(using: .utf8)!.base64EncodedString()
         storedChallenge = challenge
-        return challenge
+        return .init(challenge: challenge, initial_attestation_required: !(keyHasBeenAttested[keyId] ?? false))
     }
+
 }

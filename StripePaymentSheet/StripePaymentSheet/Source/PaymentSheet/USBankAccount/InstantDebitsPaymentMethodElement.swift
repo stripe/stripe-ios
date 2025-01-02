@@ -32,6 +32,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private var linkedBank: InstantDebitsLinkedBank?
     private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
+    var incentive: PaymentMethodIncentive?
 
     var delegate: ElementDelegate?
     var view: UIView {
@@ -173,10 +174,12 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
         incentive: PaymentMethodIncentive?,
         isPaymentIntent: Bool,
-        theme: ElementsAppearance = .default
+        appearance: PaymentSheet.Appearance = .default
     ) {
+        let theme = appearance.asElementsTheme
+        
         self.configuration = configuration
-        self.linkedBankInfoView = BankAccountInfoView(frame: .zero, theme: theme)
+        self.linkedBankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance, incentive: incentive)
         self.linkedBankInfoSectionElement = SectionElement(
             title: String.Localized.bank_account_sentence_case,
             elements: [StaticElement(view: linkedBankInfoView)],
@@ -190,8 +193,9 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
         self.linkedBank = nil
         self.linkedBankInfoSectionElement.view.isHidden = true
+        self.incentive = incentive
         self.theme = theme
-        
+
         let promoDisclaimerElement = incentive.flatMap {
             let label = ElementsUI.makeNoticeTextField(theme: theme)
             label.attributedText = $0.promoDisclaimerText(with: theme, isPaymentIntent: isPaymentIntent)
@@ -220,12 +224,11 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
     func setLinkedBank(_ linkedBank: InstantDebitsLinkedBank) {
         self.linkedBank = linkedBank
-        if
-            let last4ofBankAccount = linkedBank.last4,
-            let bankName = linkedBank.bankName
-        {
+        if let last4ofBankAccount = linkedBank.last4, let bankName = linkedBank.bankName {
             linkedBankInfoView.setBankName(text: bankName)
             linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
+            // TODO: Take the eligibility from the linked bank
+            linkedBankInfoView.setIncentiveEligible(false)
             formElement.toggleElements(
                 linkedBankElements,
                 hidden: false,
@@ -332,7 +335,7 @@ private extension PaymentSheet.Address {
 }
 
 private extension PaymentMethodIncentive {
-    
+
     func promoDisclaimerText(
         with appearance: ElementsAppearance,
         isPaymentIntent: Bool
@@ -348,15 +351,15 @@ private extension PaymentMethodIncentive {
                 "Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]'"
             )
         }
-        
+
         let string = String(format: baseString, displayText)
-        
+
         let links = [
             "terms": URL(string: "https://link.com/promotion-terms")!,
         ]
-        
+
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
-        
+
         let style = NSMutableParagraphStyle()
         style.alignment = .left
         formattedString.addAttributes(
