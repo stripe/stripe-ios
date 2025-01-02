@@ -41,14 +41,13 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             }
         }
         wait(for: [createPaymentIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
-        guard let clientSecret = retrievedClientSecret,
-            let currentYear = Calendar.current.dateComponents([.year], from: Date()).year
+        guard let clientSecret = retrievedClientSecret
         else {
             XCTFail()
             return
         }
 
-        let expiryYear = NSNumber(value: currentYear + 2)
+        let expiryYear = NSNumber(value: 2040)
         let expiryMonth = NSNumber(1)
 
         let cardParams = STPPaymentMethodCardParams()

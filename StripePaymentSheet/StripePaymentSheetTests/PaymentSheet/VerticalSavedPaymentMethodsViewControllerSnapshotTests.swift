@@ -99,7 +99,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
             "fingerprint": "B8XXs2y2JsVBtB9f",
             "networks": ["available": ["visa"]],
             "exp_month": "01",
-            "exp_year": Calendar.current.component(.year, from: Date()) + 1
+            "exp_year": "2040"
         ]
     ] as [AnyHashable : Any]
 }
