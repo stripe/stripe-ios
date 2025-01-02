@@ -84,7 +84,7 @@ extension IntegrationMethod {
            .cardSetupIntents:
           let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
-        cardParams.expYear = NSNumber(value: Calendar.current.dateComponents([.year], from: Date()).year! % 100 + 2)
+        cardParams.expYear = 2040
         cardParams.expMonth = 12
         cardParams.cvc = "123"
           return STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)

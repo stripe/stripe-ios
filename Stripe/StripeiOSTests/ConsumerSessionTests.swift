@@ -156,9 +156,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
         cardParams.expMonth = 12
-        cardParams.expYear = NSNumber(
-            value: Calendar.autoupdatingCurrent.component(.year, from: Date()) + 1
-        )
+        cardParams.expYear = 2040
         cardParams.cvc = "123"
 
         let billingParams = STPPaymentMethodBillingDetails()
@@ -262,9 +260,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
         cardParams.expMonth = 12
-        cardParams.expYear = NSNumber(
-            value: Calendar.autoupdatingCurrent.component(.year, from: Date()) + 1
-        )
+        cardParams.expYear = 2040
         cardParams.cvc = "123"
 
         let billingParams = STPPaymentMethodBillingDetails()

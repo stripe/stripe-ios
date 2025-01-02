@@ -2,24 +2,25 @@ POST
 https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1P1xLBFY0qyl6XeWc7c2LrMK\/confirm$
 400
 application/json
-access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
-content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fsetup_intents%2F%3Aintent%2Fconfirm; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=hHdU-Wb_cbZmUW-DD6ZGlNrxJz55SyQRHTjZjn6yATTxV0WC0PSHFAd4rWLDWTRivzFz1UQYxA%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+reporting-endpoints: coop="https://q.stripe.com/coop-report"
+x-wc: AB
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_X0IW5Oejg4l8Hy
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+request-id: req_FIaoS32NkYrBoi
 Content-Length: 1190
 Vary: Origin
-Date: Mon, 05 Aug 2024 23:34:39 GMT
-original-request: req_X0IW5Oejg4l8Hy
+Date: Thu, 02 Jan 2025 17:11:43 GMT
+original-request: req_FIaoS32NkYrBoi
 stripe-version: 2020-08-27
-idempotency-key: 068adc5a-4ff4-4bb0-b9ce-4a0861f2829e
+idempotency-key: a8651fea-067d-49d0-b462-c39b3faea696
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +31,7 @@ X-Stripe-Mock-Request: client_secret=seti_1P1xLBFY0qyl6XeWc7c2LrMK_secret_Prgith
 
 {
   "error" : {
-    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_X0IW5Oejg4l8Hy?t=1722900879",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_FIaoS32NkYrBoi?t=1735837903",
     "code" : "resource_missing",
     "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/resource-missing",
     "message" : "No such PaymentMethod: 'pm_123'; It's possible this PaymentMethod exists on one of your connected accounts, in which case you should retry this request on that connected account. Learn more at https:\/\/stripe.com\/docs\/connect\/authentication",
