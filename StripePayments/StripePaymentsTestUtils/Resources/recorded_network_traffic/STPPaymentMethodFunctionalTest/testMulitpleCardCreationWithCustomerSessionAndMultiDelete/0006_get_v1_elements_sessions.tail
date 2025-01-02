@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1QXSyPFY0qyl6XeWAPlKhLFD&customer_session_client_secret=cuss_secret_RQJbLLk61rP6HD5M8lS8fSJrxa5aH6jz8PPHoqY9APKbJrb&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=usd&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1QcsDVFY0qyl6XeWy0UF8AeA&customer_session_client_secret=cuss_secret_RVu1fQB3U6rueYKjmveqY8jeadZDB42aZRXZVLYCpEv2s40&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=usd&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&type=deferred_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=z6lZeKtQVBIBgvGsHq6R7RLG_q3gw9o-5sltwh3A4_p0xFlhBJgirS_lAMLVZ0OyJQIRANUsWA%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=xhHFbgA89BJofenQ4bW3zqYAmrl6kFC_Kc3jQQX5LTkZFbZit_SZTQLbvmY4oaiDmUAjYjqDpw%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_OAY6fv05sbEE0T
-Content-Length: 19262
+request-id: req_Es0SDcoc86ADUP
+Content-Length: 19454
 Vary: Origin
-Date: Wed, 18 Dec 2024 19:31:59 GMT
+Date: Thu, 02 Jan 2025 17:29:55 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -120,11 +120,12 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_aplazame" : false,
     "elements_enable_external_payment_method_rakuten_pay" : false,
     "elements_spm_messages" : false,
-    "paypal_express_checkout_recurring_support" : false,
+    "paypal_billing_address_support_in_ece" : false,
     "elements_enable_external_payment_method_paypo" : false,
+    "paypal_express_checkout_recurring_support" : false,
     "elements_enable_external_payment_method_netbanking" : false,
     "elements_enable_external_payment_method_pix_international" : false,
-    "elements_enable_progressive_cursor" : false,
+    "elements_enable_progressive_cursor" : true,
     "elements_enable_external_payment_method_poli" : false,
     "elements_enable_external_payment_method_kriya" : false,
     "financial_connections_enable_deferred_intent_flow" : true,
@@ -170,6 +171,7 @@ x-content-type-options: nosniff
     "elements_spm_max_visible_payment_methods" : false,
     "elements_disable_link_email_otp" : false,
     "cbc_in_link_popup" : true,
+    "elements_disable_progressive_cursor" : false,
     "elements_enable_external_payment_method_picpay" : false,
     "elements_enable_external_payment_method_planpay" : false,
     "elements_enable_external_payment_method_samsung_pay" : false,
@@ -188,12 +190,12 @@ x-content-type-options: nosniff
     "elements_stop_move_focus_to_first_errored_field" : true,
     "elements_enable_external_payment_method_online_banking_slovakia" : false,
     "elements_enable_external_payment_method_interac" : false,
-    "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : false,
+    "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : true,
     "use_link_views" : false,
     "elements_enable_external_payment_method_mybank" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1fxloNFjmS9",
+  "session_id" : "elements_session_1CbpJ7U3Rhn",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
@@ -222,9 +224,9 @@ x-content-type-options: nosniff
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "f90f2300-5a25-466e-a2ec-e61178715292",
+    "arb_id" : "f5e85225-aac8-42e9-8caa-aaf3d4818d7c",
     "experiment_metadata" : {
-      "seed" : "d89bd205e9e368466a9fefc72d58a802807843b2ac4516ae59cc03d7afe976e1",
+      "seed" : "497b938f4db4c51649c5ef7a0a789ffe5c74bb01c5823f52d22837f9def297eb",
       "semi_dominant_payment_methods" : [
 
       ]
@@ -373,7 +375,7 @@ x-content-type-options: nosniff
     "payment_methods" : [
       {
         "object" : "payment_method",
-        "id" : "pm_1QXSyPFY0qyl6XeWAPlKhLFD",
+        "id" : "pm_1QcsDVFY0qyl6XeWy0UF8AeA",
         "billing_details" : {
           "email" : null,
           "phone" : null,
@@ -388,6 +390,7 @@ x-content-type-options: nosniff
           }
         },
         "card" : {
+          "regulated_status" : "unregulated",
           "last4" : "4242",
           "funding" : "credit",
           "generated_from" : null,
@@ -409,21 +412,21 @@ x-content-type-options: nosniff
           "wallet" : null,
           "display_brand" : "visa",
           "exp_month" : 1,
-          "exp_year" : 2025,
+          "exp_year" : 2040,
           "country" : "US"
         },
         "livemode" : false,
-        "created" : 1734550317,
+        "created" : 1735838993,
         "allow_redisplay" : "unspecified",
         "type" : "card",
-        "customer" : "cus_RQJbs5Rx8ovEdT"
+        "customer" : "cus_RVu1EqXnWSAlVP"
       }
     ],
     "payment_methods_with_link_details" : [
       {
         "payment_method" : {
           "object" : "payment_method",
-          "id" : "pm_1QXSyPFY0qyl6XeWAPlKhLFD",
+          "id" : "pm_1QcsDVFY0qyl6XeWy0UF8AeA",
           "billing_details" : {
             "email" : null,
             "phone" : null,
@@ -438,6 +441,7 @@ x-content-type-options: nosniff
             }
           },
           "card" : {
+            "regulated_status" : "unregulated",
             "last4" : "4242",
             "funding" : "credit",
             "generated_from" : null,
@@ -459,23 +463,23 @@ x-content-type-options: nosniff
             "wallet" : null,
             "display_brand" : "visa",
             "exp_month" : 1,
-            "exp_year" : 2025,
+            "exp_year" : 2040,
             "country" : "US"
           },
           "livemode" : false,
-          "created" : 1734550317,
+          "created" : 1735838993,
           "allow_redisplay" : "unspecified",
           "type" : "card",
-          "customer" : "cus_RQJbs5Rx8ovEdT"
+          "customer" : "cus_RVu1EqXnWSAlVP"
         },
         "link_payment_details" : null
       }
     ],
-    "default_payment_method" : "pm_1QXSyPFY0qyl6XeWAPlKhLFD",
+    "default_payment_method" : "pm_1QcsDVFY0qyl6XeWy0UF8AeA",
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1734552119,
-      "id" : "cuss_1QXSyQFY0qyl6XeW26LSvVfE",
+      "api_key_expiry" : 1735840794,
+      "id" : "cuss_1QcsDWFY0qyl6XeWJZtia4V9",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -507,8 +511,8 @@ x-content-type-options: nosniff
           "enabled" : false
         }
       },
-      "customer" : "cus_RQJbs5Rx8ovEdT",
-      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLG9lOXZINlJ0alBSeDRIVUJISUQycm4xa3g5TjAwbXo_00ZuVC8xaA"
+      "customer" : "cus_RVu1EqXnWSAlVP",
+      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLEE1elFPWFBYUVBLeEpEVHNwRlFodlFTMVNPVGJSUG0_0010HHCTKl"
     }
   },
   "klarna_express_config" : {

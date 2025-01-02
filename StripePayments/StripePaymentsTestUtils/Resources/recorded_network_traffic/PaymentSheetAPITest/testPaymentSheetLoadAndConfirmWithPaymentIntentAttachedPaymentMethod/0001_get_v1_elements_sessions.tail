@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_secret=pi_3QXD6DFY0qyl6XeW1NS3nnYB_secret_UEPHGGpwb6fXbSG7mlSk0dZ0L&expand%5B0%5D=payment_method_preference\.payment_intent\.payment_method&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=payment_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_secret=pi_3Qcs2SFY0qyl6XeW1qrJjgv4_secret_rjh8r2EZ6aYPFEVPoaBPZiftu&expand%5B0%5D=payment_method_preference\.payment_intent\.payment_method&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=payment_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=2JDkSePM7sd92A-_dM81HO1Chf2Rk_qyjrCUC7o5XjdTxtfp_vGqIx_nvt3xSLso8_hg_wLDyA%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=4fToNJSgyuuEFEPsZlBwKMjaaOoM8r9q39Otr5mAk98Q6iXuT-jGTfcPsWs6cryLka7Mcj8P-A%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_zz8F7avw0MyS2E
-Content-Length: 16140
+request-id: req_xzFGBTAPyaR2zF
+Content-Length: 16284
 Vary: Origin
-Date: Wed, 18 Dec 2024 02:34:57 GMT
+Date: Thu, 02 Jan 2025 17:18:29 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -51,7 +51,7 @@ x-content-type-options: nosniff
       },
       "payment_method" : {
         "object" : "payment_method",
-        "id" : "pm_1QXD6DFY0qyl6XeWASdE6898",
+        "id" : "pm_1Qcs2SFY0qyl6XeWb1hpC1qM",
         "billing_details" : {
           "email" : null,
           "phone" : null,
@@ -66,6 +66,7 @@ x-content-type-options: nosniff
           }
         },
         "card" : {
+          "regulated_status" : "unregulated",
           "last4" : "4242",
           "funding" : "credit",
           "generated_from" : null,
@@ -86,18 +87,18 @@ x-content-type-options: nosniff
           },
           "wallet" : null,
           "display_brand" : "visa",
-          "exp_month" : 12,
-          "exp_year" : 2025,
+          "exp_month" : 1,
+          "exp_year" : 2026,
           "country" : "US"
         },
         "livemode" : false,
-        "created" : 1734489297,
+        "created" : 1735838308,
         "allow_redisplay" : "unspecified",
         "type" : "card",
         "customer" : null
       },
-      "client_secret" : "pi_3QXD6DFY0qyl6XeW1NS3nnYB_secret_UEPHGGpwb6fXbSG7mlSk0dZ0L",
-      "id" : "pi_3QXD6DFY0qyl6XeW1NS3nnYB",
+      "client_secret" : "pi_3Qcs2SFY0qyl6XeW1qrJjgv4_secret_rjh8r2EZ6aYPFEVPoaBPZiftu",
+      "id" : "pi_3Qcs2SFY0qyl6XeW1qrJjgv4",
       "confirmation_method" : "automatic",
       "amount_details" : {
         "tip" : {
@@ -110,7 +111,7 @@ x-content-type-options: nosniff
         "card"
       ],
       "setup_future_usage" : null,
-      "created" : 1734489297,
+      "created" : 1735838308,
       "description" : null
     },
     "ordered_payment_method_types" : [
@@ -201,11 +202,12 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_aplazame" : false,
     "elements_enable_external_payment_method_rakuten_pay" : false,
     "elements_spm_messages" : false,
-    "paypal_express_checkout_recurring_support" : false,
+    "paypal_billing_address_support_in_ece" : false,
     "elements_enable_external_payment_method_paypo" : false,
+    "paypal_express_checkout_recurring_support" : false,
     "elements_enable_external_payment_method_netbanking" : false,
     "elements_enable_external_payment_method_pix_international" : false,
-    "elements_enable_progressive_cursor" : false,
+    "elements_enable_progressive_cursor" : true,
     "elements_enable_external_payment_method_poli" : false,
     "elements_enable_external_payment_method_kriya" : false,
     "financial_connections_enable_deferred_intent_flow" : true,
@@ -251,6 +253,7 @@ x-content-type-options: nosniff
     "elements_spm_max_visible_payment_methods" : false,
     "elements_disable_link_email_otp" : false,
     "cbc_in_link_popup" : true,
+    "elements_disable_progressive_cursor" : false,
     "elements_enable_external_payment_method_picpay" : false,
     "elements_enable_external_payment_method_planpay" : false,
     "elements_enable_external_payment_method_samsung_pay" : false,
@@ -269,12 +272,12 @@ x-content-type-options: nosniff
     "elements_stop_move_focus_to_first_errored_field" : true,
     "elements_enable_external_payment_method_online_banking_slovakia" : false,
     "elements_enable_external_payment_method_interac" : false,
-    "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : false,
+    "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : true,
     "use_link_views" : false,
     "elements_enable_external_payment_method_mybank" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_0boTtctyqrb",
+  "session_id" : "elements_session_0bygDwP5WgM",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
@@ -303,9 +306,9 @@ x-content-type-options: nosniff
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "cda9f72c-6fb0-453d-b5ff-88d1ece6f663",
+    "arb_id" : "d73fe310-a607-4dfe-a639-e1fcd12b27c2",
     "experiment_metadata" : {
-      "seed" : "9279040f18e230c43788f8bbf8fd3d64e908a49c02f8c27aafa54f7d34c5ca1e",
+      "seed" : "d2feee71f4e2b28758c61414f18515aee3d5e7aef472fc7b88062a2a3823cad7",
       "semi_dominant_payment_methods" : [
 
       ]
