@@ -351,9 +351,9 @@ class STPElementsSessionTest: XCTestCase {
             "fingerprint": "B8XXs2y2JsVBtB9f",
             "networks": ["available": ["visa"]],
             "exp_month": "01",
-            "exp_year": "2040"
-        ]
-    ] as [AnyHashable : Any]
+            "exp_year": "2040",
+        ],
+    ] as [AnyHashable: Any]
     private let testCardAmexJSON = [
         "id": "pm_123amexcard",
         "type": "card",
@@ -361,7 +361,7 @@ class STPElementsSessionTest: XCTestCase {
             "last4": "0005",
             "brand": "amex",
         ],
-    ] as [AnyHashable : Any]
+    ] as [AnyHashable: Any]
     func testElementsCustomerDefaultPaymentMethod() {
         let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: "pm_123card", paymentMethods: [testCardAmexJSON, testCardJSON])
         let customer = elementsSession.customer

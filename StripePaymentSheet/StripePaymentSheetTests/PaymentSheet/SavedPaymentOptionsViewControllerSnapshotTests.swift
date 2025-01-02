@@ -73,9 +73,9 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             "fingerprint": "B8XXs2y2JsVBtB9f",
             "networks": ["available": ["visa"]],
             "exp_month": "01",
-            "exp_year": "2040"
-        ]
-    ] as [AnyHashable : Any]
+            "exp_year": "2040",
+        ],
+    ] as [AnyHashable: Any]
     private let testUSBankAccountJSON = [
         "id": "pm_123bank",
         "type": "us_bank_account",
@@ -97,7 +97,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             "name": "Sam Stripe",
             "email": "sam@stripe.com",
         ] as [String: Any],
-    ] as [AnyHashable : Any]
+    ] as [AnyHashable: Any]
     private let testSEPAJSON = [
         "id": "pm_123sepa",
         "type": "sepa_debit",
@@ -108,5 +108,5 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             "name": "Sam Stripe",
             "email": "sam@stripe.com",
         ] as [String: Any],
-    ] as [AnyHashable : Any]
+    ] as [AnyHashable: Any]
 }

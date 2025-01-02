@@ -159,7 +159,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        
+
         // Create test confirmParams with valid card details
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
@@ -168,7 +168,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.paymentMethodParams.card?.expYear = 2040
         confirmParams.paymentMethodParams.card?.cvc = "123"
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
-        
+
         // ...updating...
         async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
@@ -221,14 +221,14 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTFail("Expected confirm to fail")
         }
     }
-    
+
     func testConfirmCard() async throws {
         // Given an EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        
+
         // Create test confirmParams with valid card details
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
@@ -237,10 +237,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.paymentMethodParams.card?.expYear = 2040
         confirmParams.paymentMethodParams.card?.cvc = "123"
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
-        
+
         // Inject the test payment option
         sut._test_paymentOption = .new(confirmParams: confirmParams)
-        
+
         // Call confirm() and verify the result
         let result = await sut.confirm()
         switch result {
@@ -259,7 +259,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        
+
         // Create test confirmParams with invalid card details
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
@@ -268,10 +268,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.paymentMethodParams.card?.expYear = 2040
         confirmParams.paymentMethodParams.card?.cvc = "123"
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
-        
+
         // Inject the test payment option
         sut._test_paymentOption = .new(confirmParams: confirmParams)
-        
+
         // Call confirm() and verify that it fails
         let result = await sut.confirm()
         switch result {
@@ -283,7 +283,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTFail("Expected confirm to fail, but it was canceled")
         }
     }
-    
+
     func testClearPaymentOptionAfterSelection() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
@@ -336,7 +336,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertFalse(delegateDidUpdatePaymentOptionCalled)
         XCTAssertFalse(delegateDidUpdateHeightCalled)
     }
-    
+
     func testConfirmThenUpdateFails() async throws {
         // Given an EmbeddedPaymentElement that can confirm
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
@@ -352,7 +352,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.paymentMethodParams.card?.expYear = 2040
         confirmParams.paymentMethodParams.card?.cvc = "123"
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
-        
+
         // Inject the test payment option and confirm the payment successfully
         sut._test_paymentOption = .new(confirmParams: confirmParams)
         let confirmResult = await sut.confirm()
@@ -364,7 +364,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTFail("Expected the update to fail after confirming the intent.")
             return
         }
-        
+
         XCTAssertEqual((error as! PaymentSheetError).debugDescription, PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription)
     }
 
@@ -383,7 +383,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.paymentMethodParams.card?.expYear = 2040
         confirmParams.paymentMethodParams.card?.cvc = "123"
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
-        
+
         // Inject the test payment option and confirm the payment successfully
         sut._test_paymentOption = .new(confirmParams: confirmParams)
         let confirmResult = await sut.confirm()
@@ -410,12 +410,12 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.paymentMethodParams.card?.expYear = 2040
         confirmParams.paymentMethodParams.card?.cvc = "123"
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
-        
+
         // Inject the test payment option and confirm the payment successfully once
         sut._test_paymentOption = .new(confirmParams: confirmParams)
         let firstConfirmResult = await sut.confirm()
         XCTAssertEqual(firstConfirmResult, .completed)
-        
+
         // Attempting to confirm again should fail
         let secondConfirmResult = await sut.confirm()
         guard case let .failed(error) = secondConfirmResult else {
