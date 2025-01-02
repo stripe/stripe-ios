@@ -40,6 +40,14 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, expired: true)
     }
 
+    func test_UpdatePaymentMethodViewControllerSetAsDefaultCard() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, allowsSetAsDefaultPM: true)
+    }
+
+    func test_UpdatePaymentMethodViewControllerDefaultCard() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, allowsSetAsDefaultPM: true, isDefault: true)
+    }
+
     func test_UpdatePaymentMethodViewControllerRemoveOnlyCard() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canEdit: false)
     }
@@ -54,6 +62,14 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
 
     func test_UpdatePaymentMethodViewControllerUSBankAccountAppearance() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, appearance: ._testMSPaintTheme)
+    }
+
+    func test_UpdatePaymentMethodViewControllerSetAsDefaultUSBankAccount() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, allowsSetAsDefaultPM: true)
+    }
+
+    func test_UpdatePaymentMethodViewControllerDefaultUSBankAccount() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, allowsSetAsDefaultPM: true, isDefault: true)
     }
 
     func test_EmbeddedSingleUSBankAccount_UpdatePaymentMethodViewControllerDarkMode() {
@@ -80,6 +96,14 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, appearance: ._testMSPaintTheme)
     }
 
+    func test_UpdatePaymentMethodViewControllerSetAsDefaultSEPADebit() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, allowsSetAsDefaultPM: true)
+    }
+
+    func test_UpdatePaymentMethodViewControllerDefaultSEPADebit() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, allowsSetAsDefaultPM: true, isDefault: true)
+    }
+
     func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerDarkMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: true, isEmbeddedSingle: true)
     }
@@ -92,7 +116,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canEdit: Bool? = nil, canRemove: Bool = true, expired: Bool = false) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canEdit: Bool? = nil, canRemove: Bool = true, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
@@ -119,7 +143,9 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                            appearance: appearance,
                                                            hostedSurface: .paymentSheet,
                                                            canEdit: canEdit ?? paymentMethod.isCoBrandedCard,
-                                                           canRemove: canRemove
+                                                           canRemove: canRemove,
+                                                           allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                                                           isDefault: isDefault
         )
         let sut = UpdatePaymentMethodViewController(
                                            removeSavedPaymentMethodMessage: "Test removal string",
