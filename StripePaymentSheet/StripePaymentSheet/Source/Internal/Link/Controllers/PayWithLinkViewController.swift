@@ -304,6 +304,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
             )
         ) { [weak self] result, _ in
+//            TODO(link): Log confirmation type here
             self?.view.isUserInteractionEnabled = true
             completion(result)
         }
@@ -316,6 +317,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             elementsSession: context.elementsSession,
             with: .applePay
         ) { [weak self] result, _ in
+            //            TODO(link): Log confirmation type here
             switch result {
             case .canceled:
                 // no-op -- we don't dismiss/finish for canceled Apple Pay interactions

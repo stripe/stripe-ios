@@ -165,7 +165,7 @@ extension PayWithLinkViewController {
             linkAccount.signUp(
                 with: phoneNumber,
                 legalName: requiresNameCollection ? legalName : nil,
-                consentAction: .clicked_button_mobile
+                consentAction: .clicked_button_mobile_v1
             ) { [weak self] result in
                 switch result {
                 case .success:
