@@ -130,4 +130,30 @@ class StripeAttestTest: XCTestCase {
             try await group.waitForAll()
         }
     }
+
+    func testConcurrentFailedAssertionsDoNotBlock() async {
+        let iterations = 5
+        let unknownError = NSError(domain: "test", code: 0, userInfo: nil)
+        let expectation = self.expectation(description: "Wait for assertions")
+        expectation.expectedFulfillmentCount = iterations
+        await mockAttestService.setShouldFailAssertionWithError(unknownError)
+        // Make sure we correctly continue the assertionWaiters continuations if an error occurs
+        Task {
+            try! await withThrowingTaskGroup(of: Void.self) { group in
+                for _ in 0..<iterations {
+                    group.addTask {
+                        do {
+                            _ = try await self.stripeAttest.assert()
+                            XCTFail("Should not succeed")
+                        } catch {
+                            XCTAssertEqual(error as NSError, unknownError)
+                            expectation.fulfill()
+                        }
+                    }
+                }
+                try await group.waitForAll()
+            }
+        }
+        await fulfillment(of: [expectation], timeout: 1)
+    }
 }
