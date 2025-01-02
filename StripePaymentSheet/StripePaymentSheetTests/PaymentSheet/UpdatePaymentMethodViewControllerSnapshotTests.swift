@@ -119,7 +119,8 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                            appearance: appearance,
                                                            hostedSurface: .paymentSheet,
                                                            canEdit: canEdit ?? paymentMethod.isCoBrandedCard,
-                                                           canRemove: canRemove)
+                                                           canRemove: canRemove
+        )
         let sut = UpdatePaymentMethodViewController(
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            isTestMode: false,

@@ -47,19 +47,24 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodForm, updateButton, removeButton, errorLabel])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodForm])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.setCustomSpacing(16, after: headerLabel) // custom spacing from figma
+        stackView.spacing = 16 // custom spacing from figma
         if let footnoteLabel = footnoteLabel {
-            stackView.insertArrangedSubview(footnoteLabel, at: 2)
+            stackView.addArrangedSubview(footnoteLabel)
             stackView.setCustomSpacing(8, after: paymentMethodForm) // custom spacing from figma
-            stackView.setCustomSpacing(32, after: footnoteLabel) // custom spacing from figma
         }
-        else {
-            stackView.setCustomSpacing(32, after: paymentMethodForm) // custom spacing from figma
+        if let setAsDefaultCheckbox = setAsDefaultCheckbox, let lastSubview = stackView.arrangedSubviews.last {
+            stackView.addArrangedSubview(setAsDefaultCheckbox.view)
+            stackView.setCustomSpacing(20, after: lastSubview) // custom spacing from figma
         }
-        stackView.setCustomSpacing(16, after: updateButton) // custom spacing from figma
+        if let lastSubview = stackView.arrangedSubviews.last {
+            stackView.setCustomSpacing(32, after: lastSubview) // custom spacing from figma
+        }
+        stackView.addArrangedSubview(updateButton)
+        stackView.addArrangedSubview(removeButton)
+        stackView.addArrangedSubview(errorLabel)
         return stackView
     }()
 
@@ -142,6 +147,11 @@ final class UpdatePaymentMethodViewController: UIViewController {
         let form = SavedPaymentMethodFormFactory(viewModel: viewModel)
         form.delegate = self
         return form.makePaymentMethodForm()
+    }()
+
+    private lazy var setAsDefaultCheckbox: CheckboxElement? = {
+        guard viewModel.allowsSetAsDefaultPM else { return nil }
+            return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault)
     }()
 
     private lazy var footnoteLabel: UITextView? = {

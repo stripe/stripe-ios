@@ -589,7 +589,10 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                            hostedSurface: .paymentSheet,
                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
                                                            canEdit: paymentMethod.isCoBrandedCard && cbcEligible,
-                                                           canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod))
+                                                           canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+                                                           allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+                                                           isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
+        )
         let editVc = UpdatePaymentMethodViewController(
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               isTestMode: configuration.isTestMode,
