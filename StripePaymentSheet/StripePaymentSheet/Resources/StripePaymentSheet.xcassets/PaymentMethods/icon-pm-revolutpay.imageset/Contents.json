@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "icon-pm-revolutpay@3x.png",
+      "filename" : "icon-pm-revolutpay.svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon-pm-revolutpay_dark@3x.png",
+      "filename" : "icon-pm-revolutpay_dark.svg",
       "idiom" : "universal"
     }
   ],
