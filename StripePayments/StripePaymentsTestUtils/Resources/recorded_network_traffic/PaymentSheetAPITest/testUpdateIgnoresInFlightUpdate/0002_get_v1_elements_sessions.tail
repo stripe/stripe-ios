@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=5Qc3rX8CB1GcqLsm_bhsTbr3tgobqzRfvbjsBfXs-ps7f2eYMKRJp7TiEhDydX7yf06zf7DI1w%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=xhHFbgA89BJofenQ4bW3zqYAmrl6kFC_Kc3jQQX5LTkZFbZit_SZTQLbvmY4oaiDmUAjYjqDpw%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_RInTTD2QLow9TY
-Content-Length: 16464
+request-id: req_m6cH3SyqG5O8LD
+Content-Length: 16564
 Vary: Origin
-Date: Wed, 18 Dec 2024 02:35:16 GMT
+Date: Thu, 02 Jan 2025 17:18:48 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -33,8 +33,8 @@ x-content-type-options: nosniff
     "ordered_payment_method_types" : [
       "card",
       "cashapp",
-      "amazon_pay",
       "crypto",
+      "amazon_pay",
       "us_bank_account"
     ]
   },
@@ -121,11 +121,12 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_aplazame" : false,
     "elements_enable_external_payment_method_rakuten_pay" : false,
     "elements_spm_messages" : false,
-    "paypal_express_checkout_recurring_support" : false,
+    "paypal_billing_address_support_in_ece" : false,
     "elements_enable_external_payment_method_paypo" : false,
+    "paypal_express_checkout_recurring_support" : false,
     "elements_enable_external_payment_method_netbanking" : false,
     "elements_enable_external_payment_method_pix_international" : false,
-    "elements_enable_progressive_cursor" : false,
+    "elements_enable_progressive_cursor" : true,
     "elements_enable_external_payment_method_poli" : false,
     "elements_enable_external_payment_method_kriya" : false,
     "financial_connections_enable_deferred_intent_flow" : true,
@@ -171,6 +172,7 @@ x-content-type-options: nosniff
     "elements_spm_max_visible_payment_methods" : false,
     "elements_disable_link_email_otp" : false,
     "cbc_in_link_popup" : true,
+    "elements_disable_progressive_cursor" : false,
     "elements_enable_external_payment_method_picpay" : false,
     "elements_enable_external_payment_method_planpay" : false,
     "elements_enable_external_payment_method_samsung_pay" : false,
@@ -189,12 +191,12 @@ x-content-type-options: nosniff
     "elements_stop_move_focus_to_first_errored_field" : true,
     "elements_enable_external_payment_method_online_banking_slovakia" : false,
     "elements_enable_external_payment_method_interac" : false,
-    "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : false,
+    "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : true,
     "use_link_views" : false,
     "elements_enable_external_payment_method_mybank" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1z5ZtD9Fpf3",
+  "session_id" : "elements_session_1yvmb73GClS",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
@@ -223,9 +225,9 @@ x-content-type-options: nosniff
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "55f96dae-b51e-4d4b-9695-fd72ec11d6bb",
+    "arb_id" : "b019de5b-dd33-44ed-9162-eee9584f707d",
     "experiment_metadata" : {
-      "seed" : "9279040f18e230c43788f8bbf8fd3d64e908a49c02f8c27aafa54f7d34c5ca1e",
+      "seed" : "d2feee71f4e2b28758c61414f18515aee3d5e7aef472fc7b88062a2a3823cad7",
       "semi_dominant_payment_methods" : [
 
       ]
@@ -386,8 +388,8 @@ x-content-type-options: nosniff
   },
   "unactivated_payment_method_types" : [
     "cashapp",
-    "amazon_pay",
     "crypto",
+    "amazon_pay",
     "us_bank_account"
   ],
   "unverified_payment_methods_on_domain" : [
@@ -408,9 +410,9 @@ x-content-type-options: nosniff
     "card",
     "apple_pay",
     "cashapp",
-    "amazon_pay",
     "google_pay",
     "crypto",
+    "amazon_pay",
     "us_bank_account"
   ],
   "customer_error" : null

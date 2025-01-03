@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RQJbs5Rx8ovEdT&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RVu1EqXnWSAlVP&type=card$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=AA-aZa6Gn3T-413T4AtnM8nebUv_0f1EK_FmlsEy_eavXEZJDqI0QDlJA6FIQpix-PiB90Cnrw%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=4fToNJSgyuuEFEPsZlBwKMjaaOoM8r9q39Otr5mAk98Q6iXuT-jGTfcPsWs6cryLka7Mcj8P-A%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_lROSWI9ZwYI9Xr
-Content-Length: 2451
+request-id: req_IQgyQjkqTbmVM4
+Content-Length: 2537
 Vary: Origin
-Date: Wed, 18 Dec 2024 19:32:00 GMT
+Date: Thu, 02 Jan 2025 17:29:55 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -31,7 +31,7 @@ x-content-type-options: nosniff
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1QXSyPFY0qyl6XeWAPlKhLFD",
+      "id" : "pm_1QcsDVFY0qyl6XeWy0UF8AeA",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -46,6 +46,7 @@ x-content-type-options: nosniff
         }
       },
       "card" : {
+        "regulated_status" : "unregulated",
         "fingerprint" : "96sroMqLCHmUdUpL",
         "last4" : "4242",
         "funding" : "credit",
@@ -68,18 +69,18 @@ x-content-type-options: nosniff
         "wallet" : null,
         "display_brand" : "visa",
         "exp_month" : 1,
-        "exp_year" : 2025,
+        "exp_year" : 2040,
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1734550317,
+      "created" : 1735838993,
       "allow_redisplay" : "unspecified",
       "type" : "card",
-      "customer" : "cus_RQJbs5Rx8ovEdT"
+      "customer" : "cus_RVu1EqXnWSAlVP"
     },
     {
       "object" : "payment_method",
-      "id" : "pm_1QXSyOFY0qyl6XeWajZkjhE2",
+      "id" : "pm_1QcsDUFY0qyl6XeWSzvd4Oq7",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -94,6 +95,7 @@ x-content-type-options: nosniff
         }
       },
       "card" : {
+        "regulated_status" : "unregulated",
         "fingerprint" : "96sroMqLCHmUdUpL",
         "last4" : "4242",
         "funding" : "credit",
@@ -116,14 +118,14 @@ x-content-type-options: nosniff
         "wallet" : null,
         "display_brand" : "visa",
         "exp_month" : 1,
-        "exp_year" : 2025,
+        "exp_year" : 2040,
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1734550316,
+      "created" : 1735838992,
       "allow_redisplay" : "unspecified",
       "type" : "card",
-      "customer" : "cus_RQJbs5Rx8ovEdT"
+      "customer" : "cus_RVu1EqXnWSAlVP"
     }
   ],
   "url" : "\/v1\/payment_methods"
