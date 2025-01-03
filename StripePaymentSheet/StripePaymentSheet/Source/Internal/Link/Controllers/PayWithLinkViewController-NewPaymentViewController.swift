@@ -229,7 +229,7 @@ extension PayWithLinkViewController {
 
                     self.coordinator?.confirm(with: self.linkAccount,
                                               paymentDetails: paymentDetails,
-                                              completion: { [weak self] result in
+                                              completion: { [weak self] result, deferredIntentConfirmationType in
                         let state: ConfirmButton.Status
 
                         switch result {
@@ -247,7 +247,7 @@ extension PayWithLinkViewController {
                         #endif
                         self?.confirmButton.update(state: state, animated: true) {
                             if state == .succeeded {
-                                self?.coordinator?.finish(withResult: result)
+                                self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                             }
                         }
                     })

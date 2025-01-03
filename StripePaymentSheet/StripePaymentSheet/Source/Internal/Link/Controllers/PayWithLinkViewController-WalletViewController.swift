@@ -265,14 +265,14 @@ extension PayWithLinkViewController {
             updateErrorLabel(for: nil)
             confirmButton.update(state: .processing)
 
-            coordinator?.confirm(with: linkAccount, paymentDetails: paymentDetails) { [weak self] result in
+            coordinator?.confirm(with: linkAccount, paymentDetails: paymentDetails) { [weak self] result, deferredIntentConfirmationType in
                 switch result {
                 case .completed:
                     #if !os(visionOS)
                     self?.feedbackGenerator.notificationOccurred(.success)
                     #endif
                     self?.confirmButton.update(state: .succeeded, animated: true) {
-                        self?.coordinator?.finish(withResult: result)
+                        self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                     }
                 case .canceled:
                     self?.confirmButton.update(state: .enabled)
