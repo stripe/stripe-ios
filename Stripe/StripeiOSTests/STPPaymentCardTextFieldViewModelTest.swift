@@ -72,7 +72,7 @@ class STPPaymentCardTextFieldViewModelTest: XCTestCase {
 
     func testValidity() {
         viewModel?.cardNumber = "4242424242424242"
-        viewModel?.rawExpiration = "12/24"
+        viewModel?.rawExpiration = "12/40"
         viewModel?.cvc = "123"
         XCTAssertTrue(viewModel!.isValid)
 

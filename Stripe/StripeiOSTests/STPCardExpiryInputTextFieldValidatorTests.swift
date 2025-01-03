@@ -117,12 +117,12 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
     func testExpiryStringFormatsYear() throws {
         let validator = STPCardExpiryInputTextFieldValidator()
 
-        validator.inputValue = "02/24"
+        validator.inputValue = "02/40"
 
         let expiryStrings = try XCTUnwrap(validator.expiryStrings)
 
         XCTAssertEqual(expiryStrings.month, "02")
-        XCTAssertEqual(expiryStrings.year, "2024")
+        XCTAssertEqual(expiryStrings.year, "2040")
     }
 
     func testExpiryStringDoesNotFormatYear() throws {
