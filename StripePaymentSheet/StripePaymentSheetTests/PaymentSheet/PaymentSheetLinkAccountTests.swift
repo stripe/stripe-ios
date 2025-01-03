@@ -13,8 +13,11 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeCoreTestUtils
+import OHHTTPStubs
+import OHHTTPStubsSwift
 
-final class PaymentSheetLinkAccountTests: XCTestCase {
+final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
 
     func testMakePaymentMethodParams() {
         let sut = makeSUT()
@@ -49,21 +52,65 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
     
     func testRefreshesWhenNeeded() {
         let sut = makeSUT()
-        let session = LinkStubs.consumerSession()
-        let paymentDetails = makePaymentDetailsStub()
-        let exp = expectation(description: "Refreshes when needed")
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        sut.paymentSheetLinkAccountDelegate = PaymentSheetLinkAccountDelegateStub()
-        sut.listPaymentDetails { result in
-            exp.fulfill()
+        let listedPaymentDetailsExp = expectation(description: "Lists payment details")
+        let refreshExp = expectation(description: "Refreshes when needed")
+        // Set up a stub to return a 401 with the wrong key, otherwise return an empty PM list
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("consumers/payment_details/list") ?? false
+        } response: { urlRequest in
+            // Check to make sure we've passed the correct secret key
+            let body = String(data: urlRequest.httpBodyOrBodyStream!, encoding: .utf8)
+            if !body!.contains("unexpired_key") {
+                // If it isn't the unexpired key, force a refresh by sending the correct error:
+                let errorResponse = [
+                    "error":
+                        [
+                            "message": "Fake invalid consumer session error.",
+                            "code": "consumer_session_credentials_invalid",
+                            "type": "invalid_request_error",
+                        ],
+                ]
+                return HTTPStubsResponse(jsonObject: errorResponse, statusCode: 401, headers: nil)
+            }
+
+            // If we did succeed, send an empty payment details list (which will be treated as a successful response).
+            let paymentDetailsEmptyList = ["redacted_payment_details": []]
+            return HTTPStubsResponse(jsonObject: paymentDetailsEmptyList, statusCode: 200, headers: nil)
         }
+        
+        sut.paymentSheetLinkAccountDelegate = PaymentSheetLinkAccountDelegateStub(expectation: refreshExp)
+        // List the payment details. This will fail, refresh the token, then succeed.
+        sut.listPaymentDetails { result in
+            switch result {
+            case .success:
+                listedPaymentDetailsExp.fulfill()
+            case .failure:
+                XCTFail("Should not have failed")
+            }
+        }
+        waitForExpectations(timeout: 5)
     }
 
 }
 
 class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
+    let expectation: XCTestExpectation
+    
+    init(expectation: XCTestExpectation) {
+        self.expectation = expectation
+    }
+    
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void) {
-        completion(.success(LinkStubs.consumerSession()))
+        // Return a fake session with a "good" key
+        let stubSession = ConsumerSession(
+            clientSecret: "unexpired_key",
+            emailAddress: "user@example.com",
+            redactedPhoneNumber: "+1********55",
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [.card, .bankAccount]
+        )
+        completion(.success(stubSession))
+        expectation.fulfill()
     }
 }
 

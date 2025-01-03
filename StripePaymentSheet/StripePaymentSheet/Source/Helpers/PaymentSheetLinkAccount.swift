@@ -234,19 +234,19 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     func createLinkAccountSession(
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            completion(
-                .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Linking account session without valid consumer session"
+        retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Linking account session without valid consumer session"
+                        )
                     )
                 )
-            )
-            return
-        }
-
-        retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
+                return
+            }
+            
             session.createLinkAccountSession(
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionWrapper
@@ -280,12 +280,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         linkedAccountId: String,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            completion(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
-            return
-        }
         retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                completion(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
+                return
+            }
+            
             session.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
                 consumerAccountPublishableKey: publishableKey,
@@ -297,13 +298,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     func listPaymentDetails(
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
-            return
-        }
-
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
+                return
+            }
+
             session.listPaymentDetails(
                 with: apiClient,
                 consumerAccountPublishableKey: publishableKey,
@@ -313,18 +314,18 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            return completion(
-                .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Deleting Link payment details without valid session"
+        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                return completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Deleting Link payment details without valid session"
+                        )
                     )
                 )
-            )
-        }
-
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+            }
+            
             session.deletePaymentDetails(
                 with: apiClient,
                 id: id,
@@ -339,18 +340,18 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         updateParams: UpdatePaymentDetailsParams,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            return completion(
-                .failure(
-                    PaymentSheetError.unknown(
-                        debugDescription: "Updating Link payment details without valid session"
+        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                return completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Updating Link payment details without valid session"
+                        )
                     )
                 )
-            )
-        }
+            }
 
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
             session.updatePaymentDetails(
                 with: apiClient,
                 id: id,
@@ -362,16 +363,16 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            return completion(
-                .failure(
-                    PaymentSheetError.savingWithoutValidLinkSession
-                )
-            )
-        }
-
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                return completion(
+                    .failure(
+                        PaymentSheetError.savingWithoutValidLinkSession
+                    )
+                )
+            }
+
             session.sharePaymentDetails(
                 with: apiClient,
                 id: id,
