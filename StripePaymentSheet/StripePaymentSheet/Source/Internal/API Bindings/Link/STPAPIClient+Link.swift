@@ -333,7 +333,7 @@ extension STPAPIClient {
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
-            "types": ["card", "bank_account"],
+            "types": ["card"],
         ]
 
         post(
