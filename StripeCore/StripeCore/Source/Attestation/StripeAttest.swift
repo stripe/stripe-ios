@@ -18,19 +18,34 @@ import UIKit
 
     /// Sign an assertion.
     /// Will create and attest a new device key if needed.
-    @_spi(STP) public func assert() async throws -> Assertion {
+    /// Returns an AssertionHandle, which must be called after the network request completes (with success or failure) in order to unblock future assertions.
+    @_spi(STP) public func assert() async throws -> AssertionHandle {
+        // Make sure we only process one assertion at a time, until the latest
+        if assertionInProgress {
+            try await withCheckedThrowingContinuation { continuation in
+                assertionWaiters.append(continuation)
+            }
+        }
+        assertionInProgress = true
+
         do {
             let assertion = try await _assert()
             let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
-            STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
-            return assertion
+            if let apiClient {
+                STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
+            }
+            return AssertionHandle(assertion: assertion, stripeAttest: self)
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .assertionFailed, error: error)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
-            if apiClient.isTestmode {
+            if let apiClient {
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            }
+            if apiClient?.isTestmode ?? false {
                 // In testmode, we can provide a test assertion even if the real assertion fails
-                return await testmodeAssertion()
+                return await AssertionHandle(assertion: testmodeAssertion(), stripeAttest: self)
             } else {
+                // Clean up the continuation, as we're not returning it as an AssertionHandle
+                assertionCompleted()
                 throw error
             }
         }
@@ -56,7 +71,9 @@ import UIKit
     /// The key will be reset.
     @_spi(STP) public func receivedAssertionError(_ error: Error) {
         let resetKeyAnalytic = ErrorAnalytic(event: .resetKeyForAssertionError, error: error)
-        STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
+        if let apiClient {
+            STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
+        }
         resetKey()
     }
 
@@ -149,8 +166,8 @@ import UIKit
 
     /// The key to use for storing an attestation key in NSUserDefaults.
     func defaultsKeyForSetting(_ setting: SettingsKeys) -> String {
-        var key = "\(setting.rawValue):\(apiClient.publishableKey ?? "unknown")"
-        if let stripeAccount = apiClient.stripeAccount {
+        var key = "\(setting.rawValue):\(apiClient?.publishableKey ?? "unknown")"
+        if let stripeAccount = apiClient?.stripeAccount {
             key += ":\(stripeAccount)"
         }
         return key
@@ -170,7 +187,7 @@ import UIKit
     /// A network backend for the /challenge and /attest endpoints.
     let appAttestBackend: StripeAttestBackend
     /// The API client to use for network requests
-    var apiClient: STPAPIClient
+    weak var apiClient: STPAPIClient?
 
     /// The minimum time between key generation attempts.
     /// This is a safeguard against generating keys too often, as each key generation
@@ -190,7 +207,9 @@ import UIKit
         let task = Task<Void, Error> {
             try await _attest()
             let successAnalytic = GenericAnalytic(event: .attestationSucceeded, params: [:])
-            STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
+            if let apiClient {
+                STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
+            }
         }
         attestationTask = task
         defer { attestationTask = nil } // Clear the task after it's done
@@ -198,11 +217,16 @@ import UIKit
             try await task.value
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .attestationFailed, error: error)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            if let apiClient {
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            }
             throw error
         }
     }
     private var attestationTask: Task<Void, Error>?
+
+    private var assertionInProgress: Bool = false
+    private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
 
     func _assert() async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
@@ -273,7 +297,9 @@ import UIKit
             if error.domain == DCErrorDomain && error.code == DCError.invalidKey.rawValue {
                 resetKey()
                 let resetKeyAnalytic = ErrorAnalytic(event: .resetKeyForAttestationError, error: error)
-                STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
+                }
             }
             // For other errors, just report them as an analytic and throw. We'll want to retry attestation with the same key.
             throw error
@@ -286,7 +312,7 @@ import UIKit
         guard appAttestService.isSupported else {
             throw AttestationError.attestationNotSupported
         }
-        guard apiClient.publishableKey != nil else {
+        guard apiClient?.publishableKey != nil else {
             throw AttestationError.noPublishableKey
         }
         if let keyId = storedKeyID {
@@ -365,10 +391,46 @@ import UIKit
         }
     }
 
+    // MARK: Assertion concurrency
+
+    // Called when an assertion handle is completed or times out
+    private func assertionCompleted() {
+        assertionInProgress = false
+
+        // Resume the next waiter if there is one
+        if !assertionWaiters.isEmpty {
+            let nextContinuation = assertionWaiters.removeFirst()
+            nextContinuation.resume()
+        }
+    }
+
     private func testmodeAssertion() async -> Assertion {
         Assertion(assertionData: Data(bytes: [0x01, 0x02, 0x03], count: 3),
                   deviceID: (try? await getDeviceID()) ?? "test-device-id",
                   appID: (try? getAppID()) ?? "com.example.test",
                   keyID: "TestKeyID")
+    }
+}
+
+extension StripeAttest {
+    public class AssertionHandle {
+        public let assertion: Assertion
+        private weak var stripeAttest: StripeAttest?
+
+        init(assertion: Assertion, stripeAttest: StripeAttest) {
+            self.assertion = assertion
+            self.stripeAttest = stripeAttest
+        }
+
+        // Must be called by the caller when done with the assertion
+        public func complete() {
+            guard let stripeAttest = stripeAttest else {
+                stpAssertionFailure("StripeAttest was deallocated before the assertion was completed")
+                return
+            }
+            Task {
+                await stripeAttest.assertionCompleted()
+            }
+        }
     }
 }
