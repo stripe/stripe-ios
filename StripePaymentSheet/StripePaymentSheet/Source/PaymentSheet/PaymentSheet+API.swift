@@ -521,9 +521,6 @@ extension PaymentSheet {
                 } else {
                     confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, shouldSave)
                 }
-            case .withPaymentMethodParams(let linkAccount, let paymentMethodParams):
-                // shouldSave is false, as we don't show a save checkbox in the Link VC
-                createPaymentDetailsAndConfirm(linkAccount, paymentMethodParams, false)
             }
         case let .external(paymentMethod, billingDetails):
             guard let confirmHandler = configuration.externalPaymentMethodConfiguration?.externalPaymentMethodConfirmHandler else {
