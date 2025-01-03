@@ -59,7 +59,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
-    
+
     var paymentSheetLinkAccountDelegate: PaymentSheetLinkAccountDelegate?
 
     let email: String
@@ -246,7 +246,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 )
                 return
             }
-            
+
             session.createLinkAccountSession(
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionWrapper
@@ -286,7 +286,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
                 return
             }
-            
+
             session.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
                 consumerAccountPublishableKey: publishableKey,
@@ -325,7 +325,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                     )
                 )
             }
-            
+
             session.deletePaymentDetails(
                 with: apiClient,
                 id: id,

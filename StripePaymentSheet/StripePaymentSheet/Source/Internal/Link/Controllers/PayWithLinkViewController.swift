@@ -401,7 +401,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                 }
             }
         }
-        
+
     }
-    
+
 }

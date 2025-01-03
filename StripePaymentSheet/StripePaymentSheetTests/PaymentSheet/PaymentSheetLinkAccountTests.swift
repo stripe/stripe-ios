@@ -8,14 +8,14 @@
 
 import XCTest
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
-@testable@_spi(STP) import StripeCoreTestUtils
-import OHHTTPStubs
-import OHHTTPStubsSwift
 
 final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
 
@@ -49,7 +49,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             ]
         )
     }
-    
+
     func testRefreshesWhenNeeded() {
         let sut = makeSUT()
         let listedPaymentDetailsExp = expectation(description: "Lists payment details")
@@ -77,7 +77,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             let paymentDetailsEmptyList = ["redacted_payment_details": []]
             return HTTPStubsResponse(jsonObject: paymentDetailsEmptyList, statusCode: 200, headers: nil)
         }
-        
+
         sut.paymentSheetLinkAccountDelegate = PaymentSheetLinkAccountDelegateStub(expectation: refreshExp)
         // List the payment details. This will fail, refresh the token, then succeed.
         sut.listPaymentDetails { result in
@@ -95,11 +95,11 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
 
 class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
     let expectation: XCTestExpectation
-    
+
     init(expectation: XCTestExpectation) {
         self.expectation = expectation
     }
-    
+
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void) {
         // Return a fake session with a "good" key
         let stubSession = ConsumerSession(
