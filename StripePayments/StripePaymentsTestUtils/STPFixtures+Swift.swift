@@ -104,7 +104,7 @@ public extension STPPaymentMethodParams {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = number
         cardParams.cvc = "123"
-        cardParams.expYear = (Calendar.current.dateComponents([.year], from: Date()).year! + 1) as NSNumber
+        cardParams.expYear = 2040
         cardParams.expMonth = 01
         return STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
     }

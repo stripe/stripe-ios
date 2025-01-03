@@ -89,6 +89,8 @@ import UIKit
     /// Determines the `Stripe-Livemode` header value when the publishable key is a user key
     @_spi(DashboardOnly) public var userKeyLiveMode = true
 
+    @_spi(STP) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
+
     // MARK: Initializers
     override public init() {
         sourcePollers = [:]

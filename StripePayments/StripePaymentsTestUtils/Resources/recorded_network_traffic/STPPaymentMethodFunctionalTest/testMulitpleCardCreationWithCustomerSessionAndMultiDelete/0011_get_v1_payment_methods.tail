@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RQJbs5Rx8ovEdT&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RVu1EqXnWSAlVP&type=card$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=SKVEQ4BH76wEPDmQ-1ibnzykobVqemeJYJz2z7QbcW9_J8UHDGJHBQPgPty8X9KjDwi-uk8lfg%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=JeTkPMW3euZ-t6OBuV08swlSLs9i7aSBAqAk27MPhzD28n67pO2nvV_-syAjinF9BKIu76ACOw%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_w3MLm8xMvw0heG
+request-id: req_MgaJjiVCtxmu7c
 Content-Length: 89
 Vary: Origin
-Date: Wed, 18 Dec 2024 19:32:01 GMT
+Date: Thu, 02 Jan 2025 17:29:56 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
