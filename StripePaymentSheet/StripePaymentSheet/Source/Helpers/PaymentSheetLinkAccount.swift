@@ -73,7 +73,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     var isLoggedIn: Bool {
         return sessionState == .verified
     }
-    
+
     var sessionState: SessionState {
         if let currentSession = currentSession {
             // sms verification is not required if we are in the signup flow

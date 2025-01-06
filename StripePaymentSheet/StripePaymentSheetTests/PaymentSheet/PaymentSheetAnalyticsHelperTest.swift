@@ -264,6 +264,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 analyticsClient: analyticsClient
             )
             sut.intent = ._testValue()
+            sut.elementsSession = ._testValue(paymentMethodTypes: ["card"], externalPaymentMethodTypes: [], linkMode: .linkCardBrand, linkFundingSources: [.card], linkUseAttestation: true, linkSuppress2FA: true)
             sut.logPayment(
                 paymentOption: paymentOption,
                 result: result,
@@ -278,6 +279,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, paymentOption.paymentMethodTypeAnalyticsValue)
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, paymentOption.linkContextAnalyticsValue)
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_ui"] as? String, paymentOption.linkUIAnalyticsValue)
+            XCTAssertEqual(analyticsClient._testLogHistory.last!["link_use_attestation"] as? Bool, false)
+            XCTAssertEqual(analyticsClient._testLogHistory.last!["link_mobile_suppress_2fa_modal"] as? Bool, true)
         }
     }
 

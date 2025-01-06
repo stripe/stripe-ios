@@ -81,12 +81,12 @@ extension PaymentSheet {
                 return nil
             }
         }
-        
+
         // The confirmation type used by Link
         var linkUIAnalyticsValue: String? {
             if case .link(let option) = self {
                 switch option {
-                case .withPaymentDetails(account: let account, paymentDetails: _):
+                case .withPaymentDetails(account: let account, _):
                     if account.hasCompletedSMSVerification {
                         // This was a returning user who logged in
                         return "native-returning"
@@ -97,19 +97,19 @@ extension PaymentSheet {
                         stpAssertionFailure()
                         return "native-unknown"
                     }
-                case .withPaymentMethod(paymentMethod: _):
+                case .withPaymentMethod:
                     return "web-popup"
                 case .wallet:
                     // From the "Link" button in FlowController, a separate Link popup
                     return "native-popup"
-                case .signUp(account: _, phoneNumber: _, consentAction: _, legalName: _, intentConfirmParams: _):
+                case .signUp:
                     return "inline-signup"
                 }
             } else {
                 return nil
             }
         }
-        
+
         var isExternal: Bool {
             if case .external = self {
                 return true

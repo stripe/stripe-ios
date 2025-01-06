@@ -342,7 +342,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
         additionalParams["link_session_type"] = elementsSession?.linkPopupWebviewOption.rawValue
         additionalParams["link_use_attestation"] = elementsSession?.linkSettings?.useAttestationEndpoints
-        additionalParams["link_suppress_2fa"] = elementsSession?.linkSettings?.suppress2FAModal
+        additionalParams["link_mobile_suppress_2fa_modal"] = elementsSession?.linkSettings?.suppress2FAModal
         additionalParams["mpe_config"] = configuration.analyticPayload
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
