@@ -69,7 +69,9 @@ extension STPElementsSession {
         disableLinkSignup: Bool? = nil,
         allowsSetAsDefaultPM: Bool = false,
         defaultPaymentMethod: String? = nil,
-        paymentMethods: [[AnyHashable: Any]]? = nil
+        paymentMethods: [[AnyHashable: Any]]? = nil,
+        linkUseAttestation: Bool? = nil,
+        linkSuppress2FA: Bool? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -110,6 +112,14 @@ extension STPElementsSession {
 
         if let linkMode {
             json[jsonDict: "link_settings"]!["link_mode"] = linkMode.rawValue
+        }
+
+        if let linkUseAttestation {
+            json[jsonDict: "link_settings"]!["link_use_attestation"] = linkUseAttestation
+        }
+
+        if let linkSuppress2FA {
+            json[jsonDict: "link_settings"]!["link_mobile_suppress_2fa_modal"] = linkSuppress2FA
         }
 
         json[jsonDict: "link_settings"]!["link_funding_sources"] = linkFundingSources.map(\.rawValue)

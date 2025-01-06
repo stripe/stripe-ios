@@ -90,6 +90,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         return currentSession?.hasStartedSMSVerification ?? false
     }
 
+    var hasCompletedSMSVerification: Bool {
+        return currentSession?.hasVerifiedSMSSession ?? false
+    }
+
     private var currentSession: ConsumerSession?
 
     init(
