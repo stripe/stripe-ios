@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=5Qc3rX8CB1GcqLsm_bhsTbr3tgobqzRfvbjsBfXs-ps7f2eYMKRJp7TiEhDydX7yf06zf7DI1w%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=hpVXMapZU26tYKJlOZASlQGtnMQoYw6YsVaItkrAYDIikblamtLI__ZB-JWRjroaL20epznOKQ%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,14 +14,14 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_AuJz2jXioZ76Nq
+request-id: req_CcMDDmkVlR27tm
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 932
+Content-Length: 971
 Vary: Origin
-Date: Wed, 18 Dec 2024 02:34:53 GMT
-original-request: req_AuJz2jXioZ76Nq
+Date: Thu, 02 Jan 2025 17:18:24 GMT
+original-request: req_CcMDDmkVlR27tm
 stripe-version: 2020-08-27
-idempotency-key: d9fa15ba-4228-4027-ad44-b7d99f08394c
+idempotency-key: 61a8d1a4-2f32-4421-adff-8caa2c068314
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -31,7 +31,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_mont
 
 {
   "object" : "payment_method",
-  "id" : "pm_1QXD69FY0qyl6XeW2lcWu2fh",
+  "id" : "pm_1Qcs2OFY0qyl6XeWBaSoJDVH",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,6 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_mont
     }
   },
   "card" : {
+    "regulated_status" : "unregulated",
     "last4" : "4242",
     "funding" : "credit",
     "generated_from" : null,
@@ -71,7 +72,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_mont
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1734489293,
+  "created" : 1735838304,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null

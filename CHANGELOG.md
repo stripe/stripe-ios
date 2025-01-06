@@ -1,10 +1,10 @@
 ## X.Y.Z 
 ### PaymentSheet
 * [Fixed] Fixed a bug where saved payment methods could appear out of order if you have multiple types (e.g. card and bank).
+* [Fixed] Fixed a bug where deferred PaymentIntents would fail to validate when capture_method = automatic_async ([#4329](https://github.com/stripe/stripe-ios/issues/4329))
 
 
 ## 24.2.0 2024-12-19
-
 ### Connect
 * [Added] `StripeConnect` SDK to add connected account dashboard functionality to your app using [Connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios).
 

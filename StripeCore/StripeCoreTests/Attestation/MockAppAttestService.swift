@@ -68,8 +68,9 @@ actor MockAppAttestService: AppAttestService {
         }
         key.counter += 1
         keys[key.id] = key
-        // Our fake assertion is the keyID glommed onto the clientDataHash
-        return key.id.data(using: .utf8)! + clientDataHash
+        // Generate a fake assertion
+        let assertion = ["keyID": key.id, "counter": key.counter, "clientDataHash": clientDataHash.base64EncodedString()] as [String: Any]
+        return try JSONSerialization.data(withJSONObject: assertion)
     }
 
     @_spi(STP) public func attestKey(_ keyId: String, clientDataHash: Data) async throws -> Data {
@@ -96,6 +97,7 @@ actor MockAppAttestService: AppAttestService {
 @_spi(STP) public class MockAttestBackend: StripeAttestBackend {
     var storedChallenge: String?
     var keyHasBeenAttested: [String: Bool] = [:]
+    var keyCounter: [String: Int] = [:]
 
     public func attest(appId: String, deviceId: String, keyId: String, attestation: Data) async throws {
         // Decode the attestation data (it's a JSON dictionary)
@@ -131,11 +133,20 @@ actor MockAppAttestService: AppAttestService {
         print(String(data: clientDataToHash, encoding: .utf8)!)
         let clientDataHash = Data(SHA256.hash(data: clientDataToHash))
 
-        // Our fake assertion is the keyID glommed onto the clientDataHash
-        let expectedAssertionData = assertion.keyID.data(using: .utf8)! + clientDataHash
-        guard expectedAssertionData == assertion.assertionData else {
+        // Decode assertion (it's JSON)
+        let assertionDict = try JSONSerialization.jsonObject(with: assertion.assertionData) as! [String: Any]
+        let keyID = assertionDict["keyID"] as! String
+        let counter = assertionDict["counter"] as! Int
+        let assertionClientDataHash = assertionDict["clientDataHash"] as! String
+        guard clientDataHash.base64EncodedString() == assertionClientDataHash else {
             throw NSError(domain: "com.stripe.internal-error", code: 403, userInfo: ["error": "Assertion data does not match expected data"])
         }
+        // Confirm counter has incremented since last assertion
+        guard counter > (keyCounter[keyID] ?? 0) else {
+            throw NSError(domain: "com.stripe.internal-error", code: 403, userInfo: ["error": "Counter has not incremented"])
+        }
+        // Update counter
+        keyCounter[keyID] = counter
         // Clean up the challenge
         storedChallenge = nil
     }

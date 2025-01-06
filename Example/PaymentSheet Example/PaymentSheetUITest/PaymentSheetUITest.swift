@@ -50,6 +50,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.staticTexts["PaymentSheet"].tap()
         app.staticTexts["Buy"].waitForExistenceAndTap(timeout: 60)
 
+        app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.buttons["Pay €9.73"].tap()
         let successText = app.alerts.staticTexts["Your order is confirmed!"]
@@ -71,8 +72,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let yourCartFrame = yourCartText.frame
 
         // Wait for the sheet to load
-        let numberField = app.textFields["Card number"]
-        _ = numberField.waitForExistence(timeout: 20)
+        let sheetPayButton = app.buttons["Pay €9.73"].waitForExistence(timeout: 60)
 
         // Close PaymentSheet. At this point, if we messed up our presentation
         // logic, the containing UINavigationController will be in a bad state.
@@ -102,8 +102,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.buttons["Buy"].waitForExistenceAndTap(timeout: 60)
 
         // Wait for the sheet to load
-        let numberField = app.textFields["Card number"]
-        _ = numberField.waitForExistence(timeout: 20)
+        _ = app.buttons["Pay €9.73"].waitForExistence(timeout: 60)
 
         // Close the sheet (at this point UINavigationController would be in the bad state)
         app.buttons["Close"].waitForExistenceAndTap()
@@ -118,13 +117,12 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let app = XCUIApplication()
         app.launch()
 
-        app.staticTexts[
-            "PaymentSheet"
-        ].tap()
+        app.staticTexts["PaymentSheet"].tap()
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
-
+        
+        app.buttons["Card"].waitForExistenceAndTap()
         let numberField = app.textFields["Card number"]
         XCTAssertTrue(numberField.waitForExistence(timeout: 60.0))
         numberField.tap()
@@ -159,9 +157,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
+        let addCardButton = app.buttons["Card"].waitForExistenceAndTap()
 
         try! fillCardData(app)
         app.buttons["Continue"].tap()
@@ -204,9 +200,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
+        app.buttons["Card"].waitForExistenceAndTap()
 
         try! fillCardData(app)
 
@@ -239,6 +233,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
     func testPaymentSheetFlowControllerSaveAndRemoveCard() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .off
@@ -367,6 +362,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.forceTapElement()
 
+        app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.buttons["Done"].waitForExistenceAndTap(timeout: 3.0)
         app.buttons["Pay €9.73"].waitForExistenceAndTap(timeout: 3.0)
@@ -383,9 +379,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.forceTapElement()
 
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        addCardButton.tap()
+        app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.buttons["Continue"].tap()
 
@@ -403,6 +397,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
     func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.currency = .eur
@@ -437,8 +432,9 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
     func testUPIPaymentMethodPolling() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
-                settings.merchantCountryCode = .IN
+        settings.merchantCountryCode = .IN
         settings.currency = .inr
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -472,6 +468,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
     func testBLIKPaymentMethodPolling() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
                 settings.merchantCountryCode = .FR
         settings.currency = .pln
@@ -509,6 +506,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
+        app.buttons["Card"].waitForExistenceAndTap()
 
         // Card number from https://docs.stripe.com/testing#regulatory-cards
         try! fillCardData(app, cardNumber: "4000002760003184")
@@ -525,6 +523,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
     func testPreservesFormDetails() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.mode = .setup
         settings.uiStyle = .paymentSheet
@@ -569,6 +568,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
     func testDeferredPaymentIntent_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_csc
         loadPlayground(app, settings)
 
@@ -605,6 +605,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
     func testDeferredPaymentIntent_ClientSideConfirmation_LostCardDecline() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_csc
         loadPlayground(app, settings)
 
@@ -619,6 +620,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
     func testDeferredSetupIntent_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_csc
         settings.mode = .setup
         loadPlayground(app, settings)
@@ -634,6 +636,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
     func testDeferredPaymentIntent_FlowController_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_csc
         settings.uiStyle = .flowController
         loadPlayground(app, settings)
@@ -659,6 +662,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
     func testDeferredSetupIntent_FlowController_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_csc
         settings.uiStyle = .flowController
         settings.mode = .setup
@@ -739,6 +743,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
      */
     func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_csc
         loadPlayground(app, settings)
 
@@ -752,6 +757,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
     func testDeferredIntent_ApplePayFlowControllerFlow_ClientSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_csc
         settings.customerMode = .new
         settings.uiStyle = .flowController
@@ -881,6 +887,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testDeferredPaymentIntent_ServerSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_ssc
         loadPlayground(app, settings)
 
@@ -895,6 +902,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testDeferredPaymentIntent_ServerSideConfirmation_Multiprocessor() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_mp
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -910,6 +918,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testDeferredPaymentIntent_SeverSideConfirmation_LostCardDecline() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_ssc
         loadPlayground(app, settings)
 
@@ -924,6 +933,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testDeferredSetupIntent_ServerSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_ssc
         settings.mode = .setup
         loadPlayground(app, settings)
@@ -939,6 +949,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testDeferredPaymentIntent_FlowController_ServerSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_ssc
         settings.uiStyle = .flowController
         loadPlayground(app, settings)
@@ -964,6 +975,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testDeferredPaymentIntent_FlowController_ServerSideConfirmation_ManualConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_mc
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
@@ -990,6 +1002,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testDeferredSetupIntent_FlowController_ServerSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_ssc
         settings.uiStyle = .flowController
         settings.mode = .setup
@@ -1072,6 +1085,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_ssc
         loadPlayground(app, settings)
 
@@ -1086,6 +1100,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_ManualConfirmation() {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_mc
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -1101,6 +1116,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_Multiprocessor() {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.integrationType = .deferred_mp
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -1115,6 +1131,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
     func testPaymentSheetFlowControllerSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.applePayEnabled = .off // disable Apple Pay
         settings.apmsEnabled = .off
@@ -1194,6 +1211,7 @@ class PaymentSheetExternalPMUITests: PaymentSheetUITestCase {
     // MARK: - External PayPal
     func testExternalPaypalPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.externalPaymentMethods = .paypal
 
         loadPlayground(app, settings)
@@ -1221,6 +1239,7 @@ class PaymentSheetExternalPMUITests: PaymentSheetUITestCase {
 
     func testExternalPaypalPaymentSheetFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.externalPaymentMethods = .paypal
         settings.uiStyle = .flowController
 
@@ -1257,6 +1276,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
     // MARK: - Customer Session
     func testDedupedPaymentMethods_paymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.integrationType = .deferred_csc
@@ -1321,6 +1341,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
     func testDedupedPaymentMethods_FlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .flowController
         settings.integrationType = .deferred_csc
@@ -1394,6 +1415,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
     func testRemoveLastSavedPaymentMethodPaymentSheet_clientConfig() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.integrationType = .deferred_csc
@@ -1407,6 +1429,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
     }
     func testRemoveLastSavedPaymentMethodPaymentSheet() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.integrationType = .deferred_csc
@@ -1480,6 +1503,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
     func test_RemoveLastSavedPaymentMethodFlowController_clientConfig() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .flowController
         settings.integrationType = .deferred_csc
@@ -1495,6 +1519,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
     }
     func test_RemoveLastSavedPaymentMethodFlowController_customerSession() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .flowController
         settings.integrationType = .deferred_csc
@@ -1568,6 +1593,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
     func testPSPaymentMethodRemoveTwoCards() {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.customerKeyType = .customerSession
@@ -1616,6 +1642,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
     }
     func testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC_clientConfig() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.customerKeyType = .customerSession
@@ -1633,6 +1660,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
     }
     func testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC_customerSession() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
         settings.customerKeyType = .customerSession
@@ -1680,6 +1708,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
 
     func testPreservesSelectionAfterDismissPaymentSheetFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .new
 
@@ -1709,6 +1738,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
 class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
     func testCVCRecollectionFlowController_deferredCSC() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.integrationType = .deferred_csc
         settings.customerMode = .new
@@ -1755,6 +1785,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 
     func testCVCRecollectionComplete_deferredCSC() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .paymentSheet
         settings.integrationType = .deferred_csc
         settings.customerMode = .new
@@ -1794,6 +1825,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 
     func testCVCRecollectionFlowController_intentFirstCSC() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.integrationType = .normal
         settings.customerMode = .new
@@ -1839,6 +1871,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
     }
     func testCVCRecollectionComplete_intentFirstCSC() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .paymentSheet
         settings.integrationType = .normal
         settings.customerMode = .new
@@ -1879,6 +1912,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
     }
     func testLinkOnlyFlowController() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         // Use the GB merchant to use web-based Link
         settings.merchantCountryCode = .GB
         settings.uiStyle = .flowController
@@ -1991,6 +2025,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
 class PaymentSheetCardBrandFilteringUITests: PaymentSheetUITestCase {
     func testPaymentSheet_disallowedBrands() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.cardBrandAcceptance = .blockAmEx
         loadPlayground(app, settings)
@@ -2016,6 +2051,7 @@ class PaymentSheetCardBrandFilteringUITests: PaymentSheetUITestCase {
 
     func testPaymentSheet_allowedBrands() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.cardBrandAcceptance = .allowVisa
         loadPlayground(app, settings)
@@ -2047,6 +2083,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #1 flow in PaymentSheet where the merchant disable saved payment methods and first time Link user
     func testLinkPaymentSheet_disabledSPM_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2059,6 +2096,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #2 flow in PaymentSheet where the merchant disable saved payment methods and returning Link user
     func testLinkPaymentSheet_disabledSPM_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2084,6 +2122,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #3 flow in PaymentSheet where the merchant enables saved payment methods, buyer has no SPMs and first time Link user
     func testLinkPaymentSheet_enabledSPM_noSPMs_firstTimeLinkUser() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2096,6 +2135,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #4 flow in PaymentSheet where the merchant enables saved payment methods, buyer has no SPMs and returning Link user
     func testLinkPaymentSheet_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2121,6 +2161,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests Native Link with a returning user, 2FA prompt shows first
     func testLinkPaymentSheet_native_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2140,6 +2181,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests Native Link in Flow Controller with a returning user
     func testLinkPaymentSheetFC_native_enabledSPM_noSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2163,6 +2205,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #5 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and first time Link user
     func testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2208,6 +2251,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #6 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and returning Link user
     func testLinkPaymentSheet_enabledSPM_hasSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2252,6 +2296,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Seealso: testLinkOnlyFlowController for testing wallet button behavior in this flow
     func testLinkPaymentSheetFlow_disabledApplePay_disabledSPM_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .guest
         settings.apmsEnabled = .on
@@ -2266,6 +2311,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #8 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and saved payment methods and returning Link user
     func testLinkPaymentSheetFlow_disabledApplePay_disabledSPM_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .guest
         settings.apmsEnabled = .on
@@ -2290,6 +2336,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #9 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and enables saved payment methods and first time Link user
     func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
@@ -2304,6 +2351,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #10 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and enables saved payment methods and returning Link user
     func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
@@ -2328,6 +2376,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #11 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and enables saved payment methods and first time Link user
     func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_hasSPMs_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
@@ -2366,6 +2415,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #11.1 flow in PaymentSheet.FlowController where the merchant enables Apple Pay and enables saved payment methods and first time Link user
     func testLinkPaymentSheetFlow_enabledApplePay_enabledSPM_hasSPMs_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
@@ -2396,6 +2446,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #12 flow in PaymentSheet.FlowController where the merchant disables Apple Pay and enables saved payment methods and returning Link user
     func testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_hasSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
@@ -2431,6 +2482,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     // Tests the #12.1 flow in PaymentSheet.FlowController where the merchant enables Apple Pay and enables saved payment methods and returning Link user
     func testLinkPaymentSheetFlow_enablesApplePay_enabledSPM_hasSPMs_returningLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.apmsEnabled = .on
@@ -2448,6 +2500,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     func testLinkInlineSignup_gb() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2485,6 +2538,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     func testLinkInlineSignup_deferred() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
@@ -2571,6 +2625,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 //    TODO: This is disabled until the Link team adds some hooks for testing.
 //    func testLinkWebFlow() throws {
 //        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+//        settings.layout = .horizontal
 //        settings.customerMode = .guest
 //        settings.linkMode = .on
 //
@@ -2602,6 +2657,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
     func testDefaultSPMHorizontalNavigation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning
@@ -2617,6 +2673,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
     }
     func testDefaultSPMVerticalNavigation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning
@@ -2636,6 +2693,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
 extension PaymentSheetUITestCase {
     func _testUSBankAccount(mode: PaymentSheetTestPlaygroundSettings.Mode, integrationType: PaymentSheetTestPlaygroundSettings.IntegrationType, vertical: Bool = false) {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
@@ -2715,6 +2773,7 @@ extension PaymentSheetUITestCase {
         uiStyle: PaymentSheetTestPlaygroundSettings.UIStyle = .paymentSheet
     ) {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
         settings.mode = mode
         settings.uiStyle = uiStyle
         settings.apmsEnabled = .off
