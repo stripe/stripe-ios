@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import XCTest
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCoreTestUtils
+@testable @_spi(STP) import StripePaymentSheet
+import XCTest
 #if !os(visionOS)
 class PayWithLinkViewControllerTests: XCTestCase {
     @MainActor
@@ -25,7 +25,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
 
         // Always fail attestation, forcing us back to the web flow
         await mockAttestService.setShouldFailKeygenWithError(NSError(domain: "test", code: 1))
-        
+
         let exp = expectation(description: "SFAuthenticationViewController presented")
         // Create a TestViewController, which will call our custom block when a child VC is presented.
         let hostVC = TestViewController(onPresentChild: { vc in
@@ -44,7 +44,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
         // Now make the fake PayWithLinkViewController and present it
         let vc = PayWithLinkViewController(intent: ._testValue(), elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
         hostVC.present(vc, animated: true, completion: {})
-        
+
         // Wait a bit: Attestation should be attempted, but immediately fail.
         await fulfillment(of: [exp], timeout: 2.0)
     }
@@ -53,16 +53,16 @@ class PayWithLinkViewControllerTests: XCTestCase {
 // This just exists for the above test, it calls a block when a VC is presented
 class TestViewController: UIViewController {
     let onPresentChild: (UIViewController) -> Void
-    
+
     init(onPresentChild: @escaping (UIViewController) -> Void) {
         self.onPresentChild = onPresentChild
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         onPresentChild(viewControllerToPresent)
         super.present(viewControllerToPresent, animated: flag, completion: completion)
