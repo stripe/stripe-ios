@@ -96,8 +96,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 session: nil,
                                 publishableKey: nil,
                                 apiClient: self.apiClient,
-                                useMobileEndpoints: self.useMobileEndpoints,
-                                elementsSessionID: self.sessionID
+                                useMobileEndpoints: self.useMobileEndpoints
                             )
                         ))
                     } else {
