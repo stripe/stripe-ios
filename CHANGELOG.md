@@ -1,4 +1,7 @@
 ## 24.3.0 2025-01-06
+### Embedded Payment Element
+* [Added] Embedded Payment Element is now in private beta.
+
 ### PaymentSheet
 * [Fixed] Fixed a bug where saved payment methods could appear out of order if you have multiple types (e.g. card and bank).
 * [Fixed] Fixed a bug where deferred PaymentIntents would fail to validate when capture_method = automatic_async ([#4329](https://github.com/stripe/stripe-ios/issues/4329))
