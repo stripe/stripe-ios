@@ -30,7 +30,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         }
     }
 
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+    func payWithLinkWebControllerDidCancel() {
     }
 }
 
