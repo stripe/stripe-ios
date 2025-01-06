@@ -22,7 +22,7 @@ protocol PayWithLinkWebControllerDelegate: AnyObject {
         with paymentOption: PaymentOption
     )
 
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController)
+    func payWithLinkWebControllerDidCancel()
 
 }
 
@@ -161,12 +161,12 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         // If the user closed the popup, remove any Link account state.
         // Otherwise, a user would have to *log in* if they wanted to log out.
         // We don't have any account state at the moment. But if we did, we'd clear it here.
-        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
+        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel()
     }
 
     private func canceledWithError(error: Error?, returnURL: URL?) {
         STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, returnURL: returnURL, sessionType: self.context.elementsSession.linkPopupWebviewOption)
-        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
+        self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel()
     }
 
     private func handleWebAuthenticationSessionCompletion(returnURL: URL?, error: Error?) {
@@ -193,7 +193,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             case .logout:
                 // Delete the account information
                 STPAnalyticsClient.sharedClient.logLinkPopupLogout(sessionType: self.context.elementsSession.linkPopupWebviewOption)
-                self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel(self)
+                self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel()
             }
         } catch {
             self.canceledWithError(error: error, returnURL: returnURL)
