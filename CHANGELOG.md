@@ -1,3 +1,8 @@
+## X.Y.Z
+
+## PaymentSheet
+* [Fixed] Fixed a bug where deferred PaymentIntents would fail to validate when capture_method = automatic_async ([#4329](https://github.com/stripe/stripe-ios/issues/4329))
+
 ## 24.2.0 2024-12-19
 
 ### Connect
