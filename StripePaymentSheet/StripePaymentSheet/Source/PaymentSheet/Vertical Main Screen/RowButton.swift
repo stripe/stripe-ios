@@ -263,8 +263,6 @@ class RowButton: UIView {
         // Add tap gesture
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         gestureRecognizer.delegate = self
-//        gestureRecognizer.requiresExclusiveTouchType = true
-        gestureRecognizer.cancelsTouchesInView = true
         shadowRoundedRect.addGestureRecognizer(gestureRecognizer)
 
         // Add long press gesture if we should animate on press
