@@ -10,7 +10,7 @@ import XCTest
 @testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripeCore
-
+#if !os(visionOS)
 class PayWithLinkViewControllerTests: XCTestCase {
     @MainActor
     func testBailsToWebFlowWhenAttestationFails() async {
@@ -68,3 +68,4 @@ class TestViewController: UIViewController {
         super.present(viewControllerToPresent, animated: flag, completion: completion)
     }
 }
+#endif
