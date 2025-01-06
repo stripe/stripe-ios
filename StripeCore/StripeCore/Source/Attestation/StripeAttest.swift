@@ -44,6 +44,8 @@ import UIKit
                 // In testmode, we can provide a test assertion even if the real assertion fails
                 return await AssertionHandle(assertion: testmodeAssertion(), stripeAttest: self)
             } else {
+                // Clean up the continuation, as we're not returning it as an AssertionHandle
+                assertionCompleted()
                 throw error
             }
         }
@@ -422,7 +424,11 @@ extension StripeAttest {
 
         // Must be called by the caller when done with the assertion
         public func complete() {
-            guard let stripeAttest = stripeAttest else { return }
+            guard let stripeAttest = stripeAttest else {
+                stpAssertionFailure("StripeAttest was deallocated before the assertion was completed")
+                return
+            }
+
             Task {
                 await stripeAttest.assertionCompleted()
             }

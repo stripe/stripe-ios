@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您的金融卡的安全碼。";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "透過您的銀行首次支付時獲得 %@ 的返現。<terms>查看條款</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "透過您的銀行支付時獲得 %@ 的返現。<terms>查看條款</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 將代表 %@ 收取直接扣款，且確認我是該開戶人，且是唯一一個需要授權該帳戶扣款的人。";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "添加新卡";
 
 "New payment method" = "新支付方式";
+
+"No %@ promo" = "無 %@ 促銷";
 
 "Not %@?" = "不是 %@？";
 

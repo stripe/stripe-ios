@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "ご利用の銀行での初回支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "ご利用の銀行での支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "私は、Stripe が %@ の代理として口座引き落としによる回収を行うことを理解しています。また、私が当該口座を保有しており、この口座からの引き落としを承認すべき唯一の人間であることを認めます。";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "新しいカード";
 
 "New payment method" = "新しい決済手段";
+
+"No %@ promo" = "%@ のプロモーションはありません";
 
 "Not %@?" = "%@ ではありませんか？";
 

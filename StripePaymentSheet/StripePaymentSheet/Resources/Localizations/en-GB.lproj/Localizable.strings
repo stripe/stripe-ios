@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Get %@ back when you pay with your bank. <terms>See terms</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "New card";
 
 "New payment method" = "New payment method";
+
+"No %@ promo" = "No %@ promo";
 
 "Not %@?" = "Not %@?";
 

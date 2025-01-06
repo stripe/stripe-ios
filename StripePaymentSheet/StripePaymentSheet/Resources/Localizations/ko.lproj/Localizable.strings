@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "은행으로 처음 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "은행으로 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "새 카드";
 
 "New payment method" = "새 결제 방식";
+
+"No %@ promo" = "%@ 프로모션 없음";
 
 "Not %@?" = "%@ 님이 아니십니까?";
 
