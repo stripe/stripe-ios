@@ -97,7 +97,7 @@ extension PayWithLinkViewController {
         @objc
         func onCloseButtonTapped(_ sender: UIButton) {
             if context.shouldFinishOnClose {
-                coordinator?.finish(withResult: .canceled)
+                coordinator?.finish(withResult: .canceled, deferredIntentConfirmationType: nil)
             } else {
                 coordinator?.cancel()
             }
