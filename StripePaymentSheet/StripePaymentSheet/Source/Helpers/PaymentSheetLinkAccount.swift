@@ -47,6 +47,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         // Inline, email-prefilled
         case implied_v0_0 = "implied_consent_withspm_mobile_v0_0"
 
+        // Clicked button in separate Link sheet
+        case clicked_button_mobile_v1 = "clicked_button_mobile_v1"
     }
 
     // Dependencies

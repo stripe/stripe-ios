@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "Għal raġunijiet ta' sigurtà, jekk jogħġbok erġa' daħħal il-kodiċi tas-sigurtà tal-karta tiegħek.";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Ikseb %@ lura meta tħallas bil-bank għall-ewwel darba. <terms>Aqra r-regoli</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Ikseb %@ lura meta tħallas bil-bank. <terms>Aqra r-regoli</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jiena nifhem li Stripe se tkun qed tiġbor id-Debiti Diretti f'isem %@ u nikkonferma li jiena d-detentur tal-kont u l-unika persuna meħtieġa biex tawtorizza d-debiti minn dan il-kont.";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "Karta ġdida";
 
 "New payment method" = "Metodu tal-pagament ġdid";
+
+"No %@ promo" = "L-ebda offerta %@";
 
 "Not %@?" = "M'intix %@?";
 

@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "For sikkerhet, vær venleg å leggje inn sikkerhetskoden til kortet ditt.";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler for første gong med banken din. <terms>Sjå vilkår</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler for første gong med banken din. <terms>Sjå vilkår</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Eg forstår at Stripe samlar inn direkte debet på vegne av %@ og stadfestar at eg er kontoinnehavar og den einaste personen som skal autorisere debet frå denne kontoen.";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "Nytt kort";
 
 "New payment method" = "Ny betalingsmåte";
+
+"No %@ promo" = "Ingen %@-kampanje";
 
 "Not %@?" = "Ikkje %@?";
 
