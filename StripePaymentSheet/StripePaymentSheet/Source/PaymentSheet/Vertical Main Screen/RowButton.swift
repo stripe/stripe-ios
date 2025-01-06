@@ -263,6 +263,8 @@ class RowButton: UIView {
         // Add tap gesture
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         gestureRecognizer.delegate = self
+//        gestureRecognizer.requiresExclusiveTouchType = true
+        gestureRecognizer.cancelsTouchesInView = true
         shadowRoundedRect.addGestureRecognizer(gestureRecognizer)
 
         // Add long press gesture if we should animate on press
@@ -395,6 +397,19 @@ extension RowButton: UIGestureRecognizerDelegate {
         }
         
         return true
+    }
+    
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        // If the scroll view’s pan gesture begins, we want to fail the button’s tap,
+        // so the user can scroll without accidentally tapping.
+        if otherGestureRecognizer is UIPanGestureRecognizer {
+            return true
+        }
+        
+        return false
     }
 }
 
