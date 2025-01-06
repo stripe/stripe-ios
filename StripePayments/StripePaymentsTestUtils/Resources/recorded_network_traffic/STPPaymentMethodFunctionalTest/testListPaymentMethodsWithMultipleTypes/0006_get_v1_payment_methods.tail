@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RSXxKpVgP2bvkz&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RXPmG7JszA2qaM&type=card$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=3ki8L8UWeNb3e0mnMhkTa0Y9sK0Brg7sAKkzZkHuxQxp9q3KCSKQD-to9fcLkezRA3vVnNPW1Q%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=SmHpuNcDTJPfIsju_hILdXN1YWmaRIAV5FvZc0tQcqaklK1ZwWqxXwUggMmq36B3_xg_5CH9jg%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_8aE62Y7Mug2yJk
+request-id: req_rsrmXlmQjGAKfe
 Content-Length: 1314
 Vary: Origin
-Date: Tue, 24 Dec 2024 18:29:37 GMT
+Date: Mon, 06 Jan 2025 18:23:04 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -31,7 +31,7 @@ x-content-type-options: nosniff
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1QZcrLFY0qyl6XeW7XICILtF",
+      "id" : "pm_1QeKx8FY0qyl6XeW5w2KcqE6",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -69,14 +69,14 @@ x-content-type-options: nosniff
         "wallet" : null,
         "display_brand" : "visa",
         "exp_month" : 1,
-        "exp_year" : 2025,
+        "exp_year" : 2040,
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1735064975,
+      "created" : 1736187782,
       "allow_redisplay" : "unspecified",
       "type" : "card",
-      "customer" : "cus_RSXxKpVgP2bvkz"
+      "customer" : "cus_RXPmG7JszA2qaM"
     }
   ],
   "url" : "\/v1\/payment_methods"

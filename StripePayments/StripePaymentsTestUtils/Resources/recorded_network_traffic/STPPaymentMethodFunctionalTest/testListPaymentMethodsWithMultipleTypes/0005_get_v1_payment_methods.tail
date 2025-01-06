@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RSXxKpVgP2bvkz&type=sepa_debit$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RXPmG7JszA2qaM&type=sepa_debit$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=mxh5Kh2XEt_EAuJD_yfTYeEvBw0vc0Htf8sMiFiIycyB4wLqAOuG9rG9KTKF4c4xjIcovwoSig%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=VNZN_F0mPeHqaLJJGKuRr2zkMury4Xtu2usOlk16dJo6RpbIVzBGwE3ZAh06Q9BUMoZDk6IiQw%3D%3D
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_ZdgJGPGm1LOi6u
+request-id: req_3WGLtk7EB7q4sp
 Content-Length: 988
 Vary: Origin
-Date: Tue, 24 Dec 2024 18:29:37 GMT
+Date: Mon, 06 Jan 2025 18:23:04 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -42,7 +42,7 @@ x-content-type-options: nosniff
         },
         "branch_code" : ""
       },
-      "id" : "pm_1QZcrMFY0qyl6XeWH4a2Rsfm",
+      "id" : "pm_1QeKx9FY0qyl6XeW4XW2ZgrC",
       "billing_details" : {
         "email" : "email@email.com",
         "phone" : "555-555-5555",
@@ -57,10 +57,10 @@ x-content-type-options: nosniff
         }
       },
       "livemode" : false,
-      "created" : 1735064976,
+      "created" : 1736187783,
       "allow_redisplay" : "unspecified",
       "type" : "sepa_debit",
-      "customer" : "cus_RSXxKpVgP2bvkz"
+      "customer" : "cus_RXPmG7JszA2qaM"
     }
   ],
   "url" : "\/v1\/payment_methods"
