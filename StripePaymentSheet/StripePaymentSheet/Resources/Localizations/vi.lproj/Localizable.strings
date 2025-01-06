@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán lần đầu tiên với ngân hàng. <terms>Xem điều khoản</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán bằng ngân hàng.<terms>Xem điều khoản</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "Thẻ mới";
 
 "New payment method" = "Phương thức thanh toán mới";
+
+"No %@ promo" = "Không có khuyến mại %@";
 
 "Not %@?" = "Không phải %@?";
 
