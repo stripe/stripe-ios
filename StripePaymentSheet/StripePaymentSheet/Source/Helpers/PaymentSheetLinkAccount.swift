@@ -54,8 +54,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     let cookieStore: LinkCookieStore
 
     let useMobileEndpoints: Bool
-    // The session ID associated with the current Elements Session
-    let elementsSessionID: String
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
@@ -98,8 +96,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         publishableKey: String?,
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        useMobileEndpoints: Bool,
-        elementsSessionID: String
+        useMobileEndpoints: Bool
     ) {
         self.email = email
         self.currentSession = session
@@ -107,7 +104,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
-        self.elementsSessionID = elementsSessionID
     }
 
     func signUp(
