@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "Z dôvodu bezpečnosti znovu zadajte bezpečnostný kód vašej karty.";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Získajte %@ späť pri prvej platbe so svojou bankou. <terms>Pozrite si podmienky</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Získajte %@ späť pri platbe prostredníctvom vašej banky. <terms>Pozrite si podmienky</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumiem, že spoločnosť Stripe bude inkasovať priame inkasá v mene spoločnosti %@ a potvrdzujem, že som majiteľom účtu a som jediná osoba, ktorá musí autorizovať inkasá z tohto účtu.";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "Nová karta";
 
 "New payment method" = "Nový spôsob platby";
+
+"No %@ promo" = "Bez %@ propagácie";
 
 "Not %@?" = "E-mailová adresa %@ nie je vaša?";
 

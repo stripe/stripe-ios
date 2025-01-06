@@ -214,8 +214,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // Check that the test Customer has the expected cards
         let checkCustomerExpectation = expectation(description: "Check test customer")
         apiClient.listPaymentMethods(forCustomer: testCustomerID, using: customerAndEphemeralKey.ephemeralKeySecret) { paymentMethods, _ in
-            XCTAssertEqual(paymentMethods?.first?.stripeId, savedApplePayCard)
-            XCTAssertEqual(paymentMethods?.last?.stripeId, savedNonApplePayCard)
+            XCTAssertEqual(paymentMethods?.last?.stripeId, savedApplePayCard)
+            XCTAssertEqual(paymentMethods?.first?.stripeId, savedNonApplePayCard)
             checkCustomerExpectation.fulfill()
         }
         await fulfillment(of: [checkCustomerExpectation])
@@ -232,7 +232,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             case .success(let loadResult):
                 // ...check that it only loads the one normal saved card
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 2)
-                XCTAssertEqual(loadResult.savedPaymentMethods.map(\.stripeId), [savedApplePayCard, savedNonApplePayCard])
+                XCTAssertEqual(loadResult.savedPaymentMethods.map(\.stripeId), [savedNonApplePayCard, savedApplePayCard])
             case .failure:
                 XCTFail()
             }
@@ -260,8 +260,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // Check that the test Customer has the expected cards
         let checkCustomerExpectation = expectation(description: "Check test customer")
         apiClient.listPaymentMethods(forCustomer: testCustomerID, using: customerAndEphemeralKey.ephemeralKeySecret) { paymentMethods, _ in
-            XCTAssertEqual(paymentMethods?.first?.stripeId, savedApplePayCard)
-            XCTAssertEqual(paymentMethods?.last?.stripeId, savedNonApplePayCard)
+            XCTAssertEqual(paymentMethods?.last?.stripeId, savedApplePayCard)
+            XCTAssertEqual(paymentMethods?.first?.stripeId, savedNonApplePayCard)
             checkCustomerExpectation.fulfill()
         }
         await fulfillment(of: [checkCustomerExpectation])
@@ -385,7 +385,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // Check that the test Customer has the expected cards
         let checkCustomerExpectation = expectation(description: "Check test customer")
         apiClient.listPaymentMethods(forCustomer: testCustomerID, using: customerAndEphemeralKey.ephemeralKeySecret) { paymentMethods, _ in
-            XCTAssertEqual(paymentMethods?.last?.stripeId, savedCard)
+            XCTAssertEqual(paymentMethods?.first?.stripeId, savedCard)
             checkCustomerExpectation.fulfill()
         }
         await fulfillment(of: [checkCustomerExpectation])

@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "Para sa seguridad, pakilagay muli ang security code ng iyong kard.";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Bawiin ang %@ kapag nagbayad ka sa unang pagkakataon gamit ang iyong bangko. <terms>Tingnan ang mga tuntunin</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Bawiin ang %@ kapag nagbayad ka gamit ang iyong bangko. <terms>Tingnan ang mga tuntunin</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Nauunawaan ko na mangongolekta ang Stripe ng Direct Debits sa ngalan ng  %@ at kinukumpirma ko na ako ang may-ari ng account at tanging taong kinakailangan na magpahintulot sa mga debit mula sa account na ito..";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "Bagong kard";
 
 "New payment method" = "Bagong paraan ng pagbabayad";
+
+"No %@ promo" = "Walang %@ promo";
 
 "Not %@?" = "Hindi %@?";
 
