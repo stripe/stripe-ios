@@ -108,6 +108,10 @@
 
 "For security, please re-enter your card’s security code." = "Geben Sie aus Sicherheitsgründen bitte den Sicherheitscode Ihrer Karte erneut ein.";
 
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Sie erhalten %@ zurück, wenn Sie zum ersten Mal per Banküberweisung bezahlen. <terms>Siehe Konditionen</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Sie erhalten %@ zurück, wenn Sie per Banküberweisung bezahlen. <terms>Siehe Konditionen</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ich verstehe, dass Stripe im Namen von %@ Lastschriften einzieht und bestätige, dass ich der Kontoinhaber/die Kontoinhaberin und die einzige Person bin, die zur Autorisierung von Lastschriften von diesem Konto erforderlich ist.";
 
 "IBAN" = "IBAN";
@@ -133,6 +137,8 @@
 "New card" = "Neue Karte";
 
 "New payment method" = "Neue Zahlungsmethode";
+
+"No %@ promo" = "Keine %@-Aktionsangebote";
 
 "Not %@?" = "Nicht %@?";
 
