@@ -173,6 +173,20 @@ final class PayWithLinkViewController: UINavigationController {
         // the gesture when the navigation bar is hidden. Use a custom delegate
         // to restore the functionality.
         interactivePopGestureRecognizer?.delegate = self
+
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+    }
+
+    deinit {
+        LinkAccountContext.shared.removeObserver(self)
+    }
+
+    @objc
+    func onAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            let linkAccount = notification.object as? PaymentSheetLinkAccount
+            linkAccount?.paymentSheetLinkAccountDelegate = self
+        }
     }
 
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {

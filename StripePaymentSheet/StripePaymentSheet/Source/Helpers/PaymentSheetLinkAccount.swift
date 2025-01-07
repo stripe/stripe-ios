@@ -236,7 +236,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     func createLinkAccountSession(
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 completion(
@@ -250,8 +250,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
 
             session.createLinkAccountSession(
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
+                consumerAccountPublishableKey: self.publishableKey,
+                completion: completionRetryingOnAuthErrors
             )
         }
     }
@@ -260,7 +260,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 completion(
@@ -271,9 +271,9 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
             session.createPaymentDetails(
                 paymentMethodParams: paymentMethodParams,
-                with: apiClient,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
+                with: self.apiClient,
+                consumerAccountPublishableKey: self.publishableKey,
+                completion: completionRetryingOnAuthErrors
             )
         }
     }
@@ -282,17 +282,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         linkedAccountId: String,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { [publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
-                completion(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
+                completionRetryingOnAuthErrors(.failure(PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session")))
                 return
             }
 
             session.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
+                consumerAccountPublishableKey: self.publishableKey,
+                completion: completionRetryingOnAuthErrors
             )
         }
     }
@@ -300,7 +300,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     func listPaymentDetails(
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
@@ -308,15 +308,15 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
 
             session.listPaymentDetails(
-                with: apiClient,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
+                with: self.apiClient,
+                consumerAccountPublishableKey: self.publishableKey,
+                completion: completionRetryingOnAuthErrors
             )
         }
     }
 
     func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 return completion(
@@ -329,10 +329,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
 
             session.deletePaymentDetails(
-                with: apiClient,
+                with: self.apiClient,
                 id: id,
-                consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
+                consumerAccountPublishableKey: self.publishableKey,
+                completion: completionRetryingOnAuthErrors
             )
         }
     }
@@ -342,7 +342,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         updateParams: UpdatePaymentDetailsParams,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 return completion(
@@ -359,13 +359,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 id: id,
                 updateParams: updateParams,
                 consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
+                completion: completionRetryingOnAuthErrors
             )
         }
     }
 
     func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionWrapper in
+        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 return completion(
@@ -380,7 +380,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 id: id,
                 cvc: cvc,
                 consumerAccountPublishableKey: publishableKey,
-                completion: completionWrapper
+                completion: completionRetryingOnAuthErrors
             )
         }
     }
@@ -422,6 +422,8 @@ private extension PaymentSheetLinkAccount {
 
     typealias CompletionBlock<T> = (Result<T, Error>) -> Void
 
+    /// Attempts attempts a request using apiCall. If the session
+    /// is invalid, refresh it and re-attempt the apiCall.
     func retryingOnAuthError<T>(
         completion: @escaping CompletionBlock<T>,
         apiCall: @escaping (@escaping CompletionBlock<T>) -> Void
