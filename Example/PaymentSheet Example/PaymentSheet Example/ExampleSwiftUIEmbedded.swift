@@ -8,6 +8,10 @@ class EmbeddedPaymentViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var paymentResult: PaymentSheetResult?
 
+    @Published var showAlert = false
+    @Published var alertTitle = ""
+    @Published var alertMessage = ""
+    
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
 
     @MainActor
@@ -58,12 +62,17 @@ class EmbeddedPaymentViewModel: ObservableObject {
 
         switch result {
         case .completed:
-            print("Payment completed!")
+            alertTitle = "Success"
+            alertMessage = "Payment completed!"
         case .failed(let error):
-            print("Payment failed with error: \(error)")
+            alertTitle = "Error"
+            alertMessage = "Payment failed with error: \(error.localizedDescription)"
         case .canceled:
-            print("Payment canceled by user.")
+            alertTitle = "Cancelled"
+            alertMessage = "Payment canceled by user."
         }
+
+        showAlert = true
     }
 
     private func fetchPaymentIntentFromBackend() async throws -> BackendResponse {
@@ -209,6 +218,20 @@ struct MyEmbeddedCheckoutView: View {
                     EmbeddedPaymentElementView(viewModel: viewModel, height: $embeddedViewHeight)
                         .frame(height: embeddedViewHeight)
                     
+                    if let paymentOption = viewModel.embeddedPaymentElement?.paymentOption {
+                        HStack {
+                            Image(uiImage: paymentOption.image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 30)
+                            Text(paymentOption.label)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                    }
+                    
                     // Confirm Payment button
                     Button {
                         Task {
@@ -243,6 +266,13 @@ struct MyEmbeddedCheckoutView: View {
                 Task {
                     await viewModel.preparePaymentSheet()
                 }
+            }
+            .alert(isPresented: $viewModel.showAlert) {
+                Alert(
+                    title: Text(viewModel.alertTitle),
+                    message: Text(viewModel.alertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
             }
         }
     }
