@@ -41,4 +41,7 @@ class ViewController: UIViewController {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomerSheet())
     }
 
+    @IBSegueAction func showSwiftUIEmbedded(_ coder: NSCoder) -> UIViewController? {
+        return UIHostingController(coder: coder, rootView: ExampleSwiftUIEmbedded())
+    }
 }
