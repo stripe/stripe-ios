@@ -3,7 +3,6 @@ import Stripe
 @_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 
 // MARK: - ViewModel
-
 class EmbeddedPaymentViewModel: ObservableObject {
     @Published var embeddedPaymentElement: EmbeddedPaymentElement?
     @Published var isLoading = false
@@ -32,8 +31,8 @@ class EmbeddedPaymentViewModel: ObservableObject {
             )
             configuration.returnURL = "payments-example://stripe-redirect"
 
-            let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD")) { [weak self] paymentMethod, customer, intentCreationCallback in
-                // self?.handleConfirm(intentCreationCallback)
+            let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 973, currency: "EUR")) { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+                intentCreationCallback(.success(response.paymentIntentClientSecret))
             }
 
             let element = try await EmbeddedPaymentElement.create(
