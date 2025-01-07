@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 #if !os(visionOS)
 class PayWithLinkViewControllerTests: XCTestCase {
-    let mockPWLVCDelegate = MockPWLVCDelegate()
+    var paymentSheet: PaymentSheet!
 
     @MainActor
     func testBailsToWebFlowWhenAttestationFails() async {
@@ -24,6 +24,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
         let mockStripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: apiClient)
         apiClient.stripeAttest = mockStripeAttest
         config.apiClient = apiClient
+        self.paymentSheet = PaymentSheet(paymentIntentClientSecret: "pi_secret_123", configuration: config)
 
         // Always fail attestation, forcing us back to the web flow
         await mockAttestService.setShouldFailKeygenWithError(NSError(domain: "test", code: 1))
@@ -45,7 +46,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
 
         // Now make the fake PayWithLinkViewController and present it
         let vc = PayWithLinkViewController(intent: ._testValue(), elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
-        vc.payWithLinkDelegate = mockPWLVCDelegate
+        vc.payWithLinkDelegate = paymentSheet
         hostVC.present(vc, animated: true, completion: {})
 
         // Wait a bit: Attestation should be attempted, but immediately fail.
@@ -70,24 +71,5 @@ class TestViewController: UIViewController {
         onPresentChild(viewControllerToPresent)
         super.present(viewControllerToPresent, animated: flag, completion: completion)
     }
-}
-
-class MockPWLVCDelegate: NSObject, PayWithLinkViewControllerDelegate, PayWithLinkWebControllerDelegate {
-    func payWithLinkWebControllerDidComplete(_ payWithLinkWebController: StripePaymentSheet.PayWithLinkWebController, intent: StripePaymentSheet.Intent, elementsSession: StripePaymentSheet.STPElementsSession, with paymentOption: StripePaymentSheet.PaymentOption) {
-    }
-
-    func payWithLinkWebControllerDidCancel() {
-    }
-
-    func payWithLinkViewControllerDidConfirm(_ payWithLinkViewController: StripePaymentSheet.PayWithLinkViewController, intent: StripePaymentSheet.Intent, elementsSession: StripePaymentSheet.STPElementsSession, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
-    {
-    }
-
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: StripePaymentSheet.PayWithLinkViewController) {
-    }
-
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: StripePaymentSheet.PayWithLinkViewController, result: StripePaymentSheet.PaymentSheetResult) {
-    }
-
 }
 #endif
