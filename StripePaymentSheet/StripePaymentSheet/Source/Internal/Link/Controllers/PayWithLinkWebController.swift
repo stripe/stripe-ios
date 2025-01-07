@@ -80,7 +80,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         ///   - elementsSession: STPElementsSession.
         ///   - configuration: PaymentElementConfiguration configuration.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
-        ///   - alwaysUseEphemeralSession: If `true`, always use an ephemeral session.
+        ///   - alwaysUseEphemeralSession: If `true`, always use an ephemeral session. If `false`, we'll follow our existing ephemeral session logic.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
