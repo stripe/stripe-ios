@@ -396,6 +396,19 @@ extension RowButton: UIGestureRecognizerDelegate {
         
         return true
     }
+    
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        // If the scroll view’s pan gesture begins, we want to fail the button’s tap,
+        // so the user can scroll without accidentally tapping.
+        if otherGestureRecognizer is UIPanGestureRecognizer {
+            return true
+        }
+        
+        return false
+    }
 }
 
 // MARK: - Helpers
