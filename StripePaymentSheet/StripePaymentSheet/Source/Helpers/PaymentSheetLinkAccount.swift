@@ -462,7 +462,12 @@ private extension PaymentSheetLinkAccount {
     func refreshSession(
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        paymentSheetLinkAccountDelegate?.refreshLinkSession(completion: completion)
+        guard let paymentSheetLinkAccountDelegate else {
+            stpAssertionFailure()
+            completion(.failure(PaymentSheetError.unknown(debugDescription: "Attempting to refresh the Link token, but the paymentSheetLinkAccount delegate is nil")))
+            return
+        }
+        paymentSheetLinkAccountDelegate.refreshLinkSession(completion: completion)
     }
 
 }

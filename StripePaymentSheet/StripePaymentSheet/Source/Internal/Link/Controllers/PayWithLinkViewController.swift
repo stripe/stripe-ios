@@ -103,11 +103,7 @@ final class PayWithLinkViewController: UINavigationController {
     private var accountContext: LinkAccountContext = .shared
 
     private var linkAccount: PaymentSheetLinkAccount? {
-        get {
-            let account = accountContext.account
-            account?.paymentSheetLinkAccountDelegate = self
-            return account
-        }
+        get { accountContext.account }
         set { accountContext.account = newValue }
     }
 
