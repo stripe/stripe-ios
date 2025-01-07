@@ -142,24 +142,23 @@ class ConsentViewController: UIViewController {
         )
 
         footerView.setIsLoading(true)
-        dataSource.markConsentAcquired()
-            .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let manifest):
-                    self.delegate?.consentViewController(self, didConsentWithManifest: manifest)
-                case .failure(let error):
-                    // we display no errors on failure
-                    self.dataSource
-                        .analyticsClient
-                        .logUnexpectedError(
-                            error,
-                            errorName: "ConsentAcquiredError",
-                            pane: .consent
-                        )
-                }
-                self.footerView.setIsLoading(false)
+        Task { @MainActor in
+            do {
+                let manifest = try await dataSource.markConsentAcquired()
+                self.delegate?.consentViewController(self, didConsentWithManifest: manifest)
+            } catch {
+                // we display no errors on failure
+                self.dataSource
+                    .analyticsClient
+                    .logUnexpectedError(
+                        error,
+                        errorName: "ConsentAcquiredError",
+                        pane: .consent
+                    )
             }
+
+            self.footerView.setIsLoading(false)
+        }
     }
 
     private func didSelectURLInTextFromBackend(_ url: URL) {

@@ -14,7 +14,7 @@ protocol ConsentDataSource: AnyObject {
     var merchantLogo: [String]? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
-    func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest>
+    func markConsentAcquired() async throws -> FinancialConnectionsSessionManifest
 }
 
 final class ConsentDataSourceImplementation: ConsentDataSource {
@@ -22,7 +22,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
     let manifest: FinancialConnectionsSessionManifest
     let consent: FinancialConnectionsConsent
     let merchantLogo: [String]?
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: FinancialConnectionsAsyncAPIClient
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
@@ -30,7 +30,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         manifest: FinancialConnectionsSessionManifest,
         consent: FinancialConnectionsConsent,
         merchantLogo: [String]?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: FinancialConnectionsAsyncAPIClient,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
@@ -42,7 +42,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         self.analyticsClient = analyticsClient
     }
 
-    func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest> {
-        return apiClient.markConsentAcquired(clientSecret: clientSecret)
+    func markConsentAcquired() async throws -> FinancialConnectionsSessionManifest {
+        try await apiClient.markConsentAcquired(clientSecret: clientSecret)
     }
 }

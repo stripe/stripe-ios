@@ -16,6 +16,7 @@ protocol NativeFlowDataManager: AnyObject {
     var consentPaneModel: FinancialConnectionsConsent? { get }
     var accountPickerPane: FinancialConnectionsAccountPickerPane? { get }
     var apiClient: FinancialConnectionsAPIClient { get }
+    var asyncApiClient: FinancialConnectionsAsyncAPIClient { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var elementsSessionContext: ElementsSessionContext? { get }
@@ -96,6 +97,10 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
     var customSuccessPaneCaption: String?
     var customSuccessPaneSubCaption: String?
+
+    var asyncApiClient: FinancialConnectionsAsyncAPIClient {
+        FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+    }
 
     var consumerSession: ConsumerSessionData? {
         didSet {

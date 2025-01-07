@@ -10,7 +10,7 @@ import Foundation
 
 final class FinancialConnectionsAsyncAPIClient {
     let apiClient: FinancialConnectionsAPIClient
-    
+
     init(apiClient: FinancialConnectionsAPIClient) {
         self.apiClient = apiClient
     }
@@ -207,7 +207,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             }
         }
     }
-    
+
     func fetchFinancialConnectionsAccounts(
         clientSecret: String,
         startingAfterAccountId: String?
