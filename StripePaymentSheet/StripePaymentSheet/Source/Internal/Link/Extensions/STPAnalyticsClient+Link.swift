@@ -90,7 +90,7 @@ extension STPAnalyticsClient {
     }
 
     func logLinkBailedToWebFlow() {
-        self.logPaymentSheetEvent(event: .linkBailedToWebFlow)
+        self.logPaymentSheetEvent(event: .linkNativeBailed)
     }
 
     // MARK: - popup
