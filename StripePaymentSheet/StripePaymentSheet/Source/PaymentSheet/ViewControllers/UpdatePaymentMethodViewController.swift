@@ -293,11 +293,11 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
 
 // MARK: SavedPaymentMethodFormFactoryDelegate
 extension UpdatePaymentMethodViewController: SavedPaymentMethodFormFactoryDelegate {
-    func didUpdate(_: Element, didChange: Bool) {
+    func didUpdate(_: Element, didUpdateCardBrand: Bool) {
         latestError = nil // clear error on new input
         switch viewModel.paymentMethod.type {
         case .card:
-            updateCardBrand = didChange
+            updateCardBrand = didUpdateCardBrand
             updateButton.update(state: updateCardBrand || updateDefaultPaymentMethod ? .enabled : .disabled)
         default:
             break
