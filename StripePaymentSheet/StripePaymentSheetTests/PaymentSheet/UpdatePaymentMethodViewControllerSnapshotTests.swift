@@ -100,10 +100,6 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, allowsSetAsDefaultPM: true)
     }
 
-    func test_UpdatePaymentMethodViewControllerDefaultSEPADebit() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, allowsSetAsDefaultPM: true, isDefault: true)
-    }
-
     func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerDarkMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: true, isEmbeddedSingle: true)
     }

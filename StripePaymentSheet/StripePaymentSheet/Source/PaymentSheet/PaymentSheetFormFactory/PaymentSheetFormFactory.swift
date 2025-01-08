@@ -360,10 +360,6 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func renderDefaultCheckbox(element: FormElement) {
-        element.toggleElements(<#T##[Element]#>, hidden: <#T##Bool#>, animated: <#T##Bool#>)
-    }
-
     func makeDefaultCheckbox(
         didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
