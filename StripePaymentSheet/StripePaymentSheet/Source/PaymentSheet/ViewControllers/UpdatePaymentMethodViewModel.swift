@@ -14,6 +14,7 @@ import UIKit
 
 class UpdatePaymentMethodViewModel {
     static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+    static let supportedDefaultPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
 
     let paymentMethod: STPPaymentMethod
     let appearance: PaymentSheet.Appearance

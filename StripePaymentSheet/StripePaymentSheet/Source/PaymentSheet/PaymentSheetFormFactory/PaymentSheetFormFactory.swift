@@ -360,6 +360,24 @@ extension PaymentSheetFormFactory {
         }
     }
 
+    func renderDefaultCheckbox(element: FormElement) {
+        element.toggleElements(<#T##[Element]#>, hidden: <#T##Bool#>, animated: <#T##Bool#>)
+    }
+
+    func makeDefaultCheckbox(
+        didToggle: ((Bool) -> Void)? = nil
+    ) -> PaymentMethodElementWrapper<CheckboxElement> {
+        let element = CheckboxElement(
+            theme: configuration.appearance.asElementsTheme,
+            label: String.Localized.set_as_default_payment_method,
+            isSelectedByDefault: true,
+            didToggle: didToggle
+        )
+        return PaymentMethodElementWrapper(element) { _, params in
+            return params
+        }
+    }
+
     func makeBillingAddressSection(
         collectionMode: AddressSectionElement.CollectionMode = .all(),
         countries: [String]? = nil,
