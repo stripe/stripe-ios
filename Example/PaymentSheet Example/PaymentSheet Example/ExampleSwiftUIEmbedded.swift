@@ -35,7 +35,7 @@ class EmbeddedPaymentViewModel: ObservableObject {
             )
             configuration.returnURL = "payments-example://stripe-redirect"
 
-            let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 973, currency: "USD", setupFutureUsage: .onSession)) { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+            let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 973, currency: "EUR")) { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
                 intentCreationCallback(.success(response.paymentIntentClientSecret))
             }
 
@@ -111,6 +111,7 @@ class EmbeddedPaymentViewModel: ObservableObject {
 // TOOD(porter) Make this public?
 struct EmbeddedPaymentElementView: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentViewModel
+    @Binding var height: CGFloat
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -128,7 +129,17 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
+        if let element = viewModel.embeddedPaymentElement,
+           !uiView.subviews.contains(element.view) {
+            attachEmbeddedPaymentElement(element, to: uiView, context: context)
+        }
+        
         viewModel.embeddedPaymentElement?.presentingViewController = context.coordinator.visibleViewController
+        
+        DispatchQueue.main.async {
+            let newHeight = uiView.systemLayoutSizeFitting(CGSize(width: uiView.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
+            self.height = newHeight
+        }
     }
 
     private func attachEmbeddedPaymentElement(
@@ -142,11 +153,16 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
         let paymentElementView = element.view
         containerView.addSubview(paymentElementView)
         paymentElementView.translatesAutoresizingMaskIntoConstraints = false
+        let bottomConstraint = paymentElementView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        bottomConstraint.priority = .defaultHigh
+        
         NSLayoutConstraint.activate([
             paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
             paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            bottomConstraint
         ])
+
     }
 
     class Coordinator: NSObject, EmbeddedPaymentElementDelegate {
@@ -157,7 +173,7 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
         }
 
         func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
-           // no-op
+            self.parent.viewModel.objectWillChange.send()
         }
 
         func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
@@ -186,68 +202,68 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
 
 // MARK: - SwiftUI Checkout View
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct MyEmbeddedCheckoutView: View {
     @StateObject var viewModel = EmbeddedPaymentViewModel()
+    @State private var embeddedViewHeight: CGFloat = 0
+    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack(spacing: 24) {
             if let _ = viewModel.embeddedPaymentElement {
-                EmbeddedPaymentElementView(viewModel: viewModel)
-                
-                // Payment option row
-                if let paymentOption = viewModel.embeddedPaymentElement?.paymentOption {
-                    HStack {
-                        Image(uiImage: paymentOption.image)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 30)
-                        Text(paymentOption.label)
-                        Spacer()
+                ScrollView {
+                    EmbeddedPaymentElementView(viewModel: viewModel, height: $embeddedViewHeight)
+                        .frame(height: embeddedViewHeight)
+                    
+                    // Payment option row
+                    if let paymentOption = viewModel.embeddedPaymentElement?.paymentOption {
+                        HStack {
+                            Image(uiImage: paymentOption.image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 30)
+                            Text(paymentOption.label)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
                     }
+                    // Confirm Payment button
+                    Button(action: {
+                        Task {
+                            await viewModel.confirmPayment()
+                        }
+                    }) {
+                        if viewModel.isLoading {
+                            ProgressView()
+                        } else {
+                            Text("Confirm Payment")
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .disabled(
+                        viewModel.isLoading
+                        || viewModel.embeddedPaymentElement?.paymentOption == nil
+                    )
                     .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)
-                }
-                
-                // Confirm Payment button
-                Button(action: {
-                    Task {
-                        await viewModel.confirmPayment()
-                    }
-                }) {
-                    if viewModel.isLoading {
-                        ProgressView()
-                    } else {
-                        Text("Confirm Payment")
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-                .disabled(
-                    viewModel.isLoading
-                    || viewModel.embeddedPaymentElement?.paymentOption == nil
-                )
-                .padding()
-                .foregroundColor(.white)
-                .background(viewModel.embeddedPaymentElement?.paymentOption == nil ? Color.gray : Color.blue)
-                .cornerRadius(6)
-                
-                // Test height change button
-                Button(action: {
-                    viewModel.embeddedPaymentElement?.testHeightChange()
-                }) {
-                    if viewModel.isLoading {
-                        ProgressView()
-                    } else {
+                    .foregroundColor(.white)
+                    .background(viewModel.embeddedPaymentElement?.paymentOption == nil ? Color.gray : Color.blue)
+                    .cornerRadius(6)
+                    
+                    // Test height change button
+                    Button(action: {
+                        viewModel.embeddedPaymentElement?.testHeightChange()
+                    }) {
                         Text("Test height change")
                             .frame(maxWidth: .infinity)
                     }
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(Color.orange)
+                    .cornerRadius(6)
                 }
-                .padding()
-                .foregroundColor(.white)
-                .background(Color.orange)
-                .cornerRadius(6)
-                
             } else {
                 if viewModel.isLoading {
                     ProgressView("Preparing Payment...")
@@ -266,7 +282,9 @@ struct MyEmbeddedCheckoutView: View {
             Alert(
                 title: Text(viewModel.alertTitle),
                 message: Text(viewModel.alertMessage),
-                dismissButton: .default(Text("OK"))
+                dismissButton: .default(Text("Ok"), action: {
+                    dismiss()
+                })
             )
         }
     }
@@ -274,7 +292,7 @@ struct MyEmbeddedCheckoutView: View {
 
 
 // MARK: - SwiftUI Preview
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct MyEmbeddedCheckoutView_Previews: PreviewProvider {
     static var previews: some View {
         MyEmbeddedCheckoutView()
