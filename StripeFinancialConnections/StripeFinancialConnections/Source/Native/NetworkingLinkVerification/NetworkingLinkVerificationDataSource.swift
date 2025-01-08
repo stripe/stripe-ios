@@ -24,7 +24,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
 
     let accountholderCustomerEmailAddress: String
     let manifest: FinancialConnectionsSessionManifest
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: FinancialConnectionsAPIClientFacade
     private let clientSecret: String
     private let returnURL: String?
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -39,7 +39,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
     init(
         accountholderCustomerEmailAddress: String,
         manifest: FinancialConnectionsSessionManifest,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: FinancialConnectionsAPIClientFacade,
         clientSecret: String,
         returnURL: String?,
         analyticsClient: FinancialConnectionsAnalyticsClient

@@ -664,7 +664,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             !linkedAccountIds.isEmpty
         {
             do {
-                let result = try await pollAccountNumbersForSelectedAccounts(linkedAccountIds: linkedAccountIds)
+                _ = try await pollAccountNumbersForSelectedAccounts(linkedAccountIds: linkedAccountIds)
                 let saveAccountsToLinkResult = try await saveAccountsToLinkHandler()
                 return saveAccountsToLinkResult
             } catch {

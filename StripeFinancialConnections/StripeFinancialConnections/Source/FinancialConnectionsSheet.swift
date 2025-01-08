@@ -219,7 +219,7 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        let financialConnectionsApiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
+        let financialConnectionsApiClient = FinancialConnectionsAPIClientFacade(apiClient: apiClient)
         hostController = HostController(
             apiClient: financialConnectionsApiClient,
             analyticsClientV1: analyticsClient,

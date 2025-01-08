@@ -65,7 +65,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private var lastOpenedNativeURL: URL?
 
     private let clientSecret: String
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: FinancialConnectionsAPIClientFacade
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
     private let returnURL: String?
@@ -92,7 +92,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 
     init(
         clientSecret: String,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: FinancialConnectionsAPIClientFacade,
         manifest: FinancialConnectionsSessionManifest,
         sessionFetcher: FinancialConnectionsSessionFetcher,
         returnURL: String?,
@@ -465,12 +465,12 @@ extension FinancialConnectionsWebFlowViewController {
         if isInstantDebits {
             parameters.append("return_payment_method=true")
             parameters.append("expand_payment_method=true")
-            
+
             if let incentiveEligibilitySession {
                 parameters.append("instantDebitsIncentive=true")
                 parameters.append("incentiveEligibilitySession=\(incentiveEligibilitySession.id)")
             }
-            
+
             if let linkMode {
                 parameters.append("link_mode=\(linkMode.rawValue)")
             }

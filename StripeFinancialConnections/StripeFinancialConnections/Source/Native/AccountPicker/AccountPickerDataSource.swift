@@ -39,7 +39,7 @@ protocol AccountPickerDataSource: AnyObject {
 
 final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
 
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: FinancialConnectionsAPIClientFacade
     private let clientSecret: String
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
     let authSession: FinancialConnectionsAuthSession
@@ -58,7 +58,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     weak var delegate: AccountPickerDataSourceDelegate?
 
     init(
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: FinancialConnectionsAPIClientFacade,
         clientSecret: String,
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
         authSession: FinancialConnectionsAuthSession,

@@ -22,7 +22,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
     let manifest: FinancialConnectionsSessionManifest
     let consent: FinancialConnectionsConsent
     let merchantLogo: [String]?
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: FinancialConnectionsAPIClientFacade
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
@@ -30,7 +30,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         manifest: FinancialConnectionsSessionManifest,
         consent: FinancialConnectionsConsent,
         merchantLogo: [String]?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: FinancialConnectionsAPIClientFacade,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {

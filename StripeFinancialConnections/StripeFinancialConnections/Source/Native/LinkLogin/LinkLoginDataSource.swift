@@ -35,7 +35,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
 
     private let clientSecret: String
     private let returnURL: String?
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     
     private var verified: Bool {
         manifest.appVerificationEnabled ?? false
@@ -46,7 +46,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest

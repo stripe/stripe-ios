@@ -21,7 +21,7 @@ protocol AttachLinkedPaymentAccountDataSource: AnyObject {
 
 final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaymentAccountDataSource {
 
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: FinancialConnectionsAPIClientFacade
     private let clientSecret: String
     let manifest: FinancialConnectionsSessionManifest
     let institution: FinancialConnectionsInstitution
@@ -32,7 +32,7 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
     let reduceManualEntryProminenceInErrors: Bool
 
     init(
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: FinancialConnectionsAPIClientFacade,
         clientSecret: String,
         manifest: FinancialConnectionsSessionManifest,
         institution: FinancialConnectionsInstitution,

@@ -29,7 +29,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     let institution: FinancialConnectionsInstitution
     let manifest: FinancialConnectionsSessionManifest
     let returnURL: String?
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: FinancialConnectionsAPIClientFacade
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     var disableAuthSessionRetrieval: Bool {
@@ -48,7 +48,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: FinancialConnectionsAPIClientFacade,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
