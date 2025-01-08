@@ -44,6 +44,7 @@ protocol PayWithLinkCoordinating: AnyObject {
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
     func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?)
     func logout(cancel: Bool)
+    func bailToWebFlow()
 }
 
 /// A view controller for paying with Link.
@@ -117,6 +118,8 @@ final class PayWithLinkViewController: UINavigationController {
         return rootViewController is LoaderViewController
     }
 
+    private var isBailingToWebFlow: Bool = false
+
     convenience init(
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -165,6 +168,18 @@ final class PayWithLinkViewController: UINavigationController {
         updateSupportedPaymentMethods()
         updateUI()
 
+        // Prewarm attestation if needed
+        Task {
+            // Attempt to attest
+            let canAttest = await context.configuration.apiClient.stripeAttest.prepareAttestation()
+            // If we can't attest and we're in livemode, let's bail and switch to the web controller
+            if !canAttest && !context.configuration.apiClient.isTestmode {
+                DispatchQueue.main.async {
+                    self.bailToWebFlow()
+                }
+                return
+            }
+        }
         // The internal delegate of the interactive pop gesture disables
         // the gesture when the navigation bar is hidden. Use a custom delegate
         // to restore the functionality.
@@ -353,6 +368,38 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         } else {
             updateUI()
         }
+    }
+
+    // Dismiss the native Link VC and launch into the web Link flow
+    func bailToWebFlow() {
+        guard !isBailingToWebFlow else {
+            // Multiple things can kick off bailing to web flow, but we only want to do it once
+            return
+        }
+        isBailingToWebFlow = true
+        // Make sure we're presenting over a VC
+        guard let presentingViewController else {
+            // No VC to present over, so don't bail
+            return
+        }
+        // Make sure we have an active delegate that responds to all Link delegate methods
+        guard let payWithLinkWebDelegate = payWithLinkDelegate as? PayWithLinkWebControllerDelegate else {
+            stpAssertionFailure("Delegate doesn't exist or can't be transformed into a PayWithLinkWebControllerDelegate")
+            return
+        }
+        // Set up a web controller with the same settings and swap to it
+        let payWithLinkVC = PayWithLinkWebController(
+            intent: context.intent,
+            elementsSession: context.elementsSession,
+            configuration: context.configuration,
+            alwaysUseEphemeralSession: true
+        )
+        payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
+        // Dismis ourselves...
+        self.dismiss(animated: false)
+        // ... and present the web controller. (This presentation will be handled by ASWebAuthenticationSession)
+        payWithLinkVC.present(over: presentingViewController)
+        STPAnalyticsClient.sharedClient.logLinkBailedToWebFlow()
     }
 
 }

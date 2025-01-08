@@ -428,6 +428,7 @@ extension StripeAttest {
                 stpAssertionFailure("StripeAttest was deallocated before the assertion was completed")
                 return
             }
+
             Task {
                 await stripeAttest.assertionCompleted()
             }

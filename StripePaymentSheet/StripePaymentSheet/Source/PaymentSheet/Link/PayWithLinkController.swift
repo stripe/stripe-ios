@@ -74,7 +74,7 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
         }
     }
 
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+    func payWithLinkWebControllerDidCancel() {
         completion?(.canceled, nil)
         selfRetainer = nil
     }

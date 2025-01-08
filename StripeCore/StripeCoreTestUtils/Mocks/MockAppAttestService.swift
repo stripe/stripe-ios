@@ -10,7 +10,7 @@ import DeviceCheck
 @testable @_spi(STP) import StripeCore
 import UIKit
 
-actor MockAppAttestService: AppAttestService {
+@_spi(STP) public actor MockAppAttestService: AppAttestService {
     @_spi(STP) public static var shared = MockAppAttestService()
 
     @_spi(STP) public nonisolated var isSupported: Bool {
