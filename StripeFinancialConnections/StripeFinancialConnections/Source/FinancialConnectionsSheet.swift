@@ -219,7 +219,11 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        let financialConnectionsApiClient = FinancialConnectionsAPIClientFacade(apiClient: apiClient)
+        let shouldUseAsyncClient = elementsSessionContext?.usesExperimentalAsyncAPIClient ?? false
+        let financialConnectionsApiClient = FinancialConnectionsAPIClientFacade(
+            apiClient: apiClient,
+            shouldUseAsyncClient: shouldUseAsyncClient
+        )
         hostController = HostController(
             apiClient: financialConnectionsApiClient,
             analyticsClientV1: analyticsClient,

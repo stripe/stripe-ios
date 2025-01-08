@@ -9,42 +9,35 @@ import Foundation
 @_spi(STP) import StripeCore
 
 final class FinancialConnectionsAPIClientFacade {
-    var shouldUseAsyncClient: Bool = false
-
     let backingAPIClient: STPAPIClient
-    private let legacyAPIClient: FinancialConnectionsAPIClient
-    private let asyncAPIClient: FinancialConnectionsAsyncAPIClient
-
-    var apiClient: any FinancialConnectionsAPI {
-        shouldUseAsyncClient ? asyncAPIClient : legacyAPIClient
-    }
+    var apiClient: any FinancialConnectionsAPI
 
     // Passthrough properties:
     var isLinkWithStripe: Bool = false {
         didSet {
-            legacyAPIClient.isLinkWithStripe = isLinkWithStripe
-            asyncAPIClient.isLinkWithStripe = isLinkWithStripe
+            apiClient.isLinkWithStripe = isLinkWithStripe
         }
     }
 
     var consumerPublishableKey: String? {
         didSet {
-            legacyAPIClient.consumerPublishableKey = consumerPublishableKey
-            asyncAPIClient.consumerPublishableKey = consumerPublishableKey
+            apiClient.consumerPublishableKey = consumerPublishableKey
         }
     }
 
     var consumerSession: ConsumerSessionData? {
         didSet {
-            legacyAPIClient.consumerSession = consumerSession
-            asyncAPIClient.consumerSession = consumerSession
+            apiClient.consumerSession = consumerSession
         }
     }
 
-    init(apiClient: STPAPIClient) {
+    init(apiClient: STPAPIClient, shouldUseAsyncClient: Bool) {
         self.backingAPIClient = apiClient
-        self.legacyAPIClient = FinancialConnectionsAPIClient(apiClient: apiClient)
-        self.asyncAPIClient = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        if shouldUseAsyncClient {
+            self.apiClient = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        } else {
+            self.apiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
+        }
     }
 }
 

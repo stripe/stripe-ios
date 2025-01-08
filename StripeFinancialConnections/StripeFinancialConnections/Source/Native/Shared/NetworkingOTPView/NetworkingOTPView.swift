@@ -261,7 +261,7 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
             connectionsMerchantName: nil,
             pane: .networkingLinkVerification,
             consumerSession: nil,
-            apiClient: FinancialConnectionsAPIClientFacade(apiClient: .shared),
+            apiClient: FinancialConnectionsAPIClientFacade(apiClient: .shared, shouldUseAsyncClient: false),
             clientSecret: "",
             analyticsClient: FinancialConnectionsAnalyticsClient(),
             isTestMode: false,

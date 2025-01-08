@@ -442,6 +442,22 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Experimental
+
+    private static let useAsyncAPIClientKey = "use_async_api_client"
+    var useAsyncAPIClient: Bool {
+        get {
+            if let useAsyncAPIClient = configurationStore[Self.useAsyncAPIClientKey] as? Bool {
+                return useAsyncAPIClient
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationStore[Self.useAsyncAPIClientKey] = newValue
+        }
+    }
+
     // MARK: - Update
 
     func updateConfigurationString(_ configurationString: String) {
@@ -547,6 +563,12 @@ final class PlaygroundConfiguration {
             self.liveEvents = liveEvents
         } else {
             self.liveEvents = false
+        }
+
+        if let useAsyncAPIClient = dictionary[Self.useAsyncAPIClientKey] as? Bool {
+            self.useAsyncAPIClient = useAsyncAPIClient
+        } else {
+            self.useAsyncAPIClient = false
         }
     }
 }

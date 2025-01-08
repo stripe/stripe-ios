@@ -126,6 +126,10 @@ protocol FinancialConnectionsAPI {
         customSuccessPaneMessage: String?
     )
 
+    var isLinkWithStripe: Bool { get set }
+    var consumerPublishableKey: String? { get set }
+    var consumerSession: ConsumerSessionData? { get set }
+
     func synchronize(
         clientSecret: String,
         returnURL: String?
