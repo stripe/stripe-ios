@@ -37,12 +37,12 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
     private let bankInfoView: BankAccountInfoView
-    private let checkboxElement: PaymentMethodElement?
+    private let checkboxElements: [PaymentMethodElement]
     private var savingAccount: BoolReference
     private let theme: ElementsAppearance
 
     private var linkedAccountElements: [Element] {
-        [bankInfoSectionElement, checkboxElement].compactMap { $0 }
+        [bankInfoSectionElement, checkboxElements.first].compactMap { $0 }
     }
 
     private static let links: [String: URL] = [
@@ -87,7 +87,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
-        checkboxElement: PaymentMethodElement?,
+        checkboxElements: [PaymentMethodElement],
         savingAccount: BoolReference,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
@@ -115,8 +115,8 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         self.bankInfoSectionElement = SectionElement(title: String.Localized.bank_account_sentence_case,
                                                      elements: [StaticElement(view: bankInfoView)], theme: theme)
         self.bankInfoSectionElement.view.isHidden = true
-        self.checkboxElement = checkboxElement
-        checkboxElement?.view.isHidden = true
+        self.checkboxElements = checkboxElements
+        checkboxElements.forEach{ $0.view.isHidden = true }
         self.merchantName = merchantName
         self.savingAccount = savingAccount
         self.theme = theme
@@ -127,8 +127,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             phoneElement,
             addressElement,
             bankInfoSectionElement,
-            checkboxElement,
-        ]
+        ] + checkboxElements
         let autoSectioningElements = allElements.compactMap { $0 }
         self.formElement = FormElement(autoSectioningElements: autoSectioningElements, theme: theme)
         self.formElement.delegate = self

@@ -15,7 +15,6 @@ import UIKit
 extension PaymentSheetFormFactory {
     func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
-        
         let defaultCheckbox = makeDefaultCheckbox()
         defaultCheckbox.view.isHidden = true
         let saveCheckbox = makeSaveCheckbox(

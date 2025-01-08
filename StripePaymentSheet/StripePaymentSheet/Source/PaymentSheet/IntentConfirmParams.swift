@@ -24,6 +24,16 @@ final class IntentConfirmParams {
         case deselected
     }
 
+    /// An enum for the three possible states of the e.g. "Save this card for future payments" checkbox
+    enum SetAsDefaultPaymentMethodCheckboxState {
+        /// The checkbox wasn't displayed
+        case hidden
+        /// The checkbox was displayed and selected
+        case selected
+        /// The checkbox was displayed and deselected
+        case deselected
+    }
+
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: PaymentSheet.PaymentMethodType
     /// ⚠️ Usage of this is *not compatible* with server-side confirmation!
@@ -31,6 +41,8 @@ final class IntentConfirmParams {
 
     /// True if the customer opts to save their payment method for future payments.
     var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
+    /// True if the customer opts to save their payment method for future payments.
+    var setAsDefaultPaymentMethodCheckboxState: SetAsDefaultPaymentMethodCheckboxState = .hidden
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
 

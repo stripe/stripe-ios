@@ -369,7 +369,12 @@ extension PaymentSheetFormFactory {
             isSelectedByDefault: false,
             didToggle: didToggle
         )
-        return PaymentMethodElementWrapper(element) { _, params in
+        return PaymentMethodElementWrapper(element) { checkbox, params in
+            if checkbox.checkboxButton.isHidden {
+                params.setAsDefaultPaymentMethodCheckboxState = .hidden
+            } else {
+                params.setAsDefaultPaymentMethodCheckboxState = checkbox.checkboxButton.isSelected ? .selected : .deselected
+            }
             return params
         }
     }
@@ -525,6 +530,7 @@ extension PaymentSheetFormFactory {
 
     func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         let isSaving = BoolReference()
+        let defaultCheckbox = makeDefaultCheckbox()
         let saveCheckbox = makeSaveCheckbox(
             label: String(
                 format: STPLocalizedString(
@@ -535,6 +541,7 @@ extension PaymentSheetFormFactory {
             )
         ) { value in
             isSaving.value = value
+            defaultCheckbox.view.isHidden = !value
         }
 
         isSaving.value =
@@ -557,7 +564,7 @@ extension PaymentSheetFormFactory {
             emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
             phoneElement: phoneElement,
             addressElement: addressElement,
-            checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            checkboxElements: shouldDisplaySaveCheckbox ? [saveCheckbox, defaultCheckbox] : [],
             savingAccount: isSaving,
             merchantName: merchantName,
             initialLinkedBank: previousCustomerInput?.financialConnectionsLinkedBank,
