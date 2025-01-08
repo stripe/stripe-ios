@@ -366,7 +366,7 @@ extension PaymentSheetFormFactory {
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: String.Localized.set_as_default_payment_method,
-            isSelectedByDefault: true,
+            isSelectedByDefault: false,
             didToggle: didToggle
         )
         return PaymentMethodElementWrapper(element) { _, params in

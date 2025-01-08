@@ -15,12 +15,18 @@ import UIKit
 extension PaymentSheetFormFactory {
     func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
+        
+        let defaultCheckbox = makeDefaultCheckbox()
+        defaultCheckbox.view.isHidden = true
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_payment_details_for_future_$merchant_payments(
                 merchantDisplayName: configuration.merchantDisplayName
             )
-        )
+        ) { selected in
+            defaultCheckbox.view.isHidden = !selected
+        }
 
+    
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {
             let emailElement: Element? = configuration.billingDetailsCollectionConfiguration.email == .always ? makeEmail() : nil
@@ -87,6 +93,7 @@ extension PaymentSheetFormFactory {
             cardSection,
             billingAddressSection,
             shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            defaultCheckbox
         ]
 
         if case .paymentSheet(let configuration) = configuration, let accountService, showLinkInlineSignup {
