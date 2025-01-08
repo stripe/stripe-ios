@@ -183,8 +183,7 @@ extension LinkInlineSignupViewModelTests {
                             email: "user@example.com",
                             session: nil,
                             publishableKey: nil,
-                            useMobileEndpoints: false,
-                            elementsSessionID: "abc123"
+                            useMobileEndpoints: false
                         )
                     )
                 )
@@ -204,7 +203,7 @@ extension LinkInlineSignupViewModelTests {
         shouldFailLookup: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
-            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false, elementsSessionID: "abc123")
+            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false)
             : nil
 
         return LinkInlineSignupViewModel(

@@ -184,6 +184,20 @@ final class PayWithLinkViewController: UINavigationController {
         // the gesture when the navigation bar is hidden. Use a custom delegate
         // to restore the functionality.
         interactivePopGestureRecognizer?.delegate = self
+
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+    }
+
+    deinit {
+        LinkAccountContext.shared.removeObserver(self)
+    }
+
+    @objc
+    func onAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            let linkAccount = notification.object as? PaymentSheetLinkAccount
+            linkAccount?.paymentSheetLinkAccountDelegate = self
+        }
     }
 
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
@@ -408,6 +422,44 @@ extension PayWithLinkViewController: STPAuthenticationContext {
 
     func authenticationPresentingViewController() -> UIViewController {
         return self
+    }
+
+}
+
+extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
+    func refreshLinkSession(completion: @escaping (Result<ConsumerSession, any Error>) -> Void) {
+        // Tell the LinkAccountService to lookup again
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+        accountService.lookupAccount(withEmail: linkAccount?.email, emailSource: .prefilledEmail) { result in
+            switch result {
+            case .success(let account):
+                DispatchQueue.main.async {
+                    guard let account else {
+                        completion(.failure(PaymentSheetError.unknown(debugDescription: "No account found")))
+                        return
+                    }
+                    let verificationController = LinkVerificationController(mode: .modal, linkAccount: account)
+                    verificationController.present(from: self) { result in
+                        switch result {
+                        case .completed:
+                            // Return the session from the new account
+                            guard let newSession = account.currentSession else {
+                                completion(.failure(PaymentSheetError.unknown(debugDescription: "No session found")))
+                                return
+                            }
+                            completion(.success(newSession))
+                        case .canceled, .failed:
+                            completion(.failure(PaymentSheetError.unknown(debugDescription: "Authentication failed")))
+                        }
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+
     }
 
 }
