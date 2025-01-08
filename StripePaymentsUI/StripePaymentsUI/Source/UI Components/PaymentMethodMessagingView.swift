@@ -31,6 +31,24 @@ import WebKit
         configuration: Configuration,
         completion: @escaping (Result<PaymentMethodMessagingView, Swift.Error>) -> Void
     ) {
+        Task {
+            do {
+                let view = try await Self.create(configuration: configuration)
+                completion(.success(view))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Asynchronously creates a `PaymentMethodMessagingView` for the given configuration.
+    /// - Parameter configuration: A Configuration object containing details like the payment methods to display and the purchase amount.
+    /// - Returns: A configured `PaymentMethodMessagingView` instance
+    /// - Throws: An error if the view fails to load or initialize
+    /// - Note: You must use this method to initialize a `PaymentMethodMessagingView`.
+    public static func create(
+        configuration: Configuration
+    ) async throws -> PaymentMethodMessagingView {
         assert(!configuration.paymentMethods.isEmpty)
         assert(configuration.apiClient.publishableKey?.nonEmpty != nil)
         assert(!configuration.countryCode.isEmpty)
@@ -41,32 +59,32 @@ import WebKit
             additionalHeaders: [:]
         )
         request.stp_addParameters(toURL: parameters)
-        Task {
-            do {
-                let response = try await loadContent(configuration: configuration)
-                let attributedString = try await makeAttributedString(
-                    from: response.display_l_html,
-                    configuration: configuration
-                )
-                let view = PaymentMethodMessagingView(
-                    attributedString: attributedString,
-                    modalURL: response.learn_more_modal_url,
-                    configuration: configuration
-                )
-                let loadDuration = Date().timeIntervalSince(loadStartTime)
-                Self.analyticsClient.log(
-                    analytic: Analytic.loadSucceeded(duration: loadDuration),
-                    apiClient: configuration.apiClient
-                )
-                completion(.success(view))
-            } catch {
-                let loadDuration = Date().timeIntervalSince(loadStartTime)
-                Self.analyticsClient.log(
-                    analytic: Analytic.loadFailed(duration: loadDuration),
-                    apiClient: configuration.apiClient
-                )
-                completion(.failure(error))
-            }
+        do {
+            let response = try await loadContent(configuration: configuration)
+            try Task.checkCancellation()
+            let attributedString = try await makeAttributedString(
+                from: response.display_l_html,
+                configuration: configuration
+            )
+            try Task.checkCancellation()
+            let view = PaymentMethodMessagingView(
+                attributedString: attributedString,
+                modalURL: response.learn_more_modal_url,
+                configuration: configuration
+            )
+            let loadDuration = Date().timeIntervalSince(loadStartTime)
+            Self.analyticsClient.log(
+                analytic: Analytic.loadSucceeded(duration: loadDuration),
+                apiClient: configuration.apiClient
+            )
+            return view
+        } catch {
+            let loadDuration = Date().timeIntervalSince(loadStartTime)
+            Self.analyticsClient.log(
+                analytic: Analytic.loadFailed(duration: loadDuration),
+                apiClient: configuration.apiClient
+            )
+            throw error
         }
     }
 
@@ -105,23 +123,31 @@ import WebKit
     // MARK: Overrides
 
 #if !canImport(CompositorServices)
+    private var traitCollectionDidChangeTask: Task<Void, Swift.Error>? = nil
+
     // Overriden so we can respond to changing dark mode by updating the image color
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        Task {
+
+        traitCollectionDidChangeTask?.cancel()
+        traitCollectionDidChangeTask = Task<Void, Swift.Error> {
             var attributedString = label.attributedText
             if previousTraitCollection?.isDarkMode != traitCollection.isDarkMode {
                 // Update images by reloading content from the server
                 let content = try await Self.loadContent(configuration: configuration)
-                attributedString = try await Self.makeAttributedString(
+                try Task.checkCancellation()
+                let _attributedString = try await Self.makeAttributedString(
                     from: content.display_l_html,
                     configuration: configuration
                 )
+                try Task.checkCancellation()
+                attributedString = _attributedString
             }
             if adjustsFontForContentSizeCategory {
                 // Adjust the font size
                 let adjustedFontSize =
                     dummyLabelForDynamicType.font?.pointSize ?? configuration.font.pointSize
+                try Task.checkCancellation()
                 attributedString = attributedString?.withFontSize(adjustedFontSize)
             }
             label.attributedText = attributedString
