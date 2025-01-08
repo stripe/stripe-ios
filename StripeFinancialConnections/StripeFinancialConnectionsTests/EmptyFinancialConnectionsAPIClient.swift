@@ -11,6 +11,9 @@ import Foundation
 @testable import StripeFinancialConnections
 
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
+    var isLinkWithStripe: Bool = false
+    var consumerPublishableKey: String?
+    var consumerSession: StripeFinancialConnections.ConsumerSessionData?
 
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList

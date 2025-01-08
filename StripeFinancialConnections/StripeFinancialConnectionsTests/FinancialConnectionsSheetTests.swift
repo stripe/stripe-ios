@@ -20,7 +20,10 @@ class FinancialConnectionsSheetTests: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockClientSecret = "las_123345"
     private let mockAnalyticsClient = MockAnalyticsClient()
-    private let mockApiClient = FinancialConnectionsAPIClient(apiClient: APIStubbedTestCase.stubbedAPIClient())
+    private let mockApiClient = FinancialConnectionsAPIClientFacade(
+        apiClient: APIStubbedTestCase.stubbedAPIClient(),
+        shouldUseAsyncClient: false
+    )
 
     override func setUpWithError() throws {
         try super.setUpWithError()
