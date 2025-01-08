@@ -35,7 +35,7 @@ class EmbeddedPaymentViewModel: ObservableObject {
             )
             configuration.returnURL = "payments-example://stripe-redirect"
 
-            let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 973, currency: "EUR")) { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+            let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 973, currency: "EUR", setupFutureUsage: .onSession)) { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
                 intentCreationCallback(.success(response.paymentIntentClientSecret))
             }
 
@@ -112,6 +112,7 @@ class EmbeddedPaymentViewModel: ObservableObject {
 struct EmbeddedPaymentElementView: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentViewModel
     @Binding var height: CGFloat
+    @State private var isFirstLayout = true
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -122,47 +123,42 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
         containerView.backgroundColor = .clear
         
         if let element = viewModel.embeddedPaymentElement {
-            attachEmbeddedPaymentElement(element, to: containerView, context: context)
+            element.delegate = context.coordinator
+            element.presentingViewController = context.coordinator.topMostViewController()
+            
+            let paymentElementView = element.view
+            containerView.addSubview(paymentElementView)
+            paymentElementView.translatesAutoresizingMaskIntoConstraints = false
+            let bottomConstraint = paymentElementView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            bottomConstraint.priority = .defaultHigh
+            
+            NSLayoutConstraint.activate([
+                paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
+                paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+                bottomConstraint
+            ])
         }
         
         return containerView
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
-        if let element = viewModel.embeddedPaymentElement,
-           !uiView.subviews.contains(element.view) {
-            attachEmbeddedPaymentElement(element, to: uiView, context: context)
-        }
-        
-        viewModel.embeddedPaymentElement?.presentingViewController = context.coordinator.visibleViewController
+        // Update the presenting view controller in case it has changed
+        viewModel.embeddedPaymentElement?.presentingViewController = context.coordinator.topMostViewController()
         
         DispatchQueue.main.async {
             let newHeight = uiView.systemLayoutSizeFitting(CGSize(width: uiView.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
-            self.height = newHeight
+            if self.isFirstLayout {
+                // No animation for the first layout
+                self.height = newHeight
+                self.isFirstLayout = false
+            } else {
+                withAnimation(.easeInOut(duration: 0.15)) {
+                    self.height = newHeight
+                }
+            }
         }
-    }
-
-    private func attachEmbeddedPaymentElement(
-        _ element: EmbeddedPaymentElement,
-        to containerView: UIView,
-        context: Context
-    ) {
-        element.delegate = context.coordinator
-        element.presentingViewController = context.coordinator.visibleViewController
-        
-        let paymentElementView = element.view
-        containerView.addSubview(paymentElementView)
-        paymentElementView.translatesAutoresizingMaskIntoConstraints = false
-        let bottomConstraint = paymentElementView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        bottomConstraint.priority = .defaultHigh
-        
-        NSLayoutConstraint.activate([
-            paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            bottomConstraint
-        ])
-
     }
 
     class Coordinator: NSObject, EmbeddedPaymentElementDelegate {
@@ -180,22 +176,31 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
             self.parent.viewModel.objectWillChange.send()
         }
         
-        var visibleViewController: UIViewController {
-            // Same logic as before to find the top-most VC
-            guard var rootViewController = UIApplication.shared.windows.first?.rootViewController else {
+        func topMostViewController() -> UIViewController {
+            guard
+                let scene = UIApplication.shared.connectedScenes
+                    .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                let window = scene.windows.first(where: { $0.isKeyWindow }),
+                let rootViewController = window.rootViewController
+            else {
                 return UIViewController()
             }
-            while let presentedViewController = rootViewController.presentedViewController {
-                rootViewController = presentedViewController
+            return findTopViewController(from: rootViewController)
+        }
+
+        private func findTopViewController(from rootVC: UIViewController) -> UIViewController {
+            if let presented = rootVC.presentedViewController {
+                return findTopViewController(from: presented)
             }
-            if let navigationController = rootViewController as? UINavigationController {
-                return navigationController.visibleViewController ?? navigationController
+            if let nav = rootVC as? UINavigationController,
+               let visible = nav.visibleViewController {
+                return findTopViewController(from: visible)
             }
-            if let tabBarController = rootViewController as? UITabBarController,
-               let selectedViewController = tabBarController.selectedViewController {
-                return selectedViewController
+            if let tab = rootVC as? UITabBarController,
+               let selected = tab.selectedViewController {
+                return findTopViewController(from: selected)
             }
-            return rootViewController
+            return rootVC
         }
     }
 }
@@ -213,6 +218,7 @@ struct MyEmbeddedCheckoutView: View {
         VStack(spacing: 24) {
             if let _ = viewModel.embeddedPaymentElement {
                 ScrollView {
+                    // Embedded Payment Element
                     EmbeddedPaymentElementView(viewModel: viewModel, height: $embeddedViewHeight)
                         .frame(height: embeddedViewHeight)
                     
