@@ -1,5 +1,4 @@
 import SwiftUI
-import Stripe
 @_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 
 // MARK: - ViewModel
