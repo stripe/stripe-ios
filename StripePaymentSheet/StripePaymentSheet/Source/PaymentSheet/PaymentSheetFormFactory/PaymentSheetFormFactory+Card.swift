@@ -18,7 +18,6 @@ extension PaymentSheetFormFactory {
         var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
         if allowsSetAsDefaultPM {
             defaultCheckbox = makeDefaultCheckbox()
-            defaultCheckbox?.view.isHidden = true
         }
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_payment_details_for_future_$merchant_payments(
@@ -27,7 +26,7 @@ extension PaymentSheetFormFactory {
         ) { selected in
             defaultCheckbox?.view.isHidden = !selected
         }
-
+        defaultCheckbox?.view.isHidden = !saveCheckbox.element.isSelected
     
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {
