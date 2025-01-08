@@ -37,12 +37,12 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
     private let bankInfoView: BankAccountInfoView
-    private let checkboxElements: [PaymentMethodElement]
+    private let checkboxElements: [PaymentMethodElement?]
     private var savingAccount: BoolReference
     private let theme: ElementsAppearance
 
     private var linkedAccountElements: [Element] {
-        [bankInfoSectionElement, checkboxElements.first].compactMap { $0 }
+        [bankInfoSectionElement, checkboxElements.first ?? nil].compactMap { $0 }
     }
 
     private static let links: [String: URL] = [
@@ -87,7 +87,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
-        checkboxElements: [PaymentMethodElement],
+        checkboxElements: [PaymentMethodElement?],
         savingAccount: BoolReference,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
@@ -116,7 +116,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
                                                      elements: [StaticElement(view: bankInfoView)], theme: theme)
         self.bankInfoSectionElement.view.isHidden = true
         self.checkboxElements = checkboxElements
-        checkboxElements.forEach{ $0.view.isHidden = true }
+        checkboxElements.forEach{ $0?.view.isHidden = true }
         self.merchantName = merchantName
         self.savingAccount = savingAccount
         self.theme = theme

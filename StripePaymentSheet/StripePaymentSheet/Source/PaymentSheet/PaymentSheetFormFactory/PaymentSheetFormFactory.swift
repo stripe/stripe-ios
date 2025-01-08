@@ -38,6 +38,7 @@ class PaymentSheetFormFactory {
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
+    let allowsSetAsDefaultPM: Bool
 
     var shouldDisplaySaveCheckbox: Bool {
         switch savePaymentMethodConsentBehavior {
@@ -70,7 +71,8 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
-        analyticsHelper: PaymentSheetAnalyticsHelper?
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        allowsSetAsDefaultPM: Bool = false
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -106,7 +108,8 @@ class PaymentSheetFormFactory {
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   analyticsHelper: analyticsHelper,
-                  paymentMethodIncentive: elementsSession.incentive)
+                  paymentMethodIncentive: elementsSession.incentive,
+                  allowsSetAsDefaultPM: allowsSetAsDefaultPM)
     }
 
     required init(
@@ -123,7 +126,8 @@ class PaymentSheetFormFactory {
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        paymentMethodIncentive: PaymentMethodIncentive?
+        paymentMethodIncentive: PaymentMethodIncentive?,
+        allowsSetAsDefaultPM: Bool = false
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -144,6 +148,7 @@ class PaymentSheetFormFactory {
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
+        self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
     }
 
     func make() -> PaymentMethodElement {
@@ -525,7 +530,10 @@ extension PaymentSheetFormFactory {
 
     func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         let isSaving = BoolReference()
-        let defaultCheckbox = makeDefaultCheckbox()
+        var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
+        if allowsSetAsDefaultPM {
+            defaultCheckbox = makeDefaultCheckbox()
+        }
         let saveCheckbox = makeSaveCheckbox(
             label: String(
                 format: STPLocalizedString(
@@ -536,7 +544,7 @@ extension PaymentSheetFormFactory {
             )
         ) { value in
             isSaving.value = value
-            defaultCheckbox.view.isHidden = !value
+            defaultCheckbox?.view.isHidden = !value
         }
 
         isSaving.value =

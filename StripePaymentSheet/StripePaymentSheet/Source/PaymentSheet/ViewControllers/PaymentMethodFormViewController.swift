@@ -114,7 +114,8 @@ class PaymentMethodFormViewController: UIViewController {
                 previousCustomerInput: previousCustomerInput,
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
-                analyticsHelper: analyticsHelper
+                analyticsHelper: analyticsHelper,
+                allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM
             ).make()
             self.formCache[type] = form
         }
