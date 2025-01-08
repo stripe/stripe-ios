@@ -84,8 +84,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         supportedPaymentDetailsTypes: [.card]
                     ),
                     publishableKey: "pk_xxx_for_link_account_xxx",
-                    useMobileEndpoints: false,
-                    elementsSessionID: "abc123"
+                    useMobileEndpoints: false
                 ),
                 paymentDetails: .init(
                     stripeID: "pd1",
@@ -176,8 +175,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         email: "test@example.com",
                         session: .init(clientSecret: "cs_xxx", emailAddress: "test@example.com", redactedPhoneNumber: "+1-555-xxx-xxxx", verificationSessions: [.init(type: .sms, state: .verified)], supportedPaymentDetailsTypes: [.card]),
                         publishableKey: MockParams.publicKey,
-                        useMobileEndpoints: false,
-                        elementsSessionID: "abc123"),
+                        useMobileEndpoints: false),
                     paymentDetails: .init(
                         stripeID: "pd1",
                         details: .card(card: .init(expiryYear: 2055, expiryMonth: 12, brand: "visa", last4: "1234", checks: nil)),

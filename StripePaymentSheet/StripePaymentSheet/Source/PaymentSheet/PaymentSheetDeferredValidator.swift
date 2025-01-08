@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import StripePayments
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-
+import StripePayments
 struct PaymentSheetDeferredValidator {
     /// Note: We don't validate amount (for any payment method) because there are use cases where the amount can change slightly between PM collection and confirmation.
     static func validate(paymentIntent: STPPaymentIntent,
@@ -68,7 +66,7 @@ struct PaymentSheetDeferredValidator {
             }
             let errorMessage = """
                 \nThere is a mismatch between the payment method ID on your Intent: \(intentPaymentMethod.stripeId) and the payment method passed into the `confirmHandler`: \(paymentMethod.stripeId).
-            
+
                 To resolve this issue, you can:
                 1. Create a new Intent each time before you call the `confirmHandler`, or
                 2. Update the existing Intent with the desired `paymentMethod` before calling the `confirmHandler`.
@@ -141,6 +139,8 @@ private func == (lhs: STPPaymentIntentCaptureMethod, rhs: PaymentSheet.IntentCon
         return rhs == .manual
     case .unknown:
         return false
+    case .automaticAsync:
+        return rhs == .automaticAsync
     @unknown default:
         return false
     }

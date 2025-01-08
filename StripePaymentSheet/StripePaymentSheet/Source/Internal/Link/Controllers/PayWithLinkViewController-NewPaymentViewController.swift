@@ -173,6 +173,13 @@ extension PayWithLinkViewController {
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -preferredContentMargins.trailing),
 
+                errorLabel.leadingAnchor.constraint(
+                    equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
+                    constant: preferredContentMargins.leading),
+                errorLabel.trailingAnchor.constraint(
+                    equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
+                    constant: -preferredContentMargins.trailing),
+
                 addPaymentMethodVC.view.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 addPaymentMethodVC.view.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
 
@@ -222,7 +229,7 @@ extension PayWithLinkViewController {
 
                     self.coordinator?.confirm(with: self.linkAccount,
                                               paymentDetails: paymentDetails,
-                                              completion: { [weak self] result in
+                                              completion: { [weak self] result, deferredIntentConfirmationType in
                         let state: ConfirmButton.Status
 
                         switch result {
@@ -240,7 +247,7 @@ extension PayWithLinkViewController {
                         #endif
                         self?.confirmButton.update(state: state, animated: true) {
                             if state == .succeeded {
-                                self?.coordinator?.finish(withResult: result)
+                                self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                             }
                         }
                     })

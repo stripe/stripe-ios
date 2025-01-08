@@ -21,9 +21,9 @@
 		2B98F4F0120888B12EF3B181 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CFF68ABB8E67E83695FAD8EA /* Localizable.strings */; };
 		2D7A4FDBED7E3FA3D17BBB54 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A77DE176741B3A542FE890 /* StripeCore.framework */; };
 		310E6B5C2C580C06006A03EC /* StripeAttest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310E6B5B2C580C06006A03EC /* StripeAttest.swift */; };
+		312AE70A2D2C8A7C0091E5AF /* MockAppAttestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C5137D2CFE660A00A429C3 /* MockAppAttestService.swift */; };
 		31AD3BDC2B0C23E40080C800 /* Locale+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BDB2B0C23E40080C800 /* Locale+StripeCore.swift */; };
 		31C5137C2CFE65DB00A429C3 /* StripeAttestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C5137B2CFE65D600A429C3 /* StripeAttestTest.swift */; };
-		31C5137E2CFE660E00A429C3 /* MockAppAttestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C5137D2CFE660A00A429C3 /* MockAppAttestService.swift */; };
 		31CDFC302BA372B200B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2F2BA372B200B3DD91 /* PrivacyInfo.xcprivacy */; };
 		31DEFE4C2D02C25A00E6E507 /* StripeAttestBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DEFE4B2D02C25A00E6E507 /* StripeAttestBackend.swift */; };
 		31DEFE4E2D02C27000E6E507 /* AppAttestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DEFE4D2D02C27000E6E507 /* AppAttestService.swift */; };
@@ -456,7 +456,6 @@
 			isa = PBXGroup;
 			children = (
 				31C5137B2CFE65D600A429C3 /* StripeAttestTest.swift */,
-				31C5137D2CFE660A00A429C3 /* MockAppAttestService.swift */,
 			);
 			path = Attestation;
 			sourceTree = "<group>";
@@ -730,6 +729,7 @@
 			children = (
 				F2C7099CB854E1E90424235C /* MockAnalyticsClient.swift */,
 				27EB57C159E5F10F50D071E5 /* MockAnalyticsClientV2.swift */,
+				31C5137D2CFE660A00A429C3 /* MockAppAttestService.swift */,
 				A5334916D2A4F927645C2569 /* MockData.swift */,
 			);
 			path = Mocks;
@@ -991,7 +991,6 @@
 				53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */,
 				3E9FC2CD06E1D5F6B09872E9 /* AnalyticsClientV2Test.swift in Sources */,
 				84487D8E9B08106C89753536 /* Error_SerializeForLoggingTest.swift in Sources */,
-				31C5137E2CFE660E00A429C3 /* MockAppAttestService.swift in Sources */,
 				0A78AD04075C43A4059C344E /* STPAnalyticsClientTest.swift in Sources */,
 				934CCB00769674F13192A126 /* Dictionary+StripeTests.swift in Sources */,
 				31C5137C2CFE65DB00A429C3 /* StripeAttestTest.swift in Sources */,
@@ -1098,6 +1097,7 @@
 			files = (
 				330FDCF901D11882D4866DDE /* APIStubbedTestCase.swift in Sources */,
 				F990430B20393BB003EAA3F7 /* STPAnalyticsClient+StripeCoreTestingUtils.swift in Sources */,
+				312AE70A2D2C8A7C0091E5AF /* MockAppAttestService.swift in Sources */,
 				A987DFFA404EBD0788DAB21A /* UIImage+StripeCoreTestingUtils.swift in Sources */,
 				631D09E67497B49BBCA26192 /* UIView+StripeCoreTestingUtils.swift in Sources */,
 				838BDB53C4F6AC3C0567DE6A /* KeyPathExpectation.swift in Sources */,

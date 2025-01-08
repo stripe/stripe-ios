@@ -85,8 +85,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             session: session.consumerSession,
                             publishableKey: session.publishableKey,
                             apiClient: apiClient,
-                            useMobileEndpoints: self.useMobileEndpoints,
-                            elementsSessionID: self.sessionID
+                            useMobileEndpoints: self.useMobileEndpoints
                         )
                     ))
                 case .notFound:
@@ -97,8 +96,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 session: nil,
                                 publishableKey: nil,
                                 apiClient: self.apiClient,
-                                useMobileEndpoints: self.useMobileEndpoints,
-                                elementsSessionID: self.sessionID
+                                useMobileEndpoints: self.useMobileEndpoints
                             )
                         ))
                     } else {

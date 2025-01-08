@@ -18,6 +18,9 @@ protocol PayWithLinkSignUpViewModelDelegate: AnyObject {
         _ viewModel: PayWithLinkViewController.SignUpViewModel,
         didLookupAccount linkAccount: PaymentSheetLinkAccount?
     )
+    func viewModelDidEncounterAttestationError(
+        _ viewModel: PayWithLinkViewController.SignUpViewModel
+    )
 }
 
 extension PayWithLinkViewController {
@@ -165,8 +168,7 @@ extension PayWithLinkViewController {
             linkAccount.signUp(
                 with: phoneNumber,
                 legalName: requiresNameCollection ? legalName : nil,
-//                TODO(link): Was .button, add new consent action
-                consentAction: .checkbox_v0
+                consentAction: .clicked_button_mobile_v1
             ) { [weak self] result in
                 switch result {
                 case .success:
@@ -216,6 +218,9 @@ private extension PayWithLinkViewController.SignUpViewModel {
                 case .failure(let error):
                     self.linkAccount = nil
                     self.errorMessage = error.nonGenericDescription
+                    if STPAPIClient.isLinkAssertionError(error: error) {
+                        self.delegate?.viewModelDidEncounterAttestationError(self)
+                    }
                 }
             }
         }
