@@ -42,11 +42,6 @@ class BackendViewModel: ObservableObject {
         return nil
     }
 
-    @MainActor
-    func confirmPayment(embeddedPaymentElement: EmbeddedPaymentElement?) async -> PaymentSheetResult? {
-        return await embeddedPaymentElement?.confirm()
-    }
-
     private func fetchPaymentIntentFromBackend() async throws -> BackendResponse {
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
@@ -113,7 +108,7 @@ struct MyEmbeddedCheckoutView: View {
                     // Confirm Payment button
                     Button(action: {
                         Task {
-                            paymentResult = await backendViewModel.confirmPayment(embeddedPaymentElement: embeddedViewModel.embeddedPaymentElement)
+                            paymentResult = await embeddedViewModel.embeddedPaymentElement?.confirm()
                         }
                     }) {
                         if embeddedViewModel.embeddedPaymentElement == nil {
