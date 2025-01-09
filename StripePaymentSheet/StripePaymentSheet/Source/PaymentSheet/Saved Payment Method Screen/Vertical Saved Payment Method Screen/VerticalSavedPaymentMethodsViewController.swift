@@ -70,12 +70,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private var headerText: String {
+        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        let onlyCards = nonCardPaymentMethods.isEmpty
         if isEditingPaymentMethods {
+            if onlyCards {
+                return paymentMethods.count == 1 ?  .Localized.manage_card : .Localized.manage_cards
+            }
             return paymentMethods.count == 1 ?  .Localized.manage_payment_method : .Localized.manage_payment_methods
         }
-
-        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
-        return nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
+        return onlyCards ? .Localized.select_card : .Localized.select_payment_method
     }
 
     var canRemovePaymentMethods: Bool {
