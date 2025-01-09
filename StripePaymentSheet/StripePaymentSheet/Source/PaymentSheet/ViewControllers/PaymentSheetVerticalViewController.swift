@@ -143,7 +143,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // MARK: - Initializers
 
-    init(configuration: PaymentSheet.Configuration, loadResult: PaymentSheetLoader.LoadResult, isFlowController: Bool, analyticsHelper: PaymentSheetAnalyticsHelper, previousPaymentOption: PaymentOption? = nil) {
+    init(
+        configuration: PaymentSheet.Configuration,
+        loadResult: PaymentSheetLoader.LoadResult,
+        isFlowController: Bool,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        previousPaymentOption: PaymentOption? = nil
+    ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
         self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
 
@@ -282,13 +288,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         })
     }
 
-    func makePaymentMethodListViewController(selection: VerticalPaymentMethodListSelection?) -> VerticalPaymentMethodListViewController {
-        // Determine the initial selection - either `selection`, the previous payment option, the last VC's selection, or the customer's default.
-        let initialSelection: VerticalPaymentMethodListSelection? = {
-            if let selection {
-                return selection
-            }
-
+    /// Returns the default selected row in the vertical list - the previous payment option, the last VC's selection, or the customer's default.
+    func calculateInitialSelection() -> VerticalPaymentMethodListSelection? {
+        if let previousPaymentOption {
             switch previousPaymentOption {
             case .applePay:
                 return .applePay
@@ -304,52 +306,82 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 } else {
                     return .new(paymentMethodType: confirmParams.paymentMethodType)
                 }
-            case nil:
-                // If there's no previous customer input...
-                if let paymentMethodListViewController, let lastSelection = paymentMethodListViewController.currentSelection {
-                    // ...use the previous paymentMethodListViewController's selection
-                    if case let .saved(paymentMethod: paymentMethod) = lastSelection {
-                        // If the previous selection was a saved PM, only use it if it still exists:
-                        if savedPaymentMethods.map({ $0.stripeId }).contains(paymentMethod.stripeId) {
-                            return lastSelection
-                        }
-                    } else {
-                        return lastSelection
-                    }
+            }
+        }
+        // If there's no previous customer input, use the previous paymentMethodListViewController's selection:
+        if let paymentMethodListViewController, let lastSelection = paymentMethodListViewController.currentSelection {
+            if case let .saved(paymentMethod: paymentMethod) = lastSelection {
+                // If the previous selection was a saved PM, only use it if it still exists:
+                if savedPaymentMethods.map({ $0.stripeId }).contains(paymentMethod.stripeId) {
+                    return lastSelection
                 }
-                // Default to the customer's default or the first saved payment method, if any
-                var customerDefault: CustomerPaymentOption?
-                // if opted in to the "set as default" feature, try to get default payment method from elements session
-                if configuration.allowsSetAsDefaultPM {
-                    if let customer = elementsSession.customer,
-                       let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
-                        customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-                    }
-                } else {
-                    customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+            } else {
+                return lastSelection
+            }
+        }
+        // If there's no previous paymentMethodListViewController:
+        // 1. Default to the customer's default if it will be displayed
+        func willDisplay(customerDefault: CustomerPaymentOption) -> Bool {
+            switch customerDefault {
+            case .applePay:
+                return isFlowController && shouldShowApplePayInList
+            case .link:
+                return isFlowController && shouldShowLinkInList
+            case .stripeId(let stripeId):
+                guard let savedSelection = savedPaymentMethods.first else {
+                    return false
                 }
-                switch customerDefault {
-                case .applePay:
-                    return isFlowController ? .applePay : nil // Only default to Apple Pay in flow controller mode
-                case .link:
-                    return isFlowController ? .link : nil // Only default to Link in flow controller mode
-                case .stripeId, nil:
-                    if let savedSelection = savedPaymentMethods.first {
-                        return .saved(paymentMethod: savedSelection)
-                    }
-                    // If we have only one payment method type, with no wallet options, no saved payment methods, and neither Link nor Apple Pay are in the list, auto-select the lone payment method type.
-                    if loadResult.paymentMethodTypes.count == 1,
-                       !shouldShowLinkInList,
-                       !shouldShowApplePayInList,
-                       makeWalletHeaderView() == nil,
-                       let paymentMethodType = loadResult.paymentMethodTypes.first {
-                        return .new(paymentMethodType: paymentMethodType)
-                    }
+                return savedSelection.stripeId == stripeId
+            }
+        }
 
+        var customerDefault: CustomerPaymentOption?
+        if configuration.allowsSetAsDefaultPM {
+            // if opted in to the "set as default" feature, try to get default payment method from elements session
+            if let customer = elementsSession.customer,
+               let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
+                customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+            }
+        } else {
+            customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+        }
+
+        if let customerDefault, willDisplay(customerDefault: customerDefault) {
+            switch customerDefault {
+            case .applePay: return .applePay
+            case .link: return .link
+            case .stripeId:
+                guard let savedPM = savedPaymentMethods.first else {
                     return nil
                 }
+                return .saved(paymentMethod: savedPM)
             }
-        }()
+        }
+
+        // 2. Default to Apple Pay
+        if shouldShowApplePayInList {
+            return .applePay
+        }
+
+        // 3. Default to the saved PM
+        if let savedPM = savedPaymentMethods.first {
+            return .saved(paymentMethod: savedPM)
+        }
+
+        // 4. If we have only one payment method type, with no wallet options, no saved payment methods, and neither Link nor Apple Pay are in the list, auto-select the lone payment method type.
+        if loadResult.paymentMethodTypes.count == 1,
+           !shouldShowLinkInList,
+           !shouldShowApplePayInList,
+           makeWalletHeaderView() == nil,
+           let paymentMethodType = loadResult.paymentMethodTypes.first {
+            return .new(paymentMethodType: paymentMethodType)
+        }
+
+        return nil
+    }
+
+    func makePaymentMethodListViewController(selection: VerticalPaymentMethodListSelection?) -> VerticalPaymentMethodListViewController {
+        let initialSelection = selection ?? calculateInitialSelection()
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
