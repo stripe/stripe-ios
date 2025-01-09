@@ -143,13 +143,6 @@ extension String.Localized {
             "String to inform a user that specific card brands are not accepted."
         )
     }
-
-    @_spi(STP) public static var set_as_default_payment_method: String {
-        STPLocalizedString(
-            "Set as default payment method",
-            "Label of a checkbox that when checked makes a payment method as the default one."
-        )
-    }
 }
 
 @_spi(STP) public struct StripeSharedStrings {

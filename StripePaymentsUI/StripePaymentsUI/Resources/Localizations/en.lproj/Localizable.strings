@@ -55,9 +55,6 @@
 /* Postal code placeholder */
 "Postal Code" = "Postal Code";
 
-/* Label of a checkbox that when checked makes a payment method as the default one. */
-"Set as default payment method" = "Set as default payment method";
-
 /* Title for shipping address entry section */
 "Shipping Address" = "Shipping Address";
 
