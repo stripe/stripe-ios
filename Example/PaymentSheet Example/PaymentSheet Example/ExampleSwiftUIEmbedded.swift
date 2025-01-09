@@ -24,7 +24,7 @@ class BackendViewModel: ObservableObject {
             )
             configuration.returnURL = "payments-example://stripe-redirect"
 
-            let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 973, currency: "EUR", setupFutureUsage: .onSession)) { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+            let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 973, currency: "EUR")) { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
                 intentCreationCallback(.success(response.paymentIntentClientSecret))
             }
 
