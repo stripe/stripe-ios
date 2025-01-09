@@ -406,6 +406,7 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     }
 }
 
+// TODO(porter) Move into it's own file
 import SwiftUI
 import Combine
 
@@ -422,6 +423,7 @@ import Combine
     
     public init(viewModel: ViewModel) {
         self.viewModel = viewModel
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedSwiftUIProduct.self)
     }
     
     public func makeCoordinator() -> Coordinator {
@@ -512,5 +514,11 @@ import Combine
             }
             return rootVC
         }
+    }
+}
+
+final class EmbeddedSwiftUIProduct: STPAnalyticsProtocol {
+    public static var stp_analyticsIdentifier: String {
+        return "EmbeddedPaymentElement_SwiftUI"
     }
 }
