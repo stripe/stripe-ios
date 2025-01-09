@@ -3,14 +3,10 @@ import SwiftUI
 
 // MARK: - BackendViewModel
 class BackendViewModel: ObservableObject {
-    @Published var isLoading = false
-    
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
 
     @MainActor
     func prepareEmbeddedPaymentElement() async -> EmbeddedPaymentElement? {
-        isLoading = true
-        defer { isLoading = false }
         do {
             let response = try await fetchPaymentIntentFromBackend()
             STPAPIClient.shared.publishableKey = response.publishableKey
@@ -48,11 +44,7 @@ class BackendViewModel: ObservableObject {
 
     @MainActor
     func confirmPayment(embeddedPaymentElement: EmbeddedPaymentElement?) async -> PaymentSheetResult? {
-        guard let element = embeddedPaymentElement else { return nil }
-        isLoading = true
-        defer { isLoading = false }
-
-        return await element.confirm()
+        return await embeddedPaymentElement?.confirm()
     }
 
     private func fetchPaymentIntentFromBackend() async throws -> BackendResponse {
@@ -98,7 +90,7 @@ struct MyEmbeddedCheckoutView: View {
     
     var body: some View {
         VStack(spacing: 24) {
-            if let _ = embeddedViewModel.embeddedPaymentElement {
+            if embeddedViewModel.embeddedPaymentElement != nil {
                 ScrollView {
                     // Embedded Payment Element
                     EmbeddedPaymentElementView(viewModel: embeddedViewModel)
@@ -124,7 +116,7 @@ struct MyEmbeddedCheckoutView: View {
                             paymentResult = await backendViewModel.confirmPayment(embeddedPaymentElement: embeddedViewModel.embeddedPaymentElement)
                         }
                     }) {
-                        if backendViewModel.isLoading {
+                        if embeddedViewModel.embeddedPaymentElement == nil {
                             ProgressView()
                         } else {
                             Text("Confirm Payment")
@@ -132,7 +124,7 @@ struct MyEmbeddedCheckoutView: View {
                         }
                     }
                     .disabled(
-                        backendViewModel.isLoading
+                        embeddedViewModel.embeddedPaymentElement == nil
                         || embeddedViewModel.embeddedPaymentElement?.paymentOption == nil
                     )
                     .padding()
@@ -153,7 +145,7 @@ struct MyEmbeddedCheckoutView: View {
                     .cornerRadius(6)
                 }
             } else {
-                if backendViewModel.isLoading {
+                if embeddedViewModel.embeddedPaymentElement == nil {
                     ProgressView("Preparing Payment...")
                 } else {
                     Text("Payment element not loaded.")
@@ -166,18 +158,21 @@ struct MyEmbeddedCheckoutView: View {
                 embeddedViewModel.embeddedPaymentElement = await backendViewModel.prepareEmbeddedPaymentElement()
             }
         }
-        .alert(isPresented: Binding<Bool>(
-            get: { paymentResult != nil },
-            set: { if !$0 { paymentResult = nil } }
-        )) {
-            Alert(
-                title: Text(alertTitle),
-                message: Text(alertMessage),
-                dismissButton: .default(Text("Ok"), action: {
+        .alert(
+            alertTitle,
+            isPresented: Binding<Bool>(
+                get: { paymentResult != nil },
+                set: { if !$0 { paymentResult = nil } }
+            ),
+            actions: {
+                Button("OK") {
                     dismiss()
-                })
-            )
-        }
+                }
+            },
+            message: {
+                Text(alertMessage)
+            }
+        )
     }
     
     var alertTitle: String {
