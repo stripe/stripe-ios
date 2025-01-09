@@ -48,7 +48,7 @@ final class USBankAccountPaymentMethodElementTest: XCTestCase {
         form.getTextFieldElement("Email").setText("foo@bar.com")
         // Simulate customer setting up a linked bank account
         form.linkedBank = FinancialConnectionsLinkedBank(sessionId: "123", accountId: "123", displayName: "Success", bankName: "StripeBank", last4: "6789", instantlyVerified: true)
-        XCTAssertEqual(form.getAllUnwrappedSubElements().count, 11)
+        XCTAssertEqual(form.getAllUnwrappedSubElements().count, 10)
         XCTAssertNotNil(form.mandateString)
         checkbox.isSelected = true
 
