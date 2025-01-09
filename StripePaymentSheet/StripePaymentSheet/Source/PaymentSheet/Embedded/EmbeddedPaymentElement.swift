@@ -478,11 +478,11 @@ import Combine
             self.parent = parent
         }
 
-        public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
+        public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement _: EmbeddedPaymentElement) {
             self.parent.viewModel.objectWillChange.send()
         }
 
-        public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
+        public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement _: EmbeddedPaymentElement) {
             self.parent.viewModel.objectWillChange.send()
         }
         
