@@ -6,9 +6,31 @@ class BackendViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var paymentResult: PaymentSheetResult?
 
-    @Published var showAlert = false
-    @Published var alertTitle = ""
-    @Published var alertMessage = ""
+    var alertTitle: String {
+        switch paymentResult {
+        case .completed:
+            return "Success"
+        case .failed:
+            return "Error"
+        case .canceled:
+            return "Cancelled"
+        case .none:
+            return ""
+        }
+    }
+    
+    var alertMessage: String {
+        switch paymentResult {
+        case .completed:
+            return "Payment completed!"
+        case .failed(let error):
+            return "Payment failed with error: \(error.localizedDescription)"
+        case .canceled:
+            return "Payment canceled by user."
+        case .none:
+            return ""
+        }
+    }
     
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
 
@@ -59,20 +81,6 @@ class BackendViewModel: ObservableObject {
 
         let result = await element.confirm()
         self.paymentResult = result
-
-        switch result {
-        case .completed:
-            alertTitle = "Success"
-            alertMessage = "Payment completed!"
-        case .failed(let error):
-            alertTitle = "Error"
-            alertMessage = "Payment failed with error: \(error.localizedDescription)"
-        case .canceled:
-            alertTitle = "Cancelled"
-            alertMessage = "Payment canceled by user."
-        }
-
-        showAlert = true
     }
 
     private func fetchPaymentIntentFromBackend() async throws -> BackendResponse {
@@ -185,7 +193,10 @@ struct MyEmbeddedCheckoutView: View {
                 embeddedViewModel.embeddedPaymentElement = await backendViewModel.prepareEmbeddedPaymentElement()
             }
         }
-        .alert(isPresented: $backendViewModel.showAlert) {
+        .alert(isPresented: Binding<Bool>(
+            get: { backendViewModel.paymentResult != nil },
+            set: { if !$0 { backendViewModel.paymentResult = nil } }
+        )) {
             Alert(
                 title: Text(backendViewModel.alertTitle),
                 message: Text(backendViewModel.alertMessage),
