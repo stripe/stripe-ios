@@ -237,6 +237,16 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
                     self.viewModel.height = newHeight
                 }
             }
+    var alertTitle: String {
+        switch paymentResult {
+        case .completed:
+            return "Success"
+        case .failed:
+            return "Error"
+        case .canceled:
+            return "Cancelled"
+        case .none:
+            return ""
         }
     }
 
@@ -280,6 +290,17 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
                 return findTopViewController(from: selected)
             }
             return rootVC
+    
+    var alertMessage: String {
+        switch paymentResult {
+        case .completed:
+            return "Payment completed!"
+        case .failed(let error):
+            return "Payment failed with error: \(error.localizedDescription)"
+        case .canceled:
+            return "Payment canceled by user."
+        case .none:
+            return ""
         }
     }
 }
