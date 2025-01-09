@@ -4,33 +4,6 @@ import SwiftUI
 // MARK: - BackendViewModel
 class BackendViewModel: ObservableObject {
     @Published var isLoading = false
-    @Published var paymentResult: PaymentSheetResult?
-
-    var alertTitle: String {
-        switch paymentResult {
-        case .completed:
-            return "Success"
-        case .failed:
-            return "Error"
-        case .canceled:
-            return "Cancelled"
-        case .none:
-            return ""
-        }
-    }
-    
-    var alertMessage: String {
-        switch paymentResult {
-        case .completed:
-            return "Payment completed!"
-        case .failed(let error):
-            return "Payment failed with error: \(error.localizedDescription)"
-        case .canceled:
-            return "Payment canceled by user."
-        case .none:
-            return ""
-        }
-    }
     
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
 
@@ -74,13 +47,12 @@ class BackendViewModel: ObservableObject {
     }
 
     @MainActor
-    func confirmPayment(embeddedPaymentElement: EmbeddedPaymentElement?) async {
-        guard let element = embeddedPaymentElement else { return }
+    func confirmPayment(embeddedPaymentElement: EmbeddedPaymentElement?) async -> PaymentSheetResult? {
+        guard let element = embeddedPaymentElement else { return nil }
         isLoading = true
         defer { isLoading = false }
 
-        let result = await element.confirm()
-        self.paymentResult = result
+        return await element.confirm()
     }
 
     private func fetchPaymentIntentFromBackend() async throws -> BackendResponse {
@@ -120,6 +92,7 @@ class BackendViewModel: ObservableObject {
 struct MyEmbeddedCheckoutView: View {
     @StateObject var backendViewModel = BackendViewModel()
     @StateObject var embeddedViewModel = EmbeddedPaymentElementView.ViewModel()
+    @State private var paymentResult: PaymentSheetResult?
     
     @Environment(\.dismiss) private var dismiss
     
@@ -148,7 +121,7 @@ struct MyEmbeddedCheckoutView: View {
                     // Confirm Payment button
                     Button(action: {
                         Task {
-                            await backendViewModel.confirmPayment(embeddedPaymentElement: embeddedViewModel.embeddedPaymentElement)
+                            paymentResult = await backendViewModel.confirmPayment(embeddedPaymentElement: embeddedViewModel.embeddedPaymentElement)
                         }
                     }) {
                         if backendViewModel.isLoading {
@@ -194,12 +167,12 @@ struct MyEmbeddedCheckoutView: View {
             }
         }
         .alert(isPresented: Binding<Bool>(
-            get: { backendViewModel.paymentResult != nil },
-            set: { if !$0 { backendViewModel.paymentResult = nil } }
+            get: { paymentResult != nil },
+            set: { if !$0 { paymentResult = nil } }
         )) {
             Alert(
-                title: Text(backendViewModel.alertTitle),
-                message: Text(backendViewModel.alertMessage),
+                title: Text(alertTitle),
+                message: Text(alertMessage),
                 dismissButton: .default(Text("Ok"), action: {
                     dismiss()
                 })
