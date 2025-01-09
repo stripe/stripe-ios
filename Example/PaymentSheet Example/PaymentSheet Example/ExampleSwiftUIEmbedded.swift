@@ -179,64 +179,7 @@ struct MyEmbeddedCheckoutView: View {
             )
         }
     }
-}
-
-// MARK: - UIViewRepresentable wrapper
-
-// TOOD(porter) Make this public?
-struct EmbeddedPaymentElementView: UIViewRepresentable {
-    class ViewModel: ObservableObject {
-        @Published var embeddedPaymentElement: EmbeddedPaymentElement?
-        @Published var height: CGFloat = 0
-    }
     
-    @ObservedObject var viewModel: ViewModel
-    @State private var isFirstLayout = true
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    func makeUIView(context: Context) -> UIView {
-        let containerView = UIView()
-        containerView.backgroundColor = .clear
-        
-        if let element = viewModel.embeddedPaymentElement {
-            element.delegate = context.coordinator
-            element.presentingViewController = context.coordinator.topMostViewController()
-            
-            let paymentElementView = element.view
-            containerView.addSubview(paymentElementView)
-            paymentElementView.translatesAutoresizingMaskIntoConstraints = false
-            let bottomConstraint = paymentElementView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-            bottomConstraint.priority = .defaultHigh
-            
-            NSLayoutConstraint.activate([
-                paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
-                paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-                paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-                bottomConstraint
-            ])
-        }
-        
-        return containerView
-    }
-
-    func updateUIView(_ uiView: UIView, context: Context) {
-        // Update the presenting view controller in case it has changed
-        viewModel.embeddedPaymentElement?.presentingViewController = context.coordinator.topMostViewController()
-        
-        DispatchQueue.main.async {
-            let newHeight = uiView.systemLayoutSizeFitting(CGSize(width: uiView.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
-            if self.isFirstLayout {
-                // No animation for the first layout
-                self.viewModel.height = newHeight
-                self.isFirstLayout = false
-            } else {
-                withAnimation(.easeInOut(duration: 0.15)) {
-                    self.viewModel.height = newHeight
-                }
-            }
     var alertTitle: String {
         switch paymentResult {
         case .completed:
@@ -249,47 +192,6 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
             return ""
         }
     }
-
-    class Coordinator: NSObject, EmbeddedPaymentElementDelegate {
-        var parent: EmbeddedPaymentElementView
-        
-        init(_ parent: EmbeddedPaymentElementView) {
-            self.parent = parent
-        }
-
-        func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
-            self.parent.viewModel.objectWillChange.send()
-        }
-
-        func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
-            self.parent.viewModel.objectWillChange.send()
-        }
-        
-        func topMostViewController() -> UIViewController {
-            guard
-                let scene = UIApplication.shared.connectedScenes
-                    .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
-                let window = scene.windows.first(where: { $0.isKeyWindow }),
-                let rootViewController = window.rootViewController
-            else {
-                return UIViewController()
-            }
-            return findTopViewController(from: rootViewController)
-        }
-
-        private func findTopViewController(from rootVC: UIViewController) -> UIViewController {
-            if let presented = rootVC.presentedViewController {
-                return findTopViewController(from: presented)
-            }
-            if let nav = rootVC as? UINavigationController,
-               let visible = nav.visibleViewController {
-                return findTopViewController(from: visible)
-            }
-            if let tab = rootVC as? UITabBarController,
-               let selected = tab.selectedViewController {
-                return findTopViewController(from: selected)
-            }
-            return rootVC
     
     var alertMessage: String {
         switch paymentResult {
@@ -304,7 +206,6 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
         }
     }
 }
-
 
 // MARK: - SwiftUI Preview
 @available(iOS 15.0, *)
