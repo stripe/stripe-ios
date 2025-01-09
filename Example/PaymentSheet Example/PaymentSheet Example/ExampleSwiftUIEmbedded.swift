@@ -1,9 +1,8 @@
 import SwiftUI
 @_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
 
-// MARK: - ViewModel
-class EmbeddedPaymentViewModel: ObservableObject {
-    @Published var embeddedPaymentElement: EmbeddedPaymentElement?
+// MARK: - BackendViewModel
+class BackendViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var paymentResult: PaymentSheetResult?
 
@@ -14,7 +13,7 @@ class EmbeddedPaymentViewModel: ObservableObject {
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
 
     @MainActor
-    func preparePaymentSheet() async {
+    func prepareEmbeddedPaymentElement() async -> EmbeddedPaymentElement? {
         isLoading = true
         defer { isLoading = false }
         do {
@@ -43,15 +42,17 @@ class EmbeddedPaymentViewModel: ObservableObject {
                 configuration: configuration
             )
 
-            self.embeddedPaymentElement = element
+            return element
 
         } catch {
             print("Error while preparing PaymentSheet: \(error)")
         }
+        
+        return nil
     }
 
     @MainActor
-    func confirmPayment() async {
+    func confirmPayment(embeddedPaymentElement: EmbeddedPaymentElement?) async {
         guard let element = embeddedPaymentElement else { return }
         isLoading = true
         defer { isLoading = false }
@@ -106,11 +107,106 @@ class EmbeddedPaymentViewModel: ObservableObject {
     }
 }
 
+// MARK: - SwiftUI Checkout View
+@available(iOS 15.0, *)
+struct MyEmbeddedCheckoutView: View {
+    @StateObject var backendViewModel = BackendViewModel()
+    @StateObject var embeddedViewModel = EmbeddedPaymentElementView.ViewModel()
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            if let _ = embeddedViewModel.embeddedPaymentElement {
+                ScrollView {
+                    // Embedded Payment Element
+                    EmbeddedPaymentElementView(viewModel: embeddedViewModel)
+                        .frame(height: embeddedViewModel.height)
+                    
+                    // Payment option row
+                    if let paymentOption = embeddedViewModel.embeddedPaymentElement?.paymentOption {
+                        HStack {
+                            Image(uiImage: paymentOption.image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 30)
+                            Text(paymentOption.label)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                    }
+                    // Confirm Payment button
+                    Button(action: {
+                        Task {
+                            await backendViewModel.confirmPayment(embeddedPaymentElement: embeddedViewModel.embeddedPaymentElement)
+                        }
+                    }) {
+                        if backendViewModel.isLoading {
+                            ProgressView()
+                        } else {
+                            Text("Confirm Payment")
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .disabled(
+                        backendViewModel.isLoading
+                        || embeddedViewModel.embeddedPaymentElement?.paymentOption == nil
+                    )
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(embeddedViewModel.embeddedPaymentElement?.paymentOption == nil ? Color.gray : Color.blue)
+                    .cornerRadius(6)
+                    
+                    // Test height change button
+                    Button(action: {
+                        embeddedViewModel.embeddedPaymentElement?.testHeightChange()
+                    }) {
+                        Text("Test height change")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(Color.orange)
+                    .cornerRadius(6)
+                }
+            } else {
+                if backendViewModel.isLoading {
+                    ProgressView("Preparing Payment...")
+                } else {
+                    Text("Payment element not loaded.")
+                }
+            }
+        }
+        .padding()
+        .onAppear {
+            Task {
+                embeddedViewModel.embeddedPaymentElement = await backendViewModel.prepareEmbeddedPaymentElement()
+            }
+        }
+        .alert(isPresented: $backendViewModel.showAlert) {
+            Alert(
+                title: Text(backendViewModel.alertTitle),
+                message: Text(backendViewModel.alertMessage),
+                dismissButton: .default(Text("Ok"), action: {
+                    dismiss()
+                })
+            )
+        }
+    }
+}
+
 // MARK: - UIViewRepresentable wrapper
+
 // TOOD(porter) Make this public?
 struct EmbeddedPaymentElementView: UIViewRepresentable {
-    @ObservedObject var viewModel: EmbeddedPaymentViewModel
-    @Binding var height: CGFloat
+    class ViewModel: ObservableObject {
+        @Published var embeddedPaymentElement: EmbeddedPaymentElement?
+        @Published var height: CGFloat = 0
+    }
+    
+    @ObservedObject var viewModel: ViewModel
     @State private var isFirstLayout = true
     
     func makeCoordinator() -> Coordinator {
@@ -150,11 +246,11 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
             let newHeight = uiView.systemLayoutSizeFitting(CGSize(width: uiView.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
             if self.isFirstLayout {
                 // No animation for the first layout
-                self.height = newHeight
+                self.viewModel.height = newHeight
                 self.isFirstLayout = false
             } else {
                 withAnimation(.easeInOut(duration: 0.15)) {
-                    self.height = newHeight
+                    self.viewModel.height = newHeight
                 }
             }
         }
@@ -200,97 +296,6 @@ struct EmbeddedPaymentElementView: UIViewRepresentable {
                 return findTopViewController(from: selected)
             }
             return rootVC
-        }
-    }
-}
-
-// MARK: - SwiftUI Checkout View
-
-@available(iOS 15.0, *)
-struct MyEmbeddedCheckoutView: View {
-    @StateObject var viewModel = EmbeddedPaymentViewModel()
-    @State private var embeddedViewHeight: CGFloat = 0
-    
-    @Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        VStack(spacing: 24) {
-            if let _ = viewModel.embeddedPaymentElement {
-                ScrollView {
-                    // Embedded Payment Element
-                    EmbeddedPaymentElementView(viewModel: viewModel, height: $embeddedViewHeight)
-                        .frame(height: embeddedViewHeight)
-                    
-                    // Payment option row
-                    if let paymentOption = viewModel.embeddedPaymentElement?.paymentOption {
-                        HStack {
-                            Image(uiImage: paymentOption.image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 30)
-                            Text(paymentOption.label)
-                            Spacer()
-                        }
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(8)
-                    }
-                    // Confirm Payment button
-                    Button(action: {
-                        Task {
-                            await viewModel.confirmPayment()
-                        }
-                    }) {
-                        if viewModel.isLoading {
-                            ProgressView()
-                        } else {
-                            Text("Confirm Payment")
-                                .frame(maxWidth: .infinity)
-                        }
-                    }
-                    .disabled(
-                        viewModel.isLoading
-                        || viewModel.embeddedPaymentElement?.paymentOption == nil
-                    )
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(viewModel.embeddedPaymentElement?.paymentOption == nil ? Color.gray : Color.blue)
-                    .cornerRadius(6)
-                    
-                    // Test height change button
-                    Button(action: {
-                        viewModel.embeddedPaymentElement?.testHeightChange()
-                    }) {
-                        Text("Test height change")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color.orange)
-                    .cornerRadius(6)
-                }
-            } else {
-                if viewModel.isLoading {
-                    ProgressView("Preparing Payment...")
-                } else {
-                    Text("Payment element not loaded.")
-                }
-            }
-        }
-        .padding()
-        .onAppear {
-            Task {
-                await viewModel.preparePaymentSheet()
-            }
-        }
-        .alert(isPresented: $viewModel.showAlert) {
-            Alert(
-                title: Text(viewModel.alertTitle),
-                message: Text(viewModel.alertMessage),
-                dismissButton: .default(Text("Ok"), action: {
-                    dismiss()
-                })
-            )
         }
     }
 }
