@@ -12,7 +12,6 @@ extension FinancialConnectionsAsyncAPIClient {
     /// Wraps an `async` function into returning a `Future`.
     private func wrapAsyncToFuture<T>(_ asyncFunction: @escaping () async throws -> T) -> Future<T> {
         let promise = Promise<T>()
-
         Task {
             do {
                 let result = try await asyncFunction()
@@ -21,14 +20,12 @@ extension FinancialConnectionsAsyncAPIClient {
                 promise.reject(with: error)
             }
         }
-
         return promise
     }
 
     /// Wraps an `async` function into returning a `Promise`.
     private func wrapAsyncToPromise<T>(_ asyncFunction: @escaping () async throws -> T) -> Promise<T> {
         let promise = Promise<T>()
-
         Task {
             do {
                 let result = try await asyncFunction()
@@ -37,13 +34,12 @@ extension FinancialConnectionsAsyncAPIClient {
                 promise.reject(with: error)
             }
         }
-
         return promise
     }
 }
 
 // Conforms to `FinancialConnectionsAPI` for facade purposes.
-// For some reason, some `FinancialConnectionsAPI` methods return a `Promise`, and others return a `Future`.
+// Some `FinancialConnectionsAPI` methods return a `Promise`, and others return a `Future`.
 // Both of these approaches are functionally equivalent.
 extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     func synchronize(

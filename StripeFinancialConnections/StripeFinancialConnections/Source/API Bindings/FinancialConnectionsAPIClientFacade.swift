@@ -13,21 +13,27 @@ final class FinancialConnectionsAPIClientFacade {
     var apiClient: any FinancialConnectionsAPI
 
     // Passthrough properties:
-    var isLinkWithStripe: Bool = false {
-        didSet {
-            apiClient.isLinkWithStripe = isLinkWithStripe
+    var isLinkWithStripe: Bool {
+        get {
+            apiClient.isLinkWithStripe
+        } set {
+            apiClient.isLinkWithStripe = newValue
         }
     }
 
     var consumerPublishableKey: String? {
-        didSet {
-            apiClient.consumerPublishableKey = consumerPublishableKey
+        get {
+            apiClient.consumerPublishableKey
+        } set {
+            apiClient.consumerPublishableKey = newValue
         }
     }
 
     var consumerSession: ConsumerSessionData? {
-        didSet {
-            apiClient.consumerSession = consumerSession
+        get {
+            apiClient.consumerSession
+        } set {
+            apiClient.consumerSession = newValue
         }
     }
 

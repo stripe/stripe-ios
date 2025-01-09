@@ -5,8 +5,6 @@
 //  Created by Mat Schmid on 2024-08-02.
 //
 
-import OHHTTPStubs
-import OHHTTPStubsSwift
 import XCTest
 
 @_spi(STP) import StripeCore

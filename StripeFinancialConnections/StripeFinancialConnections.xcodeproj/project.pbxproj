@@ -65,6 +65,8 @@
 		495539EE2C484DC200543D18 /* FinancialConnectionsTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */; };
 		496A6AE72C29E0BB00D34F8E /* testmode@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496A6AE62C29E0BB00D34F8E /* testmode@3x.png */; };
 		497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497142BB2C514B08000DFA64 /* FlowRouterTests.swift */; };
+		4976C1392D302DDA000EF185 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 4976C1382D302DDA000EF185 /* OHHTTPStubs */; };
+		4976C13B2D302DDA000EF185 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4976C13A2D302DDA000EF185 /* OHHTTPStubsSwift */; };
 		49A0B5862C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */; };
 		49AC518C2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */; };
 		49C911372C597EAF00589E0D /* LinkLoginDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C911332C597EAF00589E0D /* LinkLoginDataSource.swift */; };
@@ -550,7 +552,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3BF4BBF7E722B961E037286C /* XCTest.framework in Frameworks */,
+				4976C1392D302DDA000EF185 /* OHHTTPStubs in Frameworks */,
 				9CE29EA549C4BFA447AB82E0 /* StripeCore.framework in Frameworks */,
+				4976C13B2D302DDA000EF185 /* OHHTTPStubsSwift in Frameworks */,
 				D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */,
 				864C5159C62C562C655B53F7 /* StripeFinancialConnections.framework in Frameworks */,
 				971E6F5E78BC3265CD80D0C6 /* StripeUICore.framework in Frameworks */,
@@ -1245,6 +1249,9 @@
 				"zh-Hant",
 			);
 			mainGroup = 7879CBA341D7E807714A831B;
+			packageReferences = (
+				4929D5772D30163600E92B9A /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
+			);
 			productRefGroup = 820BF9CF057CF92872BC3C15 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1677,6 +1684,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4929D5772D30163600E92B9A /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
+			requirement = {
+				branch = "stripe-mock";
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4976C1382D302DDA000EF185 /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4929D5772D30163600E92B9A /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		4976C13A2D302DDA000EF185 /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4929D5772D30163600E92B9A /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D00B888AF0B02587576A83F /* Project object */;
 }
