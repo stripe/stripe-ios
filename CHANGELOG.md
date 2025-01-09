@@ -27,6 +27,9 @@
 * [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
 * [Fixed] Fixed an issue in Instant Bank Payments that occurred when using a connected account.
 
+### Identity
+* [Added] Updates example app to allow reusing VerificationSessions.
+
 ## 24.1.0 2024-11-25
 ### Payments
 * [Added] Support for Crypto bindings.
