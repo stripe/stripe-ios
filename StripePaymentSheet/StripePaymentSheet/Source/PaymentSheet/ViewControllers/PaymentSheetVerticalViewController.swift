@@ -768,8 +768,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,
             accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
-            analyticsHelper: analyticsHelper,
-            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM
+            analyticsHelper: analyticsHelper
         ).make().collectsUserInput
     }
 
