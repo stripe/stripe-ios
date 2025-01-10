@@ -3,11 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A89E90BE6A08E0E26625FB3 /* PaymentMethodMessagingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEAD84E710812643F204F1E /* PaymentMethodMessagingViewController.swift */; };
 		0CDE3A1203737BFD5C5629D9 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 753BA90BA35AA6FBDAA07FBE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0ED675CAC09C7DD24824F4C2 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 28B1F86587A2774EF158BDE9 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		12956CD9F7247339704DE8C2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A61EBF938F7C0D7FFEF93C2A /* Localizable.strings */; };
@@ -84,7 +83,6 @@
 		D32ACF0ECF0DCAEF2BBB42A3 /* UI-Examples-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "UI-Examples-Debug.xcconfig"; sourceTree = "<group>"; };
 		D7D4CC026D81D7E26EDA474B /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8BFFBA74634A24020A4E389 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EFEAD84E710812643F204F1E /* PaymentMethodMessagingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodMessagingViewController.swift; sourceTree = "<group>"; };
 		F16D8E3EDF1E3CCBF5FE6F36 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F351572061CC8F516217BD0F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F3F01AF08C8165512BFF2CEC /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -144,7 +142,6 @@
 				1294FDC8AE5C19800151F829 /* CardFieldViewController.swift */,
 				D0EE0C28786C46F7AD5678C4 /* CardFormViewController.swift */,
 				931AF426917A2801C4205F00 /* MockCustomerContext.swift */,
-				EFEAD84E710812643F204F1E /* PaymentMethodMessagingViewController.swift */,
 				5C2F92F71B779415739E02D5 /* SwiftUICardFormView.swift */,
 				2CEA2C4F5B6850B738224532 /* ThemeViewController.swift */,
 			);
@@ -240,8 +237,6 @@
 		60F7610314405547AB6416E8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 6E231E366F944087F8DD657F /* Build configuration list for PBXProject "UI Examples" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -293,7 +288,6 @@
 				7251058865ACA98C98273875 /* CardFieldViewController.swift in Sources */,
 				F9A86FC25BDB54F3D64FE458 /* CardFormViewController.swift in Sources */,
 				566876172C33FCC7ACB66754 /* MockCustomerContext.swift in Sources */,
-				0A89E90BE6A08E0E26625FB3 /* PaymentMethodMessagingViewController.swift in Sources */,
 				FCB92C416FBB9287BAE1FCDF /* SwiftUICardFormView.swift in Sources */,
 				B7B3DEBC7275C023C0CAC30D /* ThemeViewController.swift in Sources */,
 			);
