@@ -329,8 +329,8 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                            appearance: configuration.appearance,
                                                            hostedSurface: .paymentSheet,
                                                            cardBrandFilter: configuration.cardBrandFilter,
-                                                           canEdit: paymentMethod.isCoBrandedCard && isCBCEligible,
                                                            canRemove: canRemovePaymentMethods,
+                                                           canUpdateCardBrand: paymentMethod.isCoBrandedCard && isCBCEligible,
                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                            isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
         )

@@ -85,7 +85,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
                 // TODO: update default payment method in the back end
             }
         })
-        button.isHidden = !viewModel.canEdit && !viewModel.allowsSetAsDefaultPM
+        button.isHidden = !viewModel.canEdit
         return button
     }()
 

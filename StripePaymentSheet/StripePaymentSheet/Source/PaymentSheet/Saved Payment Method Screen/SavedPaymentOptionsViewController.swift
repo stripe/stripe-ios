@@ -588,8 +588,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                            appearance: appearance,
                                                            hostedSurface: .paymentSheet,
                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
-                                                           canEdit: paymentMethod.isCoBrandedCard && cbcEligible,
                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+                                                           canUpdateCardBrand: paymentMethod.isCoBrandedCard && cbcEligible,
                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                            isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
         )

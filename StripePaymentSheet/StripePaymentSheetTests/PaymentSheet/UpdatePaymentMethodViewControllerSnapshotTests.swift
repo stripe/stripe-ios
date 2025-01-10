@@ -112,7 +112,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canEdit: Bool? = nil, canRemove: Bool = true, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdateCardBrand: Bool = false, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
@@ -120,11 +120,11 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                     return STPFixtures.paymentMethod()
                 }
                 else {
-                    if canEdit == false {
-                        return STPPaymentMethod._testCard()
+                    if canUpdateCardBrand {
+                        return STPPaymentMethod._testCardCoBranded()
                     }
                     else {
-                        return STPPaymentMethod._testCardCoBranded()
+                        return STPPaymentMethod._testCard()
                     }
                 }
             case .USBankAccount:
@@ -138,8 +138,8 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
                                                            appearance: appearance,
                                                            hostedSurface: .paymentSheet,
-                                                           canEdit: canEdit ?? paymentMethod.isCoBrandedCard,
                                                            canRemove: canRemove,
+                                                           canUpdateCardBrand: canUpdateCardBrand,
                                                            allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                                                            isDefault: isDefault
         )
