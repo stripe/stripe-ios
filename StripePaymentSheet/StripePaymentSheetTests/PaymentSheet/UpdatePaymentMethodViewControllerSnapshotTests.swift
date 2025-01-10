@@ -13,39 +13,39 @@ import XCTest
 final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_UpdatePaymentMethodViewControllerDarkMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, canUpdateCardBrand: true)
     }
 
     func test_UpdatePaymentMethodViewControllerLightMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true)
     }
 
     func test_UpdatePaymentMethodViewControllerAppearance() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, canUpdateCardBrand: true)
     }
 
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerDarkMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isEmbeddedSingle: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isEmbeddedSingle: true, canUpdateCardBrand: true)
     }
 
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerLightMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, canUpdateCardBrand: true)
     }
 
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerAppearance() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme, canUpdateCardBrand: true)
     }
 
     func test_UpdatePaymentMethodViewControllerExpiredCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, expired: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, expired: true)
     }
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, allowsSetAsDefaultPM: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, allowsSetAsDefaultPM: true)
     }
 
     func test_UpdatePaymentMethodViewControllerDefaultCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, allowsSetAsDefaultPM: true, isDefault: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, allowsSetAsDefaultPM: true, isDefault: true)
     }
 
     func test_UpdatePaymentMethodViewControllerRemoveOnlyCard() {
@@ -112,7 +112,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdateCardBrand: Bool = true, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdateCardBrand: Bool = false, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
