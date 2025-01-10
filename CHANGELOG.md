@@ -1,4 +1,6 @@
-## X.Y.X
+## X.Y.Z X-Y-Z
+### PaymentSheet
+* [Fixed] PaymentSheet using vertical payment method layout now defaults to Apple Pay when the customer doesn't have a default saved payment method.
 
 ### Identity
 * [Added] Updates example app to allow reusing VerificationSessions.
