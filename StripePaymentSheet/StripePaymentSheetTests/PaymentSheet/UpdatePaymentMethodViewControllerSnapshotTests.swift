@@ -49,7 +49,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     }
 
     func test_UpdatePaymentMethodViewControllerRemoveOnlyCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canEdit: false)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false)
     }
 
     func test_UpdatePaymentMethodViewControllerUSBankAccountDarkMode() {
@@ -112,7 +112,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdateCardBrand: Bool = false, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdateCardBrand: Bool = true, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
