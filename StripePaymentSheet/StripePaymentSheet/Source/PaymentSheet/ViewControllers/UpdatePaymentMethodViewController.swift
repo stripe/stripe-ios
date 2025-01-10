@@ -34,9 +34,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
     }
 
-    private var updateCardBrand: Bool = false
-    private var updateDefaultPaymentMethod: Bool = false
-
     weak var delegate: UpdatePaymentMethodViewControllerDelegate?
 
     // MARK: Navigation bar
@@ -78,13 +75,13 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: viewModel.appearance, didTap: {  [self] in
-            if updateCardBrand {
+        let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: viewModel.appearance, didTap: {  [weak self] in
+            if self?.viewModel.hasChangedCardBrand == true {
                 Task {
-                    await updateCard()
+                    await self?.updateCard()
                 }
             }
-            if updateDefaultPaymentMethod {
+            if self?.viewModel.hasChangedDefaultPaymentMethodCheckbox == true {
                 // TODO: update default payment method in the back end
             }
         })
@@ -156,10 +153,9 @@ final class UpdatePaymentMethodViewController: UIViewController {
         guard viewModel.allowsSetAsDefaultPM && UpdatePaymentMethodViewModel.supportedDefaultPaymentMethods.contains(where: {
             viewModel.paymentMethod.type == $0
         }) else { return nil }
-        return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [self] isSelected in
-            updateDefaultPaymentMethod = viewModel.isDefault != isSelected
-            updateButton.update(state: updateCardBrand || updateDefaultPaymentMethod ? .enabled : .disabled)
-            
+        return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [weak self] isSelected in
+            self?.viewModel.hasChangedDefaultPaymentMethodCheckbox = self?.viewModel.isDefault != isSelected
+            self?.updateButton.update(state: self?.viewModel.hasUpdates ?? false ? .enabled : .disabled)
         }
     }()
 
@@ -297,8 +293,8 @@ extension UpdatePaymentMethodViewController: SavedPaymentMethodFormFactoryDelega
         latestError = nil // clear error on new input
         switch viewModel.paymentMethod.type {
         case .card:
-            updateCardBrand = didUpdateCardBrand
-            updateButton.update(state: updateCardBrand || updateDefaultPaymentMethod ? .enabled : .disabled)
+            viewModel.hasChangedCardBrand = didUpdateCardBrand
+            updateButton.update(state: viewModel.hasUpdates ? .enabled : .disabled)
         default:
             break
         }

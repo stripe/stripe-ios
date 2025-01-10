@@ -15,7 +15,7 @@ import UIKit
 extension SavedPaymentMethodFormFactory {
     func makeCard() -> Element {
         let cardBrandDropDown: DropdownFieldElement? = {
-            guard viewModel.paymentMethod.isCoBrandedCard else { return nil }
+            guard viewModel.canEdit else { return nil }
             let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
             let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
                                                                                theme: viewModel.appearance.asElementsTheme,

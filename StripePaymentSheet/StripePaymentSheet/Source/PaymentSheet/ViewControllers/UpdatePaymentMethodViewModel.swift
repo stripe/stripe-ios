@@ -27,6 +27,11 @@ class UpdatePaymentMethodViewModel {
 
     var selectedCardBrand: STPCardBrand?
     var errorState: Bool = false
+    var hasChangedCardBrand: Bool = false
+    var hasChangedDefaultPaymentMethodCheckbox: Bool = false
+    var hasUpdates: Bool {
+        return hasChangedCardBrand || hasChangedDefaultPaymentMethodCheckbox
+    }
 
     lazy var header: String = {
         switch paymentMethod.type {
