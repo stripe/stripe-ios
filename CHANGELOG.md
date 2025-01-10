@@ -1,3 +1,10 @@
+## X.Y.Z X-Y-Z
+### PaymentSheet
+* [Fixed] PaymentSheet using vertical payment method layout now defaults to Apple Pay when the customer doesn't have a default saved payment method.
+
+### Identity
+* [Added] Updates example app to allow reusing VerificationSessions.
+
 ## 24.3.0 2025-01-06
 ### Embedded Payment Element
 * [Added] Embedded Payment Element is now in private beta.
@@ -26,9 +33,6 @@
 ### PaymentSheet
 * [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
 * [Fixed] Fixed an issue in Instant Bank Payments that occurred when using a connected account.
-
-### Identity
-* [Added] Updates example app to allow reusing VerificationSessions.
 
 ## 24.1.0 2024-11-25
 ### Payments

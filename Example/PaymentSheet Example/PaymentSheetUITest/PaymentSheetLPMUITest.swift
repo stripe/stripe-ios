@@ -574,7 +574,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.textFields["ZIP"].tap()
         app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
         app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Reload w/ same customer
