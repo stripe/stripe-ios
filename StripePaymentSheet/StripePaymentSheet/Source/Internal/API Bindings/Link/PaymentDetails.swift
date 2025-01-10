@@ -167,7 +167,7 @@ extension ConsumerPaymentDetails.Details.Card {
         switch checks?.cvcCheck {
         case .fail, .unavailable, .unchecked, .stateInvalid:
             return true
-        default:
+        case .pass, .unparsable, nil:
             return false
         }
     }
