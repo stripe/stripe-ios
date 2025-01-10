@@ -37,7 +37,7 @@ struct PaymentSheetTestPlayground: View {
         }
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
-                SettingView(setting: $playgroundController.settings.linkEnabledMode)
+                SettingView(setting: linkEnabledModeBinding)
             }
             SettingView(setting: $playgroundController.settings.linkPassthroughMode)
         }
@@ -240,6 +240,18 @@ struct PaymentSheetTestPlayground: View {
                 playgroundController.settings.customerMode = .guest
             }
             playgroundController.settings.merchantCountryCode = newCountry
+        }
+    }
+
+    var linkEnabledModeBinding: Binding<PaymentSheetTestPlaygroundSettings.LinkEnabledMode> {
+        Binding<PaymentSheetTestPlaygroundSettings.LinkEnabledMode> {
+            return playgroundController.settings.linkEnabledMode
+        } set: { newMode in
+            // Reset customer id if Link enabled mode changes, as we change the underlying account ID
+            if playgroundController.settings.linkEnabledMode.rawValue != newMode.rawValue {
+                playgroundController.settings.customerMode = .guest
+            }
+            playgroundController.settings.linkEnabledMode = newMode
         }
     }
 
