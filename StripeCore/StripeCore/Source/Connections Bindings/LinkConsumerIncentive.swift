@@ -1,18 +1,16 @@
 //
 //  LinkConsumerIncentive.swift
-//  StripePayments
+//  StripeCore
 //
-//  Created by Till Hellmund on 10/8/24.
+//  Created by Till Hellmund on 1/10/25.
 //
 
 import Foundation
 
-@_spi(STP) public final class LinkConsumerIncentive: NSObject, STPAPIResponseDecodable {
+@_spi(STP) public struct LinkConsumerIncentive: Decodable {
     
     @_spi(STP) public let incentiveParams: IncentiveParams
     @_spi(STP) public let incentiveDisplayText: String?
-    
-    @_spi(STP) public private(set) var allResponseFields: [AnyHashable: Any] = [:]
     
     init(
         incentiveParams: IncentiveParams,
@@ -42,10 +40,10 @@ import Foundation
         return LinkConsumerIncentive(
             incentiveParams: incentiveParams,
             incentiveDisplayText: incentiveDisplayText
-        ) as? Self
+        )
     }
     
-    @_spi(STP) public struct IncentiveParams {
+    @_spi(STP) public struct IncentiveParams: Decodable {
         @_spi(STP) public let paymentMethod: String
     }
 }
