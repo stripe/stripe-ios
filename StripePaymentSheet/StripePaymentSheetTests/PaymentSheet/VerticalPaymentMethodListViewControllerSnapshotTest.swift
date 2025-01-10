@@ -47,7 +47,7 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         .swish,
         .UPI,
     ]
-    
+
     override func setUp() {
         super.setUp()
         DownloadManager.sharedManager.resetCache()
@@ -72,8 +72,9 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, incentive: nil, delegate: self)
         let window = UIWindow()
         window.isHidden = false
-        window.addAndPinSubview(sut.view, insets: .zero)
         window.overrideUserInterfaceStyle = .dark
+        window.rootViewController = sut
+        window.addAndPinSubview(sut.view, insets: .zero)
         STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
     }
 
