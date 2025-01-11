@@ -70,6 +70,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private let manifest: FinancialConnectionsSessionManifest
     private let returnURL: String?
     private let elementsSessionContext: ElementsSessionContext?
+    private let prefillDetailsOverride: WebPrefillDetails?
 
     // MARK: - UI
 
@@ -96,7 +97,8 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         manifest: FinancialConnectionsSessionManifest,
         sessionFetcher: FinancialConnectionsSessionFetcher,
         returnURL: String?,
-        elementsSessionContext: ElementsSessionContext?
+        elementsSessionContext: ElementsSessionContext?,
+        prefillDetailsOverride: WebPrefillDetails?
     ) {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
@@ -104,6 +106,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         self.sessionFetcher = sessionFetcher
         self.returnURL = returnURL
         self.elementsSessionContext = elementsSessionContext
+        self.prefillDetailsOverride = prefillDetailsOverride
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -158,7 +161,7 @@ extension FinancialConnectionsWebFlowViewController {
             startingAdditionalParameters: additionalQueryParameters,
             isInstantDebits: manifest.isProductInstantDebits,
             linkMode: elementsSessionContext?.linkMode,
-            prefillDetails: elementsSessionContext?.prefillDetails,
+            prefillDetails: prefillDetailsOverride ?? elementsSessionContext?.prefillDetails,
             billingDetails: elementsSessionContext?.billingDetails,
             incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession
         )
@@ -206,7 +209,7 @@ extension FinancialConnectionsWebFlowViewController {
                 self.authSessionManager = nil
             })
     }
-    
+
     private func createInstantDebitsLinkedBank(
         from url: URL,
         with paymentMethod: LinkBankPaymentMethod
@@ -461,7 +464,7 @@ extension FinancialConnectionsWebFlowViewController {
         startingAdditionalParameters: String?,
         isInstantDebits: Bool,
         linkMode: LinkMode?,
-        prefillDetails: ElementsSessionContext.PrefillDetails?,
+        prefillDetails: PrefillData?,
         billingDetails: ElementsSessionContext.BillingDetails?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?
     ) -> String? {
@@ -521,7 +524,7 @@ extension FinancialConnectionsWebFlowViewController {
             if let email = prefillDetails.email, !email.isEmpty {
                 parameters.append("email=\(email)")
             }
-            if let phoneNumber = prefillDetails.unformattedPhoneNumber, !phoneNumber.isEmpty {
+            if let phoneNumber = prefillDetails.phone, !phoneNumber.isEmpty {
                 parameters.append("linkMobilePhone=\(phoneNumber)")
             }
             if let countryCode = prefillDetails.countryCode, !countryCode.isEmpty {

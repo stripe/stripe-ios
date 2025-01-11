@@ -61,6 +61,7 @@
 		492039952CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492039942CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift */; };
 		492651662C24C9E7001DDBCA /* TestModeAutofillBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */; };
 		492651682C25C0C2001DDBCA /* info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 492651672C25C0C2001DDBCA /* info@3x.png */; };
+		49424EB02D48050A0088F3D9 /* WebPrefillDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49424EAF2D48050A0088F3D9 /* WebPrefillDetails.swift */; };
 		494D62072C45B9B700106519 /* link_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 494D62062C45B9B700106519 /* link_logo@3x.png */; };
 		495539EE2C484DC200543D18 /* FinancialConnectionsTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */; };
 		496A6AE72C29E0BB00D34F8E /* testmode@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496A6AE62C29E0BB00D34F8E /* testmode@3x.png */; };
@@ -327,6 +328,7 @@
 		492039942CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsWebFlowTests.swift; sourceTree = "<group>"; };
 		492651652C24C9E7001DDBCA /* TestModeAutofillBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeAutofillBannerView.swift; sourceTree = "<group>"; };
 		492651672C25C0C2001DDBCA /* info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@3x.png"; sourceTree = "<group>"; };
+		49424EAF2D48050A0088F3D9 /* WebPrefillDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPrefillDetails.swift; sourceTree = "<group>"; };
 		494D62062C45B9B700106519 /* link_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "link_logo@3x.png"; sourceTree = "<group>"; };
 		495539ED2C484DC200543D18 /* FinancialConnectionsTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsTheme.swift; sourceTree = "<group>"; };
 		496A6AE62C29E0BB00D34F8E /* testmode@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testmode@3x.png"; sourceTree = "<group>"; };
@@ -1041,6 +1043,7 @@
 				6A3739152C4060BD00D1F765 /* AutoResizableUIView.swift */,
 				6A6F989B2C4F1BF00035C03D /* CreatePaneParameters.swift */,
 				49F047522C63B430006BAD3E /* StripeSchemeAddress.swift */,
+				49424EAF2D48050A0088F3D9 /* WebPrefillDetails.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1392,6 +1395,7 @@
 				707C265C4179A8FEC98913FE /* ConsentBodyView.swift in Sources */,
 				49F1B83E2D2EC82300136303 /* FinancialConnectionsAsyncAPIClient+Legacy.swift in Sources */,
 				465AE8A58AD2183E1E2042FE /* ConsentDataSource.swift in Sources */,
+				49424EB02D48050A0088F3D9 /* WebPrefillDetails.swift in Sources */,
 				97C528CE821C6A55D58F68A4 /* ConsentFooterView.swift in Sources */,
 				8927328EE28A0C94B5AB69DB /* ConsentLogoView.swift in Sources */,
 				E9866D5CA186A242BBEA69E1 /* ConsentViewController.swift in Sources */,
