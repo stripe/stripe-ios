@@ -210,6 +210,7 @@ final class LinkLoginViewController: UIViewController {
             case .success(let response):
                 self.delegate?.linkLoginViewController(self, signedUpAttachedAndSynchronized: response)
             case .failure(let error):
+                self.dataSource.reportAttestationErrorIfNeeded(error: error)
                 self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
             }
         }

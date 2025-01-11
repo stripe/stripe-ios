@@ -219,6 +219,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                     withError: nil
                 )
             case .failure(let error):
+                self.dataSource.reportAttestationErrorIfNeeded(error: error)
                 // on error, we still go to success pane, but show a small error
                 // notice above the done button of the success pane
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(

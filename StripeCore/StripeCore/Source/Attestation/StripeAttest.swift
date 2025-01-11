@@ -82,6 +82,15 @@ import UIKit
         return appAttestService.isSupported
     }
 
+    @_spi(STP) public static func isLinkAssertionError(error: Error) -> Bool {
+        if let error = error as? StripeCore.StripeError,
+           case let .apiError(apiError) = error,
+           apiError.code == "link_failed_to_attest_request" {
+            return true
+        }
+        return false
+    }
+
     // MARK: Public structs
 
     /// Contains the signed data and various information used to sign the request.

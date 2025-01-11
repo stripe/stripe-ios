@@ -23,6 +23,7 @@ protocol LinkLoginDataSource: AnyObject {
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
     ) -> Future<FinancialConnectionsSynchronize>
+    func reportAttestationErrorIfNeeded(error: Error)
 }
 
 final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
@@ -75,13 +76,15 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse> {
-        apiClient.linkAccountSignUp(
+        let verified = manifest.appVerificationEnabled ?? false
+        return apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             country: country,
             amount: elementsSessionContext?.amount,
             currency: elementsSessionContext?.currency,
-            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession
+            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
+            useMobileEndpoints: verified
         )
     }
 
@@ -112,5 +115,9 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             linkAccountSession: linkAccountSession,
             consumerSessionClientSecret: consumerSessionClientSecret
         )
+    }
+
+    func reportAttestationErrorIfNeeded(error: Error) {
+        apiClient.reportAttestationErrorIfNeeded(error: error)
     }
 }

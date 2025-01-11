@@ -38,6 +38,14 @@ final class FinancialConnectionsAPIClient {
         return consumerPublishableKey
     }
 
+    /// Forwards attestation errors to the `StripeAttest` client for logging.
+    func reportAttestationErrorIfNeeded(error: Error) {
+        guard StripeAttest.isLinkAssertionError(error: error) else { return }
+        Task {
+            await backingAPIClient.stripeAttest.receivedAssertionError(error)
+        }
+    }
+
     /// Passthrough to `STPAPIClient.get` which uses the `consumerPublishableKey` whenever it should be used.
     /// As a rule of thumb, `useConsumerPublishableKeyIfNeeded` should be `true` for requests that happen after the user is verified.
     /// However, there are some exceptions to this rules (such as the create payment method request).
@@ -89,9 +97,32 @@ final class FinancialConnectionsAPIClient {
             throw EncodingError.cannotCastToDictionary
         }
     }
+
+    private func applyAttestationParameters(
+        to baseParameters: [String: Any]
+    ) -> Future<[String: Any]> {
+        let promise = Promise<[String: Any]>()
+        Task {
+            do {
+                let attest = backingAPIClient.stripeAttest
+                let handle = try await attest.assert()
+                let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
+                promise.resolve(with: newParameters)
+            } catch {
+                // Fail silently if we can't get an assertion, we'll try the request anyway. It may fail.
+                promise.resolve(with: baseParameters)
+            }
+        }
+        return promise
+    }
 }
 
 protocol FinancialConnectionsAPI {
+    typealias SaveAccountsToNetworkAndLinkResponse = (
+        manifest: FinancialConnectionsSessionManifest,
+        customSuccessPaneMessage: String?
+    )
+
     func synchronize(
         clientSecret: String,
         returnURL: String?
@@ -178,10 +209,7 @@ protocol FinancialConnectionsAPI {
         country: String?,
         consumerSessionClientSecret: String?,
         clientSecret: String
-    ) -> Future<(
-        manifest: FinancialConnectionsSessionManifest,
-        customSuccessPaneMessage: String?
-    )>
+    ) -> Future<SaveAccountsToNetworkAndLinkResponse>
 
     func disableNetworking(
         disabledReason: String?,
@@ -235,7 +263,8 @@ protocol FinancialConnectionsAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        incentiveEligibilitySession: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        useMobileEndpoints: Bool
     ) -> Future<LinkSignUpResponse>
 
     func attachLinkConsumerToLinkAccountSession(
@@ -668,14 +697,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         country: String?,
         consumerSessionClientSecret: String?,
         clientSecret: String
-    ) -> Future<(
-        manifest: FinancialConnectionsSessionManifest,
-        customSuccessPaneMessage: String?
-    )> {
-        let saveAccountsToLinkHandler: () -> Future<(
-            manifest: FinancialConnectionsSessionManifest,
-            customSuccessPaneMessage: String?
-        )> = {
+    ) -> Future<SaveAccountsToNetworkAndLinkResponse> {
+        let saveAccountsToLinkHandler: () -> Future<SaveAccountsToNetworkAndLinkResponse> = {
             return self.saveAccountsToLink(
                 emailAddress: emailAddress,
                 phoneNumber: phoneNumber,
@@ -698,10 +721,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             shouldPollAccounts,
             !linkedAccountIds.isEmpty
         {
-            let promise = Promise<(
-                manifest: FinancialConnectionsSessionManifest,
-                customSuccessPaneMessage: String?
-            )>()
+            let promise = Promise<SaveAccountsToNetworkAndLinkResponse>()
             pollAccountNumbersForSelectedAccounts(
                 linkedAccountIds: linkedAccountIds
             )
@@ -934,7 +954,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        incentiveEligibilitySession: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        useMobileEndpoints: Bool
     ) -> Future<LinkSignUpResponse> {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -970,11 +991,25 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             }
         }
 
-        return post(
-            resource: APIEndpointLinkAccountsSignUp,
-            parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
-        )
+        if useMobileEndpoints {
+            return applyAttestationParameters(to: parameters)
+                .chained { [weak self] updatedParameters in
+                    guard let self else {
+                        return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
+                    }
+                    return self.post(
+                        resource: APIMobileEndpointLinkAccountSignUp,
+                        parameters: updatedParameters,
+                        useConsumerPublishableKeyIfNeeded: false
+                    )
+            }
+        } else {
+            return post(
+                resource: APIEndpointLinkAccountsSignUp,
+                parameters: parameters,
+                useConsumerPublishableKeyIfNeeded: false
+            )
+        }
     }
 
     func attachLinkConsumerToLinkAccountSession(
@@ -1168,3 +1203,5 @@ private let APIEndpointPaymentDetails = "consumers/payment_details"
 private let APIEndpointSharePaymentDetails = "consumers/payment_details/share"
 private let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpointAvailableIncentives = "consumers/incentives/update_available"
+// Verified
+private let APIMobileEndpointLinkAccountSignUp = "consumers/mobile/sign_up"

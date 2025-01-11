@@ -20,6 +20,7 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
         phoneNumber: String,
         countryCode: String
     ) -> Future<String?>
+    func reportAttestationErrorIfNeeded(error: Error)
 }
 
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
@@ -73,16 +74,54 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         phoneNumber: String,
         countryCode: String
     ) -> Future<String?> {
-        return apiClient.saveAccountsToNetworkAndLink(
-            shouldPollAccounts: !manifest.shouldAttachLinkedPaymentMethod,
-            selectedAccounts: selectedAccounts,
-            emailAddress: emailAddress,
-            phoneNumber: phoneNumber,
-            country: countryCode, // ex. "US"
-            consumerSessionClientSecret: nil,
-            clientSecret: clientSecret
-        ).chained { (_, customSuccessPaneMessage) in
-            return Promise(value: customSuccessPaneMessage)
+        let verified = manifest.appVerificationEnabled ?? false
+        if verified {
+            // In the verified scenario, first call the `/mobile/sign_up` endpoint with attestation parameters,
+            // then call `/save_accounts_to_link` and omit the email and phone parameters.
+            return apiClient.linkAccountSignUp(
+                emailAddress: emailAddress,
+                phoneNumber: phoneNumber,
+                country: countryCode,
+                amount: nil,
+                currency: nil,
+                incentiveEligibilitySession: nil,
+                useMobileEndpoints: verified
+            ).chained { [weak self] _ -> Future<FinancialConnectionsAPI.SaveAccountsToNetworkAndLinkResponse> in
+                guard let self else {
+                    return Promise(error: FinancialConnectionsSheetError.unknown(
+                        debugDescription: "Networking Link Signup data source deallocated.")
+                    )
+                }
+                // Intentionally omit email and phone in this subsequent call
+                return apiClient.saveAccountsToNetworkAndLink(
+                    shouldPollAccounts: !manifest.shouldAttachLinkedPaymentMethod,
+                    selectedAccounts: selectedAccounts,
+                    emailAddress: nil,
+                    phoneNumber: nil,
+                    country: countryCode,
+                    consumerSessionClientSecret: nil,
+                    clientSecret: clientSecret
+                )
+            }
+            .chained { (_, customSuccessPaneMessage) in
+                return Promise(value: customSuccessPaneMessage)
+            }
+        } else {
+            return apiClient.saveAccountsToNetworkAndLink(
+                shouldPollAccounts: !manifest.shouldAttachLinkedPaymentMethod,
+                selectedAccounts: selectedAccounts,
+                emailAddress: emailAddress,
+                phoneNumber: phoneNumber,
+                country: countryCode, // ex. "US"
+                consumerSessionClientSecret: nil,
+                clientSecret: clientSecret
+            ).chained { (_, customSuccessPaneMessage) in
+                return Promise(value: customSuccessPaneMessage)
+            }
         }
+    }
+
+    func reportAttestationErrorIfNeeded(error: Error) {
+        apiClient.reportAttestationErrorIfNeeded(error: error)
     }
 }
