@@ -37,7 +37,7 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         let swiftUIView = EmbeddedPaymentElementView(viewModel: viewModel)
 
         // Embed `swiftUIView` in a UIWindow for rendering
-        let hostingVC = makeWindowWithEmbeddedView(swiftUIView, width: 320, height: 600)
+        let hostingVC = makeWindowWithEmbeddedView(swiftUIView, width: 320, height: 320)
 
         // Assume the hostingVC only has 1 subview...
         XCTAssertFalse(hostingVC.view.subviews.isEmpty)
@@ -99,7 +99,6 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        view.autosizeHeight(width: 320)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 }
