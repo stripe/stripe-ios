@@ -294,20 +294,26 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         clientSecret: String,
         returnURL: String?
     ) -> Future<FinancialConnectionsSynchronize> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
             "client_secret": clientSecret,
-            "mobile": {
-                var mobileParameters: [String: Any] = [
-                    "fullscreen": true,
-                    "hide_close_button": true,
-                    "forced_authflow_version": "v3",
-                ]
-                mobileParameters["app_return_url"] = returnURL
-                return mobileParameters
-            }(),
             "locale": Locale.current.toLanguageTag(),
         ]
+
+        var mobileParameters: [String: Any] = [
+            "fullscreen": true,
+            "hide_close_button": true,
+            "forced_authflow_version": "v3",
+        ]
+        mobileParameters["app_return_url"] = returnURL
+
+        let attest = backingAPIClient.stripeAttest
+        if attest.isSupported {
+            mobileParameters["supports_app_verification"] = true
+            mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
+        }
+        parameters["mobile"] = mobileParameters
+
         return self.post(
             resource: "financial_connections/sessions/synchronize",
             parameters: parameters,
