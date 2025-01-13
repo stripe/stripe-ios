@@ -5,6 +5,7 @@
 
 import DeviceCheck
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCoreTestUtils
 import XCTest
 
 class StripeAttestTest: XCTestCase {

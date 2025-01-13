@@ -149,6 +149,7 @@ import Foundation
     case link2FAComplete = "link.2fa.complete"
     case link2FACancel = "link.2fa.cancel"
     case link2FAFailure = "link.2fa.failure"
+    case linkNativeBailed = "link.native.bailed"
 
     // MARK: - Link Misc
     case linkAccountLookupComplete = "link.account_lookup.complete"
@@ -192,11 +193,6 @@ import Foundation
     // MARK: - Address Element
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"
-
-    // MARK: - PaymentMethodMessagingView
-    case paymentMethodMessagingViewLoadSucceeded = "pmmv_load_succeeded"
-    case paymentMethodMessagingViewLoadFailed = "pmmv_load_failed"
-    case paymentMethodMessagingViewTapped = "pmmv_tapped"
 
     // MARK: - PaymentSheet Force Success
     case paymentSheetForceSuccess = "mc_force_success"

@@ -89,6 +89,10 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .link2FACancel)
     }
 
+    func logLinkBailedToWebFlow() {
+        self.logPaymentSheetEvent(event: .linkNativeBailed)
+    }
+
     // MARK: - popup
     func logLinkPopupShow(sessionType: LinkSettings.PopupWebviewOption) {
         AnalyticsHelper.shared.startTimeMeasurement(.linkPopup)

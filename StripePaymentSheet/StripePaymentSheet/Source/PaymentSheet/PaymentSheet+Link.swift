@@ -30,7 +30,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
         }
     }
 
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+    func payWithLinkWebControllerDidCancel() {
     }
 }
 
@@ -170,21 +170,6 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
 }
 
 // MARK: - Native Link helpers
-
-/// Prepares a device for native Link and returns whether the device is ready
-func prepareNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async -> Bool {
-    guard deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
-        return false
-    }
-
-    // If we're in testmode, we don't need to attest for native Link
-    if configuration.apiClient.isTestmode {
-        return true
-    }
-
-    let stripeAttest = configuration.apiClient.stripeAttest
-    return await stripeAttest.prepareAttestation()
-}
 
 /// Check if native Link is available on this device
 func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
