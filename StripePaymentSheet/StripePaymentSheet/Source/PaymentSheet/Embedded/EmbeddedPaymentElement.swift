@@ -271,7 +271,10 @@ public final class EmbeddedPaymentElement {
             case .external(let type):
                 return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             case .instantDebits, .linkCardBrand:
-                return .new(confirmParams: params)
+                guard let paymentMethod = params.instantDebitsLinkedBank?.paymentMethod.decode() else {
+                    return nil
+                }
+                return .saved(paymentMethod: paymentMethod, confirmParams: params)
             }
         case .saved(paymentMethod: let paymentMethod):
             return .saved(paymentMethod: paymentMethod, confirmParams: nil)
