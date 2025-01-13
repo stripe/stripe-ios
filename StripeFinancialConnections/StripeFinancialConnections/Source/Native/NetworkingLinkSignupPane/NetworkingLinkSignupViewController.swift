@@ -210,6 +210,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         .observe { [weak self] result in
             guard let self = self else { return }
+
+            // Mark the assertion as completed and log possible errors.
+            self.dataSource.completeAssertion(possibleError: result.error)
+
             switch result {
             case .success(let customSuccessPaneMessage):
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
@@ -219,7 +223,6 @@ final class NetworkingLinkSignupViewController: UIViewController {
                     withError: nil
                 )
             case .failure(let error):
-                self.dataSource.reportAttestationErrorIfNeeded(error: error)
                 // on error, we still go to success pane, but show a small error
                 // notice above the done button of the success pane
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(

@@ -23,7 +23,7 @@ protocol LinkLoginDataSource: AnyObject {
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
     ) -> Future<FinancialConnectionsSynchronize>
-    func reportAttestationErrorIfNeeded(error: Error)
+    func completeAssertion(possibleError: Error?)
 }
 
 final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
@@ -117,7 +117,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         )
     }
 
-    func reportAttestationErrorIfNeeded(error: Error) {
-        apiClient.reportAttestationErrorIfNeeded(error: error)
+    func completeAssertion(possibleError: Error?) {
+        apiClient.completeAssertion(possibleError: possibleError)
     }
 }

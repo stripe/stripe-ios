@@ -403,7 +403,7 @@ import UIKit
     // MARK: Assertion concurrency
 
     // Called when an assertion handle is completed or times out
-    private func assertionCompleted() {
+    @_spi(STP) public func assertionCompleted() {
         assertionInProgress = false
 
         // Resume the next waiter if there is one

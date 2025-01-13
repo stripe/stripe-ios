@@ -206,11 +206,13 @@ final class LinkLoginViewController: UIViewController {
             guard let self else { return }
             self.footerButton?.isLoading = false
 
+            // Mark the assertion as completed and log possible errors.
+            self.dataSource.completeAssertion(possibleError: result.error)
+
             switch result {
             case .success(let response):
                 self.delegate?.linkLoginViewController(self, signedUpAttachedAndSynchronized: response)
             case .failure(let error):
-                self.dataSource.reportAttestationErrorIfNeeded(error: error)
                 self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
             }
         }

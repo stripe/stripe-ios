@@ -38,11 +38,14 @@ final class FinancialConnectionsAPIClient {
         return consumerPublishableKey
     }
 
-    /// Forwards attestation errors to the `StripeAttest` client for logging.
-    func reportAttestationErrorIfNeeded(error: Error) {
-        guard StripeAttest.isLinkAssertionError(error: error) else { return }
+    /// Marks the assertion as completed and forwards attestation errors to the `StripeAttest` client for logging.
+    func completeAssertion(possibleError: Error?) {
+        let attest = backingAPIClient.stripeAttest
         Task {
-            await backingAPIClient.stripeAttest.receivedAssertionError(error)
+            if let error = possibleError, StripeAttest.isLinkAssertionError(error: error) {
+                await attest.receivedAssertionError(error)
+            }
+            await attest.assertionCompleted()
         }
     }
 
@@ -1149,7 +1152,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 )
             }
     }
-    
+
     func updateAvailableIncentives(
         consumerSessionClientSecret: String,
         sessionID: String

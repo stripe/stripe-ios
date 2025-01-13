@@ -20,7 +20,7 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
         phoneNumber: String,
         countryCode: String
     ) -> Future<String?>
-    func reportAttestationErrorIfNeeded(error: Error)
+    func completeAssertion(possibleError: Error?)
 }
 
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
@@ -121,7 +121,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         }
     }
 
-    func reportAttestationErrorIfNeeded(error: Error) {
-        apiClient.reportAttestationErrorIfNeeded(error: error)
+    func completeAssertion(possibleError: Error?) {
+        apiClient.completeAssertion(possibleError: possibleError)
     }
 }
