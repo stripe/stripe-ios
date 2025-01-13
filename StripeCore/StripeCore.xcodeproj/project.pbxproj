@@ -115,6 +115,8 @@
 		CAF857D45689FBEF17627E80 /* BundleLocatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937066801E91C99C50192364 /* BundleLocatorProtocol.swift */; };
 		CB0E9DC82CB9C79E00E083D1 /* LinkBankPaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */; };
 		CB1FB2383FAEE0194C39E4DE /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E86AC7DD5F4DE2780E0AC425 /* OHHTTPStubsSwift */; };
+		CB80352A2D31BA79008F0556 /* AvailableIncentives.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8035292D31BA79008F0556 /* AvailableIncentives.swift */; };
+		CB80352C2D31BAC7008F0556 /* LinkConsumerIncentive.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB80352B2D31BAC7008F0556 /* LinkConsumerIncentive.swift */; };
 		CB8A47A5FD057112CB607DE9 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5334916D2A4F927645C2569 /* MockData.swift */; };
 		D144C3A657E5C16975CB2191 /* NSError+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23506F3E93ECA5A96DCE7E31 /* NSError+StripeCore.swift */; };
 		D22FAB2F1AE9AE43C1808747 /* StripeAPIConfiguration+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1BFF01B1EA57F6EA7BFBF1 /* StripeAPIConfiguration+Version.swift */; };
@@ -335,6 +337,8 @@
 		C666CC926642D7AA76E75B5B /* StripeCoreTestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCoreTestUtils.h; sourceTree = "<group>"; };
 		CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBankPaymentMethod.swift; sourceTree = "<group>"; };
 		CB2721EE8E075E700FF3E58A /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		CB8035292D31BA79008F0556 /* AvailableIncentives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableIncentives.swift; sourceTree = "<group>"; };
+		CB80352B2D31BAC7008F0556 /* LinkConsumerIncentive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkConsumerIncentive.swift; sourceTree = "<group>"; };
 		CC70CDF482E22A29B11466F7 /* STPAPIClient+EmptyResponseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+EmptyResponseTest.swift"; sourceTree = "<group>"; };
 		CD9288E147B8C9D33CCB5045 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CF15BAFA3E58D68668EE6DCC /* STPSnapshotTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSnapshotTestCase.swift; sourceTree = "<group>"; };
@@ -492,6 +496,8 @@
 				492039922CA47A8600CE2072 /* ElementsSessionContext.swift */,
 				49F3828C2CC02D43001CE69A /* BillingAddress.swift */,
 				CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */,
+				CB8035292D31BA79008F0556 /* AvailableIncentives.swift */,
+				CB80352B2D31BAC7008F0556 /* LinkConsumerIncentive.swift */,
 			);
 			path = "Connections Bindings";
 			sourceTree = "<group>";
@@ -1070,6 +1076,7 @@
 				F628BBE9FDA9D3A217ACA753 /* STPNumericStringValidator.swift in Sources */,
 				C9B6C451F9A46C9FB031CE95 /* STPURLCallbackHandler.swift in Sources */,
 				A62AEDF871AC89489FE19A13 /* ServerErrorMapper.swift in Sources */,
+				CB80352A2D31BA79008F0556 /* AvailableIncentives.swift in Sources */,
 				B6DBB2BF2BA8C4E400783D15 /* STPAnalyticsClient+Error.swift in Sources */,
 				6A05FB452BCF24100001D128 /* FinancialConnectionsSDKResult.swift in Sources */,
 				49F3828D2CC02D43001CE69A /* BillingAddress.swift in Sources */,
@@ -1078,6 +1085,7 @@
 				0709F5D265CC641E6DE1011D /* URLSession+Retry.swift in Sources */,
 				6A05FB492BCF244A0001D128 /* InstantDebitsLinkedBank.swift in Sources */,
 				2991461DD354A6124CCF78DA /* STPLocalizationUtils.swift in Sources */,
+				CB80352C2D31BAC7008F0556 /* LinkConsumerIncentive.swift in Sources */,
 				4506A7016EA7C45796D3A30D /* STPLocalizedString.swift in Sources */,
 				DFF3092E51B6C3ED81AB1448 /* String+Localized.swift in Sources */,
 				6B987BDD2C9111BC00DDFDB3 /* Notification+Stripe.swift in Sources */,

@@ -1114,6 +1114,25 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 )
             }
     }
+    
+    func updateAvailableIncentives(
+        consumerSessionClientSecret: String,
+        sessionID: String
+    ) -> Future<AvailableIncentives> {
+        let parameters: [String: Any] = [
+            "request_surface": requestSurface,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ],
+            "session_id": sessionID,
+        ]
+
+        return post(
+            resource: APIEndpointAvailableIncentives,
+            parameters: parameters,
+            useConsumerPublishableKeyIfNeeded: true
+        )
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
@@ -1148,3 +1167,4 @@ private let APIEndpointAttachLinkConsumerToLinkAccountSession = "consumers/attac
 private let APIEndpointPaymentDetails = "consumers/payment_details"
 private let APIEndpointSharePaymentDetails = "consumers/payment_details/share"
 private let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointAvailableIncentives = "consumers/incentives/update_available"
