@@ -165,9 +165,9 @@ extension ConsumerPaymentDetails.Details.Card {
 
     var shouldRecollectCardCVC: Bool {
         switch checks?.cvcCheck {
-        case .fail, .unavailable, .unchecked:
+        case .fail, .unavailable, .unchecked, .stateInvalid:
             return true
-        default:
+        case .pass, .unparsable, nil:
             return false
         }
     }

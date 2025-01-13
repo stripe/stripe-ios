@@ -12,16 +12,19 @@ import Foundation
     public let bankName: String?
     public let last4: String?
     public let linkMode: LinkMode?
+    public let incentiveEligible: Bool
     
     public init(
         paymentMethod: LinkBankPaymentMethod,
         bankName: String?,
         last4: String?,
-        linkMode: LinkMode?
+        linkMode: LinkMode?,
+        incentiveEligible: Bool
     ) {
         self.paymentMethod = paymentMethod
         self.bankName = bankName
         self.last4 = last4
         self.linkMode = linkMode
+        self.incentiveEligible = incentiveEligible
     }
 }
