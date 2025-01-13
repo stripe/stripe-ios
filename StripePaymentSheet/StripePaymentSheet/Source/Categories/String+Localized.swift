@@ -448,7 +448,7 @@ extension String.Localized {
     @_spi(STP) public static var set_as_default_payment_method: String {
         STPLocalizedString(
             "Set as default payment method",
-            "Label of a checkbox that when checked makes a payment method the default one."
+            "Label of a checkbox that when checked makes a payment method as the default one."
         )
     }
 }

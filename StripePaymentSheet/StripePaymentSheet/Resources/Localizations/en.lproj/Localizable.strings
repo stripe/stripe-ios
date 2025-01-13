@@ -339,7 +339,7 @@ to be saved and used in future checkout sessions. */
 /* Label for a button or menu item that sets a payment method as default when tapped. */
 "Set as default" = "Set as default";
 
-/* Label of a checkbox that when checked makes a payment method the default one. */
+/* Label of a checkbox that when checked makes a payment method as the default one. */
 "Set as default payment method" = "Set as default payment method";
 
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
