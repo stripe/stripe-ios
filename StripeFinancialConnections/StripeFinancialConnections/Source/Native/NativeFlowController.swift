@@ -554,38 +554,11 @@ extension NativeFlowController {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
             }
             
-            let promise = Promise<PaymentMethodWithIncentiveEligibility>()
-            
-            if let incentiveEligibilitySession = elementsSessionContext?.incentiveEligibilitySession {
-                self.dataManager.apiClient.updateAvailableIncentives(
-                    consumerSessionClientSecret: consumerSession.clientSecret,
-                    sessionID: incentiveEligibilitySession.id
-                ).observe { result in
-                    switch result {
-                    case .success(let availableIncentives):
-                        let result = PaymentMethodWithIncentiveEligibility(
-                            paymentMethod: paymentMethod,
-                            incentiveEligible: availableIncentives.incentives.isEmpty == false
-                        )
-                        promise.fullfill(with: .success(result))
-                    case .failure(let error):
-                        NSLog("Failed to update available incentives: \(error)")
-                        let result = PaymentMethodWithIncentiveEligibility(
-                            paymentMethod: paymentMethod,
-                            incentiveEligible: false
-                        )
-                        promise.fullfill(with: .success(result))
-                    }
-                }
-            } else {
-                let result = PaymentMethodWithIncentiveEligibility(
-                    paymentMethod: paymentMethod,
-                    incentiveEligible: false
-                )
-                promise.fullfill(with: .success(result))
-            }
-            
-            return promise
+            return updateIncentiveEligibility(
+                incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
+                consumerSession: consumerSession,
+                paymentMethod: paymentMethod
+            )
         }
         .observe { result in
             switch result {
@@ -602,6 +575,48 @@ extension NativeFlowController {
                 completion(.failure(error))
             }
         }
+    }
+    
+    private func updateIncentiveEligibility(
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        consumerSession: ConsumerSessionData,
+        paymentMethod: LinkBankPaymentMethod
+    ) -> Promise<PaymentMethodWithIncentiveEligibility> {
+        guard let incentiveEligibilitySession else {
+            // The session isn't eligible for an incentive, so we just continue to finish the flow.
+            let result = PaymentMethodWithIncentiveEligibility(
+                paymentMethod: paymentMethod,
+                incentiveEligible: false
+            )
+            return Promise(value: result)
+        }
+        
+        let promise = Promise<PaymentMethodWithIncentiveEligibility>()
+        
+        self.dataManager.apiClient.updateAvailableIncentives(
+            consumerSessionClientSecret: consumerSession.clientSecret,
+            sessionID: incentiveEligibilitySession.id
+        ).observe { result in
+            switch result {
+            case .success(let availableIncentives):
+                let result = PaymentMethodWithIncentiveEligibility(
+                    paymentMethod: paymentMethod,
+                    incentiveEligible: availableIncentives.incentives.isEmpty == false
+                )
+                promise.resolve(with: result)
+            case .failure(let error):
+                // We weren't able to determine eligibility, so we assume ineligibility
+                // and continue to finish the flow.
+                NSLog("Failed to update available incentives: \(error)")
+                let result = PaymentMethodWithIncentiveEligibility(
+                    paymentMethod: paymentMethod,
+                    incentiveEligible: false
+                )
+                promise.resolve(with: result)
+            }
+        }
+        
+        return promise
     }
 
     private func logCompleteEvent(
