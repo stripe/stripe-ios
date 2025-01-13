@@ -102,4 +102,13 @@ enum PaymentSheetFormFactoryConfig {
             return config.cardBrandFilter
         }
     }
+
+    var allowsSetAsDefaultPM: Bool {
+        switch self {
+        case .paymentSheet(let config):
+            return config.allowsSetAsDefaultPM
+        case .customerSheet(let config):
+            return config.allowsSetAsDefaultPM
+        }
+    }
 }

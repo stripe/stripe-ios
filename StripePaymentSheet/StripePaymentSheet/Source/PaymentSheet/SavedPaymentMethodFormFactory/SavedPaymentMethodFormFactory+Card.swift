@@ -15,7 +15,7 @@ import UIKit
 extension SavedPaymentMethodFormFactory {
     func makeCard() -> Element {
         let cardBrandDropDown: DropdownFieldElement? = {
-            guard viewModel.paymentMethod.isCoBrandedCard else { return nil }
+            guard viewModel.canUpdateCardBrand else { return nil }
             let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
             let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
                                                                                theme: viewModel.appearance.asElementsTheme,
@@ -43,7 +43,7 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let panElement: TextFieldElement = {
-            return TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.card?.brand, cardBrandDropDown: cardBrandDropDown).makeElement(theme: viewModel.appearance.asElementsTheme)
+            return TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.calculateCardBrandToDisplay(), cardBrandDropDown: cardBrandDropDown).makeElement(theme: viewModel.appearance.asElementsTheme)
         }()
 
         let expiryDateElement: TextFieldElement = {

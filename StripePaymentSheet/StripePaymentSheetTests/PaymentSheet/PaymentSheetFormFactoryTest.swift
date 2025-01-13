@@ -1179,6 +1179,59 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
     }
 
+    func testNonCardsAndUSBankAccountsDontHaveSetAsDefaultPaymentMethodCheckbox() {
+        let configuration = PaymentSheet.Configuration()
+        let intent = Intent._testValue()
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(
+                format: "ACSZP",
+                require: "AZ",
+                cityNameType: .post_town,
+                stateNameType: .state,
+                zip: "",
+                zipNameType: .pin
+            ),
+        ]
+        let loadFormSpecs = expectation(description: "Load form specs")
+        FormSpecProvider.shared.load { _ in
+            loadFormSpecs.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+        // No payment method should have a checkbox except for cards and US Bank Accounts
+        for type in PaymentSheet.supportedPaymentMethods.filter({
+            $0 != .card && $0 != .USBankAccount
+        }) {
+            let factory = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testCardValue(),
+                configuration: .paymentSheet(configuration),
+                paymentMethod: .stripe(type),
+                addressSpecProvider: specProvider
+            )
+
+            var form = factory.make()
+            if let wrapper = form as? PaymentMethodElementWrapper<FormElement> {
+                form = wrapper.element
+            } else if
+                let wrapper = form as? ContainerElement,
+                let _form = wrapper.elements.first as? FormElement
+            {
+                form = _form
+            }
+
+            guard let form = form as? FormElement else {
+                XCTFail()
+                return
+            }
+            if form.getAllUnwrappedSubElements()
+                .compactMap({ $0 as? CheckboxElement })
+                .contains(where: { $0.label.hasPrefix("Set as default") }) { // Hacky way to differentiate the save checkbox from other checkboxes
+                XCTFail("\(type) contains a checkbox")
+            }
+        }
+    }
+
     func testEPSDoesntHideCardCheckbox() {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
