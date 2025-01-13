@@ -127,10 +127,7 @@ final class LinkCardEditElement: Element {
 
     private lazy var checkboxElement = CheckboxElement(
         theme: theme,
-        label: STPLocalizedString(
-            "Set as default payment method",
-            "Label of a checkbox that when checked makes a payment method as the default one."
-        ),
+        label: String.Localized.set_as_default_payment_method,
         isSelectedByDefault: paymentMethod.isDefault
     )
 

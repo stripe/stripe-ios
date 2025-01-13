@@ -37,12 +37,13 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
     private let bankInfoView: BankAccountInfoView
-    private let checkboxElement: PaymentMethodElement?
+    private let saveCheckboxElement: PaymentMethodElementWrapper<CheckboxElement>?
+    private let defaultCheckboxElement: PaymentMethodElement?
     private var savingAccount: BoolReference
     private let theme: ElementsAppearance
 
     private var linkedAccountElements: [Element] {
-        [bankInfoSectionElement, checkboxElement].compactMap { $0 }
+        [bankInfoSectionElement, saveCheckboxElement, saveCheckboxElement?.element.isSelected ?? false ? defaultCheckboxElement : nil].compactMap { $0 }
     }
 
     private static let links: [String: URL] = [
@@ -87,7 +88,8 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
-        checkboxElement: PaymentMethodElement?,
+        saveCheckboxElement: PaymentMethodElementWrapper<CheckboxElement>?,
+        defaultCheckboxElement: PaymentMethodElement?,
         savingAccount: BoolReference,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
@@ -115,8 +117,10 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         self.bankInfoSectionElement = SectionElement(title: String.Localized.bank_account_sentence_case,
                                                      elements: [StaticElement(view: bankInfoView)], theme: theme)
         self.bankInfoSectionElement.view.isHidden = true
-        self.checkboxElement = checkboxElement
-        checkboxElement?.view.isHidden = true
+        self.saveCheckboxElement = saveCheckboxElement
+        saveCheckboxElement?.view.isHidden = true
+        self.defaultCheckboxElement = defaultCheckboxElement
+        defaultCheckboxElement?.view.isHidden = true
         self.merchantName = merchantName
         self.savingAccount = savingAccount
         self.theme = theme
@@ -127,7 +131,8 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             phoneElement,
             addressElement,
             bankInfoSectionElement,
-            checkboxElement,
+            saveCheckboxElement,
+            defaultCheckboxElement
         ]
         let autoSectioningElements = allElements.compactMap { $0 }
         self.formElement = FormElement(autoSectioningElements: autoSectioningElements, theme: theme)

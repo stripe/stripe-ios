@@ -49,5 +49,32 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         )
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375   )
     }
+
+    func test_with_previous_customer_card_details_and_default_checkbox() {
+        // Given the customer previously entered card details...
+        let previousCustomerInput = IntentConfirmParams.init(
+            params: .paramsWith(card: STPFixtures.paymentMethodCardParams(), billingDetails: STPFixtures.paymentMethodBillingDetails(), metadata: nil),
+            type: .stripe(.card)
+        )
+        previousCustomerInput.saveForFutureUseCheckboxState = .selected
+        // ...and the card doesn't show up *first* in the list (so we can exercise the code that switches to the previously entered pm form)...
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.payPal, .card, .cashApp])
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        // ...and a "Save this card" checkbox...
+        config.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        // allows set as default so that the set as default checkbox renders
+        config.allowsSetAsDefaultPM = true
+        // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
+        let sut = AddPaymentMethodViewController(
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            configuration: config,
+            previousCustomerInput: previousCustomerInput,
+            paymentMethodTypes: [.stripe(.payPal), .stripe(.card), .stripe(.cashApp)],
+            formCache: .init(),
+            analyticsHelper: ._testValue()
+        )
+        STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375   )
+    }
 }
 #endif
