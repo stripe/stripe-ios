@@ -33,23 +33,27 @@ import Combine
         let containerView = UIView()
         containerView.backgroundColor = .clear
         
-        if let element = viewModel.embeddedPaymentElement {
-            element.delegate = context.coordinator
-            element.presentingViewController = context.coordinator.topMostViewController()
-            
-            let paymentElementView = element.view
-            containerView.addSubview(paymentElementView)
-            paymentElementView.translatesAutoresizingMaskIntoConstraints = false
-            let bottomConstraint = paymentElementView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-            bottomConstraint.priority = .defaultHigh
-            
-            NSLayoutConstraint.activate([
-                paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
-                paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-                paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-                bottomConstraint
-            ])
+        guard let element = viewModel.embeddedPaymentElement else {
+            return containerView
         }
+        
+        element.delegate = context.coordinator
+        element.presentingViewController = context.coordinator.topMostViewController()
+        
+        let paymentElementView = element.view
+        paymentElementView.layoutMargins = .zero
+        paymentElementView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(paymentElementView)
+        
+        let bottomConstraint = paymentElementView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        bottomConstraint.priority = .defaultHigh
+        
+        NSLayoutConstraint.activate([
+            paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            bottomConstraint
+        ])
         
         return containerView
     }

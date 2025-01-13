@@ -174,6 +174,7 @@
 		619AF08A2BF56FC000D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */; };
 		61A799522CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A799512CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift */; };
 		61C0D3B8C63EB4558AB74A7E /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1C7CFA5C9C1A8A73CFA1C0 /* StripePayments.framework */; };
+		61C413CF2D3573C60008933D /* EmbeddedPaymentElementViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C413CE2D3573C60008933D /* EmbeddedPaymentElementViewSnapshotTests.swift */; };
 		61C87E1B2CB818ED001B7DA9 /* CardBrandFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C87E1A2CB818ED001B7DA9 /* CardBrandFilter.swift */; };
 		61C87E1E2CB81FAD001B7DA9 /* CardBrandFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C87E1C2CB81F9B001B7DA9 /* CardBrandFilterTests.swift */; };
 		61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */; };
@@ -603,6 +604,7 @@
 		619AF0842BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodRowButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewControllerTests.swift; sourceTree = "<group>"; };
 		61A799512CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedFormViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
+		61C413CE2D3573C60008933D /* EmbeddedPaymentElementViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentElementViewSnapshotTests.swift; sourceTree = "<group>"; };
 		61C87E1A2CB818ED001B7DA9 /* CardBrandFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrandFilter.swift; sourceTree = "<group>"; };
 		61C87E1C2CB81F9B001B7DA9 /* CardBrandFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrandFilterTests.swift; sourceTree = "<group>"; };
 		61CBE6652BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewController.swift; sourceTree = "<group>"; };
@@ -1670,6 +1672,7 @@
 				B6CACC9F2CBD9A3300682ECE /* EmbeddedPaymentElementTest.swift */,
 				B63DC6792CC06AC80011C27E /* EmbeddedPaymentElementSnapshotTests.swift */,
 				61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */,
+				61C413CE2D3573C60008933D /* EmbeddedPaymentElementViewSnapshotTests.swift */,
 				61A799512CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift */,
 				614068E12CB0BF10003D2F12 /* EmbeddedPaymentMethodsViewTests.swift */,
 				64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */,
@@ -2015,6 +2018,7 @@
 				CBF7BE542D11BF5300A4C172 /* BankAccountInfoViewSnapshotTests.swift in Sources */,
 				D14478CFCABDF7455DA7472A /* PaymentMethodMessagingViewSnapshotTests.swift in Sources */,
 				3D3607748436E625FF6CF921 /* PaymentSheet+APITest.swift in Sources */,
+				61C413CF2D3573C60008933D /* EmbeddedPaymentElementViewSnapshotTests.swift in Sources */,
 				68F13446778AF2CAA631ACDE /* PaymentSheet+DeferredAPITest.swift in Sources */,
 				830DB7F3A2D341445BDB600F /* PaymentSheetAddressTests.swift in Sources */,
 				731DA57DAF9979D11AA5A0F6 /* PaymentSheetDeferredValidatorTests.swift in Sources */,
