@@ -36,6 +36,10 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     private let clientSecret: String
     private let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
+    
+    private var verified: Bool {
+        manifest.appVerificationEnabled ?? false
+    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -76,7 +80,6 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse> {
-        let verified = manifest.appVerificationEnabled ?? false
         return apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
@@ -118,6 +121,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     }
 
     func completeAssertion(possibleError: Error?) {
+        guard verified else { return }
         apiClient.completeAssertion(possibleError: possibleError)
     }
 }

@@ -33,6 +33,10 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
+    private var verified: Bool {
+        manifest.appVerificationEnabled ?? false
+    }
+
     init(
         manifest: FinancialConnectionsSessionManifest,
         selectedAccounts: [FinancialConnectionsPartnerAccount]?,
@@ -74,7 +78,6 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         phoneNumber: String,
         countryCode: String
     ) -> Future<String?> {
-        let verified = manifest.appVerificationEnabled ?? false
         if verified {
             // In the verified scenario, first call the `/mobile/sign_up` endpoint with attestation parameters,
             // then call `/save_accounts_to_link` and omit the email and phone parameters.
@@ -122,6 +125,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     }
 
     func completeAssertion(possibleError: Error?) {
+        guard verified else { return }
         apiClient.completeAssertion(possibleError: possibleError)
     }
 }
