@@ -69,7 +69,7 @@ import Combine
                 self.viewModel.height = newHeight
                 self.isFirstLayout = false
             } else {
-                withAnimation(.easeInOut(duration: 0.15)) {
+                withAnimation(.easeInOut(duration: 0.2)) {
                     self.viewModel.height = newHeight
                 }
             }
