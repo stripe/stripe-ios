@@ -76,12 +76,13 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: viewModel.appearance, didTap: {  [weak self] in
-            if self?.viewModel.hasChangedCardBrand == true {
+            guard let self = self else { return }
+            if self.viewModel.hasChangedCardBrand {
                 Task {
-                    await self?.updateCard()
+                    await self.updateCard()
                 }
             }
-            if self?.viewModel.hasChangedDefaultPaymentMethodCheckbox == true {
+            if self.viewModel.hasChangedDefaultPaymentMethodCheckbox {
                 // TODO: update default payment method in the back end
             }
         })
