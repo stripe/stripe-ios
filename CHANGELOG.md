@@ -1,3 +1,10 @@
+## X.Y.Z X-Y-Z
+### PaymentSheet
+* [Fixed] PaymentSheet using vertical payment method layout now defaults to Apple Pay when the customer doesn't have a default saved payment method.
+
+### Identity
+* [Added] Updates example app to allow reusing VerificationSessions.
+
 ## 24.3.0 2025-01-06
 ### Embedded Payment Element
 * [Added] Embedded Payment Element is now in private beta.

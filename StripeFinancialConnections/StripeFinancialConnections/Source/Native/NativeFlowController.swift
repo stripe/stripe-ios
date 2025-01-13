@@ -273,6 +273,11 @@ extension NativeFlowController {
 // MARK: - Other Helpers
 
 extension NativeFlowController {
+    
+    private struct PaymentMethodWithIncentiveEligibility {
+        let paymentMethod: LinkBankPaymentMethod
+        let incentiveEligible: Bool
+    }
 
     private func didSelectAnotherBank() {
         if dataManager.manifest.disableLinkMoreAccounts {
@@ -544,20 +549,74 @@ extension NativeFlowController {
                 )
             }
         }
+        .chained { [weak self] paymentMethod -> Future<PaymentMethodWithIncentiveEligibility> in
+            guard let self else {
+                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
+            }
+            
+            return updateIncentiveEligibility(
+                incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
+                consumerSession: consumerSession,
+                paymentMethod: paymentMethod
+            )
+        }
         .observe { result in
             switch result {
-            case .success(let paymentMethod):
+            case .success(let paymentMethodWithIncentiveEligibility):
                 let linkedBank = InstantDebitsLinkedBank(
-                    paymentMethod: paymentMethod,
+                    paymentMethod: paymentMethodWithIncentiveEligibility.paymentMethod,
                     bankName: bankAccountDetails?.bankName,
                     last4: bankAccountDetails?.last4,
-                    linkMode: linkMode
+                    linkMode: linkMode,
+                    incentiveEligible: paymentMethodWithIncentiveEligibility.incentiveEligible
                 )
                 completion(.success(linkedBank))
             case .failure(let error):
                 completion(.failure(error))
             }
         }
+    }
+    
+    private func updateIncentiveEligibility(
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        consumerSession: ConsumerSessionData,
+        paymentMethod: LinkBankPaymentMethod
+    ) -> Promise<PaymentMethodWithIncentiveEligibility> {
+        guard let incentiveEligibilitySession else {
+            // The session isn't eligible for an incentive, so we just continue to finish the flow.
+            let result = PaymentMethodWithIncentiveEligibility(
+                paymentMethod: paymentMethod,
+                incentiveEligible: false
+            )
+            return Promise(value: result)
+        }
+        
+        let promise = Promise<PaymentMethodWithIncentiveEligibility>()
+        
+        self.dataManager.apiClient.updateAvailableIncentives(
+            consumerSessionClientSecret: consumerSession.clientSecret,
+            sessionID: incentiveEligibilitySession.id
+        ).observe { result in
+            switch result {
+            case .success(let availableIncentives):
+                let result = PaymentMethodWithIncentiveEligibility(
+                    paymentMethod: paymentMethod,
+                    incentiveEligible: availableIncentives.incentives.isEmpty == false
+                )
+                promise.resolve(with: result)
+            case .failure(let error):
+                // We weren't able to determine eligibility, so we assume ineligibility
+                // and continue to finish the flow.
+                NSLog("Failed to update available incentives: \(error)")
+                let result = PaymentMethodWithIncentiveEligibility(
+                    paymentMethod: paymentMethod,
+                    incentiveEligible: false
+                )
+                promise.resolve(with: result)
+            }
+        }
+        
+        return promise
     }
 
     private func logCompleteEvent(
