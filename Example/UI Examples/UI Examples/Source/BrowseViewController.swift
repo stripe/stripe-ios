@@ -25,7 +25,6 @@ class BrowseViewController: UITableViewController
         case STPCardFormViewController
         case STPCardFormViewControllerCBC
         case SwiftUICardFormViewController
-        case PaymentMethodMessagingView
 
         var title: String {
             switch self {
@@ -35,7 +34,6 @@ class BrowseViewController: UITableViewController
             case .STPCardFormViewController: return "Card Form"
             case .STPCardFormViewControllerCBC: return "Card Form (CBC)"
             case .SwiftUICardFormViewController: return "Card Form (SwiftUI)"
-            case .PaymentMethodMessagingView: return "Payment Method Messaging View"
             }
         }
 
@@ -47,7 +45,6 @@ class BrowseViewController: UITableViewController
             case .STPCardFormViewController: return "STPCardFormViewController"
             case .STPCardFormViewControllerCBC: return "STPCardFormViewController (CBC)"
             case .SwiftUICardFormViewController: return "STPCardFormView.Representable"
-            case .PaymentMethodMessagingView: return "PaymentMethodMessagingView"
             }
         }
     }
@@ -117,10 +114,6 @@ class BrowseViewController: UITableViewController
         case .SwiftUICardFormViewController:
             let controller = UIHostingController(rootView: SwiftUICardFormView())
             present(controller, animated: true, completion: nil)
-        case .PaymentMethodMessagingView:
-            let vc = PaymentMethodMessagingViewController()
-            let navigationController = UINavigationController(rootViewController: vc)
-            present(navigationController, animated: true, completion: nil)
         }
     }
 
