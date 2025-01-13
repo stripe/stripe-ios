@@ -90,6 +90,24 @@ final class FormHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        if let promoBadgeView {
+            stackView.removeArrangedSubview(promoBadgeView)
+            promoBadgeView.removeFromSuperview()
+            
+            stackView.removeArrangedSubview(spacerView)
+            spacerView.removeFromSuperview()
+        }
+        
+        if let incentive {
+            promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
+            if let promoBadgeView {
+                stackView.addArrangedSubview(promoBadgeView)
+                stackView.addArrangedSubview(spacerView)
+            }
+        }
+    }
+    
     private static func makePromoBadge(
         for incentive: PaymentMethodIncentive?,
         with appearance: PaymentSheet.Appearance

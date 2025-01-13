@@ -173,6 +173,14 @@ extension PaymentMethodFormViewController: ElementDelegate {
         analyticsHelper.logFormInteracted(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         delegate?.didUpdate(self)
         animateHeightChange()
+        
+        if let instantDebitsFormElement = form as? InstantDebitsPaymentMethodElement {
+            let incentive = instantDebitsFormElement.displayableIncentive
+            
+            if let formHeaderView = headerView as? FormHeaderView {
+                formHeaderView.setIncentiveEligible(incentive != nil)
+            }
+        }
     }
 }
 
@@ -272,7 +280,7 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.incentive != nil
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
         )
     }
 
