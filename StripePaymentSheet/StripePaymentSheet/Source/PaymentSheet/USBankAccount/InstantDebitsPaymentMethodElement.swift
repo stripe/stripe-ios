@@ -32,7 +32,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let linkedBankInfoView: BankAccountInfoView
     private var linkedBank: InstantDebitsLinkedBank? {
         didSet {
-            updateLinkedBank(linkedBank)
+            renderLinkedBank(linkedBank)
         }
     }
     private let theme: ElementsAppearance
@@ -171,6 +171,8 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
     
     var displayableIncentive: PaymentMethodIncentive? {
+        // We can show the incentive if we haven't linked a bank yet, meaning
+        // that we have no indication that the session is ineligible.
         let canShowIncentive = linkedBank?.incentiveEligible ?? true
         return canShowIncentive ? incentive : nil
     }
@@ -236,7 +238,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.delegate?.didUpdate(element: self)
     }
     
-    fileprivate func updateLinkedBank(_ linkedBank: InstantDebitsLinkedBank?) {
+    fileprivate func renderLinkedBank(_ linkedBank: InstantDebitsLinkedBank?) {
         if let linkedBank, let last4ofBankAccount = linkedBank.last4, let bankName = linkedBank.bankName {
             linkedBankInfoView.setBankName(text: bankName)
             linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
