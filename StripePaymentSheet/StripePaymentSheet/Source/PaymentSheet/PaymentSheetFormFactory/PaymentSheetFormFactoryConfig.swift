@@ -102,4 +102,13 @@ enum PaymentSheetFormFactoryConfig {
             return config.cardBrandFilter
         }
     }
+    
+    var linkPaymentMethodsOnly: Bool {
+        switch self {
+        case .paymentSheet(let config):
+            return config.linkPaymentMethodsOnly
+        case .customerSheet:
+            return false
+        }
+    }
 }

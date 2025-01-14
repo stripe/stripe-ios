@@ -40,6 +40,8 @@ class PaymentSheetFormFactory {
     let paymentMethodIncentive: PaymentMethodIncentive?
 
     var shouldDisplaySaveCheckbox: Bool {
+        // Don't show the save checkbox in Link
+        guard !configuration.linkPaymentMethodsOnly else { return false }
         switch savePaymentMethodConsentBehavior {
         case .legacy:
             return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
