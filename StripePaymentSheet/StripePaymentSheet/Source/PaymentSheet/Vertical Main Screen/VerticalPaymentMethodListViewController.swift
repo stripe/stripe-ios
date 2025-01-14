@@ -23,10 +23,17 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private(set) var currentSelection: VerticalPaymentMethodListSelection?
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
-    private var incentive: PaymentMethodIncentive?
+    private(set) var incentive: PaymentMethodIncentive?
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
     
-    private var refreshContent: () -> Void = {}
+    // Properties moved from initializer captures
+    private var overrideHeaderView: UIView?
+    private var savedPaymentMethod: STPPaymentMethod?
+    private var initialSelection: VerticalPaymentMethodListSelection?
+    private var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?
+    private var shouldShowApplePay: Bool
+    private var shouldShowLink: Bool
+    private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -49,39 +56,27 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.appearance = appearance
         self.incentive = incentive
         self.delegate = delegate
-        super.init(nibName: nil, bundle: nil)
+        self.overrideHeaderView = overrideHeaderView
+        self.savedPaymentMethod = savedPaymentMethod
+        self.initialSelection = initialSelection
+        self.savedPaymentMethodAccessoryType = savedPaymentMethodAccessoryType
+        self.shouldShowApplePay = shouldShowApplePay
+        self.shouldShowLink = shouldShowLink
+        self.paymentMethodTypes = paymentMethodTypes
         
-        self.refreshContent = { [weak self] in
-            guard let self else {
-                return
-            }
-            
-            stackView.arrangedSubviews.forEach { subview in
-                subview.removeFromSuperview()
-            }
-            
-            renderContent(
-                overrideHeaderView: overrideHeaderView,
-                savedPaymentMethod: savedPaymentMethod,
-                initialSelection: initialSelection,
-                savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-                shouldShowApplePay: shouldShowApplePay,
-                shouldShowLink: shouldShowLink,
-                paymentMethodTypes: paymentMethodTypes
-            )
-        }
-        self.refreshContent()
+        super.init(nibName: nil, bundle: nil)
+        self.renderContent()
     }
     
-    private func renderContent(
-        overrideHeaderView: UIView?,
-        savedPaymentMethod: STPPaymentMethod?,
-        initialSelection: VerticalPaymentMethodListSelection?,
-        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
-        shouldShowApplePay: Bool,
-        shouldShowLink: Bool,
-        paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-    ) {
+    private func refreshContent() {
+        stackView.arrangedSubviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
+        
+        renderContent()
+    }
+    
+    private func renderContent() {
         // Add the header - either the passed in `header` or "Select payment method"
         let header = overrideHeaderView ?? PaymentSheetUI.makeHeaderLabel(title: .Localized.select_payment_method, appearance: appearance)
         stackView.addArrangedSubview(header)
