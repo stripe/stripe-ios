@@ -65,7 +65,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private var lastOpenedNativeURL: URL?
 
     private let clientSecret: String
-    private let apiClient: FinancialConnectionsAPIClientFacade
+    private let apiClient: any FinancialConnectionsAPI
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
     private let returnURL: String?
@@ -92,7 +92,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 
     init(
         clientSecret: String,
-        apiClient: FinancialConnectionsAPIClientFacade,
+        apiClient: any FinancialConnectionsAPI,
         manifest: FinancialConnectionsSessionManifest,
         sessionFetcher: FinancialConnectionsSessionFetcher,
         returnURL: String?,

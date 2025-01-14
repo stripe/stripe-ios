@@ -38,7 +38,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         }
     }
     let pane: FinancialConnectionsSessionManifest.NextPane
-    private let apiClient: FinancialConnectionsAPIClientFacade
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let isTestMode: Bool
@@ -52,7 +52,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         connectionsMerchantName: String?,
         pane: FinancialConnectionsSessionManifest.NextPane,
         consumerSession: ConsumerSessionData?,
-        apiClient: FinancialConnectionsAPIClientFacade,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         isTestMode: Bool,

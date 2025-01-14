@@ -17,13 +17,13 @@ protocol ResetFlowDataSource: AnyObject {
 
 final class ResetFlowDataSourceImplementation: ResetFlowDataSource {
 
-    private let apiClient: FinancialConnectionsAPIClientFacade
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let manifest: FinancialConnectionsSessionManifest
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
     init(
-        apiClient: FinancialConnectionsAPIClientFacade,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         manifest: FinancialConnectionsSessionManifest,
         analyticsClient: FinancialConnectionsAnalyticsClient

@@ -77,7 +77,7 @@ class HostController {
 
     // MARK: - Properties
 
-    private let apiClient: FinancialConnectionsAPIClientFacade
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     private let returnURL: String?
     private let elementsSessionContext: ElementsSessionContext?
@@ -99,7 +99,7 @@ class HostController {
     // MARK: - Init
 
     init(
-        apiClient: FinancialConnectionsAPIClientFacade,
+        apiClient: any FinancialConnectionsAPI,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         elementsSessionContext: ElementsSessionContext?,

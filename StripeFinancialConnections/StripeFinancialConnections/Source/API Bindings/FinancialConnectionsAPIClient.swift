@@ -126,6 +126,8 @@ protocol FinancialConnectionsAPI {
         customSuccessPaneMessage: String?
     )
 
+    var backingAPIClient: STPAPIClient { get }
+
     var isLinkWithStripe: Bool { get set }
     var consumerPublishableKey: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }

@@ -36,10 +36,6 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     private let clientSecret: String
     private let returnURL: String?
     private let apiClient: any FinancialConnectionsAPI
-    
-    private var verified: Bool {
-        manifest.appVerificationEnabled ?? false
-    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,

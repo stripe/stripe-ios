@@ -24,7 +24,7 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
     let manifest: FinancialConnectionsSessionManifest
     let linkedAccountsCount: Int
     let saveToLinkWithStripeSucceeded: Bool?
-    private let apiClient: FinancialConnectionsAPIClientFacade
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     var customSuccessPaneCaption: String?
@@ -37,7 +37,7 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
         manifest: FinancialConnectionsSessionManifest,
         linkedAccountsCount: Int,
         saveToLinkWithStripeSucceeded: Bool?,
-        apiClient: FinancialConnectionsAPIClientFacade,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         customSuccessPaneCaption: String?,
