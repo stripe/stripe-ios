@@ -127,6 +127,10 @@ struct FinancialConnectionsSessionManifest: Decodable {
         !livemode
     }
 
+    var verified: Bool {
+        appVerificationEnabled ?? false
+    }
+
     init(
         accountholderCustomerEmailAddress: String? = nil,
         accountholderIsLinkConsumer: Bool? = nil,

@@ -20,7 +20,7 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
         phoneNumber: String,
         countryCode: String
     ) -> Future<String?>
-    func completeAssertion(possibleError: Error?)
+    func completeAssertionIfNeeded(possibleError: Error?)
 }
 
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
@@ -32,10 +32,6 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
-
-    private var verified: Bool {
-        manifest.appVerificationEnabled ?? false
-    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -70,7 +66,11 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     }
 
     func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse> {
-        return apiClient.consumerSessionLookup(emailAddress: emailAddress, clientSecret: clientSecret)
+        return apiClient.consumerSessionLookup(
+            emailAddress: emailAddress,
+            clientSecret: clientSecret,
+            useMobileEndpoints: manifest.verified
+        )
     }
 
     func saveToLink(
@@ -78,7 +78,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         phoneNumber: String,
         countryCode: String
     ) -> Future<String?> {
-        if verified {
+        if manifest.verified {
             // In the verified scenario, first call the `/mobile/sign_up` endpoint with attestation parameters,
             // then call `/save_accounts_to_link` and omit the email and phone parameters.
             return apiClient.linkAccountSignUp(
@@ -88,7 +88,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
                 amount: nil,
                 currency: nil,
                 incentiveEligibilitySession: nil,
-                useMobileEndpoints: verified
+                useMobileEndpoints: manifest.verified
             ).chained { [weak self] _ -> Future<FinancialConnectionsAPI.SaveAccountsToNetworkAndLinkResponse> in
                 guard let self else {
                     return Promise(error: FinancialConnectionsSheetError.unknown(
@@ -124,8 +124,9 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         }
     }
 
-    func completeAssertion(possibleError: Error?) {
-        guard verified else { return }
+    // Marks the assertion as completed and logs possible errors during verified flows.
+    func completeAssertionIfNeeded(possibleError: Error?) {
+        guard manifest.verified else { return }
         apiClient.completeAssertion(possibleError: possibleError)
     }
 }

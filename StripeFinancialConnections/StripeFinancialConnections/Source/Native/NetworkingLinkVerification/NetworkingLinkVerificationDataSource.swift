@@ -52,6 +52,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
         self.analyticsClient = analyticsClient
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "SMS",
+            manifest: manifest,
             emailAddress: accountholderCustomerEmailAddress,
             customEmailType: nil,
             connectionsMerchantName: nil,
@@ -59,9 +60,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
             consumerSession: nil,
             apiClient: apiClient,
             clientSecret: clientSecret,
-            analyticsClient: analyticsClient,
-            isTestMode: manifest.isTestMode,
-            theme: manifest.theme
+            analyticsClient: analyticsClient
         )
         self.networkingOTPDataSource = networkingOTPDataSource
         networkingOTPDataSource.delegate = self
