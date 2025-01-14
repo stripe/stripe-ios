@@ -745,7 +745,10 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             }
         }()
         let headerView: UIView = {
-            let incentive = elementsSession.incentive?.takeIfAppliesTo(paymentMethodType)
+            let incentive = paymentMethodListViewController?.incentive?.takeIfAppliesTo(paymentMethodType)
+            let incentiveOwner = formCache[paymentMethodType] as? IncentiveOwner
+            let displayedIncentive = (incentiveOwner?.showIncentiveInHeader ?? true) ? incentive : nil
+            
             if shouldDisplayFormOnly, let wallet = makeWalletHeaderView() {
                 // Special case: if there is only one payment method type and it's not a card and wallet options are available
                 // Display the wallet, then the FormHeaderView below it
@@ -756,7 +759,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                             paymentMethodType: paymentMethodType,
                             shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                             appearance: configuration.appearance,
-                            incentive: incentive
+                            incentive: displayedIncentive
                         ),
                     ])
                     containerView.axis = .vertical
@@ -771,7 +774,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
                     shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                     appearance: configuration.appearance,
-                    incentive: incentive
+                    incentive: displayedIncentive
                 )
             }
         }()

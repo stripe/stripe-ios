@@ -178,7 +178,10 @@ extension PaymentMethodFormViewController: ElementDelegate {
             let incentive = instantDebitsFormElement.displayableIncentive
             
             if let formHeaderView = headerView as? FormHeaderView {
-                formHeaderView.setIncentiveEligible(incentive != nil)
+                // We already display a promo badge in the bank form, so we don't want
+                // to display another one in the header.
+                let headerIncentive = instantDebitsFormElement.showIncentiveInHeader ? incentive : nil
+                formHeaderView.setIncentive(headerIncentive)
             }
         }
     }

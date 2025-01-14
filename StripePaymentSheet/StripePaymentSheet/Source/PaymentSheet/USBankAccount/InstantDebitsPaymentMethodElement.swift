@@ -341,6 +341,15 @@ extension InstantDebitsPaymentMethodElement: ElementDelegate {
     }
 }
 
+// MARK: - IncentiveOwner
+
+extension InstantDebitsPaymentMethodElement: IncentiveOwner {
+    
+    var showIncentiveInHeader: Bool {
+        linkedBank == nil
+    }
+}
+
 private extension PaymentSheet.Address {
     /// An address is valid if all fields except `line2` are not empty.
     var isValid: Bool {
