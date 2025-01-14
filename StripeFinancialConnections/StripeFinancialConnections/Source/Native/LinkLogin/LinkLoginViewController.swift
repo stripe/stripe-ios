@@ -164,6 +164,8 @@ final class LinkLoginViewController: UIViewController {
                 footerButton?.isLoading = false
 
                 guard let self else { return }
+                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+
                 switch result {
                 case .success(let response):
                     if response.exists {
@@ -205,9 +207,7 @@ final class LinkLoginViewController: UIViewController {
         .observe { [weak self] result in
             guard let self else { return }
             self.footerButton?.isLoading = false
-
-            // Mark the assertion as completed and log possible errors.
-            self.dataSource.completeAssertion(possibleError: result.error)
+            self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
 
             switch result {
             case .success(let response):

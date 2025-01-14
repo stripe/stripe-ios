@@ -44,6 +44,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         self.analyticsClient = analyticsClient
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "EMAIL",
+            manifest: manifest,
             emailAddress: consumerSession.emailAddress,
             customEmailType: "NETWORKED_CONNECTIONS_OTP_EMAIL",
             connectionsMerchantName: manifest.businessName,
@@ -51,9 +52,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
             consumerSession: consumerSession,
             apiClient: apiClient,
             clientSecret: clientSecret,
-            analyticsClient: analyticsClient,
-            isTestMode: manifest.isTestMode,
-            theme: manifest.theme
+            analyticsClient: analyticsClient
         )
         self.networkingOTPDataSource = networkingOTPDataSource
         networkingOTPDataSource.delegate = self

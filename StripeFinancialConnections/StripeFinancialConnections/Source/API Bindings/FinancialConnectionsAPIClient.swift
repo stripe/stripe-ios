@@ -246,7 +246,8 @@ protocol FinancialConnectionsAPI {
 
     func consumerSessionLookup(
         emailAddress: String,
-        clientSecret: String
+        clientSecret: String,
+        useMobileEndpoints: Bool
     ) -> Future<LookupConsumerSessionResponse>
 
     // MARK: - Link API's
@@ -904,7 +905,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func consumerSessionLookup(
         emailAddress: String,
-        clientSecret: String
+        clientSecret: String,
+        useMobileEndpoints: Bool
     ) -> Future<LookupConsumerSessionResponse> {
         let parameters: [String: Any] = [
             "email_address":
@@ -913,11 +915,26 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 .lowercased(),
             "client_secret": clientSecret,
         ]
-        return post(
-            resource: APIEndpointConsumerSessions,
-            parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
-        )
+
+        if useMobileEndpoints {
+            return applyAttestationParameters(to: parameters)
+                .chained { [weak self] updatedParameters in
+                    guard let self else {
+                        return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
+                    }
+                    return self.post(
+                        resource: APIMobileEndpointConsumerSessionLookup,
+                        parameters: updatedParameters,
+                        useConsumerPublishableKeyIfNeeded: false
+                    )
+                }
+        } else {
+            return post(
+                resource: APIEndpointConsumerSessions,
+                parameters: parameters,
+                useConsumerPublishableKeyIfNeeded: false
+            )
+        }
     }
 
     // MARK: - Link API's
@@ -1223,4 +1240,5 @@ private let APIEndpointSharePaymentDetails = "consumers/payment_details/share"
 private let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpointAvailableIncentives = "consumers/incentives/update_available"
 // Verified
+private let APIMobileEndpointConsumerSessionLookup = "consumers/mobile/sessions/lookup"
 private let APIMobileEndpointLinkAccountSignUp = "consumers/mobile/sign_up"
