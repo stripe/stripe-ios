@@ -186,6 +186,8 @@ class RowButton: UIView {
                 }
             }()
             promoBadge.translatesAutoresizingMaskIntoConstraints = false
+            promoBadge.isUserInteractionEnabled = false
+            promoBadge.isAccessibilityElement = false
             addSubview(promoBadge)
             NSLayoutConstraint.activate([
                 promoBadge.centerYAnchor.constraint(equalTo: centerYAnchor),
