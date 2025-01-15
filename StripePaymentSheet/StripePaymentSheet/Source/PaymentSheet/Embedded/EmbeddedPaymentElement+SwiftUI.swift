@@ -176,7 +176,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         containerView.backgroundColor = .clear
         guard let embeddedPaymentElement = viewModel.embeddedPaymentElement else { return containerView }
         
-        embeddedPaymentElement.presentingViewController = context.coordinator.topMostViewController()
+        embeddedPaymentElement.presentingViewController = UIWindow.topMostViewController
         
         let paymentElementView = embeddedPaymentElement.view
         paymentElementView.layoutMargins = .zero
@@ -198,7 +198,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     
     public func updateUIView(_ uiView: UIView, context: Context) {
         // Update the presenting view controller in case it has changed
-        viewModel.embeddedPaymentElement?.presentingViewController = context.coordinator.topMostViewController()
+        viewModel.embeddedPaymentElement?.presentingViewController = UIWindow.topMostViewController
     }
 
     public class Coordinator: NSObject {
@@ -207,38 +207,40 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         init(_ parent: EmbeddedViewRepresentable) {
             self.parent = parent
         }
-        
-        func topMostViewController() -> UIViewController {
-            guard
-                let scene = UIApplication.shared.connectedScenes
-                    .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
-                let window = scene.windows.first(where: { $0.isKeyWindow }),
-                let rootViewController = window.rootViewController
-            else {
-                return UIViewController()
-            }
-            return findTopViewController(from: rootViewController)
-        }
-
-        private func findTopViewController(from rootVC: UIViewController) -> UIViewController {
-            if let presented = rootVC.presentedViewController {
-                return findTopViewController(from: presented)
-            }
-            if let nav = rootVC as? UINavigationController,
-               let visible = nav.visibleViewController {
-                return findTopViewController(from: visible)
-            }
-            if let tab = rootVC as? UITabBarController,
-               let selected = tab.selectedViewController {
-                return findTopViewController(from: selected)
-            }
-            return rootVC
-        }
     }
 }
 
 final class EmbeddedSwiftUIProduct: STPAnalyticsProtocol {
     public static var stp_analyticsIdentifier: String {
         return "EmbeddedPaymentElement_SwiftUI"
+    }
+}
+
+extension UIWindow {
+    static var topMostViewController: UIViewController? {
+        guard
+            let scene = UIApplication.shared.connectedScenes
+                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+            let window = scene.windows.first(where: { $0.isKeyWindow }) else {
+            return nil
+        }
+        
+        return window.rootViewController?.topMostViewController()
+    }
+}
+
+extension UIViewController {
+    func topMostViewController() -> UIViewController {
+        if let nav = self as? UINavigationController {
+            // Use visibleViewController for nav stacks
+            return nav.visibleViewController?.topMostViewController() ?? nav
+        } else if let tab = self as? UITabBarController {
+            // Use selectedViewController for tab controllers
+            return tab.selectedViewController?.topMostViewController() ?? tab
+        } else if let presented = presentedViewController {
+            // Recurse for any modally presented controllers
+            return presented.topMostViewController()
+        }
+        return self
     }
 }
