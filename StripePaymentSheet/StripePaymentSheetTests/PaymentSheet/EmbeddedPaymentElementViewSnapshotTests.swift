@@ -26,15 +26,11 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let element = try await createEmbeddedPaymentElement(
-            intentConfiguration: intentConfig,
-            configuration: config
-        )
 
-        // Create our ViewModel + SwiftUI EmbeddedPaymentElementView
-        let viewModel = EmbeddedPaymentElementView.ViewModel()
-        viewModel.embeddedPaymentElement = element
-        let swiftUIView = EmbeddedPaymentElementView(viewModel: viewModel)
+        // Create our SwiftUI view
+        let viewModel = EmbeddedPaymentElementViewModel()
+        try await viewModel.load(intentConfiguration: intentConfig, configuration: config)
+        let swiftUIView = EmbeddedViewRepresentable(viewModel: viewModel, height: .constant(0))
 
         // Embed `swiftUIView` in a UIWindow for rendering
         let hostingVC = makeWindowWithEmbeddedView(swiftUIView, width: 320, height: 320)
@@ -47,12 +43,12 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         verify(subview, identifier: "before_height_change")
         
         // Simulate a height change
-        element.testHeightChange()
+        viewModel.testHeightChange()
         
         verify(subview, identifier: "after_height_change")
         
         // Toggle height back to original state
-        element.testHeightChange()
+        viewModel.testHeightChange()
         
         verify(subview, identifier: "after_second_height_change")
     }
@@ -69,10 +65,10 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         )
     }
 
-    /// Wraps a SwiftUI `EmbeddedPaymentElementView` in a UIWindow to ensure
+    /// Wraps a SwiftUI `EmbeddedViewRepresentable` in a UIWindow to ensure
     /// the SwiftUI content is actually rendered prior to snapshotting.
     private func makeWindowWithEmbeddedView(
-        _ swiftUIView: EmbeddedPaymentElementView,
+        _ swiftUIView: EmbeddedViewRepresentable,
         width: CGFloat = 320,
         height: CGFloat = 800
     ) -> UIViewController {
