@@ -109,8 +109,8 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
             return XCTFail("Expected an update to fail if not loaded.")
         }
         
-        XCTAssertTrue(error is EmbeddedPaymentElementViewModel.EmbeddedPaymentElementError)
-        XCTAssertEqual(error as? EmbeddedPaymentElementViewModel.EmbeddedPaymentElementError, .notLoaded)
+        XCTAssertTrue(error is EmbeddedPaymentElementViewModel.EmbeddedPaymentElementViewModel)
+        XCTAssertEqual(error as? EmbeddedPaymentElementViewModel.EmbeddedPaymentElementViewModel, .notLoaded)
     }
 
     func testConfirmFailsIfNotLoaded() async {
@@ -121,8 +121,8 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
             return XCTFail("Expected confirm to fail if not loaded.")
         }
         
-        XCTAssertTrue(error is EmbeddedPaymentElementViewModel.EmbeddedPaymentElementError)
-        XCTAssertEqual(error as? EmbeddedPaymentElementViewModel.EmbeddedPaymentElementError, .notLoaded)
+        XCTAssertTrue(error is EmbeddedPaymentElementViewModel.EmbeddedPaymentElementViewModel)
+        XCTAssertEqual(error as? EmbeddedPaymentElementViewModel.EmbeddedPaymentElementViewModel, .notLoaded)
     }
     
     func testLoadThenUpdate() async throws {

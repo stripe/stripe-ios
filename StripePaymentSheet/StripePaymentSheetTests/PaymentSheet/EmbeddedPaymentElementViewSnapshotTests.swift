@@ -30,7 +30,7 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         // Create our SwiftUI view
         let viewModel = EmbeddedPaymentElementViewModel()
         try await viewModel.load(intentConfiguration: intentConfig, configuration: config)
-        let swiftUIView = EmbeddedViewRepresentable(viewModel: viewModel, height: .constant(0))
+        let swiftUIView = EmbeddedViewRepresentable(viewModel: viewModel)
 
         // Embed `swiftUIView` in a UIWindow for rendering
         let hostingVC = makeWindowWithEmbeddedView(swiftUIView, width: 320, height: 320)
