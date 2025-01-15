@@ -2,6 +2,9 @@
 ### ApplePay
 * [Added] Added a `dismiss` method to `STPApplePayContext`.
 
+### PaymentSheet
+* [Fixed] Embedded Payment Element (private beta) layout margins default to zero.
+
 
 ## 24.4.0 2025-01-13
 ### PaymentSheet
