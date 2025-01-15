@@ -162,10 +162,8 @@ class BackendViewModel: ObservableObject {
 // MARK: - MyEmbeddedCheckoutView
 @available(iOS 15.0, *)
 struct MyEmbeddedCheckoutView: View {
+    @StateObject var embeddedViewModel = EmbeddedPaymentElementViewModel()
     @StateObject var backendViewModel = BackendViewModel()
-    @StateObject var embeddedViewModel = EmbeddedPaymentElementView.ViewModel()
-
-    @State private var paymentResult: PaymentSheetResult?
     @State private var isSubscribing: Bool = false
     
     @Environment(\.dismiss) private var dismiss
@@ -173,14 +171,13 @@ struct MyEmbeddedCheckoutView: View {
     // MARK: Body
     var body: some View {
         VStack(spacing: 24) {
-            if let embeddedPaymentElement = embeddedViewModel.embeddedPaymentElement {
+            if embeddedViewModel.isLoaded {
                 ScrollView {
                     // Embedded Payment Element
                     EmbeddedPaymentElementView(viewModel: embeddedViewModel)
-                        .frame(height: embeddedViewModel.height)
                     
                     // Payment option row
-                    if let paymentOption = embeddedPaymentElement.paymentOption {
+                    if let paymentOption = embeddedViewModel.paymentOption {
                         HStack {
                             Image(uiImage: paymentOption.image)
                                 .resizable()
@@ -213,10 +210,10 @@ struct MyEmbeddedCheckoutView: View {
                     // Confirm Payment button
                     Button(action: {
                         Task {
-                            paymentResult = await embeddedViewModel.embeddedPaymentElement?.confirm()
+                            await embeddedViewModel.confirm()
                         }
                     }) {
-                        if embeddedPaymentElement.paymentOption == nil {
+                        if embeddedViewModel.paymentOption == nil {
                             Text("Select a payment method")
                                 .frame(maxWidth: .infinity)
                         } else {
@@ -224,11 +221,11 @@ struct MyEmbeddedCheckoutView: View {
                                 .frame(maxWidth: .infinity)
                         }
                     }
-                    .disabled(embeddedPaymentElement.paymentOption == nil)
+                    .disabled(embeddedViewModel.paymentOption == nil)
                     .padding()
                     .foregroundColor(.white)
                     .background(
-                        embeddedPaymentElement.paymentOption == nil
+                        embeddedViewModel.paymentOption == nil
                         ? Color.gray
                         : Color.blue
                     )
@@ -236,7 +233,7 @@ struct MyEmbeddedCheckoutView: View {
                     
                     // Test height change button
                     Button(action: {
-                        embeddedPaymentElement.testHeightChange()
+                        embeddedViewModel.testHeightChange()
                     }) {
                         Text("Test height change")
                             .frame(maxWidth: .infinity)
@@ -247,7 +244,7 @@ struct MyEmbeddedCheckoutView: View {
                     .cornerRadius(6)
                 }
             } else {
-                if embeddedViewModel.embeddedPaymentElement == nil {
+                if !embeddedViewModel.isLoaded {
                     ProgressView("Preparing Payment...")
                 } else {
                     Text("Payment element not loaded.")
@@ -264,8 +261,8 @@ struct MyEmbeddedCheckoutView: View {
         .alert(
             alertTitle,
             isPresented: Binding<Bool>(
-                get: { paymentResult != nil },
-                set: { if !$0 { paymentResult = nil } }
+                get: { embeddedViewModel.confirmationResult != nil },
+                set: { if !$0 { embeddedViewModel.confirmationResult = nil } }
             ),
             actions: {
                 Button("OK") {
@@ -300,13 +297,8 @@ struct MyEmbeddedCheckoutView: View {
             ephemeralKeySecret: response.ephemeralKey
         )
         configuration.returnURL = "payments-example://stripe-redirect"
-        let paymentElement = try? await EmbeddedPaymentElement.create(
-            intentConfiguration: intentConfig,
-            configuration: configuration
-        )
         
-        // 4) Set `embeddedPaymentElement` on the view model
-        embeddedViewModel.embeddedPaymentElement = paymentElement
+        try? await embeddedViewModel.load(intentConfiguration: intentConfig, configuration: configuration)
     }
     
     /// Called whenever the user toggles subscription
@@ -320,8 +312,7 @@ struct MyEmbeddedCheckoutView: View {
         let updatedConfig = backendViewModel.makeIntentConfiguration(isSubscribing: newValue)
         
         // 3) Update the existing embedded payment element
-        guard let element = embeddedViewModel.embeddedPaymentElement else { return }
-        let result = await element.update(intentConfiguration: updatedConfig)
+        let result = await embeddedViewModel.update(intentConfiguration: updatedConfig)
         
         switch result {
         case .succeeded:
@@ -330,12 +321,14 @@ struct MyEmbeddedCheckoutView: View {
             print("Update was canceled by a subsequent call to `update`.")
         case .failed(let error):
             print("Update failed with error: \(error)")
+        case .none:
+            print("PORTER CAN WE REMOVE THIS")
         }
     }
     
     // MARK: - Alert
     var alertTitle: String {
-        switch paymentResult {
+        switch embeddedViewModel.confirmationResult {
         case .completed: return "Success"
         case .failed:    return "Error"
         case .canceled:  return "Cancelled"
@@ -344,7 +337,7 @@ struct MyEmbeddedCheckoutView: View {
     }
     
     var alertMessage: String {
-        switch paymentResult {
+        switch embeddedViewModel.confirmationResult {
         case .completed:
             return "Payment completed!"
         case .failed(let error):
