@@ -41,8 +41,6 @@ import Combine
     
     @Published var height: CGFloat = 0.0
     
-    @Published var isFirstLayout: Bool = true
-    
     // MARK: - Private properties
     
     private var loadTask: Task<Void, Error>?
@@ -79,6 +77,8 @@ import Combine
             self.embeddedPaymentElement = element
             self.embeddedPaymentElement?.delegate = self
             self.paymentOption = element.paymentOption
+            // Force the height to be calculated, we own the EmbeddedPaymentElementDelegate so this is ok.
+            embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: element)
             self.isLoaded = true
         }
 
@@ -135,7 +135,11 @@ import Combine
 
 extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-        // no-op, `height` is updated in `EmbeddedViewRepresentable`
+        let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
+        
+        withAnimation(.easeInOut(duration: 0.2)) {
+            self.height = newHeight
+        }
     }
     
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
@@ -195,19 +199,6 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     public func updateUIView(_ uiView: UIView, context: Context) {
         // Update the presenting view controller in case it has changed
         viewModel.embeddedPaymentElement?.presentingViewController = context.coordinator.topMostViewController()
-        
-        DispatchQueue.main.async {
-            let newHeight = uiView.systemLayoutSizeFitting(CGSize(width: uiView.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
-            if self.viewModel.isFirstLayout {
-                // No animation for the first layout
-                self.viewModel.height = newHeight
-                self.viewModel.isFirstLayout = false
-            } else {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    self.viewModel.height = newHeight
-                }
-            }
-        }
     }
 
     public class Coordinator: NSObject {
