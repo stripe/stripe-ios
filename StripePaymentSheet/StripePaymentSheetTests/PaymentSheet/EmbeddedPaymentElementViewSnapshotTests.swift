@@ -29,28 +29,35 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
 
         // Create our SwiftUI view
         let viewModel = EmbeddedPaymentElementViewModel()
+        let swiftUIView = EmbeddedPaymentElementView(viewModel: viewModel)
         try await viewModel.load(intentConfiguration: intentConfig, configuration: config)
-        let swiftUIView = EmbeddedViewRepresentable(viewModel: viewModel)
 
         // Embed `swiftUIView` in a UIWindow for rendering
-        let hostingVC = makeWindowWithEmbeddedView(swiftUIView, width: 320, height: 320)
-
+        let hostingVC = makeWindowWithEmbeddedView(swiftUIView)
+        viewModel.embeddedPaymentElement?.presentingViewController = hostingVC
+        
         // Assume the hostingVC only has 1 subview...
         XCTAssertFalse(hostingVC.view.subviews.isEmpty)
         let subview = hostingVC.view.subviews[0]
         
-        // Verify default state
-        verify(subview, identifier: "before_height_change")
-        
         // Simulate a height change
         viewModel.testHeightChange()
-        
+
         verify(subview, identifier: "after_height_change")
+        
+        viewModel.embeddedPaymentElement?.presentingViewController = hostingVC
+        
+        // Toggle height back to original state
+        viewModel.testHeightChange()
+
+        verify(subview, identifier: "after_second_height_change")
+        
+        viewModel.embeddedPaymentElement?.presentingViewController = hostingVC
         
         // Toggle height back to original state
         viewModel.testHeightChange()
         
-        verify(subview, identifier: "after_second_height_change")
+        verify(subview, identifier: "after_third_height_change")
     }
     
     // MARK: - Helpers
@@ -68,7 +75,7 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
     /// Wraps a SwiftUI `EmbeddedViewRepresentable` in a UIWindow to ensure
     /// the SwiftUI content is actually rendered prior to snapshotting.
     private func makeWindowWithEmbeddedView(
-        _ swiftUIView: EmbeddedViewRepresentable,
+        _ swiftUIView: EmbeddedPaymentElementView,
         width: CGFloat = 320,
         height: CGFloat = 800
     ) -> UIViewController {
@@ -81,6 +88,7 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: width, height: height))
         window.rootViewController = hostingController
         window.makeKeyAndVisible()
+        
         
         // 3) Force layout so SwiftUI draws its content.
         hostingController.view.setNeedsLayout()
