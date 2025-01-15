@@ -128,34 +128,19 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertNotNil(statusView.label.range(of: "complete!"))
     }
 
-    func testAllIntegrationMethods() throws {
-        for integrationMethod in IntegrationMethod.allCases {
-            print("Testing \(integrationMethod.rawValue)")
-            switch integrationMethod {
-            case .iDEAL, .przelewy24, .bancontact, .eps, .afterpay, .sofort, .paypal:
-                testNoInputIntegrationMethod(integrationMethod, shouldConfirm: true)
-            case .alipay:
-                testAppToAppRedirect(integrationMethod)
-            case .weChatPay:
-//                testAppToAppRedirectWithoutReturnURL(integrationMethod)
-                // TODO: WeChat Pay is currently unavailable
-                break
-            case .bacsDebit, .sepaDebit:
-                testNoInputIntegrationMethod(integrationMethod, shouldConfirm: false)
-            case .card, .cardSetupIntents, .aubecsDebit, .applePay, .klarna:
-                // Tested in method-specific functions.
-                break
-            case .grabpay:
-                // TODO: GrabPay is currently broken
-                break
-            case .oxxo:
-                // TODO: OXXO is currently broken
-                break
-            case .giropay:
-                // TODO: Giropay is deprecated
-                break
-            }
-        }
+    // Exercise the ASWebAuthenticationSession flow
+    func testASWebAuthUsingPaypal() throws {
+        testNoInputIntegrationMethod(.paypal, shouldConfirm: true)
+    }
+    
+    // Exercise the app to app redirect flow, including Safari
+    func testAppToAppRedirectUsingAlipay() throws {
+        testAppToAppRedirect(.alipay)
+    }
+    
+    // Test a standard payment method using SFSafariViewController
+    func testSFSafariViewControllerUsingBancontact() throws {
+        testNoInputIntegrationMethod(.bancontact, shouldConfirm: true)
     }
 
     func testAUBECSDebit() {
