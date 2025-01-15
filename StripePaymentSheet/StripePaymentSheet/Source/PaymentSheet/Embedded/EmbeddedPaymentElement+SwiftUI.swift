@@ -46,7 +46,9 @@ import Combine
     // MARK: - Public APIs
 
     /// Creates an empty view model. Call `load` to initialize the `EmbeddedPaymentElementViewModel`
-    public init() {}
+    public init() {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedSwiftUIProduct.self)
+    }
     
     /// An asynchronous failable initializer
     /// Loads the Customer's payment methods, their default payment method, etc.
@@ -71,6 +73,7 @@ import Combine
                 configuration: configuration
             )
             self.embeddedPaymentElement = element
+            self.embeddedPaymentElement?.delegate = self
             self.paymentOption = element.paymentOption
             self.isLoaded = true
         }
@@ -124,6 +127,21 @@ import Combine
 #endif
 }
 
+// MARK: EmbeddedPaymentElementDelegate
+
+extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
+    public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
+        self.objectWillChange.send()
+    }
+    
+    public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
+        self.paymentOption = embeddedPaymentElement.paymentOption
+    }
+    
+}
+
+// MARK: Internal
+
 /// This View takes an `EmbeddedPaymentElementViewModel` and creates an instance of `EmbeddedViewRepresentable`,
 /// manages its lifecycle, and displays it within your SwiftUI view hierarchy.
 struct EmbeddedPaymentElementView: View {
@@ -140,12 +158,9 @@ struct EmbeddedPaymentElementView: View {
     }
 }
 
-// MARK: Internal
-
 struct EmbeddedViewRepresentable: UIViewRepresentable {
-    let viewModel: EmbeddedPaymentElementViewModel
+    @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
     @Binding var height: CGFloat
-    
     @State private var isFirstLayout = true
     
     public func makeCoordinator() -> Coordinator {
@@ -157,7 +172,6 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         containerView.backgroundColor = .clear
         guard let embeddedPaymentElement = viewModel.embeddedPaymentElement else { return containerView }
         
-        embeddedPaymentElement.delegate = context.coordinator
         embeddedPaymentElement.presentingViewController = context.coordinator.topMostViewController()
         
         let paymentElementView = embeddedPaymentElement.view
@@ -177,8 +191,11 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         
         return containerView
     }
-
-    func updateHeight(_ uiView: UIView) {
+    
+    public func updateUIView(_ uiView: UIView, context: Context) {
+        // Update the presenting view controller in case it has changed
+        viewModel.embeddedPaymentElement?.presentingViewController = context.coordinator.topMostViewController()
+        
         DispatchQueue.main.async {
             let newHeight = uiView.systemLayoutSizeFitting(CGSize(width: uiView.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
             if self.isFirstLayout {
@@ -192,28 +209,12 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
             }
         }
     }
-    
-    public func updateUIView(_ uiView: UIView, context: Context) {
-        // Update the presenting view controller in case it has changed
-        viewModel.embeddedPaymentElement?.presentingViewController = context.coordinator.topMostViewController()
 
-        updateHeight(uiView)
-    }
-
-    public class Coordinator: NSObject, EmbeddedPaymentElementDelegate {
+    public class Coordinator: NSObject {
         var parent: EmbeddedViewRepresentable
         
         init(_ parent: EmbeddedViewRepresentable) {
             self.parent = parent
-            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedSwiftUIProduct.self)
-        }
-
-        public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-            self.parent.updateHeight(embeddedPaymentElement.view)
-        }
-
-        public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
-            self.parent.viewModel.paymentOption = embeddedPaymentElement.paymentOption
         }
         
         func topMostViewController() -> UIViewController {
