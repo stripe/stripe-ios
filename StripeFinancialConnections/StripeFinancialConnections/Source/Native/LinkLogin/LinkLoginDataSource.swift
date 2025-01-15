@@ -23,6 +23,7 @@ protocol LinkLoginDataSource: AnyObject {
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
     ) -> Future<FinancialConnectionsSynchronize>
+    func completeAssertion(possibleError: Error?)
 }
 
 final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
@@ -35,6 +36,10 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     private let clientSecret: String
     private let returnURL: String?
     private let apiClient: FinancialConnectionsAPIClient
+    
+    private var verified: Bool {
+        manifest.appVerificationEnabled ?? false
+    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -75,13 +80,14 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse> {
-        apiClient.linkAccountSignUp(
+        return apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             country: country,
             amount: elementsSessionContext?.amount,
             currency: elementsSessionContext?.currency,
-            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession
+            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
+            useMobileEndpoints: verified
         )
     }
 
@@ -112,5 +118,10 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             linkAccountSession: linkAccountSession,
             consumerSessionClientSecret: consumerSessionClientSecret
         )
+    }
+
+    func completeAssertion(possibleError: Error?) {
+        guard verified else { return }
+        apiClient.completeAssertion(possibleError: possibleError)
     }
 }
