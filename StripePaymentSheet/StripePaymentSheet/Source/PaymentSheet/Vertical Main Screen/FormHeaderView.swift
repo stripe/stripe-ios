@@ -34,25 +34,9 @@ final class FormHeaderView: UIView {
             return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
         }
     }()
-    
-    private lazy var promoBadgeView: PromoBadgeView? = {
-        guard let incentive else {
-            return nil
-        }
-        
-        return PromoBadgeView(
-            appearance: appearance, 
-            tinyMode: false,
-            text: incentive.displayText
-        )
-    }()
 
     private lazy var stackView: UIStackView = {
-        // This spacer makes sure that the promo badge is aligned correctly
-        let spacerView = UIView()
-        spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        
-        let views = [imageView, label, promoBadgeView, spacerView].compactMap { $0 }
+        let views = [imageView, label].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.spacing = 12
         if imageView == nil {
@@ -67,21 +51,13 @@ final class FormHeaderView: UIView {
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let shouldUseNewCardHeader: Bool // true if the customer has a saved payment method that is type card
     private let appearance: PaymentSheet.Appearance
-    private let incentive: PaymentMethodIncentive?
 
-    init(
-        paymentMethodType: PaymentSheet.PaymentMethodType,
-        shouldUseNewCardHeader: Bool,
-        appearance: PaymentSheet.Appearance,
-        incentive: PaymentMethodIncentive?
-    ) {
+    init(paymentMethodType: PaymentSheet.PaymentMethodType, shouldUseNewCardHeader: Bool, appearance: PaymentSheet.Appearance) {
         self.paymentMethodType = paymentMethodType
         self.shouldUseNewCardHeader = shouldUseNewCardHeader
         self.appearance = appearance
-        self.incentive = incentive
         super.init(frame: .zero)
         addAndPinSubview(stackView)
-        
         if let imageView {
             NSLayoutConstraint.activate([
                 imageView.widthAnchor.constraint(equalToConstant: 20),

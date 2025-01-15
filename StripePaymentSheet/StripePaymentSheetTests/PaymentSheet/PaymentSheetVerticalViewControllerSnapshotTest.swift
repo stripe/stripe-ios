@@ -320,24 +320,6 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "New card"), selection: .new(paymentMethodType: .stripe(.card)))
         verify(sut)
     }
-    
-    func testPromoBadgeInFormTitle() {
-        let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["card"],
-            hasLinkConsumerIncentive: true
-        )
-        let loadResult = PaymentSheetLoader.LoadResult(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            elementsSession: elementsSession,
-            savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card), .linkCardBrand]
-        )
-        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
-        _ = makeBottomSheetAndLayout(sut) // Laying out before calling `didTap` avoids breaking constraints due to zero size
-        let listVC = sut.paymentMethodListViewController!
-        listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "Bank"), selection: .new(paymentMethodType: .linkCardBrand))
-        verify(sut)
-    }
 
     func testCVCRecollection() {
         let savedCard = STPPaymentMethod._testCard()
