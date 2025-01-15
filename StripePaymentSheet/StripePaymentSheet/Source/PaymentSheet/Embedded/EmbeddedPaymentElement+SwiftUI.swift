@@ -13,7 +13,7 @@ import Combine
 /// Use this class to create and manage an instance of `EmbeddedPaymentElement`
 @MainActor
 @_spi(EmbeddedPaymentElementPrivateBeta) public final class EmbeddedPaymentElementViewModel: ObservableObject {
-    enum EmbeddedPaymentElementError: Error {
+    enum EmbeddedPaymentElementViewModel: Error {
         /// The `EmbeddedPaymentElementViewModel` has not been loaded. Call `load()` before attempting this operation.
          case notLoaded
 
@@ -28,7 +28,7 @@ import Combine
     
     /// Contains information about the customer's selected payment option.
     /// Use this to display the payment option in your own UI
-    @Published public internal(set) var paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData?
+    @Published public private(set) var paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData?
     
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: some View {
@@ -38,6 +38,10 @@ import Combine
     // MARK: - Internal properties
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
+    
+    @Published var height: CGFloat = 0.0
+    
+    @Published var isFirstLayout: Bool = true
     
     // MARK: - Private properties
     
@@ -63,7 +67,7 @@ import Combine
     ) async throws {
         // If we already have a task (whether it’s in progress or finished), throw an error:
         guard loadTask == nil else {
-            throw EmbeddedPaymentElementError.multipleLoadCalls
+            throw EmbeddedPaymentElementViewModel.multipleLoadCalls
         }
         
         // Create and store the new Task
@@ -96,7 +100,7 @@ import Combine
         intentConfiguration: EmbeddedPaymentElement.IntentConfiguration
     ) async -> EmbeddedPaymentElement.UpdateResult {
         guard let embeddedPaymentElement = embeddedPaymentElement else {
-            return .failed(error: EmbeddedPaymentElementError.notLoaded)
+            return .failed(error: EmbeddedPaymentElementViewModel.notLoaded)
         }
         
         return await embeddedPaymentElement.update(intentConfiguration: intentConfiguration)
@@ -107,7 +111,7 @@ import Combine
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
         guard let embeddedPaymentElement = embeddedPaymentElement else {
-            return .failed(error: EmbeddedPaymentElementError.notLoaded)
+            return .failed(error: EmbeddedPaymentElementViewModel.notLoaded)
         }
         
         let result = await embeddedPaymentElement.confirm()
@@ -131,13 +135,12 @@ import Combine
 
 extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-        self.objectWillChange.send()
+        // no-op, `height` is updated in `EmbeddedViewRepresentable`
     }
     
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         self.paymentOption = embeddedPaymentElement.paymentOption
     }
-    
 }
 
 // MARK: Internal
@@ -145,23 +148,20 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
 /// This View takes an `EmbeddedPaymentElementViewModel` and creates an instance of `EmbeddedViewRepresentable`,
 /// manages its lifecycle, and displays it within your SwiftUI view hierarchy.
 struct EmbeddedPaymentElementView: View {
-    private let viewModel: EmbeddedPaymentElementViewModel
-    @State private var height: CGFloat = 0
+    @ObservedObject private var viewModel: EmbeddedPaymentElementViewModel
     
     public init(viewModel: EmbeddedPaymentElementViewModel) {
         self.viewModel = viewModel
     }
     
     public var body: some View {
-        EmbeddedViewRepresentable(viewModel: viewModel, height: $height)
-            .frame(height: height)
+        EmbeddedViewRepresentable(viewModel: viewModel)
+            .frame(height: viewModel.height)
     }
 }
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
-    @Binding var height: CGFloat
-    @State private var isFirstLayout = true
     
     public func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -198,13 +198,13 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         
         DispatchQueue.main.async {
             let newHeight = uiView.systemLayoutSizeFitting(CGSize(width: uiView.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
-            if self.isFirstLayout {
+            if self.viewModel.isFirstLayout {
                 // No animation for the first layout
-                self.height = newHeight
-                self.isFirstLayout = false
+                self.viewModel.height = newHeight
+                self.viewModel.isFirstLayout = false
             } else {
                 withAnimation(.easeInOut(duration: 0.2)) {
-                    self.height = newHeight
+                    self.viewModel.height = newHeight
                 }
             }
         }
