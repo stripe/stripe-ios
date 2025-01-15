@@ -167,10 +167,6 @@ struct EmbeddedPaymentElementView: View {
 struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
     
-    public func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
     public func makeUIView(context: Context) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .clear
@@ -199,14 +195,6 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     public func updateUIView(_ uiView: UIView, context: Context) {
         // Update the presenting view controller in case it has changed
         viewModel.embeddedPaymentElement?.presentingViewController = UIWindow.topMostViewController
-    }
-
-    public class Coordinator: NSObject {
-        var parent: EmbeddedViewRepresentable
-        
-        init(_ parent: EmbeddedViewRepresentable) {
-            self.parent = parent
-        }
     }
 }
 
