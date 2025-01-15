@@ -9,43 +9,41 @@ import SwiftUI
 import Combine
 @_spi(STP) import StripeCore
 
-
-/// A wrapper around EmbeddedPaymentElementView to automatically update height of the embedded payment element
-@_spi(EmbeddedPaymentElementPrivateBeta) public struct EmbeddedPaymentElementView: View {
-    private let viewModel: EmbeddedPaymentElementViewModel
-    @State var height: CGFloat = 0
-    
-    public init(viewModel: EmbeddedPaymentElementViewModel) {
-        self.viewModel = viewModel
-    }
-    
-    public var body: some View {
-        EmbeddedPaymentElementSwiftUIWrapper(viewModel: viewModel, height: $height)
-            .frame(height: height)
-    }
-}
-
-/// A simple wrapper around `EmbeddedPaymentElement` that exposes
-/// high-level state and actions to SwiftUI.
+/// A view model that manages an `EmbeddedPaymentElement`.
+/// Use this class to create and manage an instance of `EmbeddedPaymentElement`
 @MainActor
 @_spi(EmbeddedPaymentElementPrivateBeta) public final class EmbeddedPaymentElementViewModel: ObservableObject {
-    enum LoadError: Error {
-        case alreadyCalled
-    }
+    enum EmbeddedPaymentElementError: Error {
+        /// The `EmbeddedPaymentElementViewModel` has not been loaded. Call `load()` before attempting this operation.
+         case notLoaded
+
+        /// `load()` has already been called. `load()` may only be called once.
+         case multipleLoadCalls
+     }
     
     // MARK: - Public properties
-
-    public var embeddedPaymentElement: EmbeddedPaymentElement?
     
-    /// Indicates whether the view model is loading (i.e., creating or updating).
+    /// Indicates whether the `EmbeddedPaymentElementViewModel` has been successfully loaded.
     @Published public private(set) var isLoaded: Bool = false
     
-    /// The currently selected payment option. You can use this to
-    /// display e.g. "Visa ····4242" or "Apple Pay" in your SwiftUI UI.
+    /// Contains information about the customer's selected payment option.
+    /// Use this to display the payment option in your own UI
     @Published public internal(set) var paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData?
     
-    /// The result of the confirm call, if it’s been made.
+    /// The result of the `confirm()` call.
+    ///
+    /// This value is `nil` until `confirm()` is called. After a call to `confirm()`, this property contains the result of the confirmation,
+    /// which can be either a successful, failed, or canceled payment. Inspect the value to determine the outcome and handle it accordingly.
     @Published public var confirmationResult: EmbeddedPaymentElementResult?
+    
+    /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
+    public var view: some View {
+        EmbeddedPaymentElementView(viewModel: self)
+    }
+    
+    // MARK: - Internal properties
+
+    private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
     
     // MARK: - Private properties
     
@@ -60,6 +58,8 @@ import Combine
     /// Loads the Customer's payment methods, their default payment method, etc.
     /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the confirmation.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
+    /// - Note: This method may only be called once. Subsequent calls will throw `EmbeddedPaymentElementViewModel.LoadError.multipleLoadCalls`.
+    ///         To support retrying after a failure, catch the error and call `load` again.
     /// - Throws: An error if loading failed.
     public func load(
         intentConfiguration: EmbeddedPaymentElement.IntentConfiguration,
@@ -67,11 +67,11 @@ import Combine
     ) async throws {
         // If we already have a task (whether it’s in progress or finished), throw an error:
         guard loadTask == nil else {
-            throw LoadError.alreadyCalled
+            throw EmbeddedPaymentElementError.multipleLoadCalls
         }
-
-        // Create a new Task to perform the loading:
-        let loadTask = Task<Void, Error> {
+        
+        // Create and store the new Task
+        loadTask = Task {
             let element = try await EmbeddedPaymentElement.create(
                 intentConfiguration: intentConfiguration,
                 configuration: configuration
@@ -81,16 +81,11 @@ import Combine
             self.isLoaded = true
         }
 
-        // Store the Task so subsequent calls to `load()` see it:
-        self.loadTask = loadTask
-
-        // Await the Task. If loading fails, optionally allow retry by resetting `loadTask = nil`.
         do {
-            try await loadTask.value
+            try await loadTask?.value
         } catch {
-            // If you *never* want retries, remove the following line
-            // so that the second call will *always* throw, even after a failure.
-            self.loadTask = nil
+            // Reset loadTask to allow for load retries after errors
+            loadTask = nil
             throw error
         }
     }
@@ -100,12 +95,11 @@ import Combine
     /// - Parameter intentConfiguration: An updated IntentConfiguration.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    @discardableResult
     public func update(
         intentConfiguration: EmbeddedPaymentElement.IntentConfiguration
-    ) async -> EmbeddedPaymentElement.UpdateResult? {
+    ) async -> EmbeddedPaymentElement.UpdateResult {
         guard let embeddedPaymentElement = embeddedPaymentElement else {
-            return nil
+            return .failed(error: EmbeddedPaymentElementError.notLoaded)
         }
         
         return await embeddedPaymentElement.update(intentConfiguration: intentConfiguration)
@@ -114,10 +108,9 @@ import Combine
     /// Completes the payment or setup.
     /// - Returns: The result of the payment after any presented view controllers are dismissed.
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
-    @discardableResult
-    public func confirm() async -> EmbeddedPaymentElementResult? {
+    public func confirm() async -> EmbeddedPaymentElementResult {
         guard let embeddedPaymentElement = embeddedPaymentElement else {
-            return nil
+            return .failed(error: EmbeddedPaymentElementError.notLoaded)
         }
         
         let result = await embeddedPaymentElement.confirm()
@@ -138,9 +131,25 @@ import Combine
 #endif
 }
 
+/// This View takes an `EmbeddedPaymentElementViewModel` and creates an instance of `EmbeddedViewRepresentable`,
+/// manages its lifecycle, and displays it within your SwiftUI view hierarchy.
+struct EmbeddedPaymentElementView: View {
+    private let viewModel: EmbeddedPaymentElementViewModel
+    @State private var height: CGFloat = 0
+    
+    public init(viewModel: EmbeddedPaymentElementViewModel) {
+        self.viewModel = viewModel
+    }
+    
+    public var body: some View {
+        EmbeddedViewRepresentable(viewModel: viewModel, height: $height)
+            .frame(height: height)
+    }
+}
+
 // MARK: Internal
 
-struct EmbeddedPaymentElementSwiftUIWrapper: UIViewRepresentable {
+struct EmbeddedViewRepresentable: UIViewRepresentable {
     let viewModel: EmbeddedPaymentElementViewModel
     @Binding var height: CGFloat
     
@@ -199,10 +208,11 @@ struct EmbeddedPaymentElementSwiftUIWrapper: UIViewRepresentable {
     }
 
     public class Coordinator: NSObject, EmbeddedPaymentElementDelegate {
-        var parent: EmbeddedPaymentElementSwiftUIWrapper
+        var parent: EmbeddedViewRepresentable
         
-        init(_ parent: EmbeddedPaymentElementSwiftUIWrapper) {
+        init(_ parent: EmbeddedViewRepresentable) {
             self.parent = parent
+            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedSwiftUIProduct.self)
         }
 
         public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
