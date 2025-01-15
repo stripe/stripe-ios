@@ -1,3 +1,8 @@
+## X.Y.Z X-Y-Z
+### ApplePay
+* [Added] Added a `dismiss` method to `STPApplePayContext`.
+
+
 ## 24.4.0 2025-01-13
 ### PaymentSheet
 * [Fixed] PaymentSheet using vertical payment method layout now defaults to Apple Pay when the customer doesn't have a default saved payment method.
