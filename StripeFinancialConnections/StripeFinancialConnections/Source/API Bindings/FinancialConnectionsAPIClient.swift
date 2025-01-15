@@ -38,6 +38,26 @@ final class FinancialConnectionsAPIClient {
         return consumerPublishableKey
     }
 
+    /// Applies attestation-related parameters to the given base parameters
+    /// In case of an assertion error, returns the unmodified base parameters
+    func applyAttestationParameters(
+        to baseParameters: [String: Any]
+    ) -> Future<[String: Any]> {
+        let promise = Promise<[String: Any]>()
+        Task {
+            do {
+                let attest = backingAPIClient.stripeAttest
+                let handle = try await attest.assert()
+                let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
+                promise.resolve(with: newParameters)
+            } catch {
+                // Fail silently if we can't get an assertion, we'll try the request anyway. It may fail.
+                promise.resolve(with: baseParameters)
+            }
+        }
+        return promise
+    }
+
     /// Marks the assertion as completed and forwards attestation errors to the `StripeAttest` client for logging.
     func completeAssertion(possibleError: Error?) {
         let attest = backingAPIClient.stripeAttest
@@ -99,24 +119,6 @@ final class FinancialConnectionsAPIClient {
         } else {
             throw EncodingError.cannotCastToDictionary
         }
-    }
-
-    private func applyAttestationParameters(
-        to baseParameters: [String: Any]
-    ) -> Future<[String: Any]> {
-        let promise = Promise<[String: Any]>()
-        Task {
-            do {
-                let attest = backingAPIClient.stripeAttest
-                let handle = try await attest.assert()
-                let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
-                promise.resolve(with: newParameters)
-            } catch {
-                // Fail silently if we can't get an assertion, we'll try the request anyway. It may fail.
-                promise.resolve(with: baseParameters)
-            }
-        }
-        return promise
     }
 }
 
