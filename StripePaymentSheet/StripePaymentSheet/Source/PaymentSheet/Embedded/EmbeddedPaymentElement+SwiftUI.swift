@@ -134,10 +134,20 @@ import Combine
 // MARK: EmbeddedPaymentElementDelegate
 
 extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
+    
+    private var isUnitOrUITest: Bool {
+#if targetEnvironment(simulator)
+        return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
+#else
+        return false
+#endif
+    }
+    
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
         let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
-        
-        withAnimation(.easeInOut(duration: 0.2)) {
+
+        // Disable animations for tests
+        withAnimation(.easeInOut(duration: isUnitOrUITest ? 0.0 : 0.2)) {
             self.height = newHeight
         }
     }
@@ -170,6 +180,8 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     public func makeUIView(context: Context) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .clear
+        containerView.layoutMargins = .zero
+        
         guard let embeddedPaymentElement = viewModel.embeddedPaymentElement else { return containerView }
         
         embeddedPaymentElement.presentingViewController = UIWindow.topMostViewController
