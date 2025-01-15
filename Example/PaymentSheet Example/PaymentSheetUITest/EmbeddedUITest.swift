@@ -1015,7 +1015,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         
         let alertTitle = "Success"
         let alertBody = "Payment completed!"
-        let alertButton = "OK"
+        let alertButton = "Ok"
         dismissAlertView(alertBody: alertBody, alertTitle: alertTitle, buttonToTap: alertButton)
     }
 
