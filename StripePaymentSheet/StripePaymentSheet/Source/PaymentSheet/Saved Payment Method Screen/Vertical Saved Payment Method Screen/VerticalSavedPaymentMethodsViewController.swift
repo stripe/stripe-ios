@@ -51,7 +51,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                 paymentMethodRows.forEach {
                     let allowsRemoval = canRemovePaymentMethods
                     let paymentMethodType = $0.paymentMethod.type
-                    let allowsUpdating = UpdatePaymentMethodViewModel.supportedPaymentMethods.contains { type in paymentMethodType == type }
+                    let allowsUpdating = PaymentSheet.supportedSavedPaymentMethods.contains { type in paymentMethodType == type }
                     $0.state = .editing(allowsRemoval: allowsRemoval,
                                         allowsUpdating: allowsUpdating)
                 }
@@ -93,7 +93,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     /// Indicates whether the chevron should be shown
     /// True if any saved payment methods can be removed or edited
     var canRemoveOrEdit: Bool {
-        let hasSupportedSavedPaymentMethods = paymentMethods.allSatisfy{ UpdatePaymentMethodViewModel.supportedPaymentMethods.contains($0.type) }
+        let hasSupportedSavedPaymentMethods = paymentMethods.allSatisfy{ PaymentSheet.supportedSavedPaymentMethods.contains($0.type) }
         guard hasSupportedSavedPaymentMethods else {
             fatalError("Saved payment methods contain unsupported payment methods.")
         }

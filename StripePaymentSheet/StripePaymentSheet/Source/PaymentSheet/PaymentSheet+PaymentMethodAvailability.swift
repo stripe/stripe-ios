@@ -41,6 +41,12 @@ extension PaymentSheet {
         .multibanco,
     ]
 
+    /// An unordered list of paymentMethod types that can be saved in PaymentSheet
+    @_spi(STP) public static let supportedSavedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+
+    /// An unordered list of paymentMethod types that can be set as default in PaymentSheet when opted in to the "save as default" feature
+    @_spi(STP) public static let supportedDefaultPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
+
     /// Canonical source of truth for whether Apple Pay is enabled
     static func isApplePayEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
         return StripeAPI.deviceSupportsApplePay()

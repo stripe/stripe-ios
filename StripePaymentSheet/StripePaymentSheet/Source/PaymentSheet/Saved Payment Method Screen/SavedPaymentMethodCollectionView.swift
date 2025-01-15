@@ -152,7 +152,7 @@ extension SavedPaymentMethodCollectionView {
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
         var showEditIcon: Bool {
-            guard UpdatePaymentMethodViewModel.supportedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
+            guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
                 fatalError("Payment method does not match supported saved payment methods.")
             }
             return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)

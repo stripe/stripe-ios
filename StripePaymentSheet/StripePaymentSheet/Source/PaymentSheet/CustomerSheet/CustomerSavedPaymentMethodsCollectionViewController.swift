@@ -78,10 +78,11 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     struct Configuration {
-        let showApplePay: Bool
+        let isApplePayEnabled: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
         let isTestMode: Bool
+        let allowsSetAsDefaultPM: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -241,7 +242,14 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         cbcEligible: Bool,
         delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
-        self.savedPaymentMethods = savedPaymentMethods
+        if configuration.allowsSetAsDefaultPM {
+            self.savedPaymentMethods = savedPaymentMethods.filter{ savedPaymentMethod in CustomerSheet.supportedDefaultPaymentMethods.contains{paymentMethodType in
+                savedPaymentMethod.type == paymentMethodType}
+            }
+        }
+        else {
+            self.savedPaymentMethods = savedPaymentMethods
+        }
         self.originalSelectedSavedPaymentMethod = selectedPaymentMethodOption
         self.savedPaymentMethodsConfiguration = savedPaymentMethodsConfiguration
         self.configuration = configuration
@@ -288,7 +296,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
         self.viewModels =
         [.add]
-        + (self.configuration.showApplePay ? [.applePay] : [])
+        + (self.configuration.isApplePayEnabled ? [.applePay] : [])
         + savedPMViewModels
 
         // Select default

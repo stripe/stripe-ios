@@ -13,9 +13,6 @@ import Foundation
 import UIKit
 
 class UpdatePaymentMethodViewModel {
-    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
-    static let supportedDefaultPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
-
     let paymentMethod: STPPaymentMethod
     let appearance: PaymentSheet.Appearance
     let hostedSurface: HostedSurface
@@ -63,7 +60,7 @@ class UpdatePaymentMethodViewModel {
     }()
 
     init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdateCardBrand: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
-        guard UpdatePaymentMethodViewModel.supportedPaymentMethods.contains(paymentMethod.type) else {
+        guard PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) else {
             fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
         self.paymentMethod = paymentMethod

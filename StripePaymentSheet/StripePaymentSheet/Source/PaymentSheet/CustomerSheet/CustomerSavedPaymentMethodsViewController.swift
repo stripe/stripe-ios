@@ -64,7 +64,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private var cachedClientSecret: String?
 
     var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
-        let paymentMethodTypes = merchantSupportedPaymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: canCreateSetupIntents)
+        let supportedPaymentMethods = configuration.allowsSetAsDefaultPM ? CustomerSheet.supportedDefaultPaymentMethods : CustomerSheet.supportedPaymentMethods
+        let paymentMethodTypes = merchantSupportedPaymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: canCreateSetupIntents, supportedPaymentMethods: supportedPaymentMethods)
         return paymentMethodTypes.toPaymentSheetPaymentMethodTypes()
     }
 
@@ -94,17 +95,17 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }()
 
     private lazy var savedPaymentOptionsViewController: CustomerSavedPaymentMethodsCollectionViewController = {
-        let showApplePay = isApplePayEnabled
         return CustomerSavedPaymentMethodsCollectionViewController(
             savedPaymentMethods: savedPaymentMethods,
             selectedPaymentMethodOption: selectedPaymentMethodOption,
             mostRecentlyAddedPaymentMethod: nil,
             savedPaymentMethodsConfiguration: self.configuration,
             configuration: .init(
-                showApplePay: showApplePay,
+                isApplePayEnabled: isApplePayEnabled,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
-                isTestMode: configuration.apiClient.isTestmode
+                isTestMode: configuration.apiClient.isTestmode,
+                allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
@@ -654,10 +655,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             mostRecentlyAddedPaymentMethod: mostRecentlyAddedPaymentMethod,
             savedPaymentMethodsConfiguration: self.configuration,
             configuration: .init(
-                showApplePay: isApplePayEnabled,
+                isApplePayEnabled: isApplePayEnabled,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
-                isTestMode: configuration.apiClient.isTestmode
+                isTestMode: configuration.apiClient.isTestmode,
+                allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
