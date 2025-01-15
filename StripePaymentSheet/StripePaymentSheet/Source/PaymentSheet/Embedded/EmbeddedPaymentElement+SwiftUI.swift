@@ -206,14 +206,31 @@ final class EmbeddedSwiftUIProduct: STPAnalyticsProtocol {
 
 extension UIWindow {
     static var topMostViewController: UIViewController? {
-        guard
-            let scene = UIApplication.shared.connectedScenes
-                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
-            let window = scene.windows.first(where: { $0.isKeyWindow }) else {
-            return nil
-        }
-        
-        return window.rootViewController?.topMostViewController()
+        let window: UIWindow? = {
+             // 1. Check for connected scenes (for iOS 13 and later)
+             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                 if let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                     return keyWindow
+                 } else if let firstWindow = windowScene.windows.first {
+                     return firstWindow
+                 }
+             }
+
+             // 2. Fallback for older iOS versions or if no scene is found
+             if let appDelegateWindow = UIApplication.shared.delegate?.window ?? nil {
+                 return appDelegateWindow
+             }
+
+             // 3. As a last resort, try to find a keyWindow without a scene.
+             if let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
+                 return keyWindow
+             }
+
+             // 4. No window found
+             return nil
+         }()
+
+        return window?.rootViewController?.topMostViewController()
     }
 }
 
