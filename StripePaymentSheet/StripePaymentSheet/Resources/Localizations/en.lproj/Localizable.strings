@@ -188,6 +188,9 @@ re-entering the security code (CVV/CVC). */
 /* Title shown above a view containing the customer's card that they can delete or update */
 "Manage card" = "Manage card";
 
+/* Title shown above a view containing a list of the customer's cards that they can delete or update */
+"Manage cards" = "Manage cards";
+
 /* Title shown above a view containing the customer's payment method that they can delete or update */
 "Manage payment method" = "Manage payment method";
 

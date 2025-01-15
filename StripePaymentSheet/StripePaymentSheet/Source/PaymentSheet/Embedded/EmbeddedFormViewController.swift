@@ -131,7 +131,8 @@ class EmbeddedFormViewController: UIViewController {
             paymentMethodType: paymentMethodType,
             // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
             shouldUseNewCardHeader: shouldUseNewCardNewCardHeader,
-            appearance: configuration.appearance
+            appearance: configuration.appearance,
+            incentive: elementsSession.incentive?.takeIfAppliesTo(paymentMethodType)
         )
 
         return PaymentMethodFormViewController(

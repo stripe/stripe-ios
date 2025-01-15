@@ -70,12 +70,15 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private var headerText: String {
+        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        let hasOnlyCards = nonCardPaymentMethods.isEmpty
         if isEditingPaymentMethods {
+            if hasOnlyCards {
+                return paymentMethods.count == 1 ?  .Localized.manage_card : .Localized.manage_cards
+            }
             return paymentMethods.count == 1 ?  .Localized.manage_payment_method : .Localized.manage_payment_methods
         }
-
-        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
-        return nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
+        return hasOnlyCards ? .Localized.select_card : .Localized.select_payment_method
     }
 
     var canRemovePaymentMethods: Bool {
@@ -329,8 +332,11 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                            appearance: configuration.appearance,
                                                            hostedSurface: .paymentSheet,
                                                            cardBrandFilter: configuration.cardBrandFilter,
-                                                           canEdit: paymentMethod.isCoBrandedCard && isCBCEligible,
-                                                           canRemove: canRemovePaymentMethods)
+                                                           canRemove: canRemovePaymentMethods,
+                                                           canUpdateCardBrand: paymentMethod.isCoBrandedCard && isCBCEligible,
+                                                           allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+                                                           isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
+        )
         let updateViewController = UpdatePaymentMethodViewController(
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                             isTestMode: configuration.apiClient.isTestmode,

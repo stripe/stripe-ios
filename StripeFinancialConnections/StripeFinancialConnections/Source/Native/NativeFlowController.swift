@@ -512,8 +512,9 @@ extension NativeFlowController {
             return
         }
 
-        // Bank account details extraction for the linked bank
+        var paymentDetails: RedactedPaymentDetails?
         var bankAccountDetails: BankAccountDetails?
+        
         let elementsSessionContext = dataManager.elementsSessionContext
         let linkMode = elementsSessionContext?.linkMode
         let email = elementsSessionContext?.billingDetails?.email ?? dataManager.consumerSession?.emailAddress
@@ -524,18 +525,19 @@ extension NativeFlowController {
             billingAddress: elementsSessionContext?.billingAddress,
             billingEmail: email
         )
-        .chained { [weak self] paymentDetails -> Future<LinkBankPaymentMethod> in
+        .chained { [weak self] response -> Future<LinkBankPaymentMethod> in
             guard let self else {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
             }
 
-            bankAccountDetails = paymentDetails.redactedPaymentDetails.bankAccountDetails
+            paymentDetails = response.redactedPaymentDetails
+            bankAccountDetails = response.redactedPaymentDetails.bankAccountDetails
 
             // Decide which API to call based on the payment mode
             if let linkMode, linkMode.isPantherPayment {
                 return self.dataManager.apiClient.sharePaymentDetails(
                     consumerSessionClientSecret: consumerSession.clientSecret,
-                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
+                    paymentDetailsId: response.redactedPaymentDetails.id,
                     expectedPaymentMethodType: linkMode.expectedPaymentMethodType,
                     billingEmail: email,
                     billingPhone: phone
@@ -544,7 +546,7 @@ extension NativeFlowController {
             } else {
                 return self.dataManager.apiClient.paymentMethods(
                     consumerSessionClientSecret: consumerSession.clientSecret,
-                    paymentDetailsId: paymentDetails.redactedPaymentDetails.id,
+                    paymentDetailsId: response.redactedPaymentDetails.id,
                     billingDetails: elementsSessionContext?.billingDetails
                 )
             }
@@ -554,8 +556,13 @@ extension NativeFlowController {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
             }
             
+            guard let paymentDetailsID = paymentDetails?.id else {
+                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "redactedPaymentDetails cannot be nil"))
+            }
+            
             return updateIncentiveEligibility(
                 incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
+                paymentDetailsID: paymentDetailsID,
                 consumerSession: consumerSession,
                 paymentMethod: paymentMethod
             )
@@ -579,6 +586,7 @@ extension NativeFlowController {
     
     private func updateIncentiveEligibility(
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        paymentDetailsID: String,
         consumerSession: ConsumerSessionData,
         paymentMethod: LinkBankPaymentMethod
     ) -> Promise<PaymentMethodWithIncentiveEligibility> {
@@ -595,7 +603,8 @@ extension NativeFlowController {
         
         self.dataManager.apiClient.updateAvailableIncentives(
             consumerSessionClientSecret: consumerSession.clientSecret,
-            sessionID: incentiveEligibilitySession.id
+            sessionID: incentiveEligibilitySession.id,
+            paymentDetailsID: paymentDetailsID
         ).observe { result in
             switch result {
             case .success(let availableIncentives):

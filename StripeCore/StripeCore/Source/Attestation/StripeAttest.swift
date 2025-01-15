@@ -82,6 +82,15 @@ import UIKit
         return appAttestService.isSupported
     }
 
+    @_spi(STP) public static func isLinkAssertionError(error: Error) -> Bool {
+        if let error = error as? StripeCore.StripeError,
+           case let .apiError(apiError) = error,
+           apiError.code == "link_failed_to_attest_request" {
+            return true
+        }
+        return false
+    }
+
     // MARK: Public structs
 
     /// Contains the signed data and various information used to sign the request.
@@ -394,7 +403,7 @@ import UIKit
     // MARK: Assertion concurrency
 
     // Called when an assertion handle is completed or times out
-    private func assertionCompleted() {
+    @_spi(STP) public func assertionCompleted() {
         assertionInProgress = false
 
         // Resume the next waiter if there is one
