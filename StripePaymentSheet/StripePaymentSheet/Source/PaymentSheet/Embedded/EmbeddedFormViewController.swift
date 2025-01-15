@@ -38,10 +38,10 @@ import UIKit
     /// - Parameter embeddedFormViewController: The view controller that was canceled.
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController)
 
-    /// Notifies the delegate that the embedded form view controller should close.
+    /// Notifies the delegate that the user completed the form and tapped the primary button..
     /// This method is called when a payment option that can be confirmed later has been provided.
     /// - Parameter embeddedFormViewController: The view controller requesting to close.
-    func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController)
+    func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: EmbeddedFormViewController)
 }
 
 class EmbeddedFormViewController: UIViewController {
@@ -68,7 +68,7 @@ class EmbeddedFormViewController: UIViewController {
             navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
-    
+
     var collectsUserInput: Bool {
         return paymentMethodFormViewController.form.collectsUserInput
     }
@@ -79,7 +79,7 @@ class EmbeddedFormViewController: UIViewController {
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
         return paymentMethodFormViewController.paymentOption
     }
-    
+
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let configuration: EmbeddedPaymentElement.Configuration
     private let intent: Intent
@@ -363,7 +363,7 @@ class EmbeddedFormViewController: UIViewController {
 
         // If we defer confirmation, simply close the sheet
         if shouldDeferConfirmation {
-            self.delegate?.embeddedFormViewControllerShouldClose(self)
+            self.delegate?.embeddedFormViewControllerDidContinue(self)
             return
         }
 

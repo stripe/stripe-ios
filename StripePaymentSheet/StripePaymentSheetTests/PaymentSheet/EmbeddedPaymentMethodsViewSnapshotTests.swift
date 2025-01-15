@@ -279,7 +279,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_bacsDebit_darkBackground() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.colors.componentBackground = .black
@@ -593,7 +593,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         XCTAssertEqual(embeddedView.selection, initialSelection)
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatRadio_promoBadge() {
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: nil,
@@ -606,16 +606,16 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             mandateProvider: MockMandateProvider(),
             incentive: PaymentMethodIncentive(identifier: "link_instant_debits", displayText: "$5")
         )
-        
+
         verify(embeddedView)
     }
-    
+
     // MARK: Flat with checkmark snapshot tests
 
     func testEmbeddedPaymentMethodsView_flatWithCheckmark() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -624,14 +624,14 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_savedPaymentMethod() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .saved(paymentMethod: STPPaymentMethod._testCard()),
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: STPPaymentMethod._testCard(),
@@ -641,14 +641,14 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .viewMore,
                                                       mandateProvider: MockMandateProvider(),
                                                       savedPaymentMethods: [._testCard()])
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_noApplePay() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -657,14 +657,14 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_noLink() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -673,15 +673,15 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: false,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_rowHeight() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         appearance.embeddedPaymentElement.row.additionalInsets = 20
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
                                                       savedPaymentMethod: nil,
@@ -690,9 +690,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
-        
+
         // Assert height
         let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
@@ -701,12 +701,12 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             XCTAssertEqual((appearance.embeddedPaymentElement.row.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
         }
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_rowHeightSingleLine() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         appearance.embeddedPaymentElement.row.additionalInsets = 20
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -715,9 +715,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: false,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
-        
+
         // Assert height
         let defaultHeight = RowButton.calculateTallestHeight(appearance: .default, isEmbedded: true)
         let defaultInset = PaymentSheet.Appearance.default.embeddedPaymentElement.row.additionalInsets
@@ -726,12 +726,12 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             XCTAssertEqual((appearance.embeddedPaymentElement.row.additionalInsets - defaultInset) * 2, newHeight - defaultHeight)
         }
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_spacing() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         appearance.embeddedPaymentElement.row.floating.spacing = 30
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -740,16 +740,16 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_selectedBorder() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement .row.style = .flatWithCheckmark
         appearance.selectedBorderWidth = 5.0
         appearance.colors.selectedComponentBorder = .red
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -758,19 +758,19 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         // Simulate tapping the last button (Cash App Pay)
         embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_borderWidth() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement .row.style = .flatWithCheckmark
         appearance.borderWidth = 5.0
         appearance.colors.primary = .red
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -779,18 +779,18 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         // Simulate tapping the last button (Cash App Pay)
         embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_componentBackgroundColor() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         appearance.colors.componentBackground = .purple
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -799,15 +799,15 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_cornerRadius() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         appearance.cornerRadius = 15
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -816,16 +816,16 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_smallFont() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         appearance.font.sizeScaleFactor = 0.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -834,16 +834,16 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_largeFont() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
         appearance.font.sizeScaleFactor = 1.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -852,14 +852,14 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_promoBadge_unselected() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .new(paymentMethodType: .stripe(.card)),
             paymentMethodTypes: [.stripe(.card), .instantDebits, .stripe(.cashApp)],
@@ -871,14 +871,14 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             mandateProvider: MockMandateProvider(),
             incentive: PaymentMethodIncentive(identifier: "link_instant_debits", displayText: "$5")
         )
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithCheckmark_promoBadge_selected() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
-        
+
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .new(paymentMethodType: .instantDebits),
             paymentMethodTypes: [.stripe(.card), .instantDebits, .stripe(.cashApp)],
@@ -890,10 +890,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             mandateProvider: MockMandateProvider(),
             incentive: PaymentMethodIncentive(identifier: "link_instant_debits", displayText: "$5")
         )
-        
+
         verify(embeddedView)
     }
-
 
     // MARK: Mandate tests
 
@@ -1067,7 +1066,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_withSavedCard() {
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -1078,10 +1077,10 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider(),
                                                       savedPaymentMethods: [._testCard()])
-        
+
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_withoutSavedCard() {
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -1092,10 +1091,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider(),
                                                       savedPaymentMethods: [._testUSBankAccount()])
-        
+
         verify(embeddedView)
     }
-
 
     func verify(
         _ view: UIView,
@@ -1121,5 +1119,40 @@ class MockMandateProvider: MandateTextProvider {
 
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString? {
         return mandateResolver(paymentMethodType)
+    }
+}
+
+extension EmbeddedPaymentMethodsView {
+    convenience init(
+        initialSelection: Selection?,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        savedPaymentMethod: STPPaymentMethod?,
+        appearance: PaymentSheet.Appearance,
+        shouldShowApplePay: Bool,
+        shouldShowLink: Bool,
+        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
+        mandateProvider: MandateTextProvider,
+        shouldShowMandate: Bool = true,
+        savedPaymentMethods: [STPPaymentMethod] = [],
+        customer: PaymentSheet.CustomerConfiguration? = nil,
+        incentive: PaymentMethodIncentive? = nil,
+        delegate: EmbeddedPaymentMethodsViewDelegate? = nil
+    ) {
+        self.init(
+            initialSelection: initialSelection,
+            paymentMethodTypes: paymentMethodTypes,
+            savedPaymentMethod: savedPaymentMethod,
+            appearance: appearance,
+            shouldShowApplePay: shouldShowApplePay,
+            shouldShowLink: shouldShowLink,
+            savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
+            mandateProvider: mandateProvider,
+            shouldShowMandate: shouldShowMandate,
+            savedPaymentMethods: savedPaymentMethods,
+            customer: customer,
+            incentive: incentive,
+            analyticsHelper: ._testValue(),
+            delegate: nil
+        )
     }
 }
