@@ -164,6 +164,7 @@ class BackendViewModel: ObservableObject {
 struct MyEmbeddedCheckoutView: View {
     @StateObject var embeddedViewModel = EmbeddedPaymentElementViewModel()
     @StateObject var backendViewModel = BackendViewModel()
+    @State var confirmationResult: EmbeddedPaymentElementResult?
     @State private var isSubscribing: Bool = false
     
     @Environment(\.dismiss) private var dismiss
@@ -210,7 +211,7 @@ struct MyEmbeddedCheckoutView: View {
                     // Confirm Payment button
                     Button(action: {
                         Task {
-                            await embeddedViewModel.confirm()
+                            self.confirmationResult = await embeddedViewModel.confirm()
                         }
                     }) {
                         if embeddedViewModel.paymentOption == nil {
@@ -261,8 +262,8 @@ struct MyEmbeddedCheckoutView: View {
         .alert(
             alertTitle,
             isPresented: Binding<Bool>(
-                get: { embeddedViewModel.confirmationResult != nil },
-                set: { if !$0 { embeddedViewModel.confirmationResult = nil } }
+                get: { confirmationResult != nil },
+                set: { if !$0 { confirmationResult = nil } }
             ),
             actions: {
                 Button("Ok") {
@@ -326,7 +327,7 @@ struct MyEmbeddedCheckoutView: View {
     
     // MARK: - Alert
     var alertTitle: String {
-        switch embeddedViewModel.confirmationResult {
+        switch confirmationResult {
         case .completed: return "Success"
         case .failed:    return "Error"
         case .canceled:  return "Cancelled"
@@ -335,7 +336,7 @@ struct MyEmbeddedCheckoutView: View {
     }
     
     var alertMessage: String {
-        switch embeddedViewModel.confirmationResult {
+        switch confirmationResult {
         case .completed:
             return "Payment completed!"
         case .failed(let error):

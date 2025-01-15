@@ -30,12 +30,6 @@ import Combine
     /// Use this to display the payment option in your own UI
     @Published public internal(set) var paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData?
     
-    /// The result of the `confirm()` call.
-    ///
-    /// This value is `nil` until `confirm()` is called. After a call to `confirm()`, this property contains the result of the confirmation,
-    /// which can be either a successful, failed, or canceled payment. Inspect the value to determine the outcome and handle it accordingly.
-    @Published public var confirmationResult: EmbeddedPaymentElementResult?
-    
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
     public var view: some View {
         EmbeddedPaymentElementView(viewModel: self)
@@ -51,7 +45,7 @@ import Combine
     
     // MARK: - Public APIs
 
-    /// Creates an empty view model. Call `load` to initialize the `EmbeddedPaymentElementViewModel`.
+    /// Creates an empty view model. Call `load` to initialize the `EmbeddedPaymentElementViewModel`
     public init() {}
     
     /// An asynchronous failable initializer
@@ -114,7 +108,6 @@ import Combine
         }
         
         let result = await embeddedPaymentElement.confirm()
-        self.confirmationResult = result
         return result
     }
     
