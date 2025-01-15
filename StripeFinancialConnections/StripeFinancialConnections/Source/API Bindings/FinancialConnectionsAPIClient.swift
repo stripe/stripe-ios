@@ -1155,7 +1155,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func updateAvailableIncentives(
         consumerSessionClientSecret: String,
-        sessionID: String
+        sessionID: String,
+        paymentDetailsID: String
     ) -> Future<AvailableIncentives> {
         let parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -1163,6 +1164,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 "consumer_session_client_secret": consumerSessionClientSecret
             ],
             "session_id": sessionID,
+            "payment_details_id": paymentDetailsID,
         ]
 
         return post(
