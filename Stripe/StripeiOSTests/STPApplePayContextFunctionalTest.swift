@@ -188,6 +188,26 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testDismiss() {
+        // Dismissing before presenting...
+        context.dismiss()
+        // ...does nothing
+        XCTAssertNotNil(context.authorizationController)
+
+        // Dismissing after presentation...
+        context.presentApplePay()
+        context.dismiss()
+        // ...cleans up state
+        XCTAssertNil(context.authorizationController)
+        // ...and does not call the didComplete delegate method
+        let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
+        didCallCompletion.isInverted = true
+        delegate?.didCompleteDelegateMethod = { _, _ in
+            didCallCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+    }
+
     // MARK: - Error tests
 
     func testBadPaymentIntentClientSecretErrors() {

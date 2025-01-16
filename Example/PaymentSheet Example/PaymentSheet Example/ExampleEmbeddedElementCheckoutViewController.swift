@@ -388,7 +388,6 @@ private class PaymentMethodsViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
-        embeddedPaymentElement.view.layoutMargins = .zero
         let stackView = UIStackView(arrangedSubviews: [embeddedPaymentElement.view, continueButton])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false

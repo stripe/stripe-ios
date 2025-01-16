@@ -182,6 +182,7 @@ final class PlaygroundConfiguration {
         enum CustomId: String {
             case `default` = "default"
             case networking = "networking"
+            case verified = "verified"
             case connect = "connect"
             case customKeys = "custom_keys"
             case partnerD = "partner_d"
@@ -200,6 +201,11 @@ final class PlaygroundConfiguration {
         Merchant(
             customId: .networking,
             displayName: "Networking",
+            isTestModeSupported: true
+        ),
+        Merchant(
+            customId: .verified,
+            displayName: "Verified",
             isTestModeSupported: true
         ),
         Merchant(

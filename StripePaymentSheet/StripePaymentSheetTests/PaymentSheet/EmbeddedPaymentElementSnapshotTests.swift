@@ -50,4 +50,14 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         XCTAssertTrue(delegateDidUpdateHeightCalled)
         XCTAssertFalse(delegateDidUpdatePaymentOptionCalled)
     }
+
+    func testMarginsAreZero() async throws {
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 300)
+
+        XCTAssertEqual(sut.view.directionalLayoutMargins, .zero)
+        XCTAssertFalse(sut.view.hasAmbiguousLayout)
+    }
 }

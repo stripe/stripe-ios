@@ -15,14 +15,15 @@ class EmbeddedPaymentElementContainerView: UIView {
     init(embeddedPaymentMethodsView: EmbeddedPaymentMethodsView) {
         self.contentView = embeddedPaymentMethodsView
         super.init(frame: .zero)
-        addInitialView(contentView)
+        directionalLayoutMargins = .zero
+        setContentView(contentView)
     }
 
     required init?(coder: NSCoder) {
         fatalError()
     }
 
-    private func addInitialView(_ view: UIView) {
+    private func setContentView(_ view: UIView) {
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
         bottomAnchorConstraint = view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
@@ -39,7 +40,7 @@ class EmbeddedPaymentElementContainerView: UIView {
             // A zero frame means we haven't been laid out yet. Simply replace the old view to avoid laying out before the view is ready and breaking constraints.
             contentView.removeFromSuperview()
             contentView = embeddedPaymentMethodsView
-            addInitialView(embeddedPaymentMethodsView)
+            setContentView(embeddedPaymentMethodsView)
             return
         }
         let oldContentView = contentView
