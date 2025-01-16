@@ -12,7 +12,7 @@ final class FinancialConnectionsAPIClient {
     private enum EncodingError: Error {
         case cannotCastToDictionary
     }
-
+    
     enum EmailSource: String {
         case userAction = "user_action"
         case customerObject = "customer_object"
