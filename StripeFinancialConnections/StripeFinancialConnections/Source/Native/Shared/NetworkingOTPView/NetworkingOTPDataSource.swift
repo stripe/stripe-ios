@@ -78,6 +78,8 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             .consumerSessionLookup(
                 emailAddress: emailAddress,
                 clientSecret: clientSecret,
+                sessionId: manifest.id,
+                emailSource: .customerObject,
                 useMobileEndpoints: manifest.verified
             )
             .chained { [weak self] lookupConsumerSessionResponse in

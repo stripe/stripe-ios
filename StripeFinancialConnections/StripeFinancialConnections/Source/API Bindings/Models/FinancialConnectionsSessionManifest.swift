@@ -91,6 +91,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let experimentAssignments: [String: String]?
     let features: [String: Bool]?
     let hostedAuthUrl: String?
+    let id: String
     let initialInstitution: FinancialConnectionsInstitution?
     let instantVerificationDisabled: Bool
     let institutionSearchDisabled: Bool
@@ -151,6 +152,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         experimentAssignments: [String: String]? = nil,
         features: [String: Bool]? = nil,
         hostedAuthUrl: String? = nil,
+        id: String,
         initialInstitution: FinancialConnectionsInstitution? = nil,
         instantVerificationDisabled: Bool,
         institutionSearchDisabled: Bool,
@@ -190,6 +192,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         self.experimentAssignments = experimentAssignments
         self.features = features
         self.hostedAuthUrl = hostedAuthUrl
+        self.id = id
         self.initialInstitution = initialInstitution
         self.instantVerificationDisabled = instantVerificationDisabled
         self.institutionSearchDisabled = institutionSearchDisabled
@@ -233,6 +236,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case experimentAssignments
         case features
         case hostedAuthUrl
+        case id
         case initialInstitution
         case instantVerificationDisabled
         case institutionSearchDisabled

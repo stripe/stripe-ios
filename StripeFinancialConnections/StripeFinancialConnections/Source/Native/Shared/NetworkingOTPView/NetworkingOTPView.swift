@@ -263,6 +263,7 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
                 consentRequired: false,
                 customManualEntryHandling: false,
                 disableLinkMoreAccounts: false,
+                id: "id",
                 instantVerificationDisabled: false,
                 institutionSearchDisabled: false,
                 livemode: true,
