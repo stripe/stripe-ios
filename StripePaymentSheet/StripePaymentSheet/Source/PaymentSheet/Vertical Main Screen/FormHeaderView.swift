@@ -35,17 +35,7 @@ final class FormHeaderView: UIView {
         }
     }()
     
-    private lazy var promoBadgeView: PromoBadgeView? = {
-        guard let incentive else {
-            return nil
-        }
-        
-        return PromoBadgeView(
-            appearance: appearance,
-            tinyMode: false,
-            text: incentive.displayText
-        )
-    }()
+    private var promoBadgeView: PromoBadgeView?
     
     private lazy var spacerView: UIView = {
         // This spacer makes sure that the promo badge is aligned correctly
@@ -74,7 +64,7 @@ final class FormHeaderView: UIView {
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let shouldUseNewCardHeader: Bool // true if the customer has a saved payment method that is type card
     private let appearance: PaymentSheet.Appearance
-    private let incentive: PaymentMethodIncentive?
+    private var incentive: PaymentMethodIncentive?
 
     init(
         paymentMethodType: PaymentSheet.PaymentMethodType,
@@ -86,6 +76,7 @@ final class FormHeaderView: UIView {
         self.shouldUseNewCardHeader = shouldUseNewCardHeader
         self.appearance = appearance
         self.incentive = incentive
+        self.promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
         super.init(frame: .zero)
         addAndPinSubview(stackView)
         
@@ -99,5 +90,20 @@ final class FormHeaderView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private static func makePromoBadge(
+        for incentive: PaymentMethodIncentive?,
+        with appearance: PaymentSheet.Appearance
+    ) -> PromoBadgeView? {
+        guard let incentive else {
+            return nil
+        }
+        
+        return PromoBadgeView(
+            appearance: appearance,
+            tinyMode: false,
+            text: incentive.displayText
+        )
     }
 }
