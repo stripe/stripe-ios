@@ -13,7 +13,7 @@ import Combine
 /// Use this class to create and manage an instance of `EmbeddedPaymentElement`
 @MainActor
 @_spi(EmbeddedPaymentElementPrivateBeta) public final class EmbeddedPaymentElementViewModel: ObservableObject {
-    enum EmbeddedPaymentElementViewModel: Error {
+    enum EmbeddedPaymentElementViewModelError: Error {
         /// The `EmbeddedPaymentElementViewModel` has not been loaded. Call `load()` before attempting this operation.
          case notLoaded
 
@@ -29,11 +29,6 @@ import Combine
     /// Contains information about the customer's selected payment option.
     /// Use this to display the payment option in your own UI
     @Published public private(set) var paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData?
-    
-    /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
-    public var view: some View {
-        EmbeddedPaymentElementView(viewModel: self)
-    }
     
     // MARK: - Internal properties
 
@@ -65,7 +60,7 @@ import Combine
     ) async throws {
         // If we already have a task (whether it’s in progress or finished), throw an error:
         guard loadTask == nil else {
-            throw EmbeddedPaymentElementViewModel.multipleLoadCalls
+            throw EmbeddedPaymentElementViewModelError.multipleLoadCalls
         }
         
         // Create and store the new Task
@@ -100,7 +95,7 @@ import Combine
         intentConfiguration: EmbeddedPaymentElement.IntentConfiguration
     ) async -> EmbeddedPaymentElement.UpdateResult {
         guard let embeddedPaymentElement = embeddedPaymentElement else {
-            return .failed(error: EmbeddedPaymentElementViewModel.notLoaded)
+            return .failed(error: EmbeddedPaymentElementViewModelError.notLoaded)
         }
         
         return await embeddedPaymentElement.update(intentConfiguration: intentConfiguration)
@@ -111,7 +106,7 @@ import Combine
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
         guard let embeddedPaymentElement = embeddedPaymentElement else {
-            return .failed(error: EmbeddedPaymentElementViewModel.notLoaded)
+            return .failed(error: EmbeddedPaymentElementViewModelError.notLoaded)
         }
         
         let result = await embeddedPaymentElement.confirm()
@@ -157,13 +152,13 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
     }
 }
 
-// MARK: Internal
-
-/// This View takes an `EmbeddedPaymentElementViewModel` and creates an instance of `EmbeddedViewRepresentable`,
-/// manages its lifecycle, and displays it within your SwiftUI view hierarchy.
-struct EmbeddedPaymentElementView: View {
+/// A SwiftUI view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
+@_spi(EmbeddedPaymentElementPrivateBeta) public struct EmbeddedPaymentElementView: View {
     @ObservedObject private var viewModel: EmbeddedPaymentElementViewModel
     
+    /// Initializes a new instance of `EmbeddedPaymentElementView`.
+    ///
+    /// - Parameter viewModel: The view model for this payment element view.
     public init(viewModel: EmbeddedPaymentElementViewModel) {
         self.viewModel = viewModel
     }
@@ -173,6 +168,8 @@ struct EmbeddedPaymentElementView: View {
             .frame(height: viewModel.height)
     }
 }
+
+// MARK: Internal
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
@@ -209,6 +206,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         viewModel.embeddedPaymentElement?.presentingViewController = UIWindow.topMostViewController
     }
 }
+
 
 final class EmbeddedSwiftUIProduct: STPAnalyticsProtocol {
     public static var stp_analyticsIdentifier: String {

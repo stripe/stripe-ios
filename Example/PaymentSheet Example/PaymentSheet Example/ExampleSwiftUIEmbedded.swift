@@ -175,7 +175,7 @@ struct MyEmbeddedCheckoutView: View {
             if embeddedViewModel.isLoaded {
                 ScrollView {
                     // Embedded Payment Element
-                    embeddedViewModel.view
+                    EmbeddedPaymentElementView(viewModel: embeddedViewModel)
                     
                     // Payment option row
                     if let paymentOption = embeddedViewModel.paymentOption {
@@ -364,4 +364,63 @@ struct MyEmbeddedCheckoutView_Previews: PreviewProvider {
     static var previews: some View {
         MyEmbeddedCheckoutView()
     }
+}
+
+@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+import SwiftUI
+
+@available(iOS 15.0, *)
+struct MyEmbeddedCheckoutView2: View {
+    // Store an `EmbeddedPaymentElementViewModel` as a `@StateObject`
+    var embeddedViewModel = EmbeddedPaymentElementViewModel()
+
+    var body: some View {
+        ScrollView {
+            // Add EmbeddedPaymentElementView within a ScrollView after it has loaded
+            if embeddedViewModel.isLoaded {
+                EmbeddedPaymentElementView(viewModel: embeddedViewModel)
+            }
+            
+            // For testing only
+            #if DEBUG
+            Button("Test height change") {
+                embeddedViewModel.testHeightChange()
+            }
+            #endif
+            
+            // Display the payment option in your UI
+            if let paymentOption = embeddedViewModel.paymentOption {
+                HStack {
+                    Image(uiImage: paymentOption.image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 30)
+                    Text(paymentOption.label)
+                    Spacer()
+                }
+                .padding()
+            }
+
+        }
+        .task {
+         // Load the view model with your configuration
+         try? await loadEmbeddedViewModel()
+        }
+    }
+
+    func loadEmbeddedViewModel() async throws {
+        let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD")) { _, _, intentCreationCallback in
+            self.handleConfirm(intentCreationCallback)
+        }
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.returnURL = "your-app://stripe-redirect" // Use the return url you set up in the previous step
+        let embeddedPaymentElement = try await EmbeddedPaymentElement.create(intentConfiguration: intentConfiguration, configuration: configuration)
+
+        return try await embeddedViewModel.load(intentConfiguration: intentConfiguration, configuration: configuration)
+    }
+
+    func handleConfirm(_ intentCreationCallback: @escaping (Result<String, Error>)-> Void) {
+        // ...explained later
+    }
+
 }
