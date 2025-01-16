@@ -407,7 +407,8 @@ class IntegrationTesterUITests: XCTestCase {
         if integrationMethod == .paypal {
             // PayPal uses ASWebAuthenticationSession, tap continue:
             let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-            XCTAssertTrue(springboard.waitForExistence(timeout: 10.0))
+            let continueButton = springboard.buttons["Continue"]
+            XCTAssertTrue(continueButton.waitForExistence(timeout: 10.0))
             springboard.buttons["Continue"].tap()
         }
 
