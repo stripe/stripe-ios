@@ -308,12 +308,18 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
 
     func consumerSessionLookup(
         emailAddress: String,
-        clientSecret: String
+        clientSecret: String,
+        sessionId: String,
+        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        useMobileEndpoints: Bool
     ) -> Future<LookupConsumerSessionResponse> {
         wrapAsyncToFuture {
             try await self.consumerSessionLookup(
                 emailAddress: emailAddress,
-                clientSecret: clientSecret
+                clientSecret: clientSecret,
+                sessionId: sessionId,
+                emailSource: emailSource,
+                useMobileEndpoints: useMobileEndpoints
             )
         }
     }
