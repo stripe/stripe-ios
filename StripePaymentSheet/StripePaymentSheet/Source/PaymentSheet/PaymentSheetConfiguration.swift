@@ -201,6 +201,9 @@ extension PaymentSheet {
         /// The layout of payment methods in PaymentSheet. Defaults to `.automatic`.
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic
+        
+        /// Tktk attach customer
+        public var attachToCustomerWhenSaving: Bool = true
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.

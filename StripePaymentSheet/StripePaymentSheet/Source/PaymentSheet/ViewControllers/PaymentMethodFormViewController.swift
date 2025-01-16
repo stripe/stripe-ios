@@ -286,6 +286,8 @@ extension PaymentMethodFormViewController {
         } else if paymentMethodType == .instantDebits || paymentMethodType == .linkCardBrand {
             // only override buy button (show "Continue") IF we don't have a linked bank
             return instantDebitsFormElement?.getLinkedBank() == nil
+        } else if paymentMethodType == .stripe(.card) { // and customer attach
+            return true
         }
         return false
     }
@@ -295,7 +297,8 @@ extension PaymentMethodFormViewController {
         let isEnabled: Bool = {
             switch paymentMethodType {
             case .stripe(let paymentMethod):
-                paymentMethod == .USBankAccount && (usBankAccountFormElement?.canLinkAccount ?? false)
+                (paymentMethod == .USBankAccount && (usBankAccountFormElement?.canLinkAccount ?? false)) ||
+                paymentMethod == .card
             case .instantDebits, .linkCardBrand:
                 instantDebitsFormElement?.enableCTA ?? false
             default:
@@ -304,7 +307,7 @@ extension PaymentMethodFormViewController {
         }()
         return .init(
             enabled: isEnabled,
-            ctaType: ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
+            ctaType: ConfirmButton.CallToActionType.customWithLock(title: String.Localized.save)
         )
     }
 
@@ -324,6 +327,35 @@ extension PaymentMethodFormViewController {
             handleCollectBankAccount(from: viewController)
         case .instantDebits, .linkCardBrand:
             handleCollectInstantDebits(from: viewController)
+        case .stripe(.card):
+            // if configuration is attach to customer
+            let params = IntentConfirmParams(type: paymentMethodType)
+            params.setDefaultBillingDetailsIfNecessary(for: configuration)
+            if let params = form.updateParams(params: params) {
+                let pmParams = params.paymentMethodParams
+                // Create payment method
+                STPAPIClient.shared.createPaymentMethod(with: pmParams) { paymentMethod, error in
+                    if let error {
+                        self.delegate?.updateErrorLabel(for: error)
+                        return
+                    }
+                    guard let paymentMethod = paymentMethod else {
+                        // do something
+                        stpAssertionFailure()
+                        return
+                    }
+                    STPAPIClient.shared.attachPaymentMethod(paymentMethod.stripeId, customerID: self.configuration.customer!.id, ephemeralKeySecret: self.configuration.customer!.ephemeralKeySecret) { error in
+                        assert(error == nil)
+                        // Reload payment methods
+                        self.delegate?.didUpdate(self)
+                        let flowControllerVC = viewController as! PaymentSheetVerticalViewController
+//                        flowControllerVC.flowControllerDelegate?.flowControllerViewControllerShouldClose(flowControllerVC, didCancel: false)
+                        flowControllerVC.didAdd(viewController: self, paymentMethod: paymentMethod)
+                        flowControllerVC.flowControllerDelegate?.flowControllerViewControllerShouldClose(flowControllerVC, didCancel: false)
+                    }
+                }
+            }
+            // Save card details
         default:
             return
         }

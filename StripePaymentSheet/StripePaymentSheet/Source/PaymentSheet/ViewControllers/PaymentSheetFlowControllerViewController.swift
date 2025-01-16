@@ -127,7 +127,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case .selectingSaved:
             return .customWithLock(title: String.Localized.continue)
         case .addingNew:
-            return .continue
+            if configuration.attachToCustomerWhenSaving {
+                return .saveAndContinue
+            } else {
+                return .continue
+            }
         }
     }
 

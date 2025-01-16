@@ -852,6 +852,19 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         regenerateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
     }
+    
+    func didAdd(viewController: UIViewController, paymentMethod: STPPaymentMethod) {
+//        // Detach the payment method from the customer
+//        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+//        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
+
+        // Update savedPaymentMethods
+        self.savedPaymentMethods.insert(paymentMethod, at: 0)
+        // Update UI
+        regenerateUI(updatedListSelection: .saved(paymentMethod: paymentMethod))
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
 
     func didUpdate(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         // Update the payment method

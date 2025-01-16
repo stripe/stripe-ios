@@ -39,6 +39,7 @@ class ConfirmButton: UIView {
         case pay(amount: Int, currency: String)
         case add(paymentMethodType: PaymentSheet.PaymentMethodType)
         case `continue`
+        case saveAndContinue
         case setup
         case custom(title: String)
         case customWithLock(title: String)
@@ -401,6 +402,8 @@ class ConfirmButton: UIView {
                         } else {
                             return String.Localized.continue
                         }
+                    case .saveAndContinue:
+                        return "Save and continue"
                     case .continue:
                         return String.Localized.continue
                     case let .pay(amount, currency):
@@ -436,6 +439,9 @@ class ConfirmButton: UIView {
             case .add(let paymentMethodType):
                 lockIcon.isHidden = true
                 addIcon.isHidden = paymentMethodType != .instantDebits
+            case .saveAndContinue:
+                lockIcon.isHidden = true
+                addIcon.isHidden = false
             case .custom, .continue:
                 lockIcon.isHidden = true
                 addIcon.isHidden = true
