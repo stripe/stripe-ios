@@ -82,7 +82,6 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse> {
-        let verified = manifest.appVerificationEnabled ?? false
         return apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
