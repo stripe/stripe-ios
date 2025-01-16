@@ -91,7 +91,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
                 currency: nil,
                 incentiveEligibilitySession: nil,
                 useMobileEndpoints: manifest.verified
-            ).chained { [weak self] _ -> Future<FinancialConnectionsAPI.SaveAccountsToNetworkAndLinkResponse> in
+            ).chained { [weak self] response -> Future<FinancialConnectionsAPI.SaveAccountsToNetworkAndLinkResponse> in
                 guard let self else {
                     return Promise(error: FinancialConnectionsSheetError.unknown(
                         debugDescription: "Networking Link Signup data source deallocated.")
@@ -103,8 +103,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
                     selectedAccounts: selectedAccounts,
                     emailAddress: nil,
                     phoneNumber: nil,
-                    country: countryCode,
-                    consumerSessionClientSecret: nil,
+                    country: nil,
+                    consumerSessionClientSecret: response.consumerSession.clientSecret,
                     clientSecret: clientSecret
                 )
             }
