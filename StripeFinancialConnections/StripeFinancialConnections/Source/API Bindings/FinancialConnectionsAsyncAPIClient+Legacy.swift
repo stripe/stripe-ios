@@ -362,7 +362,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        incentiveEligibilitySession: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        useMobileEndpoints: Bool
     ) -> Future<LinkSignUpResponse> {
         wrapAsyncToFuture {
             try await self.linkAccountSignUp(
@@ -371,7 +372,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 country: country,
                 amount: amount,
                 currency: currency,
-                incentiveEligibilitySession: incentiveEligibilitySession
+                incentiveEligibilitySession: incentiveEligibilitySession,
+                useMobileEndpoints: useMobileEndpoints
             )
         }
     }
@@ -432,6 +434,20 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 paymentDetailsId: paymentDetailsId,
                 billingDetails: billingDetails
+            )
+        }
+    }
+
+    func updateAvailableIncentives(
+        consumerSessionClientSecret: String,
+        sessionID: String,
+        paymentDetailsID: String
+    ) -> Future<AvailableIncentives> {
+        wrapAsyncToFuture {
+            try await self.updateAvailableIncentives(
+                consumerSessionClientSecret: consumerSessionClientSecret,
+                sessionID: sessionID,
+                paymentDetailsID: paymentDetailsID
             )
         }
     }

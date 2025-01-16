@@ -42,6 +42,31 @@ final class FinancialConnectionsAsyncAPIClient {
         return consumerPublishableKey
     }
 
+    /// Marks the assertion as completed and forwards attestation errors to the `StripeAttest` client for logging.
+    func completeAssertion(possibleError: Error?) {
+        let attest = backingAPIClient.stripeAttest
+        Task {
+            if let error = possibleError, StripeAttest.isLinkAssertionError(error: error) {
+                await attest.receivedAssertionError(error)
+            }
+            await attest.assertionCompleted()
+        }
+    }
+
+    /// Applies attestation-related parameters to the given base parameters
+    /// In case of an assertion error, returns the unmodified base parameters
+    func applyAttestationParameters(to baseParameters: [String: Any]) async -> [String: Any] {
+        do {
+            let attest = backingAPIClient.stripeAttest
+            let handle = try await attest.assert()
+            let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
+            return newParameters
+        } catch {
+            // Fail silently if we can't get an assertion, we'll try the request anyway. It may fail.
+            return baseParameters
+        }
+    }
+
     /// Passthrough to `STPAPIClient.get` which uses the `consumerPublishableKey` whenever it should be used.
     private func get<T: Decodable>(
         endpoint: APIEndpoint,
@@ -283,7 +308,8 @@ protocol FinancialConnectionsAsyncAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        incentiveEligibilitySession: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        useMobileEndpoints: Bool
     ) async throws -> LinkSignUpResponse
 
     func attachLinkConsumerToLinkAccountSession(
@@ -311,6 +337,12 @@ protocol FinancialConnectionsAsyncAPI {
         paymentDetailsId: String,
         billingDetails: ElementsSessionContext.BillingDetails?
     ) async throws -> LinkBankPaymentMethod
+
+    func updateAvailableIncentives(
+        consumerSessionClientSecret: String,
+        sessionID: String,
+        paymentDetailsID: String
+    ) async throws -> AvailableIncentives
 }
 
 extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
@@ -318,20 +350,25 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         clientSecret: String,
         returnURL: String?
     ) async throws -> FinancialConnectionsSynchronize {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
             "client_secret": clientSecret,
-            "mobile": {
-                var mobileParameters: [String: Any] = [
-                    "fullscreen": true,
-                    "hide_close_button": true,
-                    "forced_authflow_version": "v3",
-                ]
-                mobileParameters["app_return_url"] = returnURL
-                return mobileParameters
-            }(),
             "locale": Locale.current.toLanguageTag(),
         ]
+
+        var mobileParameters: [String: Any] = [
+            "fullscreen": true,
+            "hide_close_button": true,
+            "forced_authflow_version": "v3",
+        ]
+        mobileParameters["app_return_url"] = returnURL
+
+        let attest = backingAPIClient.stripeAttest
+        if attest.isSupported {
+            mobileParameters["supports_app_verification"] = true
+            mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
+        }
+        parameters["mobile"] = mobileParameters
         return try await post(endpoint: .synchronize, parameters: parameters)
     }
 
@@ -839,7 +876,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        incentiveEligibilitySession: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        useMobileEndpoints: Bool
     ) async throws -> LinkSignUpResponse {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -874,7 +912,12 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
                 ]
             }
         }
-        return try await post(endpoint: .linkAccountsSignUp, parameters: parameters)
+        if useMobileEndpoints {
+            let updatedParameters = await applyAttestationParameters(to: parameters)
+            return try await post(endpoint: .mobileLinkAccountSignup, parameters: updatedParameters)
+        } else {
+            return try await post(endpoint: .linkAccountsSignUp, parameters: parameters)
+        }
     }
 
     func attachLinkConsumerToLinkAccountSession(
@@ -972,6 +1015,22 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
         return try await post(endpoint: .paymentMethods, parameters: parametersWithFraudDetection)
     }
+
+    func updateAvailableIncentives(
+        consumerSessionClientSecret: String,
+        sessionID: String,
+        paymentDetailsID: String
+    ) async throws -> AvailableIncentives {
+        let parameters: [String: Any] = [
+            "request_surface": requestSurface,
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ],
+            "session_id": sessionID,
+            "payment_details_id": paymentDetailsID,
+        ]
+        return try await post(endpoint: .availableIncentives, parameters: parameters)
+    }
 }
 
 enum APIEndpoint: String {
@@ -1014,6 +1073,10 @@ enum APIEndpoint: String {
     case paymentDetails = "consumers/payment_details"
     case sharePaymentDetails = "consumers/payment_details/share"
     case paymentMethods = "payment_methods"
+    case availableIncentives = "consumers/incentives/update_available"
+
+    // Verified
+    case mobileLinkAccountSignup = "consumers/mobile/sign_up"
 
     /// As a rule of thumb, `shouldUseConsumerPublishableKey` should be `true` for requests that happen after the user is verified.
     /// However, there are some exceptions to this rules (such as the create payment method request).
@@ -1023,13 +1086,14 @@ enum APIEndpoint: String {
              .featuredInstitutions, .searchInstitutions, .authSessions,
              .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
              .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
-             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails:
+             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
+             .availableIncentives:
             return true
         case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
              .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
              .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
-             .sharePaymentDetails, .paymentMethods:
+             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup:
             return false
         }
     }

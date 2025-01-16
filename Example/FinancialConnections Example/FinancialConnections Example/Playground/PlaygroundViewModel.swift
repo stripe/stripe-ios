@@ -10,6 +10,7 @@ import Combine
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeFinancialConnections
+import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -517,11 +518,6 @@ private func PresentFinancialConnectionsSheet(
     )
     financialConnectionsSheet.apiClient.stripeAccount = stripeAccount
     financialConnectionsSheet.onEvent = onEvent
-
-    let elementsSessionContext = StripeCore.ElementsSessionContext(
-        usesExperimentalAsyncAPIClient: useAsyncApiClient
-    )
-    financialConnectionsSheet.elementsSessionContext = elementsSessionContext
     let topMostViewController = UIViewController.topMostViewController()!
     if useCase == .token {
         financialConnectionsSheet.presentForToken(

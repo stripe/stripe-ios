@@ -51,7 +51,6 @@ import Foundation
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let billingDetails: BillingDetails?
     @_spi(STP) public let eligibleForIncentive: Bool
-    @_spi(STP) public let usesExperimentalAsyncAPIClient: Bool
 
     @_spi(STP) public var billingAddress: BillingAddress? {
         BillingAddress(from: billingDetails)
@@ -71,8 +70,7 @@ import Foundation
         intentId: IntentID? = nil,
         linkMode: LinkMode? = nil,
         billingDetails: BillingDetails? = nil,
-        eligibleForIncentive: Bool = false,
-        usesExperimentalAsyncAPIClient: Bool = false
+        eligibleForIncentive: Bool = false
     ) {
         self.amount = amount
         self.currency = currency
@@ -81,7 +79,6 @@ import Foundation
         self.linkMode = linkMode
         self.billingDetails = billingDetails
         self.eligibleForIncentive = eligibleForIncentive
-        self.usesExperimentalAsyncAPIClient = usesExperimentalAsyncAPIClient
     }
 }
 

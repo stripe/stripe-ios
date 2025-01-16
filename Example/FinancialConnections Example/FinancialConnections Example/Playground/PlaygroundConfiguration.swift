@@ -444,6 +444,12 @@ final class PlaygroundConfiguration {
 
     // MARK: - Experimental
 
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_USE_ASYNC_API_CLIENT",
+        defaultValue: false
+    )
+    private static var useAsyncAPIClientStorage: Bool
+
     private static let useAsyncAPIClientKey = "use_async_api_client"
     var useAsyncAPIClient: Bool {
         get {
@@ -454,7 +460,10 @@ final class PlaygroundConfiguration {
             }
         }
         set {
+            // Save to configuration string
             configurationStore[Self.useAsyncAPIClientKey] = newValue
+            // Save to user defaults
+            Self.useAsyncAPIClientStorage = newValue
         }
     }
 

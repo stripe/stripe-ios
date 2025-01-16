@@ -132,6 +132,8 @@ protocol FinancialConnectionsAPI {
     var consumerPublishableKey: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
 
+    func completeAssertion(possibleError: Error?)
+
     func synchronize(
         clientSecret: String,
         returnURL: String?
@@ -301,6 +303,12 @@ protocol FinancialConnectionsAPI {
         paymentDetailsId: String,
         billingDetails: ElementsSessionContext.BillingDetails?
     ) -> Future<LinkBankPaymentMethod>
+
+    func updateAvailableIncentives(
+        consumerSessionClientSecret: String,
+        sessionID: String,
+        paymentDetailsID: String
+    ) -> Future<AvailableIncentives>
 }
 
 extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {

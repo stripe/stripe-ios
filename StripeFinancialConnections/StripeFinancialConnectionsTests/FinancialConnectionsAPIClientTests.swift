@@ -54,7 +54,7 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
     func testEmptyBillingAddressEncodedAsParameters() throws {
         let billingAddress = BillingAddress()
         let encodedBillingAddress = try FinancialConnectionsAPIClient.encodeAsParameters(billingAddress)
-        
+
         XCTAssertNil(encodedBillingAddress)
     }
 

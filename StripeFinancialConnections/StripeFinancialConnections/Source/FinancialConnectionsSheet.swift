@@ -220,7 +220,7 @@ final public class FinancialConnectionsSheet {
         }
 
         let financialConnectionsApiClient: any FinancialConnectionsAPI
-        let shouldUseAsyncClient = elementsSessionContext?.usesExperimentalAsyncAPIClient ?? false
+        let shouldUseAsyncClient = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_USE_ASYNC_API_CLIENT")
         if shouldUseAsyncClient {
             financialConnectionsApiClient = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
         } else {

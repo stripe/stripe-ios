@@ -16,6 +16,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     var consumerPublishableKey: String?
     var consumerSession: StripeFinancialConnections.ConsumerSessionData?
 
+    func completeAssertion(possibleError: (any Error)?) {}
+
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList
     > {
@@ -245,5 +247,9 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         billingDetails: ElementsSessionContext.BillingDetails?
     ) -> StripeCore.Future<StripeFinancialConnections.LinkBankPaymentMethod> {
         Promise<StripeFinancialConnections.LinkBankPaymentMethod>()
+    }
+
+    func updateAvailableIncentives(consumerSessionClientSecret: String, sessionID: String, paymentDetailsID: String) -> Future<AvailableIncentives> {
+        Promise<AvailableIncentives>()
     }
 }

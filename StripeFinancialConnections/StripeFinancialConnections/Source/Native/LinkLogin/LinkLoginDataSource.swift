@@ -76,6 +76,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse> {
+        let verified = manifest.appVerificationEnabled ?? false
         return apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
@@ -117,7 +118,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     }
 
     func completeAssertion(possibleError: Error?) {
-        guard verified else { return }
+        guard manifest.appVerificationEnabled ?? false else { return }
         apiClient.completeAssertion(possibleError: possibleError)
     }
 }
