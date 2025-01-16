@@ -14,7 +14,7 @@ protocol LinkLoginDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func synchronize() -> Future<FinancialConnectionsLinkLoginPane>
-    func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse>
+    func lookup(emailAddress: String, manuallyEntered: Bool) -> Future<LookupConsumerSessionResponse>
     func signUp(
         emailAddress: String,
         phoneNumber: String,
@@ -67,10 +67,12 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         }
     }
 
-    func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse> {
+    func lookup(emailAddress: String, manuallyEntered: Bool) -> Future<LookupConsumerSessionResponse> {
         return apiClient.consumerSessionLookup(
             emailAddress: emailAddress,
             clientSecret: clientSecret,
+            sessionId: manifest.id,
+            emailSource: manuallyEntered ? .userAction : .customerObject,
             useMobileEndpoints: manifest.verified
         )
     }

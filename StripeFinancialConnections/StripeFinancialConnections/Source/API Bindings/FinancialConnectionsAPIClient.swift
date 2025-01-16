@@ -12,6 +12,11 @@ final class FinancialConnectionsAPIClient {
     private enum EncodingError: Error {
         case cannotCastToDictionary
     }
+    
+    enum EmailSource: String {
+        case userAction = "user_action"
+        case customerObject = "customer_object"
+    }
 
     let backingAPIClient: STPAPIClient
 
@@ -249,6 +254,8 @@ protocol FinancialConnectionsAPI {
     func consumerSessionLookup(
         emailAddress: String,
         clientSecret: String,
+        sessionId: String,
+        emailSource: FinancialConnectionsAPIClient.EmailSource,
         useMobileEndpoints: Bool
     ) -> Future<LookupConsumerSessionResponse>
 
@@ -908,17 +915,21 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func consumerSessionLookup(
         emailAddress: String,
         clientSecret: String,
+        sessionId: String,
+        emailSource: FinancialConnectionsAPIClient.EmailSource,
         useMobileEndpoints: Bool
     ) -> Future<LookupConsumerSessionResponse> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "email_address":
                 emailAddress
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .lowercased(),
-            "client_secret": clientSecret,
         ]
 
         if useMobileEndpoints {
+            parameters["request_surface"] = requestSurface
+            parameters["session_id"] = sessionId
+            parameters["email_source"] = emailSource.rawValue
             return applyAttestationParameters(to: parameters)
                 .chained { [weak self] updatedParameters in
                     guard let self else {
@@ -931,6 +942,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                     )
                 }
         } else {
+            parameters["client_secret"] = clientSecret
             return post(
                 resource: APIEndpointConsumerSessions,
                 parameters: parameters,
