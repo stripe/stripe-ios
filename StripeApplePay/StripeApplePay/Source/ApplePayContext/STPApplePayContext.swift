@@ -149,7 +149,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     private var presentationWindow: UIWindow?
 
     /// Presents the Apple Pay sheet from the key window, starting the payment process.
-    /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+    /// - Note: This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
     /// - Parameters:
     ///   - completion:               Called after the Apple Pay sheet is presented
     @available(iOSApplicationExtension, unavailable)
@@ -170,7 +170,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     /// Presents the Apple Pay sheet from the specified window, starting the payment process.
-    /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+    /// - Note: This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
     /// - Parameters:
     ///   - window:                   The UIWindow to host the Apple Pay sheet
     ///   - completion:               Called after the Apple Pay sheet is presented
@@ -221,6 +221,23 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     ) {
         let window = viewController.viewIfLoaded?.window
         presentApplePay(from: window, completion: completion)
+    }
+
+    /// Dismisses the Apple Pay sheet.
+    /// - Parameter completion: Called after the Apple Pay sheet is dismissed.
+    /// - Note: Does not call the `applePayContext:didCompleteWithStatus:` delegate method.
+    /// - Note: You must create a new instance of ApplePayContext after using this method.
+    @objc(dismissWithCompletion:)
+    public func dismiss(completion: STPVoidBlock? = nil) {
+        guard didPresentApplePay else {
+            return
+        }
+        authorizationController?.dismiss {
+            stpDispatchToMainThreadIfNecessary {
+                completion?()
+                self._end()
+            }
+        }
     }
 
     /// The API Client to use to make requests.
