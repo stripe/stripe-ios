@@ -91,6 +91,10 @@ final class FormHeaderView: UIView {
     }
     
     func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        guard incentive != self.incentive else {
+            return
+        }
+        
         if let promoBadgeView {
             stackView.removeArrangedSubview(promoBadgeView)
             promoBadgeView.removeFromSuperview()
@@ -98,6 +102,8 @@ final class FormHeaderView: UIView {
             stackView.removeArrangedSubview(spacerView)
             spacerView.removeFromSuperview()
         }
+        
+        self.incentive = incentive
         
         if let incentive {
             promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
