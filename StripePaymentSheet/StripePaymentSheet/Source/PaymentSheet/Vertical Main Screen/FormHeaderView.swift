@@ -64,7 +64,6 @@ final class FormHeaderView: UIView {
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let shouldUseNewCardHeader: Bool // true if the customer has a saved payment method that is type card
     private let appearance: PaymentSheet.Appearance
-    private var incentive: PaymentMethodIncentive?
 
     init(
         paymentMethodType: PaymentSheet.PaymentMethodType,
@@ -75,7 +74,6 @@ final class FormHeaderView: UIView {
         self.paymentMethodType = paymentMethodType
         self.shouldUseNewCardHeader = shouldUseNewCardHeader
         self.appearance = appearance
-        self.incentive = incentive
         self.promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
         super.init(frame: .zero)
         addAndPinSubview(stackView)
