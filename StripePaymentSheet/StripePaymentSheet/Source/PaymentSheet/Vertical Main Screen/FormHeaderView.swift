@@ -41,18 +41,25 @@ final class FormHeaderView: UIView {
         }
         
         return PromoBadgeView(
-            appearance: appearance, 
+            appearance: appearance,
             tinyMode: false,
             text: incentive.displayText
         )
     }()
-
-    private lazy var stackView: UIStackView = {
+    
+    private lazy var spacerView: UIView = {
         // This spacer makes sure that the promo badge is aligned correctly
         let spacerView = UIView()
         spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        return spacerView
+    }()
+
+    private lazy var stackView: UIStackView = {
+        var views = [imageView, label].compactMap { $0 }
+        if let promoBadgeView {
+            views.append(contentsOf: [promoBadgeView, spacerView])
+        }
         
-        let views = [imageView, label, promoBadgeView, spacerView].compactMap { $0 }
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.spacing = 12
         if imageView == nil {
