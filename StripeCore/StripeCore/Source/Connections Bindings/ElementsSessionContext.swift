@@ -13,7 +13,7 @@ import Foundation
         case payment(String)
         case setup(String)
         case deferred(String)
-        
+
         @_spi(STP) public var id: String {
             switch self {
             case let .payment(id), let .setup(id), let .deferred(id):
@@ -55,7 +55,7 @@ import Foundation
     @_spi(STP) public var billingAddress: BillingAddress? {
         BillingAddress(from: billingDetails)
     }
-    
+
     @_spi(STP) public var incentiveEligibilitySession: IntentID? {
         guard eligibleForIncentive else {
             return nil
@@ -64,13 +64,13 @@ import Foundation
     }
 
     @_spi(STP) public init(
-        amount: Int?,
-        currency: String?,
-        prefillDetails: PrefillDetails?,
-        intentId: IntentID?,
-        linkMode: LinkMode?,
-        billingDetails: BillingDetails?,
-        eligibleForIncentive: Bool
+        amount: Int? = nil,
+        currency: String? = nil,
+        prefillDetails: PrefillDetails? = nil,
+        intentId: IntentID? = nil,
+        linkMode: LinkMode? = nil,
+        billingDetails: BillingDetails? = nil,
+        eligibleForIncentive: Bool = false
     ) {
         self.amount = amount
         self.currency = currency
