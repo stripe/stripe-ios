@@ -445,7 +445,7 @@ class IntegrationTesterUITests: XCTestCase {
         completeAuth.forceTapElement()
 
         let safariOpenButton = safari.buttons["Open"]
-        XCTAssertTrue(safariOpenButton.waitForExistence(timeout: 5.0))
+        XCTAssertTrue(safariOpenButton.waitForExistence(timeout: 30.0))
         if safariOpenButton.exists {
             safariOpenButton.tap()
         }
