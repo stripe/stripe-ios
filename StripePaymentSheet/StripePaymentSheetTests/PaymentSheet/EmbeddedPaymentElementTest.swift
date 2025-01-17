@@ -299,7 +299,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
         // The delegate should have been notified
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
-        XCTAssertEqual(sut.paymentOption?.label, "CashApp")
+        XCTAssertEqual(sut.paymentOption?.label, "Cash App Pay")
 
         // Reset flags
         delegateDidUpdatePaymentOptionCalled = false
