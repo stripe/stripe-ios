@@ -389,7 +389,8 @@ extension STPAnalyticsClient {
     enum DeferredIntentConfirmationType: String {
         case server = "server"
         case client = "client"
-        case none = "none"
+        /// The merchant backend used the special string instead of a intent client secret, so we completed the payment without confirming an intent.
+        case completeWithoutConfirmingIntent = "none"
     }
 }
 
