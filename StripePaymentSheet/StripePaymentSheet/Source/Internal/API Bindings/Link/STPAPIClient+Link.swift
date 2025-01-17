@@ -12,6 +12,8 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 
+// Please do not attempt to modify the Stripe SDK or call private APIs directly.
+// See the Stripe Services Agreement (https://stripe.com/legal/ssa) for more details.
 extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
@@ -64,7 +66,7 @@ extension STPAPIClient {
                     // If there's an assertion error, send it to StripeAttest
                     if useMobileEndpoints,
                        case .failure(let error) = result,
-                       Self.isLinkAssertionError(error: error) {
+                       StripeAttest.isLinkAssertionError(error: error) {
                         await self.stripeAttest.receivedAssertionError(error)
                     }
                     // Mark the assertion handle as completed
@@ -130,7 +132,7 @@ extension STPAPIClient {
                     // If there's an assertion error, send it to StripeAttest
                     if useMobileEndpoints,
                        case .failure(let error) = result,
-                       Self.isLinkAssertionError(error: error) {
+                       StripeAttest.isLinkAssertionError(error: error) {
                         await self.stripeAttest.receivedAssertionError(error)
                     }
                     // Mark the assertion handle as completed
@@ -139,15 +141,6 @@ extension STPAPIClient {
                 }
             }
         }
-    }
-
-    @_spi(STP) public static func isLinkAssertionError(error: Error) -> Bool {
-        if let error = error as? StripeCore.StripeError,
-           case let .apiError(apiError) = error,
-           apiError.code == "link_failed_to_attest_request" {
-            return true
-        }
-        return false
     }
 
     private func makePaymentDetailsRequest(

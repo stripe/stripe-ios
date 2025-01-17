@@ -193,7 +193,7 @@ class RowButton: UIView {
             ])
             
             if isFlatWithCheckmarkStyle {
-                alignBadgeAndCheckmark()
+                alignBadgeAndCheckmark(initialRender: true)
             }
         }
 
@@ -284,7 +284,7 @@ class RowButton: UIView {
         updateAccessibilityTraits()
     }
     
-    private func alignBadgeAndCheckmark() {
+    private func alignBadgeAndCheckmark(initialRender: Bool = false) {
         guard let promoBadge, let checkmarkImageView else {
             return
         }
@@ -294,6 +294,12 @@ class RowButton: UIView {
         }
         
         promoBadgeConstraintToCheckmark?.isActive = isSelected
+        
+        if !initialRender {
+            UIView.animate(withDuration: 0.2) {
+                self.layoutIfNeeded()
+            }
+        }
     }
 
     private func updateDefaultBadgeFont() {
@@ -346,7 +352,7 @@ class RowButton: UIView {
 
     /// Sets icon, text, and sublabel alpha
     func setContentViewAlpha(_ alpha: CGFloat) {
-        [imageView, label, sublabel, defaultBadge, promoBadge].compactMap { $0 }.forEach {
+        [imageView, label, sublabel, defaultBadge].compactMap { $0 }.forEach {
             $0.alpha = alpha
         }
     }

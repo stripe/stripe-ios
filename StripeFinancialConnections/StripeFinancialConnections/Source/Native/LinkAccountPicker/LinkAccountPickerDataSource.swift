@@ -38,7 +38,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
     let manifest: FinancialConnectionsSessionManifest
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane?
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     private let consumerSession: ConsumerSessionData
     var dataAccessNotice: FinancialConnectionsDataAccessNotice? {
@@ -83,7 +83,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
         consumerSession: ConsumerSessionData,

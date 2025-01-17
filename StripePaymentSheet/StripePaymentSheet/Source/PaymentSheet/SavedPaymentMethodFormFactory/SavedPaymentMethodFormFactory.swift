@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 protocol SavedPaymentMethodFormFactoryDelegate: AnyObject {
-    func didUpdate(_: Element, shouldEnableSaveButton: Bool)
+    func didUpdate(_: Element, didUpdateCardBrand: Bool)
 }
 
 class SavedPaymentMethodFormFactory {
@@ -50,7 +50,7 @@ extension SavedPaymentMethodFormFactory: ElementDelegate {
     func didUpdate(element: Element) {
         switch viewModel.paymentMethod.type {
         case .card:
-            delegate?.didUpdate(_: element, shouldEnableSaveButton: viewModel.selectedCardBrand != viewModel.paymentMethod.card?.preferredDisplayBrand)
+            delegate?.didUpdate(element, didUpdateCardBrand: viewModel.selectedCardBrand != viewModel.paymentMethod.card?.preferredDisplayBrand)
         default:
             break
         }

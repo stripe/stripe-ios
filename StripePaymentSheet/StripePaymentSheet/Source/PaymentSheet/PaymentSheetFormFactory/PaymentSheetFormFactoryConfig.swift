@@ -111,4 +111,13 @@ enum PaymentSheetFormFactoryConfig {
             return false
         }
     }
+  
+    var allowsSetAsDefaultPM: Bool {
+        switch self {
+        case .paymentSheet(let config):
+            return config.allowsSetAsDefaultPM
+        case .customerSheet(let config):
+            return config.allowsSetAsDefaultPM
+        }
+    }
 }

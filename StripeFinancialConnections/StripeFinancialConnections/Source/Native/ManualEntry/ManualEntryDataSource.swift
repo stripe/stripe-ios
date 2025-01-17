@@ -20,14 +20,14 @@ protocol ManualEntryDataSource: AnyObject {
 
 final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
 
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let manifest: FinancialConnectionsSessionManifest
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let consumerSessionClientSecret: String?
 
     init(
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         manifest: FinancialConnectionsSessionManifest,
         analyticsClient: FinancialConnectionsAnalyticsClient,

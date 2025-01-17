@@ -98,6 +98,13 @@ extension String.Localized {
         )
     }
 
+    static var manage_cards: String {
+        STPLocalizedString(
+            "Manage cards",
+            "Title shown above a view containing a list of the customer's cards that they can delete or update"
+        )
+    }
+
     static var bank_account_details_cannot_be_changed: String {
         STPLocalizedString(
             "Bank account details cannot be changed.",
@@ -443,5 +450,12 @@ extension String.Localized {
             "Default",
             "Label for identifying the default payment method."
        )
+    }
+
+    @_spi(STP) public static var set_as_default_payment_method: String {
+        STPLocalizedString(
+            "Set as default payment method",
+            "Label of a checkbox that when checked makes a payment method as the default one."
+        )
     }
 }

@@ -11,6 +11,12 @@ import Foundation
 @testable import StripeFinancialConnections
 
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
+    var backingAPIClient: STPAPIClient = .shared
+    var isLinkWithStripe: Bool = false
+    var consumerPublishableKey: String?
+    var consumerSession: StripeFinancialConnections.ConsumerSessionData?
+
+    func completeAssertion(possibleError: (any Error)?) {}
 
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList
@@ -203,7 +209,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         country: String,
         amount: Int?,
         currency: String?,
-        incentiveEligibilitySession: ElementsSessionContext.IntentID?
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        useMobileEndpoints: Bool
     ) -> Future<LinkSignUpResponse> {
         return Promise<StripeFinancialConnections.LinkSignUpResponse>()
     }
@@ -240,5 +247,9 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         billingDetails: ElementsSessionContext.BillingDetails?
     ) -> StripeCore.Future<StripeFinancialConnections.LinkBankPaymentMethod> {
         Promise<StripeFinancialConnections.LinkBankPaymentMethod>()
+    }
+
+    func updateAvailableIncentives(consumerSessionClientSecret: String, sessionID: String, paymentDetailsID: String) -> Future<AvailableIncentives> {
+        Promise<AvailableIncentives>()
     }
 }

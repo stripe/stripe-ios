@@ -47,19 +47,24 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodForm, updateButton, removeButton, errorLabel])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodForm])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.setCustomSpacing(16, after: headerLabel) // custom spacing from figma
+        stackView.spacing = 16 // custom spacing from figma
         if let footnoteLabel = footnoteLabel {
-            stackView.insertArrangedSubview(footnoteLabel, at: 2)
+            stackView.addArrangedSubview(footnoteLabel)
             stackView.setCustomSpacing(8, after: paymentMethodForm) // custom spacing from figma
-            stackView.setCustomSpacing(32, after: footnoteLabel) // custom spacing from figma
         }
-        else {
-            stackView.setCustomSpacing(32, after: paymentMethodForm) // custom spacing from figma
+        if let setAsDefaultCheckbox = setAsDefaultCheckbox, let lastSubview = stackView.arrangedSubviews.last {
+            stackView.addArrangedSubview(setAsDefaultCheckbox.view)
+            stackView.setCustomSpacing(20, after: lastSubview) // custom spacing from figma
         }
-        stackView.setCustomSpacing(16, after: updateButton) // custom spacing from figma
+        if let lastSubview = stackView.arrangedSubviews.last {
+            stackView.setCustomSpacing(32, after: lastSubview) // custom spacing from figma
+        }
+        stackView.addArrangedSubview(updateButton)
+        stackView.addArrangedSubview(removeButton)
+        stackView.addArrangedSubview(errorLabel)
         return stackView
     }()
 
@@ -71,13 +76,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: viewModel.appearance, didTap: {  [weak self] in
-            switch self?.viewModel.paymentMethod.type {
-            case .card:
+            guard let self = self else { return }
+            if self.viewModel.hasChangedCardBrand {
                 Task {
-                    await self?.updateCard()
+                    await self.updateCard()
                 }
-            default:
-                fatalError("Updating payment method has not been implemented for \(self?.viewModel.paymentMethod.type ?? .unknown)")
+            }
+            if self.viewModel.hasChangedDefaultPaymentMethodCheckbox {
+                // TODO: update default payment method in the back end
             }
         })
         button.isHidden = !viewModel.canEdit
@@ -142,6 +148,16 @@ final class UpdatePaymentMethodViewController: UIViewController {
         let form = SavedPaymentMethodFormFactory(viewModel: viewModel)
         form.delegate = self
         return form.makePaymentMethodForm()
+    }()
+
+    private lazy var setAsDefaultCheckbox: CheckboxElement? = {
+        guard viewModel.allowsSetAsDefaultPM && UpdatePaymentMethodViewModel.supportedDefaultPaymentMethods.contains(where: {
+            viewModel.paymentMethod.type == $0
+        }) else { return nil }
+        return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [weak self] isSelected in
+            self?.viewModel.hasChangedDefaultPaymentMethodCheckbox = self?.viewModel.isDefault != isSelected
+            self?.updateButton.update(state: self?.viewModel.hasUpdates ?? false ? .enabled : .disabled)
+        }
     }()
 
     private lazy var footnoteLabel: UITextView? = {
@@ -274,11 +290,12 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
 
 // MARK: SavedPaymentMethodFormFactoryDelegate
 extension UpdatePaymentMethodViewController: SavedPaymentMethodFormFactoryDelegate {
-    func didUpdate(_: Element, shouldEnableSaveButton: Bool) {
+    func didUpdate(_: Element, didUpdateCardBrand: Bool) {
         latestError = nil // clear error on new input
         switch viewModel.paymentMethod.type {
         case .card:
-            updateButton.update(state: shouldEnableSaveButton ? .enabled : .disabled)
+            viewModel.hasChangedCardBrand = didUpdateCardBrand
+            updateButton.update(state: viewModel.hasUpdates ? .enabled : .disabled)
         default:
             break
         }

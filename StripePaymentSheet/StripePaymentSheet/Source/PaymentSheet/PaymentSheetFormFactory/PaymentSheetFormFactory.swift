@@ -362,6 +362,20 @@ extension PaymentSheetFormFactory {
         }
     }
 
+    func makeDefaultCheckbox(
+        didToggle: ((Bool) -> Void)? = nil
+    ) -> PaymentMethodElementWrapper<CheckboxElement> {
+        let element = CheckboxElement(
+            theme: configuration.appearance.asElementsTheme,
+            label: String.Localized.set_as_default_payment_method,
+            isSelectedByDefault: false,
+            didToggle: didToggle
+        )
+        return PaymentMethodElementWrapper(element) { _, params in
+            return params
+        }
+    }
+
     func makeBillingAddressSection(
         collectionMode: AddressSectionElement.CollectionMode = .all(),
         countries: [String]? = nil,
@@ -513,6 +527,10 @@ extension PaymentSheetFormFactory {
 
     func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         let isSaving = BoolReference()
+        var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
+        if configuration.allowsSetAsDefaultPM {
+            defaultCheckbox = makeDefaultCheckbox()
+        }
         let saveCheckbox = makeSaveCheckbox(
             label: String(
                 format: STPLocalizedString(
@@ -523,6 +541,7 @@ extension PaymentSheetFormFactory {
             )
         ) { value in
             isSaving.value = value
+            defaultCheckbox?.view.isHidden = !value
         }
 
         isSaving.value =
@@ -545,7 +564,8 @@ extension PaymentSheetFormFactory {
             emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
             phoneElement: phoneElement,
             addressElement: addressElement,
-            checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            saveCheckboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+            defaultCheckboxElement: defaultCheckbox,
             savingAccount: isSaving,
             merchantName: merchantName,
             initialLinkedBank: previousCustomerInput?.financialConnectionsLinkedBank,

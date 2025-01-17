@@ -31,7 +31,12 @@ jobs:
         run: ruby ci_scripts/check_for_untranslated_strings.rb
       - name: Read missing translations
         id: missing
-        run: echo "::set-output name=translations::$(<missing_translations.txt)"
+        run: |
+          if [ -f "missing_translations.txt" ]; then
+            echo "::set-output name=translations::$(cat missing_translations.txt)"
+          else
+            echo "::set-output name=translations::"
+          fi
       - name: Exit if no missing translations
         id: check_translations
         run: |

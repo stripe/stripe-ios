@@ -23,6 +23,7 @@ protocol LinkLoginDataSource: AnyObject {
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
     ) -> Future<FinancialConnectionsSynchronize>
+    func completeAssertion(possibleError: Error?)
 }
 
 final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
@@ -34,14 +35,14 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
 
     private let clientSecret: String
     private let returnURL: String?
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
 
     init(
         manifest: FinancialConnectionsSessionManifest,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
@@ -75,13 +76,15 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse> {
-        apiClient.linkAccountSignUp(
+        let verified = manifest.appVerificationEnabled ?? false
+        return apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             country: country,
             amount: elementsSessionContext?.amount,
             currency: elementsSessionContext?.currency,
-            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession
+            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
+            useMobileEndpoints: verified
         )
     }
 
@@ -112,5 +115,10 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             linkAccountSession: linkAccountSession,
             consumerSessionClientSecret: consumerSessionClientSecret
         )
+    }
+
+    func completeAssertion(possibleError: Error?) {
+        guard manifest.appVerificationEnabled ?? false else { return }
+        apiClient.completeAssertion(possibleError: possibleError)
     }
 }
