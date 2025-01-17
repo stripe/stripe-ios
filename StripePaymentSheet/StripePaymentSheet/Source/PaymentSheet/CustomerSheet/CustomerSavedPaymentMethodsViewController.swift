@@ -63,6 +63,10 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }()
     private var cachedClientSecret: String?
 
+    var showApplePay: Bool {
+        return isApplePayEnabled && !configuration.allowsSetAsDefaultPM
+    }
+
     var paymentMethodTypes: [PaymentSheet.PaymentMethodType] {
         let supportedPaymentMethods = configuration.allowsSetAsDefaultPM ? CustomerSheet.supportedDefaultPaymentMethods : CustomerSheet.supportedPaymentMethods
         let paymentMethodTypes = merchantSupportedPaymentMethodTypes.customerSheetSupportedPaymentMethodTypesForAdd(canCreateSetupIntents: canCreateSetupIntents, supportedPaymentMethods: supportedPaymentMethods)
@@ -101,7 +105,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             mostRecentlyAddedPaymentMethod: nil,
             savedPaymentMethodsConfiguration: self.configuration,
             configuration: .init(
-                showApplePay: isApplePayEnabled,
+                showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
                 isTestMode: configuration.apiClient.isTestmode,
@@ -164,7 +168,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.csCompletion = csCompletion
         self.delegate = delegate
 
-        if Self.shouldShowPaymentMethodCarousel(savedPaymentMethods: savedPaymentMethods, isApplePayEnabled: isApplePayEnabled) {
+        if Self.shouldShowPaymentMethodCarousel(savedPaymentMethods: savedPaymentMethods, showApplePay: isApplePayEnabled && !configuration.allowsSetAsDefaultPM) {
             self.mode = .selectingSaved
         } else {
             switch customerSheetDataSource.dataSource {
@@ -215,12 +219,12 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
     }
 
-    static func shouldShowPaymentMethodCarousel(savedPaymentMethods: [STPPaymentMethod], isApplePayEnabled: Bool) -> Bool {
-        return !savedPaymentMethods.isEmpty || isApplePayEnabled
+    static func shouldShowPaymentMethodCarousel(savedPaymentMethods: [STPPaymentMethod], showApplePay: Bool) -> Bool {
+        return !savedPaymentMethods.isEmpty || showApplePay
     }
 
     private var shouldShowPaymentMethodCarousel: Bool {
-        return CustomerSavedPaymentMethodsViewController.shouldShowPaymentMethodCarousel(savedPaymentMethods: self.savedPaymentMethods, isApplePayEnabled: isApplePayEnabled)
+        return CustomerSavedPaymentMethodsViewController.shouldShowPaymentMethodCarousel(savedPaymentMethods: self.savedPaymentMethods, showApplePay: showApplePay)
     }
 
     // MARK: Private Methods

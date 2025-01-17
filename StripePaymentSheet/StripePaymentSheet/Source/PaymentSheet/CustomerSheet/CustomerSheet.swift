@@ -212,7 +212,7 @@ public class CustomerSheet {
                                                                                 merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                                                                                 configuration: self.configuration,
                                                                                 customerSheetDataSource: customerSheetDataSource,
-                                                                                isApplePayEnabled: self.configuration.allowsSetAsDefaultPM ? false : isApplePayEnabled,
+                                                                                isApplePayEnabled: isApplePayEnabled,
                                                                                 paymentMethodRemove: paymentMethodRemove,
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
