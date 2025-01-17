@@ -442,6 +442,31 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Experimental
+
+    @UserDefault(
+        key: "FINANCIAL_CONNECTIONS_EXAMPLE_USE_ASYNC_API_CLIENT",
+        defaultValue: false
+    )
+    private static var useAsyncAPIClientStorage: Bool
+
+    private static let useAsyncAPIClientKey = "use_async_api_client"
+    var useAsyncAPIClient: Bool {
+        get {
+            if let useAsyncAPIClient = configurationStore[Self.useAsyncAPIClientKey] as? Bool {
+                return useAsyncAPIClient
+            } else {
+                return false
+            }
+        }
+        set {
+            // Save to configuration string
+            configurationStore[Self.useAsyncAPIClientKey] = newValue
+            // Save to user defaults
+            Self.useAsyncAPIClientStorage = newValue
+        }
+    }
+
     // MARK: - Update
 
     func updateConfigurationString(_ configurationString: String) {
@@ -547,6 +572,12 @@ final class PlaygroundConfiguration {
             self.liveEvents = liveEvents
         } else {
             self.liveEvents = false
+        }
+
+        if let useAsyncAPIClient = dictionary[Self.useAsyncAPIClientKey] as? Bool {
+            self.useAsyncAPIClient = useAsyncAPIClient
+        } else {
+            self.useAsyncAPIClient = false
         }
     }
 }

@@ -425,6 +425,27 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual((error as! PaymentSheetError).debugDescription, PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription)
     }
 
+    func testCorrectLast4ForInstantBankPaymentsInPassthroughMode() async throws {
+        // Given an EmbeddedPaymentElement that can confirm
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Create test confirmParams with valid Link card brand details
+        let confirmParams = IntentConfirmParams(type: .linkCardBrand)
+        confirmParams.instantDebitsLinkedBank = InstantDebitsLinkedBank(
+            paymentMethod: .init(id: "pm_1234"),
+            bankName: "Stripe Bank",
+            last4: "6789",
+            linkMode: nil,
+            incentiveEligible: false
+        )
+
+        // Inject the test payment option and assert the label
+        sut._test_paymentOption = .saved(paymentMethod: ._testCard(), confirmParams: confirmParams)
+        XCTAssertEqual(sut.paymentOption?.label, "••••6789")
+    }
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {

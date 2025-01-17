@@ -5,8 +5,6 @@
 //  Created by Mat Schmid on 2024-08-02.
 //
 
-import OHHTTPStubs
-import OHHTTPStubsSwift
 import XCTest
 
 @_spi(STP) import StripeCore
@@ -56,7 +54,7 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
     func testEmptyBillingAddressEncodedAsParameters() throws {
         let billingAddress = BillingAddress()
         let encodedBillingAddress = try FinancialConnectionsAPIClient.encodeAsParameters(billingAddress)
-        
+
         XCTAssertNil(encodedBillingAddress)
     }
 

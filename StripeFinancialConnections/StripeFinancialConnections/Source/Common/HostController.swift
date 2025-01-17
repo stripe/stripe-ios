@@ -22,16 +22,16 @@ import UIKit
 }
 
 extension HostControllerResult {
-    
+
     /// Updates the `HostControllerResult` from the manifest to populate any fields that aren't part of the actual API response,
     /// but that are still necessary to produce the correct result in the host surface.
     func updateWith(_ manifest: FinancialConnectionsSessionManifest) -> Self {
         guard case .completed(.financialConnections(let session)) = self else {
             return self
         }
-        
+
         let instantlyVerified = !manifest.manualEntryUsesMicrodeposits
-        
+
         let updatedSession = StripeAPI.FinancialConnectionsSession(
             clientSecret: session.clientSecret,
             id: session.id,
@@ -42,18 +42,18 @@ extension HostControllerResult {
             status: session.status,
             statusDetails: session.statusDetails
         )
-        
+
         return .completed(.financialConnections(updatedSession))
     }
 }
 
 private extension StripeAPI.FinancialConnectionsSession.PaymentAccount {
-    
+
     func setInstantlyVerifiedIfNeeded(_ value: Bool) -> Self {
         guard case .bankAccount(var bankAccount) = self else {
             return self
         }
-        
+
         bankAccount.instantlyVerified = value
         return .bankAccount(bankAccount)
     }
@@ -77,7 +77,7 @@ class HostController {
 
     // MARK: - Properties
 
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     private let returnURL: String?
     private let elementsSessionContext: ElementsSessionContext?
@@ -99,7 +99,7 @@ class HostController {
     // MARK: - Init
 
     init(
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         elementsSessionContext: ElementsSessionContext?,

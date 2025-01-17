@@ -24,7 +24,7 @@ class InstitutionAPIDataSource: InstitutionDataSource {
     // MARK: - Properties
 
     let manifest: FinancialConnectionsSessionManifest
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     var featuredInstitutions: [FinancialConnectionsInstitution] = []
@@ -33,7 +33,7 @@ class InstitutionAPIDataSource: InstitutionDataSource {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
