@@ -28,6 +28,9 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Add your payment information";
 
+/* Title for a button that when tapped creates a Link account for the user. */
+"Agree and continue" = "Agree and continue";
+
 /* Text on a screen asking the user to approve a payment */
 "Approve payment" = "Approve payment";
 
@@ -79,6 +82,9 @@
 /* Revolut Pay mandate text */
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
 
+/* Legal text shown when creating a Link account. */
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
@@ -127,6 +133,9 @@
 /* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
 
+/* Two factor authentication screen heading */
+"Confirm it's you" = "Confirm it's you";
+
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
 
@@ -149,13 +158,13 @@
 "Enter address manually" = "Enter address manually";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
-
-/* Two factor authentication screen heading */
-"Enter your verification code" = "Enter your verification code";
+"Enter the code sent to %@ to use your saved information." = "Enter the code sent to %@ to use your saved information.";
 
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
+
+/* Title for the Link signup screen */
+"Fast, secure, 1⁠-⁠click checkout" = "Fast, secure, 1⁠-⁠click checkout";
 
 /* A text notice shown when the user selects a card that requires
 re-entering the security code (CVV/CVC). */
@@ -178,9 +187,6 @@ re-entering the security code (CVV/CVC). */
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
-
-/* Title for a button that when tapped creates a Link account for the user. */
-"Join Link" = "Join Link";
 
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
@@ -321,11 +327,11 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 to be saved and used in future checkout sessions. */
 "Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
 
+/* Label describing the benefit of signing up for Link. */
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Save your payment information with Link, and securely check out in 1-click on Link-supported sites.";
+
 /* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
 "Saved" = "Saved";
-
-/* Title for the Link signup screen */
-"Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
 
 /* Title shown above a view containing the customer's card payment methods */
 "Select card" = "Select card";
@@ -354,9 +360,6 @@ is not supported by the merchant */
 
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";
-
-/* Two factor authentication screen heading */
-"Sign in to your Link account" = "Sign in to your Link account";
 
 /* Subtitle shown on a button allowing a user to select to pay with Link. */
 "Simple, secure one-click payments" = "Simple, secure one-click payments";

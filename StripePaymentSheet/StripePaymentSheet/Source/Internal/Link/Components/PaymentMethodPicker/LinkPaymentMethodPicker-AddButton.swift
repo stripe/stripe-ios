@@ -17,7 +17,7 @@ extension LinkPaymentMethodPicker {
             static let iconSize: CGSize = .init(width: 24, height: 24)
         }
 
-        private let iconView: UIImageView = UIImageView(image: Image.icon_add_bordered.makeImage(template: true))
+        private let iconView: UIImageView = UIImageView(image: Image.icon_add_bordered.makeImage(template: false))
 
         private lazy var textLabel: UILabel = {
             let label = UILabel()
