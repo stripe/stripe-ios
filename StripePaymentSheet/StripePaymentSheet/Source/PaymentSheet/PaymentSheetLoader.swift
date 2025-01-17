@@ -306,7 +306,6 @@ final class PaymentSheetLoader {
         return paymentMethodId
     }
 
-    static let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static func fetchSavedPaymentMethods(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
@@ -352,7 +351,7 @@ final class PaymentSheetLoader {
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
                 using: ephemeralKey,
-                types: savedPaymentMethodTypes,
+                types: PaymentSheet.supportedSavedPaymentMethods,
                 limit: 100
             ) { paymentMethods, error in
                 guard var paymentMethods, error == nil else {

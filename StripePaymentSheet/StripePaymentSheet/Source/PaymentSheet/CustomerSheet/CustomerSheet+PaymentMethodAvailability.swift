@@ -8,6 +8,7 @@ import Foundation
 
 extension CustomerSheet {
     static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+    static let supportedDefaultPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
 }
 
 extension Array where Element == STPPaymentMethodType {
