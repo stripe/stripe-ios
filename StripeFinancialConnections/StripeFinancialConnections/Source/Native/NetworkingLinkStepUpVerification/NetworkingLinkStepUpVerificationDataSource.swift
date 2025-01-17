@@ -22,7 +22,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
 
     private(set) var consumerSession: ConsumerSessionData
     private let selectedAccountIds: [String]
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let manifest: FinancialConnectionsSessionManifest
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -32,7 +32,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         consumerSession: ConsumerSessionData,
         selectedAccountIds: [String],
         manifest: FinancialConnectionsSessionManifest,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {

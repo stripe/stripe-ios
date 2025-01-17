@@ -52,7 +52,7 @@ final class HostViewController: UIViewController {
 
     private let analyticsClientV1: STPAnalyticsClientProtocol
     private let clientSecret: String
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let returnURL: String?
 
     private var lastError: Error?
@@ -63,7 +63,7 @@ final class HostViewController: UIViewController {
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         delegate: HostViewControllerDelegate?
     ) {
         self.analyticsClientV1 = analyticsClientV1

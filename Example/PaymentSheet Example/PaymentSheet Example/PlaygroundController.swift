@@ -826,6 +826,7 @@ extension PlaygroundController {
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "should_save_payment_method": shouldSavePaymentMethod,
             "mode": intentConfig.mode.requestBody,
+            "link_mode": settings.linkEnabledMode.rawValue,
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
 

@@ -8,7 +8,8 @@
 
 import Combine
 import Foundation
-import StripeFinancialConnections
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeFinancialConnections
 import StripePaymentSheet
 import SwiftUI
 import UIKit
@@ -212,6 +213,18 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
+    var useAsyncAPIClient: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.useAsyncAPIClient
+            },
+            set: {
+                self.playgroundConfiguration.useAsyncAPIClient = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     @Published var showConfigurationView = false
     private(set) lazy var playgroundConfigurationViewModel: PlaygroundManageConfigurationViewModel = {
        return PlaygroundManageConfigurationViewModel(
@@ -309,6 +322,7 @@ final class PlaygroundViewModel: ObservableObject {
                     useCase: self.playgroundConfiguration.useCase,
                     stripeAccount: self.playgroundConfiguration.merchant.stripeAccount,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
+                    useAsyncApiClient: self.playgroundConfiguration.useAsyncAPIClient,
                     onEvent: { event in
                         if self.liveEvents.wrappedValue == true {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
@@ -457,6 +471,7 @@ private func PresentFinancialConnectionsSheet(
     useCase: PlaygroundConfiguration.UseCase,
     stripeAccount: String?,
     setupPlaygroundResponseJSON: [String: String],
+    useAsyncApiClient: Bool,
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {

@@ -29,7 +29,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     let elementsSessionContext: ElementsSessionContext?
     private let selectedAccounts: [FinancialConnectionsPartnerAccount]?
     private let returnURL: String?
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
@@ -41,7 +41,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         manifest: FinancialConnectionsSessionManifest,
         selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         elementsSessionContext: ElementsSessionContext?

@@ -219,7 +219,13 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        let financialConnectionsApiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
+        let financialConnectionsApiClient: any FinancialConnectionsAPI
+        let shouldUseAsyncClient = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_USE_ASYNC_API_CLIENT")
+        if shouldUseAsyncClient {
+            financialConnectionsApiClient = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        } else {
+            financialConnectionsApiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
+        }
         hostController = HostController(
             apiClient: financialConnectionsApiClient,
             analyticsClientV1: analyticsClient,

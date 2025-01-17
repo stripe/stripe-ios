@@ -76,5 +76,26 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         )
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375   )
     }
+
+    func test_link_mode_does_not_show_checkbox() {
+        // Given a card PM and default options
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        // ...and a "Save this card" checkbox...
+        config.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        // ... but we're in Link PM mode:
+        config.linkPaymentMethodsOnly = true
+        // ...the AddPMVC should show the card form without the SFU checkbox.
+        let sut = AddPaymentMethodViewController(
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            configuration: config,
+            previousCustomerInput: nil,
+            paymentMethodTypes: [.stripe(.card)],
+            formCache: .init(),
+            analyticsHelper: ._testValue()
+        )
+        STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375   )
+    }
 }
 #endif

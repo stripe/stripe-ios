@@ -15,7 +15,7 @@ protocol NativeFlowDataManager: AnyObject {
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent? { get }
     var accountPickerPane: FinancialConnectionsAccountPickerPane? { get }
-    var apiClient: FinancialConnectionsAPIClient { get }
+    var apiClient: any FinancialConnectionsAPI { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var elementsSessionContext: ElementsSessionContext? { get }
@@ -79,7 +79,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent?
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
-    let apiClient: FinancialConnectionsAPIClient
+    var apiClient: any FinancialConnectionsAPI
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let elementsSessionContext: ElementsSessionContext?
@@ -115,7 +115,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent?,
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         elementsSessionContext: ElementsSessionContext?

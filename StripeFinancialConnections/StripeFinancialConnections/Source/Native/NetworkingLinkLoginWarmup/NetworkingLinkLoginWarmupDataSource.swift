@@ -18,14 +18,14 @@ protocol NetworkingLinkLoginWarmupDataSource: AnyObject {
 final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLoginWarmupDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let nextPaneOrDrawerOnSecondaryCta: String?
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         nextPaneOrDrawerOnSecondaryCta: String?
