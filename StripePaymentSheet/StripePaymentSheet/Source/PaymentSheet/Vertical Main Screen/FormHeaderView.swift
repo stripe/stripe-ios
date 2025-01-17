@@ -34,9 +34,22 @@ final class FormHeaderView: UIView {
             return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
         }
     }()
+    
+    private var promoBadgeView: PromoBadgeView?
+    
+    private lazy var spacerView: UIView = {
+        // This spacer makes sure that the promo badge is aligned correctly
+        let spacerView = UIView()
+        spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        return spacerView
+    }()
 
     private lazy var stackView: UIStackView = {
-        let views = [imageView, label].compactMap { $0 }
+        var views = [imageView, label].compactMap { $0 }
+        if let promoBadgeView {
+            views.append(contentsOf: [promoBadgeView, spacerView])
+        }
+        
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.spacing = 12
         if imageView == nil {
@@ -52,12 +65,19 @@ final class FormHeaderView: UIView {
     private let shouldUseNewCardHeader: Bool // true if the customer has a saved payment method that is type card
     private let appearance: PaymentSheet.Appearance
 
-    init(paymentMethodType: PaymentSheet.PaymentMethodType, shouldUseNewCardHeader: Bool, appearance: PaymentSheet.Appearance) {
+    init(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        shouldUseNewCardHeader: Bool,
+        appearance: PaymentSheet.Appearance,
+        incentive: PaymentMethodIncentive?
+    ) {
         self.paymentMethodType = paymentMethodType
         self.shouldUseNewCardHeader = shouldUseNewCardHeader
         self.appearance = appearance
+        self.promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
         super.init(frame: .zero)
         addAndPinSubview(stackView)
+        
         if let imageView {
             NSLayoutConstraint.activate([
                 imageView.widthAnchor.constraint(equalToConstant: 20),
@@ -68,5 +88,20 @@ final class FormHeaderView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private static func makePromoBadge(
+        for incentive: PaymentMethodIncentive?,
+        with appearance: PaymentSheet.Appearance
+    ) -> PromoBadgeView? {
+        guard let incentive else {
+            return nil
+        }
+        
+        return PromoBadgeView(
+            appearance: appearance,
+            tinyMode: false,
+            text: incentive.displayText
+        )
     }
 }

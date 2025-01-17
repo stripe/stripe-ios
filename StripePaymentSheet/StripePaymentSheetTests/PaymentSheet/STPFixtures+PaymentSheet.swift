@@ -71,7 +71,8 @@ extension STPElementsSession {
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
-        linkSuppress2FA: Bool? = nil
+        linkSuppress2FA: Bool? = nil,
+        hasLinkConsumerIncentive: Bool = false
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -120,6 +121,18 @@ extension STPElementsSession {
 
         if let linkSuppress2FA {
             json[jsonDict: "link_settings"]!["link_mobile_suppress_2fa_modal"] = linkSuppress2FA
+        }
+        
+        if hasLinkConsumerIncentive {
+            json[jsonDict: "link_settings"]!["link_consumer_incentive"] = [
+                "campaign": "bankaccountsignup",
+                "incentive_display_text": "$5",
+                "incentive_params": [
+                    "amount_flat": 500,
+                    "currency": "USD",
+                    "payment_method": "link_instant_debits",
+                ]
+            ]
         }
 
         json[jsonDict: "link_settings"]!["link_funding_sources"] = linkFundingSources.map(\.rawValue)
