@@ -76,7 +76,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         )
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375   )
     }
-    
+
     func test_link_mode_does_not_show_checkbox() {
         // Given a card PM and default options
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
