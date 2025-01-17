@@ -116,9 +116,15 @@ extension PaymentSheetFormFactory {
             return nil
         }()
         elements.append(mandate)
+        
+        var customSpacing: [(Element, CGFloat)] = []
+        if configuration.linkPaymentMethodsOnly {
+            customSpacing.append((cardSection, LinkUI.largeContentSpacing))
+        }
 
         return FormElement(
             elements: elements,
-            theme: theme)
+            theme: theme,
+            customSpacing: customSpacing)
     }
 }

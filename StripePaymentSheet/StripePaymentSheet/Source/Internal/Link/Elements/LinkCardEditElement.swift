@@ -182,7 +182,9 @@ final class LinkCardEditElement: Element {
             self.expiryDateElement.setText(expiryDate.displayString)
         }
 
-        self.checkboxElement.checkboxButton.isHidden = paymentMethod.isDefault
+//        self.checkboxElement.checkboxButton.isHidden = paymentMethod.isDefault
+        // This checkbox is confusing, so we'll always hide it for now. We'll bring it back once we work out the design.
+        self.checkboxElement.checkboxButton.isHidden = true
     }
 
 }

@@ -96,7 +96,7 @@ final class LinkLegalTermsView: UIView {
             switch mode {
             case .checkbox:
                 return STPLocalizedString(
-                    "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
             case .textFieldsOnlyEmailFirst:

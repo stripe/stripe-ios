@@ -38,6 +38,13 @@ extension UIColor {
     static var linkBrand400: UIColor {
         UIColor(red: 0.0, green: 0.64, blue: 0.33, alpha: 1.0)
     }
+    
+    /// Level 500 variant of Link brand color
+    ///
+    /// Use for text buttons.
+    static var linkBrand500: UIColor {
+        UIColor(red: 0, green: 0.52, blue: 0.27, alpha: 1)
+    }
 
     /// Color of the Link logo in the navigation bar.
     static let linkNavLogo: UIColor = .dynamic(

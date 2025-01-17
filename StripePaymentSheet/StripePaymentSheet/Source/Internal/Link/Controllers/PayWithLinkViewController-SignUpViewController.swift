@@ -29,7 +29,7 @@ extension PayWithLinkViewController {
             label.numberOfLines = 0
             label.textAlignment = .center
             label.text = STPLocalizedString(
-                "Secure 1⁠-⁠click checkout",
+                "Fast, secure, 1⁠-⁠click checkout",
                 "Title for the Link signup screen"
             )
             return label
@@ -42,9 +42,7 @@ extension PayWithLinkViewController {
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
-            label.text = String.Localized.pay_faster_at_$merchant_and_thousands_of_merchants(
-                merchantDisplayName: context.configuration.merchantDisplayName
-            )
+            label.text = String.Localized.save_your_payment_information_with_link
             return label
         }()
 
@@ -87,7 +85,7 @@ extension PayWithLinkViewController {
             let button = Button(
                 configuration: .linkPrimary(),
                 title: STPLocalizedString(
-                    "Join Link",
+                    "Agree and continue",
                     "Title for a button that when tapped creates a Link account for the user."
                 )
             )
