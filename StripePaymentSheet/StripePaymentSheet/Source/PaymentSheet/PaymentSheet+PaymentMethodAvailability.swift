@@ -35,6 +35,7 @@ extension PaymentSheet {
         .sunbit,
         .billie,
         .satispay,
+        .crypto,
         .boleto,
         .swish,
         .twint,

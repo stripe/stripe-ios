@@ -4,7 +4,7 @@
 
 ### PaymentSheet
 * [Fixed] Embedded Payment Element (private beta) layout margins default to zero.
-
+* [Added] Support for Crypto in PaymentSheet
 
 ## 24.4.0 2025-01-13
 ### PaymentSheet
