@@ -38,7 +38,7 @@ extension UIColor {
     static var linkBrand400: UIColor {
         UIColor(red: 0.0, green: 0.64, blue: 0.33, alpha: 1.0)
     }
-    
+
     /// Level 500 variant of Link brand color
     ///
     /// Use for text buttons.

@@ -94,7 +94,7 @@ extension PaymentSheetFormFactory {
             cardSection,
             billingAddressSection,
             shouldDisplaySaveCheckbox ? saveCheckbox : nil,
-            defaultCheckbox
+            defaultCheckbox,
         ]
 
         if case .paymentSheet(let configuration) = configuration, let accountService, showLinkInlineSignup {
@@ -116,7 +116,7 @@ extension PaymentSheetFormFactory {
             return nil
         }()
         elements.append(mandate)
-        
+
         var customSpacing: [(Element, CGFloat)] = []
         if configuration.linkPaymentMethodsOnly {
             customSpacing.append((cardSection, LinkUI.largeContentSpacing))

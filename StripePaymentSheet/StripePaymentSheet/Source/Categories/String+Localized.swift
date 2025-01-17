@@ -39,7 +39,7 @@ extension String.Localized {
             merchantDisplayName
         )
     }
-    
+
     static var save_your_payment_information_with_link: String {
         STPLocalizedString(
                 "Save your payment information with Link, and securely check out in 1-click on Link-supported sites.",

@@ -139,7 +139,8 @@ final class LinkCardEditElement: Element {
                 billingAddressSection,
                 checkboxElement,
             ],
-            theme: theme
+            theme: theme,
+            customSpacing: [(cardSection, LinkUI.largeContentSpacing)]
         )
         formElement.delegate = self
         return formElement
