@@ -191,6 +191,7 @@ extension PaymentSheet {
         public var paymentMethodOrder: [String]?
 
         // MARK: Internal
+        // PaymentSheet components are only being used for Link.
         internal var linkPaymentMethodsOnly: Bool = false
 
         /// This is an experimental feature that may be removed at any time.
