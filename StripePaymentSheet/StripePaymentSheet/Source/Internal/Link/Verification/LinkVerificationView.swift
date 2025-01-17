@@ -237,14 +237,9 @@ extension LinkVerificationView.Mode {
                 "Use your saved info to check out faster",
                 "Two factor authentication screen heading"
             )
-        case .inlineLogin:
+        case .inlineLogin, .embedded:
             return STPLocalizedString(
-                "Sign in to your Link account",
-                "Two factor authentication screen heading"
-            )
-        case .embedded:
-            return STPLocalizedString(
-                "Enter your verification code",
+                "Confirm it's you",
                 "Two factor authentication screen heading"
             )
         }
@@ -261,7 +256,7 @@ extension LinkVerificationView.Mode {
 
     func bodyText(redactedPhoneNumber: String) -> String {
         let format = STPLocalizedString(
-            "Enter the code sent to %@ to use Link to pay by default.",
+            "Enter the code sent to %@ to use your saved information.",
             "Instructs the user to enter the code sent to their phone number in order to login to Link"
         )
         return String(format: format, redactedPhoneNumber)

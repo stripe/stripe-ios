@@ -39,6 +39,8 @@ final class LinkLegalTermsView: UIView {
 
     weak var delegate: LinkLegalTermsViewDelegate?
     private let mode: LinkInlineSignupViewModel.Mode
+    /// If true, we're in a separate Link VC (instead of the inline PS one)
+    private let isStandalone: Bool
     private let emailWasPrefilled: Bool
 
     var textColor: UIColor? {
@@ -78,9 +80,11 @@ final class LinkLegalTermsView: UIView {
     init(textAlignment: NSTextAlignment = .left,
          mode: LinkInlineSignupViewModel.Mode = .checkbox,
          emailWasPrefilled: Bool = false,
+         isStandalone: Bool = false,
          delegate: LinkLegalTermsViewDelegate? = nil) {
         self.mode = mode
         self.emailWasPrefilled = emailWasPrefilled
+        self.isStandalone = isStandalone
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
         self.delegate = delegate
@@ -93,6 +97,12 @@ final class LinkLegalTermsView: UIView {
 
     private func formattedLegalText() -> NSAttributedString {
         let string: String = {
+            if isStandalone {
+                return STPLocalizedString(
+                    "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
+            }
             switch mode {
             case .checkbox:
                 return STPLocalizedString(

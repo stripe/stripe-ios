@@ -114,8 +114,10 @@ final class LinkPaymentMethodPicker: UIView {
         layer.cornerRadius = 16
         layer.borderWidth = 1
         layer.borderColor = UIColor.linkControlBorder.cgColor
-        tintColor = .linkBrandDark
+        tintColor = .linkBrand
         backgroundColor = .linkControlBackground
+
+        addPaymentMethodButton.tintColor = .linkBrand500
 
         headerView.addTarget(self, action: #selector(onHeaderTapped(_:)), for: .touchUpInside)
         headerView.layer.zPosition = 1
