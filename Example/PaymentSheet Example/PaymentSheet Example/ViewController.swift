@@ -41,4 +41,11 @@ class ViewController: UIViewController {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomerSheet())
     }
 
+    @IBSegueAction func showSwiftUIEmbedded(_ coder: NSCoder) -> UIViewController? {
+        if #available(iOS 15.0, *) {
+            return UIHostingController(coder: coder, rootView: MyEmbeddedCheckoutView())
+        } else {
+            fatalError(">= iOS 15.0 required")
+        }
+    }
 }
