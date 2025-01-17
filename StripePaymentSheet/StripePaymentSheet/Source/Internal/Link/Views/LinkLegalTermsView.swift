@@ -94,9 +94,14 @@ final class LinkLegalTermsView: UIView {
     private func formattedLegalText() -> NSAttributedString {
         let string: String = {
             switch mode {
-            case .checkbox:
+            case .explicit:
                 return STPLocalizedString(
                     "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
+            case .checkbox:
+                return STPLocalizedString(
+                    "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
             case .textFieldsOnlyEmailFirst:
@@ -109,6 +114,7 @@ final class LinkLegalTermsView: UIView {
                     "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
+            case .
             }
         }()
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
