@@ -4,7 +4,7 @@
 
 ### PaymentSheet
 * [Fixed] Embedded Payment Element (private beta) layout margins default to zero.
-
+* [Fixed] Fixed a bug in Embedded Payment Element (private beta) where it could attempt to present a view controller while already presenting.
 
 ## 24.4.0 2025-01-13
 ### PaymentSheet
