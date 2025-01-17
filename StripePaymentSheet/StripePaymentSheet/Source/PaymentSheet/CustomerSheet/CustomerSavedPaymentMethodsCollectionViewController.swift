@@ -78,7 +78,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     struct Configuration {
-        let isApplePayEnabled: Bool
+        let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
         let isTestMode: Bool
@@ -296,7 +296,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
         self.viewModels =
         [.add]
-        + (self.configuration.isApplePayEnabled ? [.applePay] : [])
+        + (self.configuration.showApplePay ? [.applePay] : [])
         + savedPMViewModels
 
         // Select default
