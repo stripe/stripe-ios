@@ -22,7 +22,6 @@ final class LinkInlineSignupViewModel {
     }
 
     enum Mode {
-        case explicit // non-inline Link signup
         case checkbox // shows the Link inline signup with the checkbox and nested form fields
         case textFieldsOnlyEmailFirst // shows the Link inline signup without the checkbox, email field first
         case textFieldsOnlyPhoneFirst // shows the Link inline signup without the checkbox, phone number field first

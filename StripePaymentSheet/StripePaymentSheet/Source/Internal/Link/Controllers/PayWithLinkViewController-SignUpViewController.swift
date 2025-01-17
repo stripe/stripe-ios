@@ -69,7 +69,7 @@ extension PayWithLinkViewController {
         private lazy var nameSection = SectionElement(elements: [nameElement], theme: LinkUI.appearance.asElementsTheme)
 
         private lazy var legalTermsView: LinkLegalTermsView = {
-            let legalTermsView = LinkLegalTermsView(textAlignment: .center, mode: .explicit)
+            let legalTermsView = LinkLegalTermsView(textAlignment: .center, isStandalone: true)
             legalTermsView.tintColor = .linkBrandDark
             legalTermsView.delegate = self
             return legalTermsView
