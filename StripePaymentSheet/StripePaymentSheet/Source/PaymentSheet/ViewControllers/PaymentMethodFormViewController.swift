@@ -526,7 +526,7 @@ extension PaymentMethodFormViewController {
     }
 }
 
-private extension LinkBankPaymentMethod {
+extension LinkBankPaymentMethod {
 
     func decode() -> STPPaymentMethod? {
         return STPPaymentMethod.decodedObject(fromAPIResponse: allResponseFields)
