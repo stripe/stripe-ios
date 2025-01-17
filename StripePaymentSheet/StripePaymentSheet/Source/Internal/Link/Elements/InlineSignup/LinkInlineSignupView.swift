@@ -81,6 +81,7 @@ final class LinkInlineSignupView: UIView {
 
     private(set) lazy var legalTermsElement: StaticElement = {
         let legalView = LinkLegalTermsView(textAlignment: .left,
+                                           mode: viewModel.mode,
                                            delegate: self)
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
