@@ -745,22 +745,23 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             }
         }()
         let headerView: UIView = {
+            let incentive = elementsSession.incentive?.takeIfAppliesTo(paymentMethodType)
             if shouldDisplayFormOnly, let wallet = makeWalletHeaderView() {
                 // Special case: if there is only one payment method type and it's not a card and wallet options are available
                 // Display the wallet, then the FormHeaderView below it
                 if loadResult.paymentMethodTypes.first != .stripe(.card) {
-                     let containerView = UIStackView(arrangedSubviews: [
-                         wallet,
-                         FormHeaderView(
-                             paymentMethodType: paymentMethodType,
-                             shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
-                             appearance: configuration.appearance
-                         ),
-                     ])
+                    let containerView = UIStackView(arrangedSubviews: [
+                        wallet,
+                        FormHeaderView(
+                            paymentMethodType: paymentMethodType,
+                            shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
+                            appearance: configuration.appearance,
+                            incentive: incentive
+                        ),
+                    ])
                     containerView.axis = .vertical
                     containerView.spacing = PaymentSheetUI.defaultPadding
-
-                     return containerView
+                    return containerView
                 }
 
                 return wallet
@@ -769,7 +770,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     paymentMethodType: paymentMethodType,
                     // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
                     shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
-                    appearance: configuration.appearance
+                    appearance: configuration.appearance,
+                    incentive: incentive
                 )
             }
         }()
