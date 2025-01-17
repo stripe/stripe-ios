@@ -242,6 +242,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         cbcEligible: Bool,
         delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
+        // when opted into the set as default feature, only show payment methods that can be set as default (card, US bank account)
         if configuration.allowsSetAsDefaultPM {
             self.savedPaymentMethods = savedPaymentMethods.filter{ savedPaymentMethod in CustomerSheet.supportedDefaultPaymentMethods.contains{paymentMethodType in
                 savedPaymentMethod.type == paymentMethodType}
