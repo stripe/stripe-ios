@@ -174,6 +174,7 @@ extension FinancialConnectionsAnalyticsClient {
         additionalParameters["single_account"] = manifest.singleAccount
         additionalParameters["allow_manual_entry"] = manifest.allowManualEntry
         additionalParameters["account_holder_id"] = manifest.accountholderToken
+        additionalParameters["app_verification_enabled"] = manifest.appVerificationEnabled
     }
 
     static func paneFromViewController(
