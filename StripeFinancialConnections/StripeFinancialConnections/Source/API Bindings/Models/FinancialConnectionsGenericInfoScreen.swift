@@ -40,10 +40,10 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
             case unparasable
 
             public init(from decoder: Decoder) throws {
-                let type = try? decoder
+                let rawType = try? decoder
                     .container(keyedBy: TypeDecodingContainer.CodingKeys.self)
-                    .decode(TypeDecodingContainer.self, forKey: .type)
-                    .type
+                    .decode(String.self, forKey: .type)
+                let type = rawType.flatMap { TypeDecodingContainer.BodyEntryType(rawValue: $0) }
                 let container = try decoder.singleValueContainer()
                 if type == .text, let value = try? container.decode(TextBodyEntry.self) {
                     self = .text(value)

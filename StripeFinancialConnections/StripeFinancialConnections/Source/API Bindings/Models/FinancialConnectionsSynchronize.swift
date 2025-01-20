@@ -8,7 +8,7 @@
 import Foundation
 
 struct FinancialConnectionsSynchronize: Decodable {
-    let manifest: FinancialConnectionsSessionManifest
+    var manifest: FinancialConnectionsSessionManifest
     let text: Text?
     let visual: VisualUpdate
 
@@ -17,6 +17,7 @@ struct FinancialConnectionsSynchronize: Decodable {
         let consentPane: FinancialConnectionsConsent?
         let networkingLinkSignupPane: FinancialConnectionsNetworkingLinkSignup?
         let linkLoginPane: FinancialConnectionsLinkLoginPane?
+        let streamlinedConsentPane: FinancialConnectionsStreamlinedConsent?
     }
 
     struct VisualUpdate: Decodable {
