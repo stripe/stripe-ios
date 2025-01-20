@@ -14,7 +14,7 @@ protocol LinkLoginDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func synchronize() -> Future<FinancialConnectionsLinkLoginPane>
-    func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse>
+    func lookup(emailAddress: String, manuallyEntered: Bool) -> Future<LookupConsumerSessionResponse>
     func signUp(
         emailAddress: String,
         phoneNumber: String,
@@ -23,7 +23,7 @@ protocol LinkLoginDataSource: AnyObject {
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
     ) -> Future<FinancialConnectionsSynchronize>
-    func completeAssertion(possibleError: Error?)
+    func completeAssertionIfNeeded(possibleError: Error?)
 }
 
 final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
@@ -67,8 +67,14 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         }
     }
 
-    func lookup(emailAddress: String) -> Future<LookupConsumerSessionResponse> {
-        return apiClient.consumerSessionLookup(emailAddress: emailAddress, clientSecret: clientSecret)
+    func lookup(emailAddress: String, manuallyEntered: Bool) -> Future<LookupConsumerSessionResponse> {
+        return apiClient.consumerSessionLookup(
+            emailAddress: emailAddress,
+            clientSecret: clientSecret,
+            sessionId: manifest.id,
+            emailSource: manuallyEntered ? .userAction : .customerObject,
+            useMobileEndpoints: manifest.verified
+        )
     }
 
     func signUp(
@@ -76,7 +82,6 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         phoneNumber: String,
         country: String
     ) -> Future<LinkSignUpResponse> {
-        let verified = manifest.appVerificationEnabled ?? false
         return apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
@@ -84,7 +89,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             amount: elementsSessionContext?.amount,
             currency: elementsSessionContext?.currency,
             incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
-            useMobileEndpoints: verified
+            useMobileEndpoints: manifest.verified
         )
     }
 
@@ -117,8 +122,9 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         )
     }
 
-    func completeAssertion(possibleError: Error?) {
-        guard manifest.appVerificationEnabled ?? false else { return }
+    // Marks the assertion as completed and logs possible errors during verified flows.
+    func completeAssertionIfNeeded(possibleError: Error?) {
+        guard manifest.verified else { return }
         apiClient.completeAssertion(possibleError: possibleError)
     }
 }

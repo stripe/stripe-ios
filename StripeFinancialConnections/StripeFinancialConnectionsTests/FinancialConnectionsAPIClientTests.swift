@@ -99,4 +99,31 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
         XCTAssertEqual(encodedBillingAddress?["postal_code"] as? String, "90210")
         XCTAssertEqual(encodedBillingAddress?["country_code"] as? String, "US")
     }
+
+    func testApplyAttestationParameters() {
+        // Mark API client as testmode to use a mock assertion
+        mockApiClient.publishableKey = "pk_test"
+
+        let expectation = expectation(description: "applyAttestationParameters completed")
+        let baseParameters: [String: Any] = [
+            "base_parameter": true,
+        ]
+        let apiClient = FinancialConnectionsAPIClient(apiClient: mockApiClient)
+        apiClient
+            .applyAttestationParameters(to: baseParameters)
+            .observe { result in
+                switch result {
+                case .success(let updatedParameters):
+                    XCTAssertNotNil(updatedParameters["base_parameter"])
+                    XCTAssertNotNil(updatedParameters["app_id"])
+                    XCTAssertNotNil(updatedParameters["key_id"])
+                    XCTAssertNotNil(updatedParameters["device_id"])
+                    XCTAssertNotNil(updatedParameters["ios_assertion_object"])
+                case .failure(let error):
+                    XCTFail("Unexpected error when applying attestation parameters: \(error)")
+                }
+                expectation.fulfill()
+            }
+        wait(for: [expectation], timeout: 2.0)
+    }
 }

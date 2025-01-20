@@ -175,7 +175,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func consumerSessionLookup(
         emailAddress: String,
-        clientSecret: String
+        clientSecret: String,
+        sessionId: String,
+        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        useMobileEndpoints: Bool
     ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {
         return Promise<StripeFinancialConnections.LookupConsumerSessionResponse>()
     }

@@ -51,6 +51,10 @@ final class LinkLoginViewController: UIViewController {
 
     private var paneLayoutView: PaneLayoutView?
     private var footerButton: StripeUICore.Button?
+    private var prefillEmailAddress: String? {
+        let email = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
+        return email?.isEmpty == false ? email : nil
+    }
 
     init(dataSource: LinkLoginDataSource) {
         self.dataSource = dataSource
@@ -118,11 +122,10 @@ final class LinkLoginViewController: UIViewController {
         paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif
 
-        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
-        if let emailAddress, !emailAddress.isEmpty {
+        if let prefillEmailAddress {
             // Immediately set the button state to loading here to bypass the debouncing by the textfield.
             footerButton?.isLoading = true
-            formView.prefillEmailAddress(emailAddress)
+            formView.prefillEmailAddress(prefillEmailAddress)
 
             let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.prefillDetails?.formattedPhoneNumber
             formView.prefillPhoneNumber(phoneNumber)
@@ -157,13 +160,19 @@ final class LinkLoginViewController: UIViewController {
         formView.emailTextField.showLoadingView(true)
         footerButton?.isLoading = true
 
+        let manuallyEnteredEmail = emailAddress != prefillEmailAddress
         dataSource
-            .lookup(emailAddress: emailAddress)
+            .lookup(
+                emailAddress: emailAddress,
+                manuallyEntered: manuallyEnteredEmail
+            )
             .observe { [weak self, weak formView, weak footerButton] result in
                 formView?.emailTextField.showLoadingView(false)
                 footerButton?.isLoading = false
 
                 guard let self else { return }
+                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+
                 switch result {
                 case .success(let response):
                     if response.exists {
@@ -205,9 +214,7 @@ final class LinkLoginViewController: UIViewController {
         .observe { [weak self] result in
             guard let self else { return }
             self.footerButton?.isLoading = false
-
-            // Mark the assertion as completed and log possible errors.
-            self.dataSource.completeAssertion(possibleError: result.error)
+            self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
 
             switch result {
             case .success(let response):
