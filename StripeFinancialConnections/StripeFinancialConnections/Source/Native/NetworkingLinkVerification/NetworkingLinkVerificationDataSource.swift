@@ -106,7 +106,8 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
 
             return self.apiClient.synchronize(
                 clientSecret: self.clientSecret,
-                returnURL: self.returnURL
+                returnURL: self.returnURL,
+                initialSynchronize: false
             )
         }
     }

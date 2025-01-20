@@ -56,7 +56,8 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     func synchronize() -> Future<FinancialConnectionsLinkLoginPane> {
         apiClient.synchronize(
             clientSecret: clientSecret,
-            returnURL: returnURL
+            returnURL: returnURL,
+            initialSynchronize: false
         )
         .chained { synchronize in
             if let linkLoginPane = synchronize.text?.linkLoginPane {
@@ -73,7 +74,8 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             clientSecret: clientSecret,
             sessionId: manifest.id,
             emailSource: manuallyEntered ? .userAction : .customerObject,
-            useMobileEndpoints: manifest.verified
+            useMobileEndpoints: manifest.verified,
+            pane: .linkLogin
         )
     }
 
@@ -89,7 +91,8 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             amount: elementsSessionContext?.amount,
             currency: elementsSessionContext?.currency,
             incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
-            useMobileEndpoints: manifest.verified
+            useMobileEndpoints: manifest.verified,
+            pane: .linkLogin
         )
     }
 
@@ -107,7 +110,8 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
 
             return apiClient.synchronize(
                 clientSecret: self.clientSecret,
-                returnURL: self.returnURL
+                returnURL: self.returnURL,
+                initialSynchronize: false
             )
         }
     }
@@ -125,6 +129,9 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     // Marks the assertion as completed and logs possible errors during verified flows.
     func completeAssertionIfNeeded(possibleError: Error?) {
         guard manifest.verified else { return }
-        apiClient.completeAssertion(possibleError: possibleError)
+        apiClient.completeAssertion(
+            possibleError: possibleError,
+            pane: .linkLogin
+        )
     }
 }

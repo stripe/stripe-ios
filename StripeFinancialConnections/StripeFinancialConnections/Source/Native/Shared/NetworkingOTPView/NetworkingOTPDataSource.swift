@@ -85,7 +85,8 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
                 clientSecret: clientSecret,
                 sessionId: manifest.id,
                 emailSource: .customerObject,
-                useMobileEndpoints: manifest.verified
+                useMobileEndpoints: manifest.verified,
+                pane: pane
             )
             .chained { [weak self] lookupConsumerSessionResponse in
                 self?.consumerSession = lookupConsumerSessionResponse.consumerSession
@@ -125,7 +126,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     // Marks the assertion as completed and logs possible errors during verified flows.
     func completeAssertionIfNeeded(possibleError: Error?) {
         guard manifest.verified else { return }
-        apiClient.completeAssertion(possibleError: possibleError)
+        apiClient.completeAssertion(possibleError: possibleError, pane: pane)
     }
 
 }
