@@ -588,6 +588,7 @@ private func PresentFinancialConnectionsSheet(
     var configuration = FinancialConnectionsSheet.Configuration()
     configuration.style = style.configurationValue
     let financialConnectionsSheet = FinancialConnectionsSheet(
+        // TODO: Set to hard-coded secret for testing
         financialConnectionsSessionClientSecret: clientSecret,
         // disable app-to-app for UI tests
         returnURL: isUITest ? nil : "financial-connections-example://redirect",

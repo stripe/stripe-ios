@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 func GenericInfoFooterView(
     footer: FinancialConnectionsGenericInfoScreen.Footer?,
@@ -46,6 +47,47 @@ func GenericInfoFooterView(
         bottomText: footer.belowCta,
         didSelectURL: didSelectURL
     ).footerView
+}
+
+func GenericInfoFooterViewAndPrimaryButton(
+    footer: FinancialConnectionsGenericInfoScreen.Footer?,
+    theme: FinancialConnectionsTheme,
+    didSelectPrimaryButton: (() -> Void)?,
+    didSelectSecondaryButton: (() -> Void)?,
+    didSelectURL: @escaping (URL) -> Void
+) -> (footerView: UIView?, primaryButton: StripeUICore.Button?) {
+    guard let footer else {
+        return (nil, nil)
+    }
+    let primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
+    if let primaryCta = footer.primaryCta, let didSelectPrimaryButton {
+        primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
+            title: primaryCta.label,
+            accessibilityIdentifier: "generic_info_primary_button",
+            action: didSelectPrimaryButton
+        )
+    } else {
+        primaryButtonConfiguration = nil
+    }
+    let secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
+    if let secondaryCta = footer.secondaryCta, let didSelectSecondaryButton {
+        secondaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
+            title: secondaryCta.label,
+            accessibilityIdentifier: "generic_info_secondary_button",
+            action: didSelectSecondaryButton
+        )
+    } else {
+        secondaryButtonConfiguration = nil
+    }
+    let footerView = PaneLayoutView.createFooterView(
+        primaryButtonConfiguration: primaryButtonConfiguration,
+        secondaryButtonConfiguration: secondaryButtonConfiguration,
+        topText: footer.disclaimer,
+        theme: theme,
+        bottomText: footer.belowCta,
+        didSelectURL: didSelectURL
+    )
+    return (footerView.footerView, footerView.primaryButton)
 }
 
 #if DEBUG

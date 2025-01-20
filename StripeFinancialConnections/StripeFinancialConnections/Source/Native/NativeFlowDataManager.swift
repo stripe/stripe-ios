@@ -15,6 +15,7 @@ protocol NativeFlowDataManager: AnyObject {
     var merchantLogo: [String]? { get }
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent? { get }
+    var streamlinedConsentPaneModel: FinancialConnectionsStreamlinedConsent? { get }
     var accountPickerPane: FinancialConnectionsAccountPickerPane? { get }
     var apiClient: any FinancialConnectionsAPI { get }
     var clientSecret: String { get }
@@ -81,6 +82,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     let configuration: FinancialConnectionsSheet.Configuration
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent?
+    let streamlinedConsentPaneModel: FinancialConnectionsStreamlinedConsent?
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
     var apiClient: any FinancialConnectionsAPI
     let clientSecret: String
@@ -119,6 +121,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent?,
+        streamlinedConsentPaneModel: FinancialConnectionsStreamlinedConsent?,
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
@@ -130,6 +133,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.visualUpdate = visualUpdate
         self.returnURL = returnURL
         self.consentPaneModel = consentPaneModel
+        self.streamlinedConsentPaneModel = streamlinedConsentPaneModel
         self.accountPickerPane = accountPickerPane
         self.apiClient = apiClient
         self.clientSecret = clientSecret

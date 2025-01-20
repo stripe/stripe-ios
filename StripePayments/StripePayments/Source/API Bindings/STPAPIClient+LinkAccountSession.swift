@@ -81,6 +81,9 @@ public extension STPAPIClient {
         parameters["currency"] = currency
         parameters["on_behalf_of"] = onBehalfOf
         
+        // TODO: Remove testing code
+        parameters["initial_institution"] = "bcinst_Jg18xEfPHevfHP"
+        
         let hostedSurface = parameters["hosted_surface"]
         if hostedSurface != nil {
             parameters["link_mode"] = linkMode?.rawValue ?? "LINK_DISABLED"

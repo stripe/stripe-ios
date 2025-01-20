@@ -136,7 +136,9 @@ extension HostViewController {
                 )
 
                 switch result {
-                case .success(let synchronizePayload):
+                case .success(var synchronizePayload):
+                    // TODO: Remove testing code
+                    synchronizePayload.manifest.nextPane = .streamlinedConsent
                     self.lastError = nil
                     self.delegate?.hostViewController(self, didFetch: synchronizePayload)
                 case .failure(let error):

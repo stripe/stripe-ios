@@ -32,6 +32,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case networkingLinkVerification = "networking_link_verification"
         case networkingSaveToLinkVerification = "networking_save_to_link_verification"
         case partnerAuth = "partner_auth"
+        case streamlinedConsent = "streamlined_consent"
         case success = "success"
         case unexpectedError = "unexpected_error"
         case unparsable
@@ -102,7 +103,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let livemode: Bool
     let manualEntryMode: ManualEntryMode
     let manualEntryUsesMicrodeposits: Bool
-    let nextPane: NextPane
+    var nextPane: NextPane
     let paymentMethodType: FinancialConnectionsPaymentMethodType?
     let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     let product: String
