@@ -54,7 +54,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     func synchronize() -> Future<FinancialConnectionsNetworkingLinkSignup> {
         return apiClient.synchronize(
             clientSecret: clientSecret,
-            returnURL: returnURL
+            returnURL: returnURL,
+            initialSynchronize: false
         )
         .chained { synchronize in
             if let networkingLinkSignup = synchronize.text?.networkingLinkSignupPane {
@@ -71,7 +72,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
             clientSecret: clientSecret,
             sessionId: manifest.id,
             emailSource: manuallyEntered ? .userAction : .customerObject,
-            useMobileEndpoints: manifest.verified
+            useMobileEndpoints: manifest.verified,
+            pane: .networkingLinkSignupPane
         )
     }
 
@@ -90,7 +92,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
                 amount: nil,
                 currency: nil,
                 incentiveEligibilitySession: nil,
-                useMobileEndpoints: manifest.verified
+                useMobileEndpoints: manifest.verified,
+                pane: .networkingLinkSignupPane
             ).chained { [weak self] response -> Future<FinancialConnectionsAPI.SaveAccountsToNetworkAndLinkResponse> in
                 guard let self else {
                     return Promise(error: FinancialConnectionsSheetError.unknown(
@@ -129,6 +132,9 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     // Marks the assertion as completed and logs possible errors during verified flows.
     func completeAssertionIfNeeded(possibleError: Error?) {
         guard manifest.verified else { return }
-        apiClient.completeAssertion(possibleError: possibleError)
+        apiClient.completeAssertion(
+            possibleError: possibleError,
+            pane: .networkingLinkSignupPane
+        )
     }
 }

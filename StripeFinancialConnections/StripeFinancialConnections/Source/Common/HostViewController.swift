@@ -112,7 +112,8 @@ extension HostViewController {
         apiClient
             .synchronize(
                 clientSecret: clientSecret,
-                returnURL: returnURL
+                returnURL: returnURL,
+                initialSynchronize: true
             )
             .observe { [weak self] result in
                 guard let self = self else { return }

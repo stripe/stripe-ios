@@ -110,7 +110,7 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
         ]
         let apiClient = FinancialConnectionsAPIClient(apiClient: mockApiClient)
         apiClient
-            .applyAttestationParameters(to: baseParameters)
+            .applyAttestationParameters(to: baseParameters, pane: .consent)
             .observe { result in
                 switch result {
                 case .success(let updatedParameters):
