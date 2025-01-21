@@ -115,6 +115,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
             button.titleLabel?.font = font
             button.titleLabel?.adjustsFontForContentSizeCategory = true
         }
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(buttonTouchDown(_:)), for: .touchDown)
         button.addTarget(self, action: #selector(buttonTouchUp(_:)), for: [.touchUpInside, .touchUpOutside])
         button.addTarget(self, action: #selector(removePaymentMethod), for: .touchUpInside)
@@ -195,6 +196,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
         isModalInPresentation = true
         self.view.backgroundColor = viewModel.appearance.colors.background
         view.addAndPinSubview(formStackView, insets: PaymentSheetUI.defaultSheetMargins)
+        // taken from ConfirmButton intrinsicContentSize
+        let minimumLabelHeight: CGFloat = 24
+        let minimumButtonHeight: CGFloat = 44
+        NSLayoutConstraint.activate([
+            removeButton.heightAnchor.constraint(equalToConstant: max(minimumLabelHeight + removeButton.directionalLayoutMargins.top + removeButton.directionalLayoutMargins.bottom, minimumButtonHeight))
+        ])
     }
 
     override func viewDidAppear(_ animated: Bool) {
