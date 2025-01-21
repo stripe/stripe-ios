@@ -382,8 +382,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             events,
             ["mc_embedded_paymentoption_savedpm_select",
-             "mc_carousel_payment_method_tapped", "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
-             "mc_carousel_payment_method_tapped", "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
+             "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
+             "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
             ]
         )
     }
