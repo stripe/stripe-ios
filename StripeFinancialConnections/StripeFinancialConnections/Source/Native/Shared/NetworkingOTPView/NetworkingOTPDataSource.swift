@@ -28,9 +28,16 @@ protocol NetworkingOTPDataSource: AnyObject {
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
 
     let otpType: String
+    let pane: FinancialConnectionsSessionManifest.NextPane
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     private let emailAddress: String
     private let customEmailType: String?
     private let connectionsMerchantName: String?
+    private let apiClient: any FinancialConnectionsAPI
+    private let manifest: FinancialConnectionsSessionManifest
+    private let clientSecret: String
+    weak var delegate: NetworkingOTPDataSourceDelegate?
+
     private var consumerSession: ConsumerSessionData? {
         didSet {
             if let consumerSession = consumerSession {
@@ -38,14 +45,14 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             }
         }
     }
-    let pane: FinancialConnectionsSessionManifest.NextPane
-    private let apiClient: any FinancialConnectionsAPI
-    private let manifest: FinancialConnectionsSessionManifest
-    private let clientSecret: String
-    let analyticsClient: FinancialConnectionsAnalyticsClient
-    let isTestMode: Bool
-    let theme: FinancialConnectionsTheme
-    weak var delegate: NetworkingOTPDataSourceDelegate?
+
+    var isTestMode: Bool {
+        manifest.isTestMode
+    }
+
+    var theme: FinancialConnectionsTheme {
+        manifest.theme
+    }
 
     init(
         otpType: String,
@@ -69,8 +76,6 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-        self.isTestMode = manifest.isTestMode
-        self.theme = manifest.theme
     }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
