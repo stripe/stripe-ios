@@ -98,10 +98,6 @@
 
 "Enter address manually" = "주소 직접 입력";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Link를 기본값으로 결제하려면 %@에 전송된 코드를 입력해 주십시오.";
-
-"Enter your verification code" = "확인 코드 입력";
-
 "FPX Bank" = "FPX 은행";
 
 "For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Link 가입";
-
 "Log out of Link" = "Link 로그아웃";
 
 "Manage SEPA debit" = "SEPA 자동 이체 관리";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "미국 은행 계좌 관리";
 
 "Manage card" = "카드 관리";
+
+"Manage cards" = "카드 관리";
 
 "Manage payment method" = "결제 방식 관리";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "저장함";
 
-"Secure 1⁠-⁠click checkout" = "보안 원클릭 체크아웃";
-
 "Select card" = "카드 선택";
 
 "Select payment method" = "결제 방식 선택";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
 
 "Show menu" = "메뉴 표시";
-
-"Sign in to your Link account" = "Link 계정에 로그인";
 
 "Simple, secure one-click payments" = "간단하고 안전한 원클릭 결제";
 

@@ -98,10 +98,6 @@
 
 "Enter address manually" = "住所を手動で入力";
 
-"Enter the code sent to %@ to use Link to pay by default." = "デフォルトで Link を使用して支払うには %@ に送信されたコードを入力してください。";
-
-"Enter your verification code" = "確認コードを入力してください";
-
 "FPX Bank" = "FPX 銀行";
 
 "For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Link に申し込む";
-
 "Log out of Link" = "Link からログアウト";
 
 "Manage SEPA debit" = "SEPA デビットの管理";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "アメリカの銀行口座の管理";
 
 "Manage card" = "カードの管理";
+
+"Manage cards" = "カードを管理する";
 
 "Manage payment method" = "支払い方法の管理";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "保存済み";
 
-"Secure 1⁠-⁠click checkout" = "安全なワンクリックでの購入";
-
 "Select card" = "カードを選択する";
 
 "Select payment method" = "決済手段を選択する";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "%@ への配送には対応していません。";
 
 "Show menu" = "メニューを表示";
-
-"Sign in to your Link account" = "Link アカウントにサインイン";
 
 "Simple, secure one-click payments" = "シンプルで安全なワンクリック決済";
 

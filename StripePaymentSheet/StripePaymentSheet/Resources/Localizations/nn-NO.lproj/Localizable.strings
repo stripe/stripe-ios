@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Legg inn koden som blei send til %@ Link for å betale med standard.";
-
-"Enter your verification code" = "Legg inn verifiseringskoden din";
-
 "FPX Bank" = "FPX-bank";
 
 "For security, please re-enter your card’s security code." = "For sikkerhet, vær venleg å leggje inn sikkerhetskoden til kortet ditt.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Kople på lenka";
-
 "Log out of Link" = "Logg ut av Link";
 
 "Manage SEPA debit" = "Handsam SEPA debet";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Handsam bankkonto i USA";
 
 "Manage card" = "Handsam kort";
+
+"Manage cards" = "Handsam kort";
 
 "Manage payment method" = "Handsam betalingsmetode";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Lagra";
 
-"Secure 1⁠-⁠click checkout" = "Sikker 1-klikk betaling";
-
 "Select card" = "Vel kort";
 
 "Select payment method" = "Vel betalingsmetode";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Levering til %@ er ikkje støtta.";
 
 "Show menu" = "Vis meny";
-
-"Sign in to your Link account" = "Logg inn på Link-kontoen din";
 
 "Simple, secure one-click payments" = "Enkle, trygge betalingar med eitt klikk";
 

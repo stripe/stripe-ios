@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Ръчно въвеждане на адрес";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Въведете кода, изпратен до %@, за да използвате Link за плащане по подразбиране.";
-
-"Enter your verification code" = "Въведете Вашия код за верификация";
-
 "FPX Bank" = "Банка FPX";
 
 "For security, please re-enter your card’s security code." = "От съображения за сигурност, моля, въведете отново защитния код на Вашата банкова карта.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Присъединяване към Link";
-
 "Log out of Link" = "Излизане от Link";
 
 "Manage SEPA debit" = "Управление на SEPA дебит";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Управление на банкова сметка в САЩ";
 
 "Manage card" = "Управление на карта";
+
+"Manage cards" = "Управление на карти";
 
 "Manage payment method" = "Управляване на начина на плащане";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Запазено";
 
-"Secure 1⁠-⁠click checkout" = "Защитено финализиране с едно щракване";
-
 "Select card" = "Избор на карта";
 
 "Select payment method" = "Избор на начин на плащане";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Доставки до %@ не се поддържат.";
 
 "Show menu" = "Показване на менюто";
-
-"Sign in to your Link account" = "Влезте в своя акаунт в Link";
 
 "Simple, secure one-click payments" = "Лесни и сигурни плащания с едно щракане";
 

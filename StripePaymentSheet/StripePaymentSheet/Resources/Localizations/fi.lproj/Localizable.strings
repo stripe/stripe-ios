@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Syötä numeroon %@ lähetetty koodi käyttääksesi Link-maksua oletuksena.";
-
-"Enter your verification code" = "Syötä vahvistuskoodi";
-
 "FPX Bank" = "FPX-pankki";
 
 "For security, please re-enter your card’s security code." = "Turvallisuussyistä sinun on annettava korttisi turvakoodi uudelleen.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Liity Link-palveluun";
-
 "Log out of Link" = "Kirjaudu ulos Link-palvelusta";
 
 "Manage SEPA debit" = "Hallinnoi SEPA-pankkiveloitusta";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Hallinnoi yhdysvaltalaista pankkitiliä";
 
 "Manage card" = "Hallinnoi korttia";
+
+"Manage cards" = "Hallinnoi kortteja";
 
 "Manage payment method" = "Hallinnoi maksutapaa";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Tallennettu";
 
-"Secure 1⁠-⁠click checkout" = "Turvallinen kerran napsautettava maksaminen";
-
 "Select card" = "Valitse kortti";
 
 "Select payment method" = "Valitse maksutapa";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
 
 "Show menu" = "Näytä valikko";
-
-"Sign in to your Link account" = "Kirjaudu sisään Link-tiliisi";
 
 "Simple, secure one-click payments" = "Yksinkertaiset turvalliset kerran napsautettavat maksut";
 

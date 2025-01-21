@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Nhập mã được gửi tới %@ để dùng Link làm phương thức thanh toán mặc định.";
-
-"Enter your verification code" = "Nhập mã xác minh của bạn";
-
 "FPX Bank" = "Ngân hàng FPX";
 
 "For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Tham gia Link";
-
 "Log out of Link" = "Đăng xuất khỏi Link";
 
 "Manage SEPA debit" = "Quản lý Ghi nợ SEPA";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Quản lý tài khoản ngân hàng Hoa Kỳ";
 
 "Manage card" = "Quản lý thẻ";
+
+"Manage cards" = "Quản lý thẻ";
 
 "Manage payment method" = "Quản lý phương thức thanh toán";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Đã lưu";
 
-"Secure 1⁠-⁠click checkout" = "Thanh toán bảo mật bằng một cú nhấp chuột";
-
 "Select card" = "Chọn thẻ";
 
 "Select payment method" = "Chọn phương thức thanh toán";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
 
 "Show menu" = "Hiển thị trình đơn";
-
-"Sign in to your Link account" = "Đăng nhập vào tài khoản Link của bạn";
 
 "Simple, secure one-click payments" = "Thanh toán đơn giản, an toàn chỉ bằng một cú nhấp chuột";
 

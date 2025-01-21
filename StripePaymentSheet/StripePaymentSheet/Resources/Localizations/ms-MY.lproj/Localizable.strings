@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Masukkan kod yang dihantar ke %@ untuk menggunakan Link sebagai kaedah pembayaran tetapan asal.";
-
-"Enter your verification code" = "Masukkan kod penentusahan anda";
-
 "FPX Bank" = "Bank untuk FPX";
 
 "For security, please re-enter your card’s security code." = "Bagi tujuan keselamatan, sila masukkan semula kod keselamatan kad anda.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Sertai Link";
-
 "Log out of Link" = "Log keluar dari Link";
 
 "Manage SEPA debit" = "Urus debit SEPA";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Urus akaun bank AS";
 
 "Manage card" = "Urus kad";
+
+"Manage cards" = "Urus kad";
 
 "Manage payment method" = "Urus kaedah pembayaran";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Disimpan";
 
-"Secure 1⁠-⁠click checkout" = "Proses bayar dan keluar yang selamat dengan satu klik";
-
 "Select card" = "Pilih kad";
 
 "Select payment method" = "Pilih kaedah pembayaran";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Penghantaran ke %@ tidak disokong.";
 
 "Show menu" = "Paparkan menu";
-
-"Sign in to your Link account" = "Daftar masuk ke akaun Link anda";
 
 "Simple, secure one-click payments" = "Pembayaran dengan sekali klik yang mudah dan selamat";
 

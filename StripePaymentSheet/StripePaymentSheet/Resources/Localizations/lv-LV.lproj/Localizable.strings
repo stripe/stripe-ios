@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Ievadiet kodu, kas nosūtīts %@, lai izmantotu Link maksāšanai pēc noklusējuma.";
-
-"Enter your verification code" = "Ievadiet savu verifikācijas kodu";
-
 "FPX Bank" = "FPX banka";
 
 "For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Pievienoties Link";
-
 "Log out of Link" = "Izrakstīties no Link";
 
 "Manage SEPA debit" = "Pārvaldīt SEPA debetu";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Pārvaldīt ASV bankas kontu";
 
 "Manage card" = "Pārvaldīt karti";
+
+"Manage cards" = "Pārvaldīt kartes";
 
 "Manage payment method" = "Pārvaldīt maksājuma veidu";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Saglabāts";
 
-"Secure 1⁠-⁠click checkout" = "Droša 1 klikšķa norēķināšanās";
-
 "Select card" = "Atlasīt karti";
 
 "Select payment method" = "Atlasīt maksājuma veidu";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Piegāde uz %@ netiek atbalstīts.";
 
 "Show menu" = "Rādīt izvēlni";
-
-"Sign in to your Link account" = "Pierakstīties Link kontā";
 
 "Simple, secure one-click payments" = "Vienkārši, droši 1 klikšķa maksājumi";
 

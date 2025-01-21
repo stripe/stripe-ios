@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża Link u tħallas bil-metodu tal-pagament standard.";
-
-"Enter your verification code" = "Daħħal il-kodiċi ta' verifika tiegħek";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Għal raġunijiet ta' sigurtà, jekk jogħġbok erġa' daħħal il-kodiċi tas-sigurtà tal-karta tiegħek.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Ingħaqad ma' Link";
-
 "Log out of Link" = "Oħroġ minn Link";
 
 "Manage SEPA debit" = "Ħu ħsieb id-debitu SEPA";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Ħu ħsieb il-kont tal-bank tal-Istati Uniti tal-Amerka";
 
 "Manage card" = "Ħu ħsieb il-karta";
+
+"Manage cards" = "Ħu ħsieb il-karti";
 
 "Manage payment method" = "Ħu ħsieb il-metodu tal-pagament";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Merfugħ";
 
-"Secure 1⁠-⁠click checkout" = "Ħlas sigur b'mossa waħda";
-
 "Select card" = "Agħżel karta";
 
 "Select payment method" = "Agħżel metodu tal-pagament";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Ma nistgħux nibagħtu l-affarijiet lejn: %@";
 
 "Show menu" = "Uri l-menù";
-
-"Sign in to your Link account" = "Idħol fil-kont Link tiegħek";
 
 "Simple, secure one-click payments" = "Pagamenti sempliċi u siguri b'mossa waħda";
 

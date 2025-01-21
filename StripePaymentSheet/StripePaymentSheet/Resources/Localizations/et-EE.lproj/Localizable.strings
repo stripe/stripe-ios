@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Vaikimisi Linkiga maksmiseks sisestage numbrile %@ saadetud kood.";
-
-"Enter your verification code" = "Sisestage oma kinnituskood";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Turvalisuse huvides sisestage palun uuesti oma kaardi turvakood.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Liitu Linkiga";
-
 "Log out of Link" = "Logi Link välja";
 
 "Manage SEPA debit" = "SEPA deebeti haldamine";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Ameerika Ühendriikide pangakonto haldamine";
 
 "Manage card" = "Halda kaarti";
+
+"Manage cards" = "Kaartide haldamine";
 
 "Manage payment method" = "Makseviisi haldamine";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Salvestatud";
 
-"Secure 1⁠-⁠click checkout" = "Turvaline ühe klõpsuga makse lõpuleviimine";
-
 "Select card" = "Vali kaart";
 
 "Select payment method" = "Vali makseviis";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
 
 "Show menu" = "Kuva menüü";
-
-"Sign in to your Link account" = "Logi oma Linki kontole sisse";
 
 "Simple, secure one-click payments" = "Lihtsad turvalised maksed ühe hiireklõpsuga";
 

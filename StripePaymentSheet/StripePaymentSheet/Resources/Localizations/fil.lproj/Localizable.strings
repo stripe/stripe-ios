@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Manwal na ilagay ang address";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Ilagay ang code na ipinadala sa %@ para gamitin ang Link sa pagbabayad bilang default.";
-
-"Enter your verification code" = "Ilagay ang iyong verification code.";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Para sa seguridad, pakilagay muli ang security code ng iyong kard.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Sumali sa Link";
-
 "Log out of Link" = "Mag-log out sa Link";
 
 "Manage SEPA debit" = "Pangasiwaan ang SEPA debit";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Pangasiwaan ang account sa bangko sa US";
 
 "Manage card" = "Pangasiwaan ang kard";
+
+"Manage cards" = "Pangasiwaan ang mga kard";
 
 "Manage payment method" = "Pangasiwaan ang paraan ng pagbabayad";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Nai-save";
 
-"Secure 1⁠-⁠click checkout" = "Tiyakin ang 1-click na pag-checkout";
-
 "Select card" = "Pumili ng kard";
 
 "Select payment method" = "Pumili ng paraan ng pagbabayad";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Hindi sinusuportahan ang pagpapadala sa %@.";
 
 "Show menu" = "Ipakita ang menu";
-
-"Sign in to your Link account" = "Mag-sign in sa iyong Link account";
 
 "Simple, secure one-click payments" = "Simple, ligtas na isang-click na mga pagbabayad";
 
