@@ -44,6 +44,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
     var delegateDidUpdatePaymentOptionCalled = false
     var delegateDidUpdateHeightCalled = false
+    var delegateWillPresentCalled = false
 
     // MARK: - `update` tests
 
@@ -298,7 +299,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
         // The delegate should have been notified
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
-        XCTAssertNotNil(sut.paymentOption)
+        XCTAssertEqual(sut.paymentOption?.label, "Cash App Pay")
 
         // Reset flags
         delegateDidUpdatePaymentOptionCalled = false
@@ -309,6 +310,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // The paymentOption should now be nil after reset
         XCTAssertNil(sut.paymentOption)
+        XCTAssertNil(sut.selectedFormViewController)
 
         // The delegate should have been notified again after reset
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
@@ -455,6 +457,10 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
 
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
         delegateDidUpdatePaymentOptionCalled = true
+    }
+
+    func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
+        delegateWillPresentCalled = true
     }
 }
 
