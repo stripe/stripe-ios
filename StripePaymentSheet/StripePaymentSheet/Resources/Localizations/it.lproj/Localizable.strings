@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Inserisci manualmente l'indirizzo";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Inserisci il codice inviato al numero %@ per pagare sempre con Link.";
-
-"Enter your verification code" = "Inserisci il codice di verifica";
-
 "FPX Bank" = "Banca FBX";
 
 "For security, please re-enter your card’s security code." = "Per motivi di sicurezza inserisci di nuovo il codice di sicurezza della tua carta.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Registrati su Link";
-
 "Log out of Link" = "Esci da Link";
 
 "Manage SEPA debit" = "Gestisci addebito SEPA";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Gestisci conto bancario Stati Uniti";
 
 "Manage card" = "Gestisci carta";
+
+"Manage cards" = "Gestire le carte";
 
 "Manage payment method" = "Gestisci modalità di pagamento";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Salvata";
 
-"Secure 1⁠-⁠click checkout" = "Pagamento sicuro con un clic";
-
 "Select card" = "Seleziona la carta";
 
 "Select payment method" = "Seleziona la modalità di pagamento";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "La spedizione in %@ non è supportata.";
 
 "Show menu" = "Mostra menu";
-
-"Sign in to your Link account" = "Accedi al tuo account Link";
 
 "Simple, secure one-click payments" = "Pagamenti semplici e sicuri con un solo clic";
 

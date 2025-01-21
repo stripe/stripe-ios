@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Εισαγάγετε τον κωδικό που εστάλη στο %@ για να χρησιμοποιήσετε το Link ως προεπιλεγμένη μέθοδο πληρωμής.";
-
-"Enter your verification code" = "Εισαγάγετε τον κωδικό επαλήθευσης";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Για λόγους ασφάλειας, εισαγάγετε πάλι τον κωδικό ασφαλείας της κάρτας σας.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Σύνδεση στο Link";
-
 "Log out of Link" = "Αποσύνδεση από το Link";
 
 "Manage SEPA debit" = "Διαχείριση χρέωσης SEPA";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Διαχείριση τραπεζικού λογαριασμού στις Ηνωμένες Πολιτείες";
 
 "Manage card" = "Διαχείριση κάρτας";
+
+"Manage cards" = "Διαχείριση καρτών";
 
 "Manage payment method" = "Διαχείριση μεθόδου πληρωμής";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Αποθηκεύτηκε";
 
-"Secure 1⁠-⁠click checkout" = "Ασφαλής ολοκλήρωση αγοράς με 1 κλικ";
-
 "Select card" = "Επιλέξτε κάρτα";
 
 "Select payment method" = "Επιλέξτε μέθοδο πληρωμής";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Η αποστολή στη χώρα %@ δεν υποστηρίζεται.";
 
 "Show menu" = "Εμφάνιση μενού";
-
-"Sign in to your Link account" = "Σύνδεση στον λογαριασμό σας Link";
 
 "Simple, secure one-click payments" = "Απλές και ασφαλείς πληρωμές με ένα κλικ";
 

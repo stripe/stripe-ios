@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Cím megadása kézzel";
 
-"Enter the code sent to %@ to use Link to pay by default." = "A Link alapértelmezett fizetési módként történő használatához adja meg a(z) %@ számra küldött kódot";
-
-"Enter your verification code" = "Adja meg az ellenőrző kódot";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Biztonsági okból adja meg újra kártyája biztonsági kódját.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Csatlakozás a Linkhez";
-
 "Log out of Link" = "Kijelentkezés a Link";
 
 "Manage SEPA debit" = "SEPA beszedés kezelése";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "USA bankszámla kezelése";
 
 "Manage card" = "Kártya kezelése";
+
+"Manage cards" = "Kártyák kezelése";
 
 "Manage payment method" = "Fizetési mód kezelése";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Mentett";
 
-"Secure 1⁠-⁠click checkout" = "Biztonságos egykattintásos fizetés";
-
 "Select card" = "Kártya kiválasztása";
 
 "Select payment method" = "Fizetési mód választása";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
 
 "Show menu" = "Menü megjelenítése";
-
-"Sign in to your Link account" = "Bejelentkezés a Link-fiókba";
 
 "Simple, secure one-click payments" = "Egyszerű, biztonságos, egykattintásos fizetés";
 

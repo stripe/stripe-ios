@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Zadať adresu manuálne";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Zadajte kód odoslaný na telefónne číslo %@ a používajte službu Link ako predvolenú platobnú službu.";
-
-"Enter your verification code" = "Zadajte overovací kód";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Z dôvodu bezpečnosti znovu zadajte bezpečnostný kód vašej karty.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Pripojiť sa do služby Link";
-
 "Log out of Link" = "Odhlásiť sa zo služby Link";
 
 "Manage SEPA debit" = "Spravovať SEPA inkaso";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Spravovať americký bankový účet";
 
 "Manage card" = "Spravovať kartu";
+
+"Manage cards" = "Spravovať karty";
 
 "Manage payment method" = "Spravovať spôsob platby";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Uložené";
 
-"Secure 1⁠-⁠click checkout" = "Bezpečná platba jedným kliknutím";
-
 "Select card" = "Vybrať kartu";
 
 "Select payment method" = "Vybrať spôsob platby";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Dodanie na/do %@ sa nepodporuje.";
 
 "Show menu" = "Zobraziť ponuku";
-
-"Sign in to your Link account" = "Prihláste sa do svojho účtu Link";
 
 "Simple, secure one-click payments" = "Jednoduché, bezpečné platby jedným kliknutím";
 

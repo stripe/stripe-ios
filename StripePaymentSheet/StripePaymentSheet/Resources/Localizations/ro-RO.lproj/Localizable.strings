@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Introduceți adresa manual";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Introduceți codul trimis la %@ pentru a utiliza Link ca metodă de plată implicită";
-
-"Enter your verification code" = "Introduceți codul de verificare";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Din motive de securitate, vă rugăm să introduceți din nou codul de securitate al cardului dvs.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Înscrieți-vă în Link";
-
 "Log out of Link" = "Deconectare de la Link";
 
 "Manage SEPA debit" = "Gestionare debit SEPA";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Gestionare cont bancar din SUA";
 
 "Manage card" = "Gestionare card";
+
+"Manage cards" = "Gestionare carduri";
 
 "Manage payment method" = "Gestionare metodă de plată";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Salvare efectuată";
 
-"Secure 1⁠-⁠click checkout" = "Finalizare securizată a comenzii cu un singur clic";
-
 "Select card" = "Selectare card";
 
 "Select payment method" = "Selectare metodă de plată";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Expedierea către %@ nu este acceptată.";
 
 "Show menu" = "Afișare meniu";
-
-"Sign in to your Link account" = "Conectați-vă la contul dvs. Link";
 
 "Simple, secure one-click payments" = "Plăți simple și securizate cu un singur clic";
 

@@ -1,4 +1,4 @@
-## X.Y.Z X-Y-Z
+## 24.4.1 2025-01-21
 ### ApplePay
 * [Added] Added a `dismiss` method to `STPApplePayContext`.
 

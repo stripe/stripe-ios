@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Adres handmatig invoeren";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Voer de code in die is verstuurd naar %@ om standaard met Link te betalen.";
-
-"Enter your verification code" = "Voer je verificatiecode in.";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Voer uit veiligheidsoverwegingen de beveiligingscode van je betaalkaart opnieuw in.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Aanmelden bij Link";
-
 "Log out of Link" = "Afmelden bij Link";
 
 "Manage SEPA debit" = "SEPA-incasso beheren";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Amerikaanse bankrekening beheren";
 
 "Manage card" = "Betaalkaart beheren";
+
+"Manage cards" = "Betaalkaarten beheren";
 
 "Manage payment method" = "Betaalmethode beheren";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Opgeslagen";
 
-"Secure 1⁠-⁠click checkout" = "Veilig afrekenen in één klik";
-
 "Select card" = "Betaalkaart selecteren";
 
 "Select payment method" = "Betaalmethode selecteren";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Verzending naar %@ wordt niet ondersteund.";
 
 "Show menu" = "Menu weergeven";
-
-"Sign in to your Link account" = "Aanmelden bij je Link-account";
 
 "Simple, secure one-click payments" = "Betaal eenvoudig en veilig met één klik";
 

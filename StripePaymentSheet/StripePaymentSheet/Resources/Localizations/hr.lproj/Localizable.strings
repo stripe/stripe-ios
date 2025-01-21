@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Unesite adresu ručno";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Unesite kod poslan na %@ kako biste koristili Link za plaćanje kao zadanu opciju.";
-
-"Enter your verification code" = "Unesite verifikacijski kod";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Radi sigurnosti, ponovno unesite sigurnosni kod vaše kartice.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Pridružite se na Link";
-
 "Log out of Link" = "Odjavite se s Linka";
 
 "Manage SEPA debit" = "Upravljajte SEPA terećenjem";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Upravljajte bankovnim računom u SAD-u";
 
 "Manage card" = "Upravljajte karticom";
+
+"Manage cards" = "Upravljajte karticama";
 
 "Manage payment method" = "Upravljajte načinom plaćanja";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Spremljeno";
 
-"Secure 1⁠-⁠click checkout" = "Sigurno plaćanje pomoću 1 klika";
-
 "Select card" = "Odaberite karticu";
 
 "Select payment method" = "Odaberite način plaćanja";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Dostava do %@ nije podržana.";
 
 "Show menu" = "Prikaži izbornik";
-
-"Sign in to your Link account" = "Prijavite se na svoj Link račun";
 
 "Simple, secure one-click payments" = "Jednostavna sigurna plaćanja jednim klikom";
 

@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Įveskite kodą, išsiųstą numeriu %@, kad pagal numatytuosius nustatymus galėtumėte mokėti naudodami „Link“.";
-
-"Enter your verification code" = "Įveskite patvirtinimo kodą";
-
 "FPX Bank" = "FPX bankas";
 
 "For security, please re-enter your card’s security code." = "Saugumo sumetimais dar kartą įveskite kortelės saugumo kodą.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Prisijungti prie „Link“";
-
 "Log out of Link" = "Atsijungti nuo „Link“";
 
 "Manage SEPA debit" = "Tvarkyti SEPA debetą";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Tvarkyti JAV banko sąskaitą";
 
 "Manage card" = "Tvarkyti kortelę";
+
+"Manage cards" = "Tvarkyti korteles";
 
 "Manage payment method" = "Tvarkyti mokėjimo būdą";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Įrašyta";
 
-"Secure 1⁠-⁠click checkout" = "Saugus atsiskaitymas vienu spustelėjimu";
-
 "Select card" = "Pasirinkti kortelę";
 
 "Select payment method" = "Pasirinkti mokėjimo būdą";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
 
 "Show menu" = "Rodyti meniu";
-
-"Sign in to your Link account" = "Prisijunkite prie savo „Link“ paskyros";
 
 "Simple, secure one-click payments" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
 

@@ -98,10 +98,6 @@
 
 "Enter address manually" = "Indtast adresse manuelt";
 
-"Enter the code sent to %@ to use Link to pay by default." = "Indtast koden, der blev sendt til %@, for at bruge Link som standardbetaling.";
-
-"Enter your verification code" = "Indtast din bekræftelseskode";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "Af hensyn til sikkerheden skal du indtaste dit korts sikkerhedskode igen.";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "Tilmeld Link";
-
 "Log out of Link" = "Log ud af Link";
 
 "Manage SEPA debit" = "Administrer SEPA-debet";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "Administrer amerikansk bankkonto";
 
 "Manage card" = "Administrer kort";
+
+"Manage cards" = "Administrer kort";
 
 "Manage payment method" = "Administrer betalingsmetode";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "Gemt";
 
-"Secure 1⁠-⁠click checkout" = "Sikker 1-kliks-betaling";
-
 "Select card" = "Vælg kort";
 
 "Select payment method" = "Vælg betalingsmetode";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "Forsewndelse til %@ understøttes ikke.";
 
 "Show menu" = "Vis menu";
-
-"Sign in to your Link account" = "Log ind på din Link-konto";
 
 "Simple, secure one-click payments" = "Enkle og trygge betalinger med ét klik";
 

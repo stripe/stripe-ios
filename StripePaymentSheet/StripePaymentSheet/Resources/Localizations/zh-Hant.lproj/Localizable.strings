@@ -98,10 +98,6 @@
 
 "Enter address manually" = "手動輸入地址";
 
-"Enter the code sent to %@ to use Link to pay by default." = "輸入發送到 %@ 的驗證碼，以預設用 Link 支付。";
-
-"Enter your verification code" = "輸入您的驗證碼";
-
 "FPX Bank" = "FPX Bank";
 
 "For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您的金融卡的安全碼。";
@@ -114,8 +110,6 @@
 
 "IBAN" = "IBAN";
 
-"Join Link" = "加入 Link";
-
 "Log out of Link" = "退出 Link";
 
 "Manage SEPA debit" = "管理 SEPA 借記";
@@ -123,6 +117,8 @@
 "Manage US bank account" = "管理美國銀行帳戶";
 
 "Manage card" = "管理金融卡";
+
+"Manage cards" = "管理卡片";
 
 "Manage payment method" = "管理支付方式";
 
@@ -208,8 +204,6 @@
 
 "Saved" = "已保存";
 
-"Secure 1⁠-⁠click checkout" = "安全地一鍵結帳";
-
 "Select card" = "選擇金融卡";
 
 "Select payment method" = "選擇支付方式";
@@ -225,8 +219,6 @@
 "Shipping to %@ is not supported." = "不支援向 %@ 配送。";
 
 "Show menu" = "顯示選單";
-
-"Sign in to your Link account" = "登入您的 Link 帳戶";
 
 "Simple, secure one-click payments" = "簡單、安全地一鍵支付";
 
