@@ -6,26 +6,28 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 struct FinancialConnectionsAPIClientLogger {
     private var analyticsClient = FinancialConnectionsAnalyticsClient()
 
+    enum API: String {
+        case consumerSessionLookup = "consumer_session_lookup"
+        case linkSignUp = "link_sign_up"
+    }
+
     enum Event {
-        /// When checking if generating attestation is supported succeeds.
-        case attestationInitSucceeded
         /// When checking if generating attestation is supported does not succeed.
         case attestationInitFailed
         /// When an attestation token gets generated successfully.
-        case attestationRequestTokenSucceeded
+        case attestationRequestTokenSucceeded(API)
         /// When a token generation attempt fails client-side.
-        case attestationRequestTokenFailed
+        case attestationRequestTokenFailed(API, Error)
         /// When an attestation verdict fails backend side and we get an attestation related error.
-        case attestationVerdictFailed
+        case attestationVerdictFailed(API)
 
         var name: String {
             switch self {
-            case .attestationInitSucceeded:
-                return "attestation.init_succeeded"
             case .attestationInitFailed:
                 return "attestation.init_failed"
             case .attestationRequestTokenSucceeded:
@@ -49,8 +51,19 @@ struct FinancialConnectionsAPIClientLogger {
                     reason = "ios_os_version_unsupported"
                 }
                 return ["reason": reason]
-            default:
-                return [:]
+            case .attestationRequestTokenFailed(let api, let error):
+                var errorReason: String
+                if let attestationError = error as? StripeAttest.AttestationError {
+                    errorReason = attestationError.rawValue
+                } else {
+                    errorReason = "unknown"
+                }
+                return [
+                    "api": api.rawValue,
+                    "error_reason": errorReason,
+                ]
+            case .attestationRequestTokenSucceeded(let api), .attestationVerdictFailed(let api):
+                return ["api": api.rawValue]
             }
         }
     }

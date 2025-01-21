@@ -213,7 +213,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         .observe { [weak self] result in
             guard let self = self else { return }
-            self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+            self.dataSource.completeAssertionIfNeeded(
+                possibleError: result.error,
+                api: .linkSignUp
+            )
 
             switch result {
             case .success(let customSuccessPaneMessage):
@@ -298,7 +301,10 @@ extension NetworkingLinkSignupViewController: LinkSignupFormViewDelegate {
             )
             .observe { [weak self, weak bodyFormView] result in
                 guard let self = self else { return }
-                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+                self.dataSource.completeAssertionIfNeeded(
+                    possibleError: result.error,
+                    api: .consumerSessionLookup
+                )
 
                 switch result {
                 case .success(let response):

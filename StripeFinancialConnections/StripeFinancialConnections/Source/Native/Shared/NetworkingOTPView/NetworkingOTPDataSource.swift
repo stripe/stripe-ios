@@ -22,7 +22,10 @@ protocol NetworkingOTPDataSource: AnyObject {
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
-    func completeAssertionIfNeeded(possibleError: Error?)
+    func completeAssertionIfNeeded(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API
+    )
 }
 
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
@@ -124,9 +127,16 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     }
 
     // Marks the assertion as completed and logs possible errors during verified flows.
-    func completeAssertionIfNeeded(possibleError: Error?) {
+    func completeAssertionIfNeeded(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API
+    ) {
         guard manifest.verified else { return }
-        apiClient.completeAssertion(possibleError: possibleError, pane: pane)
+        apiClient.completeAssertion(
+            possibleError: possibleError,
+            api: api,
+            pane: pane
+        )
     }
 
 }

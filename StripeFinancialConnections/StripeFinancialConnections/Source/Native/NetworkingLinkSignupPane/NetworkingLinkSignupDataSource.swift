@@ -20,7 +20,10 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
         phoneNumber: String,
         countryCode: String
     ) -> Future<String?>
-    func completeAssertionIfNeeded(possibleError: Error?)
+    func completeAssertionIfNeeded(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API
+    )
 }
 
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
@@ -130,10 +133,14 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     }
 
     // Marks the assertion as completed and logs possible errors during verified flows.
-    func completeAssertionIfNeeded(possibleError: Error?) {
+    func completeAssertionIfNeeded(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API
+    ) {
         guard manifest.verified else { return }
         apiClient.completeAssertion(
             possibleError: possibleError,
+            api: api,
             pane: .networkingLinkSignupPane
         )
     }

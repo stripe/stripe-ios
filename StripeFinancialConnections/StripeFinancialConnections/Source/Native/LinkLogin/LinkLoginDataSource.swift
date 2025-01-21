@@ -23,7 +23,10 @@ protocol LinkLoginDataSource: AnyObject {
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
     ) -> Future<FinancialConnectionsSynchronize>
-    func completeAssertionIfNeeded(possibleError: Error?)
+    func completeAssertionIfNeeded(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API
+    )
 }
 
 final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
@@ -127,10 +130,14 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     }
 
     // Marks the assertion as completed and logs possible errors during verified flows.
-    func completeAssertionIfNeeded(possibleError: Error?) {
+    func completeAssertionIfNeeded(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API
+    ) {
         guard manifest.verified else { return }
         apiClient.completeAssertion(
             possibleError: possibleError,
+            api: api,
             pane: .linkLogin
         )
     }
