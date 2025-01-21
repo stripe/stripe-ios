@@ -43,9 +43,7 @@ import Combine
     // MARK: - Public APIs
 
     /// Creates an empty view model. Call `load` to initialize the `EmbeddedPaymentElementViewModel`
-    public init() {
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedSwiftUIProduct.self)
-    }
+    public init() {}
     
     /// An asynchronous failable initializer
     /// Loads the Customer's payment methods, their default payment method, etc.
@@ -161,6 +159,7 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
     /// - Parameter viewModel: The view model for this payment element view.
     public init(viewModel: EmbeddedPaymentElementViewModel) {
         self.viewModel = viewModel
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedSwiftUIProduct.self)
     }
     
     public var body: some View {
