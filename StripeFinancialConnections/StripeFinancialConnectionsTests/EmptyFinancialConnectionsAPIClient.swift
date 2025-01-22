@@ -18,6 +18,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func completeAssertion(
         possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {}
 

@@ -110,8 +110,11 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
         ]
         let apiClient = FinancialConnectionsAPIClient(apiClient: mockApiClient)
         apiClient
-            .assertAndApplyAttestationParameters(to: baseParameters, pane: .consent)
-            .observe { result in
+            .assertAndApplyAttestationParameters(
+                to: baseParameters,
+                api: .linkSignUp,
+                pane: .consent
+            ).observe { result in
                 switch result {
                 case .success(let updatedParameters):
                     XCTAssertNotNil(updatedParameters["base_parameter"])
