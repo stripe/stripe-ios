@@ -312,8 +312,7 @@ private extension URL {
         let result: Result<LinkBankPaymentMethod, Error> = STPAPIClient.decodeResponse(
             data: data,
             error: nil,
-            response: nil,
-            request: nil
+            response: nil
         )
 
         return try? result.get()
