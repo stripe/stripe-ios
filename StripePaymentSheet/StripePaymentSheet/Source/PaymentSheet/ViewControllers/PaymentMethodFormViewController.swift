@@ -243,11 +243,11 @@ extension PaymentMethodFormViewController {
         let intentId: ElementsSessionContext.IntentID? = {
             switch intent {
             case .paymentIntent(let paymentIntent):
-                return .payment(paymentIntent.stripeId)
+                return .payment(id: paymentIntent.stripeId, elementsSessionID: elementsSession.sessionID)
             case .setupIntent(let setupIntent):
-                return .setup(setupIntent.stripeID)
+                return .setup(id: setupIntent.stripeID, elementsSessionID: elementsSession.sessionID)
             case .deferredIntent:
-                return nil
+                return .deferred(id: elementsSession.sessionID)
             }
         }()
 

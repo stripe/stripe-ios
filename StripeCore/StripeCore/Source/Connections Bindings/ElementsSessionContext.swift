@@ -10,13 +10,20 @@ import Foundation
 /// Contains elements session context useful for the Financial Connections SDK.
 @_spi(STP) public struct ElementsSessionContext {
     @_spi(STP) @frozen public enum IntentID {
-        case payment(String)
-        case setup(String)
-        case deferred(String)
+        case payment(id: String, elementsSessionID: String)
+        case setup(id: String, elementsSessionID: String)
+        case deferred(id: String)
 
         @_spi(STP) public var id: String {
             switch self {
-            case let .payment(id), let .setup(id), let .deferred(id):
+            case let .payment(id, _), let .setup(id, _), let .deferred(id):
+                return id
+            }
+        }
+        
+        @_spi(STP) public var elementsSessionID: String {
+            switch self {
+            case let .payment(_, id), let .setup(_, id), let .deferred(id):
                 return id
             }
         }
