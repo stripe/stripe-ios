@@ -114,7 +114,7 @@ struct PaymentSheetTestPlayground: View {
                                     Button {
                                         playgroundController.customerSessionSettingsTapped()
                                     } label: {
-                                        Text("Settings")
+                                        Text("CSSettings")
                                             .font(.callout.smallCaps())
                                     }.buttonStyle(.bordered)
                                 }
