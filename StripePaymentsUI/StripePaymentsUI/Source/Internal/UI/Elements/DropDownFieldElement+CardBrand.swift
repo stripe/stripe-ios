@@ -14,6 +14,7 @@ import UIKit
 extension DropdownFieldElement {
 
     @_spi(STP) public static func makeCardBrandDropdown(cardBrands: Set<STPCardBrand> = Set<STPCardBrand>(),
+                                                        disallowedCardBrands: Set<STPCardBrand> = Set<STPCardBrand>(),
                                                         theme: ElementsAppearance = .default,
                                                         includePlaceholder: Bool = true,
                                                         maxWidth: CGFloat? = nil,
@@ -21,7 +22,7 @@ extension DropdownFieldElement {
                                                         didPresent: DropdownFieldElement.DidPresent? = nil,
                                                         didTapClose: DropdownFieldElement.DidTapClose? = nil) -> DropdownFieldElement {
         let dropDown = DropdownFieldElement(
-            items: items(from: cardBrands, theme: theme, includePlaceholder: includePlaceholder, maxWidth: maxWidth),
+            items: items(from: cardBrands, disallowedCardBrands: disallowedCardBrands, theme: theme, includePlaceholder: includePlaceholder, maxWidth: maxWidth),
             defaultIndex: 0,
             label: nil,
             theme: theme,
@@ -34,7 +35,7 @@ extension DropdownFieldElement {
         return dropDown
     }
 
-    @_spi(STP) public static func items(from cardBrands: Set<STPCardBrand>, theme: ElementsAppearance, includePlaceholder: Bool = true, maxWidth: CGFloat? = nil) -> [DropdownItem] {
+    @_spi(STP) public static func items(from cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>, theme: ElementsAppearance, includePlaceholder: Bool = true, maxWidth: CGFloat? = nil) -> [DropdownItem] {
         let placeholderItem = DropdownItem(
             pickerDisplayName: NSAttributedString(string: .Localized.card_brand_dropdown_placeholder),
             labelDisplayName: STPCardBrand.unknown.brandIconAttributedString(theme: theme, maxWidth: maxWidth),
@@ -43,7 +44,8 @@ extension DropdownFieldElement {
             isPlaceholder: true
         )
 
-        let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme, maxWidth: maxWidth) }
+        let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme, isAllowed: !disallowedCardBrands.contains($0), maxWidth: maxWidth) }
+        
         return includePlaceholder ? [placeholderItem] + cardBrandItems : cardBrandItems
     }
 }

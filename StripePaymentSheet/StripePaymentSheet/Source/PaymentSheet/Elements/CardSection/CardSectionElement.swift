@@ -220,7 +220,7 @@ final class CardSectionElement: ContainerElement {
             // Clear any previously fetched card brands from the dropdown
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
-                cardBrandDropDown?.update(items: DropdownFieldElement.items(from: self.cardBrands, theme: self.theme))
+                cardBrandDropDown?.update(items: DropdownFieldElement.items(from: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>(), theme: self.theme))
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
             return
@@ -228,7 +228,7 @@ final class CardSectionElement: ContainerElement {
 
         var fetchedCardBrands = Set<STPCardBrand>()
         let hadBrands = !cardBrands.isEmpty
-        STPCardValidator.possibleBrands(forNumber: panElement.text, with: cardBrandFilter) { [weak self] result in
+        STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let brands):
@@ -245,7 +245,8 @@ final class CardSectionElement: ContainerElement {
 
             if self.cardBrands != fetchedCardBrands {
                 self.cardBrands = fetchedCardBrands
-                cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, theme: self.theme))
+                let disallowedCardBrands = fetchedCardBrands.filter{ !self.cardBrandFilter.isAccepted(cardBrand: $0) }
+                cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands, theme: self.theme))
 
                 // If we didn't previously have brands but now have them select based on merchant preference
                 // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks

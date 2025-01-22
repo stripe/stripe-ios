@@ -21,15 +21,16 @@ import UIKit
     public typealias DidTapClose = () -> Void
 
     public struct DropdownItem {
-        public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
+        public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false, isDisabled: Bool = false) {
             self.pickerDisplayName = pickerDisplayName
             self.labelDisplayName = labelDisplayName
             self.accessibilityValue = accessibilityValue
             self.isPlaceholder = isPlaceholder
             self.rawData = rawData
+            self.isDisabled = isDisabled
         }
 
-        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
+        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false, isDisabled: Bool = false) {
             self = .init(pickerDisplayName: NSAttributedString(string: pickerDisplayName),
                          labelDisplayName: NSAttributedString(string: labelDisplayName),
                          accessibilityValue: accessibilityValue,
@@ -53,6 +54,8 @@ import UIKit
 
         /// If true, this item will be styled with greyed out secondary text
         public let isPlaceholder: Bool
+        
+        public let isDisabled: Bool
     }
 
     // MARK: - Public properties
@@ -243,16 +246,27 @@ extension DropdownFieldElement {
             guard let dropdownFieldElement else { return nil }
             let item = dropdownFieldElement.items[row]
 
-            guard item.isPlaceholder else { return item.pickerDisplayName }
+            guard item.isPlaceholder || item.isDisabled else { return item.pickerDisplayName }
 
-            // If this item is marked as a placeholder, apply placeholder text color
+            // If this item is marked as a placeholder or disabled, apply placeholder text color
+            let placeholderString = NSMutableAttributedString(attributedString: item.pickerDisplayName)
             let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: dropdownFieldElement.theme.colors.placeholderText]
-            let placeholderString = NSAttributedString(string: item.pickerDisplayName.string, attributes: attributes)
+            placeholderString.addAttributes(attributes, range: NSRange(location: 0, length: placeholderString.length))
+
             return placeholderString
         }
 
         public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            dropdownFieldElement?.pickerView(pickerView, didSelectRow: row, inComponent: component)
+            guard let dropdownFieldElement else { return }
+            let item = dropdownFieldElement.items[row]
+            
+            // If this item is a placeholder or disabled, prevent selecting that item by rolling back to the previous selection
+            if  item.isPlaceholder || item.isDisabled {
+                pickerView.selectRow(dropdownFieldElement.selectedIndex, inComponent: 0, animated: true)
+                return
+            }
+            
+            dropdownFieldElement.pickerView(pickerView, didSelectRow: row, inComponent: component)
         }
 
         public func numberOfComponents(in pickerView: UIPickerView) -> Int {
