@@ -189,18 +189,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
         presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
-
-    func verifyIntegration() {
-        guard delegate != nil else {
-            stpAssertionFailure("Delegate not set. Please set EmbeddedPaymentElement.delegate.")
-            return
-        }
-
-        guard presentingViewController != nil else {
-            stpAssertionFailure("Presenting view controller not found. Please set EmbeddedPaymentElement.presentingViewController.")
-            return
-        }
-    }
 }
 
 // MARK: UpdatePaymentMethodViewControllerDelegate
@@ -342,8 +330,6 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
 extension EmbeddedPaymentElement {
 
     func _confirm() async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
-        verifyIntegration()
-
         guard !hasConfirmedIntent else {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), STPAnalyticsClient.DeferredIntentConfirmationType.none)
         }
