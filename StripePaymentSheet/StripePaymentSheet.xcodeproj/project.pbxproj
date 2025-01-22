@@ -260,6 +260,7 @@
 		A3B2F2B62CF1149200C0E88C /* SavedPaymentMethodFormFactory+Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B2F2B52CF1149200C0E88C /* SavedPaymentMethodFormFactory+Card.swift */; };
 		A3B2F2B82CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B2F2B72CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift */; };
 		A3B2F2BA2CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B2F2B92CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift */; };
+		A3BE1C242D4161DC0061632C /* RemoveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BE1C232D4161DC0061632C /* RemoveButton.swift */; };
 		A4CD99B2032CBFA7F957B1B8 /* String+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982014B36F49D902CD04AF5C /* String+AutoComplete.swift */; };
 		A4FF52567582E9774AE13348 /* PaymentDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981F958E99945A0318D47BBF /* PaymentDetails.swift */; };
 		A59432E765A72CEE2C36E0EF /* PaymentSheetFormFactory+Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF41D601B198DC37337940C /* PaymentSheetFormFactory+Card.swift */; };
@@ -693,6 +694,7 @@
 		A3B2F2B52CF1149200C0E88C /* SavedPaymentMethodFormFactory+Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedPaymentMethodFormFactory+Card.swift"; sourceTree = "<group>"; };
 		A3B2F2B72CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedPaymentMethodFormFactory+USBankAccount.swift"; sourceTree = "<group>"; };
 		A3B2F2B92CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedPaymentMethodFormFactory+SEPADebit.swift"; sourceTree = "<group>"; };
+		A3BE1C232D4161DC0061632C /* RemoveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveButton.swift; sourceTree = "<group>"; };
 		A49D0A50ECFA7A4A5FC40878 /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A5012364ED0F2EEC6EC2AB52 /* PaymentMethodElementWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodElementWrapper.swift; sourceTree = "<group>"; };
 		A5E8DD8761B4C52B143038C4 /* LinkInlineSignupElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineSignupElement.swift; sourceTree = "<group>"; };
@@ -1378,6 +1380,7 @@
 				6193FC5E14E1EC459E31B5F4 /* SheetNavigationButton.swift */,
 				B8A49995CE949176F7A8C71F /* SimpleMandateTextView.swift */,
 				64D658AC15478BF1E0A76B9D /* TestModeView.swift */,
+				A3BE1C232D4161DC0061632C /* RemoveButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2259,6 +2262,7 @@
 				F4EA474D60D0889E7D48E1CF /* BankAccountInfoView.swift in Sources */,
 				057A899F4123F3716F2AC0FA /* USBankAccountPaymentMethodElement.swift in Sources */,
 				985DAA770BC0289D24A5999C /* AddressSearchResult.swift in Sources */,
+				A3BE1C242D4161DC0061632C /* RemoveButton.swift in Sources */,
 				3147CED12CC1BF6E0067B5E4 /* LinkCardEditElement.swift in Sources */,
 				31CC9BA12CB5F93100E84A38 /* Button+Link.swift in Sources */,
 				9DEDA3E0FFF73F9275F5F8F0 /* AutoCompleteViewController.swift in Sources */,
