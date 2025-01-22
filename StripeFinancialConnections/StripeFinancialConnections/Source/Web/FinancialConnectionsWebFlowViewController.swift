@@ -468,7 +468,7 @@ extension FinancialConnectionsWebFlowViewController {
 
             if let incentiveEligibilitySession {
                 parameters.append("instantDebitsIncentive=true")
-                parameters.append("incentiveEligibilitySession=\(incentiveEligibilitySession.elementsSessionID)")
+                parameters.append("incentiveEligibilitySession=\(incentiveEligibilitySession.id)")
             }
 
             if let linkMode {

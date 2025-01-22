@@ -1024,15 +1024,13 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
         if let incentiveEligibilitySession {
             switch incentiveEligibilitySession {
-            case .payment(let paymentIntentId, let elementsSessionId):
+            case .payment(let paymentIntentId):
                 parameters["financial_incentive"] = [
                     "payment_intent": paymentIntentId,
-                    "elements_session_id": elementsSessionId,
                 ]
-            case .setup(let setupIntentId, let elementsSessionId):
+            case .setup(let setupIntentId):
                 parameters["financial_incentive"] = [
                     "setup_intent": setupIntentId,
-                    "elements_session_id": elementsSessionId,
                 ]
             case .deferred(let elementsSessionId):
                 parameters["financial_incentive"] = [

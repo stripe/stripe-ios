@@ -216,7 +216,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             linkMode: nil,
             prefillDetails: nil,
             billingDetails: nil,
-            incentiveEligibilitySession: .payment(id: "pi_123", elementsSessionID: "elements_session_abc123")
+            incentiveEligibilitySession: .payment("pi_123")
         )
         XCTAssertEqual(
             additionalParameters,

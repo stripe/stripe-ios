@@ -603,7 +603,7 @@ extension NativeFlowController {
         
         self.dataManager.apiClient.updateAvailableIncentives(
             consumerSessionClientSecret: consumerSession.clientSecret,
-            sessionID: incentiveEligibilitySession.elementsSessionID,
+            sessionID: incentiveEligibilitySession.id,
             paymentDetailsID: paymentDetailsID
         ).observe { result in
             switch result {

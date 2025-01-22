@@ -912,15 +912,13 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
 
         if let incentiveEligibilitySession {
             switch incentiveEligibilitySession {
-            case .payment(let paymentIntentId, let elementsSessionId):
+            case .payment(let paymentIntentId):
                 parameters["financial_incentive"] = [
                     "payment_intent": paymentIntentId,
-                    "elements_session_id": elementsSessionId,
                 ]
-            case .setup(let setupIntentId, let elementsSessionId):
+            case .setup(let setupIntentId):
                 parameters["financial_incentive"] = [
                     "setup_intent": setupIntentId,
-                    "elements_session_id": elementsSessionId,
                 ]
             case .deferred(let elementsSessionId):
                 parameters["financial_incentive"] = [
@@ -1103,14 +1101,14 @@ enum APIEndpoint: String {
              .featuredInstitutions, .searchInstitutions, .authSessions,
              .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
              .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
-             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
-             .availableIncentives:
+             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails:
             return true
         case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
              .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
              .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
-             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup:
+             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup,
+             .availableIncentives:
             return false
         }
     }
