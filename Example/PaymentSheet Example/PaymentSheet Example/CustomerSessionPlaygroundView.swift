@@ -7,15 +7,9 @@ import StripePaymentSheet
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct CustomerSessionPlaygroundView: View {
     @State var viewModel: PaymentSheetTestPlaygroundSettings
     var doneAction: ((PaymentSheetTestPlaygroundSettings) -> Void) = { _ in }
-
-    init(viewModel: PaymentSheetTestPlaygroundSettings, doneAction: @escaping ((PaymentSheetTestPlaygroundSettings) -> Void)) {
-        _viewModel = State<PaymentSheetTestPlaygroundSettings>.init(initialValue: viewModel)
-        self.doneAction = doneAction
-    }
 
     var body: some View {
         var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
