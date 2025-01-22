@@ -552,7 +552,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         settings.customerMode = .new
         settings.applePayEnabled = .off // disable Apple Pay
         settings.mode = .setup
-        settings.allowsDelayedPMs = .on
+        settings.customerKeyType = .legacy // TODO: Change to customerSessions when adding save checkbox for SEPA        settings.allowsDelayedPMs = .on
         loadPlayground(app, settings)
 
         let paymentMethodButton = app.buttons["Payment method"]
