@@ -2701,7 +2701,7 @@ extension PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
         settings.mode = mode
-        settings.customerKeyType = .legacy // TODO: Change to customerSessions after fixing mandate
+        settings.customerKeyType = .customerSession
         settings.integrationType = integrationType
         if vertical {
             settings.layout = .vertical
@@ -2738,18 +2738,17 @@ extension PaymentSheetUITestCase {
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
         // Make sure bottom notice mandate is visible
-        switch mode {
-        case .payment:
-            XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
-        case .paymentWithSetup, .setup:
-            XCTAssertTrue(app.textViews["By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
-        }
+        let paymentMandateText = "By continuing, you agree to authorize payments pursuant to these terms."
+        let setupMandateText = "By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."
 
-        if mode == .payment {
-            let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
-            XCTAssertFalse(saveThisAccountToggle.isSelected)
-            saveThisAccountToggle.tap()
-        }
+        // Save the payment method
+        XCTAssertTrue(app.textViews[paymentMandateText].waitForExistence(timeout: 5))
+        let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisAccountToggle.isSelected)
+        saveThisAccountToggle.tap()
+
+        // Tapping the checkbox changes the mandate
+        XCTAssertTrue(app.textViews[setupMandateText].waitForExistence(timeout: 5))
 
         // Confirm
         let confirmButtonText = mode == .payment ? "Pay $50.99" : "Set up"
