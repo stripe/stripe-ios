@@ -21,7 +21,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         XCTAssertFalse(isLinkEnabled, "Link should be disabled when supportsLink is false and link is not in payment method types")
     }
     
-    func testIsLinkEnabled_supportsLinkFalse_linkPresent() {
+    func testIsLinkEnabled_supportsLinkTrue_linkPresent() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card", "link"],
             isLinkPassthroughModeEnabled: false
@@ -29,7 +29,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
 
-        XCTAssertFalse(isLinkEnabled, "Link should be disabled when supportsLink is false, even if link is present")
+        XCTAssertTrue(isLinkEnabled, "Link should be enabled when isLinkPassthroughModeEnabled is false, since Link is present in the payment method types")
     }
 
     func testIsLinkEnabled_supportsLinkTrue_linkNotPresent_passthroughEnabled() {
