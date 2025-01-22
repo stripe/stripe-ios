@@ -252,7 +252,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     if (acsUIType != STDSACSUITypeHTML) {
         if (!error && submitAuthenticationLabel && (!challengeInfoLabel && !challengeInfoHeader && !challengeInfoText)) {
-            error = [NSError _stds_missingJSONFieldError:@"challengeInfoLabel or challengeInfoText"];
+            error = [NSError _stds_missingJSONFieldError:@"challengeInfoLabel or challengeInfoText or challengeInfoHeader"];
         }
     }
     
