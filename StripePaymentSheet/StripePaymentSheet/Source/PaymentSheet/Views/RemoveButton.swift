@@ -13,9 +13,6 @@ import PassKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-private let spinnerMoveToCenterAnimationDuration = 0.35
-private let checkmarkStrokeDuration = 0.2
-
 /// Remove button
 /// For internal SDK use only
 @objc(STP_Internal_RemoveButton)
@@ -69,7 +66,7 @@ class RemoveButton: UIButton {
         addTarget(self, action: #selector(buttonTouchUp(_:)), for: [.touchUpInside, .touchUpOutside])
     }
 
-    @objc private func buttonTouchDown(_ button: UIButton) {
+    @objc private func buttonTouchDown(_: UIButton) {
         if #available(iOS 15.0, *)  {
             configuration?.attributedTitle?.foregroundColor = appearance.colors.danger.disabledColor
             configuration?.background.strokeColor = appearance.colors.danger.disabledColor
@@ -80,7 +77,7 @@ class RemoveButton: UIButton {
         }
     }
 
-    @objc private func buttonTouchUp(_ button: UIButton) {
+    @objc private func buttonTouchUp(_: UIButton) {
         if #available(iOS 15.0, *)  {
             configuration?.attributedTitle?.foregroundColor = appearance.colors.danger
             configuration?.background.strokeColor = appearance.colors.danger
