@@ -49,7 +49,7 @@ class RemoveButton: UIButton {
             config.background.strokeWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
             config.background.strokeColor = appearance.colors.danger
             config.titleAlignment = .center
-            config.attributedTitle = AttributedString(.Localized.remove, attributes: AttributeContainer([.font: font, .foregroundColor: appearance.colors.danger]))
+            config.attributedTitle = AttributedString(title, attributes: AttributeContainer([.font: font, .foregroundColor: appearance.colors.danger]))
             configuration = config
         } else {
             setTitleColor(appearance.colors.danger, for: .normal)
@@ -57,7 +57,7 @@ class RemoveButton: UIButton {
             layer.borderColor = appearance.colors.danger.cgColor
             layer.borderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
             layer.cornerRadius = appearance.cornerRadius
-            setTitle(.Localized.remove, for: .normal)
+            setTitle(title, for: .normal)
             titleLabel?.textAlignment = .center
             titleLabel?.font = font
             titleLabel?.adjustsFontForContentSizeCategory = true
