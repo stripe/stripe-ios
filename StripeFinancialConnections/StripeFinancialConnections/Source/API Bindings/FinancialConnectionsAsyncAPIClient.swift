@@ -55,7 +55,7 @@ final class FinancialConnectionsAsyncAPIClient {
 
     /// Applies attestation-related parameters to the given base parameters
     /// In case of an assertion error, returns the unmodified base parameters
-    func applyAttestationParameters(to baseParameters: [String: Any]) async -> [String: Any] {
+    func assertAndApplyAttestationParameters(to baseParameters: [String: Any]) async -> [String: Any] {
         do {
             let attest = backingAPIClient.stripeAttest
             let handle = try await attest.assert()
@@ -829,7 +829,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             parameters["request_surface"] = requestSurface
             parameters["session_id"] = sessionId
             parameters["email_source"] = emailSource.rawValue
-            let updatedParameters = await applyAttestationParameters(to: parameters)
+            let updatedParameters = await assertAndApplyAttestationParameters(to: parameters)
             return try await post(endpoint: .mobileConsumerSessionLookup, parameters: updatedParameters)
         } else {
             parameters["client_secret"] = clientSecret
@@ -927,7 +927,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             }
         }
         if useMobileEndpoints {
-            let updatedParameters = await applyAttestationParameters(to: parameters)
+            let updatedParameters = await assertAndApplyAttestationParameters(to: parameters)
             return try await post(endpoint: .mobileLinkAccountSignup, parameters: updatedParameters)
         } else {
             return try await post(endpoint: .linkAccountsSignUp, parameters: parameters)

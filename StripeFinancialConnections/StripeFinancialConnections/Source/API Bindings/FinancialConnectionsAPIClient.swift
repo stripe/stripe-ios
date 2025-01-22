@@ -45,7 +45,7 @@ final class FinancialConnectionsAPIClient {
 
     /// Applies attestation-related parameters to the given base parameters
     /// In case of an assertion error, returns the unmodified base parameters
-    func applyAttestationParameters(
+    func assertAndApplyAttestationParameters(
         to baseParameters: [String: Any]
     ) -> Future<[String: Any]> {
         let promise = Promise<[String: Any]>()
@@ -930,7 +930,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             parameters["request_surface"] = requestSurface
             parameters["session_id"] = sessionId
             parameters["email_source"] = emailSource.rawValue
-            return applyAttestationParameters(to: parameters)
+            return assertAndApplyAttestationParameters(to: parameters)
                 .chained { [weak self] updatedParameters in
                     guard let self else {
                         return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
@@ -1040,7 +1040,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         }
 
         if useMobileEndpoints {
-            return applyAttestationParameters(to: parameters)
+            return assertAndApplyAttestationParameters(to: parameters)
                 .chained { [weak self] updatedParameters in
                     guard let self else {
                         return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
