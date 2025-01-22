@@ -59,7 +59,9 @@ extension PaymentSheet {
         guard elementsSession.supportsLink else {
             return false
         }
-        return !configuration.requiresBillingDetailCollection()
+        
+        // Disable Link if the merchant is using the billing address collection API or card brand filtering
+        return !configuration.requiresBillingDetailCollection() && configuration.cardBrandAcceptance == .all
     }
 
     /// An unordered list of paymentMethodTypes that can be used with Link in PaymentSheet
