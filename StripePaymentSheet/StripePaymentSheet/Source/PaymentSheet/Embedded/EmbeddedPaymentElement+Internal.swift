@@ -310,9 +310,13 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
 }
 
 extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
-    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: EmbeddedFormViewController, completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+    func embeddedFormViewControllerShouldConfirm(
+        _ embeddedFormViewController: EmbeddedFormViewController,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
         Task { @MainActor in
-            let (result, deferredIntentConfirmationType) = await _confirm()
+            let (result, deferredIntentConfirmationType) = await _confirm(paymentOption: paymentOption, authContext: embeddedFormViewController)
             completion(result, deferredIntentConfirmationType)
         }
     }
@@ -341,7 +345,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
 
 extension EmbeddedPaymentElement {
 
-    func _confirm() async -> (
+    func _confirm(paymentOption: PaymentOption, authContext: STPAuthenticationContext) async -> (
         result: PaymentSheetResult,
         deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
     ) {
@@ -368,34 +372,6 @@ extension EmbeddedPaymentElement {
             }
         }
 
-        let authContext: STPAuthenticationContext? = {
-            switch configuration.formSheetAction {
-            case .confirm:
-                if selectedFormViewController?.presentingViewController != nil {
-                    return selectedFormViewController
-                }
-                if let presentingViewController {
-                    return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
-                }
-                return nil
-            case .continue:
-                // 'formViewController' is never currently presented during confirmation in continue mode
-                if let presentingViewController {
-                    return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
-                }
-                return nil
-            }
-        }()
-
-        guard let authContext else {
-            return (.failed(error: PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil authContext.")), nil)
-        }
-
-        guard let paymentOption = _paymentOption else {
-            return (.failed(error: PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil payment option.")),
-                    nil)
-        }
-
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: authContext,
@@ -406,9 +382,11 @@ extension EmbeddedPaymentElement {
             integrationShape: .embedded,
             analyticsHelper: analyticsHelper
         )
-        analyticsHelper.logPayment(paymentOption: paymentOption,
-                                   result: result,
-                                   deferredIntentConfirmationType: deferredIntentConfirmationType)
+        analyticsHelper.logPayment(
+            paymentOption: paymentOption,
+            result: result,
+            deferredIntentConfirmationType: deferredIntentConfirmationType
+        )
 
         // If the confirmation was successful, disable user interaction
         if case .completed = result {
