@@ -434,6 +434,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
+        settings.customerKeyType = .legacy
         settings.merchantCountryCode = .IN
         settings.currency = .inr
         settings.apmsEnabled = .off
@@ -532,7 +533,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Add a card first so we can test saved screen
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        try! fillCardData(app)
+        try! fillCardData(app, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         app.buttons["Set up"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         app.buttons["Reload"].tap()
@@ -1424,6 +1425,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkPassthroughMode = .pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        settings.customerKeyType = .legacy
 
         try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings)
     }
@@ -1512,6 +1514,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkPassthroughMode = .pm
 
+        settings.customerKeyType = .legacy
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
@@ -2209,6 +2212,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
+        // TODO: Properly pass the allow_redisplay value to 'consumers/payment_details' endpoint
+        settings.customerKeyType = .legacy
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2698,6 +2703,7 @@ extension PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
         settings.mode = mode
+        settings.customerKeyType = .legacy // TODO: Change to customerSessions after fixing mandate
         settings.integrationType = integrationType
         if vertical {
             settings.layout = .vertical

@@ -510,6 +510,20 @@ class PlaygroundController: ObservableObject {
             rootViewController.present(alert, animated: true, completion: nil)
         }
     }
+    func customerSessionSettingsTapped() {
+        if #available(iOS 14.0, *) {
+            let vc = UIHostingController(rootView: CustomerSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+                self.settings = updatedSettings
+                self.rootViewController.dismiss(animated: true, completion: nil)
+                self.load(reinitializeControllers: true)
+            }))
+            rootViewController.present(vc, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Unavailable", message: "This playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            rootViewController.present(alert, animated: true, completion: nil)
+        }
+    }
 
     // Completion
 
