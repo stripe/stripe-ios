@@ -10,8 +10,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-@_spi(STP) import StripeCore
-
 extension EmbeddedPaymentElement {
     @MainActor
     static func makeView(
@@ -60,8 +58,7 @@ extension EmbeddedPaymentElement {
                 if let defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
                     customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
                 }
-            }
-            else {
+            } else {
                 customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
             }
             switch customerDefault {
@@ -92,38 +89,23 @@ extension EmbeddedPaymentElement {
             savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
             incentive: loadResult.elementsSession.incentive,
+            analyticsHelper: analyticsHelper,
             delegate: delegate
         )
     }
-}
 
-// MARK: - EmbeddedPaymentMethodsViewDelegate
-
-extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
-    func heightDidChange() {
-        delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+    /// Helper method to inform delegate only if the payment option changed
+    func informDelegateIfPaymentOptionUpdated() {
+        if lastUpdatedPaymentOption != paymentOption {
+            delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+            lastUpdatedPaymentOption = paymentOption
+        }
     }
 
-    func updateSelectionState(isNewSelection: Bool) {
-        // Deferring notifying delegate until the exit of this function guarantees the new payment option comes from the new instance of `EmbeddedFormViewController`
-        defer {
-            if isNewSelection {
-                delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
-                if let selection = embeddedPaymentMethodsView.selection {
-                    analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
-                }
-            }
-        }
-
-        guard case let .new(paymentMethodType) = embeddedPaymentMethodsView.selection else {
-            // This can occur when selection is being reset to nothing selected or to a saved payment method, so don't assert.
-            self.formViewController = nil
-            return
-        }
-
-        guard let presentingViewController else {
-            stpAssertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
-            return
+    // Helper method to create Form VC for a payment method row, if applicable.
+    func makeFormViewControllerIfNecessary(selection: EmbeddedPaymentMethodsView.Selection?) -> EmbeddedFormViewController? {
+        guard case let .new(paymentMethodType) = selection else {
+            return nil
         }
 
         let formViewController = EmbeddedFormViewController(
@@ -132,25 +114,48 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             elementsSession: elementsSession,
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
             paymentMethodType: paymentMethodType,
-            previousPaymentOption: self.formViewController?.previousPaymentOption,
+            previousPaymentOption: self.selectedFormViewController?.previousPaymentOption,
             analyticsHelper: analyticsHelper,
             formCache: formCache
         )
         formViewController.delegate = self
-
-        // Only show forms that require user input
         guard formViewController.collectsUserInput else {
-            self.formViewController = nil  // Clear out any previous form view controller to update self._paymentOption
-            return
+            return nil
         }
+        return formViewController
+    }
+}
 
-        let bottomSheet = bottomSheetController(with: formViewController)
-        delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
-        presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
-        self.formViewController = formViewController
+// MARK: - EmbeddedPaymentMethodsViewDelegate
+
+extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
+    func embeddedPaymentMethodsViewDidUpdateHeight() {
+        delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
 
-    func presentSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
+    func embeddedPaymentMethodsViewDidUpdateSelection() {
+        // 1. Update the currently selection's form VC to match the selection.
+        // Note `paymentOption` derives from this property
+        self.selectedFormViewController = makeFormViewControllerIfNecessary(selection: embeddedPaymentMethodsView.selection)
+
+        // 2. Inform the delegate of the updated payment option
+        informDelegateIfPaymentOptionUpdated()
+    }
+
+    func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
+        guard let selectedFormViewController else {
+            // If the current selection has no form VC, there's nothing to do
+            return
+        }
+        // Present the current selection's form VC
+        delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
+        let bottomSheet = bottomSheetController(with: selectedFormViewController)
+        stpAssert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+        presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+
+    }
+
+    func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
         // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
@@ -184,14 +189,14 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
         presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
-    
+
     func verifyIntegration() {
-        guard let _ = delegate else {
+        guard delegate != nil else {
             stpAssertionFailure("Delegate not set. Please set EmbeddedPaymentElement.delegate.")
             return
         }
-        
-        guard let _ = presentingViewController else {
+
+        guard presentingViewController != nil else {
             stpAssertionFailure("Presenting view controller not found. Please set EmbeddedPaymentElement.presentingViewController.")
             return
         }
@@ -323,25 +328,22 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
         // If the formViewController was populated with a previous payment option don't reset
         if embeddedFormViewController.previousPaymentOption == nil {
-            self.formViewController = nil
             embeddedPaymentMethodsView.resetSelectionToLastSelection()
         }
         embeddedFormViewController.dismiss(animated: true)
     }
 
-    func embeddedFormViewControllerShouldClose(_ embeddedFormViewController: EmbeddedFormViewController) {
-        embeddedPaymentMethodsView.highlightSelection()
+    func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: EmbeddedFormViewController) {
         embeddedFormViewController.dismiss(animated: true)
-        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+        informDelegateIfPaymentOptionUpdated()
     }
-
 }
 
 extension EmbeddedPaymentElement {
 
     func _confirm() async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         verifyIntegration()
-        
+
         guard !hasConfirmedIntent else {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), STPAnalyticsClient.DeferredIntentConfirmationType.none)
         }
@@ -366,8 +368,8 @@ extension EmbeddedPaymentElement {
         let authContext: STPAuthenticationContext? = {
             switch configuration.formSheetAction {
             case .confirm:
-                if formViewController?.presentingViewController != nil {
-                    return formViewController
+                if selectedFormViewController?.presentingViewController != nil {
+                    return selectedFormViewController
                 }
                 if let presentingViewController {
                     return STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
@@ -404,13 +406,13 @@ extension EmbeddedPaymentElement {
         analyticsHelper.logPayment(paymentOption: paymentOption,
                                    result: result,
                                    deferredIntentConfirmationType: deferredIntentConfirmationType)
-        
+
         // If the confirmation was successful, disable user interaction
         if case .completed = result {
             hasConfirmedIntent = true
             containerView.isUserInteractionEnabled = false
         }
-        
+
         return (result, deferredIntentConfirmationType)
     }
 

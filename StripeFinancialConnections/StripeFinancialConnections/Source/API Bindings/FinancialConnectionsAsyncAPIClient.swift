@@ -55,7 +55,7 @@ final class FinancialConnectionsAsyncAPIClient {
 
     /// Applies attestation-related parameters to the given base parameters
     /// In case of an assertion error, returns the unmodified base parameters
-    func applyAttestationParameters(to baseParameters: [String: Any]) async -> [String: Any] {
+    func assertAndApplyAttestationParameters(to baseParameters: [String: Any]) async -> [String: Any] {
         do {
             let attest = backingAPIClient.stripeAttest
             let handle = try await attest.assert()
@@ -280,7 +280,10 @@ protocol FinancialConnectionsAsyncAPI {
 
     func consumerSessionLookup(
         emailAddress: String,
-        clientSecret: String
+        clientSecret: String,
+        sessionId: String,
+        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        useMobileEndpoints: Bool
     ) async throws -> LookupConsumerSessionResponse
 
     // MARK: - Link API's
@@ -811,16 +814,27 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
 
     func consumerSessionLookup(
         emailAddress: String,
-        clientSecret: String
+        clientSecret: String,
+        sessionId: String,
+        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        useMobileEndpoints: Bool
     ) async throws -> LookupConsumerSessionResponse {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "email_address":
                 emailAddress
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .lowercased(),
-            "client_secret": clientSecret,
         ]
-        return try await post(endpoint: .consumerSessions, parameters: parameters)
+        if useMobileEndpoints {
+            parameters["request_surface"] = requestSurface
+            parameters["session_id"] = sessionId
+            parameters["email_source"] = emailSource.rawValue
+            let updatedParameters = await assertAndApplyAttestationParameters(to: parameters)
+            return try await post(endpoint: .mobileConsumerSessionLookup, parameters: updatedParameters)
+        } else {
+            parameters["client_secret"] = clientSecret
+            return try await post(endpoint: .consumerSessions, parameters: parameters)
+        }
     }
 
     // MARK: - Link API's
@@ -913,7 +927,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             }
         }
         if useMobileEndpoints {
-            let updatedParameters = await applyAttestationParameters(to: parameters)
+            let updatedParameters = await assertAndApplyAttestationParameters(to: parameters)
             return try await post(endpoint: .mobileLinkAccountSignup, parameters: updatedParameters)
         } else {
             return try await post(endpoint: .linkAccountsSignUp, parameters: parameters)
@@ -1076,6 +1090,7 @@ enum APIEndpoint: String {
     case availableIncentives = "consumers/incentives/update_available"
 
     // Verified
+    case mobileConsumerSessionLookup = "consumers/mobile/sessions/lookup"
     case mobileLinkAccountSignup = "consumers/mobile/sign_up"
 
     /// As a rule of thumb, `shouldUseConsumerPublishableKey` should be `true` for requests that happen after the user is verified.
@@ -1093,7 +1108,7 @@ enum APIEndpoint: String {
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
              .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
              .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
-             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup:
+             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup:
             return false
         }
     }

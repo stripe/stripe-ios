@@ -6,9 +6,9 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripePayments
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
@@ -105,12 +105,12 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
         verifyIntegration()
-        
+
         // Do not process any update calls if we have already successfully confirmed an intent
         guard !hasConfirmedIntent else {
             return .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
         }
-        
+
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
         // Cancel the old task and let it finish so that merchants receive update results in order
         latestUpdateTask?.cancel()
@@ -137,19 +137,19 @@ public final class EmbeddedPaymentElement {
 
             // Store the old payment option before we update self.formViewController
             let oldPaymentOption = self?.paymentOption
-            
+
             // 2.1. Re-initialize embedded form view controller to update the UI to match the newly loaded data.
-            if let formPaymentMethodType = self?.formViewController?.selectedPaymentOption?.paymentMethodType {
-                self?.formViewController = EmbeddedFormViewController(configuration: configuration,
+            if let formPaymentMethodType = self?.selectedFormViewController?.selectedPaymentOption?.paymentMethodType {
+                self?.selectedFormViewController = EmbeddedFormViewController(configuration: configuration,
                                                                 intent: loadResult.intent,
                                                                 elementsSession: loadResult.elementsSession,
                                                                 shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
                                                                 paymentMethodType: formPaymentMethodType,
-                                                                previousPaymentOption: self?.formViewController?.selectedPaymentOption,
+                                                                previousPaymentOption: self?.selectedFormViewController?.selectedPaymentOption,
                                                                 analyticsHelper: analyticsHelper)
-                
+
             }
-            
+
             // 2.4 Re-initialize embedded view to update the UI to match the newly loaded data.
             let embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
@@ -158,7 +158,7 @@ public final class EmbeddedPaymentElement {
                 previousPaymentOption: self?._paymentOption,
                 delegate: self
             )
-            
+
             // 3. Pre-load image into cache
             // Call this on a detached Task b/c this synchronously (!) loads the image from network and we don't want to block the main actor
             let fetchPaymentOption = Task.detached(priority: .userInitiated) {
@@ -193,31 +193,31 @@ public final class EmbeddedPaymentElement {
     /// - Returns: The result of the payment after any presented view controllers are dismissed.
     /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
-    public func confirm() async -> EmbeddedPaymentElementResult {        
+    public func confirm() async -> EmbeddedPaymentElementResult {
         return await _confirm().result
     }
 
     /// Sets the currently selected payment option to `nil`.
     public func clearPaymentOption() {
         verifyIntegration()
-        
+
         // If a payment has been successfully completed, we don't allow clearing the payment option.
         guard !hasConfirmedIntent else { return }
-        
+
         // Early exit for a nil payment option, don't notify delegate since no change in payment option can occur
         guard paymentOption != nil else { return }
-        
+
         // Clear out the form controller to clear any payment option
-        formViewController = nil
-        
+        selectedFormViewController = nil
+
         // Reset the selection on the `embeddedPaymentMethodsView`
         embeddedPaymentMethodsView.resetSelection()
-        
+
 #if DEBUG
         // Clear the testable payment option (only populated during unit testing)
         _test_paymentOption = nil
 #endif
-        
+
         // Notify the delegate that the payment option has changed
         delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
     }
@@ -239,13 +239,16 @@ public final class EmbeddedPaymentElement {
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
     internal var savedPaymentMethods: [STPPaymentMethod]
     internal private(set) var formCache: PaymentMethodFormCache = .init()
-    internal var formViewController: EmbeddedFormViewController?
+    /// The form view controller for the currently selected payment method.
+    internal var selectedFormViewController: EmbeddedFormViewController?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif
 
+    /// The value of `paymentOption` when we last called `embeddedPaymentElementDidUpdatePaymentOption`
+    internal var lastUpdatedPaymentOption: PaymentOptionDisplayData?
     internal var _paymentOption: PaymentOption? {
     #if DEBUG
         if let testPaymentOption = _test_paymentOption {
@@ -253,10 +256,10 @@ public final class EmbeddedPaymentElement {
         }
     #endif
         // If we have a form use it's payment option
-        if let formViewController {
-            return formViewController.selectedPaymentOption
+        if let selectedFormViewController {
+            return selectedFormViewController.selectedPaymentOption
         }
-        
+
         switch embeddedPaymentMethodsView.selection {
         case .applePay:
             return .applePay
@@ -285,7 +288,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
-    
+
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     private init(
@@ -313,6 +316,7 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.embeddedPaymentMethodsView.delegate = self
+        self.lastUpdatedPaymentOption = paymentOption
     }
 }
 

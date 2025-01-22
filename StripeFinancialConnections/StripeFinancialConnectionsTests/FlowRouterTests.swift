@@ -166,6 +166,7 @@ class FlowRouterTests: XCTestCase {
                 disableLinkMoreAccounts: false,
                 experimentAssignments: ["connections_mobile_native": nativeExperimentEnabled ? "treatment" : ""],
                 features: ["bank_connections_mobile_native_version_killswitch": killswitchActive],
+                id: "id",
                 instantVerificationDisabled: false,
                 institutionSearchDisabled: false,
                 livemode: false,
