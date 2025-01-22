@@ -13,6 +13,11 @@ final class FinancialConnectionsAPIClient {
         case cannotCastToDictionary
     }
 
+    enum EmailSource: String {
+        case userAction = "user_action"
+        case customerObject = "customer_object"
+    }
+
     let backingAPIClient: STPAPIClient
 
     var isLinkWithStripe: Bool = false
@@ -36,6 +41,26 @@ final class FinancialConnectionsAPIClient {
             return nil
         }
         return consumerPublishableKey
+    }
+
+    /// Applies attestation-related parameters to the given base parameters
+    /// In case of an assertion error, returns the unmodified base parameters
+    func assertAndApplyAttestationParameters(
+        to baseParameters: [String: Any]
+    ) -> Future<[String: Any]> {
+        let promise = Promise<[String: Any]>()
+        Task {
+            do {
+                let attest = backingAPIClient.stripeAttest
+                let handle = try await attest.assert()
+                let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
+                promise.resolve(with: newParameters)
+            } catch {
+                // Fail silently if we can't get an assertion, we'll try the request anyway. It may fail.
+                promise.resolve(with: baseParameters)
+            }
+        }
+        return promise
     }
 
     /// Marks the assertion as completed and forwards attestation errors to the `StripeAttest` client for logging.
@@ -99,24 +124,6 @@ final class FinancialConnectionsAPIClient {
         } else {
             throw EncodingError.cannotCastToDictionary
         }
-    }
-
-    private func applyAttestationParameters(
-        to baseParameters: [String: Any]
-    ) -> Future<[String: Any]> {
-        let promise = Promise<[String: Any]>()
-        Task {
-            do {
-                let attest = backingAPIClient.stripeAttest
-                let handle = try await attest.assert()
-                let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
-                promise.resolve(with: newParameters)
-            } catch {
-                // Fail silently if we can't get an assertion, we'll try the request anyway. It may fail.
-                promise.resolve(with: baseParameters)
-            }
-        }
-        return promise
     }
 }
 
@@ -246,7 +253,10 @@ protocol FinancialConnectionsAPI {
 
     func consumerSessionLookup(
         emailAddress: String,
-        clientSecret: String
+        clientSecret: String,
+        sessionId: String,
+        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        useMobileEndpoints: Bool
     ) -> Future<LookupConsumerSessionResponse>
 
     // MARK: - Link API's
@@ -904,20 +914,41 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func consumerSessionLookup(
         emailAddress: String,
-        clientSecret: String
+        clientSecret: String,
+        sessionId: String,
+        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        useMobileEndpoints: Bool
     ) -> Future<LookupConsumerSessionResponse> {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "email_address":
                 emailAddress
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .lowercased(),
-            "client_secret": clientSecret,
         ]
-        return post(
-            resource: APIEndpointConsumerSessions,
-            parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: false
-        )
+
+        if useMobileEndpoints {
+            parameters["request_surface"] = requestSurface
+            parameters["session_id"] = sessionId
+            parameters["email_source"] = emailSource.rawValue
+            return assertAndApplyAttestationParameters(to: parameters)
+                .chained { [weak self] updatedParameters in
+                    guard let self else {
+                        return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
+                    }
+                    return self.post(
+                        resource: APIMobileEndpointConsumerSessionLookup,
+                        parameters: updatedParameters,
+                        useConsumerPublishableKeyIfNeeded: false
+                    )
+                }
+        } else {
+            parameters["client_secret"] = clientSecret
+            return post(
+                resource: APIEndpointConsumerSessions,
+                parameters: parameters,
+                useConsumerPublishableKeyIfNeeded: false
+            )
+        }
     }
 
     // MARK: - Link API's
@@ -1009,7 +1040,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         }
 
         if useMobileEndpoints {
-            return applyAttestationParameters(to: parameters)
+            return assertAndApplyAttestationParameters(to: parameters)
                 .chained { [weak self] updatedParameters in
                     guard let self else {
                         return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
@@ -1223,4 +1254,5 @@ private let APIEndpointSharePaymentDetails = "consumers/payment_details/share"
 private let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpointAvailableIncentives = "consumers/incentives/update_available"
 // Verified
+private let APIMobileEndpointConsumerSessionLookup = "consumers/mobile/sessions/lookup"
 private let APIMobileEndpointLinkAccountSignUp = "consumers/mobile/sign_up"

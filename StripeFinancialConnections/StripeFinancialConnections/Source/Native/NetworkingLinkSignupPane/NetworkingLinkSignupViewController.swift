@@ -47,6 +47,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private var footerView: NetworkingLinkSignupFooterView?
     private var viewDidAppear: Bool = false
     private var willNavigateToReturningConsumer = false
+    private var prefillEmailAddress: String? {
+        let email = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
+        return email?.isEmpty == false ? email : nil
+    }
 
     init(dataSource: NetworkingLinkSignupDataSource) {
         self.dataSource = dataSource
@@ -165,9 +169,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
         paneLayoutView.scrollView.keyboardDismissMode = .onDrag
         #endif
 
-        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
-        if let emailAddress, !emailAddress.isEmpty {
-            formView.prefillEmailAddress(emailAddress)
+        if let prefillEmailAddress {
+            formView.prefillEmailAddress(prefillEmailAddress)
 
             let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.prefillDetails?.formattedPhoneNumber
             formView.prefillPhoneNumber(phoneNumber)
@@ -210,9 +213,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         .observe { [weak self] result in
             guard let self = self else { return }
-
-            // Mark the assertion as completed and log possible errors.
-            self.dataSource.completeAssertion(possibleError: result.error)
+            self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
 
             switch result {
             case .success(let customSuccessPaneMessage):
@@ -289,10 +290,16 @@ extension NetworkingLinkSignupViewController: LinkSignupFormViewDelegate {
         didEnterValidEmailAddress emailAddress: String
     ) {
         bodyFormView.emailTextField.showLoadingView(true)
+        let manuallyEnteredEmail = emailAddress != prefillEmailAddress
         dataSource
-            .lookup(emailAddress: emailAddress)
+            .lookup(
+                emailAddress: emailAddress,
+                manuallyEntered: manuallyEnteredEmail
+            )
             .observe { [weak self, weak bodyFormView] result in
                 guard let self = self else { return }
+                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+
                 switch result {
                 case .success(let response):
                     if response.exists {

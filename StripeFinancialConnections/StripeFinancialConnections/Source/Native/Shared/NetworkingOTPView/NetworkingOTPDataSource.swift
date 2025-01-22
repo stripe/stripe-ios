@@ -22,14 +22,22 @@ protocol NetworkingOTPDataSource: AnyObject {
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
+    func completeAssertionIfNeeded(possibleError: Error?)
 }
 
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
 
     let otpType: String
+    let pane: FinancialConnectionsSessionManifest.NextPane
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     private let emailAddress: String
     private let customEmailType: String?
     private let connectionsMerchantName: String?
+    private let apiClient: any FinancialConnectionsAPI
+    private let manifest: FinancialConnectionsSessionManifest
+    private let clientSecret: String
+    weak var delegate: NetworkingOTPDataSourceDelegate?
+
     private var consumerSession: ConsumerSessionData? {
         didSet {
             if let consumerSession = consumerSession {
@@ -37,16 +45,18 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             }
         }
     }
-    let pane: FinancialConnectionsSessionManifest.NextPane
-    private let apiClient: any FinancialConnectionsAPI
-    private let clientSecret: String
-    let analyticsClient: FinancialConnectionsAnalyticsClient
-    let isTestMode: Bool
-    let theme: FinancialConnectionsTheme
-    weak var delegate: NetworkingOTPDataSourceDelegate?
+
+    var isTestMode: Bool {
+        manifest.isTestMode
+    }
+
+    var theme: FinancialConnectionsTheme {
+        manifest.theme
+    }
 
     init(
         otpType: String,
+        manifest: FinancialConnectionsSessionManifest,
         emailAddress: String,
         customEmailType: String?,
         connectionsMerchantName: String?,
@@ -54,11 +64,10 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         consumerSession: ConsumerSessionData?,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient,
-        isTestMode: Bool,
-        theme: FinancialConnectionsTheme
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.otpType = otpType
+        self.manifest = manifest
         self.emailAddress = emailAddress
         self.customEmailType = customEmailType
         self.connectionsMerchantName = connectionsMerchantName
@@ -67,15 +76,16 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-        self.isTestMode = isTestMode
-        self.theme = theme
     }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
         apiClient
             .consumerSessionLookup(
                 emailAddress: emailAddress,
-                clientSecret: clientSecret
+                clientSecret: clientSecret,
+                sessionId: manifest.id,
+                emailSource: .customerObject,
+                useMobileEndpoints: manifest.verified
             )
             .chained { [weak self] lookupConsumerSessionResponse in
                 self?.consumerSession = lookupConsumerSessionResponse.consumerSession
@@ -111,4 +121,11 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             return Promise(value: consumerSessionResponse)
         }
     }
+
+    // Marks the assertion as completed and logs possible errors during verified flows.
+    func completeAssertionIfNeeded(possibleError: Error?) {
+        guard manifest.verified else { return }
+        apiClient.completeAssertion(possibleError: possibleError)
+    }
+
 }
