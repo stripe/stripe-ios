@@ -160,6 +160,8 @@ final class NetworkingOTPView: UIView {
         dataSource.lookupConsumerSession()
             .observe { [weak self] result in
                 guard let self = self else { return }
+                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+
                 switch result {
                 case .success(let lookupConsumerSessionResponse):
                     if lookupConsumerSessionResponse.exists {
@@ -251,11 +253,28 @@ final class NetworkingOTPView: UIView {
 import SwiftUI
 
 private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
-    let theme: FinancialConnectionsTheme
+    let theme: FinancialConnectionsSessionManifest.Theme
 
     func makeUIView(context: Context) -> NetworkingOTPView {
         NetworkingOTPView(dataSource: NetworkingOTPDataSourceImplementation(
             otpType: "",
+            manifest: FinancialConnectionsSessionManifest(
+                allowManualEntry: false,
+                consentRequired: false,
+                customManualEntryHandling: false,
+                disableLinkMoreAccounts: false,
+                id: "id",
+                instantVerificationDisabled: false,
+                institutionSearchDisabled: false,
+                livemode: true,
+                manualEntryMode: .automatic,
+                manualEntryUsesMicrodeposits: false,
+                nextPane: .success,
+                permissions: [],
+                product: "product",
+                singleAccount: true,
+                _theme: theme
+            ),
             emailAddress: "",
             customEmailType: nil,
             connectionsMerchantName: nil,
@@ -263,9 +282,7 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
             consumerSession: nil,
             apiClient: FinancialConnectionsAPIClient(apiClient: .shared),
             clientSecret: "",
-            analyticsClient: FinancialConnectionsAnalyticsClient(),
-            isTestMode: false,
-            theme: theme
+            analyticsClient: FinancialConnectionsAnalyticsClient()
         ))
     }
 
