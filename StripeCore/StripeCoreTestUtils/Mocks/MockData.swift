@@ -28,8 +28,7 @@ extension MockData {
         let result: Result<ResponseType, Error> = STPAPIClient.decodeResponse(
             data: try data(),
             error: nil,
-            response: nil,
-            request: nil
+            response: nil
         )
         switch result {
         case .success(let response):

@@ -540,7 +540,7 @@ extension STPAPIClient {
         data: Data?,
         error: Error?,
         response: URLResponse?,
-        request: URLRequest?
+        request: URLRequest? = nil
     ) -> Result<T, Error> {
         if let error = error {
             return .failure(error)
