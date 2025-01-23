@@ -367,10 +367,9 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         mobileParameters["app_return_url"] = returnURL
 
         let attest = backingAPIClient.stripeAttest
-        if attest.isSupported {
-            mobileParameters["supports_app_verification"] = true
-            mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
-        }
+        mobileParameters["supports_app_verification"] = attest.isSupported
+        mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
+
         parameters["mobile"] = mobileParameters
         return try await post(endpoint: .synchronize, parameters: parameters)
     }
