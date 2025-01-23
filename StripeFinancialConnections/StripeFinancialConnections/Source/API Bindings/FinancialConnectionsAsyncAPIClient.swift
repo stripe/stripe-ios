@@ -1101,14 +1101,14 @@ enum APIEndpoint: String {
              .featuredInstitutions, .searchInstitutions, .authSessions,
              .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
              .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
-             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
-             .availableIncentives:
+             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails:
             return true
         case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
              .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
              .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
-             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup:
+             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup,
+             .availableIncentives:
             return false
         }
     }
