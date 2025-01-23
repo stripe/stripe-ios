@@ -2204,15 +2204,25 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     }
 
     // Tests the #5 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and first time Link user
-    func testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser() {
+    func testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser_legacy() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
-        // TODO: Properly pass the allow_redisplay value to 'consumers/payment_details' endpoint
         settings.customerKeyType = .legacy
-
+        _testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser(settings: settings)
+    }
+    func testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser_customerSession() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkPassthroughMode = .pm
+        settings.customerKeyType = .customerSession
+        _testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser(settings: settings)
+    }
+    func _testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser(settings: PaymentSheetTestPlaygroundSettings) {
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
