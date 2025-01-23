@@ -116,6 +116,25 @@ extension PaymentSheet {
             }
             return false
         }
+
+        var setAsDefaultPM: Bool {
+            get {
+                switch self {
+                case let .new(confirmParams: intentConfirmParams):
+                    return intentConfirmParams.setAsDefaultPM
+                default:
+                    return false
+                }
+            }
+            set {
+                switch self {
+                case let .new(confirmParams: intentConfirmParams):
+                    intentConfirmParams.setAsDefaultPM = newValue
+                default:
+                    return
+                }
+            }
+        }
     }
 
     /// A class that presents the individual steps of a payment flow

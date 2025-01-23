@@ -18,6 +18,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         mandateData: STPMandateDataParams? = nil,
+        setAsDefaultPM: Bool = false,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
@@ -71,7 +72,8 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
                             configuration: configuration,
-                            mandateData: mandateData
+                            mandateData: mandateData,
+                            setAsDefaultPM: setAsDefaultPM
                         )
 
                         paymentHandler.confirmPayment(
@@ -100,7 +102,8 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
                             configuration: configuration,
-                            mandateData: mandateData
+                            mandateData: mandateData,
+                            setAsDefaultPM: setAsDefaultPM
                         )
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,

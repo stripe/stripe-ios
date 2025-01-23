@@ -45,6 +45,8 @@ final class IntentConfirmParams {
         }
     }
 
+    var setAsDefaultPM: Bool = false
+
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
