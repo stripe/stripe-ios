@@ -30,6 +30,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.mode = .setup
         settings.customerMode = .new
         settings.currency = .eur
+        settings.customerKeyType = .legacy // TODO: Change to customerSessions when adding save checkbox for SEPA
         settings.uiStyle = .flowController
         settings.layout = .vertical
         loadPlayground(app, settings)
@@ -287,7 +288,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             app.buttons["Present PaymentSheet"].tap()
             let addCardButton = app.buttons["New card"]
             addCardButton.waitForExistenceAndTap()
-            try! fillCardData(app, cardNumber: cardNumber)
+            try! fillCardData(app, cardNumber: cardNumber, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
             app.buttons["Set up"].tap()
             let successText = app.staticTexts["Success!"]
             XCTAssertTrue(successText.waitForExistence(timeout: 10.0))

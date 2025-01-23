@@ -8,14 +8,5 @@
 import Foundation
 
 @_spi(STP) public struct AvailableIncentives: Decodable {
-    @_spi(STP) public  let incentives: [LinkConsumerIncentive]
-    
-    @_spi(STP) public init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        incentives = try container.decode([LinkConsumerIncentive].self, forKey: .data)
-    }
-    
-    enum CodingKeys: String, CodingKey {
-        case data
-    }
+    @_spi(STP) public  let data: [LinkConsumerIncentive]
 }

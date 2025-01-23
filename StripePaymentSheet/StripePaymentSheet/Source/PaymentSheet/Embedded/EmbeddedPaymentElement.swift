@@ -104,8 +104,6 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
-        verifyIntegration()
-
         // Do not process any update calls if we have already successfully confirmed an intent
         guard !hasConfirmedIntent else {
             return .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
@@ -177,7 +175,7 @@ public final class EmbeddedPaymentElement {
             self.intent = loadResult.intent
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
-            self.formCache = .init()
+            self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
             if oldPaymentOption != self.paymentOption {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
@@ -199,8 +197,6 @@ public final class EmbeddedPaymentElement {
 
     /// Sets the currently selected payment option to `nil`.
     public func clearPaymentOption() {
-        verifyIntegration()
-
         // If a payment has been successfully completed, we don't allow clearing the payment option.
         guard !hasConfirmedIntent else { return }
 
@@ -224,7 +220,6 @@ public final class EmbeddedPaymentElement {
 
     #if DEBUG
     public func testHeightChange() {
-        verifyIntegration()
         stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
         self.embeddedPaymentMethodsView.testHeightChange()
     }

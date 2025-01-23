@@ -364,12 +364,10 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         mobileParameters["app_return_url"] = returnURL
 
         let attest = backingAPIClient.stripeAttest
-        if attest.isSupported {
-            mobileParameters["supports_app_verification"] = true
-            mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
-        }
-        parameters["mobile"] = mobileParameters
+        mobileParameters["supports_app_verification"] = attest.isSupported
+        mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
 
+        parameters["mobile"] = mobileParameters
         return self.post(
             resource: "financial_connections/sessions/synchronize",
             parameters: parameters,
@@ -1215,7 +1213,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointAvailableIncentives,
             parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: true
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 }

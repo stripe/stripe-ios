@@ -367,10 +367,9 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         mobileParameters["app_return_url"] = returnURL
 
         let attest = backingAPIClient.stripeAttest
-        if attest.isSupported {
-            mobileParameters["supports_app_verification"] = true
-            mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
-        }
+        mobileParameters["supports_app_verification"] = attest.isSupported
+        mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
+
         parameters["mobile"] = mobileParameters
         return try await post(endpoint: .synchronize, parameters: parameters)
     }
@@ -1101,14 +1100,14 @@ enum APIEndpoint: String {
              .featuredInstitutions, .searchInstitutions, .authSessions,
              .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
              .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
-             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
-             .availableIncentives:
+             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails:
             return true
         case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
              .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
              .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
-             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup:
+             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup,
+             .availableIncentives:
             return false
         }
     }
