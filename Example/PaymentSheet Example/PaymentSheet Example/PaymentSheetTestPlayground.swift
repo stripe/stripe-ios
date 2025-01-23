@@ -108,22 +108,16 @@ struct PaymentSheetTestPlayground: View {
                         if playgroundController.settings.customerKeyType == .customerSession {
                             VStack {
                                 HStack {
-                                    Text("Customer Session Settings")
+                                    Text("Customer Session")
                                         .font(.subheadline)
-                                        .bold()
                                     Spacer()
+                                    Button {
+                                        playgroundController.customerSessionSettingsTapped()
+                                    } label: {
+                                        Text("CSSettings")
+                                            .font(.callout.smallCaps())
+                                    }.buttonStyle(.bordered)
                                 }
-                                SettingPickerView(setting: paymentMethodSaveBinding)
-                                if playgroundController.settings.paymentMethodSave == .disabled {
-                                    SettingPickerView(setting: $playgroundController.settings.allowRedisplayOverride)
-                                }
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemoveLast)
-                                SettingPickerView(setting: paymentMethodRedisplayBinding)
-                                if playgroundController.settings.paymentMethodRedisplay == .enabled {
-                                    SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
-                                }
-                                SettingPickerView(setting: $playgroundController.settings.allowsSetAsDefaultPM)
                             }
                         }
                     }
@@ -221,16 +215,7 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customerMode = newMode
         }
     }
-    var paymentMethodRedisplayBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
-        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
-            return playgroundController.settings.paymentMethodRedisplay
-        } set: { newPaymentMethodRedisplay in
-            if playgroundController.settings.paymentMethodRedisplay.rawValue != newPaymentMethodRedisplay.rawValue {
-                playgroundController.settings.paymentMethodAllowRedisplayFilters = .notSet
-            }
-            playgroundController.settings.paymentMethodRedisplay = newPaymentMethodRedisplay
-        }
-    }
+
     var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
         Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
             return playgroundController.settings.merchantCountryCode

@@ -610,7 +610,7 @@ extension NativeFlowController {
             case .success(let availableIncentives):
                 let result = PaymentMethodWithIncentiveEligibility(
                     paymentMethod: paymentMethod,
-                    incentiveEligible: availableIncentives.incentives.isEmpty == false
+                    incentiveEligible: availableIncentives.data.isEmpty == false
                 )
                 promise.resolve(with: result)
             case .failure(let error):

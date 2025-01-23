@@ -1215,7 +1215,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return post(
             resource: APIEndpointAvailableIncentives,
             parameters: parameters,
-            useConsumerPublishableKeyIfNeeded: true
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 }
