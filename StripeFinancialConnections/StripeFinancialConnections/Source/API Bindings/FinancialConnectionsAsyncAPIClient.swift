@@ -387,9 +387,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             let attestationIsSupported = backingAPIClient.stripeAttest.isSupported
             mobileParameters["supports_app_verification"] = attestationIsSupported
             mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
-            if attestationIsSupported {
-                logger.log(.attestationInitSucceeded, pane: .consent)
-            } else {
+            if !attestationIsSupported {
                 logger.log(.attestationInitFailed, pane: .consent)
             }
         }
