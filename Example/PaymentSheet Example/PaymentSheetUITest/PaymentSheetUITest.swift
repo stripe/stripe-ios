@@ -434,6 +434,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
+        settings.customerKeyType = .legacy
         settings.merchantCountryCode = .IN
         settings.currency = .inr
         settings.apmsEnabled = .off
@@ -532,7 +533,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         // Add a card first so we can test saved screen
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        try! fillCardData(app)
+        try! fillCardData(app, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         app.buttons["Set up"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         app.buttons["Reload"].tap()
@@ -1326,10 +1327,10 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         app.buttons["customer_session"].waitForExistenceAndTap()
 
         // Switch to see all payment methods
-        let paymentMethodRedisplayFilters = app.buttons["PaymentMethodRedisplayFilters, always"]
-        XCTAssertNotNil(scrollDown(scrollView: app.scrollViews.firstMatch, toFindElement: paymentMethodRedisplayFilters))
-        paymentMethodRedisplayFilters.waitForExistenceAndTap()
-        app.buttons["unspecified_limited_always"].waitForExistenceAndTap()
+        app.buttons["CSSettings"].waitForExistenceAndTap(timeout: 3)
+        app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap(timeout: 3)
+        app.buttons["unspecified_limited_always"].waitForExistenceAndTap(timeout: 3)
+        app.buttons["Done"].waitForExistenceAndTap(timeout: 3)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
@@ -1386,7 +1387,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
 
         // Assert there are two payment methods using legacy customer ephemeral key
-        // value == 2, 1 value on playground + 2 payment method
+        // value == 3, 1 value on playground + 2 payment method
         XCTAssertEqual(app.staticTexts.matching(identifier: "•••• 4242").count, 3)
 
         // Close sheet
@@ -1396,19 +1397,17 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         app.buttons["customer_session"].waitForExistenceAndTap()
 
         // Switch to see all payment methods
-        let paymentMethodRedisplayFilters = app.buttons["PaymentMethodRedisplayFilters, always"]
-        XCTAssertNotNil(scrollDown(scrollView: app.scrollViews.firstMatch, toFindElement: paymentMethodRedisplayFilters))
-        paymentMethodRedisplayFilters.waitForExistenceAndTap()
-        app.buttons["unspecified_limited_always"].waitForExistenceAndTap()
+        app.buttons["CSSettings"].waitForExistenceAndTap(timeout: 3)
+        app.buttons["PaymentMethodRedisplayFilters, always"].waitForExistenceAndTap(timeout: 3)
+        app.buttons["unspecified_limited_always"].waitForExistenceAndTap(timeout: 3)
+        app.buttons["Done"].waitForExistenceAndTap(timeout: 3)
 
         reload(app, settings: settings)
-
-        // TODO: Use default payment method from elements/sessions payload
-        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 10)
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 3))
+        app.staticTexts["•••• 4242"].waitForExistenceAndTap()
 
         // Assert there is only a single payment method using CustomerSession
-        XCTAssertEqual(app.staticTexts.matching(identifier: "•••• 4242").count, 1)
+        // value == 2, 1 value on playground + 1 payment method
+        XCTAssertEqual(app.staticTexts.matching(identifier: "•••• 4242").count, 2)
         app.buttons["Close"].waitForExistenceAndTap()
     }
     // MARK: - Remove last saved PM
@@ -1424,6 +1423,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkPassthroughMode = .pm
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        settings.customerKeyType = .legacy
 
         try _testRemoveLastSavedPaymentMethodPaymentSheet(settings: settings)
     }
@@ -1512,6 +1512,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.linkPassthroughMode = .pm
 
+        settings.customerKeyType = .legacy
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
@@ -2209,6 +2210,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
+        // TODO: Properly pass the allow_redisplay value to 'consumers/payment_details' endpoint
+        settings.customerKeyType = .legacy
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2698,6 +2701,7 @@ extension PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.allowsDelayedPMs = .on
         settings.mode = mode
+        settings.customerKeyType = .customerSession
         settings.integrationType = integrationType
         if vertical {
             settings.layout = .vertical
@@ -2734,18 +2738,17 @@ extension PaymentSheetUITestCase {
         app.buttons.matching(identifier: "Done").allElementsBoundByIndex.last?.tap()
 
         // Make sure bottom notice mandate is visible
-        switch mode {
-        case .payment:
-            XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
-        case .paymentWithSetup, .setup:
-            XCTAssertTrue(app.textViews["By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 5))
-        }
+        let paymentMandateText = "By continuing, you agree to authorize payments pursuant to these terms."
+        let setupMandateText = "By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."
 
-        if mode == .payment {
-            let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
-            XCTAssertFalse(saveThisAccountToggle.isSelected)
-            saveThisAccountToggle.tap()
-        }
+        // Save the payment method
+        XCTAssertTrue(app.textViews[paymentMandateText].waitForExistence(timeout: 5))
+        let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisAccountToggle.isSelected)
+        saveThisAccountToggle.tap()
+
+        // Tapping the checkbox changes the mandate
+        XCTAssertTrue(app.textViews[setupMandateText].waitForExistence(timeout: 5))
 
         // Confirm
         let confirmButtonText = mode == .payment ? "Pay $50.99" : "Set up"

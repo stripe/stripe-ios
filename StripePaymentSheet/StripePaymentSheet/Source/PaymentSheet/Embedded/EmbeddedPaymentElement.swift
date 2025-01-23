@@ -175,7 +175,7 @@ public final class EmbeddedPaymentElement {
             self.intent = loadResult.intent
             self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
-            self.formCache = .init()
+            self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
             if oldPaymentOption != self.paymentOption {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }

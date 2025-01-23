@@ -510,6 +510,14 @@ class PlaygroundController: ObservableObject {
             rootViewController.present(alert, animated: true, completion: nil)
         }
     }
+    func customerSessionSettingsTapped() {
+        let vc = UIHostingController(rootView: CustomerSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+            self.settings = updatedSettings
+            self.rootViewController.dismiss(animated: true, completion: nil)
+            self.load(reinitializeControllers: true)
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
+    }
 
     // Completion
 
