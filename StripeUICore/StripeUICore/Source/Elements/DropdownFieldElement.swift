@@ -35,7 +35,8 @@ import UIKit
                          labelDisplayName: NSAttributedString(string: labelDisplayName),
                          accessibilityValue: accessibilityValue,
                          rawData: rawData,
-                         isPlaceholder: isPlaceholder)
+                         isPlaceholder: isPlaceholder,
+                         isDisabled: isDisabled)
         }
 
         /// Item label displayed in the picker
@@ -257,16 +258,7 @@ extension DropdownFieldElement {
         }
 
         public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            guard let dropdownFieldElement else { return }
-            let item = dropdownFieldElement.items[row]
-            
-            // If this item is a placeholder or disabled, prevent selecting that item by rolling back to the previous selection
-            if  item.isPlaceholder || item.isDisabled {
-                pickerView.selectRow(dropdownFieldElement.selectedIndex, inComponent: 0, animated: true)
-                return
-            }
-            
-            dropdownFieldElement.pickerView(pickerView, didSelectRow: row, inComponent: component)
+            dropdownFieldElement?.pickerView(pickerView, didSelectRow: row, inComponent: component)
         }
 
         public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -279,6 +271,13 @@ extension DropdownFieldElement {
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let item = items[row]
+        // If a user selects a disable row, reset to the previous selection
+        if item.isDisabled {
+            pickerView.selectRow(selectedIndex, inComponent: 0, animated: true)
+            return
+        }
+        
         selectedIndex = row
     }
 }
