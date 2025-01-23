@@ -316,8 +316,8 @@ class IntegrationTesterUITests: XCTestCase {
     }
     
     func testHSBCWebViewLinksTrigger(cardNumber: String) {
-        print("Hello")
-        
+        print("Testing \(cardNumber)")
+
         self.popToMainMenu()
         let tablesQuery = app.collectionViews
 
