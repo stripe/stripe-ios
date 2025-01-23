@@ -195,12 +195,12 @@ public final class EmbeddedPaymentElement {
         guard let presentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
             stpAssertionFailure(errorMessage)
-            return .failed(error: PaymentSheetError.integrationError(debugDescription: errorMessage))
+            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
         guard let paymentOption = _paymentOption else {
             let errorMessage = "`confirm` should only be called when `paymentOption` is not nil"
             stpAssertionFailure(errorMessage)
-            return .failed(error: PaymentSheetError.integrationError(debugDescription: errorMessage))
+            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
         let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
         return await _confirm(paymentOption: paymentOption, authContext: authContext).result
