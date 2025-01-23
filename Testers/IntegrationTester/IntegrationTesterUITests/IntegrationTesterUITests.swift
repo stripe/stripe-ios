@@ -77,6 +77,11 @@ class IntegrationTesterUICardTests: IntegrationTesterUITests {
     func testSingleSelect3DS2() throws {
         testSingleSelectAuthentication(cardNumber: alwaysSingleSelectCard)
     }
+    
+    let hsbcCard = "4000582600000292"
+    func testHSBCHTMLIssue() throws {
+        testHSBCWebViewLinksTrigger(cardNumber: hsbcCard)
+    }
 }
 
 class IntegrationTesterUIPMTests: IntegrationTesterUITests {
@@ -308,6 +313,48 @@ class IntegrationTesterUITests: XCTestCase {
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: expectedResult))
+    }
+    
+    func testHSBCWebViewLinksTrigger(cardNumber: String) {
+        print("Hello")
+        
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+        
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+        
+        let oobChallengeScreenPredicate = NSPredicate(format: "label ==[c] 'OTP'")
+        let challengeText = app.staticTexts.matching(oobChallengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+        challengeText.forceTapElement()
+
+        let submitButton = app.buttons["Submit"]
+        XCTAssertTrue(submitButton.waitForExistence(timeout: 10.0))
+        submitButton.forceTapElement()
+        
+        let enterCodePredicate = NSPredicate(format: "placeholderValue CONTAINS[c] 'Enter OTP here'")
+        let enterCodeText = app.textFields.matching(enterCodePredicate).element
+        XCTAssertTrue(enterCodeText.waitForExistence(timeout: 10))
+        enterCodeText.tap()
+        enterCodeText.typeText("555555")
+        
+        let doneButton = app.buttons["Done"]
+        XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
+        doneButton.forceTapElement()
+        
+        let submitCodeButton = app.buttons["Submit"]
+        XCTAssertTrue(submitCodeButton.waitForExistence(timeout: 10.0))
+        submitCodeButton.forceTapElement()
+        
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
     }
 
     func testOOBAuthentication(cardNumber: String) {
