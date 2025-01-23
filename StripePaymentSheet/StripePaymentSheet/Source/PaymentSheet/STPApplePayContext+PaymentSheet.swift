@@ -88,7 +88,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             case .client:
                 return .client
             case .none:
-                return STPAnalyticsClient.DeferredIntentConfirmationType.none
+                return .completeWithoutConfirmingIntent
             }
         }()
         switch status {
