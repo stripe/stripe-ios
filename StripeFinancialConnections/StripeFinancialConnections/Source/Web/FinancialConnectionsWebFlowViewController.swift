@@ -171,15 +171,9 @@ extension FinancialConnectionsWebFlowViewController {
                 case .success(.success(let returnUrl)):
                     if manifest.isProductInstantDebits {
                         if let paymentMethod = returnUrl.extractLinkBankPaymentMethod() {
-                            let instantDebitsLinkedBank = InstantDebitsLinkedBank(
-                                paymentMethod: paymentMethod,
-                                bankName: returnUrl.extractValue(forKey: "bank_name")?
-                                // backend can return "+" instead of a more-common encoding of "%20" for spaces
-                                    .replacingOccurrences(of: "+", with: " "),
-                                last4: returnUrl.extractValue(forKey: "last4"),
-                                linkMode: elementsSessionContext?.linkMode,
-                                // TODO: Parse this from the return URL
-                                incentiveEligible: false
+                            let instantDebitsLinkedBank = createInstantDebitsLinkedBank(
+                                from: returnUrl,
+                                with: paymentMethod
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
                         } else {
@@ -211,6 +205,21 @@ extension FinancialConnectionsWebFlowViewController {
                 }
                 self.authSessionManager = nil
             })
+    }
+    
+    private func createInstantDebitsLinkedBank(
+        from url: URL,
+        with paymentMethod: LinkBankPaymentMethod
+    ) -> InstantDebitsLinkedBank {
+        return InstantDebitsLinkedBank(
+            paymentMethod: paymentMethod,
+            bankName: url.extractValue(forKey: "bank_name")?
+                // backend can return "+" instead of a more-common encoding of "%20" for spaces
+                .replacingOccurrences(of: "+", with: " "),
+            last4: url.extractValue(forKey: "last4"),
+            linkMode: elementsSessionContext?.linkMode,
+            incentiveEligible: url.extractValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false
+        )
     }
 
     private func redirect(to url: URL) {
