@@ -58,7 +58,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
         // ...with cash app selected...
-        let cashAppPayRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay")
         sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
         delegateDidUpdatePaymentOptionCalled = false // This gets set to true when we select cash app ^
         XCTAssertNil(sut.paymentOption?.mandateText)
@@ -171,18 +170,20 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
 
         // ...updating...
-        async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
+        async let _firstUpdateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
         // Inject the test payment option
         sut._test_paymentOption = .new(confirmParams: confirmParams)
         let confirmResult = await sut.confirm()
-        // ...should make the confirm call wait for the update and then
+        // ...should make the confirm call wait for the update before completing
         switch confirmResult {
         case .completed:
             break
         default:
             XCTFail("Expected confirm to succeed")
         }
+        let firstUpdateResult = await _firstUpdateResult
+        XCTAssertEqual(firstUpdateResult, .succeeded)
     }
 
     func testConfirmHandlesInflightUpdateThatFails() async throws {
@@ -190,6 +191,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.delegate = self
         sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+        sut.embeddedPaymentMethodsView.didTap(selection: .applePay)
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         async let _ = sut.update(intentConfiguration: brokenConfig)
@@ -209,6 +212,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.delegate = self
         sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+        sut.embeddedPaymentMethodsView.didTap(selection: .applePay)
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         _ = await sut.update(intentConfiguration: brokenConfig)
