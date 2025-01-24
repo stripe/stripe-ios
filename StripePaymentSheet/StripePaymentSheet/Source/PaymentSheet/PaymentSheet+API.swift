@@ -193,8 +193,7 @@ extension PaymentSheet {
                         shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
                     ),
                     paymentIntent: paymentIntent,
-                    configuration: configuration,
-                    setAsDefaultPM: confirmParams.setAsDefaultPM
+                    configuration: configuration
                 )
                 paymentHandler.confirmPayment(
                     params,
@@ -215,8 +214,7 @@ extension PaymentSheet {
                         shouldSave: false
                     ),
                     setupIntent: setupIntent,
-                    configuration: configuration,
-                    setAsDefaultPM: confirmParams.setAsDefaultPM
+                    configuration: configuration
                 )
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
@@ -611,8 +609,7 @@ extension PaymentSheet {
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
         configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil,
-        setAsDefaultPM: Bool = false
+        mandateData: STPMandateDataParams? = nil
     ) -> STPPaymentIntentParams {
         let params: STPPaymentIntentParams
         let shouldSave: Bool
@@ -665,8 +662,7 @@ extension PaymentSheet {
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
         configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil,
-        setAsDefaultPM: Bool = false
+        mandateData: STPMandateDataParams? = nil
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
