@@ -457,7 +457,7 @@ extension PaymentSheet {
             }
             // This payment method and its requirements are hardcoded on the client
             switch paymentMethodType {
-            case .card, .USBankAccount:
+            case .card, .USBankAccount, .iDEAL, .sofort, .bancontact, .SEPADebit:
                 return true
             default:
                 return false

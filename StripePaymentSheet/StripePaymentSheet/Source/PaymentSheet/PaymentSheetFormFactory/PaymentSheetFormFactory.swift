@@ -206,6 +206,8 @@ class PaymentSheetFormFactory {
                 return makeiDEAL(spec: spec)
             } else if paymentMethod == .sofort {
                 return makeSofort(spec: spec)
+            } else if paymentMethod == .SEPADebit {
+                return makeSepaDebit(spec: spec)
             }
 
             // 2. Element-based forms defined in JSON
@@ -458,12 +460,31 @@ extension PaymentSheetFormFactory {
             }
         }()
         let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
-        let elements: [Element?] = [contactSection, addressSection, mandate]
+        let checkboxElement: Element? = makeSepaBasedPMCheckbox()
+        let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
             theme: theme
         )
     }
+
+    func makeSepaDebit(spec: FormSpec) -> PaymentMethodElement {
+        let contactSection: Element? = makeContactInformationSection(
+            nameRequiredByPaymentMethod: true,
+            emailRequiredByPaymentMethod: true,
+            phoneRequiredByPaymentMethod: false
+        )
+        let iban: Element = makeIban()
+        let mandate: Element? = makeSepaMandate()
+        let addressSection: Element? = makeBillingAddressSection()
+        let checkboxElement: Element? = makeSepaBasedPMCheckbox()
+        let elements: [Element?] = [contactSection, iban, addressSection, checkboxElement, mandate]
+        return FormElement(
+            autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
+    }
+
 
     func makeBancontact() -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
@@ -472,8 +493,9 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: false
         )
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let checkboxElement: Element? = makeSepaBasedPMCheckbox()
         let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
-        let elements: [Element?] = [contactSection, addressSection, mandate]
+        let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
             theme: theme
@@ -519,7 +541,8 @@ extension PaymentSheetFormFactory {
 
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
-        let elements: [Element?] = [contactSection, bankDropdown, addressSection, mandate]
+        let checkboxElement = makeSepaBasedPMCheckbox()
+        let elements: [Element?] = [contactSection, bankDropdown, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
             theme: theme
@@ -601,6 +624,26 @@ extension PaymentSheetFormFactory {
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    // Only show checkbox for PI+SFU & Setup Intent
+    func makeSepaBasedPMCheckbox() -> Element? {
+        let isSaving = BoolReference()
+        let saveCheckbox = makeSaveCheckbox(
+            label: String(
+                format: STPLocalizedString(
+                    "Save this account for future %@ payments",
+                    "Prompt next to checkbox to save bank account."
+                ),
+                configuration.merchantDisplayName
+            )
+        ) { value in
+            isSaving.value = value
+        }
+        isSaving.value = shouldDisplaySaveCheckbox && isSettingUp
+            ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : isSettingUp
+
+        return shouldDisplaySaveCheckbox && isSettingUp ? saveCheckbox : nil
     }
 
     func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {
