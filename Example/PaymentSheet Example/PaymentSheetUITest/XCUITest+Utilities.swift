@@ -249,6 +249,7 @@ extension XCTestCase {
         app.tapCoordinate(at: .init(x: 150, y: 150))
     }
     func fillSepaData(_ app: XCUIApplication,
+                      tapCheckboxWithText checkboxText: String? = nil,
                       container: XCUIElement? = nil) throws {
         let context = container ?? app
         let nameField = context.textFields["Full name"]
@@ -279,6 +280,13 @@ extension XCTestCase {
 
         app.typeText("94016")
         context.buttons["Done"].tap()
+
+        if let checkboxText {
+            let saveThisAccountToggle = app.switches[checkboxText]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+            XCTAssertTrue(saveThisAccountToggle.isSelected)
+        }
     }
 
     func skipLinkSignup(_ app: XCUIApplication) {

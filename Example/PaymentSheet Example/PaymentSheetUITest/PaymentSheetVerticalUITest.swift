@@ -30,7 +30,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.mode = .setup
         settings.customerMode = .new
         settings.currency = .eur
-        settings.customerKeyType = .legacy // TODO: Change to customerSessions when adding save checkbox for SEPA
+        settings.customerKeyType = .customerSession
         settings.uiStyle = .flowController
         settings.layout = .vertical
         loadPlayground(app, settings)
@@ -72,7 +72,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(app.textFields["Card number"].value as? String, "1, Your card number is invalid.")
         app.textFields["Card number"].clearText()
         // Finish the card payment
-        try! fillCardData(app, cardNumber: "4242424242424242")
+        try! fillCardData(app, cardNumber: "4242424242424242", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         continueButton.tap()
         XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         app.buttons["Confirm"].tap()
@@ -89,9 +89,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         // Add a SEPA Debit PM
         app.buttons["SEPA Debit"].tap()
-        try! fillSepaData(app)
+        try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         continueButton.tap()
-        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, 123 Main, San Francisco, CA, 94016, US")
+        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 123 Main, San Francisco, CA, 94016, US")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         XCTAssertEqual(
