@@ -207,7 +207,7 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .sofort {
                 return makeSofort(spec: spec)
             } else if paymentMethod == .SEPADebit {
-                return makeSepaDebit(spec: spec)
+                return makeSepaDebit()
             }
 
             // 2. Element-based forms defined in JSON
@@ -468,7 +468,7 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    func makeSepaDebit(spec: FormSpec) -> PaymentMethodElement {
+    func makeSepaDebit() -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
             nameRequiredByPaymentMethod: true,
             emailRequiredByPaymentMethod: true,
