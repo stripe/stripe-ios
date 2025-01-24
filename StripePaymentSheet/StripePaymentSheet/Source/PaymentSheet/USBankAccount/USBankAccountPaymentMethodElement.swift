@@ -43,7 +43,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let theme: ElementsAppearance
 
     private var linkedAccountElements: [Element] {
-        [bankInfoSectionElement, saveCheckboxElement, saveCheckboxElement == nil ? defaultCheckboxElement : saveCheckboxElement?.element.isSelected ?? false ? defaultCheckboxElement : nil].compactMap { $0 }
+        [bankInfoSectionElement, saveCheckboxElement, saveCheckboxElement?.element.isSelected ?? false ? defaultCheckboxElement : nil].compactMap { $0 }
     }
 
     private static let links: [String: URL] = [
