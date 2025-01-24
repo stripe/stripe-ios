@@ -346,6 +346,8 @@ extension InstantDebitsPaymentMethodElement: ElementDelegate {
 extension InstantDebitsPaymentMethodElement: IncentiveOwner {
     
     var showIncentiveInHeader: Bool {
+        // Only show the incentive if the user hasn't linked a bank account yet. If they have,
+        // the incentive will be shown in the bank form instead.
         linkedBank == nil
     }
 }

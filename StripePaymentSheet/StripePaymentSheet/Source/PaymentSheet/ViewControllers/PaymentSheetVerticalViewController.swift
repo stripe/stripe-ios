@@ -746,8 +746,15 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         }()
         let headerView: UIView = {
             let incentive = paymentMethodListViewController?.incentive?.takeIfAppliesTo(paymentMethodType)
-            let incentiveOwner = formCache[paymentMethodType] as? IncentiveOwner
-            let displayedIncentive = (incentiveOwner?.showIncentiveInHeader ?? true) ? incentive : nil
+            let currentForm = formCache[paymentMethodType]
+            
+            let displayedIncentive = if let incentiveOwner = currentForm as? IncentiveOwner {
+                // If we have shown this form before and the incentive has been cleared, make sure we don't show it again
+                // when re-rendering the form.
+                incentiveOwner.showIncentiveInHeader ? incentive : nil
+            } else {
+                incentive
+            }
             
             if shouldDisplayFormOnly, let wallet = makeWalletHeaderView() {
                 // Special case: if there is only one payment method type and it's not a card and wallet options are available
