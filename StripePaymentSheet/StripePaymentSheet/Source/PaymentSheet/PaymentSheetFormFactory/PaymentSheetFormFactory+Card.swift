@@ -26,7 +26,7 @@ extension PaymentSheetFormFactory {
         ) { selected in
             defaultCheckbox?.view.isHidden = !selected
         }
-        defaultCheckbox?.view.isHidden = !saveCheckbox.element.isSelected
+        defaultCheckbox?.view.isHidden = savePaymentMethodConsentBehavior == .customerSheetWithCustomerSession ? false : !saveCheckbox.element.isSelected
 
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {

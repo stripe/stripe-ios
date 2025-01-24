@@ -193,7 +193,8 @@ extension PaymentSheet {
                         shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
                     ),
                     paymentIntent: paymentIntent,
-                    configuration: configuration
+                    configuration: configuration,
+                    setAsDefaultPM: confirmParams.setAsDefaultPM
                 )
                 paymentHandler.confirmPayment(
                     params,
@@ -214,7 +215,8 @@ extension PaymentSheet {
                         shouldSave: false
                     ),
                     setupIntent: setupIntent,
-                    configuration: configuration
+                    configuration: configuration,
+                    setAsDefaultPM: confirmParams.setAsDefaultPM
                 )
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
@@ -239,6 +241,7 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
+                    setAsDefaultPM: confirmParams.setAsDefaultPM,
                     completion: completion
                 )
             }
@@ -608,7 +611,8 @@ extension PaymentSheet {
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
         configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil
+        mandateData: STPMandateDataParams? = nil,
+        setAsDefaultPM: Bool? = nil
     ) -> STPPaymentIntentParams {
         let params: STPPaymentIntentParams
         let shouldSave: Bool
@@ -653,7 +657,9 @@ extension PaymentSheet {
         params.paymentMethodOptions = paymentOptions
         params.returnURL = configuration.returnURL
         params.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
-
+        if let setAsDefaultPM = setAsDefaultPM {
+            params.setAsDefaultPM = NSNumber(value: setAsDefaultPM)
+        }
         return params
     }
 
@@ -661,7 +667,8 @@ extension PaymentSheet {
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
         configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil
+        mandateData: STPMandateDataParams? = nil,
+        setAsDefaultPM: Bool? = nil
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
@@ -696,7 +703,9 @@ extension PaymentSheet {
             params.additionalAPIParameters["payment_method_options"] = ["card": ["moto": true]]
         }
         params.returnURL = configuration.returnURL
-
+        if let setAsDefaultPM = setAsDefaultPM {
+            params.setAsDefaultPM = NSNumber(value: setAsDefaultPM)
+        }
         return params
     }
 }

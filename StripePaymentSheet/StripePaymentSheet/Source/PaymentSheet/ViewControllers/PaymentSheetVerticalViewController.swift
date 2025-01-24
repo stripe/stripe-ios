@@ -54,7 +54,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return nil
         }
     }
-
     // Edge-case, only set to true when Link is selected via wallet in flow controller
     var isLinkWalletButtonSelected: Bool = false
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
