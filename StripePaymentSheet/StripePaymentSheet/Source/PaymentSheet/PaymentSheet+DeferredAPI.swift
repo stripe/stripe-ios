@@ -72,8 +72,7 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
                             configuration: configuration,
-                            mandateData: mandateData,
-                            setAsDefaultPM: setAsDefaultPM
+                            mandateData: mandateData
                         )
 
                         paymentHandler.confirmPayment(
@@ -102,8 +101,7 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
                             configuration: configuration,
-                            mandateData: mandateData,
-                            setAsDefaultPM: setAsDefaultPM
+                            mandateData: mandateData
                         )
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
