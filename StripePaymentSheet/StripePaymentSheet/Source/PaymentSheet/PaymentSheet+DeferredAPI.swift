@@ -18,7 +18,6 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         mandateData: STPMandateDataParams? = nil,
-        setAsDefaultPM: Bool = false,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in

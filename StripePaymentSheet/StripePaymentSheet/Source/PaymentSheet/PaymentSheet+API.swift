@@ -239,7 +239,6 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
-                    setAsDefaultPM: confirmParams.setAsDefaultPM,
                     completion: completion
                 )
             }
