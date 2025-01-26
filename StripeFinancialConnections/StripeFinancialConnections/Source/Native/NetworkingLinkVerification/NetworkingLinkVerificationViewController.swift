@@ -52,7 +52,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         otpView.lookupConsumerAndStartVerification()
     }
 

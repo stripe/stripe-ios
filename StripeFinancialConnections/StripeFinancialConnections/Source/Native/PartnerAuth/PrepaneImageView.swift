@@ -25,7 +25,7 @@ final class PrepaneImageView: UIView {
         super.init(frame: .zero)
 
         // background color of the whole view
-        centeringView.backgroundColor = .backgroundContainer
+        centeringView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundHighlighted
 
         addAndPinSubview(
             centeringView,
@@ -132,7 +132,7 @@ private final class GIFImageView: UIView, WKNavigationDelegate {
         webView.scrollView.isScrollEnabled = false
         webView.isUserInteractionEnabled = false
         webView.loadHTMLString(htmlString, baseURL: nil)
-        webView.backgroundColor = .customBackgroundColor
+        webView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         addAndPinSubview(webView)
     }
 

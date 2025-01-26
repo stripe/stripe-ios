@@ -74,7 +74,7 @@ class ConsentViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let paneLayoutView = PaneLayoutView(
             contentView: {
@@ -101,6 +101,7 @@ class ConsentViewController: UIViewController {
                 verticalStackView.addArrangedSubview(
                     ConsentBodyView(
                         bulletItems: dataSource.consent.body.bullets,
+                        appearance: dataSource.manifest.appearance,
                         didSelectURL: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }

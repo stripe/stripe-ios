@@ -12,9 +12,12 @@ struct FinancialConnectionsAppearance: Equatable {
     static let link: Self = .init(from: .linkLight)
 
     struct Colors: Equatable {
+        // Background color is static, and doesn't depend on the manifest's theme.
+        static let background: UIColor = .dynamic(light: .neutral0, dark: .neutral0Dark)
+        static let backgroundHighlighted: UIColor = .dynamic(light: .neutral50, dark: .neutral50Dark)
+
         let primary: UIColor
         let primaryAccent: UIColor
-        let background: UIColor
         let textDefault: UIColor
         let textSubdued: UIColor
         let textAction: UIColor
@@ -45,7 +48,6 @@ extension FinancialConnectionsAppearance.Colors {
     static let stripe: FinancialConnectionsAppearance.Colors = .init(
         primary: .dynamic(light: .brand500, dark: .brand500),
         primaryAccent: .dynamic(light: .neutral0, dark: .neutral0),
-        background: .dynamic(light: .neutral0, dark: .neutral0Dark),
         textDefault: .dynamic(light: .neutral800, dark: .neutral800Dark),
         textSubdued: .dynamic(light: .neutral600, dark: .neutral600Dark),
         textAction: .dynamic(light: .brand600, dark: .brand600),
@@ -60,7 +62,6 @@ extension FinancialConnectionsAppearance.Colors {
     static let link: FinancialConnectionsAppearance.Colors = .init(
         primary: .dynamic(light: .linkGreen200, dark: .linkGreen200),
         primaryAccent: .dynamic(light: .linkGreen900, dark: .linkGreen900),
-        background: .dynamic(light: .neutral0, dark: .neutral0Dark),
         textDefault: .dynamic(light: .neutral800, dark: .neutral800Dark),
         textSubdued: .dynamic(light: .neutral600, dark: .neutral600Dark),
         textAction: .dynamic(light: .linkGreen500, dark: .linkGreen500),

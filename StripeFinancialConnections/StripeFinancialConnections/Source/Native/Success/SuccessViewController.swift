@@ -30,7 +30,7 @@ final class SuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.hidesBackButton = true
 
         let showSaveToLinkFailedNotice = (dataSource.saveToLinkWithStripeSucceeded == false)

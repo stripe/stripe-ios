@@ -9,12 +9,6 @@ import UIKit
 
 extension UIColor {
 
-    // The background color we use across across many screens.
-    // Added for future support around dark mode.
-    static var customBackgroundColor: UIColor {
-        return .white
-    }
-
     static var textDefault: UIColor {
         return neutral800
     }
@@ -71,10 +65,6 @@ extension UIColor {
         return critical500
     }
 
-    static var backgroundContainer: UIColor {
-        return neutral50
-    }
-
     static var backgroundOffset: UIColor {
         return neutral25
     }
@@ -99,8 +89,12 @@ extension UIColor {
         return UIColor(red: 245 / 255.0, green: 246 / 255.0, blue: 248 / 255.0, alpha: 1)  // #f5f6f8
     }
 
-    private static var neutral50: UIColor {
+    static var neutral50: UIColor {
         return UIColor(red: 246 / 255.0, green: 248 / 255.0, blue: 250 / 255.0, alpha: 1)  // #f6f8fa
+    }
+
+    static var neutral50Dark: UIColor {
+        return UIColor(red: 33 / 255.0, green: 37 / 255.0, blue: 44 / 255.0, alpha: 1)  // #21252c
     }
 
     private static var neutral100: UIColor {

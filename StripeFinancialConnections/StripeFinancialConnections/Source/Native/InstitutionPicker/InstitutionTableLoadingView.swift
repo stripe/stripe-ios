@@ -13,7 +13,7 @@ final class InstitutionTableLoadingView: UIView {
 
     init() {
         super.init(frame: UIScreen.main.bounds)
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
         let verticalStackView = UIStackView(
             arrangedSubviews: (0..<10).map({ _ in
                 ShimmeringInstitutionRowView()

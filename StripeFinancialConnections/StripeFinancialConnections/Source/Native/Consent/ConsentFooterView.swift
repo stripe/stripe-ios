@@ -40,13 +40,13 @@ class ConsentFooterView: HitTestView {
         self.appearance = appearance
         self.didSelectAgree = didSelectAgree
         super.init(frame: .zero)
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let termsAndPrivacyPolicyLabel = AttributedTextView(
             font: .label(.small),
             boldFont: .label(.smallEmphasized),
             linkFont: .label(.small),
-            textColor: .textDefault,
+            textColor: appearance.colors.textDefault,
             alignment: .center
         )
         termsAndPrivacyPolicyLabel.setText(
@@ -75,7 +75,7 @@ class ConsentFooterView: HitTestView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: .textDefault,
+                textColor: appearance.colors.textDefault,
                 alignment: .center
             )
             manuallyVerifyLabel.setText(

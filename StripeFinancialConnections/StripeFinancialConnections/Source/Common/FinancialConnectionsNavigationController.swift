@@ -133,7 +133,7 @@ extension FinancialConnectionsNavigationController {
             .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -13, bottom: -2, right: 0))
         let appearance = UINavigationBarAppearance()
         appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
-        appearance.backgroundColor = .customBackgroundColor
+        appearance.backgroundColor = FinancialConnectionsAppearance.Colors.background
         appearance.shadowColor = .clear  // remove border
         navigationBar.standardAppearance = appearance
         navigationBar.scrollEdgeAppearance = appearance

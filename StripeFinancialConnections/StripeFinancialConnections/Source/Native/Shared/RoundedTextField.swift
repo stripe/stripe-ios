@@ -46,7 +46,7 @@ final class RoundedTextField: UIView {
                 textFieldContainerView
             ]
         )
-        containerStackView.backgroundColor = .customBackgroundColor
+        containerStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         containerStackView.axis = .horizontal
         containerStackView.spacing = 12
         containerStackView.isLayoutMarginsRelativeArrangement = true
@@ -725,7 +725,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                 Spacer()
             }
             .padding()
-            .background(Color(UIColor.customBackgroundColor))
+            .background(Color(FinancialConnectionsAppearance.Colors.background))
 
             // Use separate devices to showcase highlighted state
             RoundedTextFieldUIViewRepresentable(

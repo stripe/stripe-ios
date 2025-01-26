@@ -100,7 +100,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
         self.didSelectNotNow = didSelectNotNow
         self.didSelectURL = didSelectURL
         super.init(frame: .zero)
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
         addAndPinSubview(footerVerticalStackView)
     }
 

@@ -125,7 +125,7 @@ final class InstitutionTableView: UIView {
         }
         dataSource.defaultRowAnimation = .fade
         super.init(frame: frame)
-        tableView.backgroundColor = .customBackgroundColor
+        tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         tableView.separatorInset = .zero
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension

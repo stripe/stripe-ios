@@ -262,7 +262,7 @@ struct PhoneTextField_Previews: PreviewProvider {
                 Spacer()
             }
             .padding()
-            .background(Color(UIColor.customBackgroundColor))
+            .background(Color(FinancialConnectionsAppearance.Colors.background))
         }
     }
 }

@@ -18,7 +18,7 @@ final class InstitutionTableViewCell: UITableViewCell {
 
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
-        overlayView.backgroundColor = .customBackgroundColor.withAlphaComponent(0.8)
+        overlayView.backgroundColor = FinancialConnectionsAppearance.Colors.background.withAlphaComponent(0.8)
         overlayView.alpha = 0
         return overlayView
     }()
@@ -38,7 +38,7 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     private func adjustBackgroundColor(isHighlighted: Bool) {
-        contentView.backgroundColor = isHighlighted ? .backgroundContainer : .customBackgroundColor
+        contentView.backgroundColor = isHighlighted ? FinancialConnectionsAppearance.Colors.backgroundHighlighted : FinancialConnectionsAppearance.Colors.background
         backgroundColor = contentView.backgroundColor
 
         // fix a bug where the background color of a

@@ -76,7 +76,7 @@ final class AccountPickerRowView: UIView {
         super.init(frame: .zero)
 
         // necessary so the shadow does not appear under text
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         if isFaded {
             horizontalStackView.alpha = 0.25
