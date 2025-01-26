@@ -101,6 +101,7 @@ class ConsentViewController: UIViewController {
                 verticalStackView.addArrangedSubview(
                     ConsentBodyView(
                         bulletItems: dataSource.consent.body.bullets,
+                        appearance: dataSource.manifest.appearance,
                         didSelectURL: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }
