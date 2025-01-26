@@ -147,7 +147,7 @@ private func CreateSingleBulletinView(
 ) -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    imageView.tintColor = .iconDefault
+    imageView.tintColor = FinancialConnectionsAppearance.Colors.icon
     if let iconUrl = iconUrl {
         imageView.setImage(with: iconUrl, useAlwaysTemplateRenderingMode: true)
     } else {

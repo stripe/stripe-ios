@@ -34,7 +34,7 @@ final class AccountPickerRowView: UIView {
                     height: 1 / UIScreen.main.nativeScale
                 )
             } else {
-                layer.borderColor = UIColor.borderDefault.cgColor
+                layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
                 layer.borderWidth = 1
                 layer.shadowOpacity = 0
             }

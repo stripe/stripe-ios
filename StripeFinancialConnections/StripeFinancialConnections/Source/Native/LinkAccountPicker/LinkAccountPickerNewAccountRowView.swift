@@ -39,7 +39,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
         addGestureRecognizer(tapGestureRecognizer)
 
         layer.cornerRadius = 12
-        layer.borderColor = UIColor.borderDefault.cgColor
+        layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
         layer.borderWidth = 1
     }
 

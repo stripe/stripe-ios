@@ -21,7 +21,9 @@ struct FinancialConnectionsAppearance: Equatable {
         static let textSubdued: UIColor = .dynamic(light: .neutral600, dark: .neutral600Dark)
         static let textCritical: UIColor = .feedbackCritical600
 
-        static let borderNeutral: UIColor = .dynamic(light: .neutral150, dark: .neutral100Dark)
+        static let icon: UIColor = .dynamic(light: .neutral700, dark: .neutral700Dark)
+
+        static let borderNeutral: UIColor = .dynamic(light: .neutral100, dark: .neutral100Dark)
 
         let primary: UIColor
         let primaryAccent: UIColor

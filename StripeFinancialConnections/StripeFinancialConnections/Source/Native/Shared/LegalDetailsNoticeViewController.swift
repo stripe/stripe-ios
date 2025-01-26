@@ -129,7 +129,7 @@ private func CreateSingleLinkView(
 
 private func CreateSeparatorView() -> UIView {
     let separatorView = UIView()
-    separatorView.backgroundColor = .borderDefault
+    separatorView.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
     separatorView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         separatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale)

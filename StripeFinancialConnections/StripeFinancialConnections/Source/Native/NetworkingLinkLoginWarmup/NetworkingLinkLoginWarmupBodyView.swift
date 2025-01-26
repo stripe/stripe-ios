@@ -49,7 +49,7 @@ private func CreateEmailView(
         bottom: 12,
         trailing: 16
     )
-    horizontalStack.layer.borderColor = UIColor.borderDefault.cgColor
+    horizontalStack.layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
     horizontalStack.layer.borderWidth = 1
     horizontalStack.layer.cornerRadius = 12
     return horizontalStack

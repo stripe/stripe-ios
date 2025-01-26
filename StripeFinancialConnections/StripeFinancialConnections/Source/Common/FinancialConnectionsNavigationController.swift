@@ -140,7 +140,7 @@ extension FinancialConnectionsNavigationController {
         navigationBar.compactAppearance = appearance
 
         // change the back button color
-        navigationBar.tintColor = UIColor.iconDefault
+        navigationBar.tintColor = FinancialConnectionsAppearance.Colors.icon
         navigationBar.isTranslucent = false
     }
 

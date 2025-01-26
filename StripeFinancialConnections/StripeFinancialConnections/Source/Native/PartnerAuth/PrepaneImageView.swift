@@ -71,9 +71,9 @@ private func CreatePhoneBackgroundView(imageView: UIView) -> UIView {
     let containerView = UIView()
     let borderWidth: CGFloat = 8
     imageView.layer.borderWidth = borderWidth
-    imageView.layer.borderColor = UIColor.backgroundOffset.cgColor
+    imageView.layer.borderColor = FinancialConnectionsAppearance.Colors.backgroundSecondary.cgColor
     imageView.layer.shadowRadius = 10
-    imageView.layer.shadowColor = UIColor.borderDefault.cgColor
+    imageView.layer.shadowColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
     imageView.layer.shadowOpacity = 1.0
     containerView.addAndPinSubview(
         imageView,

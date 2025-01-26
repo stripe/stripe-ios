@@ -38,7 +38,7 @@ final class HostViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .iconDefault
+        item.tintColor = FinancialConnectionsAppearance.Colors.icon
         item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()

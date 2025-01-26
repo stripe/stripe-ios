@@ -64,7 +64,7 @@ private func CreateBulletPointView(
 ) -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    imageView.tintColor = .iconDefault
+    imageView.tintColor = FinancialConnectionsAppearance.Colors.icon
     imageView.setImage(with: iconUrl)
     imageView.translatesAutoresizingMaskIntoConstraints = false
     let imageDiameter: CGFloat = 20

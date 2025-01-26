@@ -75,7 +75,7 @@ final class NetworkingOTPView: UIView {
         var theme: ElementsAppearance = .default
         theme.colors = {
             var colors = ElementsAppearance.Color()
-            colors.border = .borderDefault
+            colors.border = FinancialConnectionsAppearance.Colors.borderNeutral
             colors.componentBackground = FinancialConnectionsAppearance.Colors.background
             colors.textFieldText = FinancialConnectionsAppearance.Colors.textDefault
             colors.danger = FinancialConnectionsAppearance.Colors.textCritical

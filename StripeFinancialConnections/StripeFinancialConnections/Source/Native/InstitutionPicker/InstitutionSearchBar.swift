@@ -94,7 +94,7 @@ final class InstitutionSearchBar: UIView {
     private lazy var searchIconView: UIView = {
         let searchIconImageView = UIImageView()
         searchIconImageView.image = Image.search.makeImage()
-            .withTintColor(.iconDefault)
+            .withTintColor(FinancialConnectionsAppearance.Colors.icon)
         searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             searchIconImageView.widthAnchor.constraint(equalToConstant: 20),
@@ -166,7 +166,7 @@ final class InstitutionSearchBar: UIView {
             searchBarBorderWidth = 2
             shadowOpacity = 0.1
         } else {
-            searchBarBorderColor = .borderDefault
+            searchBarBorderColor = FinancialConnectionsAppearance.Colors.borderNeutral
             searchBarBorderWidth = 1
             shadowOpacity = 0
         }
