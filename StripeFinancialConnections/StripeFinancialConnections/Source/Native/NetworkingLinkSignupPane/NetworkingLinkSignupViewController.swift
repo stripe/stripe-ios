@@ -34,12 +34,12 @@ final class NetworkingLinkSignupViewController: UIViewController {
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var loadingView: SpinnerView = {
-        return SpinnerView(theme: dataSource.manifest.theme)
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
     private lazy var formView: LinkSignupFormView = {
         let formView = LinkSignupFormView(
             accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber,
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         formView.delegate = self
         return formView
@@ -116,7 +116,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             aboveCtaText: networkingLinkSignup.aboveCta,
             saveToLinkButtonText: networkingLinkSignup.cta,
             notNowButtonText: networkingLinkSignup.skipCta,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectSaveToLink: { [weak self] in
                 self?.didSelectSaveToLink()
             },
@@ -254,7 +254,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 if urlHost == "legal-details-notice", let legalDetailsNotice {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNotice,
-                        theme: dataSource.manifest.theme,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(
                                 url,

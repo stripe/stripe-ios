@@ -26,7 +26,7 @@ protocol RoundedTextFieldDelegate: AnyObject {
 final class RoundedTextField: UIView {
 
     private let showDoneToolbar: Bool
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
 
     // Used to optionally add an error message
     // at the bottom of the text field
@@ -101,7 +101,7 @@ final class RoundedTextField: UIView {
         var theme: ElementsAppearance = .default
         theme.colors = {
             var colors = ElementsAppearance.Color()
-            colors.primary = self.theme.primaryColor
+            colors.primary = self.appearance.colors.primary
             colors.secondaryText = .textSubdued
             return colors
         }()
@@ -137,10 +137,10 @@ final class RoundedTextField: UIView {
         placeholder: String,
         footerText: String? = nil,
         showDoneToolbar: Bool = false,
-        theme: FinancialConnectionsTheme
+        appearance: FinancialConnectionsAppearance
     ) {
         self.showDoneToolbar = showDoneToolbar
-        self.theme = theme
+        self.appearance = appearance
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
         textField.placeholder = placeholder
@@ -197,7 +197,7 @@ final class RoundedTextField: UIView {
             containerHorizontalStackView.layer.borderWidth = 2.0
         } else {
             if highlighted {
-                containerHorizontalStackView.layer.borderColor = theme.textFieldFocusedColor.cgColor
+                containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
                 containerHorizontalStackView.layer.borderWidth = 2.0
             } else {
                 containerHorizontalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
@@ -659,13 +659,13 @@ private struct RoundedTextFieldUIViewRepresentable: UIViewRepresentable {
     let footerText: String?
     let errorText: String?
     let isFocused: Bool
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> RoundedTextField {
         RoundedTextField(
             placeholder: placeholder,
             footerText: footerText,
-            theme: theme
+            appearance: appearance
         )
     }
 
@@ -687,7 +687,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: nil,
                     errorText: nil,
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 56)
                 RoundedTextFieldUIViewRepresentable(
@@ -695,7 +695,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: "Your account can be checkings or savings.",
                     errorText: nil,
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 80)
                 RoundedTextFieldUIViewRepresentable(
@@ -703,7 +703,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: nil,
                     errorText: nil,
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 56)
                 RoundedTextFieldUIViewRepresentable(
@@ -711,7 +711,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: nil,
                     errorText: "Routing number is required.",
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 80)
                 RoundedTextFieldUIViewRepresentable(
@@ -719,7 +719,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: "Your account can be checkings or savings.",
                     errorText: "Account number is required.",
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 80)
                 Spacer()
@@ -733,7 +733,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                 footerText: nil,
                 errorText: nil,
                 isFocused: true,
-                theme: .light
+                appearance: .stripe
             )
             .frame(height: 56)
             .padding()
@@ -744,7 +744,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                 footerText: nil,
                 errorText: nil,
                 isFocused: true,
-                theme: .linkLight
+                appearance: .link
             )
             .frame(height: 56)
             .padding()

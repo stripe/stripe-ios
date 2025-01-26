@@ -106,7 +106,7 @@ class NativeFlowController {
         }
         if showConfirmationAlert {
             let closeConfirmationViewController = CloseConfirmationViewController(
-                theme: dataManager.manifest.theme,
+                appearance: dataManager.manifest.appearance,
                 didSelectClose: {
                     finishClosingAuthFlow()
                 }
@@ -157,7 +157,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    theme: self.dataManager.manifest.theme,
+                    appearance: self.dataManager.manifest.appearance,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
@@ -206,7 +206,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    theme: self.dataManager.manifest.theme,
+                    appearance: dataManager.manifest.appearance,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
@@ -273,7 +273,7 @@ extension NativeFlowController {
 // MARK: - Other Helpers
 
 extension NativeFlowController {
-    
+
     private struct PaymentMethodWithIncentiveEligibility {
         let paymentMethod: LinkBankPaymentMethod
         let incentiveEligible: Bool
@@ -514,7 +514,7 @@ extension NativeFlowController {
 
         var paymentDetails: RedactedPaymentDetails?
         var bankAccountDetails: BankAccountDetails?
-        
+
         let elementsSessionContext = dataManager.elementsSessionContext
         let linkMode = elementsSessionContext?.linkMode
         let email = elementsSessionContext?.billingDetails?.email ?? dataManager.consumerSession?.emailAddress
@@ -555,11 +555,11 @@ extension NativeFlowController {
             guard let self else {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
             }
-            
+
             guard let paymentDetailsID = paymentDetails?.id else {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "redactedPaymentDetails cannot be nil"))
             }
-            
+
             return updateIncentiveEligibility(
                 incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
                 paymentDetailsID: paymentDetailsID,
@@ -583,7 +583,7 @@ extension NativeFlowController {
             }
         }
     }
-    
+
     private func updateIncentiveEligibility(
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
         paymentDetailsID: String,
@@ -598,9 +598,9 @@ extension NativeFlowController {
             )
             return Promise(value: result)
         }
-        
+
         let promise = Promise<PaymentMethodWithIncentiveEligibility>()
-        
+
         self.dataManager.apiClient.updateAvailableIncentives(
             consumerSessionClientSecret: consumerSession.clientSecret,
             sessionID: incentiveEligibilitySession.id,
@@ -624,7 +624,7 @@ extension NativeFlowController {
                 promise.resolve(with: result)
             }
         }
-        
+
         return promise
     }
 
@@ -1588,7 +1588,7 @@ private func CreatePaneViewController(
             let terminalErrorViewController = TerminalErrorViewController(
                 error: terminalError,
                 allowManualEntry: dataManager.manifest.allowManualEntry,
-                theme: dataManager.manifest.theme
+                appearance: dataManager.manifest.appearance
             )
             terminalErrorViewController.delegate = nativeFlowController
             viewController = terminalErrorViewController

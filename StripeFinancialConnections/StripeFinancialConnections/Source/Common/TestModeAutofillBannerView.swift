@@ -32,7 +32,7 @@ class TestModeAutofillBannerView: UIView {
     }
 
     private let context: Context
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let didTapAutofill: () -> Void
 
     // MARK: - Subviews
@@ -72,7 +72,7 @@ class TestModeAutofillBannerView: UIView {
     private lazy var autofillDataButton: UIButton = {
         let button = UIButton()
         button.setTitle(context.buttonLabel, for: .normal)
-        button.setTitleColor(theme.textActionColor, for: .normal)
+        button.setTitleColor(appearance.colors.textAction, for: .normal)
         button.titleLabel?.textAlignment = .right
         button.titleLabel?.font = FinancialConnectionsFont.label(.mediumEmphasized).uiFont
         button.addTarget(self, action: #selector(autofillTapped), for: .touchUpInside)
@@ -89,9 +89,9 @@ class TestModeAutofillBannerView: UIView {
 
     // MARK: - Init and setup
 
-    init(context: Context, theme: FinancialConnectionsTheme, didTapAutofill: @escaping () -> Void) {
+    init(context: Context, appearance: FinancialConnectionsAppearance, didTapAutofill: @escaping () -> Void) {
         self.context = context
-        self.theme = theme
+        self.appearance = appearance
         self.didTapAutofill = didTapAutofill
         super.init(frame: .zero)
         setupLayout()
@@ -135,10 +135,10 @@ import SwiftUI
 
 private struct TestModeAutofillBannerViewRepresentable: UIViewRepresentable {
     let bannerContext: TestModeAutofillBannerView.Context
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> TestModeAutofillBannerView {
-        TestModeAutofillBannerView(context: bannerContext, theme: theme, didTapAutofill: {})
+        TestModeAutofillBannerView(context: bannerContext, appearance: appearance, didTapAutofill: {})
     }
 
     func updateUIView(_ uiView: TestModeAutofillBannerView, context: Context) {}
@@ -147,13 +147,13 @@ private struct TestModeAutofillBannerViewRepresentable: UIViewRepresentable {
 struct TestModeAutofillBannerView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
-            TestModeAutofillBannerViewRepresentable(bannerContext: .account, theme: .light)
+            TestModeAutofillBannerViewRepresentable(bannerContext: .account, appearance: .stripe)
                 .frame(height: 38)
 
-            TestModeAutofillBannerViewRepresentable(bannerContext: .otp, theme: .light)
+            TestModeAutofillBannerViewRepresentable(bannerContext: .otp, appearance: .stripe)
                 .frame(height: 38)
 
-            TestModeAutofillBannerViewRepresentable(bannerContext: .otp, theme: .linkLight)
+            TestModeAutofillBannerViewRepresentable(bannerContext: .otp, appearance: .link)
                 .frame(height: 38)
         }
         .padding()

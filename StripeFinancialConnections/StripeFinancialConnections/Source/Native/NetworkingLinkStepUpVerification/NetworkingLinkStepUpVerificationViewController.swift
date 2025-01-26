@@ -37,11 +37,11 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
     weak var delegate: NetworkingLinkStepUpVerificationViewControllerDelegate?
 
     private lazy var fullScreenLoadingView: UIView = {
-        return SpinnerView(theme: dataSource.manifest.theme)
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
     private lazy var bodyView: NetworkingLinkStepUpVerificationBodyView = {
         let bodyView = NetworkingLinkStepUpVerificationBodyView(
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             otpView: otpView,
             didSelectResendCode: { [weak self] in
                 self?.didSelectResendCode()

@@ -148,7 +148,7 @@ extension FinancialConnectionsNavigationController {
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
         shouldHideLogo: Bool,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         isTestMode: Bool
     ) {
         let iconHeight: CGFloat = 20
@@ -174,8 +174,8 @@ extension FinancialConnectionsNavigationController {
         let logoView: UIImageView? = {
             guard !shouldHideLogo else { return nil }
 
-            let logoImage = UIImageView(image: theme.logo.makeImage(template: true))
-            logoImage.tintColor = theme.logoColor
+            let logoImage = UIImageView(image: appearance.logo.makeImage(template: true))
+            logoImage.tintColor = appearance.colors.logo
             logoImage.contentMode = .scaleAspectFit
             logoImage.sizeToFit()
 

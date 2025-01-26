@@ -91,6 +91,10 @@ extension UIColor {
         return .white
     }
 
+    static var neutral0Dark: UIColor {
+        return UIColor(red: 20 / 255.0, green: 23 / 255.0, blue: 29 / 255.0, alpha: 1) // #14171d
+    }
+
     static var neutral25: UIColor {
         return UIColor(red: 245 / 255.0, green: 246 / 255.0, blue: 248 / 255.0, alpha: 1)  // #f5f6f8
     }
@@ -119,16 +123,24 @@ extension UIColor {
         return UIColor(red: 106 / 255.0, green: 115 / 255.0, blue: 131 / 255.0, alpha: 1)  // #6a7383
     }
 
-    private static var neutral600: UIColor {
+    static var neutral600: UIColor {
         return UIColor(red: 89 / 255.0, green: 97 / 255.0, blue: 113 / 255.0, alpha: 1)  // #596171
+    }
+
+    static var neutral600Dark: UIColor {
+        return UIColor(red: 140 / 255.0, green: 153 / 255.0, blue: 173 / 255.0, alpha: 1) // #8c99ad
     }
 
     private static var neutral700: UIColor {
         return UIColor(red: 71 / 255.0, green: 78 / 255.0, blue: 90 / 255.0, alpha: 1)  // #474e5a
     }
 
-    private static var neutral800: UIColor {
+    static var neutral800: UIColor {
         return UIColor(red: 53 / 255.0, green: 58 / 255.0, blue: 68 / 255.0, alpha: 1)  // #353a44
+    }
+
+    static var neutral800Dark: UIColor {
+        return UIColor(red: 201 / 255.0, green: 206 / 255.0, blue: 216 / 255.0, alpha: 1) // #14171d
     }
 
     static var brand25: UIColor {

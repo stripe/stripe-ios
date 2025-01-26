@@ -44,7 +44,7 @@ final class NetworkingOTPView: UIView {
         if dataSource.isTestMode {
             let testModeBanner = TestModeAutofillBannerView(
                 context: .otp,
-                theme: dataSource.theme,
+                appearance: dataSource.appearance,
                 didTapAutofill: applyTestModeValue
             )
             otpVerticalStackView.addArrangedSubview(testModeBanner)
@@ -67,7 +67,7 @@ final class NetworkingOTPView: UIView {
             ),
             theme: theme
         )
-        otpTextField.tintColor = dataSource.theme.primaryColor
+        otpTextField.tintColor = dataSource.appearance.colors.primary
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
         return otpTextField
     }()
@@ -76,8 +76,8 @@ final class NetworkingOTPView: UIView {
         theme.colors = {
             var colors = ElementsAppearance.Color()
             colors.border = .borderDefault
-            colors.componentBackground = .customBackgroundColor
-            colors.textFieldText = .textDefault
+            colors.componentBackground = dataSource.appearance.colors.background
+            colors.textFieldText = dataSource.appearance.colors.textDefault
             colors.danger = .textFeedbackCritical
             return colors
         }()
@@ -109,7 +109,7 @@ final class NetworkingOTPView: UIView {
 
         if show {
             let activityIndicator = ActivityIndicator(size: .medium)
-            activityIndicator.color = dataSource.theme.primaryColor
+            activityIndicator.color = dataSource.appearance.colors.spinner
             activityIndicator.startAnimating()
             let loadingView = UIStackView(
                 arrangedSubviews: [activityIndicator]

@@ -67,6 +67,7 @@
 		497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497142BB2C514B08000DFA64 /* FlowRouterTests.swift */; };
 		49A0B5862C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */; };
 		49AC518C2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */; };
+		49B5BF762D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B5BF752D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift */; };
 		49C911372C597EAF00589E0D /* LinkLoginDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C911332C597EAF00589E0D /* LinkLoginDataSource.swift */; };
 		49C911392C597EAF00589E0D /* LinkLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C911352C597EAF00589E0D /* LinkLoginViewController.swift */; };
 		49C9113B2C59932300589E0D /* LinkSignupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C9113A2C59932300589E0D /* LinkSignupFormView.swift */; };
@@ -332,6 +333,7 @@
 		497142BB2C514B08000DFA64 /* FlowRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowRouterTests.swift; sourceTree = "<group>"; };
 		49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClientTests.swift; sourceTree = "<group>"; };
 		49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLinkLoginPane.swift; sourceTree = "<group>"; };
+		49B5BF752D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAppearance.swift; sourceTree = "<group>"; };
 		49C911332C597EAF00589E0D /* LinkLoginDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkLoginDataSource.swift; sourceTree = "<group>"; };
 		49C911352C597EAF00589E0D /* LinkLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkLoginViewController.swift; sourceTree = "<group>"; };
 		49C9113A2C59932300589E0D /* LinkSignupFormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LinkSignupFormView.swift; path = StripeFinancialConnections/Source/Native/NetworkingLinkSignupPane/LinkSignupFormView.swift; sourceTree = SOURCE_ROOT; };
@@ -1067,6 +1069,7 @@
 				2C0F907D5B0AC58BE7A454BA /* StripeFinancialConnectionsBundleLocator.swift */,
 				FBC23DAC91962D0D8A713D37 /* UIColor+Extensions.swift */,
 				BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */,
+				49B5BF752D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1449,6 +1452,7 @@
 				691619AE9A989548ABA36535 /* HitTestView.swift in Sources */,
 				91A3583A0BDE0F8F0C4AD3E2 /* InstitutionIconView.swift in Sources */,
 				0375F8C6D79947C992C32362 /* NetworkingOTPDataSource.swift in Sources */,
+				49B5BF762D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift in Sources */,
 				40FF444E6CF20E9DA7D90448 /* NetworkingOTPView.swift in Sources */,
 				444884F264D13FF654EA7471 /* PaneLayoutView.swift in Sources */,
 				49C911372C597EAF00589E0D /* LinkLoginDataSource.swift in Sources */,

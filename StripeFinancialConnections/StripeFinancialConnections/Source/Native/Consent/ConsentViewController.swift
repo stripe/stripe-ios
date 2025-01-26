@@ -52,7 +52,7 @@ class ConsentViewController: UIViewController {
             aboveCtaText: dataSource.consent.aboveCta,
             ctaText: dataSource.consent.cta,
             belowCtaText: dataSource.consent.belowCta,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectAgree: { [weak self] in
                 self?.didSelectAgree()
             },
@@ -192,7 +192,7 @@ class ConsentViewController: UIViewController {
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNotice,
-                            theme: dataSource.manifest.theme,
+                            appearance: dataSource.manifest.appearance,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
@@ -203,7 +203,7 @@ class ConsentViewController: UIViewController {
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNoticeModel,
-                        theme: dataSource.manifest.theme,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }

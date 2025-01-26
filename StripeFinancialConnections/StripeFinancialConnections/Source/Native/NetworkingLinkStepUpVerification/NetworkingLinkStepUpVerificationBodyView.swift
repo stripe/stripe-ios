@@ -12,7 +12,7 @@ import UIKit
 
 final class NetworkingLinkStepUpVerificationBodyView: UIView {
 
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let didSelectResendCode: () -> Void
 
     // `UIStackView` is used only for padding
@@ -31,11 +31,11 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
     }()
 
     init(
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         otpView: UIView,
         didSelectResendCode: @escaping () -> Void
     ) {
-        self.theme = theme
+        self.appearance = appearance
         self.didSelectResendCode = didSelectResendCode
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
@@ -62,7 +62,7 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
         if show {
             footnoteStackView.addArrangedSubview(
                 CreateResendCodeLabel(
-                    theme: theme,
+                    appearance: appearance,
                     didSelect: didSelectResendCode
                 )
             )
@@ -71,14 +71,14 @@ final class NetworkingLinkStepUpVerificationBodyView: UIView {
 }
 
 private func CreateResendCodeLabel(
-    theme: FinancialConnectionsTheme,
+    appearance: FinancialConnectionsAppearance,
     didSelect: @escaping () -> Void
 ) -> UIView {
     let resendCodeLabel = AttributedTextView(
         font: .label(.medium),
         boldFont: .label(.mediumEmphasized),
         linkFont: .label(.mediumEmphasized),
-        textColor: theme.textActionColor,
+        textColor: appearance.colors.textAction,
         showLinkUnderline: false
     )
     let text = STPLocalizedString(
@@ -100,11 +100,11 @@ private func CreateResendCodeLabel(
 import SwiftUI
 
 private struct NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable: UIViewRepresentable {
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> NetworkingLinkStepUpVerificationBodyView {
         NetworkingLinkStepUpVerificationBodyView(
-            theme: theme,
+            appearance: appearance,
             otpView: UIView(),
             didSelectResendCode: {}
         )
@@ -117,10 +117,10 @@ struct NetworkingLinkStepUpVerificationBodyView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(alignment: .leading) {
             Spacer()
-            NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable(theme: .light)
+            NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable(appearance: .stripe)
                 .frame(maxHeight: 100)
                 .padding()
-            NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable(theme: .linkLight)
+            NetworkingLinkStepUpVerificationBodyViewUIViewRepresentable(appearance: .link)
                 .frame(maxHeight: 100)
                 .padding()
             Spacer()

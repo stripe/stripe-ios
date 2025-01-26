@@ -37,7 +37,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private lazy var continueStateView: UIView = {
         let continueStateViews = ContinueStateViews(
             institutionImageUrl: nil,
-            theme: manifest.theme,
+            appearance: manifest.appearance,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
                 if let url = self.lastOpenedNativeURL {
@@ -86,7 +86,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     }()
 
     // Use nil theme so the spinner view doesn't flash to the theme's color before launching the webview.
-    private let loadingView = LoadingView(frame: .zero, theme: nil)
+    private let loadingView = LoadingView(frame: .zero, appearance: nil)
 
     // MARK: - Init
 
@@ -206,7 +206,7 @@ extension FinancialConnectionsWebFlowViewController {
                 self.authSessionManager = nil
             })
     }
-    
+
     private func createInstantDebitsLinkedBank(
         from url: URL,
         with paymentMethod: LinkBankPaymentMethod

@@ -12,16 +12,16 @@ import UIKit
 final class DataAccessNoticeViewController: SheetViewController {
 
     private let dataAccessNotice: FinancialConnectionsDataAccessNotice
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let didSelectUrl: (URL) -> Void
 
     init(
         dataAccessNotice: FinancialConnectionsDataAccessNotice,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.dataAccessNotice = dataAccessNotice
-        self.theme = theme
+        self.appearance = appearance
         self.didSelectUrl = didSelectUrl
         super.init()
     }
@@ -56,7 +56,7 @@ final class DataAccessNoticeViewController: SheetViewController {
                 iconView: RoundedIconView(
                     image: .imageUrl(dataAccessNotice.icon?.default),
                     style: .circle,
-                    theme: theme
+                    appearance: appearance
                 ),
                 title: dataAccessNotice.title,
                 subtitle: firstSubtitle,
@@ -73,7 +73,7 @@ final class DataAccessNoticeViewController: SheetViewController {
                 ),
                 secondaryButtonConfiguration: nil,
                 topText: dataAccessNotice.disclaimer,
-                theme: theme,
+                appearance: appearance,
                 didSelectURL: didSelectUrl
             ).footerView
         )
@@ -199,7 +199,7 @@ private struct DataAccessNoticeViewControllerRepresentable: UIViewControllerRepr
     func makeUIViewController(context: Context) -> DataAccessNoticeViewController {
         DataAccessNoticeViewController(
             dataAccessNotice: dataAccessNotice,
-            theme: .light,
+            appearance: .stripe,
             didSelectUrl: { _  in })
     }
 

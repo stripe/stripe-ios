@@ -16,7 +16,7 @@ protocol NetworkingOTPDataSource: AnyObject {
     var otpType: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var isTestMode: Bool { get }
-    var theme: FinancialConnectionsTheme { get }
+    var appearance: FinancialConnectionsAppearance { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
@@ -50,8 +50,8 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         manifest.isTestMode
     }
 
-    var theme: FinancialConnectionsTheme {
-        manifest.theme
+    var appearance: FinancialConnectionsAppearance {
+        manifest.appearance
     }
 
     init(

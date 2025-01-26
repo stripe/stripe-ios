@@ -48,8 +48,8 @@ final class PhoneCountryCodeSelectorView: UIView {
         var theme: ElementsAppearance = .default
         theme.colors = {
             var colors = ElementsAppearance.Color()
-            colors.primary = self.theme.primaryColor
-            colors.secondaryText = .textSubdued
+            colors.primary = appearance.colors.primary
+            colors.secondaryText = appearance.colors.textSubdued
             return colors
         }()
         let keyboardToolbar = DoneButtonToolbar(
@@ -60,16 +60,16 @@ final class PhoneCountryCodeSelectorView: UIView {
         return keyboardToolbar
     }()
     private let pickerView: PhoneCountryCodePickerView
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     var selectedCountryCode: String {
         return pickerView.selectedCountryCode
     }
 
     weak var delegate: PhoneCountryCodeSelectorViewDelegate?
 
-    init(defaultCountryCode: String?, theme: FinancialConnectionsTheme) {
+    init(defaultCountryCode: String?, appearance: FinancialConnectionsAppearance) {
         self.pickerView = PhoneCountryCodePickerView(defaultCountryCode: defaultCountryCode)
-        self.theme = theme
+        self.appearance = appearance
         super.init(frame: .zero)
         pickerView.delegate = self
 
@@ -170,7 +170,7 @@ private struct PhoneCountryCodeSelectorViewUIViewRepresentable: UIViewRepresenta
     let defaultCountryCode: String?
 
     func makeUIView(context: Context) -> PhoneCountryCodeSelectorView {
-        PhoneCountryCodeSelectorView(defaultCountryCode: defaultCountryCode, theme: .light)
+        PhoneCountryCodeSelectorView(defaultCountryCode: defaultCountryCode, appearance: .stripe)
     }
 
     func updateUIView(
