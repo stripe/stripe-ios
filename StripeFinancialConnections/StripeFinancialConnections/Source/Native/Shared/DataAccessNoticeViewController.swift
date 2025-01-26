@@ -100,7 +100,7 @@ private func CreateConnectedAccountContentView(
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.mediumEmphasized),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         secondSubtitleLabel.setText(secondSubtitle)
         verticalStackView.addArrangedSubview(secondSubtitleLabel)

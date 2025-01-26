@@ -233,6 +233,7 @@ final class InstitutionTableView: UIView {
                 showTableFooterView(
                     true,
                     view: InstitutionNoResultsView(
+                        appearance: appearance,
                         didSelectManuallyEnterDetails: self.allowManualEntry ? { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.institutionTableView(

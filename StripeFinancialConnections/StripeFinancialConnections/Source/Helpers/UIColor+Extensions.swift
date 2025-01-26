@@ -9,52 +9,12 @@ import UIKit
 
 extension UIColor {
 
-    static var textDefault: UIColor {
-        return neutral800
-    }
-
-    static var textSubdued: UIColor {
-        return neutral600
-    }
-
-    static var textActionPrimary: UIColor {
-        return brand600
-    }
-
-    static var textActionPrimaryFocused: UIColor {
-        return brand600
-    }
-
-    static var textBrand: UIColor {
-        return brand500
-    }
-
-    static var textDisabled: UIColor {
-        return neutral300
-    }
-
-    static var textCritical: UIColor {
-        return critical500
-    }
-
-    static var textFeedbackCritical: UIColor {
-        return feedbackCritical600
-    }
-
-    static var textSuccess: UIColor {
-        return success500
-    }
-
     static var iconDefault: UIColor {
         return neutral700
     }
 
     static var iconActionPrimary: UIColor {
         return brand500
-    }
-
-    static var borderNeutral: UIColor {
-        return neutral150
     }
 
     static var borderDefault: UIColor {
@@ -89,6 +49,10 @@ extension UIColor {
         return UIColor(red: 245 / 255.0, green: 246 / 255.0, blue: 248 / 255.0, alpha: 1)  // #f5f6f8
     }
 
+    static var neutral25Dark: UIColor {
+        return UIColor(red: 27 / 255.0, green: 30 / 255.0, blue: 37 / 255.0, alpha: 1)  // #1b1e25
+    }
+
     static var neutral50: UIColor {
         return UIColor(red: 246 / 255.0, green: 248 / 255.0, blue: 250 / 255.0, alpha: 1)  // #f6f8fa
     }
@@ -101,7 +65,11 @@ extension UIColor {
         return UIColor(red: 216 / 255.0, green: 222 / 255.0, blue: 228 / 255.0, alpha: 1)  // #d8dee4
     }
 
-    private static var neutral150: UIColor {
+    static var neutral100Dark: UIColor {
+        return UIColor(red: 43 / 255.0, green: 48 / 255.0, blue: 57 / 255.0, alpha: 1)  // #2b3039
+    }
+
+    static var neutral150: UIColor {
         return UIColor(red: 224 / 255.0, green: 230 / 255.0, blue: 235 / 255.0, alpha: 1)  // #e0e6eb
     }
 
@@ -153,11 +121,11 @@ extension UIColor {
         return UIColor(red: 83 / 255.0, green: 58 / 255.0, blue: 253 / 255.0, alpha: 1)  // #533afd
     }
 
-    private static var critical500: UIColor {
+    static var critical500: UIColor {
         return UIColor(red: 223 / 255.0, green: 27 / 255.0, blue: 65 / 255.0, alpha: 1)  // #df1b41
     }
 
-    private static var feedbackCritical600: UIColor {
+    static var feedbackCritical600: UIColor {
         return UIColor(red: 192 / 255.0, green: 18 / 255.0, blue: 60 / 255.0, alpha: 1)  // #c0123c
     }
 

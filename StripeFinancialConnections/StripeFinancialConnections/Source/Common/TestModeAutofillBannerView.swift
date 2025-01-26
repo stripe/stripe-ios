@@ -63,7 +63,8 @@ class TestModeAutofillBannerView: UIView {
         let label = UILabel()
         label.attributedText = attributedString
         label.font = FinancialConnectionsFont.body(.small).uiFont
-        label.textColor = .textDefault
+        // Static font color here to contrast with yellow background.
+        label.textColor = .neutral800
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         return label

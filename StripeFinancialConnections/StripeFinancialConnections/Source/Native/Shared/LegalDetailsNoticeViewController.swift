@@ -103,7 +103,7 @@ private func CreateSingleLinkView(
         font: titleLabelFont,
         boldFont: titleLabelFont,
         linkFont: titleLabelFont,
-        textColor: .textDefault,
+        textColor: FinancialConnectionsAppearance.Colors.textDefault,
         linkColor: appearance.colors.textAction,
         showLinkUnderline: false
     )
@@ -116,7 +116,7 @@ private func CreateSingleLinkView(
             font: contentFont,
             boldFont: contentFont,
             linkFont: contentFont,
-            textColor: .textSubdued,
+            textColor: FinancialConnectionsAppearance.Colors.textSubdued,
             linkColor: appearance.colors.textAction,
             showLinkUnderline: false
         )

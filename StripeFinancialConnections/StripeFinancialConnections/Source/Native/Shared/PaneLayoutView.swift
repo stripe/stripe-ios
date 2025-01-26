@@ -195,7 +195,7 @@ private class AutomaticShadowScrollView: UIScrollView {
         if canScroll && shadowView == nil {
             let shadowView = UIView()
             self.shadowView = shadowView
-            shadowView.layer.shadowColor = UIColor.textDefault.cgColor
+            shadowView.layer.shadowColor = FinancialConnectionsAppearance.Colors.textDefault.cgColor
             shadowView.layer.shadowOpacity = 0.77
             shadowView.layer.shadowOffset = CGSize(width: 0, height: -4)
             shadowView.layer.shadowRadius = 10

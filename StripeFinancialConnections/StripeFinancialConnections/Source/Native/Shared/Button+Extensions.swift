@@ -53,11 +53,11 @@ extension StripeUICore.Button.Configuration {
         secondaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         secondaryButtonConfiguration.cornerRadius = 12.0
         // default
-        secondaryButtonConfiguration.foregroundColor = .textDefault
-        secondaryButtonConfiguration.backgroundColor = .neutral25
+        secondaryButtonConfiguration.foregroundColor = FinancialConnectionsAppearance.Colors.textDefault
+        secondaryButtonConfiguration.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
         // disabled
-        secondaryButtonConfiguration.disabledForegroundColor = .textDefault.withAlphaComponent(0.4)
-        secondaryButtonConfiguration.disabledBackgroundColor = .neutral25
+        secondaryButtonConfiguration.disabledForegroundColor = FinancialConnectionsAppearance.Colors.textDefault.withAlphaComponent(0.4)
+        secondaryButtonConfiguration.disabledBackgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
         // pressed
         secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)  // this tries to simulate `neutral100`
         secondaryButtonConfiguration.colorTransforms.highlightedForeground = nil

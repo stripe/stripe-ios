@@ -77,9 +77,9 @@ final class RoundedTextField: UIView {
     private(set) lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
         textField.font = FinancialConnectionsFont.label(.large).uiFont
-        textField.textColor = .textDefault
-        textField.defaultPlaceholderColor = .textSubdued
-        textField.floatingPlaceholderColor = .textSubdued
+        textField.textColor = FinancialConnectionsAppearance.Colors.textDefault
+        textField.defaultPlaceholderColor = FinancialConnectionsAppearance.Colors.textSubdued
+        textField.floatingPlaceholderColor = FinancialConnectionsAppearance.Colors.textSubdued
         textField.placeholderLabel.font = textField.font
         textField.tintColor = textField.textColor
         textField.delegate = self
@@ -102,7 +102,7 @@ final class RoundedTextField: UIView {
         theme.colors = {
             var colors = ElementsAppearance.Color()
             colors.primary = self.appearance.colors.primary
-            colors.secondaryText = .textSubdued
+            colors.secondaryText = FinancialConnectionsAppearance.Colors.textSubdued
             return colors
         }()
         let keyboardToolbar = DoneButtonToolbar(
@@ -174,7 +174,7 @@ final class RoundedTextField: UIView {
         } else if let footerText = footerText {
             let footerLabel = AttributedLabel(
                 font: .label(.large),
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             footerLabel.text = footerText
             footerTextLabel = footerLabel
@@ -193,14 +193,14 @@ final class RoundedTextField: UIView {
         let highlighted = textField.isFirstResponder
 
         if errorText != nil && !highlighted {
-            containerHorizontalStackView.layer.borderColor = UIColor.textFeedbackCritical.cgColor
+            containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.textCritical.cgColor
             containerHorizontalStackView.layer.borderWidth = 2.0
         } else {
             if highlighted {
                 containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
                 containerHorizontalStackView.layer.borderWidth = 2.0
             } else {
-                containerHorizontalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
+                containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
                 containerHorizontalStackView.layer.borderWidth = 1.0
             }
         }
@@ -258,8 +258,8 @@ private func CreateErrorLabel(text: String) -> UIView {
         font: .label(.small),
         boldFont: .label(.smallEmphasized),
         linkFont: .label(.small),
-        textColor: .textFeedbackCritical,
-        linkColor: .textFeedbackCritical
+        textColor: FinancialConnectionsAppearance.Colors.textCritical,
+        linkColor: FinancialConnectionsAppearance.Colors.textCritical
     )
     errorLabel.setText(text)
     return errorLabel
@@ -292,8 +292,8 @@ private class FloatingPlaceholderTextField: UITextField {
     }()
     private var lastAnimator: UIViewPropertyAnimator?
     private var changingFirstResponderStatus = false
-    var defaultPlaceholderColor: UIColor = .textSubdued
-    var floatingPlaceholderColor: UIColor = .textSubdued
+    var defaultPlaceholderColor: UIColor = FinancialConnectionsAppearance.Colors.textSubdued
+    var floatingPlaceholderColor: UIColor = FinancialConnectionsAppearance.Colors.textSubdued
     private var placeholderColor: UIColor {
         get {
             return placeholderLabel.textColor

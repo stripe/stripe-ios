@@ -46,7 +46,7 @@ class ConsentFooterView: HitTestView {
             font: .label(.small),
             boldFont: .label(.smallEmphasized),
             linkFont: .label(.small),
-            textColor: appearance.colors.textDefault,
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
         termsAndPrivacyPolicyLabel.setText(
@@ -75,7 +75,7 @@ class ConsentFooterView: HitTestView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: appearance.colors.textDefault,
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: .center
             )
             manuallyVerifyLabel.setText(

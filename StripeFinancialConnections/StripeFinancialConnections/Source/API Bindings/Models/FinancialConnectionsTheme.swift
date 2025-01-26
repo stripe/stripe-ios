@@ -58,14 +58,14 @@ extension FinancialConnectionsTheme {
         }
     }
 
-    var logoColor: UIColor {
-        switch self {
-        case .linkLight:
-            return .linkGreen900
-        case .light:
-            return .textActionPrimary
-        }
-    }
+//    var logoColor: UIColor {
+//        switch self {
+//        case .linkLight:
+//            return .linkGreen900
+//        case .light:
+//            return .textActionPrimary
+//        }
+//    }
 
     var iconTintColor: UIColor {
         switch self {

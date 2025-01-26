@@ -24,7 +24,7 @@ class LoadingView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = Styling.errorLabelFont
-        label.textColor = .textDefault
+        label.textColor = FinancialConnectionsAppearance.Colors.textDefault
         return label
     }()
 

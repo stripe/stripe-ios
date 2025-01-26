@@ -21,14 +21,14 @@ final class PhoneCountryCodeSelectorView: UIView {
     private lazy var flagLabel: AttributedLabel = {
         let flagLabel = AttributedLabel(
             font: .label(.large),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         return flagLabel
     }()
     private lazy var countryCodeLabel: AttributedLabel = {
         let flagLabel = AttributedLabel(
             font: .label(.large),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         return flagLabel
     }()
@@ -49,7 +49,7 @@ final class PhoneCountryCodeSelectorView: UIView {
         theme.colors = {
             var colors = ElementsAppearance.Color()
             colors.primary = appearance.colors.primary
-            colors.secondaryText = appearance.colors.textSubdued
+            colors.secondaryText = FinancialConnectionsAppearance.Colors.textSubdued
             return colors
         }()
         let keyboardToolbar = DoneButtonToolbar(
@@ -73,7 +73,7 @@ final class PhoneCountryCodeSelectorView: UIView {
         super.init(frame: .zero)
         pickerView.delegate = self
 
-        backgroundColor = .backgroundOffset
+        backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
         layer.cornerRadius = 8
         clipsToBounds = true
         accessibilityIdentifier = "phone_country_code_selector"

@@ -124,7 +124,7 @@ private func CreateBodyView(
 ) -> UIView {
     let titleLabel = AttributedLabel(
         font: .heading(.extraLarge),
-        textColor: .textDefault
+        textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     titleLabel.setText(title)
     let labelVerticalStackView = UIStackView(
@@ -139,7 +139,7 @@ private func CreateBodyView(
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.medium),
-            textColor: .textDefault,
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
         subtitleLabel.setText(subtitle)

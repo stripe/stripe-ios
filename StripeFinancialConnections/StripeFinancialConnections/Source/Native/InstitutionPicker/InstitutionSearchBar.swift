@@ -34,7 +34,7 @@ final class InstitutionSearchBar: UIView {
 
     private lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
-        textField.textColor = .textDefault
+        textField.textColor = FinancialConnectionsAppearance.Colors.textDefault
         textField.tintColor = textField.textColor // caret color
         textField.font = FinancialConnectionsFont.label(.large).uiFont
         // this removes the `searchTextField` background color.
@@ -48,7 +48,7 @@ final class InstitutionSearchBar: UIView {
                 "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."
             ),
             attributes: [
-                .foregroundColor: UIColor.textSubdued,
+                .foregroundColor: FinancialConnectionsAppearance.Colors.textSubdued,
                 .font: FinancialConnectionsFont.label(.large).uiFont,
             ]
         )
@@ -77,7 +77,7 @@ final class InstitutionSearchBar: UIView {
         let imageView = UIImageView()
         let textFieldClearButton = TextFieldClearButton()
         let cancelImage = Image.cancel_circle.makeImage()
-            .withTintColor(.textSubdued)
+            .withTintColor(FinancialConnectionsAppearance.Colors.textSubdued)
         textFieldClearButton.setImage(cancelImage, for: .normal)
         textFieldClearButton.addTarget(
             self,

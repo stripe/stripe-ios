@@ -64,7 +64,7 @@ extension PaneLayoutView {
                 font: titleFont,
                 boldFont: titleFont,
                 linkFont: titleFont,
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             titleLabel.setText(title)
             headerStackView.addArrangedSubview(titleLabel)
@@ -114,7 +114,7 @@ extension PaneLayoutView {
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             textLabel.setText(text)
             paddingStackView.addArrangedSubview(textLabel)
@@ -169,7 +169,7 @@ extension PaneLayoutView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: .textDefault,
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: .center
             )
             topTextLabel.setText(
@@ -221,7 +221,7 @@ extension PaneLayoutView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: .textDefault,
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: .center
             )
             bottomTextLabel.setText(

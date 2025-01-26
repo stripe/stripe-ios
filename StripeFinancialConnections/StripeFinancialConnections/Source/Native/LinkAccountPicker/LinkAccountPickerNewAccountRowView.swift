@@ -63,7 +63,7 @@ private func CreateIconView(imageUrl: String, appearance: FinancialConnectionsAp
 private func CreateTitleLabelView(title: String) -> UIView {
     let titleLabel = AttributedLabel(
         font: .label(.largeEmphasized),
-        textColor: .textDefault
+        textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     titleLabel.text = title
     titleLabel.lineBreakMode = .byCharWrapping

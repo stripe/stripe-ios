@@ -12,14 +12,19 @@ struct FinancialConnectionsAppearance: Equatable {
     static let link: Self = .init(from: .linkLight)
 
     struct Colors: Equatable {
-        // Background color is static, and doesn't depend on the manifest's theme.
+        // Some colors are static, and don't depend on the manifest's theme.
         static let background: UIColor = .dynamic(light: .neutral0, dark: .neutral0Dark)
+        static let backgroundSecondary: UIColor = .dynamic(light: .neutral25, dark: .neutral25Dark)
         static let backgroundHighlighted: UIColor = .dynamic(light: .neutral50, dark: .neutral50Dark)
+
+        static let textDefault: UIColor = .dynamic(light: .neutral800, dark: .neutral800Dark)
+        static let textSubdued: UIColor = .dynamic(light: .neutral600, dark: .neutral600Dark)
+        static let textCritical: UIColor = .feedbackCritical600
+
+        static let borderNeutral: UIColor = .dynamic(light: .neutral150, dark: .neutral100Dark)
 
         let primary: UIColor
         let primaryAccent: UIColor
-        let textDefault: UIColor
-        let textSubdued: UIColor
         let textAction: UIColor
         let textFieldFocused: UIColor
         let logo: UIColor
@@ -46,30 +51,26 @@ struct FinancialConnectionsAppearance: Equatable {
 
 extension FinancialConnectionsAppearance.Colors {
     static let stripe: FinancialConnectionsAppearance.Colors = .init(
-        primary: .dynamic(light: .brand500, dark: .brand500),
-        primaryAccent: .dynamic(light: .neutral0, dark: .neutral0),
-        textDefault: .dynamic(light: .neutral800, dark: .neutral800Dark),
-        textSubdued: .dynamic(light: .neutral600, dark: .neutral600Dark),
-        textAction: .dynamic(light: .brand600, dark: .brand600),
-        textFieldFocused: .dynamic(light: .brand600, dark: .brand600),
-        logo: .dynamic(light: .brand600, dark: .brand600),
-        iconTint: .dynamic(light: .brand500, dark: .brand500),
-        iconBackground: .dynamic(light: .brand25, dark: .brand25),
-        spinner: .dynamic(light: .brand500, dark: .brand500),
-        border: .dynamic(light: .brand600, dark: .brand600)
+        primary: .brand500,
+        primaryAccent: .neutral0,
+        textAction: .brand600,
+        textFieldFocused: .brand600,
+        logo: .brand600,
+        iconTint: .brand500,
+        iconBackground: .brand25,
+        spinner: .brand500,
+        border: .brand600
     )
 
     static let link: FinancialConnectionsAppearance.Colors = .init(
-        primary: .dynamic(light: .linkGreen200, dark: .linkGreen200),
-        primaryAccent: .dynamic(light: .linkGreen900, dark: .linkGreen900),
-        textDefault: .dynamic(light: .neutral800, dark: .neutral800Dark),
-        textSubdued: .dynamic(light: .neutral600, dark: .neutral600Dark),
-        textAction: .dynamic(light: .linkGreen500, dark: .linkGreen500),
-        textFieldFocused: .dynamic(light: .linkGreen200, dark: .linkGreen200),
+        primary: .linkGreen200,
+        primaryAccent: .linkGreen900,
+        textAction: .linkGreen500,
+        textFieldFocused: .linkGreen200,
         logo: .dynamic(light: .linkGreen900, dark: .neutral0),
-        iconTint: .dynamic(light: .brand500, dark: .brand500),
-        iconBackground: .dynamic(light: .linkGreen500, dark: .linkGreen500),
-        spinner: .dynamic(light: .linkGreen200, dark: .linkGreen200),
-        border: .dynamic(light: .linkGreen200, dark: .linkGreen200)
+        iconTint: .brand500,
+        iconBackground: .linkGreen500,
+        spinner: .linkGreen200,
+        border: .linkGreen200
     )
 }

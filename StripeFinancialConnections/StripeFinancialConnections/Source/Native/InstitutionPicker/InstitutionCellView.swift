@@ -39,14 +39,14 @@ final class InstitutionCellView: UIView {
     private lazy var titleLabel: AttributedLabel = {
         let titleLabel = AttributedLabel(
             font: .label(.largeEmphasized),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         return titleLabel
     }()
     private lazy var subtitleLabel: AttributedLabel = {
         let subtitleLabel = AttributedLabel(
             font: .label(.medium),
-            textColor: .textSubdued
+            textColor: FinancialConnectionsAppearance.Colors.textSubdued
         )
         return subtitleLabel
     }()

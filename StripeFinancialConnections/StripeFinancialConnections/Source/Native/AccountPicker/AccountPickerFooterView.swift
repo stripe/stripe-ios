@@ -108,7 +108,7 @@ private func CreateDataAccessLabel(
         font: .label(.small),
         boldFont: .label(.smallEmphasized),
         linkFont: .label(.small),
-        textColor: .textDefault,
+        textColor: FinancialConnectionsAppearance.Colors.textDefault,
         alignment: .center
     )
     label.setText(

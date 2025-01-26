@@ -21,7 +21,7 @@ final class AccountPickerRowLabelView: UIView {
     private lazy var titleLabel: AttributedLabel = {
         return AttributedLabel(
             font: .label(.largeEmphasized),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
     }()
     private lazy var horizontalSubtitleStackView: UIStackView = {
@@ -33,7 +33,7 @@ final class AccountPickerRowLabelView: UIView {
     private lazy var subtitleLabel: AttributedLabel = {
         return AttributedLabel(
             font: .label(.medium),
-            textColor: .textSubdued
+            textColor: FinancialConnectionsAppearance.Colors.textSubdued
         )
     }()
     private lazy var subtitleBalanceView: UIView = {
@@ -53,7 +53,7 @@ final class AccountPickerRowLabelView: UIView {
     private lazy var subtitleBalanceLabel: AttributedLabel = {
         let trailingTitleLabel = AttributedLabel(
             font: .label(.small),
-            textColor: .textSubdued
+            textColor: FinancialConnectionsAppearance.Colors.textSubdued
         )
         return trailingTitleLabel
     }()

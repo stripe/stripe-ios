@@ -77,8 +77,8 @@ final class NetworkingOTPView: UIView {
             var colors = ElementsAppearance.Color()
             colors.border = .borderDefault
             colors.componentBackground = FinancialConnectionsAppearance.Colors.background
-            colors.textFieldText = dataSource.appearance.colors.textDefault
-            colors.danger = .textFeedbackCritical
+            colors.textFieldText = FinancialConnectionsAppearance.Colors.textDefault
+            colors.danger = FinancialConnectionsAppearance.Colors.textCritical
             return colors
         }()
         return theme
@@ -135,8 +135,8 @@ final class NetworkingOTPView: UIView {
                 font: .label(.medium),
                 boldFont: .label(.mediumEmphasized),
                 linkFont: .label(.medium),
-                textColor: .textFeedbackCritical,
-                linkColor: .textFeedbackCritical,
+                textColor: FinancialConnectionsAppearance.Colors.textCritical,
+                linkColor: FinancialConnectionsAppearance.Colors.textCritical,
                 alignment: .center
             )
             errorLabel.setText(errorText)

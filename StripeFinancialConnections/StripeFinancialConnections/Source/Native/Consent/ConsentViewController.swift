@@ -33,7 +33,7 @@ class ConsentViewController: UIViewController {
             font: .heading(.extraLarge),
             boldFont: .heading(.extraLarge),
             linkFont: .heading(.extraLarge),
-            textColor: .textDefault,
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
         titleLabel.setText(

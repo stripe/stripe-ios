@@ -154,8 +154,8 @@ final class ManualEntryFormView: UIView {
                 font: .label(.medium),
                 boldFont: .label(.mediumEmphasized),
                 linkFont: .label(.medium),
-                textColor: .textFeedbackCritical,
-                linkColor: .textFeedbackCritical,
+                textColor: FinancialConnectionsAppearance.Colors.textCritical,
+                linkColor: FinancialConnectionsAppearance.Colors.textCritical,
                 alignment: .center
             )
             errorLabel.setText(text)

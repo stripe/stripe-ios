@@ -29,7 +29,7 @@ private func CreateEmailView(
 
     let emailLabel = AttributedLabel(
         font: .body(.small),
-        textColor: .textDefault
+        textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     emailLabel.setText(email)
 

@@ -497,7 +497,7 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
 private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = AttributedLabel(
         font: .heading(.extraLarge),
-        textColor: .textDefault
+        textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     headerTitleLabel.setText(
         STPLocalizedString(

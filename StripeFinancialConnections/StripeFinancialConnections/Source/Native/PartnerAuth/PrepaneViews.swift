@@ -141,7 +141,7 @@ private func CreateContentView(
                 font: .label(.large),
                 boldFont: .label(.largeEmphasized),
                 linkFont: .label(.largeEmphasized),
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             label.setText(text, action: didSelectURL)
             verticalStackView.addArrangedSubview(label)
