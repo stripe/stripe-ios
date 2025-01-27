@@ -19,6 +19,7 @@ final class PaymentSheetAnalyticsHelper {
     var elementsSession: STPElementsSession?
     var loadingStartDate: Date?
     private var startTimes: [TimeMeasurement: Date] = [:]
+    private var updateStartDate: Date?
 
     enum IntegrationShape {
         case flowController
@@ -343,6 +344,38 @@ final class PaymentSheetAnalyticsHelper {
             linkContext: paymentOption.linkContextAnalyticsValue,
             linkUI: paymentOption.linkUIAnalyticsValue
         )
+    }
+    
+    func logEmbeddedUpdateStarted() {
+        stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
+        updateStartDate = Date()
+        log(event: .mcUpdateStartedEmbedded)
+    }
+
+    func logEmbeddedUpdateFinished(result: EmbeddedPaymentElement.UpdateResult) {
+        stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
+        let duration: TimeInterval? = {
+            guard let updateStartDate else { return nil }
+            return Date().timeIntervalSince(updateStartDate)
+        }()
+        
+        let event: STPAnalyticEvent = {
+            switch result {
+            case .succeeded:
+                return .mcUpdateFinishedEmbedded
+            case .failed:
+                return .mcUpdateFailedEmbedded
+            case .canceled:
+                return .mcUpdateCanceledEmbedded
+            }
+        }()
+        
+        var params: [String: Any] = [:]
+        if case .failed(let error) = result {
+            params["error"] = error.localizedDescription
+        }
+        
+        log(event: event, duration: duration, params: params)
     }
 
     func log(

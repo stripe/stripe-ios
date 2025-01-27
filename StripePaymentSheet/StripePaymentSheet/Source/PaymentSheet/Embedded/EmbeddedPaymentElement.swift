@@ -115,6 +115,12 @@ public final class EmbeddedPaymentElement {
         _ = await latestUpdateTask?.value
         // Start the new update task
         let currentUpdateTask = Task { @MainActor [weak self, configuration, analyticsHelper] in
+            analyticsHelper.logEmbeddedUpdateStarted()
+            var updateResult: UpdateResult = .canceled // Default to canceled if unhandled
+            defer {
+                analyticsHelper.logEmbeddedUpdateFinished(result: updateResult)
+            }
+            
             // ⚠️ Don't modify `self` until the end to avoid being canceled halfway through and leaving self in a partially updated state.
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
@@ -127,10 +133,12 @@ public final class EmbeddedPaymentElement {
                     integrationShape: .embedded
                 )
             } catch {
-                return UpdateResult.failed(error: error)
+                updateResult = UpdateResult.failed(error: error)
+                return updateResult
             }
             guard !Task.isCancelled else {
-                return UpdateResult.canceled
+                updateResult = UpdateResult.canceled
+                return updateResult
             }
 
             // Store the old payment option before we update self.formViewController
@@ -167,7 +175,8 @@ public final class EmbeddedPaymentElement {
             _ = await fetchPaymentOption.value
 
             guard let self, !Task.isCancelled else {
-                return .canceled
+                updateResult = UpdateResult.canceled
+                return updateResult
             }
             // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             self.savedPaymentMethods = loadResult.savedPaymentMethods
@@ -179,7 +188,8 @@ public final class EmbeddedPaymentElement {
             if oldPaymentOption != self.paymentOption {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
-            return .succeeded
+            updateResult = .succeeded
+            return updateResult
         }
         self.latestUpdateTask = currentUpdateTask
         let updateResult = await currentUpdateTask.value

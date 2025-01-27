@@ -89,6 +89,8 @@ import Foundation
     // MARK: - Embedded Payment Element update
     case mcUpdateStartedEmbedded = "mc_embedded_update_started"
     case mcUpdateFinishedEmbedded = "mc_embedded_update_finished"
+    case mcUpdateFailedEmbedded = "mc_embedded_update_failed"
+    case mcUpdateCanceledEmbedded = "mc_embedded_update_canceled"
     
     // MARK: - PaymentSheet Show
     case mcShowCustomNewPM = "mc_custom_sheet_newpm_show"
