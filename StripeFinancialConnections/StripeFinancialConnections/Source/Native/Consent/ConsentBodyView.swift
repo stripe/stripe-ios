@@ -14,7 +14,6 @@ class ConsentBodyView: UIView {
 
     init(
         bulletItems: [FinancialConnectionsBulletPoint],
-        appearance: FinancialConnectionsAppearance,
         didSelectURL: @escaping (URL) -> Void
     ) {
         super.init(frame: .zero)
@@ -130,7 +129,6 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
                     content: "You can [disconnect](https://www.stripe.com) your accounts at any time."
                 ),
             ],
-            appearance: .stripe,
             didSelectURL: { _ in }
         )
     }
