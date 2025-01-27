@@ -453,7 +453,7 @@ extension PaymentSheet {
                         case .success(let paymentDetails):
                             if elementsSession.linkPassthroughModeEnabled {
                                 // If passthrough mode, share payment details
-                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
+                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc, allowRedisplay: paymentMethodParams.allowRedisplay) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
                                         confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
@@ -492,6 +492,11 @@ extension PaymentSheet {
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+                        // Set allow_redisplay on params
+                        intentConfirmParams.setAllowRedisplay(
+                            mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
+                            isSettingUp: intent.isSettingUp
+                        )
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
@@ -505,7 +510,8 @@ extension PaymentSheet {
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
 
                 if elementsSession.linkPassthroughModeEnabled {
-                    linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentDetails.cvc) { result in
+                    // allowRedisplay is nil since we are not saving a payment method.
+                    linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentDetails.cvc, allowRedisplay: nil) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
                             confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
