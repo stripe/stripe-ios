@@ -16,7 +16,7 @@ final class SpinnerView: UIView {
         let imageView = UIImageView(image: Image.spinner.makeImage(template: true))
         // Fallback to a neutral spinner color if the appearance hasn't been loaded yet.
         // This should only be the case for the initial spinner that is shown.
-        imageView.tintColor = appearance?.colors.spinner ?? .neutral200
+        imageView.tintColor = appearance?.colors.spinner ?? FinancialConnectionsAppearance.Colors.spinnerNeutral
         return imageView
     }()
     private let animationKey = "animation_key"

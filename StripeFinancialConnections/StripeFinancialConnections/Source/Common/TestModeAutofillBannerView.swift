@@ -41,7 +41,7 @@ class TestModeAutofillBannerView: UIView {
         // Create icon as a text attachement.
         let icon = Image.info
             .makeImage(template: true)
-            .withTintColor(.attention300)
+            .withTintColor(FinancialConnectionsAppearance.Colors.warning)
         let textAttachment = NSTextAttachment(image: icon)
 
         textAttachment.bounds = CGRect(
@@ -63,8 +63,9 @@ class TestModeAutofillBannerView: UIView {
         let label = UILabel()
         label.attributedText = attributedString
         label.font = FinancialConnectionsFont.body(.small).uiFont
-        // Static font color here to contrast with yellow background.
-        label.textColor = .neutral800
+        // Staticly use the light-mode font color here to contrast with yellow background.
+        let lightTrait = UITraitCollection(userInterfaceStyle: .light)
+        label.textColor = FinancialConnectionsAppearance.Colors.textDefault.resolvedColor(with: lightTrait)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         return label
@@ -99,7 +100,7 @@ class TestModeAutofillBannerView: UIView {
     }
 
     private func setupLayout() {
-        backgroundColor = .attention50
+        backgroundColor = FinancialConnectionsAppearance.Colors.warningLight
         layer.cornerRadius = 12
         clipsToBounds = true
 

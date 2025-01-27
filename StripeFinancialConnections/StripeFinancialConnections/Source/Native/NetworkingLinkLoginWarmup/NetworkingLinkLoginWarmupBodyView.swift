@@ -56,10 +56,12 @@ private func CreateEmailView(
 }
 
 private func CreateAvatarView(email: String) -> UIView {
+    // Always use Link-themed appearnce for this avatar view.
+    let appearance = FinancialConnectionsAppearance.link
     let diameter: CGFloat = 36
 
     let circleView = UIView()
-    circleView.backgroundColor = .linkGreen200
+    circleView.backgroundColor = appearance.colors.primary
     circleView.layer.cornerRadius = diameter / 2
     circleView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
@@ -69,7 +71,7 @@ private func CreateAvatarView(email: String) -> UIView {
 
     let letterLabel = AttributedLabel(
         font: .body(.small),
-        textColor: .linkGreen900
+        textColor: appearance.colors.primaryAccent
     )
     letterLabel.setText(String(email.uppercased().first ?? "E"))
     circleView.addSubview(letterLabel)

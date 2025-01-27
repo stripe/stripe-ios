@@ -422,7 +422,7 @@ private func CreateCustomSheetHandleView() -> UIView {
     ])
 
     let handleView = UIView()
-    handleView.backgroundColor = UIColor.neutral200
+    handleView.backgroundColor = FinancialConnectionsAppearance.Colors.spinnerNeutral
     handleView.layer.cornerRadius = 2
     containerView.addSubview(handleView)
     handleView.translatesAutoresizingMaskIntoConstraints = false

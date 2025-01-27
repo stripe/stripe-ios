@@ -14,7 +14,6 @@ class ConsentBodyView: UIView {
 
     init(
         bulletItems: [FinancialConnectionsBulletPoint],
-        appearance: FinancialConnectionsAppearance,
         didSelectURL: @escaping (URL) -> Void
     ) {
         super.init(frame: .zero)
@@ -56,7 +55,8 @@ private func CreateLabelView(
 ) -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    imageView.setImage(with: iconUrl)
+    imageView.setImage(with: iconUrl, useAlwaysTemplateRenderingMode: true)
+    imageView.tintColor = FinancialConnectionsAppearance.Colors.icon
     imageView.translatesAutoresizingMaskIntoConstraints = false
     let imageDiameter: CGFloat = 20
     NSLayoutConstraint.activate([
@@ -129,7 +129,6 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
                     content: "You can [disconnect](https://www.stripe.com) your accounts at any time."
                 ),
             ],
-            appearance: .stripe,
             didSelectURL: { _ in }
         )
     }
