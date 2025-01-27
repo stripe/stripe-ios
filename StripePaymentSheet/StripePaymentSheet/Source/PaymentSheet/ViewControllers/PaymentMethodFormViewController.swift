@@ -247,7 +247,7 @@ extension PaymentMethodFormViewController {
             case .setupIntent(let setupIntent):
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
-                return nil
+                return .deferred(elementsSession.sessionID)
             }
         }()
 

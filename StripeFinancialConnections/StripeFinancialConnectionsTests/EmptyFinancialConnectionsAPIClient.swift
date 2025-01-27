@@ -16,7 +16,11 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     var consumerPublishableKey: String?
     var consumerSession: StripeFinancialConnections.ConsumerSessionData?
 
-    func completeAssertion(possibleError: (any Error)?) {}
+    func completeAssertion(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API,
+        pane: FinancialConnectionsSessionManifest.NextPane
+    ) {}
 
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList
@@ -30,7 +34,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func synchronize(
         clientSecret: String,
-        returnURL: String?
+        returnURL: String?,
+        initialSynchronize: Bool
     ) -> Future<FinancialConnectionsSynchronize> {
         return Promise<FinancialConnectionsSynchronize>()
     }
@@ -178,7 +183,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         clientSecret: String,
         sessionId: String,
         emailSource: FinancialConnectionsAPIClient.EmailSource,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {
         return Promise<StripeFinancialConnections.LookupConsumerSessionResponse>()
     }
@@ -213,7 +219,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LinkSignUpResponse> {
         return Promise<StripeFinancialConnections.LinkSignUpResponse>()
     }

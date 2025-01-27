@@ -20,6 +20,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case unknown(debugDescription: String)
 
     // MARK: Generic errors
+    case integrationError(nonPIIDebugDescription: String)
     case missingClientSecret
     case invalidClientSecret
     case unexpectedResponseFromStripeAPI
@@ -129,6 +130,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return message
             case .embeddedPaymentElementAlreadyConfirmedIntent:
                 return "This instance of EmbeddedPaymentElement has already confirmed an intent successfully. Create a new instance of EmbeddedPaymentElement to confirm a new intent."
+            case .integrationError(nonPIIDebugDescription: let nonPIIDebugDescription):
+                return "There's a problem with your integration. \(nonPIIDebugDescription)"
             }
         }()
 

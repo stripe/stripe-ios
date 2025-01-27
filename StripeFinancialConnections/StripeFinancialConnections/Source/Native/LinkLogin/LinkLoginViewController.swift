@@ -171,7 +171,10 @@ final class LinkLoginViewController: UIViewController {
                 footerButton?.isLoading = false
 
                 guard let self else { return }
-                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+                self.dataSource.completeAssertionIfNeeded(
+                    possibleError: result.error,
+                    api: .consumerSessionLookup
+                )
 
                 switch result {
                 case .success(let response):
@@ -214,7 +217,10 @@ final class LinkLoginViewController: UIViewController {
         .observe { [weak self] result in
             guard let self else { return }
             self.footerButton?.isLoading = false
-            self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+            self.dataSource.completeAssertionIfNeeded(
+                possibleError: result.error,
+                api: .linkSignUp
+            )
 
             switch result {
             case .success(let response):
