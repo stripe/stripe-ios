@@ -51,6 +51,16 @@
     XCTAssertEqualObjects(cr.acsCounterACStoSDK, @"001");
 }
 
+// Make sure that despite unrelated fields existing, the HTML response is successfully decoded.
+- (void)testHTMLResponseRequirements {
+    NSDictionary *json = [STDSTestJSONUtils jsonNamed:@"HTMLCRes"];
+    NSError *error;
+    STDSChallengeResponseObject *cr = [STDSChallengeResponseObject decodedObjectFromJSON:json error:&error];
+
+    XCTAssertEqual(cr.acsUIType, STDSACSUITypeHTML);
+    XCTAssertNil(error);
+}
+
 - (void)testMissingFields {
     NSArray<NSString *> *requiredFields = @[
                                             @"threeDSServerTransID",
