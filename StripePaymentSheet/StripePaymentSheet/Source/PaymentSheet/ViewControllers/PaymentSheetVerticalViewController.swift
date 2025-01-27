@@ -748,10 +748,10 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             let incentive = paymentMethodListViewController?.incentive?.takeIfAppliesTo(paymentMethodType)
             let currentForm = formCache[paymentMethodType]
             
-            let displayedIncentive = if let incentiveOwner = currentForm as? IncentiveOwner {
+            let displayedIncentive = if let instantDebitsForm = currentForm as? InstantDebitsPaymentMethodElement {
                 // If we have shown this form before and the incentive has been cleared, make sure we don't show it again
                 // when re-rendering the form.
-                incentiveOwner.showIncentiveInHeader ? incentive : nil
+                instantDebitsForm.showIncentiveInHeader ? incentive : nil
             } else {
                 incentive
             }

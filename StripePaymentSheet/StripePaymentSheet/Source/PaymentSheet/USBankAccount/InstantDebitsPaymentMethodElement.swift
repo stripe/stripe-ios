@@ -176,6 +176,12 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         let canShowIncentive = linkedBank?.incentiveEligible ?? true
         return canShowIncentive ? incentive : nil
     }
+    
+    var showIncentiveInHeader: Bool {
+        // Only show the incentive if the user hasn't linked a bank account yet. If they have,
+        // the incentive will be shown in the bank form instead.
+        linkedBank == nil
+    }
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
@@ -338,17 +344,6 @@ extension InstantDebitsPaymentMethodElement: ElementDelegate {
 
     func continueToNextField(element: Element) {
         self.delegate?.continueToNextField(element: element)
-    }
-}
-
-// MARK: - IncentiveOwner
-
-extension InstantDebitsPaymentMethodElement: IncentiveOwner {
-    
-    var showIncentiveInHeader: Bool {
-        // Only show the incentive if the user hasn't linked a bank account yet. If they have,
-        // the incentive will be shown in the bank form instead.
-        linkedBank == nil
     }
 }
 
