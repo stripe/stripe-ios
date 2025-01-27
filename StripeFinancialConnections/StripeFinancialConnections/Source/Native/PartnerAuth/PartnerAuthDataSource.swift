@@ -15,6 +15,7 @@ protocol PartnerAuthDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var pendingAuthSession: FinancialConnectionsAuthSession? { get }
     var disableAuthSessionRetrieval: Bool { get }
+    var isNetworkingRelinkSession: Bool { get }
 
     func createAuthSession() -> Future<FinancialConnectionsAuthSession>
     func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
@@ -24,6 +25,10 @@ protocol PartnerAuthDataSource: AnyObject {
     func retrieveAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
 }
 
+struct RelinkSessionPayload {
+    let coreAuthorization: String
+}
+
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
 
     let institution: FinancialConnectionsInstitution
@@ -31,9 +36,14 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     let returnURL: String?
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
+    private let relinkSessionPayload: RelinkSessionPayload?
     let analyticsClient: FinancialConnectionsAnalyticsClient
     var disableAuthSessionRetrieval: Bool {
         return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
+    }
+    
+    var isNetworkingRelinkSession: Bool {
+        return relinkSessionPayload != nil
     }
 
     // a "pending" auth session is a session which has started
@@ -47,6 +57,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         authSession: FinancialConnectionsAuthSession?,
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
+        repairSessionPayload: RelinkSessionPayload?,
         returnURL: String?,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
@@ -59,15 +70,38 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.relinkSessionPayload = repairSessionPayload
     }
 
     func createAuthSession() -> Future<FinancialConnectionsAuthSession> {
-        return apiClient.createAuthSession(
-            clientSecret: clientSecret,
-            institutionId: institution.id
-        ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
-            self?.pendingAuthSession = authSession
-            return Promise(value: authSession)
+        if let relinkSessionPayload {
+            return apiClient.repairAuthSession(
+                clientSecret: clientSecret,
+                coreAuthorization: relinkSessionPayload.coreAuthorization
+            ).chained { [weak self] (repairSession: FinancialConnectionsRepairSession) in
+                let authSession = FinancialConnectionsAuthSession(
+                    id: repairSession.id,
+                    flow: repairSession.flow,
+                    institutionSkipAccountSelection: nil,
+                    nextPane: .success,
+                    showPartnerDisclosure: nil,
+                    skipAccountSelection: nil,
+                    url: repairSession.url,
+                    isOauth: repairSession.isOauth,
+                    display: repairSession.display
+                )
+                
+                self?.pendingAuthSession = authSession
+                return Promise(value: authSession)
+            }
+        } else {
+            return apiClient.createAuthSession(
+                clientSecret: clientSecret,
+                institutionId: institution.id
+            ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
+                self?.pendingAuthSession = authSession
+                return Promise(value: authSession)
+            }
         }
     }
 

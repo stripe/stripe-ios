@@ -54,6 +54,10 @@ final class PartnerAuthViewController: SheetViewController {
     private var loadingView: UIView?
     private var legacyLoadingView: UIView?
     private var showLegacyBrowserOnViewDidAppear = false
+    
+    var pane: FinancialConnectionsSessionManifest.NextPane {
+        return dataSource.isNetworkingRelinkSession ? .bankAuthRepair : .partnerAuth
+    }
 
     init(
         dataSource: PartnerAuthDataSource,
@@ -137,7 +141,7 @@ final class PartnerAuthViewController: SheetViewController {
             prepaneViews = nil // the `deinit` of prepane views will remove views
             let prepaneViews = PrepaneViews(
                 prepaneModel: prepaneModel,
-                isRepairSession: false, // TODO(kgaidis): change this for repair sessions
+                hideSecondaryButton: dataSource.isNetworkingRelinkSession,
                 panePresentationStyle: panePresentationStyle,
                 appearance: dataSource.manifest.appearance,
                 didSelectURL: { [weak self] url in
