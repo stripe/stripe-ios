@@ -311,11 +311,13 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
 
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         analyticsHelper.logSavedPMScreenOptionSelected(option: .saved(paymentMethod: paymentMethod))
-        // Set payment method as default
-        CustomerPaymentOption.setDefaultPaymentMethod(
-            .stripeId(paymentMethod.stripeId),
-            forCustomer: configuration.customer?.id
-        )
+        if !configuration.allowsSetAsDefaultPM {
+            // Set payment method as default
+            CustomerPaymentOption.setDefaultPaymentMethod(
+                .stripeId(paymentMethod.stripeId),
+                forCustomer: configuration.customer?.id
+            )
+        }
 
         // Deselect previous button
         paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected

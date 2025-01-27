@@ -720,7 +720,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         Task {
             let customerPaymentMethodOption = paymentOptionSelection.customerPaymentMethodOption()
             do {
-                try await customerSheetDataSource.setSelectedPaymentOption(paymentOption: customerPaymentMethodOption)
+                if configuration.allowsSetAsDefaultPM {
+                    // TODO: update internal default endpoint
+                } else {
+                    try await customerSheetDataSource.setSelectedPaymentOption(paymentOption: customerPaymentMethodOption)
+                }
                 onSuccess()
             } catch {
                 onError(error)

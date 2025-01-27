@@ -59,9 +59,6 @@ extension CustomerSheet {
             setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
             setupIntentParams.returnURL = configuration.returnURL
             setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
-            if let setAsDefaultPM = confirmParams.setAsDefaultPM {
-                setupIntentParams.setAsDefaultPM = NSNumber(value: setAsDefaultPM)
-            }
             paymentHandler.confirmSetupIntent(
                 setupIntentParams,
                 with: authenticationContext,
