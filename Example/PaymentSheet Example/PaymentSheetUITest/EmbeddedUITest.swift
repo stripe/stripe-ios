@@ -24,7 +24,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             .filter({ !$0.starts(with: "luxe") })
         XCTAssertEqual(
             startupLog,
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_init"]
+            ["mc_load_started_embedded", "link.account_lookup.complete", "mc_load_succeeded_embedded", "mc_embedded_init"]
         )
 
         // Entering a card w/ deferred PaymentIntent...
@@ -73,7 +73,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_carousel_payment_method_tapped"]
+            ["mc_load_started_embedded", "link.account_lookup.complete", "mc_load_succeeded_embedded", "mc_carousel_payment_method_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
@@ -122,7 +122,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             klarnaAnalytics,
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_carousel_payment_method_tapped",
+            ["mc_load_started_embedded", "link.account_lookup.complete", "mc_load_succeeded_embedded", "mc_carousel_payment_method_tapped",
              "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped",
             ]
         )
@@ -250,7 +250,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             .prefix(5)
         XCTAssertEqual(
             presentEmbeddedLog,
-            ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_carousel_payment_method_tapped", "mc_form_shown"]
+            ["mc_load_started_embedded", "mc_load_succeeded_embedded", "mc_embedded_init", "mc_carousel_payment_method_tapped", "mc_form_shown"]
         )
 
         // Complete payment
@@ -518,7 +518,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         let loadEventsWithoutSPMSelection = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ $0.starts(with: "mc_") }).prefix(3)
-        XCTAssertEqual(loadEventsWithoutSPMSelection, ["mc_load_started", "mc_load_succeeded", "mc_embedded_init"])
+        XCTAssertEqual(loadEventsWithoutSPMSelection, ["mc_load_started_embedded", "mc_load_succeeded_embedded", "mc_embedded_init"])
 
         let confirmationEvents = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ $0.starts(with: "mc_") }).suffix(1)
