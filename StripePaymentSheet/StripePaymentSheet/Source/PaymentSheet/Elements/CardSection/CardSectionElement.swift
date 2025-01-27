@@ -247,7 +247,8 @@ final class CardSectionElement: ContainerElement {
                 self.cardBrands = fetchedCardBrands
                 let disallowedCardBrands = fetchedCardBrands.filter{ !self.cardBrandFilter.isAccepted(cardBrand: $0) }
                 cardBrandDropDown.update(items: DropdownFieldElement.items(from: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands, theme: self.theme))
-
+                let validBrandSelections = cardBrandDropDown.items.filter { !$0.isPlaceholder && !$0.isDisabled }
+                
                 // If we didn't previously have brands but now have them select based on merchant preference
                 // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
                 if !hadBrands,
@@ -255,10 +256,10 @@ final class CardSectionElement: ContainerElement {
                    let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) }),
                    let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
-                } else if cardBrands.count == 1 && self.cardBrandFilter != .default {
-                    // If we only fetched one card brand auto select it, 1 index due to 0 index being the placeholder.
+                } else if validBrandSelections.count == 1, let firstItem = validBrandSelections.first, let indexToSelect = cardBrandDropDown.items.firstIndex(where: {$0.rawData == firstItem.rawData}) {
+                    // If we only fetched one card brand that is not disallowed, auto select it.
                     // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
-                    cardBrandDropDown.select(index: 1, shouldAutoAdvance: false)
+                    cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
                 }
 
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
