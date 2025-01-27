@@ -185,8 +185,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .consent
         case is InstitutionPickerViewController:
             return .institutionPicker
-        case is PartnerAuthViewController:
-            return .partnerAuth
+        case let partnerAuthViewController as PartnerAuthViewController:
+            return partnerAuthViewController.pane
         case is AccountPickerViewController:
             return .accountPicker
         case is AttachLinkedPaymentAccountViewController:

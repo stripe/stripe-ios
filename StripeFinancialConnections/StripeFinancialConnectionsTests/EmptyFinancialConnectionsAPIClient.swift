@@ -57,6 +57,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
+    
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
+        return Promise<FinancialConnectionsRepairSession>()
+    }
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()

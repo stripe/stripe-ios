@@ -184,6 +184,8 @@ protocol FinancialConnectionsAPI {
     func fetchInstitutions(clientSecret: String, query: String) -> Future<FinancialConnectionsInstitutionSearchResultResource>
 
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession>
+    
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession>
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
 
@@ -453,6 +455,19 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         ]
         return self.post(
             resource: APIEndpointAuthSessions,
+            parameters: body,
+            useConsumerPublishableKeyIfNeeded: true
+        )
+    }
+    
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
+        let body: [String: Any] = [
+            "client_secret": clientSecret,
+            "core_authorization": coreAuthorization,
+            "return_url": "ios",
+        ]
+        return self.post(
+            resource: APIEndpointAuthSessionsRepair,
             parameters: body,
             useConsumerPublishableKeyIfNeeded: true
         )
@@ -1275,6 +1290,7 @@ private let APIEndpointAuthSessionsAuthorized = "connections/auth_sessions/autho
 private let APIEndpointAuthSessionsAccounts = "connections/auth_sessions/accounts"
 private let APIEndpointAuthSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
 private let APIEndpointAuthSessionsEvents = "connections/auth_sessions/events"
+private let APIEndpointAuthSessionsRepair = "connections/repair_sessions/generate_url"
 // Networking
 private let APIEndpointDisableNetworking = "link_account_sessions/disable_networking"
 private let APIEndpointLinkStepUpAuthenticationVerified = "link_account_sessions/link_step_up_authentication_verified"

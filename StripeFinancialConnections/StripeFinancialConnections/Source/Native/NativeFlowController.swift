@@ -1169,6 +1169,16 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         dataManager.institution = institution
         pushPane(.partnerAuth, animated: true)
     }
+    
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        requestedBankAuthRepairWithInstitution institution: FinancialConnectionsInstitution,
+        forAuthorization authorization: String
+    ) {
+        dataManager.institution = institution
+        dataManager.pendingRepairAuthorization = authorization
+        pushPane(.bankAuthRepair, animated: true, clearNavigationStack: true)
+    }
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
@@ -1412,8 +1422,27 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .bankAuthRepair:
-        assertionFailure("Not supported")
-        viewController = nil
+        if let institution = dataManager.institution, let coreAuthorization = dataManager.pendingRepairAuthorization {
+            let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
+                authSession: dataManager.authSession,
+                institution: institution,
+                manifest: dataManager.manifest,
+                repairSessionPayload: RelinkSessionPayload(coreAuthorization: coreAuthorization),
+                returnURL: dataManager.returnURL,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let partnerAuthViewController = PartnerAuthViewController(
+                dataSource: partnerAuthDataSource,
+                panePresentationStyle: panePresentationStyle
+            )
+            partnerAuthViewController.delegate = nativeFlowController
+            viewController = partnerAuthViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .consent:
         if let consentPaneModel = dataManager.consentPaneModel {
             let consentDataSource = ConsentDataSourceImplementation(
@@ -1574,6 +1603,7 @@ private func CreatePaneViewController(
                 authSession: dataManager.authSession,
                 institution: institution,
                 manifest: dataManager.manifest,
+                repairSessionPayload: nil,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
