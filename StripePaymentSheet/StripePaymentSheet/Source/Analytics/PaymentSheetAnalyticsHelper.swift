@@ -70,7 +70,15 @@ final class PaymentSheetAnalyticsHelper {
 
     func logLoadStarted() {
         loadingStartDate = Date()
-        log(event: .paymentSheetLoadStarted)
+        let event: STPAnalyticEvent = {
+            switch integrationShape {
+            case .complete, .flowController:
+                return .paymentSheetLoadStarted
+            case .embedded:
+                return .mcLoadStartedEmbedded
+            }
+        }()
+        log(event: event)
     }
 
     func logLoadFailed(error: Error) {
@@ -79,8 +87,16 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
+        let event: STPAnalyticEvent = {
+            switch integrationShape {
+            case .complete, .flowController:
+                return .paymentSheetLoadFailed
+            case .embedded:
+                return .mcLoadFailedEmbedded
+            }
+        }()
         log(
-            event: .paymentSheetLoadFailed,
+            event: event,
             duration: duration,
             error: error
         )
@@ -124,8 +140,16 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
+        let event: STPAnalyticEvent = {
+            switch integrationShape {
+            case .complete, .flowController:
+                return .paymentSheetLoadSucceeded
+            case .embedded:
+                return .mcLoadSucceededEmbedded
+            }
+        }()
         log(
-            event: .paymentSheetLoadSucceeded,
+            event: event,
             duration: duration,
             params: params
         )
