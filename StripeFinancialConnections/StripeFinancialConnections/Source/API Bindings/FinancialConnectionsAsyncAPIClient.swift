@@ -23,6 +23,8 @@ final class FinancialConnectionsAsyncAPIClient {
     var consumerPublishableKey: String?
     var consumerSession: ConsumerSessionData?
 
+    private lazy var logger = FinancialConnectionsAPIClientLogger()
+
     var requestSurface: String {
         isLinkWithStripe ? "ios_instant_debits" : "ios_connections"
     }
@@ -43,10 +45,15 @@ final class FinancialConnectionsAsyncAPIClient {
     }
 
     /// Marks the assertion as completed and forwards attestation errors to the `StripeAttest` client for logging.
-    func completeAssertion(possibleError: Error?) {
+    func completeAssertion(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API,
+        pane: FinancialConnectionsSessionManifest.NextPane
+    ) {
         let attest = backingAPIClient.stripeAttest
         Task {
             if let error = possibleError, StripeAttest.isLinkAssertionError(error: error) {
+                logger.log(.attestationVerdictFailed(api), pane: pane)
                 await attest.receivedAssertionError(error)
             }
             await attest.assertionCompleted()
@@ -55,14 +62,20 @@ final class FinancialConnectionsAsyncAPIClient {
 
     /// Applies attestation-related parameters to the given base parameters
     /// In case of an assertion error, returns the unmodified base parameters
-    func assertAndApplyAttestationParameters(to baseParameters: [String: Any]) async -> [String: Any] {
+    func assertAndApplyAttestationParameters(
+        to baseParameters: [String: Any],
+        api: FinancialConnectionsAPIClientLogger.API,
+        pane: FinancialConnectionsSessionManifest.NextPane
+    ) async -> [String: Any] {
         do {
             let attest = backingAPIClient.stripeAttest
             let handle = try await attest.assert()
+            logger.log(.attestationRequestTokenSucceeded(api), pane: pane)
             let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
             return newParameters
         } catch {
             // Fail silently if we can't get an assertion, we'll try the request anyway. It may fail.
+            logger.log(.attestationRequestTokenFailed(api, error), pane: pane)
             return baseParameters
         }
     }
@@ -169,7 +182,8 @@ final class FinancialConnectionsAsyncAPIClient {
 protocol FinancialConnectionsAsyncAPI {
     func synchronize(
         clientSecret: String,
-        returnURL: String?
+        returnURL: String?,
+        initialSynchronize: Bool
     ) async throws -> FinancialConnectionsSynchronize
 
     func fetchFinancialConnectionsAccounts(
@@ -283,7 +297,8 @@ protocol FinancialConnectionsAsyncAPI {
         clientSecret: String,
         sessionId: String,
         emailSource: FinancialConnectionsAPIClient.EmailSource,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) async throws -> LookupConsumerSessionResponse
 
     // MARK: - Link API's
@@ -312,7 +327,8 @@ protocol FinancialConnectionsAsyncAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) async throws -> LinkSignUpResponse
 
     func attachLinkConsumerToLinkAccountSession(
@@ -351,7 +367,8 @@ protocol FinancialConnectionsAsyncAPI {
 extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
     func synchronize(
         clientSecret: String,
-        returnURL: String?
+        returnURL: String?,
+        initialSynchronize: Bool = false
     ) async throws -> FinancialConnectionsSynchronize {
         var parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
@@ -366,9 +383,14 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         ]
         mobileParameters["app_return_url"] = returnURL
 
-        let attest = backingAPIClient.stripeAttest
-        mobileParameters["supports_app_verification"] = attest.isSupported
-        mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
+        if initialSynchronize {
+            let attestationIsSupported = backingAPIClient.stripeAttest.isSupported
+            mobileParameters["supports_app_verification"] = attestationIsSupported
+            mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
+            if !attestationIsSupported {
+                logger.log(.attestationInitFailed, pane: .consent)
+            }
+        }
 
         parameters["mobile"] = mobileParameters
         return try await post(endpoint: .synchronize, parameters: parameters)
@@ -816,7 +838,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         clientSecret: String,
         sessionId: String,
         emailSource: FinancialConnectionsAPIClient.EmailSource,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) async throws -> LookupConsumerSessionResponse {
         var parameters: [String: Any] = [
             "email_address":
@@ -828,7 +851,11 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             parameters["request_surface"] = requestSurface
             parameters["session_id"] = sessionId
             parameters["email_source"] = emailSource.rawValue
-            let updatedParameters = await assertAndApplyAttestationParameters(to: parameters)
+            let updatedParameters = await assertAndApplyAttestationParameters(
+                to: parameters,
+                api: .consumerSessionLookup,
+                pane: pane
+            )
             return try await post(endpoint: .mobileConsumerSessionLookup, parameters: updatedParameters)
         } else {
             parameters["client_secret"] = clientSecret
@@ -890,7 +917,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) async throws -> LinkSignUpResponse {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -926,7 +954,11 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             }
         }
         if useMobileEndpoints {
-            let updatedParameters = await assertAndApplyAttestationParameters(to: parameters)
+            let updatedParameters = await assertAndApplyAttestationParameters(
+                to: parameters,
+                api: .linkSignUp,
+                pane: pane
+            )
             return try await post(endpoint: .mobileLinkAccountSignup, parameters: updatedParameters)
         } else {
             return try await post(endpoint: .linkAccountsSignUp, parameters: parameters)
