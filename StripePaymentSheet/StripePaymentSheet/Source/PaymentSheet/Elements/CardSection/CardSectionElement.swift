@@ -263,6 +263,7 @@ final class CardSectionElement: ContainerElement {
                    let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
                 } else if validBrandSelections.count == 1,
+                          !disallowedCardBrands.isEmpty,
                           let firstItem = validBrandSelections.first,
                           let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == firstItem.rawData }) {
                     // If we only fetched one card brand that is not disallowed, auto select it.
