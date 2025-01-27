@@ -24,6 +24,8 @@ final class FinancialConnectionsAPIClient {
     var consumerPublishableKey: String?
     var consumerSession: ConsumerSessionData?
 
+    private lazy var logger = FinancialConnectionsAPIClientLogger()
+
     var requestSurface: String {
         isLinkWithStripe ? "ios_instant_debits" : "ios_connections"
     }
@@ -46,17 +48,21 @@ final class FinancialConnectionsAPIClient {
     /// Applies attestation-related parameters to the given base parameters
     /// In case of an assertion error, returns the unmodified base parameters
     func assertAndApplyAttestationParameters(
-        to baseParameters: [String: Any]
+        to baseParameters: [String: Any],
+        api: FinancialConnectionsAPIClientLogger.API,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<[String: Any]> {
         let promise = Promise<[String: Any]>()
         Task {
             do {
                 let attest = backingAPIClient.stripeAttest
                 let handle = try await attest.assert()
+                logger.log(.attestationRequestTokenSucceeded(api), pane: pane)
                 let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
                 promise.resolve(with: newParameters)
             } catch {
                 // Fail silently if we can't get an assertion, we'll try the request anyway. It may fail.
+                logger.log(.attestationRequestTokenFailed(api, error), pane: pane)
                 promise.resolve(with: baseParameters)
             }
         }
@@ -64,10 +70,15 @@ final class FinancialConnectionsAPIClient {
     }
 
     /// Marks the assertion as completed and forwards attestation errors to the `StripeAttest` client for logging.
-    func completeAssertion(possibleError: Error?) {
+    func completeAssertion(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API,
+        pane: FinancialConnectionsSessionManifest.NextPane
+    ) {
         let attest = backingAPIClient.stripeAttest
         Task {
             if let error = possibleError, StripeAttest.isLinkAssertionError(error: error) {
+                logger.log(.attestationVerdictFailed(api), pane: pane)
                 await attest.receivedAssertionError(error)
             }
             await attest.assertionCompleted()
@@ -139,11 +150,16 @@ protocol FinancialConnectionsAPI {
     var consumerPublishableKey: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
 
-    func completeAssertion(possibleError: Error?)
+    func completeAssertion(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API,
+        pane: FinancialConnectionsSessionManifest.NextPane
+    )
 
     func synchronize(
         clientSecret: String,
-        returnURL: String?
+        returnURL: String?,
+        initialSynchronize: Bool
     ) -> Future<FinancialConnectionsSynchronize>
 
     func fetchFinancialConnectionsAccounts(
@@ -256,7 +272,8 @@ protocol FinancialConnectionsAPI {
         clientSecret: String,
         sessionId: String,
         emailSource: FinancialConnectionsAPIClient.EmailSource,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LookupConsumerSessionResponse>
 
     // MARK: - Link API's
@@ -285,7 +302,8 @@ protocol FinancialConnectionsAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LinkSignUpResponse>
 
     func attachLinkConsumerToLinkAccountSession(
@@ -348,7 +366,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
 
     func synchronize(
         clientSecret: String,
-        returnURL: String?
+        returnURL: String?,
+        initialSynchronize: Bool = false
     ) -> Future<FinancialConnectionsSynchronize> {
         var parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
@@ -363,9 +382,14 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         ]
         mobileParameters["app_return_url"] = returnURL
 
-        let attest = backingAPIClient.stripeAttest
-        mobileParameters["supports_app_verification"] = attest.isSupported
-        mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
+        if initialSynchronize {
+            let attestationIsSupported = backingAPIClient.stripeAttest.isSupported
+            mobileParameters["supports_app_verification"] = attestationIsSupported
+            mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
+            if !attestationIsSupported {
+                logger.log(.attestationInitFailed, pane: .consent)
+            }
+        }
 
         parameters["mobile"] = mobileParameters
         return self.post(
@@ -915,7 +939,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         clientSecret: String,
         sessionId: String,
         emailSource: FinancialConnectionsAPIClient.EmailSource,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LookupConsumerSessionResponse> {
         var parameters: [String: Any] = [
             "email_address":
@@ -928,17 +953,20 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             parameters["request_surface"] = requestSurface
             parameters["session_id"] = sessionId
             parameters["email_source"] = emailSource.rawValue
-            return assertAndApplyAttestationParameters(to: parameters)
-                .chained { [weak self] updatedParameters in
-                    guard let self else {
-                        return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
-                    }
-                    return self.post(
-                        resource: APIMobileEndpointConsumerSessionLookup,
-                        parameters: updatedParameters,
-                        useConsumerPublishableKeyIfNeeded: false
-                    )
+            return assertAndApplyAttestationParameters(
+                to: parameters,
+                api: .consumerSessionLookup,
+                pane: pane
+            ).chained { [weak self] updatedParameters in
+                guard let self else {
+                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
                 }
+                return self.post(
+                    resource: APIMobileEndpointConsumerSessionLookup,
+                    parameters: updatedParameters,
+                    useConsumerPublishableKeyIfNeeded: false
+                )
+            }
         } else {
             parameters["client_secret"] = clientSecret
             return post(
@@ -1001,7 +1029,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LinkSignUpResponse> {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -1038,16 +1067,19 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         }
 
         if useMobileEndpoints {
-            return assertAndApplyAttestationParameters(to: parameters)
-                .chained { [weak self] updatedParameters in
-                    guard let self else {
-                        return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
-                    }
-                    return self.post(
-                        resource: APIMobileEndpointLinkAccountSignUp,
-                        parameters: updatedParameters,
-                        useConsumerPublishableKeyIfNeeded: false
-                    )
+            return assertAndApplyAttestationParameters(
+                to: parameters,
+                api: .linkSignUp,
+                pane: pane
+            ).chained { [weak self] updatedParameters in
+                guard let self else {
+                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAPIClient was deallocated."))
+                }
+                return self.post(
+                    resource: APIMobileEndpointLinkAccountSignUp,
+                    parameters: updatedParameters,
+                    useConsumerPublishableKeyIfNeeded: false
+                )
             }
         } else {
             return post(

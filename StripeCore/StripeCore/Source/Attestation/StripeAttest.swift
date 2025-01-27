@@ -113,25 +113,25 @@ import UIKit
         }
     }
 
-    @_spi(STP) public enum AttestationError: Error {
+    @_spi(STP) public enum AttestationError: String, Error {
         /// Attestation is not supported on this device.
-        case attestationNotSupported
+        case attestationNotSupported = "attestation_not_supported"
         /// Device ID is unavailable.
-        case noDeviceID
+        case noDeviceID = "no_device_id"
         /// App ID is unavailable.
-        case noAppID
+        case noAppID = "no_app_id"
         /// Retried assertion, but it failed.
-        case secondAssertionFailureAfterRetryingAttestation
+        case secondAssertionFailureAfterRetryingAttestation = "second_assertion_failure_after_retrying_attestation"
         /// Can't attest any more keys today.
-        case attestationRateLimitExceeded
+        case attestationRateLimitExceeded = "attestation_rate_limit_exceeded"
         /// The challenge couldn't be converted to UTF-8 data.
-        case invalidChallengeData
+        case invalidChallengeData = "invalid_challenge_data"
         /// The backend asked us not to attest
-        case shouldNotAttest
+        case shouldNotAttest = "should_not_attest"
         /// The backend asked us to attest, but the key is already attested
-        case shouldAttestButKeyIsAlreadyAttested
+        case shouldAttestButKeyIsAlreadyAttested = "should_attest_but_key_is_already_attested"
         /// A publishable key was not set
-        case noPublishableKey
+        case noPublishableKey = "no_publishable_key"
     }
 
     // MARK: - Internal

@@ -160,7 +160,10 @@ final class NetworkingOTPView: UIView {
         dataSource.lookupConsumerSession()
             .observe { [weak self] result in
                 guard let self = self else { return }
-                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+                self.dataSource.completeAssertionIfNeeded(
+                    possibleError: result.error,
+                    api: .consumerSessionLookup
+                )
 
                 switch result {
                 case .success(let lookupConsumerSessionResponse):

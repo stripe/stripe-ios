@@ -192,7 +192,18 @@ public final class EmbeddedPaymentElement {
     /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
-        return await _confirm().result
+        guard let presentingViewController else {
+            let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
+            stpAssertionFailure(errorMessage)
+            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
+        }
+        guard let paymentOption = _paymentOption else {
+            let errorMessage = "`confirm` should only be called when `paymentOption` is not nil"
+            stpAssertionFailure(errorMessage)
+            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
+        }
+        let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
+        return await _confirm(paymentOption: paymentOption, authContext: authContext).result
     }
 
     /// Sets the currently selected payment option to `nil`.
