@@ -36,6 +36,7 @@ protocol NativeFlowDataManager: AnyObject {
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneCaption: String? { get set }
     var customSuccessPaneSubCaption: String? { get set }
+    var pendingRepairAuthorization: String? { get set }
 
     func createPaymentDetails(
         consumerSessionClientSecret: String,
@@ -98,6 +99,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
     var customSuccessPaneCaption: String?
     var customSuccessPaneSubCaption: String?
+    var pendingRepairAuthorization: String?
 
     var consumerSession: ConsumerSessionData? {
         didSet {

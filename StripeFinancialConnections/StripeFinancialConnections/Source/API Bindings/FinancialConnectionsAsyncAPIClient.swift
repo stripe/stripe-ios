@@ -456,6 +456,15 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         ]
         return try await post(endpoint: .authSessions, parameters: parameters)
     }
+    
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) async throws -> FinancialConnectionsRepairSession {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            "core_authorization": coreAuthorization,
+            "return_url": "ios",
+        ]
+        return try await post(endpoint: .authSessions, parameters: parameters)
+    }
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsAuthSession {
         let parameters = [
@@ -1107,6 +1116,7 @@ enum APIEndpoint: String {
     case authSessionsAccounts = "connections/auth_sessions/accounts"
     case authSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
     case authSessionsEvents = "connections/auth_sessions/events"
+    case authSessionsRepair = "connections/repair_sessions/generate_url"
 
     // Networking
     case disableNetworking = "link_account_sessions/disable_networking"
@@ -1140,7 +1150,8 @@ enum APIEndpoint: String {
              .featuredInstitutions, .searchInstitutions, .authSessions,
              .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
              .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
-             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails:
+             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
+             .authSessionsRepair:
             return true
         case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
