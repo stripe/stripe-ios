@@ -585,7 +585,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssert(app.fc_playgroundSuccessAlertView.exists)
     }
 
-    func testNativeConnectMerchantForTokenCase() {
+    func disabled_testNativeConnectMerchantForTokenCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """

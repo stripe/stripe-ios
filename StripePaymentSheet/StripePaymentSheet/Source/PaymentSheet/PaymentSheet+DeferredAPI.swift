@@ -46,7 +46,7 @@ extension PaymentSheet {
                                                                                  shouldSavePaymentMethod: confirmType.shouldSave)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
-                    completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.none)
+                    completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
                     return
                 }
 

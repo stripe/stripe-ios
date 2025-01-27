@@ -505,7 +505,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             uiStyle: .paymentSheet,
             layout: .automatic,
             mode: .payment,
-            customerKeyType: .legacy,
+            customerKeyType: .customerSession,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
