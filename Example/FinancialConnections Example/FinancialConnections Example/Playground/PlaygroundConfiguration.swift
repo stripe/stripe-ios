@@ -456,7 +456,7 @@ final class PlaygroundConfiguration {
             if let useAsyncAPIClient = configurationStore[Self.useAsyncAPIClientKey] as? Bool {
                 return useAsyncAPIClient
             } else {
-                return false
+                return true
             }
         }
         set {
