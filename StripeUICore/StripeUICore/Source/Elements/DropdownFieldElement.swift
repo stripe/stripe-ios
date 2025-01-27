@@ -157,8 +157,8 @@ import UIKit
         didUpdate: DidUpdateSelectedIndex? = nil,
         didTapClose: DidTapClose? = nil
     ) {
-        assert(!items.isEmpty, "`items` must contain at least one item")
-
+        assert(!items.filter{!$0.isDisabled}.isEmpty, "`items` must contain at least one non-disabled item")
+        
         self.label = label
         self.theme = theme
         self.items = items
@@ -189,7 +189,7 @@ import UIKit
 
     public func update(items: [DropdownItem]) {
         assert(!items.isEmpty, "`items` must contain at least one item")
-        // Try to re-select the same item afer updating, if not possible default to the first item in the list
+        // Try to re-select the same item after updating, if not possible default to the first item in the list
         let newSelectedIndex = items.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData }) ?? 0
 
         self.items = items
