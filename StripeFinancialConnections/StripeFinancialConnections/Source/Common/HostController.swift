@@ -93,7 +93,11 @@ class HostController {
         apiClient: apiClient,
         delegate: self
     )
-    lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
+    lazy var navigationController: FinancialConnectionsNavigationController = {
+        let navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
+        configuration.style.configure(navigationController)
+        return navigationController
+    }()
 
     weak var delegate: HostControllerDelegate?
 

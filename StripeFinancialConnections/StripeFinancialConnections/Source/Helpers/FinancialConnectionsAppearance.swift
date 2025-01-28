@@ -178,9 +178,12 @@ private extension UIColor {
     }
 
     // MARK: Helpers
-    static func dynamic(light: UIColor, dark: UIColor, supportsDynamicColors: Bool = false) -> UIColor {
-        guard supportsDynamicColors else { return light }
+    static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
         return UIColor(dynamicProvider: {
+            guard ExperimentStore.shared.supportsDynamicStyle else {
+                return light
+            }
+
             switch $0.userInterfaceStyle {
             case .light, .unspecified:
                 return light
