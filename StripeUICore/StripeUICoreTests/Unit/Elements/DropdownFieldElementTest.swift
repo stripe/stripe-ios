@@ -101,6 +101,7 @@ final class DropdownFieldElementTest: XCTestCase {
                                                              rawData: "Disabled",
                                                              isDisabled: true)
         let itemsWithDisabled = items + [disabledItem]
+        XCTAssertEqual(4, items.count)
         
         var index: Int?
         let element = DropdownFieldElement(items: itemsWithDisabled, defaultIndex: 0, label: "", didUpdate: { index = $0 })
