@@ -212,6 +212,7 @@ public final class EmbeddedPaymentElement {
             stpAssertionFailure(errorMessage)
             return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
+        analyticsHelper.log(event: .mcConfirmEmbedded)
         let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
         return await _confirm(paymentOption: paymentOption, authContext: authContext).result
     }
