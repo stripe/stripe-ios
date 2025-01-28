@@ -568,9 +568,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             isServerSideConfirm: true // Server-side confirmation
         )
     }
-
     
-
     func testDeferredConfirm_new_insufficient_funds_card() {
         // Note: This fails when the intent is confirmed
         let insufficient_funds_new_PM = IntentConfirmParams(params: ._testCardValue(number: "4000000000009995"), type: .stripe(.card))
@@ -734,7 +732,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 XCTFail("Result did not match. Expected \(expectedResult) but got \(result)")
             }
         }
-        waitForExpectations(timeout: 100)
+        waitForExpectations(timeout: 10)
     }
 
     func testDeferredConfirm_paymentintent_client_side_confirm_validates() {
