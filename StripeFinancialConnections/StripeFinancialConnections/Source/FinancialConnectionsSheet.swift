@@ -43,7 +43,7 @@ final public class FinancialConnectionsSheet {
             .completed(result: (session: session, token: session.bankAccountToken))
         }
     }
-    
+
     /// Configuration for the Financial Connections Sheet.
     @_spi(STP) public struct Configuration {
         /// Style options for colors in Financial Connections.
@@ -58,9 +58,13 @@ final public class FinancialConnectionsSheet {
             /// Applies the specified user interface style to the given view controller.
             func configure(_ viewController: UIViewController?) {
                 guard let viewController else { return }
+                guard ExperimentStore.shared.supportsDynamicStyle else {
+                    return
+                }
+
                 switch self {
                 case .automatic:
-                    break // no-op
+                    break
                 case .alwaysLight:
                     viewController.overrideUserInterfaceStyle = .light
                 case .alwaysDark:
@@ -69,7 +73,11 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        @_spi(STP) public var style: UserInterfaceStyle = .automatic
+        @_spi(STP) public var style: UserInterfaceStyle
+
+        @_spi(STP) public init(style: UserInterfaceStyle = .alwaysLight) {
+            self.style = style
+        }
     }
 
     /// Configuration for the Financial Connections Sheet.
