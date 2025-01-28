@@ -985,7 +985,7 @@ extension IntentConfirmParams: Equatable {
         // Sanity check to make sure when we add new properties, we check them here
         let mirror = Mirror(reflecting: lhs)
         let propertyCount = mirror.children.count
-        XCTAssertEqual(propertyCount, 7)
+        XCTAssertEqual(propertyCount, 8)
 
         return true
     }
