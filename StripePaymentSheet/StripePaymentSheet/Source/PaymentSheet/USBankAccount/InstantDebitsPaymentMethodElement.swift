@@ -227,8 +227,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         if let last4ofBankAccount = linkedBank.last4, let bankName = linkedBank.bankName {
             linkedBankInfoView.setBankName(text: bankName)
             linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
-            // TODO: Take the eligibility from the linked bank
-            linkedBankInfoView.setIncentiveEligible(false)
+            linkedBankInfoView.setIncentiveEligible(linkedBank.incentiveEligible)
             formElement.toggleElements(
                 linkedBankElements,
                 hidden: false,

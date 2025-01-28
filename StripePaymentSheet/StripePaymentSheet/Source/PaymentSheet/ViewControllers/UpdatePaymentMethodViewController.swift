@@ -90,59 +90,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
         return button
     }()
 
-    private lazy var removeButton: UIButton = {
-        let button = UIButton(type: .custom)
-        let font = viewModel.appearance.primaryButton.font ?? viewModel.appearance.scaledFont(for: viewModel.appearance.font.base.medium, style: .callout, maximumPointSize: 25)
-        if #available(iOS 15.0, *) {
-            var configuration = UIButton.Configuration.bordered()
-            configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-            configuration.baseBackgroundColor = .clear
-            configuration.background.cornerRadius = viewModel.appearance.cornerRadius
-            configuration.background.strokeWidth = viewModel.appearance.selectedBorderWidth ?? viewModel.appearance.borderWidth * 1.5
-            configuration.background.strokeColor = viewModel.appearance.colors.danger
-            configuration.titleAlignment = .center
-            configuration.attributedTitle = AttributedString(.Localized.remove, attributes: AttributeContainer([.font: font, .foregroundColor: viewModel.appearance.colors.danger]))
-            button.configuration = configuration
-        } else {
-            button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
-            button.setTitleColor(viewModel.appearance.colors.danger, for: .normal)
-            button.setTitleColor(viewModel.appearance.colors.danger.disabledColor, for: .highlighted)
-            button.layer.borderColor = viewModel.appearance.colors.danger.cgColor
-            button.layer.borderWidth = viewModel.appearance.selectedBorderWidth ?? viewModel.appearance.borderWidth * 1.5
-            button.layer.cornerRadius = viewModel.appearance.cornerRadius
-            button.setTitle(.Localized.remove, for: .normal)
-            button.titleLabel?.textAlignment = .center
-            button.titleLabel?.font = font
-            button.titleLabel?.adjustsFontForContentSizeCategory = true
-        }
-        button.addTarget(self, action: #selector(buttonTouchDown(_:)), for: .touchDown)
-        button.addTarget(self, action: #selector(buttonTouchUp(_:)), for: [.touchUpInside, .touchUpOutside])
+    private lazy var removeButton: RemoveButton = {
+        let button = RemoveButton(title: .Localized.remove, appearance: viewModel.appearance)
         button.addTarget(self, action: #selector(removePaymentMethod), for: .touchUpInside)
         button.isHidden = !viewModel.canRemove
         return button
     }()
-
-    @objc private func buttonTouchDown(_ button: UIButton) {
-        if #available(iOS 15.0, *)  {
-            button.configuration?.attributedTitle?.foregroundColor = viewModel.appearance.colors.danger.disabledColor
-            button.configuration?.background.strokeColor = viewModel.appearance.colors.danger.disabledColor
-        }
-        else {
-            button.setTitleColor(viewModel.appearance.colors.danger.disabledColor, for: .normal)
-            button.layer.borderColor = viewModel.appearance.colors.danger.disabledColor.cgColor
-        }
-    }
-
-    @objc private func buttonTouchUp(_ button: UIButton) {
-        if #available(iOS 15.0, *)  {
-            button.configuration?.attributedTitle?.foregroundColor = viewModel.appearance.colors.danger
-            button.configuration?.background.strokeColor = viewModel.appearance.colors.danger
-        }
-        else {
-            button.setTitleColor(viewModel.appearance.colors.danger, for: .normal)
-            button.layer.borderColor = viewModel.appearance.colors.danger.cgColor
-        }
-    }
 
     private lazy var paymentMethodForm: UIView = {
         let form = SavedPaymentMethodFormFactory(viewModel: viewModel)
