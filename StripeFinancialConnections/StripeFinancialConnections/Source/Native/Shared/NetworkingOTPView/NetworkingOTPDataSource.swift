@@ -18,6 +18,7 @@ protocol NetworkingOTPDataSource: AnyObject {
     var isTestMode: Bool { get }
     var theme: FinancialConnectionsTheme { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
+    var emailAddress: String { get }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
@@ -25,7 +26,7 @@ protocol NetworkingOTPDataSource: AnyObject {
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
-    )
+    ) -> Error?
 }
 
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
@@ -33,7 +34,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     let otpType: String
     let pane: FinancialConnectionsSessionManifest.NextPane
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    private let emailAddress: String
+    let emailAddress: String
     private let customEmailType: String?
     private let connectionsMerchantName: String?
     private let apiClient: any FinancialConnectionsAPI
@@ -130,9 +131,9 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
-    ) {
-        guard manifest.verified else { return }
-        apiClient.completeAssertion(
+    ) -> Error? {
+        guard manifest.verified else { return nil }
+        return apiClient.completeAssertion(
             possibleError: possibleError,
             api: api,
             pane: pane

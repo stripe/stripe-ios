@@ -26,7 +26,7 @@ protocol LinkLoginDataSource: AnyObject {
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
-    )
+    ) -> Error?
 }
 
 final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
@@ -133,9 +133,9 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
-    ) {
-        guard manifest.verified else { return }
-        apiClient.completeAssertion(
+    ) -> Error? {
+        guard manifest.verified else { return nil }
+        return apiClient.completeAssertion(
             possibleError: possibleError,
             api: api,
             pane: .linkLogin

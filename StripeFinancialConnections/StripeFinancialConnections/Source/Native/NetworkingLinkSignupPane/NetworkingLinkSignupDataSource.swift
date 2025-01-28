@@ -23,7 +23,7 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
-    )
+    ) -> Error?
 }
 
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
@@ -136,9 +136,9 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
-    ) {
-        guard manifest.verified else { return }
-        apiClient.completeAssertion(
+    ) -> Error? {
+        guard manifest.verified else { return nil }
+        return apiClient.completeAssertion(
             possibleError: possibleError,
             api: api,
             pane: .networkingLinkSignupPane
