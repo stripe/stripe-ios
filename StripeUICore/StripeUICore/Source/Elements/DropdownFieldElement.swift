@@ -271,6 +271,10 @@ extension DropdownFieldElement {
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        guard row < items.count else {
+            stpAssertionFailure("DropdownFieldElement selected row (\(row)) is out of bounds. Total dropdown items: \(items.count)")
+            return
+        }
         let item = items[row]
         // If a user selects a disable row, reset to the previous selection
         if item.isDisabled {
