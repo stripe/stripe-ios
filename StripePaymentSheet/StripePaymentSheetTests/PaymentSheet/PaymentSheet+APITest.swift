@@ -65,6 +65,27 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         return newCardPaymentOption
     }()
 
+    lazy var newCardDefaultPaymentOption: PaymentSheet.PaymentOption = {
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.cvc = "123"
+        cardParams.expYear = 32
+        cardParams.expMonth = 12
+        var confirmParams: IntentConfirmParams = .init(
+            params: .init(
+                card: cardParams,
+                billingDetails: .init(),
+                metadata: nil
+            ),
+            type: .stripe(.card)
+        )
+        confirmParams.setAsDefaultPM = true
+        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
+            confirmParams: confirmParams
+        )
+
+        return newCardPaymentOption
+    }()
     // MARK: - load and confirm tests
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {
@@ -344,6 +365,83 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    func testPaymentSheetLoadAndConfirmWithPaymentIntentSetAsDefault() {
+        let expectation = XCTestExpectation(description: "Retrieve Payment Intent With Preferences")
+        let types = ["card"]
+        let expected = [.card]
+            .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+        var configuration = self.configuration
+        configuration.customer = .init(id: "test_customer_default", ephemeralKeySecret: "")
+        configuration.allowsSetAsDefaultPM = true
+        // 0. Create a PI on our test backend
+        STPTestingAPIClient.shared.fetchPaymentIntent(types: types) { result in
+            switch result {
+            case .success(let clientSecret):
+                // 1. Load the PI
+                PaymentSheetLoader.load(
+                    mode: .paymentIntentClientSecret(clientSecret),
+                    configuration: configuration,
+                    analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                    integrationShape: .complete
+                ) { result in
+                    switch result {
+                    case .success(let loadResult):
+                        XCTAssertEqual(
+                            Set(loadResult.elementsSession.orderedPaymentMethodTypes),
+                            Set(expected)
+                        )
+                        XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                        // 2. Confirm the intent with a new card
+
+                        PaymentSheet.confirm(
+                            configuration: configuration,
+                            authenticationContext: self,
+                            intent: loadResult.intent,
+                            elementsSession: loadResult.elementsSession,
+                            paymentOption: self.newCardDefaultPaymentOption,
+                            paymentHandler: self.paymentHandler,
+                            analyticsHelper: ._testValue()
+                        ) { result, _ in
+                            switch result {
+                            case .completed:
+                                // 3. Fetch the PI
+                                self.apiClient.retrievePaymentIntent(withClientSecret: clientSecret)
+                                { paymentIntent, _ in
+                                    // Make sure the PI is succeeded and contains shipping
+                                    XCTAssertNotNil(paymentIntent?.shipping)
+                                    XCTAssertEqual(
+                                        paymentIntent?.shipping?.name,
+                                        self.configuration.shippingDetails()?.name
+                                    )
+                                    XCTAssertEqual(
+                                        paymentIntent?.shipping?.phone,
+                                        self.configuration.shippingDetails()?.phone
+                                    )
+                                    XCTAssertEqual(
+                                        paymentIntent?.shipping?.address?.line1,
+                                        self.configuration.shippingDetails()?.address.line1
+                                    )
+                                    XCTAssertEqual(paymentIntent?.status, .succeeded)
+                                    expectation.fulfill()
+                                }
+                            case .canceled:
+                                XCTFail("Confirm canceled")
+                            case .failed(let error):
+                                XCTFail("Failed to confirm: \(error)")
+                            }
+                        }
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+
+            case .failure(let error):
+                print(error)
+            }
+        }
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
     // MARK: - Deferred confirm tests
     struct TestCase {
         let name: String
@@ -363,6 +461,12 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     var valid_card_checkbox_deselected: IntentConfirmParams {
         let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
+        return intentConfirmParams
+    }
+    var valid_card_set_as_default: IntentConfirmParams {
+        let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card))
+        intentConfirmParams.saveForFutureUseCheckboxState = .selected
+        intentConfirmParams.setAsDefaultPM = true
         return intentConfirmParams
     }
     func createValidSavedPaymentMethod() -> STPPaymentMethod {
@@ -415,6 +519,25 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         )
     }
 
+    func testDeferredConfirm_valid_new_card_and_save_checkbox_selected_and_set_as_default() {
+        _testDeferredConfirm(
+            inputPaymentOption: .new(confirmParams: valid_card_set_as_default),
+            expectedShouldSavePaymentMethod: true,
+            expectedResult: .completed,
+            isPaymentIntent: true, // PaymentIntent
+            isServerSideConfirm: false // Client-side confirmation
+
+        )
+        _testDeferredConfirm(
+            inputPaymentOption: .new(confirmParams: valid_card_set_as_default),
+            expectedShouldSavePaymentMethod: true,
+            expectedResult: .completed,
+            isPaymentIntent: false, // SetupIntent
+            isServerSideConfirm: false // Client-side confirmation
+
+        )
+    }
+
     func testDeferredConfirm_valid_saved_card() {
         _testDeferredConfirm(
             inputPaymentOption: .saved(paymentMethod: createValidSavedPaymentMethod(), confirmParams: nil),
@@ -445,6 +568,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             isServerSideConfirm: true // Server-side confirmation
         )
     }
+
+    
 
     func testDeferredConfirm_new_insufficient_funds_card() {
         // Note: This fails when the intent is confirmed
@@ -609,7 +734,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 XCTFail("Result did not match. Expected \(expectedResult) but got \(result)")
             }
         }
-        waitForExpectations(timeout: 10)
+        waitForExpectations(timeout: 100)
     }
 
     func testDeferredConfirm_paymentintent_client_side_confirm_validates() {

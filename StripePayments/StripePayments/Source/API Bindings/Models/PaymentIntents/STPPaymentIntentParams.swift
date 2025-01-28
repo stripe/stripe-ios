@@ -82,7 +82,7 @@ public class STPPaymentIntentParams: NSObject {
 
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc public var setAsDefaultPM: NSNumber?
+    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.

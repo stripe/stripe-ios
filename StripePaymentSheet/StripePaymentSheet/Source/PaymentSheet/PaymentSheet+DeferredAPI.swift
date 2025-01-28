@@ -18,7 +18,6 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         mandateData: STPMandateDataParams? = nil,
-        setAsDefaultPM: Bool? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
@@ -29,7 +28,7 @@ extension PaymentSheet {
                 switch confirmType {
                 case let .saved(savedPaymentMethod, _):
                     paymentMethod = savedPaymentMethod
-                case let .new(params, paymentOptions, newPaymentMethod, shouldSave):
+                case let .new(params, paymentOptions, newPaymentMethod, shouldSave, shouldSetAsDefaultPM):
                     if let newPaymentMethod {
                         let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
                                                           error: PaymentSheetError.unexpectedNewPaymentMethod,
@@ -38,7 +37,7 @@ extension PaymentSheet {
                     }
                     stpAssert(newPaymentMethod == nil)
                     paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
-                    confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave)
+                    confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
                 }
 
                 // 2. Get Intent client secret from merchant
@@ -72,8 +71,7 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
                             configuration: configuration,
-                            mandateData: mandateData,
-                            setAsDefaultPM: setAsDefaultPM
+                            mandateData: mandateData
                         )
 
                         paymentHandler.confirmPayment(
@@ -102,8 +100,7 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
                             configuration: configuration,
-                            mandateData: mandateData,
-                            setAsDefaultPM: setAsDefaultPM
+                            mandateData: mandateData
                         )
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
