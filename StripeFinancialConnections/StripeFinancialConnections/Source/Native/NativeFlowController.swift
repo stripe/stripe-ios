@@ -1698,6 +1698,7 @@ private func CreatePaneViewController(
             )
     }
 
+    dataManager.configuration.style.configure(viewController)
     return viewController
 }
 

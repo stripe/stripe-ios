@@ -43,6 +43,34 @@ final public class FinancialConnectionsSheet {
             .completed(result: (session: session, token: session.bankAccountToken))
         }
     }
+    
+    /// Configuration for the Financial Connections Sheet.
+    @_spi(STP) public struct Configuration {
+        /// Style options for colors in Financial Connections.
+        @_spi(STP) @frozen public enum UserInterfaceStyle {
+            /// (default) Financial Connections will automatically switch between light and dark mode compatible colors based on device settings.
+            case automatic
+            /// Financial Connections will always use colors appropriate for light mode UI.
+            case alwaysLight
+            /// Financial Connections will always use colors appropriate for dark mode UI.
+            case alwaysDark
+
+            /// Applies the specified user interface style to the given view controller.
+            func configure(_ viewController: UIViewController?) {
+                guard let viewController else { return }
+                switch self {
+                case .automatic:
+                    break // no-op
+                case .alwaysLight:
+                    viewController.overrideUserInterfaceStyle = .light
+                case .alwaysDark:
+                    viewController.overrideUserInterfaceStyle = .dark
+                }
+            }
+        }
+
+        @_spi(STP) public var style: UserInterfaceStyle = .automatic
+    }
 
     // MARK: - Properties
 
@@ -79,10 +107,13 @@ final public class FinancialConnectionsSheet {
 
     private var wrapperViewController: ModalPresentationWrapperViewController?
 
-    // Any additional Elements context useful for the Financial Connections SDK.
+    /// Contains all configurable properties of Financial Connections.
+    @_spi(STP) public var configuration: FinancialConnectionsSheet.Configuration = .init()
+
+    /// Any additional Elements context useful for the Financial Connections SDK.
     @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
 
-    // Analytics client to use for logging analytics
+    /// Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
     // MARK: - Init
@@ -230,8 +261,9 @@ final public class FinancialConnectionsSheet {
             apiClient: financialConnectionsApiClient,
             analyticsClientV1: analyticsClient,
             clientSecret: financialConnectionsSessionClientSecret,
-            elementsSessionContext: elementsSessionContext,
             returnURL: returnURL,
+            configuration: configuration,
+            elementsSessionContext: elementsSessionContext,
             publishableKey: apiClient.publishableKey,
             stripeAccount: apiClient.stripeAccount
         )

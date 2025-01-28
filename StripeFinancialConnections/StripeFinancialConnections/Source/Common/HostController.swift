@@ -80,6 +80,7 @@ class HostController {
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     private let returnURL: String?
+    private let configuration: FinancialConnectionsSheet.Configuration
     private let elementsSessionContext: ElementsSessionContext?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
     private let analyticsClientV1: STPAnalyticsClientProtocol
@@ -102,16 +103,18 @@ class HostController {
         apiClient: any FinancialConnectionsAPI,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
-        elementsSessionContext: ElementsSessionContext?,
         returnURL: String?,
+        configuration: FinancialConnectionsSheet.Configuration,
+        elementsSessionContext: ElementsSessionContext?,
         publishableKey: String?,
         stripeAccount: String?
     ) {
         self.apiClient = apiClient
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
-        self.elementsSessionContext = elementsSessionContext
         self.returnURL = returnURL
+        self.configuration = configuration
+        self.elementsSessionContext = elementsSessionContext
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
         analyticsClient.setAdditionalParameters(
             linkAccountSessionClientSecret: clientSecret,
@@ -208,6 +211,7 @@ private extension HostController {
 
         let dataManager = NativeFlowAPIDataManager(
             manifest: synchronizePayload.manifest,
+            configuration: configuration,
             visualUpdate: synchronizePayload.visual,
             returnURL: returnURL,
             consentPaneModel: synchronizePayload.text?.consentPane,
