@@ -234,6 +234,7 @@
 		F0B9EFD359B1AB28A695CB48 /* STDSSynchronousLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C12AE31D386D4A193C00004B /* STDSSynchronousLocationManager.h */; };
 		F13A032A4AF15BB61EA18A8D /* STDSChallengeInformationView.h in Headers */ = {isa = PBXBuildFile; fileRef = C893FD867C964775E68AE85F /* STDSChallengeInformationView.h */; };
 		F28AD6CA8AB1A5DEE7A8F429 /* STDSDebuggerChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = D122FAE093BC4F649CC6E7AB /* STDSDebuggerChecker.h */; };
+		F2D0DB032D4825C600DA26AD /* HTMLCRes.json in Resources */ = {isa = PBXBuildFile; fileRef = F2D0DB022D4825C600DA26AD /* HTMLCRes.json */; };
 		F35963DB86D90320CFA7BCB9 /* STDSExpandableInformationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 939C45AE068CF4F5BEB4C138 /* STDSExpandableInformationView.h */; };
 		F4E8353A470750D9BCEA3CD8 /* CRes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8C6D262891811FB3FE0C947E /* CRes.json */; };
 		F5513045A25210C524A05DF5 /* STDSSelectionCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CD753D9BBFC378C1B491B00 /* STDSSelectionCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -596,6 +597,7 @@
 		F112967E9FE8EE02FFFDC313 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F139E48FDEFD921FF410892F /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F2BC7014D26158AC9D74CC67 /* Stripe3DS2Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		F2D0DB022D4825C600DA26AD /* HTMLCRes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HTMLCRes.json; sourceTree = "<group>"; };
 		F363439353A6DD554FC44AC2 /* STDSOSVersionChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSOSVersionChecker.m; sourceTree = "<group>"; };
 		F40CC91AA69F5296B0AA985C /* STDSTransaction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSTransaction.h; sourceTree = "<group>"; };
 		F4D6DB90E3D01495C1F9BFE9 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -923,6 +925,7 @@
 			children = (
 				237977B021FE538E5E4FA35C /* ARes.json */,
 				8C6D262891811FB3FE0C947E /* CRes.json */,
+				F2D0DB022D4825C600DA26AD /* HTMLCRes.json */,
 				E12798864D5CFFB7157D4CF5 /* ErrorMessage.json */,
 			);
 			path = JSON;
@@ -1290,6 +1293,7 @@
 				5B16918BF5F67B0F5FB1AFD5 /* ARes.json in Resources */,
 				F4E8353A470750D9BCEA3CD8 /* CRes.json in Resources */,
 				E7A72BB7CC8DE8DA7FA0DEC5 /* ErrorMessage.json in Resources */,
+				F2D0DB032D4825C600DA26AD /* HTMLCRes.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
