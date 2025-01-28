@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Qm8puFY0qyl6XeW1aOH4nwN\?client_secret=pi_3Qm8puFY0qyl6XeW1aOH4nwN_secret_XMMgvmcm50C6d7pTrUsfxjOsr$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3QmKgzFY0qyl6XeW1AAWRXRU\?client_secret=pi_3QmKgzFY0qyl6XeW1AAWRXRU_secret_TyeVzichB09mH7s3sRTltB6zO$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=nV0yLFo0ZA8eFskFD1a4xhvUB4-r0gZwkvg-bvxd6-kURYanjdsej6nmLg-OBhh5wNIRrOlhaTDSDnYM
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=NOwwzK-UjAEmOSy0w-fo5BEwxb9qSJ8NHWxP3E6K-DzEh8Xfy6IOaBq74_1xSgh9f9zBaD_2K07qh6LR
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_67udJEqESanNZu
-Content-Length: 1161
+request-id: req_TjZKomYmMK47tX
+Content-Length: 1258
 Vary: Origin
-Date: Tue, 28 Jan 2025 07:03:52 GMT
+Date: Tue, 28 Jan 2025 19:43:27 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -46,7 +46,11 @@ x-content-type-options: nosniff
       "postal_code" : null
     }
   },
-  "status" : "succeeded",
+  "payment_method_options" : {
+    "card" : {
+      "setup_future_usage" : "off_session"
+    }
+  },
   "object" : "payment_intent",
   "currency" : "eur",
   "last_payment_error" : null,
@@ -54,13 +58,14 @@ x-content-type-options: nosniff
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "next_action" : null,
+  "status" : "succeeded",
+  "payment_method" : "pm_1QmKh0FY0qyl6XeWjHUFjRgd",
+  "client_secret" : "pi_3QmKgzFY0qyl6XeW1AAWRXRU_secret_TyeVzichB09mH7s3sRTltB6zO",
   "total_details" : {
     "amount_discount" : 0,
     "amount_tax" : 0
   },
-  "payment_method" : "pm_1Qm8pvFY0qyl6XeWkeaGsVCX",
-  "client_secret" : "pi_3Qm8puFY0qyl6XeW1aOH4nwN_secret_XMMgvmcm50C6d7pTrUsfxjOsr",
-  "id" : "pi_3Qm8puFY0qyl6XeW1aOH4nwN",
+  "id" : "pi_3QmKgzFY0qyl6XeW1AAWRXRU",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -73,6 +78,6 @@ x-content-type-options: nosniff
     "card"
   ],
   "setup_future_usage" : null,
-  "created" : 1738047830,
+  "created" : 1738093405,
   "description" : null
 }
