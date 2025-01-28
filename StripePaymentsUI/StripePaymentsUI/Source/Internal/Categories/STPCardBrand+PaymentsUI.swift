@@ -27,12 +27,12 @@ extension STPCardBrand {
         return NSAttributedString(attachment: brandImageAttachment)
     }
 
-    func cardBrandItem(theme: ElementsAppearance = .default, isAllowed: Bool, maxWidth: CGFloat? = nil) -> DropdownFieldElement.DropdownItem {
+    func cardBrandItem(theme: ElementsAppearance = .default, isDisallowed: Bool, maxWidth: CGFloat? = nil) -> DropdownFieldElement.DropdownItem {
         let brandName = STPCardBrandUtilities.stringFrom(self) ?? ""
 
         let displayText = NSMutableAttributedString(attributedString: brandIconAttributedString(theme: theme))
         displayText.append(NSAttributedString(string: " " + brandName))
-        if !isAllowed {
+        if isDisallowed {
             displayText.append(NSAttributedString(string: " \(String.Localized.brand_not_accepted)"))
         }
         
@@ -41,7 +41,7 @@ extension STPCardBrand {
             labelDisplayName: brandIconAttributedString(theme: theme, maxWidth: maxWidth),
             accessibilityValue: brandName,
             rawData: STPCardBrandUtilities.apiValue(from: self),
-            isDisabled: !isAllowed
+            isDisabled: isDisallowed
         )
     }
 }

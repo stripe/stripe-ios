@@ -44,7 +44,7 @@ extension DropdownFieldElement {
             isPlaceholder: true
         )
 
-        let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme, isAllowed: !disallowedCardBrands.contains($0), maxWidth: maxWidth) }
+        let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme, isDisallowed: disallowedCardBrands.contains($0), maxWidth: maxWidth) }
         
         return includePlaceholder ? [placeholderItem] + cardBrandItems : cardBrandItems
     }
