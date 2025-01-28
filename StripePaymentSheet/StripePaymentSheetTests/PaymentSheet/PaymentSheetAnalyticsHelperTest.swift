@@ -140,6 +140,36 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
         XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,external_paypal")
     }
+    
+    func testLogLoadFailed_embedded() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        // Load started -> failed
+        sut.logLoadStarted()
+        sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
+        XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started_embedded")
+        XCTAssertEqual(analyticsClient._testLogHistory[1]["event"] as? String, "mc_load_failed_embedded")
+        XCTAssertLessThan(analyticsClient._testLogHistory[1]["duration"] as! Double, 1.0)
+    }
+
+    func testLogLoadSucceeded_embedded() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        // Load started -> succeeded
+        sut.logLoadStarted()
+        sut.logLoadSucceeded(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            defaultPaymentMethod: .applePay,
+            orderedPaymentMethodTypes: [.stripe(.card), .external(._testPayPalValue())]
+        )
+        XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started_embedded")
+
+        let loadSucceededPayload = analyticsClient._testLogHistory[1]
+        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded_embedded")
+        XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
+        XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "apple_pay")
+        XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
+        XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,external_paypal")
+    }
 
     func testLogShow() {
         let paymentSheetHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
@@ -368,6 +398,33 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             deferredIntentConfirmationType: nil
         )
         XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "link_card_brand")
+    }
+    
+    func testLogEmbeddedUpdate() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        
+        // Test update started
+        sut.logEmbeddedUpdateStarted()
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_update_started_embedded")
+        
+        // Test successful update
+        sut.logEmbeddedUpdateFinished(result: .succeeded)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_update_finished_embedded")
+        XCTAssertNotNil(analyticsClient._testLogHistory.last!["duration"])
+        
+        // Test failed update
+        sut.logEmbeddedUpdateStarted()
+        let error = NSError(domain: "test", code: 123, userInfo: [NSLocalizedDescriptionKey: "Test error"])
+        sut.logEmbeddedUpdateFinished(result: .failed(error: error))
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_update_failed_embedded")
+        XCTAssertNotNil(analyticsClient._testLogHistory.last!["duration"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["error"] as? String, "Test error")
+        
+        // Test canceled update
+        sut.logEmbeddedUpdateStarted()
+        sut.logEmbeddedUpdateFinished(result: .canceled)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_update_canceled_embedded")
+        XCTAssertNotNil(analyticsClient._testLogHistory.last!["duration"])
     }
 
     // MARK: - Helpers
