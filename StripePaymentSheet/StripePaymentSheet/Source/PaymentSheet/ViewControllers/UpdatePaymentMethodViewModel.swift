@@ -33,16 +33,12 @@ class UpdatePaymentMethodViewModel {
         return hasChangedCardBrand || hasChangedDefaultPaymentMethodCheckbox
     }
     var canUpdateCardBrand: Bool {
-        switch paymentMethod.type {
-        case .card:
-            let availableBrands = paymentMethod.card?.networks?.available.map {$0.toCardBrand }.compactMap{ $0 }
-            let filteredCardBrands = availableBrands?.filter {cardBrandFilter.isAccepted(cardBrand: $0)} ?? []
-            return isCBCEligible && filteredCardBrands.count > 1
-        case .USBankAccount, .SEPADebit:
+        guard paymentMethod.type == .card else {
             return false
-        default:
-            fatalError("Updating payment method has not been implemented for \(paymentMethod.type)")
         }
+        let availableBrands = paymentMethod.card?.networks?.available.map {$0.toCardBrand }.compactMap{ $0 }
+        let filteredCardBrands = availableBrands?.filter {cardBrandFilter.isAccepted(cardBrand: $0)} ?? []
+        return isCBCEligible && filteredCardBrands.count > 1
     }
 
     lazy var header: String = {
