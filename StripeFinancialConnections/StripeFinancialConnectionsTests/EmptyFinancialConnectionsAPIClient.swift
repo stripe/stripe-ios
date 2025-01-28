@@ -20,7 +20,9 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API,
         pane: FinancialConnectionsSessionManifest.NextPane
-    ) {}
+    ) -> Error? {
+        return nil
+    }
 
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<
         StripeAPI.FinancialConnectionsSession.AccountList

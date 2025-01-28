@@ -20,6 +20,12 @@ protocol NativeFlowControllerDelegate: AnyObject {
         _ nativeFlowController: NativeFlowController,
         didReceiveEvent event: FinancialConnectionsEvent
     )
+
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
+        shouldLaunchWebFlow manifest: FinancialConnectionsSessionManifest,
+        prefillDetails: WebPrefillDetails
+    )
 }
 
 class NativeFlowController {
@@ -273,7 +279,7 @@ extension NativeFlowController {
 // MARK: - Other Helpers
 
 extension NativeFlowController {
-    
+
     private struct PaymentMethodWithIncentiveEligibility {
         let paymentMethod: LinkBankPaymentMethod
         let incentiveEligible: Bool
@@ -514,7 +520,7 @@ extension NativeFlowController {
 
         var paymentDetails: RedactedPaymentDetails?
         var bankAccountDetails: BankAccountDetails?
-        
+
         let elementsSessionContext = dataManager.elementsSessionContext
         let linkMode = elementsSessionContext?.linkMode
         let email = elementsSessionContext?.billingDetails?.email ?? dataManager.consumerSession?.emailAddress
@@ -555,11 +561,11 @@ extension NativeFlowController {
             guard let self else {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
             }
-            
+
             guard let paymentDetailsID = paymentDetails?.id else {
                 return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "redactedPaymentDetails cannot be nil"))
             }
-            
+
             return updateIncentiveEligibility(
                 incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
                 paymentDetailsID: paymentDetailsID,
@@ -583,7 +589,7 @@ extension NativeFlowController {
             }
         }
     }
-    
+
     private func updateIncentiveEligibility(
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
         paymentDetailsID: String,
@@ -598,9 +604,9 @@ extension NativeFlowController {
             )
             return Promise(value: result)
         }
-        
+
         let promise = Promise<PaymentMethodWithIncentiveEligibility>()
-        
+
         self.dataManager.apiClient.updateAvailableIncentives(
             consumerSessionClientSecret: consumerSession.clientSecret,
             sessionID: incentiveEligibilitySession.id,
@@ -624,7 +630,7 @@ extension NativeFlowController {
                 promise.resolve(with: result)
             }
         }
-        
+
         return promise
     }
 
@@ -963,7 +969,6 @@ extension NativeFlowController: ResetFlowViewControllerDelegate {
 // MARK: - NetworkingLinkSignupViewControllerDelegate
 
 extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
-
     func networkingLinkSignupViewController(
         _ viewController: NetworkingLinkSignupViewController,
         foundReturningConsumerWithSession consumerSession: ConsumerSessionData
@@ -992,6 +997,17 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+
+    func networkingLinkSignupViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkSignupViewController,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            shouldLaunchWebFlow: dataManager.manifest,
+            prefillDetails: prefillDetails
+        )
     }
 }
 
@@ -1108,6 +1124,17 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
     ) {
         showTerminalError(error)
     }
+
+    func networkingLinkVerificationViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkVerificationViewController,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            shouldLaunchWebFlow: dataManager.manifest,
+            prefillDetails: prefillDetails
+        )
+    }
 }
 
 // MARK: - LinkAccountPickerViewControllerDelegate
@@ -1189,6 +1216,17 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
     ) {
         showTerminalError(error)
     }
+
+    func networkingSaveToLinkVerificationViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingSaveToLinkVerificationViewController,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            shouldLaunchWebFlow: dataManager.manifest,
+            prefillDetails: prefillDetails
+        )
+    }
 }
 
 // MARK: - NetworkingLinkStepUpVerificationViewControllerDelegate
@@ -1223,6 +1261,17 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
         _ viewController: NetworkingLinkStepUpVerificationViewController
     ) {
         pushPane(.institutionPicker, animated: true)
+    }
+
+    func networkingLinkStepUpVerificationViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkStepUpVerificationViewController,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            shouldLaunchWebFlow: dataManager.manifest,
+            prefillDetails: prefillDetails
+        )
     }
 }
 
@@ -1259,6 +1308,17 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         didReceiveTerminalError error: any Error
     ) {
         showTerminalError(error)
+    }
+
+    func linkLoginViewControllerDidFailAttestationVerdict(
+        _ viewController: LinkLoginViewController,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            shouldLaunchWebFlow: dataManager.manifest,
+            prefillDetails: prefillDetails
+        )
     }
 }
 
