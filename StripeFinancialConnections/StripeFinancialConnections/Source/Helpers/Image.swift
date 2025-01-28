@@ -31,4 +31,5 @@ enum Image: String, ImageMaker {
     case testmode
     case warning_triangle
     case bullet
+    case verified
 }

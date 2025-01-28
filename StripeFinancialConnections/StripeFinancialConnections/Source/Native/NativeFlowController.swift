@@ -164,7 +164,8 @@ extension NativeFlowController {
                         merchantLogo: self.dataManager.merchantLogo
                     ),
                     theme: self.dataManager.manifest.theme,
-                    isTestMode: self.dataManager.manifest.isTestMode
+                    isTestMode: self.dataManager.manifest.isTestMode,
+                    isVerified: self.dataManager.manifest.verified
                 )
             }
             self.navigationController.setViewControllers(viewControllers, animated: animated)
@@ -213,7 +214,8 @@ extension NativeFlowController {
                         merchantLogo: self.dataManager.merchantLogo
                     ),
                     theme: self.dataManager.manifest.theme,
-                    isTestMode: self.dataManager.manifest.isTestMode
+                    isTestMode: self.dataManager.manifest.isTestMode,
+                    isVerified: self.dataManager.manifest.verified
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
             } else {

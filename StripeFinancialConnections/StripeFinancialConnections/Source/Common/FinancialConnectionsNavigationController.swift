@@ -149,11 +149,13 @@ extension FinancialConnectionsNavigationController {
         closeItem: UIBarButtonItem,
         shouldHideLogo: Bool,
         theme: FinancialConnectionsTheme,
-        isTestMode: Bool
+        isTestMode: Bool,
+        isVerified: Bool
     ) {
         let iconHeight: CGFloat = 20
         var testModeImageViewWidth: CGFloat = 0
         var logoImageViewWidth: CGFloat = 0
+        var verifiedImageViewWidth: CGFloat = 0
 
         let testModeBadgeView: UIImageView? = {
             guard isTestMode else { return nil }
@@ -188,9 +190,26 @@ extension FinancialConnectionsNavigationController {
             )
             return logoImage
         }()
+        
+        let verifiedBadgeView: UIImageView? = {
+            guard isVerified else { return nil }
+            
+            let verifiedImage = UIImageView(image: Image.verified.makeImage())
+            verifiedImage.contentMode = .scaleAspectFit
+            verifiedImage.sizeToFit()
+
+            verifiedImageViewWidth = verifiedImage.bounds.width * (iconHeight / max(1, verifiedImage.bounds.height))
+            verifiedImage.frame = CGRect(
+                x: 0,
+                y: 0,
+                width: verifiedImageViewWidth,
+                height: iconHeight
+            )
+            return verifiedImage
+        }()
 
         let spacing: CGFloat = 6
-        let imageViews = [logoView, testModeBadgeView].compactMap { $0.self }
+        let imageViews = [logoView, testModeBadgeView, verifiedBadgeView].compactMap { $0.self }
         let stackView = UIStackView(arrangedSubviews: imageViews)
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -198,7 +217,7 @@ extension FinancialConnectionsNavigationController {
         stackView.frame = CGRect(
             x: 0,
             y: 0,
-            width: logoImageViewWidth + testModeImageViewWidth + spacing,
+            width: logoImageViewWidth + testModeImageViewWidth + verifiedImageViewWidth + spacing,
             height: iconHeight
         )
 
