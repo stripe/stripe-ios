@@ -470,7 +470,7 @@ extension FinancialConnectionsWebFlowViewController {
     ) -> String? {
         var parameters: [String] = []
 
-        if let startingAdditionalParameters {
+        if let startingAdditionalParameters, startingAdditionalParameters.isEmpty == false {
             parameters.append(startingAdditionalParameters)
         }
 
@@ -531,6 +531,8 @@ extension FinancialConnectionsWebFlowViewController {
                 parameters.append("linkMobilePhoneCountry=\(countryCode)")
             }
         }
+
+        parameters.append("launched_by=ios_sdk")
 
         // Join all values with an &, and URL encode.
         // We encode these parameters since they will be appended to the auth flow URL.
