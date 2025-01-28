@@ -486,7 +486,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                         { setupIntent, _ in
                             XCTAssertEqual(setupIntent?.status, .succeeded)
                             // 4. Create a new SI on our test backend
-                            Task {
+                            Task { [configuration] in
                                 let clientSecret2 = try await STPTestingAPIClient.shared.fetchSetupIntent(types: types, customerID: configuration.customer?.id)
                                 // 5. Reload PaymentSheet
                                 PaymentSheetLoader.load(
@@ -530,7 +530,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         configuration.allowsSetAsDefaultPM = true
         let types = ["card"]
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, intentCreationCallback in
-            Task {
+            Task { [configuration] in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: types, customerID: configuration.customer?.id)
                 intentCreationCallback(.success(clientSecret))
                 callbackExpectation.fulfill()
