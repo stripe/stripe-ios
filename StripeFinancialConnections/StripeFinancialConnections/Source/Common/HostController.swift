@@ -176,7 +176,7 @@ extension HostController: HostViewControllerDelegate {
 
 private extension HostController {
 
-    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
+    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest, prefillDetails: WebPrefillDetails? = nil) {
         delegate?.hostController(
             self,
             didReceiveEvent: FinancialConnectionsEvent(
@@ -196,7 +196,8 @@ private extension HostController {
             manifest: manifest,
             sessionFetcher: sessionFetcher,
             returnURL: returnURL,
-            elementsSessionContext: elementsSessionContext
+            elementsSessionContext: elementsSessionContext,
+            prefillDetailsOverride: prefillDetails
         )
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)
@@ -263,6 +264,14 @@ extension HostController: NativeFlowControllerDelegate {
         didReceiveEvent event: FinancialConnectionsEvent
     ) {
         delegate?.hostController(self, didReceiveEvent: event)
+    }
+
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
+        shouldLaunchWebFlow manifest: FinancialConnectionsSessionManifest,
+        prefillDetails: WebPrefillDetails
+    ) {
+        continueWithWebFlow(manifest, prefillDetails: prefillDetails)
     }
 }
 

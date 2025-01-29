@@ -25,6 +25,10 @@ protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
         _ viewController: NetworkingLinkVerificationViewController,
         didReceiveTerminalError error: Error
     )
+    func networkingLinkVerificationViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkVerificationViewController,
+        prefillDetails: WebPrefillDetails
+    )
 }
 
 final class NetworkingLinkVerificationViewController: UIViewController {
@@ -265,5 +269,15 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                 didReceiveTerminalError: error
             )
         }
+    }
+
+    func networkingOTPViewDidFailAttestationVerdict(
+        _ view: NetworkingOTPView,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.networkingLinkVerificationViewControllerDidFailAttestationVerdict(
+            self,
+            prefillDetails: prefillDetails
+        )
     }
 }

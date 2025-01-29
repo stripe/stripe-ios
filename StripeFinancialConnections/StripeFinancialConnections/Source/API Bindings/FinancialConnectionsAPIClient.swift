@@ -70,19 +70,27 @@ final class FinancialConnectionsAPIClient {
     }
 
     /// Marks the assertion as completed and forwards attestation errors to the `StripeAttest` client for logging.
+    /// If any attestation errors are present, return them synchronously while completing the assertion.
     func completeAssertion(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API,
         pane: FinancialConnectionsSessionManifest.NextPane
-    ) {
+    ) -> Error? {
         let attest = backingAPIClient.stripeAttest
-        Task {
-            if let error = possibleError, StripeAttest.isLinkAssertionError(error: error) {
+        let attestationError: Error?
+        if let error = possibleError, StripeAttest.isLinkAssertionError(error: error) {
+            attestationError = error
+        } else {
+            attestationError = nil
+        }
+        Task { @Sendable in
+            if let attestationError {
                 logger.log(.attestationVerdictFailed(api), pane: pane)
-                await attest.receivedAssertionError(error)
+                await attest.receivedAssertionError(attestationError)
             }
             await attest.assertionCompleted()
         }
+        return attestationError
     }
 
     /// Passthrough to `STPAPIClient.get` which uses the `consumerPublishableKey` whenever it should be used.
@@ -154,7 +162,7 @@ protocol FinancialConnectionsAPI {
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API,
         pane: FinancialConnectionsSessionManifest.NextPane
-    )
+    ) -> Error?
 
     func synchronize(
         clientSecret: String,

@@ -26,6 +26,10 @@ protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
         _ viewController: NetworkingLinkSignupViewController,
         didReceiveTerminalError error: Error
     )
+    func networkingLinkSignupViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkSignupViewController,
+        prefillDetails: WebPrefillDetails
+    )
 }
 
 final class NetworkingLinkSignupViewController: UIViewController {
@@ -213,10 +217,22 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         .observe { [weak self] result in
             guard let self = self else { return }
-            self.dataSource.completeAssertionIfNeeded(
+            let attestationError = self.dataSource.completeAssertionIfNeeded(
                 possibleError: result.error,
                 api: .linkSignUp
             )
+            if attestationError != nil {
+                let prefillDetails = WebPrefillDetails(
+                    email: self.formView.email,
+                    phone: self.formView.phoneNumber,
+                    countryCode: self.formView.countryCode
+                )
+                self.delegate?.networkingLinkSignupViewControllerDidFailAttestationVerdict(
+                    self,
+                    prefillDetails: prefillDetails
+                )
+                return
+            }
 
             switch result {
             case .success(let customSuccessPaneMessage):
@@ -301,10 +317,15 @@ extension NetworkingLinkSignupViewController: LinkSignupFormViewDelegate {
             )
             .observe { [weak self, weak bodyFormView] result in
                 guard let self = self else { return }
-                self.dataSource.completeAssertionIfNeeded(
+                let attestationError = self.dataSource.completeAssertionIfNeeded(
                     possibleError: result.error,
                     api: .consumerSessionLookup
                 )
+                if attestationError != nil {
+                    let prefillDetails = WebPrefillDetails(email: emailAddress)
+                    self.delegate?.networkingLinkSignupViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                    return
+                }
 
                 switch result {
                 case .success(let response):

@@ -24,6 +24,11 @@ protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         didReceiveTerminalError error: Error
     )
+
+    func networkingSaveToLinkVerificationViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingSaveToLinkVerificationViewController,
+        prefillDetails: WebPrefillDetails
+    )
 }
 
 final class NetworkingSaveToLinkVerificationViewController: UIViewController {
@@ -228,6 +233,16 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                 didReceiveTerminalError: error
             )
         }
+    }
+
+    func networkingOTPViewDidFailAttestationVerdict(
+        _ view: NetworkingOTPView,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.networkingSaveToLinkVerificationViewControllerDidFailAttestationVerdict(
+            self,
+            prefillDetails: prefillDetails
+        )
     }
 
     func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
