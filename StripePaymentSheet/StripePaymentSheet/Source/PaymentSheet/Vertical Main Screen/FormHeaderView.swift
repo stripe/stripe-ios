@@ -64,6 +64,7 @@ final class FormHeaderView: UIView {
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let shouldUseNewCardHeader: Bool // true if the customer has a saved payment method that is type card
     private let appearance: PaymentSheet.Appearance
+    private var incentive: PaymentMethodIncentive?
 
     init(
         paymentMethodType: PaymentSheet.PaymentMethodType,
@@ -74,6 +75,7 @@ final class FormHeaderView: UIView {
         self.paymentMethodType = paymentMethodType
         self.shouldUseNewCardHeader = shouldUseNewCardHeader
         self.appearance = appearance
+        self.incentive = incentive
         self.promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
         super.init(frame: .zero)
         addAndPinSubview(stackView)
@@ -88,6 +90,30 @@ final class FormHeaderView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        guard incentive != self.incentive else {
+            return
+        }
+        
+        if let promoBadgeView {
+            stackView.removeArrangedSubview(promoBadgeView)
+            promoBadgeView.removeFromSuperview()
+            
+            stackView.removeArrangedSubview(spacerView)
+            spacerView.removeFromSuperview()
+        }
+        
+        self.incentive = incentive
+        
+        if let incentive {
+            promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
+            if let promoBadgeView {
+                stackView.addArrangedSubview(promoBadgeView)
+                stackView.addArrangedSubview(spacerView)
+            }
+        }
     }
     
     private static func makePromoBadge(

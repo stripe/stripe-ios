@@ -23,16 +23,21 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     let emailElement: TextFieldElement?
     let phoneElement: PhoneNumberElement?
     let addressElement: AddressSectionElement?
+    private let promoDisclaimerElement: StaticElement?
 
     private var linkedBankElements: [Element] {
         return [linkedBankInfoSectionElement]
     }
     private let linkedBankInfoSectionElement: SectionElement
     private let linkedBankInfoView: BankAccountInfoView
-    private var linkedBank: InstantDebitsLinkedBank?
+    private var linkedBank: InstantDebitsLinkedBank? {
+        didSet {
+            renderLinkedBank(linkedBank)
+        }
+    }
     private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
-    var incentive: PaymentMethodIncentive?
+    private let incentive: PaymentMethodIncentive?
 
     var delegate: ElementDelegate?
     var view: UIView {
@@ -164,6 +169,19 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
         return nameValid && emailValid && phoneValid && addressValid
     }
+    
+    var displayableIncentive: PaymentMethodIncentive? {
+        // We can show the incentive if we haven't linked a bank yet, meaning
+        // that we have no indication that the session is ineligible.
+        let canShowIncentive = linkedBank?.incentiveEligible ?? true
+        return canShowIncentive ? incentive : nil
+    }
+    
+    var showIncentiveInHeader: Bool {
+        // Only show the incentive if the user hasn't linked a bank account yet. If they have,
+        // the incentive will be shown in the bank form instead.
+        linkedBank == nil
+    }
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
@@ -195,8 +213,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.linkedBankInfoSectionElement.view.isHidden = true
         self.incentive = incentive
         self.theme = theme
-
-        let promoDisclaimerElement = incentive.flatMap {
+        self.promoDisclaimerElement = incentive.flatMap {
             let label = ElementsUI.makeNoticeTextField(theme: theme)
             label.attributedText = $0.promoDisclaimerText(with: theme, isPaymentIntent: isPaymentIntent)
             label.textContainerInset = .zero
@@ -224,17 +241,30 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
     func setLinkedBank(_ linkedBank: InstantDebitsLinkedBank) {
         self.linkedBank = linkedBank
-        if let last4ofBankAccount = linkedBank.last4, let bankName = linkedBank.bankName {
+        self.delegate?.didUpdate(element: self)
+    }
+    
+    fileprivate func renderLinkedBank(_ linkedBank: InstantDebitsLinkedBank?) {
+        if let linkedBank, let last4ofBankAccount = linkedBank.last4, let bankName = linkedBank.bankName {
             linkedBankInfoView.setBankName(text: bankName)
             linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
             linkedBankInfoView.setIncentiveEligible(linkedBank.incentiveEligible)
+        }
+        
+        formElement.toggleElements(
+            linkedBankElements,
+            hidden: linkedBank == nil,
+            animated: true
+        )
+        
+        if let promoDisclaimerElement {
+            let hideDisclaimer = incentive == nil || linkedBank?.incentiveEligible == false
             formElement.toggleElements(
-                linkedBankElements,
-                hidden: false,
+                [promoDisclaimerElement],
+                hidden: hideDisclaimer,
                 animated: true
             )
         }
-        self.delegate?.didUpdate(element: self)
     }
 
     func getLinkedBank() -> InstantDebitsLinkedBank? {
@@ -248,11 +278,6 @@ extension InstantDebitsPaymentMethodElement: BankAccountInfoViewDelegate {
 
     func didTapXIcon() {
         let hideLinkedBankElement = {
-            self.formElement.toggleElements(
-                self.linkedBankElements,
-                hidden: true,
-                animated: true
-            )
             self.linkedBank = nil
             self.delegate?.didUpdate(element: self)
         }

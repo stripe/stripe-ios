@@ -173,6 +173,17 @@ extension PaymentMethodFormViewController: ElementDelegate {
         analyticsHelper.logFormInteracted(paymentMethodTypeIdentifier: paymentMethodType.identifier)
         delegate?.didUpdate(self)
         animateHeightChange()
+        
+        if let instantDebitsFormElement = form as? InstantDebitsPaymentMethodElement {
+            let incentive = instantDebitsFormElement.displayableIncentive
+            
+            if let formHeaderView = headerView as? FormHeaderView {
+                // We already display a promo badge in the bank form, so we don't want
+                // to display another one in the header.
+                let headerIncentive = instantDebitsFormElement.showIncentiveInHeader ? incentive : nil
+                formHeaderView.setIncentive(headerIncentive)
+            }
+        }
     }
 }
 
@@ -272,7 +283,7 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.incentive != nil
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
         )
     }
 

@@ -23,7 +23,17 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private(set) var currentSelection: VerticalPaymentMethodListSelection?
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
+    private(set) var incentive: PaymentMethodIncentive?
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
+    
+    // Properties moved from initializer captures
+    private var overrideHeaderView: UIView?
+    private var savedPaymentMethod: STPPaymentMethod?
+    private var initialSelection: VerticalPaymentMethodListSelection?
+    private var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?
+    private var shouldShowApplePay: Bool
+    private var shouldShowLink: Bool
+    private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -43,11 +53,30 @@ class VerticalPaymentMethodListViewController: UIViewController {
         incentive: PaymentMethodIncentive?,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
-        self.delegate = delegate
         self.appearance = appearance
+        self.incentive = incentive
         self.delegate = delegate
+        self.overrideHeaderView = overrideHeaderView
+        self.savedPaymentMethod = savedPaymentMethod
+        self.initialSelection = initialSelection
+        self.savedPaymentMethodAccessoryType = savedPaymentMethodAccessoryType
+        self.shouldShowApplePay = shouldShowApplePay
+        self.shouldShowLink = shouldShowLink
+        self.paymentMethodTypes = paymentMethodTypes
+        
         super.init(nibName: nil, bundle: nil)
-
+        self.renderContent()
+    }
+    
+    private func refreshContent() {
+        stackView.arrangedSubviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
+        
+        renderContent()
+    }
+    
+    private func renderContent() {
         // Add the header - either the passed in `header` or "Select payment method"
         let header = overrideHeaderView ?? PaymentSheetUI.makeHeaderLabel(title: .Localized.select_payment_method, appearance: appearance)
         stackView.addArrangedSubview(header)
@@ -119,7 +148,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
-                shouldAnimateOnPress: !delegate.shouldSelectPaymentMethod(selection)
+                shouldAnimateOnPress: delegate?.shouldSelectPaymentMethod(selection) == false
             ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
@@ -169,6 +198,15 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     @objc func didTapAccessoryButton() {
         delegate?.didTapSavedPaymentMethodAccessoryButton()
+    }
+    
+    func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        guard self.incentive != incentive else {
+            return
+        }
+        
+        self.incentive = incentive
+        self.refreshContent()
     }
 
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {

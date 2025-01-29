@@ -90,6 +90,18 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: PaymentMethodTypeCollectionView.cellHeight)
     }
+    
+    func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        guard self.incentive != incentive, let index = self.indexPathsForSelectedItems?.first else {
+            return
+        }
+        
+        self.incentive = incentive
+        
+        // Prevent the selected cell from being unselected following the reload
+        reloadItems(at: [index])
+        selectItem(at: index, animated: false, scrollPosition: [])
+    }
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
