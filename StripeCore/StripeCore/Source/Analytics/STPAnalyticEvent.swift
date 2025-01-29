@@ -78,11 +78,6 @@ import Foundation
     // MARK: - Embedded Payment Element init
     case mcInitEmbedded = "mc_embedded_init"
     
-    // MARK: - Embedded Payment Element loading
-    case mcLoadStartedEmbedded = "mc_load_started_embedded"
-    case mcLoadSucceededEmbedded = "mc_load_succeeded_embedded"
-    case mcLoadFailedEmbedded = "mc_load_failed_embedded"
-    
     // MARK: - Embedded Payment Element confirm
     case mcConfirmEmbedded = "mc_embedded_confirm"
     

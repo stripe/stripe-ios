@@ -112,63 +112,63 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     }
 
     func testLogLoadFailed() {
-        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        // Load started -> failed
-        sut.logLoadStarted()
-        sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
-        XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
-        XCTAssertEqual(analyticsClient._testLogHistory[1]["event"] as? String, "mc_load_failed")
-        XCTAssertLessThan(analyticsClient._testLogHistory[1]["duration"] as! Double, 1.0)
+        let integrationShapes: [(PaymentSheetAnalyticsHelper.IntegrationShape, String)] = [
+            (.complete, "paymentsheet"),
+            (.embedded, "embedded"),
+            (.flowController, "flow_controller")
+        ]
+        
+        for (shape, shapeString) in integrationShapes {
+            let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+            
+            // Reset the analytics client for each iteration
+            analyticsClient._testLogHistory.removeAll()
+            
+            // Load started -> failed
+            sut.logLoadStarted()
+            sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
+            
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
+            XCTAssertEqual(analyticsClient._testLogHistory[1]["event"] as? String, "mc_load_failed")
+            XCTAssertLessThan(analyticsClient._testLogHistory[1]["duration"] as! Double, 1.0)
+            XCTAssertEqual(analyticsClient._testLogHistory[1]["integration_shape"] as? String, shapeString)
+        }
     }
 
     func testLogLoadSucceeded() {
-        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        // Load started -> succeeded
-        sut.logLoadStarted()
-        sut.logLoadSucceeded(
-            intent: ._testValue(),
-            elementsSession: ._testCardValue(),
-            defaultPaymentMethod: .applePay,
-            orderedPaymentMethodTypes: [.stripe(.card), .external(._testPayPalValue())]
-        )
-        XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
-
-        let loadSucceededPayload = analyticsClient._testLogHistory[1]
-        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
-        XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
-        XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "apple_pay")
-        XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
-        XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,external_paypal")
-    }
-    
-    func testLogLoadFailed_embedded() {
-        let sut = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        // Load started -> failed
-        sut.logLoadStarted()
-        sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
-        XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started_embedded")
-        XCTAssertEqual(analyticsClient._testLogHistory[1]["event"] as? String, "mc_load_failed_embedded")
-        XCTAssertLessThan(analyticsClient._testLogHistory[1]["duration"] as! Double, 1.0)
-    }
-
-    func testLogLoadSucceeded_embedded() {
-        let sut = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        // Load started -> succeeded
-        sut.logLoadStarted()
-        sut.logLoadSucceeded(
-            intent: ._testValue(),
-            elementsSession: ._testCardValue(),
-            defaultPaymentMethod: .applePay,
-            orderedPaymentMethodTypes: [.stripe(.card), .external(._testPayPalValue())]
-        )
-        XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started_embedded")
-
-        let loadSucceededPayload = analyticsClient._testLogHistory[1]
-        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded_embedded")
-        XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
-        XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "apple_pay")
-        XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
-        XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,external_paypal")
+        let integrationShapes: [(PaymentSheetAnalyticsHelper.IntegrationShape, String)] = [
+            (.complete, "paymentsheet"),
+            (.embedded, "embedded"),
+            (.flowController, "flow_controller")
+        ]
+        
+        for (shape, shapeString) in integrationShapes {
+            let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+            
+            // Reset the analytics client for each iteration
+            analyticsClient._testLogHistory.removeAll()
+            
+            // Load started -> succeeded
+            sut.logLoadStarted()
+            sut.logLoadSucceeded(
+                intent: ._testValue(),
+                elementsSession: ._testCardValue(),
+                defaultPaymentMethod: .applePay,
+                orderedPaymentMethodTypes: [.stripe(.card), .external(._testPayPalValue())]
+            )
+            
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
+            
+            let loadSucceededPayload = analyticsClient._testLogHistory[1]
+            XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+            XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
+            XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "apple_pay")
+            XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
+            XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,external_paypal")
+            XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
+        }
     }
 
     func testLogShow() {

@@ -25,6 +25,17 @@ final class PaymentSheetAnalyticsHelper {
         case flowController
         case complete
         case embedded
+        
+        var analyticsValue: String {
+            switch self {
+            case .flowController:
+                return "flow_controller"
+            case .complete:
+                return "paymentsheet"
+            case .embedded:
+                return "embedded"
+            }
+        }
     }
 
     init(
@@ -71,15 +82,7 @@ final class PaymentSheetAnalyticsHelper {
 
     func logLoadStarted() {
         loadingStartDate = Date()
-        let event: STPAnalyticEvent = {
-            switch integrationShape {
-            case .complete, .flowController:
-                return .paymentSheetLoadStarted
-            case .embedded:
-                return .mcLoadStartedEmbedded
-            }
-        }()
-        log(event: event)
+        log(event: .paymentSheetLoadStarted, params: ["integration_shape": integrationShape.analyticsValue])
     }
 
     func logLoadFailed(error: Error) {
@@ -88,18 +91,11 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
-        let event: STPAnalyticEvent = {
-            switch integrationShape {
-            case .complete, .flowController:
-                return .paymentSheetLoadFailed
-            case .embedded:
-                return .mcLoadFailedEmbedded
-            }
-        }()
         log(
-            event: event,
+            event: .paymentSheetLoadFailed,
             duration: duration,
-            error: error
+            error: error,
+            params: ["integration_shape": integrationShape.analyticsValue]
         )
     }
 
@@ -131,6 +127,7 @@ final class PaymentSheetAnalyticsHelper {
             "selected_lpm": defaultPaymentMethodAnalyticsValue,
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
+            "integration_shape": integrationShape.analyticsValue
         ]
         let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         if linkEnabled {
@@ -141,16 +138,9 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
-        let event: STPAnalyticEvent = {
-            switch integrationShape {
-            case .complete, .flowController:
-                return .paymentSheetLoadSucceeded
-            case .embedded:
-                return .mcLoadSucceededEmbedded
-            }
-        }()
+
         log(
-            event: event,
+            event: .paymentSheetLoadSucceeded,
             duration: duration,
             params: params
         )
