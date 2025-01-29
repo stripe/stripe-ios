@@ -117,7 +117,6 @@ import Combine
     /// Sets the currently selected payment option to `nil`.
     public func clearPaymentOption() {
         embeddedPaymentElement?.clearPaymentOption()
-        self.paymentOption = embeddedPaymentElement?.paymentOption
     }
 
 #if DEBUG
