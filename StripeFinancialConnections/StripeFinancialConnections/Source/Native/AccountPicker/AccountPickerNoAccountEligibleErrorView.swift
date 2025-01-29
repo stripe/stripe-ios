@@ -19,7 +19,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         institutionSkipAccountSelection: Bool,
         numberOfIneligibleAccounts: Int,
         paymentMethodType: FinancialConnectionsPaymentMethodType,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelectAnotherBank: @escaping () -> Void
     ) {
         super.init(frame: .zero)
@@ -143,7 +143,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                     }(),
                     action: didSelectAnotherBank
                 ),
-                theme: theme
+                appearance: appearance
             ).footerView
         )
         paneLayoutView.addTo(view: self)
@@ -179,7 +179,7 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
             institutionSkipAccountSelection: institutionSkipAccountSelection,
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
             paymentMethodType: paymentMethodType,
-            theme: .light,
+            appearance: .stripe,
             didSelectAnotherBank: {}
         )
     }

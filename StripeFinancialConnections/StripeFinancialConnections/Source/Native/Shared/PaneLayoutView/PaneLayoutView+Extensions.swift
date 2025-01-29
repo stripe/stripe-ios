@@ -64,7 +64,7 @@ extension PaneLayoutView {
                 font: titleFont,
                 boldFont: titleFont,
                 linkFont: titleFont,
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             titleLabel.setText(title)
             headerStackView.addArrangedSubview(titleLabel)
@@ -114,7 +114,7 @@ extension PaneLayoutView {
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             textLabel.setText(text)
             paddingStackView.addArrangedSubview(textLabel)
@@ -148,7 +148,7 @@ extension PaneLayoutView {
         primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
         secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration? = nil,
         topText: String? = nil,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         bottomText: String? = nil,
         didSelectURL: ((URL) -> Void)? = nil
     ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?, secondaryButton: StripeUICore.Button?) {
@@ -169,7 +169,7 @@ extension PaneLayoutView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: .textDefault,
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: .center
             )
             topTextLabel.setText(
@@ -182,7 +182,7 @@ extension PaneLayoutView {
 
         var primaryButtonReference: StripeUICore.Button?
         if let primaryButtonConfiguration = primaryButtonConfiguration {
-            let primaryButton = Button.primary(theme: theme)
+            let primaryButton = Button.primary(appearance: appearance)
             primaryButtonReference = primaryButton
             primaryButton.title = primaryButtonConfiguration.title
             primaryButton.accessibilityIdentifier = primaryButtonConfiguration.accessibilityIdentifier
@@ -221,7 +221,7 @@ extension PaneLayoutView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: .textDefault,
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: .center
             )
             bottomTextLabel.setText(

@@ -12,16 +12,16 @@ import UIKit
 final class DataAccessNoticeViewController: SheetViewController {
 
     private let dataAccessNotice: FinancialConnectionsDataAccessNotice
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let didSelectUrl: (URL) -> Void
 
     init(
         dataAccessNotice: FinancialConnectionsDataAccessNotice,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.dataAccessNotice = dataAccessNotice
-        self.theme = theme
+        self.appearance = appearance
         self.didSelectUrl = didSelectUrl
         super.init()
     }
@@ -56,7 +56,7 @@ final class DataAccessNoticeViewController: SheetViewController {
                 iconView: RoundedIconView(
                     image: .imageUrl(dataAccessNotice.icon?.default),
                     style: .circle,
-                    theme: theme
+                    appearance: appearance
                 ),
                 title: dataAccessNotice.title,
                 subtitle: firstSubtitle,
@@ -73,7 +73,7 @@ final class DataAccessNoticeViewController: SheetViewController {
                 ),
                 secondaryButtonConfiguration: nil,
                 topText: dataAccessNotice.disclaimer,
-                theme: theme,
+                appearance: appearance,
                 didSelectURL: didSelectUrl
             ).footerView
         )
@@ -100,7 +100,7 @@ private func CreateConnectedAccountContentView(
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.mediumEmphasized),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         secondSubtitleLabel.setText(secondSubtitle)
         verticalStackView.addArrangedSubview(secondSubtitleLabel)
@@ -147,7 +147,7 @@ private func CreateSingleBulletinView(
 ) -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    imageView.tintColor = .iconDefault
+    imageView.tintColor = FinancialConnectionsAppearance.Colors.icon
     if let iconUrl = iconUrl {
         imageView.setImage(with: iconUrl, useAlwaysTemplateRenderingMode: true)
     } else {
@@ -199,7 +199,7 @@ private struct DataAccessNoticeViewControllerRepresentable: UIViewControllerRepr
     func makeUIViewController(context: Context) -> DataAccessNoticeViewController {
         DataAccessNoticeViewController(
             dataAccessNotice: dataAccessNotice,
-            theme: .light,
+            appearance: .stripe,
             didSelectUrl: { _  in })
     }
 

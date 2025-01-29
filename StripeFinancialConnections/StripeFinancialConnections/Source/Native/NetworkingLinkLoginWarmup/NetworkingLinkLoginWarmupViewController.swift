@@ -59,7 +59,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                 iconView: RoundedIconView(
                     image: .image(.person),
                     style: .circle,
-                    theme: dataSource.manifest.theme
+                    appearance: dataSource.manifest.appearance
                 ),
                 title: STPLocalizedString(
                     "Continue with Link",
@@ -93,7 +93,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                         self?.didSelectSkip()
                     }
                 ),
-                theme: dataSource.manifest.theme
+                appearance: dataSource.manifest.appearance
             ).footerView
         )
     }

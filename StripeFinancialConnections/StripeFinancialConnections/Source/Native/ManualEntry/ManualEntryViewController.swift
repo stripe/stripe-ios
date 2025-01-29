@@ -27,7 +27,7 @@ final class ManualEntryViewController: UIViewController {
     private lazy var manualEntryFormView: ManualEntryFormView = {
         let manualEntryFormView = ManualEntryFormView(
             isTestMode: dataSource.manifest.isTestMode,
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         manualEntryFormView.delegate = self
         return manualEntryFormView
@@ -47,7 +47,7 @@ final class ManualEntryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
@@ -58,7 +58,7 @@ final class ManualEntryViewController: UIViewController {
                 accessibilityIdentifier: "manual_entry_continue_button",
                 action: didSelectContinue
             ),
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         self.footerButton = footerView.primaryButton
 

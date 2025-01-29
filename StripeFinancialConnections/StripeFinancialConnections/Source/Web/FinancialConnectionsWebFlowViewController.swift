@@ -37,7 +37,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private lazy var continueStateView: UIView = {
         let continueStateViews = ContinueStateViews(
             institutionImageUrl: nil,
-            theme: manifest.theme,
+            appearance: manifest.appearance,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
                 if let url = self.lastOpenedNativeURL {
@@ -81,13 +81,13 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .iconDefault
+        item.tintColor = FinancialConnectionsAppearance.Colors.icon
         item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
 
     // Use nil theme so the spinner view doesn't flash to the theme's color before launching the webview.
-    private let loadingView = LoadingView(frame: .zero, theme: nil)
+    private let loadingView = LoadingView(frame: .zero, appearance: nil)
 
     // MARK: - Init
 
@@ -119,7 +119,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         view.addSubview(loadingView)

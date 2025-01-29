@@ -75,7 +75,7 @@ final class AccountPickerViewController: UIViewController {
         return AccountPickerFooterView(
             dataAccessNotice: dataSource.accountPickerPane?.dataAccessNotice,
             singleAccount: dataSource.manifest.singleAccount,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectLinkAccounts: { [weak self] in
                 guard let self = self else {
                     return
@@ -101,7 +101,7 @@ final class AccountPickerViewController: UIViewController {
                 if let dataAccessNotice = self.dataSource.dataAccessNotice {
                     let dataAccessNoticeViewController = DataAccessNoticeViewController(
                         dataAccessNotice: dataAccessNotice,
-                        theme: self.dataSource.manifest.theme,
+                        appearance: self.dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             guard let self = self else { return }
                             AuthFlowHelpers.handleURLInTextFromBackend(
@@ -135,7 +135,7 @@ final class AccountPickerViewController: UIViewController {
         super.viewDidLoad()
         // account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         pollAuthSessionAccounts()
     }
 
@@ -264,7 +264,7 @@ final class AccountPickerViewController: UIViewController {
                 ?? false,
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
             paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
-            theme: self.dataSource.manifest.theme,
+            appearance: self.dataSource.manifest.appearance,
             didSelectAnotherBank: self.didSelectAnotherBank
         )
         // the user will never enter this instance of `AccountPickerViewController`
@@ -288,7 +288,7 @@ final class AccountPickerViewController: UIViewController {
             enabledAccounts: enabledAccounts,
             disabledAccounts: disabledAccounts,
             institution: dataSource.institution,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             delegate: self
         )
         self.accountPickerSelectionView = accountPickerSelectionView
@@ -351,7 +351,7 @@ final class AccountPickerViewController: UIViewController {
     private func showAccountLoadErrorView(error: Error) {
         let errorView = AccountPickerAccountLoadErrorView(
             institution: dataSource.institution,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectAnotherBank: didSelectAnotherBank,
             didSelectTryAgain: didSelectTryAgain,
             didSelectEnterBankDetailsManually: didSelectManualEntry

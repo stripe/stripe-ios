@@ -33,7 +33,7 @@ class ConsentViewController: UIViewController {
             font: .heading(.extraLarge),
             boldFont: .heading(.extraLarge),
             linkFont: .heading(.extraLarge),
-            textColor: .textDefault,
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
         titleLabel.setText(
@@ -52,7 +52,7 @@ class ConsentViewController: UIViewController {
             aboveCtaText: dataSource.consent.aboveCta,
             ctaText: dataSource.consent.cta,
             belowCtaText: dataSource.consent.belowCta,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectAgree: { [weak self] in
                 self?.didSelectAgree()
             },
@@ -74,7 +74,7 @@ class ConsentViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let paneLayoutView = PaneLayoutView(
             contentView: {
@@ -192,7 +192,7 @@ class ConsentViewController: UIViewController {
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNotice,
-                            theme: dataSource.manifest.theme,
+                            appearance: dataSource.manifest.appearance,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
@@ -203,7 +203,7 @@ class ConsentViewController: UIViewController {
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNoticeModel,
-                        theme: dataSource.manifest.theme,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }
