@@ -42,7 +42,7 @@ import Combine
     /// Creates an empty view model. Call `load` to initialize the `EmbeddedPaymentElementViewModel`
     public init() {}
 
-    /// Asynchronously loads and initializes EmbeddedPaymentElementViewModel. This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
+    /// Asynchronously loads the EmbeddedPaymentElementViewModel. This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
     /// Loads the Customer's payment methods, their default payment method, etc.
     /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the confirmation.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
