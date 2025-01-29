@@ -24,6 +24,7 @@ struct FinancialConnectionsAppearance: Equatable {
         static let spinnerNeutral: UIColor = .neutral200
         static let warningLight: UIColor = .attention50
         static let warning: UIColor = .attention300
+        static let shadow: UIColor = .dynamic(light: .black, dark: .neutral0)
 
         // These colors change based on the manifest's theme.
         let primary: UIColor
@@ -80,6 +81,10 @@ extension FinancialConnectionsAppearance.Colors {
 
 // MARK: - Raw colors
 private extension UIColor {
+    static var black: UIColor {
+        return UIColor(red: 0 / 255.0, green: 0 / 255.0, blue: 0 / 255.0, alpha: 1) // #000000
+    }
+
     // MARK: Neutral
     static var neutral0: UIColor {
         return UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 1) // #ffffff

@@ -11,15 +11,25 @@ import Foundation
 import UIKit
 
 final class NetworkingLinkLoginWarmupBodyView: HitTestView {
+    var borderLayer: CALayer?
 
     init(email: String) {
         super.init(frame: .zero)
         let emailView = CreateEmailView(email: email)
+        self.borderLayer = emailView.layer
         addAndPinSubview(emailView)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        borderLayer?.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
     }
 }
 
