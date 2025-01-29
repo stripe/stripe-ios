@@ -357,8 +357,8 @@ class RowButton: UIView {
     func makeSameHeightAsOtherRowButtonsIfNecessary() {
         // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
         // Don't do this if we are flat_with_checkmark style and have an accessory view - this row button is allowed to be taller than the rest
-        let displayingRightAccessoryView = !(rightAccessoryView?.isHidden ?? true)
-        guard !(isFlatWithCheckmarkStyle && displayingRightAccessoryView) else {
+        let isDisplayingRightAccessoryView = rightAccessoryView?.isHidden == false
+        if isFlatWithCheckmarkStyle && isDisplayingRightAccessoryView {
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
