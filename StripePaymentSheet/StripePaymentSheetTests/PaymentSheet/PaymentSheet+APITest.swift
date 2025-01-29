@@ -561,7 +561,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 ) { result, _ in
                     switch result {
                     case .completed:
-                        sleep(10)
+                        sleep(3)
                         PaymentSheetLoader.load(
                             mode: .deferredIntent(intentConfig),
                             configuration: configuration,
@@ -587,7 +587,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 print(error)
             }
         }
-        await fulfillment(of: [expectation, callbackExpectation], timeout: 100)
+        await fulfillment(of: [expectation, callbackExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testPaymentSheetLoadAndConfirmWithDeferredSetupIntentSetAsDefault() async throws {
