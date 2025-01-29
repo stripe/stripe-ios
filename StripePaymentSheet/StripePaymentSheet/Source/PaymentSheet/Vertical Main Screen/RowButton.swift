@@ -31,7 +31,7 @@ class RowButton: UIView {
     }()
     let imageView: UIImageView
     let label: UILabel
-    let sublabel: UILabel?
+    let sublabel: UILabel
     let defaultBadge: UILabel?
     let rightAccessoryView: UIView?
     let promoBadge: PromoBadgeView?
@@ -91,21 +91,10 @@ class RowButton: UIView {
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.imageView = imageView
-        self.label = Self.makeVerticalRowButtonLabel(text: text, appearance: appearance)
+        self.label = Self.makeRowButtonLabel(text: text, appearance: appearance)
         self.isEmbedded = isEmbedded
         self.rightAccessoryView = rightAccessoryView
-        if let subtext {
-            let sublabel = UILabel()
-            sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
-            sublabel.numberOfLines = 1
-            sublabel.adjustsFontSizeToFitWidth = true
-            sublabel.adjustsFontForContentSizeCategory = true
-            sublabel.text = subtext
-            sublabel.textColor = appearance.colors.componentPlaceholderText
-            self.sublabel = sublabel
-        } else {
-            self.sublabel = nil
-        }
+        self.sublabel = Self.makeRowButtonSublabel(text: subtext, appearance: appearance)
         if let badgeText {
             let defaultBadge = UILabel()
             defaultBadge.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
@@ -429,7 +418,7 @@ extension RowButton {
         return size.height
     }
 
-    static func makeVerticalRowButtonLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
+    static func makeRowButtonLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
         let label = UILabel()
         label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
         label.adjustsFontSizeToFitWidth = true
@@ -438,6 +427,18 @@ extension RowButton {
         label.numberOfLines = 1
         label.textColor = appearance.colors.componentText
         return label
+    }
+    
+    static func makeRowButtonSublabel(text: String?, appearance: PaymentSheet.Appearance) -> UILabel {
+        let sublabel = UILabel()
+        sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+        sublabel.numberOfLines = 1
+        sublabel.adjustsFontSizeToFitWidth = true
+        sublabel.adjustsFontForContentSizeCategory = true
+        sublabel.text = text
+        sublabel.textColor = appearance.colors.componentPlaceholderText
+        sublabel.isHidden = text?.isEmpty ?? true
+        return sublabel
     }
 
     static func makeForPaymentMethodType(
