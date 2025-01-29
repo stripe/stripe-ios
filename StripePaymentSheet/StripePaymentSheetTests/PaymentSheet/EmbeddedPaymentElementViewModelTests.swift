@@ -92,7 +92,6 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
             return XCTFail("Expected an update to fail if not loaded.")
         }
 
-        XCTAssertTrue(error is EmbeddedPaymentElementViewModel.ViewModelError)
         XCTAssertEqual(error as? EmbeddedPaymentElementViewModel.ViewModelError, .notLoaded)
     }
 
@@ -104,7 +103,6 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
             return XCTFail("Expected confirm to fail if not loaded.")
         }
 
-        XCTAssertTrue(error is EmbeddedPaymentElementViewModel.ViewModelError)
         XCTAssertEqual(error as? EmbeddedPaymentElementViewModel.ViewModelError, .notLoaded)
     }
 
@@ -258,7 +256,6 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
         guard case let .failed(error) = updateResult else {
             return XCTFail("Expected update to fail after a successful confirmation.")
         }
-        XCTAssertTrue(error is PaymentSheetError)
         XCTAssertEqual(
             (error as! PaymentSheetError).debugDescription,
             PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription
@@ -292,7 +289,6 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
         guard case let .failed(error) = secondConfirm else {
             return XCTFail("Expected second confirm to fail after the intent is already confirmed.")
         }
-        XCTAssertTrue(error is PaymentSheetError)
         XCTAssertEqual(
             (error as! PaymentSheetError).debugDescription,
             PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription
