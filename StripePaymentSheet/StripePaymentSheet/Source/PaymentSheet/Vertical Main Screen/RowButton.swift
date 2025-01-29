@@ -382,18 +382,6 @@ extension RowButton: UIGestureRecognizerDelegate {
         true
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if let accessoryView = rightAccessoryView as? RightAccessoryButton {
-            let locationInAccessoryView = touch.location(in: accessoryView)
-            if accessoryView.bounds.contains(locationInAccessoryView) {
-                accessoryView.handleTap()
-                return false
-            }
-        }
-
-        return true
-    }
-
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
