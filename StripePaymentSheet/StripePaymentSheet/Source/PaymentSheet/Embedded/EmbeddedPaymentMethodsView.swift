@@ -162,7 +162,6 @@ class EmbeddedPaymentMethodsView: UIView {
             let selection: Selection = .new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
-                subtitle: VerticalPaymentMethodListViewController.subtitleText(for: paymentMethodType),
                 hasSavedCard: savedPaymentMethods.hasSavedCard,
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: rowButtonAppearance,

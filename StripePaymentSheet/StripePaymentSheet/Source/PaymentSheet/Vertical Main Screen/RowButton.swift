@@ -428,7 +428,7 @@ extension RowButton {
         label.textColor = appearance.colors.componentText
         return label
     }
-    
+
     static func makeRowButtonSublabel(text: String?, appearance: PaymentSheet.Appearance) -> UILabel {
         let sublabel = UILabel()
         sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
@@ -443,7 +443,6 @@ extension RowButton {
 
     static func makeForPaymentMethodType(
         paymentMethodType: PaymentSheet.PaymentMethodType,
-        subtitle: String? = nil,
         hasSavedCard: Bool,
         rightAccessoryView: UIView? = nil,
         promoText: String? = nil,
@@ -455,6 +454,7 @@ extension RowButton {
     ) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
+        
         // Special case "New card" vs "Card" title
         let text: String = {
             if hasSavedCard && paymentMethodType == .stripe(.card) {
@@ -462,7 +462,34 @@ extension RowButton {
             }
             return paymentMethodType.displayName
         }()
-        return RowButton(appearance: appearance, originalCornerRadius: originalCornerRadius, imageView: imageView, text: text, subtext: subtitle, promoText: promoText, rightAccessoryView: rightAccessoryView, shouldAnimateOnPress: shouldAnimateOnPress, isEmbedded: isEmbedded, didTap: didTap)
+        let subtext: String? = {
+            switch paymentMethodType {
+            case .stripe(.klarna):
+                return String.Localized.buy_now_or_pay_later_with_klarna
+            case .stripe(.afterpayClearpay):
+                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: Locale.current) {
+                    return String.Localized.buy_now_or_pay_later_with_clearpay
+                } else {
+                    return String.Localized.buy_now_or_pay_later_with_afterpay
+                }
+            case .stripe(.affirm):
+                return String.Localized.pay_over_time_with_affirm
+            default:
+                return nil
+            }
+        }()
+        return RowButton(
+            appearance: appearance,
+            originalCornerRadius: originalCornerRadius,
+            imageView: imageView,
+            text: text,
+            subtext: subtext,
+            promoText: promoText,
+            rightAccessoryView: rightAccessoryView,
+            shouldAnimateOnPress: shouldAnimateOnPress,
+            isEmbedded: isEmbedded,
+            didTap: didTap
+        )
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
