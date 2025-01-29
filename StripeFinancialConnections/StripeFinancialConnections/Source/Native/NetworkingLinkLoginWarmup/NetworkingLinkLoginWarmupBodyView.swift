@@ -56,7 +56,7 @@ private func CreateEmailView(
 }
 
 private func CreateAvatarView(email: String) -> UIView {
-    // Always use Link-themed appearnce for this avatar view.
+    // Always use Link-themed appearance for this avatar view.
     let appearance = FinancialConnectionsAppearance.link
     let diameter: CGFloat = 36
 
