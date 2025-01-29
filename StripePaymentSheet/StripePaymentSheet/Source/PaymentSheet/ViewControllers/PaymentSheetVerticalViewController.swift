@@ -745,7 +745,17 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             }
         }()
         let headerView: UIView = {
-            let incentive = elementsSession.incentive?.takeIfAppliesTo(paymentMethodType)
+            let incentive = paymentMethodListViewController?.incentive?.takeIfAppliesTo(paymentMethodType)
+            let currentForm = formCache[paymentMethodType]
+            
+            let displayedIncentive = if let instantDebitsForm = currentForm as? InstantDebitsPaymentMethodElement {
+                // If we have shown this form before and the incentive has been cleared, make sure we don't show it again
+                // when re-rendering the form.
+                instantDebitsForm.showIncentiveInHeader ? incentive : nil
+            } else {
+                incentive
+            }
+            
             if shouldDisplayFormOnly, let wallet = makeWalletHeaderView() {
                 // Special case: if there is only one payment method type and it's not a card and wallet options are available
                 // Display the wallet, then the FormHeaderView below it
@@ -756,7 +766,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                             paymentMethodType: paymentMethodType,
                             shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                             appearance: configuration.appearance,
-                            incentive: incentive
+                            incentive: displayedIncentive
                         ),
                     ])
                     containerView.axis = .vertical
@@ -771,7 +781,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
                     shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                     appearance: configuration.appearance,
-                    incentive: incentive
+                    incentive: displayedIncentive
                 )
             }
         }()
@@ -880,6 +890,11 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
         updateUI()
         if viewController.paymentOption != nil {
             analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
+        }
+        
+        if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
+            let incentive = instantDebitsFormElement.displayableIncentive
+            paymentMethodListViewController?.setIncentive(incentive)
         }
     }
 
