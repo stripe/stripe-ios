@@ -30,6 +30,11 @@ protocol LinkLoginViewControllerDelegate: AnyObject {
         _ viewController: LinkLoginViewController,
         didReceiveTerminalError error: Error
     )
+
+    func linkLoginViewControllerDidFailAttestationVerdict(
+        _ viewController: LinkLoginViewController,
+        prefillDetails: WebPrefillDetails
+    )
 }
 
 final class LinkLoginViewController: UIViewController {
@@ -171,7 +176,15 @@ final class LinkLoginViewController: UIViewController {
                 footerButton?.isLoading = false
 
                 guard let self else { return }
-                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+                let attestationError = self.dataSource.completeAssertionIfNeeded(
+                    possibleError: result.error,
+                    api: .consumerSessionLookup
+                )
+                if attestationError != nil {
+                    let prefillDetails = WebPrefillDetails(email: emailAddress)
+                    self.delegate?.linkLoginViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                    return
+                }
 
                 switch result {
                 case .success(let response):
@@ -214,7 +227,19 @@ final class LinkLoginViewController: UIViewController {
         .observe { [weak self] result in
             guard let self else { return }
             self.footerButton?.isLoading = false
-            self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+            let attestationError = self.dataSource.completeAssertionIfNeeded(
+                possibleError: result.error,
+                api: .linkSignUp
+            )
+            if attestationError != nil {
+                let prefillDetails = WebPrefillDetails(
+                    email: self.formView.email,
+                    phone: self.formView.phoneNumber,
+                    countryCode: self.formView.countryCode
+                )
+                self.delegate?.linkLoginViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                return
+            }
 
             switch result {
             case .success(let response):

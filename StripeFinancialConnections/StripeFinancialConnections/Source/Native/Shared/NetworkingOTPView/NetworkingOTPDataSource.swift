@@ -18,11 +18,15 @@ protocol NetworkingOTPDataSource: AnyObject {
     var isTestMode: Bool { get }
     var theme: FinancialConnectionsTheme { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
+    var emailAddress: String { get }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
-    func completeAssertionIfNeeded(possibleError: Error?)
+    func completeAssertionIfNeeded(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API
+    ) -> Error?
 }
 
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
@@ -30,7 +34,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     let otpType: String
     let pane: FinancialConnectionsSessionManifest.NextPane
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    private let emailAddress: String
+    let emailAddress: String
     private let customEmailType: String?
     private let connectionsMerchantName: String?
     private let apiClient: any FinancialConnectionsAPI
@@ -85,7 +89,8 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
                 clientSecret: clientSecret,
                 sessionId: manifest.id,
                 emailSource: .customerObject,
-                useMobileEndpoints: manifest.verified
+                useMobileEndpoints: manifest.verified,
+                pane: pane
             )
             .chained { [weak self] lookupConsumerSessionResponse in
                 self?.consumerSession = lookupConsumerSessionResponse.consumerSession
@@ -123,9 +128,16 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     }
 
     // Marks the assertion as completed and logs possible errors during verified flows.
-    func completeAssertionIfNeeded(possibleError: Error?) {
-        guard manifest.verified else { return }
-        apiClient.completeAssertion(possibleError: possibleError)
+    func completeAssertionIfNeeded(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API
+    ) -> Error? {
+        guard manifest.verified else { return nil }
+        return apiClient.completeAssertion(
+            possibleError: possibleError,
+            api: api,
+            pane: pane
+        )
     }
 
 }

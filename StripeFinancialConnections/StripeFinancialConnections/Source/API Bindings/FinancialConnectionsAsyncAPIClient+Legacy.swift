@@ -44,10 +44,15 @@ extension FinancialConnectionsAsyncAPIClient {
 extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     func synchronize(
         clientSecret: String,
-        returnURL: String?
+        returnURL: String?,
+        initialSynchronize: Bool
     ) -> Future<FinancialConnectionsSynchronize> {
         wrapAsyncToFuture {
-            try await self.synchronize(clientSecret: clientSecret, returnURL: returnURL)
+            try await self.synchronize(
+                clientSecret: clientSecret,
+                returnURL: returnURL,
+                initialSynchronize: initialSynchronize
+            )
         }
     }
 
@@ -311,7 +316,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         clientSecret: String,
         sessionId: String,
         emailSource: FinancialConnectionsAPIClient.EmailSource,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LookupConsumerSessionResponse> {
         wrapAsyncToFuture {
             try await self.consumerSessionLookup(
@@ -319,7 +325,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 clientSecret: clientSecret,
                 sessionId: sessionId,
                 emailSource: emailSource,
-                useMobileEndpoints: useMobileEndpoints
+                useMobileEndpoints: useMobileEndpoints,
+                pane: pane
             )
         }
     }
@@ -369,7 +376,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LinkSignUpResponse> {
         wrapAsyncToFuture {
             try await self.linkAccountSignUp(
@@ -379,7 +387,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 amount: amount,
                 currency: currency,
                 incentiveEligibilitySession: incentiveEligibilitySession,
-                useMobileEndpoints: useMobileEndpoints
+                useMobileEndpoints: useMobileEndpoints,
+                pane: pane
             )
         }
     }

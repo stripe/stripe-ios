@@ -10,6 +10,8 @@
 import XCTest
 
 final class FinancialConnectionsWebFlowTests: XCTestCase {
+    static let iosSdkParameter = "&launched_by=ios_sdk"
+
     func test_noAdditionalParameters_empty() {
         let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: nil,
@@ -19,7 +21,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertNil(additionalParameters)
+        XCTAssertEqual(additionalParameters, "&launched_by=ios_sdk")
     }
 
     func test_someAdditionalParameters_notInstantDebits_noLinkMode() {
@@ -31,7 +33,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertNil(additionalParameters)
+        XCTAssertEqual(additionalParameters, "&launched_by=ios_sdk")
     }
 
     func test_someAdditionalParameters_instantDebits_noLinkMode() {
@@ -43,7 +45,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_instantDebits_noLinkMode() {
@@ -55,7 +57,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true")
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_notInstantDebits_someLinkMode() {
@@ -67,7 +69,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertNil(additionalParameters)
+        XCTAssertEqual(additionalParameters, Self.iosSdkParameter)
     }
 
     func test_someAdditionalParameters_instantDebits_passthroughLinkMode() {
@@ -79,7 +81,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_instantDebits_linkCardBrandLinkMode() {
@@ -91,7 +93,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true&link_mode=LINK_CARD_BRAND")
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true&link_mode=LINK_CARD_BRAND&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_emptyPrefillDetails() {
@@ -109,7 +111,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertNil(additionalParameters)
+        XCTAssertEqual(additionalParameters, "&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_prefilledEmail() {
@@ -127,7 +129,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&email=test%40example.com")
+        XCTAssertEqual(additionalParameters, "&email=test%40example.com&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_fullPrefillDetails() {
@@ -145,7 +147,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
+        XCTAssertEqual(additionalParameters, "&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_fullPrefillDetails_instantDebits_passthroughLinkMode() {
@@ -163,7 +165,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: nil,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_emptyBillingDetails() {
@@ -181,7 +183,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: billingDetails,
             incentiveEligibilitySession: nil
         )
-        XCTAssertNil(additionalParameters)
+        XCTAssertEqual(additionalParameters, "&launched_by=ios_sdk")
     }
 
     func test_additionalParameters_billingDetails() {
@@ -206,9 +208,9 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: billingDetails,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON")
+        XCTAssertEqual(additionalParameters, "&return_payment_method=true&expand_payment_method=true&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON&launched_by=ios_sdk")
     }
-    
+
     func test_additionalParameters_incentiveEligible() {
         let additionalParameters = FinancialConnectionsWebFlowViewController.buildEncodedUrlParameters(
             startingAdditionalParameters: nil,
@@ -220,7 +222,7 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
         )
         XCTAssertEqual(
             additionalParameters,
-            "&return_payment_method=true&expand_payment_method=true&instantDebitsIncentive=true&incentiveEligibilitySession=pi_123"
+            "&return_payment_method=true&expand_payment_method=true&instantDebitsIncentive=true&incentiveEligibilitySession=pi_123&launched_by=ios_sdk"
         )
     }
 
@@ -252,6 +254,6 @@ final class FinancialConnectionsWebFlowTests: XCTestCase {
             billingDetails: billingDetails,
             incentiveEligibilitySession: nil
         )
-        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US")
+        XCTAssertEqual(additionalParameters, "&testmode=true&return_payment_method=true&expand_payment_method=true&link_mode=PASSTHROUGH&billingDetails%5Bname%5D=Foo%20Bar&billingDetails%5Bemail%5D=foo%40bar.com&billingDetails%5Bphone%5D=+1%20(123)%20456-7890&billingDetails%5Baddress%5D%5Bcity%5D=Toronto&billingDetails%5Baddress%5D%5Bcountry%5D=CA&billingDetails%5Baddress%5D%5Bline1%5D=123%20Main%20St&billingDetails%5Baddress%5D%5Bpostal_code%5D=A0B%201C2&billingDetails%5Baddress%5D%5Bstate%5D=ON&email=test%40example.com&linkMobilePhone=1234567890&linkMobilePhoneCountry=US&launched_by=ios_sdk")
     }
 }

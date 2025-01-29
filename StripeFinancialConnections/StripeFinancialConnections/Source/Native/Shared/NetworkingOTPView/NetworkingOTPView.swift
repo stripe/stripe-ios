@@ -27,6 +27,8 @@ protocol NetworkingOTPViewDelegate: AnyObject {
         didFailToConfirmVerification error: Error,
         isTerminal: Bool
     )
+
+    func networkingOTPViewDidFailAttestationVerdict(_ view: NetworkingOTPView, prefillDetails: WebPrefillDetails)
 }
 
 final class NetworkingOTPView: UIView {
@@ -160,7 +162,15 @@ final class NetworkingOTPView: UIView {
         dataSource.lookupConsumerSession()
             .observe { [weak self] result in
                 guard let self = self else { return }
-                self.dataSource.completeAssertionIfNeeded(possibleError: result.error)
+                let attestationError = self.dataSource.completeAssertionIfNeeded(
+                    possibleError: result.error,
+                    api: .consumerSessionLookup
+                )
+                if attestationError != nil {
+                    let prefillDetails = WebPrefillDetails(email: self.dataSource.emailAddress)
+                    self.delegate?.networkingOTPViewDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                    return
+                }
 
                 switch result {
                 case .success(let lookupConsumerSessionResponse):

@@ -29,6 +29,10 @@ protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     func networkingLinkStepUpVerificationViewControllerEncounteredSoftError(
         _ viewController: NetworkingLinkStepUpVerificationViewController
     )
+    func networkingLinkStepUpVerificationViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkStepUpVerificationViewController,
+        prefillDetails: WebPrefillDetails
+    )
 }
 
 final class NetworkingLinkStepUpVerificationViewController: UIViewController {
@@ -290,5 +294,15 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
                 didReceiveTerminalError: error
             )
         }
+    }
+
+    func networkingOTPViewDidFailAttestationVerdict(
+        _ view: NetworkingOTPView,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.networkingLinkStepUpVerificationViewControllerDidFailAttestationVerdict(
+            self,
+            prefillDetails: prefillDetails
+        )
     }
 }
