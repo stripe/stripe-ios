@@ -371,8 +371,8 @@ extension PaymentSheetFormFactory {
             isSelectedByDefault: false,
             didToggle: didToggle
         )
-        return PaymentMethodElementWrapper(element) { checkbox, params in
-            params.setAsDefaultPM = checkbox.isSelected
+        return PaymentMethodElementWrapper(element) { defaultCheckbox, params in
+            params.setAsDefaultPM = defaultCheckbox.isSelected
             return params
         }
     }

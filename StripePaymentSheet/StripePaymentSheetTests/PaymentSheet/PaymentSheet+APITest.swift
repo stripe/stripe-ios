@@ -46,26 +46,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }()
 
     lazy var newCardPaymentOption: PaymentSheet.PaymentOption = {
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4242424242424242"
-        cardParams.cvc = "123"
-        cardParams.expYear = 32
-        cardParams.expMonth = 12
-        let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
-            confirmParams: .init(
-                params: .init(
-                    card: cardParams,
-                    billingDetails: .init(),
-                    metadata: nil
-                ),
-                type: .stripe(.card)
-            )
-        )
-
-        return newCardPaymentOption
+        return makeNewCardPaymentOption()
     }()
 
     lazy var newCardDefaultPaymentOption: PaymentSheet.PaymentOption = {
+        return makeNewCardPaymentOption(setAsDefaultPM: true)
+    }()
+
+    private func makeNewCardPaymentOption(setAsDefaultPM: Bool = false) -> PaymentSheet.PaymentOption {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
         cardParams.cvc = "123"
@@ -79,14 +67,17 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             ),
             type: .stripe(.card)
         )
-        confirmParams.setAsDefaultPM = true
-        confirmParams.saveForFutureUseCheckboxState = .selected
+        if setAsDefaultPM {
+            confirmParams.setAsDefaultPM = true
+            confirmParams.saveForFutureUseCheckboxState = .selected
+        }
         let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
             confirmParams: confirmParams
         )
 
         return newCardPaymentOption
-    }()
+    }
+
     // MARK: - load and confirm tests
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {
