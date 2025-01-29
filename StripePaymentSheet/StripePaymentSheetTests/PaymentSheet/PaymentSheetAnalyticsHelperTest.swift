@@ -410,20 +410,24 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         // Test successful update
         sut.logEmbeddedUpdateFinished(result: .succeeded)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "succeeded")
         XCTAssertNotNil(analyticsClient._testLogHistory.last!["duration"])
         
         // Test failed update
         sut.logEmbeddedUpdateStarted()
         let error = NSError(domain: "test", code: 123, userInfo: [NSLocalizedDescriptionKey: "Test error"])
         sut.logEmbeddedUpdateFinished(result: .failed(error: error))
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_failed")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "failed")
         XCTAssertNotNil(analyticsClient._testLogHistory.last!["duration"])
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["error"] as? String, "Test error")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["error_type"] as? String, "test")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["error_code"] as? String, "123")
         
         // Test canceled update
         sut.logEmbeddedUpdateStarted()
         sut.logEmbeddedUpdateFinished(result: .canceled)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_canceled")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "canceled")
         XCTAssertNotNil(analyticsClient._testLogHistory.last!["duration"])
     }
 

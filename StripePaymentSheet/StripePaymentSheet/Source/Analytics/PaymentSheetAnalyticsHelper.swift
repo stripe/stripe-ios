@@ -349,23 +349,15 @@ final class PaymentSheetAnalyticsHelper {
             return Date().timeIntervalSince(updateStartDate)
         }()
         
-        let event: STPAnalyticEvent = {
+        let error: Error? = {
             switch result {
-            case .succeeded:
-                return .mcUpdateFinishedEmbedded
-            case .failed:
-                return .mcUpdateFailedEmbedded
-            case .canceled:
-                return .mcUpdateCanceledEmbedded
+            case .failed(let error):
+                return error
+            default:
+                return nil
             }
         }()
-        
-        var params: [String: Any] = [:]
-        if case .failed(let error) = result {
-            params["error"] = error.localizedDescription
-        }
-        
-        log(event: event, duration: duration, params: params)
+        log(event: .mcUpdateFinishedEmbedded, duration: duration, error: error, params: ["status": result.analyticValue])
     }
 
     func log(
@@ -476,5 +468,18 @@ extension PaymentElementConfiguration {
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
         payload["card_brand_acceptance"] = cardBrandAcceptance != .all
         return payload
+    }
+}
+
+extension EmbeddedPaymentElement.UpdateResult {
+    var analyticValue: String {
+        switch self {
+        case .succeeded:
+            return "succeeded"
+        case .canceled:
+            return "canceled"
+        case .failed(_):
+            return "failed"
+        }
     }
 }
