@@ -367,7 +367,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 #endif
     // MARK: - Helpers
-    
+
     func makeSavedPaymentMethodButton(savedPaymentMethod: STPPaymentMethod,
                                       savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) -> RowButton {
         let accessoryButton: RowButton.RightAccessoryButton? = {
@@ -393,11 +393,21 @@ class EmbeddedPaymentMethodsView: UIView {
         })
         return savedPaymentMethodButton
     }
-    
+
     func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
+        // We always add a hidden accessory button ("Change >") so we can un-hide if needed
+        let accessoryButton = RowButton.RightAccessoryButton(
+            accessoryType: appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? .changeWithChevron : .change,
+            appearance: appearance,
+            didTap: { [weak self] in
+                self?.didTap(selection: .new(paymentMethodType: paymentMethodType))
+            }
+        )
+        accessoryButton.isHidden = true
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
             hasSavedCard: savedPaymentMethods.hasSavedCard,
+            rightAccessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             appearance: rowButtonAppearance,
             originalCornerRadius: appearance.cornerRadius,
