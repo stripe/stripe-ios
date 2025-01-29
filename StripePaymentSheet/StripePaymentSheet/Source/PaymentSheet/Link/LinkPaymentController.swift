@@ -314,6 +314,14 @@ import UIKit
             )
         )
 
+        let styleConfig: ElementsSessionContext.StyleConfig = {
+            switch configuration.style {
+            case .automatic: return .automatic
+            case .alwaysLight: return .alwaysLight
+            case .alwaysDark: return .alwaysDark
+            }
+        }()
+
         return ElementsSessionContext(
             amount: mode.amount,
             currency: mode.currency,
@@ -321,7 +329,8 @@ import UIKit
             intentId: nil,
             linkMode: nil,
             billingDetails: billingDetails,
-            eligibleForIncentive: false
+            eligibleForIncentive: false,
+            styleConfig: styleConfig
         )
     }
 

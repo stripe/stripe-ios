@@ -48,19 +48,21 @@ final public class FinancialConnectionsSheet {
     @_spi(STP) public struct Configuration {
         /// Style options for colors in Financial Connections.
         @_spi(STP) @frozen public enum UserInterfaceStyle {
-            /// (default) Financial Connections will automatically switch between light and dark mode compatible colors based on device settings.
+            /// Financial Connections will automatically switch between light and dark mode compatible colors based on device settings.
             case automatic
-            /// Financial Connections will always use colors appropriate for light mode UI.
+
+            /// (default) Financial Connections will always use colors appropriate for light mode UI.
             case alwaysLight
+
             /// Financial Connections will always use colors appropriate for dark mode UI.
             case alwaysDark
 
             /// Applies the specified user interface style to the given view controller.
             func configure(_ viewController: UIViewController?) {
-                guard let viewController else { return }
                 guard ExperimentStore.shared.supportsDynamicStyle else {
                     return
                 }
+                guard let viewController else { return }
 
                 switch self {
                 case .automatic:

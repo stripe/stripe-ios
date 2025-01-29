@@ -648,6 +648,12 @@ private func PresentPaymentSheet(
     configuration.defaultBillingDetails.email = config.email
     configuration.defaultBillingDetails.phone = config.phone
 
+    switch config.style {
+    case .automatic: configuration.style = .automatic
+    case .alwaysLight: configuration.style = .alwaysLight
+    case .alwaysDark: configuration.style = .alwaysDark
+    }
+
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
     // disable app-to-app for UI tests
     configuration.returnURL = isUITest ? nil : "financial-connections-example://redirect"

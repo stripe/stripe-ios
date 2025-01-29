@@ -7,7 +7,8 @@
 
 import Foundation
 
-/// Internal store to access exoerimental features,
+/// Internal singleton store to access experimental features.
+/// Enabling any of these might result in unexpected behavior.
 @_spi(STP) public class ExperimentStore {
     @_spi(STP) public static let shared = ExperimentStore()
 
