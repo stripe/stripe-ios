@@ -104,7 +104,7 @@ import Combine
         }
         
         // Check if update was called before load, if so throw an error
-        guard let embeddedPaymentElement = embeddedPaymentElement else {
+        guard let embeddedPaymentElement else {
             return .failed(error: ViewModelError.notLoaded)
         }
 
@@ -115,7 +115,7 @@ import Combine
     /// - Returns: The result of the payment after any presented view controllers are dismissed.
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
-        guard let embeddedPaymentElement = embeddedPaymentElement else {
+        guard let embeddedPaymentElement else {
             return .failed(error: ViewModelError.notLoaded)
         }
 
