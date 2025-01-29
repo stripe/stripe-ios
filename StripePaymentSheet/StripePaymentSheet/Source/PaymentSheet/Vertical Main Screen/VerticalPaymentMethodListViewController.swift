@@ -252,7 +252,7 @@ enum VerticalPaymentMethodListSelection: Equatable, Hashable {
             return false
         }
     }
-    
+
     func hash(into hasher: inout Hasher) {
         switch self {
         case .new(let paymentMethodType):

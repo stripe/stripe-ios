@@ -380,22 +380,24 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         }()
         let selection: Selection = .saved(paymentMethod: savedPaymentMethod)
-        let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
-                                                                           appearance: rowButtonAppearance,
-                                                                           rightAccessoryView: accessoryButton,
-                                                                           isEmbedded: true,
-                                                                           didTap: { [weak self] _ in
-            CustomerPaymentOption.setDefaultPaymentMethod(
-                .stripeId(savedPaymentMethod.stripeId),
-                forCustomer: self?.customer?.id
-            )
-           self?.didTap(selection: selection)
-        })
+        let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
+            paymentMethod: savedPaymentMethod,
+            appearance: rowButtonAppearance,
+            rightAccessoryView: accessoryButton,
+            isEmbedded: true,
+            didTap: { [weak self] _ in
+                CustomerPaymentOption.setDefaultPaymentMethod(
+                    .stripeId(savedPaymentMethod.stripeId),
+                    forCustomer: self?.customer?.id
+                )
+                self?.didTap(selection: selection)
+            }
+        )
         return savedPaymentMethodButton
     }
 
     func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
-        // We always add a hidden accessory button ("Change >") so we can un-hide if needed
+        // We always add a hidden accessory button ("Change >") so we can show/hide it easily
         let accessoryButton = RowButton.RightAccessoryButton(
             accessoryType: appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? .changeWithChevron : .change,
             appearance: appearance,

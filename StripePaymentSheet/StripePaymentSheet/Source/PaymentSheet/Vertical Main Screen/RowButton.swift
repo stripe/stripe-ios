@@ -210,9 +210,13 @@ class RowButton: UIView {
             imageView.widthAnchor.constraint(equalToConstant: 24),
         ]
 
-        let isSavedPMRow = rightAccessoryView != nil
-        if isFlatWithCheckmarkStyle, isSavedPMRow {
-            labelsStackView.setCustomSpacing(8, after: label)
+        if isFlatWithCheckmarkStyle, let rightAccessoryView, !rightAccessoryView.isHidden {
+            // In flat_with_checkmark, we need additional vertical space around the View More / Change accessory view.
+            if sublabel.isHidden {
+                labelsStackView.setCustomSpacing(8, after: sublabel)
+            } else {
+                labelsStackView.setCustomSpacing(8, after: label)
+            }
             imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor))
         } else {
             imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: centerYAnchor))
@@ -351,7 +355,7 @@ class RowButton: UIView {
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        guard sublabel?.text?.isEmpty ?? true else {
+        guard sublabel.text?.isEmpty ?? true else {
             return
         }
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
@@ -442,7 +446,7 @@ extension RowButton {
     ) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.componentBackground)
         imageView.contentMode = .scaleAspectFit
-        
+
         // Special case "New card" vs "Card" title
         let text: String = {
             if hasSavedCard && paymentMethodType == .stripe(.card) {
