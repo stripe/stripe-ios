@@ -41,7 +41,7 @@ class NativeFlowController {
             target: self,
             action: #selector(didSelectNavigationBarCloseButton)
         )
-        item.tintColor = .iconDefault
+        item.tintColor = FinancialConnectionsAppearance.Colors.icon
         item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
@@ -112,7 +112,7 @@ class NativeFlowController {
         }
         if showConfirmationAlert {
             let closeConfirmationViewController = CloseConfirmationViewController(
-                theme: dataManager.manifest.theme,
+                appearance: dataManager.manifest.appearance,
                 didSelectClose: {
                     finishClosingAuthFlow()
                 }
@@ -163,7 +163,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    theme: self.dataManager.manifest.theme,
+                    appearance: self.dataManager.manifest.appearance,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
@@ -212,7 +212,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    theme: self.dataManager.manifest.theme,
+                    appearance: dataManager.manifest.appearance,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
@@ -1648,7 +1648,7 @@ private func CreatePaneViewController(
             let terminalErrorViewController = TerminalErrorViewController(
                 error: terminalError,
                 allowManualEntry: dataManager.manifest.allowManualEntry,
-                theme: dataManager.manifest.theme
+                appearance: dataManager.manifest.appearance
             )
             terminalErrorViewController.delegate = nativeFlowController
             viewController = terminalErrorViewController

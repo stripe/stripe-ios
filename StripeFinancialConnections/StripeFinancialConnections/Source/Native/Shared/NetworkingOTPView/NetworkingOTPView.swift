@@ -46,7 +46,7 @@ final class NetworkingOTPView: UIView {
         if dataSource.isTestMode {
             let testModeBanner = TestModeAutofillBannerView(
                 context: .otp,
-                theme: dataSource.theme,
+                appearance: dataSource.appearance,
                 didTapAutofill: applyTestModeValue
             )
             otpVerticalStackView.addArrangedSubview(testModeBanner)
@@ -69,7 +69,7 @@ final class NetworkingOTPView: UIView {
             ),
             theme: theme
         )
-        otpTextField.tintColor = dataSource.theme.primaryColor
+        otpTextField.tintColor = dataSource.appearance.colors.primary
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
         return otpTextField
     }()
@@ -77,10 +77,10 @@ final class NetworkingOTPView: UIView {
         var theme: ElementsAppearance = .default
         theme.colors = {
             var colors = ElementsAppearance.Color()
-            colors.border = .borderDefault
-            colors.componentBackground = .customBackgroundColor
-            colors.textFieldText = .textDefault
-            colors.danger = .textFeedbackCritical
+            colors.border = FinancialConnectionsAppearance.Colors.borderNeutral
+            colors.componentBackground = FinancialConnectionsAppearance.Colors.background
+            colors.textFieldText = FinancialConnectionsAppearance.Colors.textDefault
+            colors.danger = FinancialConnectionsAppearance.Colors.textCritical
             return colors
         }()
         return theme
@@ -111,7 +111,7 @@ final class NetworkingOTPView: UIView {
 
         if show {
             let activityIndicator = ActivityIndicator(size: .medium)
-            activityIndicator.color = dataSource.theme.primaryColor
+            activityIndicator.color = dataSource.appearance.colors.spinner
             activityIndicator.startAnimating()
             let loadingView = UIStackView(
                 arrangedSubviews: [activityIndicator]
@@ -137,8 +137,8 @@ final class NetworkingOTPView: UIView {
                 font: .label(.medium),
                 boldFont: .label(.mediumEmphasized),
                 linkFont: .label(.medium),
-                textColor: .textFeedbackCritical,
-                linkColor: .textFeedbackCritical,
+                textColor: FinancialConnectionsAppearance.Colors.textCritical,
+                linkColor: FinancialConnectionsAppearance.Colors.textCritical,
                 alignment: .center
             )
             errorLabel.setText(errorText)

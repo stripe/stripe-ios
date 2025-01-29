@@ -42,13 +42,13 @@ final class LinkLoginViewController: UIViewController {
     weak var delegate: LinkLoginViewControllerDelegate?
 
     private lazy var loadingView: SpinnerView = {
-        return SpinnerView(theme: dataSource.manifest.theme)
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
 
     private lazy var formView: LinkSignupFormView = {
         let formView = LinkSignupFormView(
             accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber,
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         formView.delegate = self
         return formView
@@ -72,7 +72,7 @@ final class LinkLoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         showLoadingView(true)
         dataSource
@@ -109,7 +109,7 @@ final class LinkLoginViewController: UIViewController {
                 action: didSelectContinueWithLink
             ),
             topText: linkLoginPane.aboveCta,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectURL: didSelectURLInTextFromBackend
         )
         self.footerButton = footerView.primaryButton

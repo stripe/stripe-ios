@@ -105,7 +105,7 @@ final class LinkAccountPickerViewController: UIViewController {
         super.viewDidLoad()
         // link account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let paneLayoutView =  PaneLayoutView(
             contentView: contentStackView,
@@ -173,7 +173,7 @@ final class LinkAccountPickerViewController: UIViewController {
         let bodyView = LinkAccountPickerBodyView(
             accountTuples: accountTuples,
             addNewAccount: networkingAccountPicker.addNewAccount,
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         bodyView.delegate = self
         self.bodyView = bodyView
@@ -199,7 +199,7 @@ final class LinkAccountPickerViewController: UIViewController {
             defaultCta: networkingAccountPicker.defaultCta,
             aboveCta: networkingAccountPicker.aboveCta,
             singleAccount: dataSource.manifest.singleAccount,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectConnectAccount: { [weak self] in
                 guard let self = self else {
                     return
@@ -215,7 +215,7 @@ final class LinkAccountPickerViewController: UIViewController {
                 if let dataAccessNotice = self.dataSource.dataAccessNotice {
                     let dataAccessNoticeViewController = DataAccessNoticeViewController(
                         dataAccessNotice: dataAccessNotice,
-                        theme: dataSource.manifest.theme,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             guard let self = self else { return }
                             self.didSelectURLInTextFromBackend(url)
@@ -503,7 +503,7 @@ final class LinkAccountPickerViewController: UIViewController {
 
         let genericInfoViewController = GenericInfoViewController(
             genericInfoScreen: drawerOnSelection,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             panePresentationStyle: .sheet,
             iconView: {
                 if let institutionIconUrl = partnerAccount.institution?.icon?.default {
@@ -577,7 +577,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                 // why they can't use this bank account
                 let accountSelectionDrawerViewController = GenericInfoViewController(
                     genericInfoScreen: drawerOnSelection,
-                    theme: dataSource.manifest.theme,
+                    appearance: dataSource.manifest.appearance,
                     panePresentationStyle: .sheet,
                     didSelectPrimaryButton: { genericInfoViewController in
                         genericInfoViewController.dismiss(animated: true)

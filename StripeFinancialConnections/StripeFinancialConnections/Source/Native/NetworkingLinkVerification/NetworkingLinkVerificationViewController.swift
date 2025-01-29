@@ -37,7 +37,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     weak var delegate: NetworkingLinkVerificationViewControllerDelegate?
 
     private lazy var loadingView: UIView = {
-        return SpinnerView(theme: dataSource.manifest.theme)
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -56,7 +56,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         otpView.lookupConsumerAndStartVerification()
     }
 

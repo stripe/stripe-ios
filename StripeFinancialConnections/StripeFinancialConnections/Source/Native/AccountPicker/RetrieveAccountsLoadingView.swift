@@ -58,7 +58,7 @@ private class ShimmeringAccountPickerRow: ShimmeringView {
         super.init(frame: frame)
         clipsToBounds = true
         layer.cornerRadius = 12
-        backgroundColor = .backgroundOffset
+        backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
 
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
