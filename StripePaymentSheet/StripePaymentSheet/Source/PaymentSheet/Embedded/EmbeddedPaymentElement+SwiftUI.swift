@@ -95,7 +95,7 @@ import Combine
         }
         
         // Check if update was called before load, if so throw an error
-        guard let embeddedPaymentElement = embeddedPaymentElement else {
+        guard let embeddedPaymentElement else {
             return .failed(error: ViewModelError.notLoaded)
         }
 
