@@ -412,6 +412,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "succeeded")
         XCTAssertNotNil(analyticsClient._testLogHistory.last!["duration"])
+        XCTAssertNil(analyticsClient._testLogHistory.last!["error_type"])
+        XCTAssertNil(analyticsClient._testLogHistory.last!["error_code"])
         
         // Test failed update
         sut.logEmbeddedUpdateStarted()
@@ -429,6 +431,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "canceled")
         XCTAssertNotNil(analyticsClient._testLogHistory.last!["duration"])
+        XCTAssertNil(analyticsClient._testLogHistory.last!["error_type"])
+        XCTAssertNil(analyticsClient._testLogHistory.last!["error_code"])
     }
 
     // MARK: - Helpers
