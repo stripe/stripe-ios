@@ -11,13 +11,22 @@ import Combine
 /// A view model that manages an `EmbeddedPaymentElement`.
 @MainActor
 @_spi(EmbeddedPaymentElementPrivateBeta) public final class EmbeddedPaymentElementViewModel: ObservableObject {
-    enum ViewModelError: Error {
+    enum ViewModelError: Error, CustomDebugStringConvertible {
         /// The `EmbeddedPaymentElementViewModel` has not been loaded. Call `load()` before attempting this operation.
-         case notLoaded
+        case notLoaded
 
         /// `load()` has already been called. `load()` may only be called once.
-         case alreadyLoaded
-     }
+        case alreadyLoaded
+
+        var debugDescription: String {
+            switch self {
+            case .notLoaded:
+                return "EmbeddedPaymentElementViewModel has not been loaded. Call `load()` before attempting this operation."
+            case .alreadyLoaded:
+                return "load() has already been called. `load()` may only be called once."
+            }
+        }
+    }
 
     // MARK: - Public properties
 
