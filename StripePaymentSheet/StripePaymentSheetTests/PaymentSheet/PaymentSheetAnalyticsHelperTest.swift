@@ -417,7 +417,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         
         // Test failed update
         sut.logEmbeddedUpdateStarted()
-        let error = NSError(domain: "test", code: 123, userInfo: [NSLocalizedDescriptionKey: "Test error"])
+        let error = NSError(domain: "test", code: 123)
         sut.logEmbeddedUpdateFinished(result: .failed(error: error))
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "failed")
