@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1QmKPAFY0qyl6XeWSuYcRh1T\?client_secret=seti_1QmKPAFY0qyl6XeWSuYcRh1T_secret_RffkQy813jjn9L8PUYTFHLvpmYFeWJk$
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1QmPRrFY0qyl6XeW2rhGoo6G\?client_secret=seti_1QmPRrFY0qyl6XeW2rhGoo6G_secret_RfkxhFE1QaxZpslZJ7gjop5hpLeMYrm$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=FzcPHbp2U9c4o_MtQ7TcxI9wabZd9JFpcGj4yDH5SBKizAEfoLOH73mntwVDlL1jGhP2txwyog_tJEGd
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=CHAOYFwlc47KzUuH5v0Dl2YUJypcc48y8axxygFZdPZ2KolhlmkW8Z1ud31GjvB29txJ7KV37KZQIU1U
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_Lf2BQaWJBMQVe5
+request-id: req_sdX59q0pdH2pKZ
 Content-Length: 544
 Vary: Origin
-Date: Tue, 28 Jan 2025 19:25:02 GMT
+Date: Wed, 29 Jan 2025 00:48:09 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -26,11 +26,11 @@ Content-Type: application/json
 x-content-type-options: nosniff
 
 {
-  "id" : "seti_1QmKPAFY0qyl6XeWSuYcRh1T",
+  "id" : "seti_1QmPRrFY0qyl6XeW2rhGoo6G",
   "description" : null,
   "next_action" : null,
   "livemode" : false,
-  "payment_method" : "pm_1QmKPBFY0qyl6XeWLgcdM4Jg",
+  "payment_method" : "pm_1QmPRrFY0qyl6XeW4TKGyB2p",
   "payment_method_configuration_details" : null,
   "usage" : "off_session",
   "payment_method_types" : [
@@ -38,8 +38,8 @@ x-content-type-options: nosniff
   ],
   "object" : "setup_intent",
   "last_setup_error" : null,
-  "created" : 1738092300,
-  "client_secret" : "seti_1QmKPAFY0qyl6XeWSuYcRh1T_secret_RffkQy813jjn9L8PUYTFHLvpmYFeWJk",
+  "created" : 1738111687,
+  "client_secret" : "seti_1QmPRrFY0qyl6XeW2rhGoo6G_secret_RfkxhFE1QaxZpslZJ7gjop5hpLeMYrm",
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "status" : "succeeded"
