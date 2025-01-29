@@ -6,46 +6,46 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CardBrandFilteringBeta) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
 final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_UpdatePaymentMethodViewControllerDarkMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, canUpdateCardBrand: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isCBCEligible: true)
     }
 
     func test_UpdatePaymentMethodViewControllerLightMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true)
     }
 
     func test_UpdatePaymentMethodViewControllerAppearance() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, canUpdateCardBrand: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, isCBCEligible: true)
     }
 
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerDarkMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isEmbeddedSingle: true, canUpdateCardBrand: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isEmbeddedSingle: true, isCBCEligible: true)
     }
 
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerLightMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, canUpdateCardBrand: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, isCBCEligible: true)
     }
 
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerAppearance() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme, canUpdateCardBrand: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme, isCBCEligible: true)
     }
 
     func test_UpdatePaymentMethodViewControllerExpiredCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, expired: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, expired: true)
     }
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, allowsSetAsDefaultPM: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, allowsSetAsDefaultPM: true)
     }
 
     func test_UpdatePaymentMethodViewControllerDefaultCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, allowsSetAsDefaultPM: true, isDefault: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, allowsSetAsDefaultPM: true, isDefault: true)
     }
 
     func test_UpdatePaymentMethodViewControllerRemoveOnlyCard() {
@@ -111,8 +111,13 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerAppearance() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
+    
+    func test_UpdatePaymentMethodViewControllerLightMode_blockedBrands() {
+        let cardBrandFilter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.amex]))
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, cardBrandFilter: cardBrandFilter)
+    }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdateCardBrand: Bool = false, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, isCBCEligible: Bool = false, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false, cardBrandFilter: CardBrandFilter = .default) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
@@ -120,7 +125,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                     return STPFixtures.paymentMethod()
                 }
                 else {
-                    if canUpdateCardBrand {
+                    if isCBCEligible {
                         return STPPaymentMethod._testCardCoBranded()
                     }
                     else {
@@ -138,8 +143,9 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
                                                            appearance: appearance,
                                                            hostedSurface: .paymentSheet,
+                                                           cardBrandFilter: cardBrandFilter,
                                                            canRemove: canRemove,
-                                                           canUpdateCardBrand: canUpdateCardBrand,
+                                                           isCBCEligible: isCBCEligible,
                                                            allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                                                            isDefault: isDefault
         )
