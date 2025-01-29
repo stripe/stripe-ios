@@ -452,9 +452,17 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum ConfigurationStyle: String, PickerEnum {
+        static let enumName: String = "Style"
+        case automatic
+        case alwaysLight
+        case alwaysDark
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
+    var style: ConfigurationStyle
     var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
     var customerMode: CustomerMode
@@ -505,6 +513,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             uiStyle: .paymentSheet,
             layout: .automatic,
             mode: .payment,
+            style: .automatic,
             customerKeyType: .customerSession,
             integrationType: .normal,
             customerMode: .guest,
