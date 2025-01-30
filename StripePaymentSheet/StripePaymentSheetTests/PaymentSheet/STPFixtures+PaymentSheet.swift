@@ -89,7 +89,7 @@ extension STPElementsSession {
                                 "customer_session": [
                                     "id": "id123",
                                     "livemode": false,
-                                    "api_key": "cuss_12345",
+                                    "api_key": "ek_12345",
                                     "api_key_expiry": 12345,
                                     "customer": "cus_123",
                                     "components": customerSessionData,
