@@ -24,6 +24,7 @@ struct PaymentSheetTestPlayground: View {
         if playgroundController.settings.uiStyle != .embedded {
             SettingView(setting: $playgroundController.settings.layout)
         }
+        SettingView(setting: $playgroundController.settings.style)
         SettingView(setting: $playgroundController.settings.shippingInfo)
         SettingView(setting: $playgroundController.settings.applePayEnabled)
         SettingView(setting: $playgroundController.settings.applePayButtonType)
