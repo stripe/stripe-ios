@@ -20,19 +20,13 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         embeddedPaymentElement.presentingViewController = UIWindow.topMostViewController
 
         let paymentElementView = embeddedPaymentElement.view
-        paymentElementView.layoutMargins = .zero
         paymentElementView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(paymentElementView)
-
-        let bottomConstraint = paymentElementView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        // Lowering the priority prevents SwiftUI from hitting a required constraint so SwiftUI can gracefully resize the container
-        bottomConstraint.priority = .defaultHigh
 
         NSLayoutConstraint.activate([
             paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
             paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            bottomConstraint
+            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
         ])
 
         return containerView

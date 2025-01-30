@@ -78,6 +78,7 @@ import Combine
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
             self.paymentOption = embeddedPaymentElement.paymentOption
+            self.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: embeddedPaymentElement)
             self.isLoaded = true
         }
 
