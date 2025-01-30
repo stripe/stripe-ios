@@ -340,6 +340,8 @@ extension EmbeddedPaymentElement {
         guard !hasConfirmedIntent else {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), nil)
         }
+        
+        embeddedPaymentMethodsView.isUserInteractionEnabled = false
         // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
         if let latestUpdateTask {
             switch await latestUpdateTask.value {
@@ -377,7 +379,10 @@ extension EmbeddedPaymentElement {
         // If the confirmation was successful, disable user interaction
         if case .completed = result {
             hasConfirmedIntent = true
-            containerView.isUserInteractionEnabled = false
+            embeddedPaymentMethodsView.isUserInteractionEnabled = false
+        } else {
+            // Re-enable interaction for failed and canceled results
+            embeddedPaymentMethodsView.isUserInteractionEnabled = true
         }
 
         return (result, deferredIntentConfirmationType)
