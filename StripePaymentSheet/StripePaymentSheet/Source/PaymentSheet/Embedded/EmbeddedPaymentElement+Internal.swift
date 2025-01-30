@@ -375,7 +375,6 @@ extension EmbeddedPaymentElement {
             deferredIntentConfirmationType: deferredIntentConfirmationType
         )
 
-        // If the confirmation was successful, disable user interaction
         if case .completed = result {
             hasConfirmedIntent = true
         } else {
