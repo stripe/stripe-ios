@@ -29,7 +29,7 @@ final class PaymentSheetAnalyticsHelper {
         var analyticsValue: String {
             switch self {
             case .flowController:
-                return "flow_controller"
+                return "flowcontroller"
             case .complete:
                 return "paymentsheet"
             case .embedded:

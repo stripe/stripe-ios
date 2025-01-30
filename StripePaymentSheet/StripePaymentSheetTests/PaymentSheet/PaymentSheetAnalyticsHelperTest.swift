@@ -115,7 +115,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         let integrationShapes: [(PaymentSheetAnalyticsHelper.IntegrationShape, String)] = [
             (.complete, "paymentsheet"),
             (.embedded, "embedded"),
-            (.flowController, "flow_controller")
+            (.flowController, "flowcontroller")
         ]
         
         for (shape, shapeString) in integrationShapes {
@@ -140,7 +140,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         let integrationShapes: [(PaymentSheetAnalyticsHelper.IntegrationShape, String)] = [
             (.complete, "paymentsheet"),
             (.embedded, "embedded"),
-            (.flowController, "flow_controller")
+            (.flowController, "flowcontroller")
         ]
         
         for (shape, shapeString) in integrationShapes {
