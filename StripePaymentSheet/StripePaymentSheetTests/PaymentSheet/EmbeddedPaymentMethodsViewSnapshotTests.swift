@@ -547,7 +547,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     // MARK: Initial selection tests
 
     func testEmbeddedPaymentMethodsView_flatRadio_initialApplePay() {
-        let initialSelection: EmbeddedPaymentMethodsView.Selection = .applePay
+        let initialSelection: RowButtonType = .applePay
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -563,7 +563,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_initialLink() {
-        let initialSelection: EmbeddedPaymentMethodsView.Selection = .link
+        let initialSelection: RowButtonType = .link
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
                                                       savedPaymentMethod: nil,
@@ -578,7 +578,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testEmbeddedPaymentMethodsView_flatRadio_initialSavedCard() {
-        let initialSelection: EmbeddedPaymentMethodsView.Selection = .saved(paymentMethod: ._testCard())
+        let initialSelection: RowButtonType = .saved(paymentMethod: ._testCard())
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: initialSelection,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -1124,7 +1124,7 @@ class MockMandateProvider: MandateTextProvider {
 
 extension EmbeddedPaymentMethodsView {
     convenience init(
-        initialSelection: Selection?,
+        initialSelection: RowButtonType?,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         savedPaymentMethod: STPPaymentMethod?,
         appearance: PaymentSheet.Appearance,
