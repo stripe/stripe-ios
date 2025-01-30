@@ -209,7 +209,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
 
         verify(embeddedView)
     }
@@ -448,7 +448,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
 
         verify(embeddedView)
     }
@@ -469,7 +469,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
 
         verify(embeddedView)
     }
@@ -558,7 +558,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
 
-        XCTAssertEqual(embeddedView.selection, initialSelection)
+        XCTAssertEqual(embeddedView.selectedRowButton?.type, initialSelection)
         verify(embeddedView)
     }
 
@@ -573,7 +573,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
 
-        XCTAssertEqual(embeddedView.selection, initialSelection)
+        XCTAssertEqual(embeddedView.selectedRowButton?.type, initialSelection)
         verify(embeddedView)
     }
 
@@ -590,7 +590,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider(),
                                                       savedPaymentMethods: [._testCard()])
 
-        XCTAssertEqual(embeddedView.selection, initialSelection)
+        XCTAssertEqual(embeddedView.selectedRowButton?.type, initialSelection)
         verify(embeddedView)
     }
 
@@ -760,7 +760,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
 
         verify(embeddedView)
     }
@@ -781,7 +781,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
 
         verify(embeddedView)
     }

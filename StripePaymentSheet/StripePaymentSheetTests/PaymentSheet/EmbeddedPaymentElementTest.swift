@@ -58,7 +58,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
         // ...with cash app selected...
-        sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         delegateDidUpdatePaymentOptionCalled = false // This gets set to true when we select cash app ^
         XCTAssertNil(sut.paymentOption?.mandateText)
         // ...its intent should match the initial intent config...
@@ -192,7 +192,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        sut.embeddedPaymentMethodsView.didTap(selection: .applePay)
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         async let _ = sut.update(intentConfiguration: brokenConfig)
@@ -213,7 +213,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        sut.embeddedPaymentMethodsView.didTap(selection: .applePay)
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         _ = await sut.update(intentConfiguration: brokenConfig)
@@ -307,7 +307,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertNil(sut.paymentOption)
 
         // Select the "Card" payment method
-        sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // The delegate should have been notified
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
         XCTAssertEqual(sut.paymentOption?.label, "Cash App Pay")
@@ -487,10 +487,6 @@ extension EmbeddedPaymentElement.UpdateResult: Equatable {
 }
 
 extension EmbeddedPaymentMethodsView {
-    var rowButtons: [RowButton] {
-        return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
-    }
-
     func getRowButton(accessibilityIdentifier: String) -> RowButton {
         return rowButtons.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
     }
