@@ -377,7 +377,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             customerID: configuration.customerID,
             showApplePay: configuration.showApplePay,
             showLink: configuration.showLink,
-            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+            paymentMethodSetAsDefault: configuration.allowsSetAsDefaultPM,
             customer: elementsSession.customer
         )
 
