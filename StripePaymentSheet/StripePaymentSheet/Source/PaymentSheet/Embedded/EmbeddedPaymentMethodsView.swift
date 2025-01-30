@@ -26,7 +26,7 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
 
-    typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
+    typealias Selection = RowButtonType // TODO(porter) Maybe define our own later
 
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
