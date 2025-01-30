@@ -19,6 +19,7 @@ protocol AccountPickerDataSource: AnyObject {
 
     var delegate: AccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var accountPickerPane: FinancialConnectionsAccountPickerPane? { get }
     var authSession: FinancialConnectionsAuthSession { get }
     var institution: FinancialConnectionsInstitution { get }
@@ -44,6 +45,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
     let authSession: FinancialConnectionsAuthSession
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     let institution: FinancialConnectionsInstitution
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let reduceManualEntryProminenceInErrors: Bool
@@ -63,6 +65,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
         authSession: FinancialConnectionsAuthSession,
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         institution: FinancialConnectionsInstitution,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         reduceManualEntryProminenceInErrors: Bool,
@@ -74,6 +77,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.accountPickerPane = accountPickerPane
         self.authSession = authSession
         self.manifest = manifest
+        self.configuration = configuration
         self.institution = institution
         self.analyticsClient = analyticsClient
         self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors

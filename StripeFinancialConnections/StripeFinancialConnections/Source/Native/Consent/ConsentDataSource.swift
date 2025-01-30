@@ -10,6 +10,7 @@ import Foundation
 
 protocol ConsentDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var consent: FinancialConnectionsConsent { get }
     var merchantLogo: [String]? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
@@ -20,6 +21,7 @@ protocol ConsentDataSource: AnyObject {
 final class ConsentDataSourceImplementation: ConsentDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     let consent: FinancialConnectionsConsent
     let merchantLogo: [String]?
     private let apiClient: any FinancialConnectionsAPI
@@ -28,6 +30,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         consent: FinancialConnectionsConsent,
         merchantLogo: [String]?,
         apiClient: any FinancialConnectionsAPI,
@@ -35,6 +38,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.consent = consent
         self.merchantLogo = merchantLogo
         self.apiClient = apiClient

@@ -197,6 +197,7 @@ class ConsentViewController: UIViewController {
                                 self?.didSelectURLInTextFromBackend(url)
                             }
                         )
+                        dataSource.configuration.style.configure(dataAccessNoticeViewController)
                         dataAccessNoticeViewController.present(on: self)
                     }
                 case .legalDatailsNotice:
@@ -208,6 +209,7 @@ class ConsentViewController: UIViewController {
                             self?.didSelectURLInTextFromBackend(url)
                         }
                     )
+                    dataSource.configuration.style.configure(legalDetailsNoticeViewController)
                     legalDetailsNoticeViewController.present(on: self)
                 case .linkAccountPicker:
                     delegate?.consentViewController(

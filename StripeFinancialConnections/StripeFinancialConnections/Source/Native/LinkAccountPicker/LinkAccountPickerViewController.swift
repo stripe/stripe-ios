@@ -221,6 +221,7 @@ final class LinkAccountPickerViewController: UIViewController {
                             self.didSelectURLInTextFromBackend(url)
                         }
                     )
+                    self.dataSource.configuration.style.configure(dataAccessNoticeViewController)
                     dataAccessNoticeViewController.present(on: self)
                 }
             }
@@ -540,6 +541,7 @@ final class LinkAccountPickerViewController: UIViewController {
             },
             willDismissSheet: willDismissSheet
         )
+        dataSource.configuration.style.configure(genericInfoViewController)
         genericInfoViewController.present(on: self)
     }
 
@@ -587,6 +589,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                         self.didSelectURLInTextFromBackend(url)
                     }
                 )
+                dataSource.configuration.style.configure(accountSelectionDrawerViewController)
                 accountSelectionDrawerViewController.present(on: self)
             } else {
                 // we will (likely) be presenting a different drawer further down the function

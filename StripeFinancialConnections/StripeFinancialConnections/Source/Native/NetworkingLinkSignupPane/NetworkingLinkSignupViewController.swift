@@ -269,7 +269,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
             url: url,
             pane: .networkingLinkSignupPane,
             analyticsClient: dataSource.analyticsClient,
-            handleURL: { urlHost, _ in
+            handleURL: { [weak self] urlHost, _ in
+                guard let self else { return }
                 if urlHost == "legal-details-notice", let legalDetailsNotice {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNotice,
@@ -281,6 +282,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                             )
                         }
                     )
+                    self.dataSource.configuration.style.configure(legalDetailsNoticeViewController)
                     legalDetailsNoticeViewController.present(on: self)
                 }
             }

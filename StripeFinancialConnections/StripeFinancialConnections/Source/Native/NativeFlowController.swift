@@ -117,6 +117,7 @@ class NativeFlowController {
                     finishClosingAuthFlow()
                 }
             )
+            dataManager.configuration.style.configure(closeConfirmationViewController)
             closeConfirmationViewController.present(on: navigationController)
         } else {
             finishClosingAuthFlow()
@@ -1360,6 +1361,7 @@ private func CreatePaneViewController(
                 accountPickerPane: dataManager.accountPickerPane,
                 authSession: authSession,
                 manifest: dataManager.manifest,
+                configuration: dataManager.configuration,
                 institution: institution,
                 analyticsClient: dataManager.analyticsClient,
                 reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors,
@@ -1404,6 +1406,7 @@ private func CreatePaneViewController(
         if let consentPaneModel = dataManager.consentPaneModel {
             let consentDataSource = ConsentDataSourceImplementation(
                 manifest: dataManager.manifest,
+                configuration: dataManager.configuration,
                 consent: consentPaneModel,
                 merchantLogo: dataManager.merchantLogo,
                 apiClient: dataManager.apiClient,
@@ -1431,6 +1434,7 @@ private func CreatePaneViewController(
         if let consumerSession = dataManager.consumerSession {
             let linkAccountPickerDataSource = LinkAccountPickerDataSourceImplementation(
                 manifest: dataManager.manifest,
+                configuration: dataManager.configuration,
                 apiClient: dataManager.apiClient,
                 analyticsClient: dataManager.analyticsClient,
                 clientSecret: dataManager.clientSecret,
@@ -1480,6 +1484,7 @@ private func CreatePaneViewController(
     case .networkingLinkSignupPane:
         let networkingLinkSignupDataSource = NetworkingLinkSignupDataSourceImplementation(
             manifest: dataManager.manifest,
+            configuration: dataManager.configuration,
             selectedAccounts: dataManager.linkedAccounts,
             returnURL: dataManager.returnURL,
             apiClient: dataManager.apiClient,
@@ -1560,6 +1565,7 @@ private func CreatePaneViewController(
                 authSession: dataManager.authSession,
                 institution: institution,
                 manifest: dataManager.manifest,
+                configuration: dataManager.configuration,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,

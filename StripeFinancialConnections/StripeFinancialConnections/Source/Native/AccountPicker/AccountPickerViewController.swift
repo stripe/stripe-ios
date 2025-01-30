@@ -112,6 +112,7 @@ final class AccountPickerViewController: UIViewController {
                             )
                         }
                     )
+                    self.dataSource.configuration.style.configure(dataAccessNoticeViewController)
                     dataAccessNoticeViewController.present(on: self)
                 } else {
                     SFSafariViewController.present(url: url)
