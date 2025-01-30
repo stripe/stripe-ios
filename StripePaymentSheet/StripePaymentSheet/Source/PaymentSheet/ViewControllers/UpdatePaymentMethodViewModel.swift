@@ -18,7 +18,7 @@ class UpdatePaymentMethodViewModel {
     let hostedSurface: HostedSurface
     let cardBrandFilter: CardBrandFilter
     let canRemove: Bool
-    let canUpdateCardBrand: Bool
+    let isCBCEligible: Bool
     let allowsSetAsDefaultPM: Bool
     let isDefault: Bool
 
@@ -31,6 +31,14 @@ class UpdatePaymentMethodViewModel {
     }
     var hasUpdates: Bool {
         return hasChangedCardBrand || hasChangedDefaultPaymentMethodCheckbox
+    }
+    var canUpdateCardBrand: Bool {
+        guard paymentMethod.type == .card else {
+            return false
+        }
+        let availableBrands = paymentMethod.card?.networks?.available.map {$0.toCardBrand }.compactMap{ $0 }
+        let filteredCardBrands = availableBrands?.filter {cardBrandFilter.isAccepted(cardBrand: $0)} ?? []
+        return isCBCEligible && filteredCardBrands.count > 1
     }
 
     lazy var header: String = {
@@ -59,7 +67,7 @@ class UpdatePaymentMethodViewModel {
         }
     }()
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdateCardBrand: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         guard PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) else {
             fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
@@ -68,7 +76,7 @@ class UpdatePaymentMethodViewModel {
         self.hostedSurface = hostedSurface
         self.cardBrandFilter = cardBrandFilter
         self.canRemove = canRemove
-        self.canUpdateCardBrand = canUpdateCardBrand
+        self.isCBCEligible = isCBCEligible
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
         self.isDefault = isDefault
     }

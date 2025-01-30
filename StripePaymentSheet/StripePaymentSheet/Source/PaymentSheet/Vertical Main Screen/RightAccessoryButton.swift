@@ -43,12 +43,7 @@ extension RowButton {
         private var label: UILabel {
             let label = UILabel()
             label.text = accessoryType.text
-            switch accessoryType {
-            case .edit, .viewMoreChevron, .update:
-                label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-            case .viewMore:
-                label.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 20)
-            }
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             if #available(iOS 15.0, *) {
                 label.minimumContentSizeCategory = .large
             }
@@ -65,8 +60,7 @@ extension RowButton {
             let imageView = UIImageView(image: image)
             if accessoryType == .update {
                 imageView.tintColor = appearance.colors.icon
-            }
-            else {
+            } else {
                 imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
             }
             imageView.contentMode = .scaleAspectFit

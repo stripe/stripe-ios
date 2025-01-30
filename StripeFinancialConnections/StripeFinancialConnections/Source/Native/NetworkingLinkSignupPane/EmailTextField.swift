@@ -20,7 +20,7 @@ protocol EmailTextFieldDelegate: AnyObject {
 
 final class EmailTextField: UIView {
 
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
             placeholder: STPLocalizedString(
@@ -28,7 +28,7 @@ final class EmailTextField: UIView {
                 "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address."
             ),
             showDoneToolbar: true,
-            theme: theme
+            appearance: appearance
         )
         textField.textField.keyboardType = .emailAddress
         textField.textField.textContentType = .emailAddress
@@ -43,7 +43,7 @@ final class EmailTextField: UIView {
     private lazy var activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .medium)
         activityIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
-        activityIndicator.color = theme.spinnerColor
+        activityIndicator.color = appearance.colors.spinner
         return activityIndicator
     }()
     fileprivate var didEndEditingOnce = false
@@ -63,8 +63,8 @@ final class EmailTextField: UIView {
 
     weak var delegate: EmailTextFieldDelegate?
 
-    init(theme: FinancialConnectionsTheme) {
-        self.theme = theme
+    init(appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
         super.init(frame: .zero)
         addAndPinSubview(textField)
     }
@@ -147,10 +147,10 @@ private struct EmailTextFieldUIViewRepresentable: UIViewRepresentable {
 
     let text: String
     let isLoading: Bool
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> EmailTextField {
-        EmailTextField(theme: theme)
+        EmailTextField(appearance: appearance)
     }
 
     func updateUIView(
@@ -174,43 +174,43 @@ struct EmailTextField_Previews: PreviewProvider {
                 EmailTextFieldUIViewRepresentable(
                     text: "",
                     isLoading: false,
-                    theme: .light
+                    appearance: .stripe
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "test@test.com",
                     isLoading: false,
-                    theme: .light
+                    appearance: .stripe
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "test@test-very-long-name-thats-very-long.com",
                     isLoading: true,
-                    theme: .light
+                    appearance: .stripe
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "wrongemail@wronger",
                     isLoading: false,
-                    theme: .light
+                    appearance: .stripe
                 ).frame(height: 90)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "light@theme.com",
                     isLoading: true,
-                    theme: .light
+                    appearance: .stripe
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "linklight@theme.com",
                     isLoading: true,
-                    theme: .linkLight
+                    appearance: .link
                 ).frame(height: 56)
 
                 Spacer()
             }
             .padding()
-            .background(Color(UIColor.customBackgroundColor))
+            .background(Color(FinancialConnectionsAppearance.Colors.background))
         }
     }
 }

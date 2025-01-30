@@ -11,13 +11,13 @@ import UIKit
 
 final class AccountPickerRowView: UIView {
 
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let didSelect: () -> Void
     private var isSelected: Bool = false {
         didSet {
             layer.cornerRadius = 12
             if isSelected {
-                layer.borderColor = theme.borderColor.cgColor
+                layer.borderColor = appearance.colors.border.cgColor
                 layer.borderWidth = 2
                 let shadowWidthOffset: CGFloat = 0
                 layer.shadowPath = CGPath(
@@ -34,7 +34,7 @@ final class AccountPickerRowView: UIView {
                     height: 1 / UIScreen.main.nativeScale
                 )
             } else {
-                layer.borderColor = UIColor.borderDefault.cgColor
+                layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
                 layer.borderWidth = 1
                 layer.shadowOpacity = 0
             }
@@ -53,7 +53,7 @@ final class AccountPickerRowView: UIView {
         return InstitutionIconView()
     }()
     private lazy var checkboxView: CheckboxView = {
-        let selectionView = CheckboxView(theme: theme)
+        let selectionView = CheckboxView(appearance: appearance)
         selectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             selectionView.widthAnchor.constraint(equalToConstant: 16),
@@ -68,15 +68,15 @@ final class AccountPickerRowView: UIView {
     init(
         isDisabled: Bool,
         isFaded: Bool,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelect: @escaping () -> Void
     ) {
-        self.theme = theme
+        self.appearance = appearance
         self.didSelect = didSelect
         super.init(frame: .zero)
 
         // necessary so the shadow does not appear under text
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         if isFaded {
             horizontalStackView.alpha = 0.25
@@ -172,7 +172,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
     let isSelected: Bool
     let isDisabled: Bool
     let isFaded: Bool
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     init(
         institutionIconUrl: String? = nil,
@@ -182,7 +182,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
         isSelected: Bool,
         isDisabled: Bool,
         isFaded: Bool,
-        theme: FinancialConnectionsTheme = .light
+        appearance: FinancialConnectionsAppearance = .stripe
     ) {
         self.institutionIconUrl = institutionIconUrl
         self.title = title
@@ -191,14 +191,14 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
         self.isSelected = isSelected
         self.isDisabled = isDisabled
         self.isFaded = isFaded
-        self.theme = theme
+        self.appearance = appearance
     }
 
     func makeUIView(context: Context) -> AccountPickerRowView {
         let view = AccountPickerRowView(
             isDisabled: isDisabled,
             isFaded: isFaded,
-            theme: theme,
+            appearance: appearance,
             didSelect: {}
         )
         view.set(
@@ -254,7 +254,7 @@ struct AccountPickerRowView_Previews: PreviewProvider {
                         isSelected: true,
                         isDisabled: false,
                         isFaded: false,
-                        theme: .linkLight
+                        appearance: .link
                     ).frame(height: 76)
                     AccountPickerRowViewUIViewRepresentable(
                         title: "Joint Checking Very Long Name To Truncate",

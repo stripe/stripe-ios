@@ -38,13 +38,13 @@ final class HostViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .iconDefault
+        item.tintColor = FinancialConnectionsAppearance.Colors.icon
         item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         return item
     }()
 
     // We haven't loaded the manifest yet, so we use a nil theme to show a neutral-colored spinner.
-    private let loadingView = LoadingView(frame: .zero, theme: nil)
+    private let loadingView = LoadingView(frame: .zero, appearance: nil)
 
     // MARK: - Properties
 
@@ -84,7 +84,7 @@ final class HostViewController: UIViewController {
         super.viewDidLoad()
 
         view.addSubview(loadingView)
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         getManifest()

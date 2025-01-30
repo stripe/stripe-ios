@@ -133,14 +133,14 @@ extension FinancialConnectionsNavigationController {
             .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -13, bottom: -2, right: 0))
         let appearance = UINavigationBarAppearance()
         appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
-        appearance.backgroundColor = .customBackgroundColor
+        appearance.backgroundColor = FinancialConnectionsAppearance.Colors.background
         appearance.shadowColor = .clear  // remove border
         navigationBar.standardAppearance = appearance
         navigationBar.scrollEdgeAppearance = appearance
         navigationBar.compactAppearance = appearance
 
         // change the back button color
-        navigationBar.tintColor = UIColor.iconDefault
+        navigationBar.tintColor = FinancialConnectionsAppearance.Colors.icon
         navigationBar.isTranslucent = false
     }
 
@@ -148,7 +148,7 @@ extension FinancialConnectionsNavigationController {
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
         shouldHideLogo: Bool,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         isTestMode: Bool
     ) {
         let iconHeight: CGFloat = 20
@@ -174,8 +174,8 @@ extension FinancialConnectionsNavigationController {
         let logoView: UIImageView? = {
             guard !shouldHideLogo else { return nil }
 
-            let logoImage = UIImageView(image: theme.logo.makeImage(template: true))
-            logoImage.tintColor = theme.logoColor
+            let logoImage = UIImageView(image: appearance.logo.makeImage(template: true))
+            logoImage.tintColor = appearance.colors.logo
             logoImage.contentMode = .scaleAspectFit
             logoImage.sizeToFit()
 

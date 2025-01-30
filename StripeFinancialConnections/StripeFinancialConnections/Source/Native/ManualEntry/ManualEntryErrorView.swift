@@ -17,8 +17,8 @@ final class ManualEntryErrorView: UIView {
             font: .label(.small),
             boldFont: .label(.smallEmphasized),
             linkFont: .label(.small),
-            textColor: .textFeedbackCritical,
-            linkColor: .textFeedbackCritical
+            textColor: FinancialConnectionsAppearance.Colors.textCritical,
+            linkColor: FinancialConnectionsAppearance.Colors.textCritical
         )
         errorLabel.setText(text)
         addAndPinSubview(errorLabel)
