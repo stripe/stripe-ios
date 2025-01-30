@@ -140,10 +140,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = makeFormViewControllerIfNecessary(
-            selection: embeddedPaymentMethodsView.selection,
+            selection: embeddedPaymentMethodsView.selectedRowButton?.type,
             previousPaymentOption:  selectedFormViewController?.previousPaymentOption
         )
-
         // 2. Inform the delegate of the updated payment option
         informDelegateIfPaymentOptionUpdated()
     }
@@ -226,7 +225,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         }
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
-        let isSelected = embeddedPaymentMethodsView.selection?.isSaved ?? false
+        let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
@@ -265,7 +264,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         // or
         // there are still saved payment methods & the saved payment method was previously selected to presenting
         let isSelected = (latestPaymentMethods.count > 1 && selectedPaymentMethod != nil) ||
-        (embeddedPaymentMethodsView.selection?.isSaved ?? false && latestPaymentMethods.count > 0)
+        (embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false && latestPaymentMethods.count > 0)
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)

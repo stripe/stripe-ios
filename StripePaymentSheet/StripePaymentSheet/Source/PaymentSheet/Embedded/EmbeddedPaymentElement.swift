@@ -150,7 +150,7 @@ public final class EmbeddedPaymentElement {
                 delegate: self
             )
             self.selectedFormViewController = makeFormViewControllerIfNecessary(
-                selection: self.embeddedPaymentMethodsView.selection,
+                selection: self.embeddedPaymentMethodsView.selectedRowButton?.type,
                 previousPaymentOption: previousPaymentOption
             )
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
@@ -245,7 +245,7 @@ public final class EmbeddedPaymentElement {
             return selectedFormViewController.selectedPaymentOption
         }
 
-        switch embeddedPaymentMethodsView.selection {
+        switch embeddedPaymentMethodsView.selectedRowButton?.type {
         case .applePay:
             return .applePay
         case .link:

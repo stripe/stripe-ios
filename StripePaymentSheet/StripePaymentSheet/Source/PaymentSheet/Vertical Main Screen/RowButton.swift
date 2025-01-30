@@ -514,7 +514,7 @@ extension RowButton {
 }
 
 // MARK: - RowButtonType
-enum RowButtonType: Equatable, Hashable {
+enum RowButtonType: Equatable {
     case new(paymentMethodType: PaymentSheet.PaymentMethodType)
     case saved(paymentMethod: STPPaymentMethod)
     case applePay
