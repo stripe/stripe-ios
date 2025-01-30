@@ -16,6 +16,7 @@ final class AccountNumberRetrievalErrorView: UIView {
     init(
         institution: FinancialConnectionsInstitution,
         appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
         didSelectAnotherBank: @escaping () -> Void,
         didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
     ) {
@@ -45,7 +46,8 @@ final class AccountNumberRetrievalErrorView: UIView {
                         )
                     }
                 }(),
-                contentView: nil
+                contentView: nil,
+                configuration: configuration
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
@@ -93,6 +95,7 @@ private struct AccountNumberRetrievalErrorViewUIViewRepresentable: UIViewReprese
                 logo: nil
             ),
             appearance: appearance,
+            configuration: .init(),
             didSelectAnotherBank: {},
             didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
         )

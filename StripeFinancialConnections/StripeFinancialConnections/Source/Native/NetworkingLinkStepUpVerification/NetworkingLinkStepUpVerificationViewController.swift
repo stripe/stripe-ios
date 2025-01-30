@@ -112,7 +112,8 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
                         "The subtitle/description of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. '%@' is replaced with an email, for example, 'test@test.com'."
                     ), dataSource.consumerSession.emailAddress
                 ),
-                contentView: bodyView
+                contentView: bodyView,
+                configuration: dataSource.networkingOTPDataSource.configuration
             ),
             footerView: nil
         )

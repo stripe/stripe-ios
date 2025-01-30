@@ -10,7 +10,7 @@ import SafariServices
 
 extension SFSafariViewController {
 
-    static func present(url: URL) {
+    static func present(url: URL, configuration: FinancialConnectionsSheet.Configuration) {
         guard
             url.scheme == "http" || url.scheme == "https",
             let topMostViewController = UIViewController.topMostViewController()
@@ -19,6 +19,7 @@ extension SFSafariViewController {
             return
         }
         let safariViewController = SFSafariViewController(url: url)
+        configuration.style.configure(safariViewController)
         topMostViewController.present(safariViewController, animated: true, completion: nil)
     }
 }

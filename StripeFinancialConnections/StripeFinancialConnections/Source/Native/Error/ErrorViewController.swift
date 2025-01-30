@@ -123,7 +123,8 @@ final class ErrorViewController: UIViewController {
                             }()
                             return beginningOfSubtitle + " " + endOfSubtitle
                         }(),
-                        contentView: nil
+                        contentView: nil,
+                        configuration: dataSource.configuration
                     ),
                     footerView: PaneLayoutView.createFooterView(
                         primaryButtonConfiguration: primaryButtonConfiguration,
@@ -167,7 +168,8 @@ final class ErrorViewController: UIViewController {
                                 )
                             }
                         }(),
-                        contentView: nil
+                        contentView: nil,
+                        configuration: dataSource.configuration
                     ),
                     footerView: PaneLayoutView.createFooterView(
                         primaryButtonConfiguration: primaryButtonConfiguration,
@@ -202,6 +204,7 @@ final class ErrorViewController: UIViewController {
             errorView = TerminalErrorView(
                 allowManualEntry: dataSource.manifest.allowManualEntry,
                 appearance: dataSource.manifest.appearance,
+                configuration: dataSource.configuration,
                 didSelectManualEntry: { [weak self] in
                     guard let self else { return }
                     self.delegate?.errorViewControllerDidSelectManualEntry(self)

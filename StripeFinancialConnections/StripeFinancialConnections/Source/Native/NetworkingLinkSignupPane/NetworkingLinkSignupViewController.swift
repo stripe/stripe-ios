@@ -43,7 +43,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private lazy var formView: LinkSignupFormView = {
         let formView = LinkSignupFormView(
             accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber,
-            appearance: dataSource.manifest.appearance
+            appearance: dataSource.manifest.appearance,
+            configuration: dataSource.configuration
         )
         formView.delegate = self
         return formView
@@ -162,7 +163,8 @@ final class NetworkingLinkSignupViewController: UIViewController {
                             legalDetailsNotice: networkingLinkSignup.legalDetailsNotice
                         )
                     }
-                )
+                ),
+                configuration: dataSource.configuration
             ),
             footerView: footerView
         )
@@ -269,11 +271,14 @@ final class NetworkingLinkSignupViewController: UIViewController {
             url: url,
             pane: .networkingLinkSignupPane,
             analyticsClient: dataSource.analyticsClient,
-            handleURL: { urlHost, _ in
+            configuration: dataSource.configuration,
+            handleURL: { [weak self] urlHost, _ in
+                guard let self else { return }
                 if urlHost == "legal-details-notice", let legalDetailsNotice {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNotice,
                         appearance: dataSource.manifest.appearance,
+                        configuration: dataSource.configuration,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(
                                 url,
@@ -281,6 +286,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                             )
                         }
                     )
+                    self.dataSource.configuration.style.configure(legalDetailsNoticeViewController)
                     legalDetailsNoticeViewController.present(on: self)
                 }
             }

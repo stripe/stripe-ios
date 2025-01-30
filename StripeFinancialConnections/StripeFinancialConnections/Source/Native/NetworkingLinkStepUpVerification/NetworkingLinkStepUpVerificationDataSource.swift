@@ -32,6 +32,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         consumerSession: ConsumerSessionData,
         selectedAccountIds: [String],
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
@@ -45,6 +46,7 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "EMAIL",
             manifest: manifest,
+            configuration: configuration,
             emailAddress: consumerSession.emailAddress,
             customEmailType: "NETWORKED_CONNECTIONS_OTP_EMAIL",
             connectionsMerchantName: manifest.businessName,

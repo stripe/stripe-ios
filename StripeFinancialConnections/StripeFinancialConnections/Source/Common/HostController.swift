@@ -201,6 +201,7 @@ private extension HostController {
             clientSecret: clientSecret,
             apiClient: apiClient,
             manifest: manifest,
+            configuration: configuration,
             sessionFetcher: sessionFetcher,
             returnURL: returnURL,
             elementsSessionContext: elementsSessionContext,

@@ -36,6 +36,7 @@ final class AuthFlowHelpers {
         url: URL,
         pane: FinancialConnectionsSessionManifest.NextPane,
         analyticsClient: FinancialConnectionsAnalyticsClient,
+        configuration: FinancialConnectionsSheet.Configuration,
         handleURL: (_ urlHost: String?, _ nextPaneOrDrawerOnSecondaryCta: String?) -> Void
     ) {
         let internalLinkToPaneId: [String: String] = [
@@ -68,7 +69,7 @@ final class AuthFlowHelpers {
         if url.scheme == "stripe" {
             handleURL(url.host, nextPaneOrDrawerOnSecondaryCta)
         } else {
-            SFSafariViewController.present(url: url)
+            SFSafariViewController.present(url: url, configuration: configuration)
         }
     }
 

@@ -11,7 +11,7 @@ import UIKit
 
 final class ManualEntryErrorView: UIView {
 
-    init(text: String) {
+    init(text: String, configuration: FinancialConnectionsSheet.Configuration) {
         super.init(frame: .zero)
         let errorLabel = AttributedTextView(
             font: .label(.small),
@@ -20,7 +20,7 @@ final class ManualEntryErrorView: UIView {
             textColor: FinancialConnectionsAppearance.Colors.textCritical,
             linkColor: FinancialConnectionsAppearance.Colors.textCritical
         )
-        errorLabel.setText(text)
+        errorLabel.setText(text, action: AttributedTextView.linkSelectedAction(with: configuration))
         addAndPinSubview(errorLabel)
     }
 

@@ -13,15 +13,18 @@ final class LegalDetailsNoticeViewController: SheetViewController {
 
     private let legalDetailsNotice: FinancialConnectionsLegalDetailsNotice
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     private let didSelectUrl: (URL) -> Void
 
     init(
         legalDetailsNotice: FinancialConnectionsLegalDetailsNotice,
         appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.legalDetailsNotice = legalDetailsNotice
         self.appearance = appearance
+        self.configuration = configuration
         self.didSelectUrl = didSelectUrl
         super.init()
     }
@@ -46,7 +49,8 @@ final class LegalDetailsNoticeViewController: SheetViewController {
                     appearance: appearance,
                     didSelectURL: didSelectUrl
                 ),
-                isSheet: true
+                isSheet: true,
+                configuration: configuration
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(

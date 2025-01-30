@@ -11,6 +11,7 @@ import Foundation
 protocol PartnerAuthDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var returnURL: String? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var pendingAuthSession: FinancialConnectionsAuthSession? { get }
@@ -28,6 +29,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
 
     let institution: FinancialConnectionsInstitution
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     let returnURL: String?
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
@@ -47,6 +49,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         authSession: FinancialConnectionsAuthSession?,
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         returnURL: String?,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
@@ -55,6 +58,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         self.pendingAuthSession = authSession
         self.institution = institution
         self.manifest = manifest
+        self.configuration = configuration
         self.returnURL = returnURL
         self.apiClient = apiClient
         self.clientSecret = clientSecret

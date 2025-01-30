@@ -15,6 +15,7 @@ final class InstitutionNoResultsView: UIView {
 
     init(
         appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
         didSelectManuallyEnterDetails: (() -> Void)?
     ) {
         self.didSelectManuallyEnterDetails = didSelectManuallyEnterDetails
@@ -77,7 +78,8 @@ final class InstitutionNoResultsView: UIView {
                 STPLocalizedString(
                     "Try searching another bank",
                     "The subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned."
-                )
+                ),
+                action: AttributedTextView.linkSelectedAction(with: configuration)
             )
         }
         verticalStackView.addArrangedSubview(subtitleLabel)
@@ -103,6 +105,7 @@ private struct InstitutionNoResultsViewUIViewRepresentable: UIViewRepresentable 
     func makeUIView(context: Context) -> InstitutionNoResultsView {
         InstitutionNoResultsView(
             appearance: .stripe,
+            configuration: .init(),
             didSelectManuallyEnterDetails: (showManualEntry ? {} : nil)
         )
     }

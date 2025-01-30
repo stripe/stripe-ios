@@ -12,10 +12,16 @@ import UIKit
 final class CloseConfirmationViewController: SheetViewController {
 
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     private let didSelectClose: () -> Void
 
-    init(appearance: FinancialConnectionsAppearance, didSelectClose: @escaping () -> Void) {
+    init(
+        appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
+        didSelectClose: @escaping () -> Void)
+    {
         self.appearance = appearance
+        self.configuration = configuration
         self.didSelectClose = didSelectClose
         super.init()
     }
@@ -42,7 +48,8 @@ final class CloseConfirmationViewController: SheetViewController {
                     "The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen."
                 ),
                 contentView: nil,
-                isSheet: true
+                isSheet: true,
+                configuration: configuration
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(

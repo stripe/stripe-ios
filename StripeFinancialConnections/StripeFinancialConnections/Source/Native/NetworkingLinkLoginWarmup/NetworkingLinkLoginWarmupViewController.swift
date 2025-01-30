@@ -74,7 +74,8 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     // since the email is only used as a visual, it's not worth to throw an error
                     // if it is null
                     email: dataSource.manifest.accountholderCustomerEmailAddress ?? "you"
-                )
+                ),
+                configuration: dataSource.configuration
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(

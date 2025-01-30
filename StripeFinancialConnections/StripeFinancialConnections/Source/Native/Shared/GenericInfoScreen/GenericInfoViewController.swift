@@ -12,6 +12,7 @@ final class GenericInfoViewController: SheetViewController {
 
     private let genericInfoScreen: FinancialConnectionsGenericInfoScreen
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     private let iconView: UIView?
     private let didSelectPrimaryButton: (_ genericInfoViewController: GenericInfoViewController) -> Void
     private let didSelectSecondaryButton: ((_ genericInfoViewController: GenericInfoViewController) -> Void)?
@@ -21,6 +22,7 @@ final class GenericInfoViewController: SheetViewController {
     init(
         genericInfoScreen: FinancialConnectionsGenericInfoScreen,
         appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
         panePresentationStyle: PanePresentationStyle,
         iconView: UIView? = nil,
         didSelectPrimaryButton: @escaping (_ genericInfoViewController: GenericInfoViewController) -> Void,
@@ -30,6 +32,7 @@ final class GenericInfoViewController: SheetViewController {
     ) {
         self.genericInfoScreen = genericInfoScreen
         self.appearance = appearance
+        self.configuration = configuration
         self.iconView = iconView
         self.didSelectPrimaryButton = didSelectPrimaryButton
         self.didSelectSecondaryButton = didSelectSecondaryButton
@@ -76,7 +79,8 @@ final class GenericInfoViewController: SheetViewController {
                     body: genericInfoScreen.body,
                     didSelectURL: didSelectURL
                 ),
-                isSheet: (panePresentationStyle == .sheet)
+                isSheet: (panePresentationStyle == .sheet),
+                configuration: configuration
             ),
             footerView: GenericInfoFooterView(
                 footer: genericInfoScreen.footer,

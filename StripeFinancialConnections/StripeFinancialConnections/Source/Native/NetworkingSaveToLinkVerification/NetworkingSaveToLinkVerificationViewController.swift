@@ -76,7 +76,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                     "Enter the code sent to %@.",
                     "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
                 ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
-                contentView: otpView
+                contentView: otpView,
+                configuration: dataSource.networkingOTPDataSource.configuration
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: nil,

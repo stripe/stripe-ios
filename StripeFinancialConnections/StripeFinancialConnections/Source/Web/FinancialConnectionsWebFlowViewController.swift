@@ -38,6 +38,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         let continueStateViews = ContinueStateViews(
             institutionImageUrl: nil,
             appearance: manifest.appearance,
+            configuration: configuration,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
                 if let url = self.lastOpenedNativeURL {
@@ -68,6 +69,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private let apiClient: any FinancialConnectionsAPI
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
+    private let configuration: FinancialConnectionsSheet.Configuration
     private let returnURL: String?
     private let elementsSessionContext: ElementsSessionContext?
     private let prefillDetailsOverride: WebPrefillDetails?
@@ -95,6 +97,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         clientSecret: String,
         apiClient: any FinancialConnectionsAPI,
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         sessionFetcher: FinancialConnectionsSessionFetcher,
         returnURL: String?,
         elementsSessionContext: ElementsSessionContext?,
@@ -103,6 +106,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
         self.manifest = manifest
+        self.configuration = configuration
         self.sessionFetcher = sessionFetcher
         self.returnURL = returnURL
         self.elementsSessionContext = elementsSessionContext

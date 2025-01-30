@@ -48,7 +48,8 @@ final class LinkLoginViewController: UIViewController {
     private lazy var formView: LinkSignupFormView = {
         let formView = LinkSignupFormView(
             accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber,
-            appearance: dataSource.manifest.appearance
+            appearance: dataSource.manifest.appearance,
+            configuration: dataSource.configuration
         )
         formView.delegate = self
         return formView
@@ -100,7 +101,8 @@ final class LinkLoginViewController: UIViewController {
             iconView: nil,
             title: linkLoginPane.title,
             subtitle: linkLoginPane.body,
-            contentView: formView
+            contentView: formView,
+            configuration: dataSource.configuration
         )
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
@@ -255,6 +257,7 @@ final class LinkLoginViewController: UIViewController {
             url: url,
             pane: .linkLogin,
             analyticsClient: dataSource.analyticsClient,
+            configuration: dataSource.configuration,
             handleURL: { _, _ in /* Stripe scheme URLs are not expected. */ }
         )
     }

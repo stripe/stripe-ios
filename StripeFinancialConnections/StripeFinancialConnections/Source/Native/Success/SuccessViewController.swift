@@ -48,7 +48,8 @@ final class SuccessViewController: UIViewController {
                 isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
                 showSaveToLinkFailedNotice: showSaveToLinkFailedNotice
             ),
-            appearance: dataSource.manifest.appearance
+            appearance: dataSource.manifest.appearance,
+            configuration: dataSource.configuration
         )
         contentView.addSubview(bodyView)
 
@@ -120,7 +121,8 @@ final class SuccessViewController: UIViewController {
 private func CreateBodyView(
     title: String,
     subtitle: String?,
-    appearance: FinancialConnectionsAppearance
+    appearance: FinancialConnectionsAppearance,
+    configuration: FinancialConnectionsSheet.Configuration
 ) -> UIView {
     let titleLabel = AttributedLabel(
         font: .heading(.extraLarge),
@@ -142,7 +144,7 @@ private func CreateBodyView(
             textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
-        subtitleLabel.setText(subtitle)
+        subtitleLabel.setText(subtitle, action: AttributedTextView.linkSelectedAction(with: configuration))
         labelVerticalStackView.addArrangedSubview(subtitleLabel)
     }
 

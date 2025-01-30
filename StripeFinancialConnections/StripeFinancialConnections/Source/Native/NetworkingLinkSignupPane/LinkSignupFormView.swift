@@ -24,6 +24,7 @@ final class LinkSignupFormView: UIView {
 
     private let accountholderPhoneNumber: String?
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     weak var delegate: LinkSignupFormViewDelegate?
 
     private lazy var verticalStackView: UIStackView = {
@@ -35,21 +36,33 @@ final class LinkSignupFormView: UIView {
         return verticalStackView
     }()
     private(set) lazy var emailTextField: EmailTextField = {
-       let emailTextField = EmailTextField(appearance: appearance)
+        let emailTextField = EmailTextField(
+            appearance: appearance,
+            configuration: configuration
+        )
         emailTextField.delegate = self
         return emailTextField
     }()
     private(set) lazy var phoneTextField: PhoneTextField = {
-       let phoneTextField = PhoneTextField(defaultPhoneNumber: accountholderPhoneNumber, appearance: appearance)
+        let phoneTextField = PhoneTextField(
+            defaultPhoneNumber: accountholderPhoneNumber,
+            appearance: appearance,
+            configuration: configuration
+        )
         phoneTextField.delegate = self
         return phoneTextField
     }()
     private var debounceEmailTimer: Timer?
     private var lastValidEmail: String?
 
-    init(accountholderPhoneNumber: String?, appearance: FinancialConnectionsAppearance) {
-        self.appearance = appearance
+    init(
+        accountholderPhoneNumber: String?,
+        appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration
+    ) {
         self.accountholderPhoneNumber = accountholderPhoneNumber
+        self.appearance = appearance
+        self.configuration = configuration
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
         phoneTextField.isHidden = true
@@ -205,7 +218,7 @@ import SwiftUI
 private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> LinkSignupFormView {
-        LinkSignupFormView(accountholderPhoneNumber: nil, appearance: .stripe)
+        LinkSignupFormView(accountholderPhoneNumber: nil, appearance: .stripe, configuration: .init())
     }
 
     func updateUIView(_ uiView: LinkSignupFormView, context: Context) {}

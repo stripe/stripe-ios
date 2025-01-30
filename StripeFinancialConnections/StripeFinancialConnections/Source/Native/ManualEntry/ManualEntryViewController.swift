@@ -27,7 +27,8 @@ final class ManualEntryViewController: UIViewController {
     private lazy var manualEntryFormView: ManualEntryFormView = {
         let manualEntryFormView = ManualEntryFormView(
             isTestMode: dataSource.manifest.isTestMode,
-            appearance: dataSource.manifest.appearance
+            appearance: dataSource.manifest.appearance,
+            configuration: dataSource.configuration
         )
         manualEntryFormView.delegate = self
         return manualEntryFormView
@@ -97,7 +98,8 @@ final class ManualEntryViewController: UIViewController {
                         }
                     }
                 }(),
-                contentView: manualEntryFormView
+                contentView: manualEntryFormView,
+                configuration: dataSource.configuration
             ),
             footerView: footerView.footerView,
             keepFooterAboveKeyboard: true

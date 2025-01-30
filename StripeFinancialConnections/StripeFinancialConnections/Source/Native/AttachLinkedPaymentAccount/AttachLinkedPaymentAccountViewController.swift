@@ -128,6 +128,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                         let errorView = AccountNumberRetrievalErrorView(
                             institution: self.dataSource.institution,
                             appearance: self.dataSource.manifest.appearance,
+                            configuration: self.dataSource.configuration,
                             didSelectAnotherBank: self.didSelectAnotherBank,
                             didSelectEnterBankDetailsManually: self.didSelectManualEntry
                         )
@@ -144,6 +145,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                         let errorView = AccountPickerAccountLoadErrorView(
                             institution: self.dataSource.institution,
                             appearance: self.dataSource.manifest.appearance,
+                            configuration: self.dataSource.configuration,
                             didSelectAnotherBank: self.didSelectAnotherBank,
                             didSelectTryAgain: self.didSelectTryAgain,
                             didSelectEnterBankDetailsManually: self.didSelectManualEntry

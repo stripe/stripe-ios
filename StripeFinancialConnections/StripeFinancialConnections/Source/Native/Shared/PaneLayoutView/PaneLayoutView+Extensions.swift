@@ -19,7 +19,8 @@ extension PaneLayoutView {
         subtitle: String?,
         headerAlignment: UIStackView.Alignment = .leading,
         contentView: UIView?,
-        isSheet: Bool = false
+        isSheet: Bool = false,
+        configuration: FinancialConnectionsSheet.Configuration
     ) -> UIView {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
@@ -29,14 +30,16 @@ extension PaneLayoutView {
                 iconView: iconView,
                 title: title,
                 alignment: headerAlignment,
-                isSheet: isSheet
+                isSheet: isSheet,
+                configuration: configuration
             )
             verticalStackView.addArrangedSubview(headerView)
         }
         if subtitle != nil || contentView != nil {
             let bodyView = createBodyView(
                 text: subtitle,
-                contentView: contentView
+                contentView: contentView,
+                configuration: configuration
             )
             verticalStackView.addArrangedSubview(bodyView)
         }
@@ -48,7 +51,8 @@ extension PaneLayoutView {
         iconView: UIView?,
         title: String?,
         alignment: UIStackView.Alignment = .leading,
-        isSheet: Bool = false
+        isSheet: Bool = false,
+        configuration: FinancialConnectionsSheet.Configuration
     ) -> UIView {
         let headerStackView = HitTestStackView()
         headerStackView.axis = .vertical
@@ -66,7 +70,7 @@ extension PaneLayoutView {
                 linkFont: titleFont,
                 textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
-            titleLabel.setText(title)
+            titleLabel.setText(title, action: AttributedTextView.linkSelectedAction(with: configuration))
             headerStackView.addArrangedSubview(titleLabel)
         }
 
@@ -90,7 +94,8 @@ extension PaneLayoutView {
     @available(iOSApplicationExtension, unavailable)
     static func createBodyView(
         text: String?,
-        contentView: UIView?
+        contentView: UIView?,
+        configuration: FinancialConnectionsSheet.Configuration
     ) -> UIView {
         let willShowDescriptionText = (text != nil)
 
@@ -116,7 +121,7 @@ extension PaneLayoutView {
                 linkFont: .body(.mediumEmphasized),
                 textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
-            textLabel.setText(text)
+            textLabel.setText(text, action: AttributedTextView.linkSelectedAction(with: configuration))
             paddingStackView.addArrangedSubview(textLabel)
         }
 

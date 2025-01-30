@@ -10,7 +10,7 @@ import UIKit
 
 final class RetrieveAccountsLoadingView: UIView {
 
-    init(institutionIconUrl: String?) {
+    init(institutionIconUrl: String?, configuration: FinancialConnectionsSheet.Configuration) {
         super.init(frame: .zero)
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
@@ -40,7 +40,8 @@ final class RetrieveAccountsLoadingView: UIView {
                     verticalStackView.axis = .vertical
                     verticalStackView.spacing = 16
                     return verticalStackView
-                }()
+                }(),
+                configuration: configuration
             ),
             footerView: nil
         )

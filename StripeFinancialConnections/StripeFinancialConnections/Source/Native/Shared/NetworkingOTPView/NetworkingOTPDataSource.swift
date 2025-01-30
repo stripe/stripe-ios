@@ -17,6 +17,7 @@ protocol NetworkingOTPDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var isTestMode: Bool { get }
     var appearance: FinancialConnectionsAppearance { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
     var emailAddress: String { get }
 
@@ -35,6 +36,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     let pane: FinancialConnectionsSessionManifest.NextPane
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let emailAddress: String
+    let configuration: FinancialConnectionsSheet.Configuration
     private let customEmailType: String?
     private let connectionsMerchantName: String?
     private let apiClient: any FinancialConnectionsAPI
@@ -61,6 +63,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     init(
         otpType: String,
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         emailAddress: String,
         customEmailType: String?,
         connectionsMerchantName: String?,
@@ -72,6 +75,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     ) {
         self.otpType = otpType
         self.manifest = manifest
+        self.configuration = configuration
         self.emailAddress = emailAddress
         self.customEmailType = customEmailType
         self.connectionsMerchantName = connectionsMerchantName

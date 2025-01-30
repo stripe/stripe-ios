@@ -136,6 +136,7 @@ final class PartnerAuthViewController: SheetViewController {
                 isRepairSession: false, // TODO(kgaidis): change this for repair sessions
                 panePresentationStyle: panePresentationStyle,
                 appearance: dataSource.manifest.appearance,
+                configuration: dataSource.configuration,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
                 },
@@ -291,6 +292,7 @@ final class PartnerAuthViewController: SheetViewController {
         let continueStateViews = ContinueStateViews(
             institutionImageUrl: institution.icon?.default,
             appearance: dataSource.manifest.appearance,
+            configuration: dataSource.configuration,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
                 self.dataSource.analyticsClient.log(
@@ -547,16 +549,20 @@ final class PartnerAuthViewController: SheetViewController {
             url: url,
             pane: .partnerAuth,
             analyticsClient: dataSource.analyticsClient,
-            handleURL: { urlHost, _ in
+            configuration: dataSource.configuration,
+            handleURL: { [weak self] urlHost, _ in
+                guard let self else { return }
                 if urlHost == "data-access-notice" {
                     if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNoticeModel,
                             appearance: dataSource.manifest.appearance,
+                            configuration: dataSource.configuration,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
                         )
+                        self.dataSource.configuration.style.configure(dataAccessNoticeViewController)
                         dataAccessNoticeViewController.present(on: self)
                     }
                 }

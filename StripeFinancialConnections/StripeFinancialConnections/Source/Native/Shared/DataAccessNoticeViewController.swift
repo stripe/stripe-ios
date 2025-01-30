@@ -13,15 +13,18 @@ final class DataAccessNoticeViewController: SheetViewController {
 
     private let dataAccessNotice: FinancialConnectionsDataAccessNotice
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     private let didSelectUrl: (URL) -> Void
 
     init(
         dataAccessNotice: FinancialConnectionsDataAccessNotice,
         appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.dataAccessNotice = dataAccessNotice
         self.appearance = appearance
+        self.configuration = configuration
         self.didSelectUrl = didSelectUrl
         super.init()
     }
@@ -41,6 +44,7 @@ final class DataAccessNoticeViewController: SheetViewController {
                 connectedAccountBulletItems: connectedAccountNotice.body.bullets,
                 secondSubtitle: dataAccessNotice.subtitle,
                 merchantBulletItems: dataAccessNotice.body.bullets,
+                configuration: configuration,
                 didSelectURL: didSelectUrl
             )
         } else {
@@ -61,7 +65,8 @@ final class DataAccessNoticeViewController: SheetViewController {
                 title: dataAccessNotice.title,
                 subtitle: firstSubtitle,
                 contentView: contentView,
-                isSheet: true
+                isSheet: true,
+                configuration: configuration
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
@@ -84,6 +89,7 @@ private func CreateConnectedAccountContentView(
     connectedAccountBulletItems: [FinancialConnectionsBulletPoint],
     secondSubtitle: String?,
     merchantBulletItems: [FinancialConnectionsBulletPoint],
+    configuration: FinancialConnectionsSheet.Configuration,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView()
@@ -102,7 +108,7 @@ private func CreateConnectedAccountContentView(
             linkFont: .body(.mediumEmphasized),
             textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
-        secondSubtitleLabel.setText(secondSubtitle)
+        secondSubtitleLabel.setText(secondSubtitle, action: AttributedTextView.linkSelectedAction(with: configuration))
         verticalStackView.addArrangedSubview(secondSubtitleLabel)
     }
     verticalStackView.addArrangedSubview(
@@ -200,6 +206,7 @@ private struct DataAccessNoticeViewControllerRepresentable: UIViewControllerRepr
         DataAccessNoticeViewController(
             dataAccessNotice: dataAccessNotice,
             appearance: .stripe,
+            configuration: .init(),
             didSelectUrl: { _  in })
     }
 

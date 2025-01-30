@@ -30,6 +30,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         consumerSession: ConsumerSessionData,
         selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         apiClient: any FinancialConnectionsAPI,
@@ -45,6 +46,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "SMS",
             manifest: manifest,
+            configuration: configuration,
             emailAddress: consumerSession.emailAddress,
             customEmailType: nil,
             connectionsMerchantName: nil,

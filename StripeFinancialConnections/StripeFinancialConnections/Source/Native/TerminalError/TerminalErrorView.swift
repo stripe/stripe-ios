@@ -12,6 +12,7 @@ import UIKit
 func TerminalErrorView(
     allowManualEntry: Bool,
     appearance: FinancialConnectionsAppearance,
+    configuration: FinancialConnectionsSheet.Configuration,
     didSelectManualEntry: @escaping () -> Void,
     didSelectClose: @escaping () -> Void
 ) -> UIView {
@@ -39,7 +40,8 @@ func TerminalErrorView(
                     )
                 }
             }(),
-            contentView: nil
+            contentView: nil,
+            configuration: configuration
         ),
         footerView: PaneLayoutView.createFooterView(
             primaryButtonConfiguration: {

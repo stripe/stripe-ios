@@ -15,6 +15,7 @@ final class AccountPickerAccountLoadErrorView: UIView {
     init(
         institution: FinancialConnectionsInstitution,
         appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
         didSelectAnotherBank: @escaping () -> Void,
         didSelectTryAgain: (() -> Void)?,  // if nil, don't show button
         didSelectEnterBankDetailsManually: (() -> Void)?  // if nil, don't show button
@@ -76,7 +77,8 @@ final class AccountPickerAccountLoadErrorView: UIView {
                     institution.name
                 ),
                 subtitle: subtitle,
-                contentView: nil
+                contentView: nil,
+                configuration: configuration
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: primaryButtonConfiguration,
@@ -113,6 +115,7 @@ private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepre
                 logo: nil
             ),
             appearance: appearance,
+            configuration: .init(),
             didSelectAnotherBank: {},
             didSelectTryAgain: didSelectTryAgain,
             didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually

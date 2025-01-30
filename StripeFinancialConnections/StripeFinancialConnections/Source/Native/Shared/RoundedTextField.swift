@@ -27,6 +27,7 @@ final class RoundedTextField: UIView {
 
     private let showDoneToolbar: Bool
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
 
     // Used to optionally add an error message
     // at the bottom of the text field
@@ -137,10 +138,12 @@ final class RoundedTextField: UIView {
         placeholder: String,
         footerText: String? = nil,
         showDoneToolbar: Bool = false,
-        appearance: FinancialConnectionsAppearance
+        appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration
     ) {
         self.showDoneToolbar = showDoneToolbar
         self.appearance = appearance
+        self.configuration = configuration
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
         textField.placeholder = placeholder
@@ -168,9 +171,9 @@ final class RoundedTextField: UIView {
 
         let footerTextLabel: UIView?
         if let errorText = errorText, footerText != nil {
-            footerTextLabel = CreateErrorLabel(text: errorText)
+            footerTextLabel = CreateErrorLabel(text: errorText, configuration: configuration)
         } else if let errorText = errorText {
-            footerTextLabel = CreateErrorLabel(text: errorText)
+            footerTextLabel = CreateErrorLabel(text: errorText, configuration: configuration)
         } else if let footerText = footerText {
             let footerLabel = AttributedLabel(
                 font: .label(.large),
@@ -253,7 +256,7 @@ extension RoundedTextField: DoneButtonToolbarDelegate {
     }
 }
 
-private func CreateErrorLabel(text: String) -> UIView {
+private func CreateErrorLabel(text: String, configuration: FinancialConnectionsSheet.Configuration) -> UIView {
     let errorLabel = AttributedTextView(
         font: .label(.small),
         boldFont: .label(.smallEmphasized),
@@ -261,7 +264,7 @@ private func CreateErrorLabel(text: String) -> UIView {
         textColor: FinancialConnectionsAppearance.Colors.textCritical,
         linkColor: FinancialConnectionsAppearance.Colors.textCritical
     )
-    errorLabel.setText(text)
+    errorLabel.setText(text, action: AttributedTextView.linkSelectedAction(with: configuration))
     return errorLabel
 }
 
@@ -665,7 +668,8 @@ private struct RoundedTextFieldUIViewRepresentable: UIViewRepresentable {
         RoundedTextField(
             placeholder: placeholder,
             footerText: footerText,
-            appearance: appearance
+            appearance: appearance,
+            configuration: .init()
         )
     }
 

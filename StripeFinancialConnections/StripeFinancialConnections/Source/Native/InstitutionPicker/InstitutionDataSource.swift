@@ -11,6 +11,7 @@ import Foundation
 protocol InstitutionDataSource: AnyObject {
 
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var featuredInstitutions: [FinancialConnectionsInstitution] { get }
 
@@ -24,6 +25,7 @@ class InstitutionAPIDataSource: InstitutionDataSource {
     // MARK: - Properties
 
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -33,11 +35,13 @@ class InstitutionAPIDataSource: InstitutionDataSource {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient

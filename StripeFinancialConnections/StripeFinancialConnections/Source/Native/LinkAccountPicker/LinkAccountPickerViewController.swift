@@ -71,13 +71,15 @@ final class LinkAccountPickerViewController: UIViewController {
                                 "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
                             )
                         }
-                    }()
+                    }(),
+                    configuration: dataSource.configuration
                 ),
                 // `createBodyView` adds extra padding
                 // around the loading view
                 PaneLayoutView.createBodyView(
                     text: nil,
-                    contentView: LinkAccountPickerLoadingView()
+                    contentView: LinkAccountPickerLoadingView(),
+                    configuration: dataSource.configuration
                 ),
             ]
         )
@@ -185,13 +187,15 @@ final class LinkAccountPickerViewController: UIViewController {
         contentStackView.addArrangedSubview(
             PaneLayoutView.createHeaderView(
                 iconView: nil,
-                title: networkingAccountPicker.title
+                title: networkingAccountPicker.title,
+                configuration: dataSource.configuration
             )
         )
         contentStackView.addArrangedSubview(
             PaneLayoutView.createBodyView(
                 text: nil,
-                contentView: bodyView
+                contentView: bodyView,
+                configuration: dataSource.configuration
             )
         )
 
@@ -216,11 +220,13 @@ final class LinkAccountPickerViewController: UIViewController {
                     let dataAccessNoticeViewController = DataAccessNoticeViewController(
                         dataAccessNotice: dataAccessNotice,
                         appearance: dataSource.manifest.appearance,
+                        configuration: dataSource.configuration,
                         didSelectUrl: { [weak self] url in
                             guard let self = self else { return }
                             self.didSelectURLInTextFromBackend(url)
                         }
                     )
+                    self.dataSource.configuration.style.configure(dataAccessNoticeViewController)
                     dataAccessNoticeViewController.present(on: self)
                 }
             }
@@ -504,6 +510,7 @@ final class LinkAccountPickerViewController: UIViewController {
         let genericInfoViewController = GenericInfoViewController(
             genericInfoScreen: drawerOnSelection,
             appearance: dataSource.manifest.appearance,
+            configuration: dataSource.configuration,
             panePresentationStyle: .sheet,
             iconView: {
                 if let institutionIconUrl = partnerAccount.institution?.icon?.default {
@@ -540,6 +547,7 @@ final class LinkAccountPickerViewController: UIViewController {
             },
             willDismissSheet: willDismissSheet
         )
+        dataSource.configuration.style.configure(genericInfoViewController)
         genericInfoViewController.present(on: self)
     }
 
@@ -548,6 +556,7 @@ final class LinkAccountPickerViewController: UIViewController {
             url: url,
             pane: .linkAccountPicker,
             analyticsClient: self.dataSource.analyticsClient,
+            configuration: dataSource.configuration,
             handleURL: { _, _ in }
         )
     }
@@ -578,6 +587,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                 let accountSelectionDrawerViewController = GenericInfoViewController(
                     genericInfoScreen: drawerOnSelection,
                     appearance: dataSource.manifest.appearance,
+                    configuration: dataSource.configuration,
                     panePresentationStyle: .sheet,
                     didSelectPrimaryButton: { genericInfoViewController in
                         genericInfoViewController.dismiss(animated: true)
@@ -587,6 +597,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                         self.didSelectURLInTextFromBackend(url)
                     }
                 )
+                dataSource.configuration.style.configure(accountSelectionDrawerViewController)
                 accountSelectionDrawerViewController.present(on: self)
             } else {
                 // we will (likely) be presenting a different drawer further down the function

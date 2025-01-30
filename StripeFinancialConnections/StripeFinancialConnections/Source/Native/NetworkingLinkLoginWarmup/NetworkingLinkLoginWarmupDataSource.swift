@@ -10,6 +10,7 @@ import Foundation
 
 protocol NetworkingLinkLoginWarmupDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func disableNetworking() -> Future<FinancialConnectionsSessionManifest>
@@ -18,6 +19,7 @@ protocol NetworkingLinkLoginWarmupDataSource: AnyObject {
 final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLoginWarmupDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -25,12 +27,14 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         nextPaneOrDrawerOnSecondaryCta: String?
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient

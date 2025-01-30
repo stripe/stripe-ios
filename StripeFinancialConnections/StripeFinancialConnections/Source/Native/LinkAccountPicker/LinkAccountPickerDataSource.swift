@@ -19,6 +19,7 @@ protocol LinkAccountPickerDataSource: AnyObject {
 
     var delegate: LinkAccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var selectedAccounts: [FinancialConnectionsAccountTuple] { get }
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane? { get set }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
@@ -36,6 +37,7 @@ protocol LinkAccountPickerDataSource: AnyObject {
 final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane?
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let apiClient: any FinancialConnectionsAPI
@@ -83,6 +85,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         apiClient: any FinancialConnectionsAPI,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
@@ -90,6 +93,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         dataAccessNotice: FinancialConnectionsDataAccessNotice?
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.apiClient = apiClient
         self.analyticsClient = analyticsClient
         self.clientSecret = clientSecret

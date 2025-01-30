@@ -35,6 +35,7 @@ final class InstitutionTableView: UIView {
     private let allowManualEntry: Bool
     private let institutionSearchDisabled: Bool
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: InstitutionTableViewDelegate?
@@ -104,11 +105,13 @@ final class InstitutionTableView: UIView {
         frame: CGRect,
         allowManualEntry: Bool,
         institutionSearchDisabled: Bool,
-        appearance: FinancialConnectionsAppearance
+        appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration
     ) {
         self.allowManualEntry = allowManualEntry
         self.institutionSearchDisabled = institutionSearchDisabled
         self.appearance = appearance
+        self.configuration = configuration
         let cellIdentifier = "\(InstitutionTableViewCell.self)"
         tableView = UITableView(frame: frame)
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
@@ -234,6 +237,7 @@ final class InstitutionTableView: UIView {
                     true,
                     view: InstitutionNoResultsView(
                         appearance: appearance,
+                        configuration: configuration,
                         didSelectManuallyEnterDetails: self.allowManualEntry ? { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.institutionTableView(

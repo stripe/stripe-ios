@@ -11,6 +11,7 @@ import Foundation
 protocol SuccessDataSource: AnyObject {
 
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var linkedAccountsCount: Int { get }
     var saveToLinkWithStripeSucceeded: Bool? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
@@ -22,6 +23,7 @@ protocol SuccessDataSource: AnyObject {
 final class SuccessDataSourceImplementation: SuccessDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     let linkedAccountsCount: Int
     let saveToLinkWithStripeSucceeded: Bool?
     private let apiClient: any FinancialConnectionsAPI
@@ -35,6 +37,7 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         linkedAccountsCount: Int,
         saveToLinkWithStripeSucceeded: Bool?,
         apiClient: any FinancialConnectionsAPI,
@@ -44,6 +47,7 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
         customSuccessPaneSubCaption: String?
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.linkedAccountsCount = linkedAccountsCount
         self.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
         self.apiClient = apiClient

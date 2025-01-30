@@ -21,6 +21,7 @@ protocol EmailTextFieldDelegate: AnyObject {
 final class EmailTextField: UIView {
 
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
             placeholder: STPLocalizedString(
@@ -28,7 +29,8 @@ final class EmailTextField: UIView {
                 "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address."
             ),
             showDoneToolbar: true,
-            appearance: appearance
+            appearance: appearance,
+            configuration: configuration
         )
         textField.textField.keyboardType = .emailAddress
         textField.textField.textContentType = .emailAddress
@@ -63,8 +65,9 @@ final class EmailTextField: UIView {
 
     weak var delegate: EmailTextFieldDelegate?
 
-    init(appearance: FinancialConnectionsAppearance) {
+    init(appearance: FinancialConnectionsAppearance, configuration: FinancialConnectionsSheet.Configuration) {
         self.appearance = appearance
+        self.configuration = configuration
         super.init(frame: .zero)
         addAndPinSubview(textField)
     }
@@ -148,9 +151,10 @@ private struct EmailTextFieldUIViewRepresentable: UIViewRepresentable {
     let text: String
     let isLoading: Bool
     let appearance: FinancialConnectionsAppearance
+    let configuration: FinancialConnectionsSheet.Configuration
 
     func makeUIView(context: Context) -> EmailTextField {
-        EmailTextField(appearance: appearance)
+        EmailTextField(appearance: appearance, configuration: configuration)
     }
 
     func updateUIView(
@@ -174,37 +178,43 @@ struct EmailTextField_Previews: PreviewProvider {
                 EmailTextFieldUIViewRepresentable(
                     text: "",
                     isLoading: false,
-                    appearance: .stripe
+                    appearance: .stripe,
+                    configuration: .init()
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "test@test.com",
                     isLoading: false,
-                    appearance: .stripe
+                    appearance: .stripe,
+                    configuration: .init()
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "test@test-very-long-name-thats-very-long.com",
                     isLoading: true,
-                    appearance: .stripe
+                    appearance: .stripe,
+                    configuration: .init()
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "wrongemail@wronger",
                     isLoading: false,
-                    appearance: .stripe
+                    appearance: .stripe,
+                    configuration: .init()
                 ).frame(height: 90)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "light@theme.com",
                     isLoading: true,
-                    appearance: .stripe
+                    appearance: .stripe,
+                    configuration: .init()
                 ).frame(height: 56)
 
                 EmailTextFieldUIViewRepresentable(
                     text: "linklight@theme.com",
                     isLoading: true,
-                    appearance: .link
+                    appearance: .link,
+                    configuration: .init()
                 ).frame(height: 56)
 
                 Spacer()

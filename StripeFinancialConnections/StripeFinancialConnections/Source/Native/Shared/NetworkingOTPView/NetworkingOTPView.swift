@@ -141,7 +141,7 @@ final class NetworkingOTPView: UIView {
                 linkColor: FinancialConnectionsAppearance.Colors.textCritical,
                 alignment: .center
             )
-            errorLabel.setText(errorText)
+            errorLabel.setText(errorText, action: AttributedTextView.linkSelectedAction(with: dataSource.configuration))
             let errorView = UIStackView(
                 arrangedSubviews: [errorLabel]
             )
@@ -285,6 +285,7 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
                 singleAccount: true,
                 _theme: theme
             ),
+            configuration: .init(),
             emailAddress: "",
             customEmailType: nil,
             connectionsMerchantName: nil,

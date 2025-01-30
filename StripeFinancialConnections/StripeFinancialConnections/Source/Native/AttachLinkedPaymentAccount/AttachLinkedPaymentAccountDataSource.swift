@@ -11,6 +11,7 @@ import Foundation
 protocol AttachLinkedPaymentAccountDataSource: AnyObject {
 
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var institution: FinancialConnectionsInstitution { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var authSessionId: String? { get }
@@ -24,6 +25,7 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     let institution: FinancialConnectionsInstitution
     private let linkedAccountId: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
@@ -35,6 +37,7 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         institution: FinancialConnectionsInstitution,
         linkedAccountId: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
@@ -45,6 +48,7 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.manifest = manifest
+        self.configuration = configuration
         self.institution = institution
         self.linkedAccountId = linkedAccountId
         self.analyticsClient = analyticsClient

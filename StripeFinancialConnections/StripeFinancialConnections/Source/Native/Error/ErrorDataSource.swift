@@ -13,6 +13,7 @@ final class ErrorDataSource {
     let error: Error
     let referrerPane: FinancialConnectionsSessionManifest.NextPane
     let manifest: FinancialConnectionsSessionManifest
+    var configuration: FinancialConnectionsSheet.Configuration
     let reduceManualEntryProminenceInErrors: Bool
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let institution: FinancialConnectionsInstitution?
@@ -21,6 +22,7 @@ final class ErrorDataSource {
         error: Error,
         referrerPane: FinancialConnectionsSessionManifest.NextPane,
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         reduceManualEntryProminenceInErrors: Bool,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         institution: FinancialConnectionsInstitution?
@@ -28,6 +30,7 @@ final class ErrorDataSource {
         self.error = error
         self.referrerPane = referrerPane
         self.manifest = manifest
+        self.configuration = configuration
         self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
         self.analyticsClient = analyticsClient
         self.institution = institution

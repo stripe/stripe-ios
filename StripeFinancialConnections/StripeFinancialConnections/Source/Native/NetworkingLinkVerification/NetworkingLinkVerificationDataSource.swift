@@ -39,6 +39,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
     init(
         accountholderCustomerEmailAddress: String,
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         returnURL: String?,
@@ -53,6 +54,7 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "SMS",
             manifest: manifest,
+            configuration: configuration,
             emailAddress: accountholderCustomerEmailAddress,
             customEmailType: nil,
             connectionsMerchantName: nil,

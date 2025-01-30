@@ -10,6 +10,7 @@ import Foundation
 
 protocol LinkLoginDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var elementsSessionContext: ElementsSessionContext? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
@@ -33,6 +34,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
     private static let deallocatedError = FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated")
 
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     let elementsSessionContext: ElementsSessionContext?
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
@@ -42,6 +44,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
         returnURL: String?,
@@ -49,6 +52,7 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.analyticsClient = analyticsClient
         self.clientSecret = clientSecret
         self.returnURL = returnURL

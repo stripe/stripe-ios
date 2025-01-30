@@ -43,7 +43,8 @@ final class ManualEntryFormView: UIView {
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."
             ),
             showDoneToolbar: true,
-            appearance: appearance
+            appearance: appearance,
+            configuration: configuration
         )
         routingNumberTextField.textField.keyboardType = .numberPad
         routingNumberTextField.delegate = self
@@ -57,7 +58,8 @@ final class ManualEntryFormView: UIView {
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number."
             ),
             showDoneToolbar: true,
-            appearance: appearance
+            appearance: appearance,
+            configuration: configuration
         )
         accountNumberTextField.textField.keyboardType = .numberPad
         accountNumberTextField.delegate = self
@@ -71,7 +73,8 @@ final class ManualEntryFormView: UIView {
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."
             ),
             showDoneToolbar: true,
-            appearance: appearance
+            appearance: appearance,
+            configuration: configuration
         )
         accountNumberConfirmationTextField.textField.keyboardType = .numberPad
         accountNumberConfirmationTextField.delegate = self
@@ -80,6 +83,7 @@ final class ManualEntryFormView: UIView {
     }()
 
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     private var didEndEditingOnceRoutingNumberTextField = false
     private var didEndEditingOnceAccountNumberTextField = false
     private var didEndEditingOnceAccountNumberConfirmationTextField = false
@@ -98,8 +102,9 @@ final class ManualEntryFormView: UIView {
         return (routingNumberTextField.text, accountNumberTextField.text)
     }
 
-    init(isTestMode: Bool, appearance: FinancialConnectionsAppearance) {
+    init(isTestMode: Bool, appearance: FinancialConnectionsAppearance, configuration: FinancialConnectionsSheet.Configuration) {
         self.appearance = appearance
+        self.configuration = configuration
         super.init(frame: .zero)
 
         let contentVerticalStackView = UIStackView()
@@ -158,7 +163,7 @@ final class ManualEntryFormView: UIView {
                 linkColor: FinancialConnectionsAppearance.Colors.textCritical,
                 alignment: .center
             )
-            errorLabel.setText(text)
+            errorLabel.setText(text, action: AttributedTextView.linkSelectedAction(with: configuration))
             let paddingStackView = UIStackView(
                 arrangedSubviews: [
                     errorLabel

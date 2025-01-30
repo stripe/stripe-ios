@@ -23,7 +23,8 @@ final class PhoneTextField: UIView {
         let textField = RoundedTextField(
             placeholder: STPLocalizedString("Phone number", "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type a phone number."),
             showDoneToolbar: true,
-            appearance: appearance
+            appearance: appearance,
+            configuration: configuration
         )
         textField.textField.keyboardType = .phonePad
         textField.textField.textContentType = .telephoneNumber
@@ -45,6 +46,7 @@ final class PhoneTextField: UIView {
     }()
     private let countryCodeSelectorView: PhoneCountryCodeSelectorView
     private let appearance: FinancialConnectionsAppearance
+    private let configuration: FinancialConnectionsSheet.Configuration
     // we will only start validating as user
     // types once editing ends
     fileprivate var didEndEditingOnce = false
@@ -76,7 +78,11 @@ final class PhoneTextField: UIView {
 
     weak var delegate: PhoneTextFieldDelegate?
 
-    init(defaultPhoneNumber: String?, appearance: FinancialConnectionsAppearance) {
+    init(
+        defaultPhoneNumber: String?,
+        appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration
+    ) {
         var defaultPhoneNumber = defaultPhoneNumber
         var defaultCountryCode: String?
         if let _defaultPhoneNumber = defaultPhoneNumber, let e164PhoneNumber = PhoneNumber.fromE164(_defaultPhoneNumber) {
@@ -88,6 +94,7 @@ final class PhoneTextField: UIView {
             appearance: appearance
         )
         self.appearance = appearance
+        self.configuration = configuration
         super.init(frame: .zero)
         countryCodeSelectorView.delegate = self
         addAndPinSubview(textField)
@@ -219,7 +226,7 @@ private struct PhoneTextFieldUIViewRepresentable: UIViewRepresentable {
     let defaultPhoneNumber: String
 
     func makeUIView(context: Context) -> PhoneTextField {
-        PhoneTextField(defaultPhoneNumber: defaultPhoneNumber, appearance: .stripe)
+        PhoneTextField(defaultPhoneNumber: defaultPhoneNumber, appearance: .stripe, configuration: .init())
     }
 
     func updateUIView(

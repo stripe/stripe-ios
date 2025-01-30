@@ -98,12 +98,16 @@ final class AttributedTextView: HitTestView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    /// Helper that automatically handles extracting links and, optionally, opening it via `SFSafariViewController`
-        func setText(
-        _ text: String,
-        action: @escaping ((URL) -> Void) = { url in
-            SFSafariViewController.present(url: url)
+    static func linkSelectedAction(with configuration: FinancialConnectionsSheet.Configuration) -> ((URL) -> Void) {
+        return { url in
+            SFSafariViewController.present(url: url, configuration: configuration)
         }
+    }
+
+    /// Helper that automatically handles extracting links and, optionally, opening it via `SFSafariViewController`
+    func setText(
+        _ text: String,
+        action: @escaping ((URL) -> Void)
     ) {
         let textLinks = text.extractLinks()
         setText(

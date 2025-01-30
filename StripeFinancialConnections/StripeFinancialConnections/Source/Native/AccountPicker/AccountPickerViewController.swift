@@ -102,19 +102,22 @@ final class AccountPickerViewController: UIViewController {
                     let dataAccessNoticeViewController = DataAccessNoticeViewController(
                         dataAccessNotice: dataAccessNotice,
                         appearance: self.dataSource.manifest.appearance,
+                        configuration: self.dataSource.configuration,
                         didSelectUrl: { [weak self] url in
                             guard let self = self else { return }
                             AuthFlowHelpers.handleURLInTextFromBackend(
                                 url: url,
                                 pane: .accountPicker,
                                 analyticsClient: self.dataSource.analyticsClient,
+                                configuration: self.dataSource.configuration,
                                 handleURL: { _, _ in }
                             )
                         }
                     )
+                    self.dataSource.configuration.style.configure(dataAccessNoticeViewController)
                     dataAccessNoticeViewController.present(on: self)
                 } else {
-                    SFSafariViewController.present(url: url)
+                    SFSafariViewController.present(url: url, configuration: self.dataSource.configuration)
                 }
             }
         )
@@ -141,7 +144,8 @@ final class AccountPickerViewController: UIViewController {
 
     private func pollAuthSessionAccounts() {
         let retreivingAccountsLoadingView = RetrieveAccountsLoadingView(
-            institutionIconUrl: dataSource.institution.icon?.default
+            institutionIconUrl: dataSource.institution.icon?.default,
+            configuration: dataSource.configuration
         )
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
 
@@ -265,6 +269,7 @@ final class AccountPickerViewController: UIViewController {
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
             paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
             appearance: self.dataSource.manifest.appearance,
+            configuration: self.dataSource.configuration,
             didSelectAnotherBank: self.didSelectAnotherBank
         )
         // the user will never enter this instance of `AccountPickerViewController`
@@ -318,7 +323,8 @@ final class AccountPickerViewController: UIViewController {
                     }
                 }(),
                 subtitle: nil,
-                contentView: accountPickerSelectionView
+                contentView: accountPickerSelectionView,
+                configuration: dataSource.configuration
             ),
             footerView: footerView
         )
@@ -352,6 +358,7 @@ final class AccountPickerViewController: UIViewController {
         let errorView = AccountPickerAccountLoadErrorView(
             institution: dataSource.institution,
             appearance: dataSource.manifest.appearance,
+            configuration: dataSource.configuration,
             didSelectAnotherBank: didSelectAnotherBank,
             didSelectTryAgain: didSelectTryAgain,
             didSelectEnterBankDetailsManually: didSelectManualEntry

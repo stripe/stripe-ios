@@ -167,6 +167,7 @@ class ConsentViewController: UIViewController {
             url: url,
             pane: .consent,
             analyticsClient: dataSource.analyticsClient,
+            configuration: dataSource.configuration,
             handleURL: { urlHost, nextPaneOrDrawerOnSecondaryCta in
                 guard let urlHost, let address = StripeSchemeAddress(rawValue: urlHost) else {
                     self.dataSource
@@ -193,10 +194,12 @@ class ConsentViewController: UIViewController {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNotice,
                             appearance: dataSource.manifest.appearance,
+                            configuration: dataSource.configuration,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
                         )
+                        dataSource.configuration.style.configure(dataAccessNoticeViewController)
                         dataAccessNoticeViewController.present(on: self)
                     }
                 case .legalDatailsNotice:
@@ -204,10 +207,12 @@ class ConsentViewController: UIViewController {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNoticeModel,
                         appearance: dataSource.manifest.appearance,
+                        configuration: dataSource.configuration,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }
                     )
+                    dataSource.configuration.style.configure(legalDetailsNoticeViewController)
                     legalDetailsNoticeViewController.present(on: self)
                 case .linkAccountPicker:
                     delegate?.consentViewController(

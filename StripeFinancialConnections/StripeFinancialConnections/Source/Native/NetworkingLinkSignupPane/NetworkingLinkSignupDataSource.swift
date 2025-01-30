@@ -10,6 +10,7 @@ import Foundation
 
 protocol NetworkingLinkSignupDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var elementsSessionContext: ElementsSessionContext? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
@@ -29,6 +30,7 @@ protocol NetworkingLinkSignupDataSource: AnyObject {
 final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDataSource {
 
     let manifest: FinancialConnectionsSessionManifest
+    let configuration: FinancialConnectionsSheet.Configuration
     let elementsSessionContext: ElementsSessionContext?
     private let selectedAccounts: [FinancialConnectionsPartnerAccount]?
     private let returnURL: String?
@@ -38,6 +40,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         selectedAccounts: [FinancialConnectionsPartnerAccount]?,
         returnURL: String?,
         apiClient: any FinancialConnectionsAPI,
@@ -46,6 +49,7 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.selectedAccounts = selectedAccounts
         self.returnURL = returnURL
         self.apiClient = apiClient

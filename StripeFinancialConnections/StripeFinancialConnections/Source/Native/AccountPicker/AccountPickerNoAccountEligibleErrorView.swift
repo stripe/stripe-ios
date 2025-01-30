@@ -20,6 +20,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         numberOfIneligibleAccounts: Int,
         paymentMethodType: FinancialConnectionsPaymentMethodType,
         appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
         didSelectAnotherBank: @escaping () -> Void
     ) {
         super.init(frame: .zero)
@@ -127,7 +128,8 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                     }
                 }(),
                 subtitle: subtitleFirstSentence + " " + subtitleSecondSentence,
-                contentView: nil
+                contentView: nil,
+                configuration: configuration
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
@@ -180,6 +182,7 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
             paymentMethodType: paymentMethodType,
             appearance: .stripe,
+            configuration: .init(),
             didSelectAnotherBank: {}
         )
     }

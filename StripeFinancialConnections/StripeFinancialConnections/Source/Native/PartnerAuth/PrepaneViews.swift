@@ -35,6 +35,7 @@ final class PrepaneViews {
         isRepairSession: Bool,
         panePresentationStyle: PanePresentationStyle,
         appearance: FinancialConnectionsAppearance,
+        configuration: FinancialConnectionsSheet.Configuration,
         didSelectURL: @escaping (URL) -> Void,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: @escaping () -> Void
@@ -52,14 +53,16 @@ final class PrepaneViews {
                 }
             }(),
             title: prepaneModel.title,
-            isSheet: (panePresentationStyle == .sheet)
+            isSheet: (panePresentationStyle == .sheet),
+            configuration: configuration
         )
         self.bodyView = PaneLayoutView.createBodyView(
             text: prepaneModel.subtitle,
             contentView: CreateContentView(
                 prepaneBodyModel: prepaneModel.body,
                 didSelectURL: didSelectURL
-            )
+            ),
+            configuration: configuration
         )
 
         contentStackView.addArrangedSubview(headerView)
@@ -210,6 +213,7 @@ private class PrepanePreviewView: UIView {
         isRepairSession: false,
         panePresentationStyle: .sheet,
         appearance: .stripe,
+        configuration: .init(),
         didSelectURL: { _ in },
         didSelectContinue: {},
         didSelectCancel: {}
