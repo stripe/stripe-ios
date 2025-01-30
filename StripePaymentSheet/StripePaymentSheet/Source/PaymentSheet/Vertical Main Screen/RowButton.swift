@@ -213,9 +213,9 @@ class RowButton: UIView {
         if isFlatWithCheckmarkStyle, let rightAccessoryView, !rightAccessoryView.isHidden {
             // In flat_with_checkmark, we need additional vertical space around the View More / Change accessory view.
             if sublabel.isHidden {
-                labelsStackView.setCustomSpacing(8, after: sublabel)
-            } else {
                 labelsStackView.setCustomSpacing(8, after: label)
+            } else {
+                labelsStackView.setCustomSpacing(8, after: sublabel)
             }
             imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor))
         } else {
