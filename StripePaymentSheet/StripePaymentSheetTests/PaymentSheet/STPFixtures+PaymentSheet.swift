@@ -89,7 +89,7 @@ extension STPElementsSession {
                                 "customer_session": [
                                     "id": "id123",
                                     "livemode": false,
-                                    "api_key": "ek_12345",
+                                    "api_key": "cuss_12345",
                                     "api_key_expiry": 12345,
                                     "customer": "cus_123",
                                     "components": customerSessionData,
@@ -148,7 +148,8 @@ extension STPElementsSession {
     static func _testValue(
         intent: Intent,
         linkMode: LinkMode? = nil,
-        linkFundingSources: Set<LinkSettings.FundingSource> = []
+        linkFundingSources: Set<LinkSettings.FundingSource> = [],
+        allowsSetAsDefaultPM: Bool = false
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
             switch intent {
@@ -160,10 +161,26 @@ extension STPElementsSession {
                 return intentConfig.paymentMethodTypes ?? []
             }
         }()
+        var customerSessionData: [String: Any]?
+        if allowsSetAsDefaultPM {
+            customerSessionData = [
+                "mobile_payment_element": [
+                    "enabled": true,
+                    "features": ["payment_method_save": "enabled",
+                                 "payment_method_remove": "enabled",
+                                ],
+                ],
+                "customer_sheet": [
+                    "enabled": false,
+                ]
+            ]
+        }
         return STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes,
+            customerSessionData: customerSessionData,
             linkMode: linkMode,
-            linkFundingSources: linkFundingSources
+            linkFundingSources: linkFundingSources,
+            allowsSetAsDefaultPM: allowsSetAsDefaultPM
         )
     }
 }
