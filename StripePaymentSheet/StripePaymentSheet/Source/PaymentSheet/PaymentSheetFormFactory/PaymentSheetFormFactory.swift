@@ -126,7 +126,7 @@ class PaymentSheetFormFactory {
         isSettingUp: Bool,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        showSetAsDefaultCheckbox: Bool,
+        showSetAsDefaultCheckbox: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?
     ) {
@@ -529,7 +529,7 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    func makeUSBankAccount(merchantName: String, showSetAsDefaultCheckbox: Bool) -> PaymentMethodElement {
+    func makeUSBankAccount(merchantName: String, showSetAsDefaultCheckbox: Bool = false) -> PaymentMethodElement {
         let isSaving = BoolReference()
         var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
         if showSetAsDefaultCheckbox {

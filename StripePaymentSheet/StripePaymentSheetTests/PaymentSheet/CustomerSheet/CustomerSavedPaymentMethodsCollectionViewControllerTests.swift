@@ -294,7 +294,7 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
     func testHideNonCardUSBank_SetAsDefault() {
         let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
                                           paymentMethodRemove: true,
-                                          allowsSetAsDefaultPM: true)
+                                          paymentMethodSetAsDefault: true)
         let controller = customerSavedPaymentMethods(configuration,
                                                      savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testUSBankAccount(), STPPaymentMethod._testSEPA()],
                                                      cbcEligible: false)
@@ -303,12 +303,12 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
 
     func configuration(allowsRemovalOfLastSavedPaymentMethod: Bool,
                        paymentMethodRemove: Bool,
-                       showApplePay: Bool = false,
-                       allowsSetAsDefaultPM: Bool = false) -> CustomerSavedPaymentMethodsCollectionViewController.Configuration {
+                       paymentMethodSetAsDefault: Bool = false,
+                       showApplePay: Bool = false) -> CustomerSavedPaymentMethodsCollectionViewController.Configuration {
         return CustomerSavedPaymentMethodsCollectionViewController.Configuration(showApplePay: showApplePay,
                                                                                  allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                  paymentMethodRemove: paymentMethodRemove,
-                                                                                 paymentMethodSetAsDefault: allowsSetAsDefaultPM,
+                                                                                 paymentMethodSetAsDefault: paymentMethodSetAsDefault,
                                                                                  isTestMode: true)
     }
     func customerSavedPaymentMethods(_ configuration: CustomerSavedPaymentMethodsCollectionViewController.Configuration,

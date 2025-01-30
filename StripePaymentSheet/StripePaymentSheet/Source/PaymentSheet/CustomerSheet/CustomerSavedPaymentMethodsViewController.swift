@@ -60,7 +60,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
             savePaymentMethodConsentBehavior: customerSheetDataSource.savePaymentMethodConsentBehavior(),
-            showSetAsDefaultCheckbox: paymentMethodSetAsDefault,
             delegate: self)
     }()
     private var cachedClientSecret: String?
@@ -653,7 +652,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
             savePaymentMethodConsentBehavior: customerSheetDataSource.savePaymentMethodConsentBehavior(),
-            showSetAsDefaultCheckbox: paymentMethodSetAsDefault,
             delegate: self)
         cachedClientSecret = nil
     }

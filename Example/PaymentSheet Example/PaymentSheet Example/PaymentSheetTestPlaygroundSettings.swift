@@ -235,6 +235,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    
+    enum PaymentMethodSetAsDefault: String, PickerEnum {
+        static let enumName: String = "paymentMethodSetAsDefault"
+        case enabled
+        case disabled
+    }
+
     enum DefaultBillingAddress: String, PickerEnum {
         static var enumName: String { "Default billing address" }
 
@@ -444,12 +451,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case all
         case blockAmEx
         case allowVisa
-    }
-
-    enum PaymentMethodSetAsDefault: String, PickerEnum {
-        static let enumName: String = "paymentMethodSetAsDefault"
-        case enabled
-        case disabled
     }
 
     var uiStyle: UIStyle

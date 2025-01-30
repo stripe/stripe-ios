@@ -41,11 +41,11 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     }
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, allowsSetAsDefaultPM: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, canSetAsDefaultPM: true)
     }
 
     func test_UpdatePaymentMethodViewControllerDefaultCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, allowsSetAsDefaultPM: true, isDefault: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdateCardBrand: true, canSetAsDefaultPM: true, isDefault: true)
     }
 
     func test_UpdatePaymentMethodViewControllerRemoveOnlyCard() {
@@ -65,11 +65,11 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     }
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultUSBankAccount() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, allowsSetAsDefaultPM: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, canSetAsDefaultPM: true)
     }
 
     func test_UpdatePaymentMethodViewControllerDefaultUSBankAccount() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, allowsSetAsDefaultPM: true, isDefault: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, canSetAsDefaultPM: true, isDefault: true)
     }
 
     func test_EmbeddedSingleUSBankAccount_UpdatePaymentMethodViewControllerDarkMode() {
@@ -97,7 +97,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     }
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultSEPADebit() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, allowsSetAsDefaultPM: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, canSetAsDefaultPM: true)
     }
 
     func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerDarkMode() {
@@ -112,7 +112,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdateCardBrand: Bool = false, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdateCardBrand: Bool = false, expired: Bool = false, canSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
@@ -140,7 +140,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                            hostedSurface: .paymentSheet,
                                                            canRemove: canRemove,
                                                            canUpdateCardBrand: canUpdateCardBrand,
-                                                           canSetAsDefaultPM: allowsSetAsDefaultPM,
+                                                           canSetAsDefaultPM: canSetAsDefaultPM,
                                                            isDefault: isDefault
         )
         let sut = UpdatePaymentMethodViewController(

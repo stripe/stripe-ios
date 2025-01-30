@@ -45,7 +45,6 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         configuration.appearance = appearance
         var paymentMethods = generatePaymentMethods()
         if showDefaultPMBadge {
-            configuration.paymentMethodSetAsDefault = true
             let card = STPPaymentMethod._testCard()
             paymentMethods.insert(card, at: 0)
         }
