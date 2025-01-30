@@ -134,6 +134,7 @@ public final class EmbeddedPaymentElement {
                 return UpdateResult.failed(error: error)
             }
             guard !Task.isCancelled else {
+                return UpdateResult.canceled
             }
 
             // Store the old payment option before we update self.formViewController
@@ -170,8 +171,6 @@ public final class EmbeddedPaymentElement {
             _ = await fetchPaymentOption.value
 
             guard let self, !Task.isCancelled else {
-                updateResult = UpdateResult.canceled
-                return updateResult
                 return .canceled
             }
             // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
@@ -184,12 +183,12 @@ public final class EmbeddedPaymentElement {
             if oldPaymentOption != self.paymentOption {
                 self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             }
-            updateResult = .succeeded
-            return updateResult
+            return .succeeded
         }
         self.latestUpdateTask = currentUpdateTask
         let updateResult = await currentUpdateTask.value
         embeddedPaymentMethodsView.isUserInteractionEnabled = true
+        analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
     }
 
