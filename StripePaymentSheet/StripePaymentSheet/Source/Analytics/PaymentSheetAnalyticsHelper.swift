@@ -19,7 +19,6 @@ final class PaymentSheetAnalyticsHelper {
     var elementsSession: STPElementsSession?
     var loadingStartDate: Date?
     private var startTimes: [TimeMeasurement: Date] = [:]
-    private var updateStartDate: Date?
 
     enum IntegrationShape {
         case flowController
@@ -338,16 +337,11 @@ final class PaymentSheetAnalyticsHelper {
     
     func logEmbeddedUpdateStarted() {
         stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
-        updateStartDate = Date()
         log(event: .mcUpdateStartedEmbedded)
     }
 
-    func logEmbeddedUpdateFinished(result: EmbeddedPaymentElement.UpdateResult) {
+    func logEmbeddedUpdateFinished(result: EmbeddedPaymentElement.UpdateResult, duration: TimeInterval) {
         stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
-        let duration: TimeInterval? = {
-            guard let updateStartDate else { return nil }
-            return Date().timeIntervalSince(updateStartDate)
-        }()
         
         let error: Error? = {
             switch result {

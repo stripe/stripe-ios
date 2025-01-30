@@ -104,9 +104,13 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        let startTime = Date()
+        analyticsHelper.logEmbeddedUpdateStarted()
         // Do not process any update calls if we have already successfully confirmed an intent
         guard !hasConfirmedIntent else {
-            return .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
+            let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
+            analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
+            return result
         }
 
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
@@ -115,12 +119,6 @@ public final class EmbeddedPaymentElement {
         _ = await latestUpdateTask?.value
         // Start the new update task
         let currentUpdateTask = Task { @MainActor [weak self, configuration, analyticsHelper] in
-            analyticsHelper.logEmbeddedUpdateStarted()
-            var updateResult: UpdateResult = .canceled // Default to canceled if unhandled
-            defer {
-                analyticsHelper.logEmbeddedUpdateFinished(result: updateResult)
-            }
-            
             // ⚠️ Don't modify `self` until the end to avoid being canceled halfway through and leaving self in a partially updated state.
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
@@ -133,12 +131,9 @@ public final class EmbeddedPaymentElement {
                     integrationShape: .embedded
                 )
             } catch {
-                updateResult = UpdateResult.failed(error: error)
-                return updateResult
+                return UpdateResult.failed(error: error)
             }
             guard !Task.isCancelled else {
-                updateResult = UpdateResult.canceled
-                return updateResult
             }
 
             // Store the old payment option before we update self.formViewController
@@ -177,6 +172,7 @@ public final class EmbeddedPaymentElement {
             guard let self, !Task.isCancelled else {
                 updateResult = UpdateResult.canceled
                 return updateResult
+                return .canceled
             }
             // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             self.savedPaymentMethods = loadResult.savedPaymentMethods
@@ -202,7 +198,6 @@ public final class EmbeddedPaymentElement {
     /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
-        analyticsHelper.log(event: .mcConfirmEmbedded)
         guard let presentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
             stpAssertionFailure(errorMessage)
