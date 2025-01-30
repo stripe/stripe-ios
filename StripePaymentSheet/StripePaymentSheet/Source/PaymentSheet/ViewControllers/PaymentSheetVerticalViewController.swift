@@ -336,7 +336,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
 
         var customerDefault: CustomerPaymentOption?
-        if configuration.allowsSetAsDefaultPM {
+        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
             // if opted in to the "set as default" feature, try to get default payment method from elements session
             if let customer = elementsSession.customer,
                let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
@@ -619,7 +619,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                canUpdateCardBrand: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
-                                                               allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+                                                               canSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
             )
             let updateViewController = UpdatePaymentMethodViewController(

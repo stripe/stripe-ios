@@ -333,7 +333,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheetWithSavedPM_200)
         var configuration = CustomerSheet.Configuration()
         configuration.apiClient = stubbedAPIClient
-        configuration.allowsSetAsDefaultPM = true
+        configuration.paymentMethodSetAsDefault = true
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,
@@ -357,7 +357,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheet_200)
         var configuration = CustomerSheet.Configuration()
         configuration.apiClient = stubbedAPIClient
-        configuration.allowsSetAsDefaultPM = true
+        configuration.paymentMethodSetAsDefault = true
 
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,

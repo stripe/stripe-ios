@@ -140,7 +140,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                            hostedSurface: .paymentSheet,
                                                            canRemove: canRemove,
                                                            canUpdateCardBrand: canUpdateCardBrand,
-                                                           allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                                                           canSetAsDefaultPM: allowsSetAsDefaultPM,
                                                            isDefault: isDefault
         )
         let sut = UpdatePaymentMethodViewController(

@@ -59,7 +59,7 @@ class UpdatePaymentMethodViewModel {
         }
     }()
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdateCardBrand: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdateCardBrand: Bool,                                                                canSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         guard PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) else {
             fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
@@ -69,7 +69,7 @@ class UpdatePaymentMethodViewModel {
         self.cardBrandFilter = cardBrandFilter
         self.canRemove = canRemove
         self.canUpdateCardBrand = canUpdateCardBrand
-        self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
+        self.allowsSetAsDefaultPM =                                                                canSetAsDefaultPM
         self.isDefault = isDefault
     }
 }

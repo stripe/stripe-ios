@@ -50,13 +50,15 @@ struct CustomerSessionPlaygroundView: View {
                     if viewModel.paymentMethodSave == .disabled {
                         SettingPickerView(setting: $viewModel.allowRedisplayOverride)
                     }
+                    else {
+                        SettingPickerView(setting: $viewModel.paymentMethodSetAsDefault)
+                    }
                     SettingPickerView(setting: $viewModel.paymentMethodRemove)
                     SettingPickerView(setting: $viewModel.paymentMethodRemoveLast)
                     SettingPickerView(setting: paymentMethodRedisplayBinding)
                     if viewModel.paymentMethodRedisplay == .enabled {
                         SettingPickerView(setting: $viewModel.paymentMethodAllowRedisplayFilters)
                     }
-                    SettingPickerView(setting: $viewModel.allowsSetAsDefaultPM)
                 }
             }.padding()
 

@@ -36,6 +36,7 @@ class PaymentSheetFormFactory {
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
+    let showSetAsDefaultCheckbox: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
 
@@ -107,6 +108,7 @@ class PaymentSheetFormFactory {
                   isSettingUp: intent.isSettingUp,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
+                  showSetAsDefaultCheckbox: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive)
     }
@@ -124,6 +126,7 @@ class PaymentSheetFormFactory {
         isSettingUp: Bool,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
+        showSetAsDefaultCheckbox: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?
     ) {
@@ -144,6 +147,7 @@ class PaymentSheetFormFactory {
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
+        self.showSetAsDefaultCheckbox = showSetAsDefaultCheckbox
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
     }
@@ -160,9 +164,9 @@ class PaymentSheetFormFactory {
             // We have two ways to create the form for a payment method
             // 1. Custom, one-off forms
             if paymentMethod == .card {
-                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
+                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible, showSetAsDefaultCheckbox: showSetAsDefaultCheckbox)
             } else if paymentMethod == .USBankAccount {
-                return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
+                return makeUSBankAccount(merchantName: configuration.merchantDisplayName, showSetAsDefaultCheckbox: showSetAsDefaultCheckbox)
             } else if paymentMethod == .UPI {
                 return makeUPI()
             } else if paymentMethod == .cashApp && isSettingUp {
@@ -525,10 +529,10 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
+    func makeUSBankAccount(merchantName: String, showSetAsDefaultCheckbox: Bool) -> PaymentMethodElement {
         let isSaving = BoolReference()
         var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
-        if configuration.allowsSetAsDefaultPM {
+        if showSetAsDefaultCheckbox {
             defaultCheckbox = makeDefaultCheckbox()
         }
         let saveCheckbox = makeSaveCheckbox(

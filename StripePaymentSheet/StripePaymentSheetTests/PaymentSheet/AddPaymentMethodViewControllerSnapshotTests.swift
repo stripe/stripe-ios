@@ -63,7 +63,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         // ...and a "Save this card" checkbox...
         config.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // allows set as default so that the set as default checkbox renders
-        config.allowsSetAsDefaultPM = true
+        config.paymentMethodSetAsDefault = true
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
         let sut = AddPaymentMethodViewController(
             intent: intent,

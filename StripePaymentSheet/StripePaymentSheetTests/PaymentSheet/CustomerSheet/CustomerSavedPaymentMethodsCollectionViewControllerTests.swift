@@ -308,8 +308,8 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         return CustomerSavedPaymentMethodsCollectionViewController.Configuration(showApplePay: showApplePay,
                                                                                  allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                  paymentMethodRemove: paymentMethodRemove,
-                                                                                 isTestMode: true,
-                                                                                 allowsSetAsDefaultPM: allowsSetAsDefaultPM)
+                                                                                 paymentMethodSetAsDefault: allowsSetAsDefaultPM,
+                                                                                 isTestMode: true)
     }
     func customerSavedPaymentMethods(_ configuration: CustomerSavedPaymentMethodsCollectionViewController.Configuration,
                                      savedPaymentMethods: [STPPaymentMethod],

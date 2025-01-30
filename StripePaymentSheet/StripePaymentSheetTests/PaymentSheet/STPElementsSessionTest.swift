@@ -342,6 +342,25 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertTrue(allowsRemoval)
         XCTAssertFalse(elementsSession.paymentMethodRemoveLastForCustomerSheet)
     }
+    func testAllowsRemovalOfPaymentMethodsForCustomerSheet_setAsDefault_enabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "mobile_payment_element": [
+                                                                    "enabled": false
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_remove": "enabled",
+                                                                                 "payment_method_set_as_default": "enabled",
+                                                                                ],
+                                                                ],
+                                                            ])
+
+        let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
+        let allowsSetAsDefault = elementsSession.paymentMethodSetAsDefaultForCustomerSheet
+        XCTAssertTrue(allowsRemoval)
+        XCTAssertTrue(allowsSetAsDefault)
+    }
     private let testCardJSON = [
         "id": "pm_123card",
         "type": "card",

@@ -183,7 +183,6 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-        configuration.allowsSetAsDefaultPM = settings.allowsSetAsDefaultPM == .on
         return configuration
     }
 
@@ -272,7 +271,6 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-        configuration.allowsSetAsDefaultPM = settings.allowsSetAsDefaultPM == .on
         return configuration
     }
 
@@ -630,6 +628,7 @@ extension PlaygroundController {
             "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
             "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
             "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
+            "customer_session_payment_method_set_as_default": settings.paymentMethodSetAsDefault.rawValue,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if settingsToLoad.apmsEnabled == .off, let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {

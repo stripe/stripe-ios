@@ -24,6 +24,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let cbcEligible: Bool
     let savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior
+    let showSetAsDefaultCheckbox: Bool
 
     // MARK: - Read-only Properties
     weak var delegate: CustomerAddPaymentMethodViewControllerDelegate?
@@ -127,6 +128,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         cbcEligible: Bool,
         savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior,
+        showSetAsDefaultCheckbox: Bool,
         delegate: CustomerAddPaymentMethodViewControllerDelegate
     ) {
         self.configuration = configuration
@@ -140,6 +142,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         self.paymentMethodTypes = paymentMethodTypes
         self.cbcEligible = cbcEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
+        self.showSetAsDefaultCheckbox = showSetAsDefaultCheckbox
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
     }
@@ -249,6 +252,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             isSettingUp: true,
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
+            showSetAsDefaultCheckbox: showSetAsDefaultCheckbox,
             analyticsHelper: nil,
             paymentMethodIncentive: nil
         ).make()

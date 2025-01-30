@@ -54,7 +54,7 @@ extension EmbeddedPaymentElement {
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
             var customerDefault: CustomerPaymentOption?
             // if opted in to the "set as default" feature, try to get default payment method from elements session
-            if configuration.allowsSetAsDefaultPM {
+            if loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
                 if let defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
                     customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
                 }
@@ -165,7 +165,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                canUpdateCardBrand: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
-                                                               allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+                                                               canSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
             )
             let updateViewController = UpdatePaymentMethodViewController(
