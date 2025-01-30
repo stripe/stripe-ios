@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+@_spi(STP) import StripeCore
 
 /// A view model that manages an `EmbeddedPaymentElement`.
 @MainActor
@@ -40,6 +41,8 @@ import Combine
     // MARK: - Internal properties
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
+    
+    @Published var height: CGFloat = 0.0
 
     // MARK: - Private properties
 
@@ -139,12 +142,42 @@ import Combine
 // MARK: EmbeddedPaymentElementDelegate
 
 extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
+    private var isUnitOrUITest: Bool {
+#if targetEnvironment(simulator)
+        return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
+#else
+        return false
+#endif
+    }
 
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-        // TODO(porter) Handle height changes when we add the UIViewRepresentable MOBILESDK-3001
+        let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
+
+        // Disable animations for tests
+        withAnimation(.easeInOut(duration: isUnitOrUITest ? 0.0 : 0.2)) {
+            self.height = newHeight
+        }
     }
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         self.paymentOption = embeddedPaymentElement.paymentOption
+    }
+}
+
+/// A SwiftUI view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
+@_spi(EmbeddedPaymentElementPrivateBeta) public struct EmbeddedPaymentElementView: View {
+    @ObservedObject private var viewModel: EmbeddedPaymentElementViewModel
+
+    /// Initializes a new instance of `EmbeddedPaymentElementView`.
+    ///
+    /// - Parameter viewModel: The view model for this payment element view.
+    public init(viewModel: EmbeddedPaymentElementViewModel) {
+        self.viewModel = viewModel
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+    }
+
+    public var body: some View {
+        EmbeddedViewRepresentable(viewModel: viewModel)
+            .frame(height: viewModel.height)
     }
 }
