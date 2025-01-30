@@ -45,6 +45,9 @@ final class IntentConfirmParams {
         }
     }
 
+    /// True if the customer opts to save their payment method as their default payment method.
+    var setAsDefaultPM: Bool?
+
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))

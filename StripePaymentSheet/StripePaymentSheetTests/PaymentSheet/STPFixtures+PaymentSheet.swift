@@ -149,7 +149,7 @@ extension STPElementsSession {
         intent: Intent,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
-        paymentMethodSetAsDefault: Bool = false
+        allowsSetAsDefaultPM: Bool = false
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
             switch intent {
@@ -161,8 +161,8 @@ extension STPElementsSession {
                 return intentConfig.paymentMethodTypes ?? []
             }
         }()
-        var customerSessionData: [String : Any]?
-        if paymentMethodSetAsDefault {
+        var customerSessionData: [String: Any]?
+        if allowsSetAsDefaultPM {
             customerSessionData = [
                 "mobile_payment_element": [
                     "enabled": true,
@@ -173,7 +173,8 @@ extension STPElementsSession {
                 ],
                 "customer_sheet": [
                     "enabled": false,
-                ], ]
+                ]
+            ]
         }
         return STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes,
