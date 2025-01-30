@@ -34,7 +34,7 @@ extension EmbeddedPaymentElement {
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
-        let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
+        let initialSelection: RowButtonType? = {
             // Select the previous payment option
             switch previousPaymentOption {
             case .applePay:
@@ -104,7 +104,7 @@ extension EmbeddedPaymentElement {
 
     // Helper method to create Form VC for a payment method row, if applicable.
     func makeFormViewControllerIfNecessary(
-        selection: EmbeddedPaymentMethodsView.Selection?,
+        selection: RowButtonType?,
         previousPaymentOption: PaymentOption?
     ) -> EmbeddedFormViewController? {
         guard case let .new(paymentMethodType) = selection else {

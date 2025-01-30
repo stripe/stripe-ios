@@ -11,71 +11,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-// MARK: - RowButtonType
-enum RowButtonType: Equatable, Hashable {
-    case new(paymentMethodType: PaymentSheet.PaymentMethodType)
-    case saved(paymentMethod: STPPaymentMethod)
-    case applePay
-    case link
-
-    static func == (lhs: RowButtonType, rhs: RowButtonType) -> Bool {
-        switch (lhs, rhs) {
-        case (.link, .link):
-            return true
-        case (.applePay, .applePay):
-            return true
-        case let (.new(lhsPMType), .new(rhsPMType)):
-            return lhsPMType == rhsPMType
-        case let (.saved(lhsPM), .saved(rhsPM)):
-            return lhsPM.stripeId == rhsPM.stripeId && lhsPM.calculateCardBrandToDisplay() == rhsPM.calculateCardBrandToDisplay()
-        default:
-            return false
-        }
-    }
-
-    var isSaved: Bool {
-        switch self {
-        case .saved:
-            return true
-        default:
-            return false
-        }
-    }
-
-    var analyticsIdentifier: String {
-        switch self {
-        case .applePay:
-            return "apple_pay"
-        case .link:
-            return "link"
-        case .saved:
-            return "saved"
-        case .new(paymentMethodType: let type):
-            return type.identifier
-        }
-    }
-
-    var savedPaymentMethod: STPPaymentMethod? {
-        switch self {
-        case .applePay, .link, .new:
-            return nil
-        case .saved(let paymentMethod):
-            return paymentMethod
-        }
-    }
-
-    var paymentMethodType: PaymentSheet.PaymentMethodType? {
-        switch self {
-        case .new(let paymentMethodType):
-            return paymentMethodType
-        case .saved(let paymentMethod):
-            return .stripe(paymentMethod.type)
-        case .applePay, .link:
-            return nil
-        }
-    }
-}
-
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 class RowButton: UIView {
     let type: RowButtonType
@@ -575,5 +510,70 @@ extension RowButton {
         let button = RowButton(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.shadowRoundedRect.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
+    }
+}
+
+// MARK: - RowButtonType
+enum RowButtonType: Equatable, Hashable {
+    case new(paymentMethodType: PaymentSheet.PaymentMethodType)
+    case saved(paymentMethod: STPPaymentMethod)
+    case applePay
+    case link
+
+    static func == (lhs: RowButtonType, rhs: RowButtonType) -> Bool {
+        switch (lhs, rhs) {
+        case (.link, .link):
+            return true
+        case (.applePay, .applePay):
+            return true
+        case let (.new(lhsPMType), .new(rhsPMType)):
+            return lhsPMType == rhsPMType
+        case let (.saved(lhsPM), .saved(rhsPM)):
+            return lhsPM.stripeId == rhsPM.stripeId && lhsPM.calculateCardBrandToDisplay() == rhsPM.calculateCardBrandToDisplay()
+        default:
+            return false
+        }
+    }
+
+    var isSaved: Bool {
+        switch self {
+        case .saved:
+            return true
+        default:
+            return false
+        }
+    }
+
+    var analyticsIdentifier: String {
+        switch self {
+        case .applePay:
+            return "apple_pay"
+        case .link:
+            return "link"
+        case .saved:
+            return "saved"
+        case .new(paymentMethodType: let type):
+            return type.identifier
+        }
+    }
+
+    var savedPaymentMethod: STPPaymentMethod? {
+        switch self {
+        case .applePay, .link, .new:
+            return nil
+        case .saved(let paymentMethod):
+            return paymentMethod
+        }
+    }
+
+    var paymentMethodType: PaymentSheet.PaymentMethodType? {
+        switch self {
+        case .new(let paymentMethodType):
+            return paymentMethodType
+        case .saved(let paymentMethod):
+            return .stripe(paymentMethod.type)
+        case .applePay, .link:
+            return nil
+        }
     }
 }
