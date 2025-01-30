@@ -128,8 +128,8 @@ extension RowButton {
 
         // MARK: - UIGestureRecognizerDelegate
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-            // Without this, the long press prevents you from scrolling or the tap gesture from triggering.
-            true
+            // Without this, the long press prevents you from scrolling or our tap/pan gesture from triggering together.
+            return otherGestureRecognizer is UIPanGestureRecognizer || (gestureRecognizers?.contains(otherGestureRecognizer) ?? false)
         }
     }
 }

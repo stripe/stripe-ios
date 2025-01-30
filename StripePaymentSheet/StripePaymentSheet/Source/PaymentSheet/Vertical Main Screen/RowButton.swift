@@ -60,6 +60,7 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
+        
     var isFlatWithCheckmarkStyle: Bool {
         return appearance.embeddedPaymentElement.row.style == .flatWithCheckmark && isEmbedded
     }
@@ -188,7 +189,6 @@ class RowButton: UIView {
 
         for view in [radioButton, imageView, labelsStackView, defaultBadge].compactMap({ $0 }) {
             view.translatesAutoresizingMaskIntoConstraints = false
-            view.isUserInteractionEnabled = false
             view.isAccessibilityElement = false
             addSubview(view)
         }
@@ -247,14 +247,14 @@ class RowButton: UIView {
         // Add tap gesture
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         gestureRecognizer.delegate = self
-        shadowRoundedRect.addGestureRecognizer(gestureRecognizer)
+        addGestureRecognizer(gestureRecognizer)
 
         // Add long press gesture if we should animate on press
         if shouldAnimateOnPress {
             let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(gesture:)))
             longPressGesture.minimumPressDuration = 0.2
             longPressGesture.delegate = self
-            shadowRoundedRect.addGestureRecognizer(longPressGesture)
+            addGestureRecognizer(longPressGesture)
         }
 
         // Accessibility
@@ -382,8 +382,8 @@ extension RowButton: EventHandler {
 // MARK: - UIGestureRecognizerDelegate
 extension RowButton: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        // Without this, the long press prevents you from scrolling or the tap gesture from triggering.
-        true
+        // Without this, the long press prevents you from scrolling or our tap/pan gesture from triggering together.
+        return otherGestureRecognizer is UIPanGestureRecognizer || (gestureRecognizers?.contains(otherGestureRecognizer) ?? false)
     }
 
     func gestureRecognizer(
