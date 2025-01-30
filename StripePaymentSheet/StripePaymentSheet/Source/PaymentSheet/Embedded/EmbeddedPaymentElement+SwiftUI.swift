@@ -67,11 +67,11 @@ import Combine
 
         // Store the load task
         loadTask = Task { [weak self] in
-            guard let self else { return }
             let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
                 intentConfiguration: intentConfiguration,
                 configuration: configuration
             )
+            guard let self else { return }
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
             self.paymentOption = embeddedPaymentElement.paymentOption
