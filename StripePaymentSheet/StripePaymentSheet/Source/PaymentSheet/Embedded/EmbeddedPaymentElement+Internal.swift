@@ -379,7 +379,6 @@ extension EmbeddedPaymentElement {
         // If the confirmation was successful, disable user interaction
         if case .completed = result {
             hasConfirmedIntent = true
-            embeddedPaymentMethodsView.isUserInteractionEnabled = false
         } else {
             // Re-enable interaction for failed and canceled results
             embeddedPaymentMethodsView.isUserInteractionEnabled = true
