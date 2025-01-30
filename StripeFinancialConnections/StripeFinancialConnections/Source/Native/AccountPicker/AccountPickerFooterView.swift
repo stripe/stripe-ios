@@ -12,11 +12,11 @@ import UIKit
 final class AccountPickerFooterView: UIView {
 
     private let singleAccount: Bool
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let didSelectLinkAccounts: () -> Void
 
     private lazy var linkAccountsButton: Button = {
-        let linkAccountsButton = Button.primary(theme: theme)
+        let linkAccountsButton = Button.primary(appearance: appearance)
         linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -29,12 +29,12 @@ final class AccountPickerFooterView: UIView {
     init(
         dataAccessNotice: String?,
         singleAccount: Bool,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelectLinkAccounts: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.singleAccount = singleAccount
-        self.theme = theme
+        self.appearance = appearance
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
 
@@ -108,7 +108,7 @@ private func CreateDataAccessLabel(
         font: .label(.small),
         boldFont: .label(.smallEmphasized),
         linkFont: .label(.small),
-        textColor: .textDefault,
+        textColor: FinancialConnectionsAppearance.Colors.textDefault,
         alignment: .center
     )
     label.setText(

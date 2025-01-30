@@ -23,7 +23,7 @@ protocol LinkSignupFormViewDelegate: AnyObject {
 final class LinkSignupFormView: UIView {
 
     private let accountholderPhoneNumber: String?
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     weak var delegate: LinkSignupFormViewDelegate?
 
     private lazy var verticalStackView: UIStackView = {
@@ -35,20 +35,20 @@ final class LinkSignupFormView: UIView {
         return verticalStackView
     }()
     private(set) lazy var emailTextField: EmailTextField = {
-       let emailTextField = EmailTextField(theme: theme)
+       let emailTextField = EmailTextField(appearance: appearance)
         emailTextField.delegate = self
         return emailTextField
     }()
     private(set) lazy var phoneTextField: PhoneTextField = {
-       let phoneTextField = PhoneTextField(defaultPhoneNumber: accountholderPhoneNumber, theme: theme)
+       let phoneTextField = PhoneTextField(defaultPhoneNumber: accountholderPhoneNumber, appearance: appearance)
         phoneTextField.delegate = self
         return phoneTextField
     }()
     private var debounceEmailTimer: Timer?
     private var lastValidEmail: String?
 
-    init(accountholderPhoneNumber: String?, theme: FinancialConnectionsTheme) {
-        self.theme = theme
+    init(accountholderPhoneNumber: String?, appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
         self.accountholderPhoneNumber = accountholderPhoneNumber
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
@@ -205,7 +205,7 @@ import SwiftUI
 private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> LinkSignupFormView {
-        LinkSignupFormView(accountholderPhoneNumber: nil, theme: .light)
+        LinkSignupFormView(accountholderPhoneNumber: nil, appearance: .stripe)
     }
 
     func updateUIView(_ uiView: LinkSignupFormView, context: Context) {}

@@ -23,7 +23,7 @@ final class PhoneTextField: UIView {
         let textField = RoundedTextField(
             placeholder: STPLocalizedString("Phone number", "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type a phone number."),
             showDoneToolbar: true,
-            theme: theme
+            appearance: appearance
         )
         textField.textField.keyboardType = .phonePad
         textField.textField.textContentType = .telephoneNumber
@@ -44,7 +44,7 @@ final class PhoneTextField: UIView {
         return textField
     }()
     private let countryCodeSelectorView: PhoneCountryCodeSelectorView
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     // we will only start validating as user
     // types once editing ends
     fileprivate var didEndEditingOnce = false
@@ -76,7 +76,7 @@ final class PhoneTextField: UIView {
 
     weak var delegate: PhoneTextFieldDelegate?
 
-    init(defaultPhoneNumber: String?, theme: FinancialConnectionsTheme) {
+    init(defaultPhoneNumber: String?, appearance: FinancialConnectionsAppearance) {
         var defaultPhoneNumber = defaultPhoneNumber
         var defaultCountryCode: String?
         if let _defaultPhoneNumber = defaultPhoneNumber, let e164PhoneNumber = PhoneNumber.fromE164(_defaultPhoneNumber) {
@@ -85,9 +85,9 @@ final class PhoneTextField: UIView {
         }
         self.countryCodeSelectorView = PhoneCountryCodeSelectorView(
             defaultCountryCode: defaultCountryCode,
-            theme: theme
+            appearance: appearance
         )
-        self.theme = theme
+        self.appearance = appearance
         super.init(frame: .zero)
         countryCodeSelectorView.delegate = self
         addAndPinSubview(textField)
@@ -219,7 +219,7 @@ private struct PhoneTextFieldUIViewRepresentable: UIViewRepresentable {
     let defaultPhoneNumber: String
 
     func makeUIView(context: Context) -> PhoneTextField {
-        PhoneTextField(defaultPhoneNumber: defaultPhoneNumber, theme: .light)
+        PhoneTextField(defaultPhoneNumber: defaultPhoneNumber, appearance: .stripe)
     }
 
     func updateUIView(
@@ -262,7 +262,7 @@ struct PhoneTextField_Previews: PreviewProvider {
                 Spacer()
             }
             .padding()
-            .background(Color(UIColor.customBackgroundColor))
+            .background(Color(FinancialConnectionsAppearance.Colors.background))
         }
     }
 }

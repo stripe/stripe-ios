@@ -34,7 +34,7 @@ final class PrepaneViews {
         prepaneModel: FinancialConnectionsOAuthPrepane,
         isRepairSession: Bool,
         panePresentationStyle: PanePresentationStyle,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelectURL: @escaping (URL) -> Void,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: @escaping () -> Void
@@ -91,7 +91,7 @@ final class PrepaneViews {
                     )
                 }
             }(),
-            theme: theme
+            appearance: appearance
         )
         self.footerView = footerViewTuple.footerView
         self.primaryButton = footerViewTuple.primaryButton
@@ -141,7 +141,7 @@ private func CreateContentView(
                 font: .label(.large),
                 boldFont: .label(.largeEmphasized),
                 linkFont: .label(.largeEmphasized),
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             label.setText(text, action: didSelectURL)
             verticalStackView.addArrangedSubview(label)
@@ -209,7 +209,7 @@ private class PrepanePreviewView: UIView {
         ),
         isRepairSession: false,
         panePresentationStyle: .sheet,
-        theme: .light,
+        appearance: .stripe,
         didSelectURL: { _ in },
         didSelectContinue: {},
         didSelectCancel: {}
@@ -222,7 +222,7 @@ private class PrepanePreviewView: UIView {
             footerView: prepaneViews.footerView
         )
         paneLayoutView.addTo(view: self)
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
     }
 
     required init?(coder: NSCoder) {

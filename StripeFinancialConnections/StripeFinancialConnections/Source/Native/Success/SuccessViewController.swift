@@ -30,7 +30,7 @@ final class SuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.hidesBackButton = true
 
         let showSaveToLinkFailedNotice = (dataSource.saveToLinkWithStripeSucceeded == false)
@@ -48,12 +48,12 @@ final class SuccessViewController: UIViewController {
                 isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
                 showSaveToLinkFailedNotice: showSaveToLinkFailedNotice
             ),
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         contentView.addSubview(bodyView)
 
         let footerView = SuccessFooterView(
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectDone: { [weak self] footerView in
                 guard let self = self else { return }
                 // we NEVER set isLoading to `false` because
@@ -120,11 +120,11 @@ final class SuccessViewController: UIViewController {
 private func CreateBodyView(
     title: String,
     subtitle: String?,
-    theme: FinancialConnectionsTheme
+    appearance: FinancialConnectionsAppearance
 ) -> UIView {
     let titleLabel = AttributedLabel(
         font: .heading(.extraLarge),
-        textColor: .textDefault
+        textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     titleLabel.setText(title)
     let labelVerticalStackView = UIStackView(
@@ -139,7 +139,7 @@ private func CreateBodyView(
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.medium),
-            textColor: .textDefault,
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
         subtitleLabel.setText(subtitle)
@@ -148,7 +148,7 @@ private func CreateBodyView(
 
     let bodyVerticalStackView = UIStackView(
         arrangedSubviews: [
-            CreateIconView(theme: theme),
+            CreateIconView(appearance: appearance),
             labelVerticalStackView,
         ]
     )
@@ -171,9 +171,9 @@ private func CreateBodyView(
     return bodyVerticalStackView
 }
 
-private func CreateIconView(theme: FinancialConnectionsTheme) -> UIView {
+private func CreateIconView(appearance: FinancialConnectionsAppearance) -> UIView {
     let iconContainerView = UIView()
-    iconContainerView.backgroundColor = theme.primaryColor
+    iconContainerView.backgroundColor = appearance.colors.primary
     let iconRadius: CGFloat = 56
     iconContainerView.layer.cornerRadius = iconRadius/2
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -183,7 +183,7 @@ private func CreateIconView(theme: FinancialConnectionsTheme) -> UIView {
     ])
 
     let iconImageView = UIImageView()
-    iconImageView.image = Image.check.makeImage().withTintColor(theme.primaryAccentColor)
+    iconImageView.image = Image.check.makeImage().withTintColor(appearance.colors.primaryAccent)
     iconContainerView.addSubview(iconImageView)
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([

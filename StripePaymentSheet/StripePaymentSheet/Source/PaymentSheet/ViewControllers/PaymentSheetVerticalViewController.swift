@@ -619,6 +619,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                canUpdateCardBrand: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
+                                                               isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                canSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
             )

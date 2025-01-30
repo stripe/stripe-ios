@@ -183,6 +183,15 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
+
+        switch settings.style {
+        case .automatic:
+            configuration.style = .automatic
+        case .alwaysLight:
+            configuration.style = .alwaysLight
+        case .alwaysDark:
+            configuration.style = .alwaysDark
+        }
         return configuration
     }
 

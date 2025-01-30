@@ -30,7 +30,7 @@ final class InstitutionIconView: UIView {
         institutionImageView.layer.cornerRadius = cornerRadius
         institutionImageView.clipsToBounds = true
 
-        layer.shadowColor = UIColor.textDefault.cgColor
+        layer.shadowColor = FinancialConnectionsAppearance.Colors.textDefault.cgColor
         layer.shadowOpacity = 0.3
         layer.shadowRadius = 1
         layer.shadowOffset = CGSize(

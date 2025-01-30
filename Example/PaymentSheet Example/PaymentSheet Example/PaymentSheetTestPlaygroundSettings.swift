@@ -237,7 +237,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     
     enum PaymentMethodSetAsDefault: String, PickerEnum {
-        static let enumName: String = "paymentMethodSetAsDefault"
+        static let enumName: String = "PaymentMethodSetAsDefault"
         case enabled
         case disabled
     }
@@ -453,9 +453,17 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
+    enum ConfigurationStyle: String, PickerEnum {
+        static let enumName: String = "Style"
+        case automatic
+        case alwaysLight
+        case alwaysDark
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
+    var style: ConfigurationStyle
     var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
     var customerMode: CustomerMode
@@ -506,6 +514,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             uiStyle: .paymentSheet,
             layout: .automatic,
             mode: .payment,
+            style: .automatic,
             customerKeyType: .customerSession,
             integrationType: .normal,
             customerMode: .guest,

@@ -12,16 +12,16 @@ import UIKit
 final class LegalDetailsNoticeViewController: SheetViewController {
 
     private let legalDetailsNotice: FinancialConnectionsLegalDetailsNotice
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let didSelectUrl: (URL) -> Void
 
     init(
         legalDetailsNotice: FinancialConnectionsLegalDetailsNotice,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelectUrl: @escaping (URL) -> Void
     ) {
         self.legalDetailsNotice = legalDetailsNotice
-        self.theme = theme
+        self.appearance = appearance
         self.didSelectUrl = didSelectUrl
         super.init()
     }
@@ -37,13 +37,13 @@ final class LegalDetailsNoticeViewController: SheetViewController {
                 iconView: RoundedIconView(
                     image: .imageUrl(legalDetailsNotice.icon?.default),
                     style: .circle,
-                    theme: theme
+                    appearance: appearance
                 ),
                 title: legalDetailsNotice.title,
                 subtitle: legalDetailsNotice.subtitle,
                 contentView: CreateMultiLinkView(
                     linkItems: legalDetailsNotice.body.links,
-                    theme: theme,
+                    appearance: appearance,
                     didSelectURL: didSelectUrl
                 ),
                 isSheet: true
@@ -58,7 +58,7 @@ final class LegalDetailsNoticeViewController: SheetViewController {
                 ),
                 secondaryButtonConfiguration: nil,
                 topText: legalDetailsNotice.disclaimer,
-                theme: theme,
+                appearance: appearance,
                 didSelectURL: didSelectUrl
             ).footerView
         )
@@ -67,7 +67,7 @@ final class LegalDetailsNoticeViewController: SheetViewController {
 
 private func CreateMultiLinkView(
     linkItems: [FinancialConnectionsLegalDetailsNotice.Body.Link],
-    theme: FinancialConnectionsTheme,
+    appearance: FinancialConnectionsAppearance,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView()
@@ -79,7 +79,7 @@ private func CreateMultiLinkView(
             CreateSingleLinkView(
                 title: linkItem.title,
                 content: linkItem.content,
-                theme: theme,
+                appearance: appearance,
                 didSelectURL: didSelectURL
             )
         )
@@ -91,7 +91,7 @@ private func CreateMultiLinkView(
 private func CreateSingleLinkView(
     title: String,
     content: String?,
-    theme: FinancialConnectionsTheme,
+    appearance: FinancialConnectionsAppearance,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalLabelStackView = HitTestStackView()
@@ -103,8 +103,8 @@ private func CreateSingleLinkView(
         font: titleLabelFont,
         boldFont: titleLabelFont,
         linkFont: titleLabelFont,
-        textColor: .textDefault,
-        linkColor: theme.textActionColor,
+        textColor: FinancialConnectionsAppearance.Colors.textDefault,
+        linkColor: appearance.colors.textAction,
         showLinkUnderline: false
     )
     titleLabel.setText(title, action: didSelectURL)
@@ -116,8 +116,8 @@ private func CreateSingleLinkView(
             font: contentFont,
             boldFont: contentFont,
             linkFont: contentFont,
-            textColor: .textSubdued,
-            linkColor: theme.textActionColor,
+            textColor: FinancialConnectionsAppearance.Colors.textSubdued,
+            linkColor: appearance.colors.textAction,
             showLinkUnderline: false
         )
         contentLabel.setText(content, action: didSelectURL)
@@ -129,7 +129,7 @@ private func CreateSingleLinkView(
 
 private func CreateSeparatorView() -> UIView {
     let separatorView = UIView()
-    separatorView.backgroundColor = .borderDefault
+    separatorView.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
     separatorView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         separatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale)

@@ -18,7 +18,7 @@ protocol InstitutionSearchBarDelegate: AnyObject {
 
 final class InstitutionSearchBar: UIView {
 
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     weak var delegate: InstitutionSearchBarDelegate?
     var text: String {
         get {
@@ -34,7 +34,7 @@ final class InstitutionSearchBar: UIView {
 
     private lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
-        textField.textColor = .textDefault
+        textField.textColor = FinancialConnectionsAppearance.Colors.textDefault
         textField.tintColor = textField.textColor // caret color
         textField.font = FinancialConnectionsFont.label(.large).uiFont
         // this removes the `searchTextField` background color.
@@ -48,7 +48,7 @@ final class InstitutionSearchBar: UIView {
                 "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."
             ),
             attributes: [
-                .foregroundColor: UIColor.textSubdued,
+                .foregroundColor: FinancialConnectionsAppearance.Colors.textSubdued,
                 .font: FinancialConnectionsFont.label(.large).uiFont,
             ]
         )
@@ -77,7 +77,7 @@ final class InstitutionSearchBar: UIView {
         let imageView = UIImageView()
         let textFieldClearButton = TextFieldClearButton()
         let cancelImage = Image.cancel_circle.makeImage()
-            .withTintColor(.textSubdued)
+            .withTintColor(FinancialConnectionsAppearance.Colors.textSubdued)
         textFieldClearButton.setImage(cancelImage, for: .normal)
         textFieldClearButton.addTarget(
             self,
@@ -94,7 +94,7 @@ final class InstitutionSearchBar: UIView {
     private lazy var searchIconView: UIView = {
         let searchIconImageView = UIImageView()
         searchIconImageView.image = Image.search.makeImage()
-            .withTintColor(.iconDefault)
+            .withTintColor(FinancialConnectionsAppearance.Colors.icon)
         searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             searchIconImageView.widthAnchor.constraint(equalToConstant: 20),
@@ -103,8 +103,8 @@ final class InstitutionSearchBar: UIView {
         return searchIconImageView
     }()
 
-    init(theme: FinancialConnectionsTheme) {
-        self.theme = theme
+    init(appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
         super.init(frame: .zero)
         layer.cornerRadius = 12
 
@@ -162,11 +162,11 @@ final class InstitutionSearchBar: UIView {
         let searchBarBorderWidth: CGFloat
         let shadowOpacity: Float
         if shouldHighlightBorder {
-            searchBarBorderColor = theme.textFieldFocusedColor
+            searchBarBorderColor = appearance.colors.textFieldFocused
             searchBarBorderWidth = 2
             shadowOpacity = 0.1
         } else {
-            searchBarBorderColor = .borderDefault
+            searchBarBorderColor = FinancialConnectionsAppearance.Colors.borderNeutral
             searchBarBorderWidth = 1
             shadowOpacity = 0
         }
@@ -217,10 +217,10 @@ private struct InstitutionSearchBarUIViewRepresentable: UIViewRepresentable {
 
     let text: String
     var isSelected: Bool = false
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> InstitutionSearchBar {
-        InstitutionSearchBar(theme: theme)
+        InstitutionSearchBar(appearance: appearance)
     }
 
     func updateUIView(_ searchBar: InstitutionSearchBar, context: Context) {
@@ -235,11 +235,11 @@ private struct InstitutionSearchBarUIViewRepresentable: UIViewRepresentable {
 struct InstitutionSearchBar_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
-            InstitutionSearchBarUIViewRepresentable(text: "", theme: .light)
+            InstitutionSearchBarUIViewRepresentable(text: "", appearance: .stripe)
                 .frame(width: 327)
                 .frame(height: 56)
 
-            InstitutionSearchBarUIViewRepresentable(text: "Chase", theme: .light)
+            InstitutionSearchBarUIViewRepresentable(text: "Chase", appearance: .stripe)
                 .frame(width: 327)
                 .frame(height: 56)
 
@@ -247,12 +247,12 @@ struct InstitutionSearchBar_Previews: PreviewProvider {
         }
         .frame(maxWidth: .infinity)
 
-        InstitutionSearchBarUIViewRepresentable(text: "Chase", isSelected: true, theme: .light)
+        InstitutionSearchBarUIViewRepresentable(text: "Chase", isSelected: true, appearance: .stripe)
             .frame(width: 327)
             .frame(height: 56)
             .previewDisplayName("Selected - Light theme")
 
-        InstitutionSearchBarUIViewRepresentable(text: "Chase", isSelected: true, theme: .linkLight)
+        InstitutionSearchBarUIViewRepresentable(text: "Chase", isSelected: true, appearance: .link)
             .frame(width: 327)
             .frame(height: 56)
             .previewDisplayName("Selected - Link Light theme")

@@ -18,7 +18,7 @@ final class InstitutionTableViewCell: UITableViewCell {
 
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
-        overlayView.backgroundColor = .customBackgroundColor.withAlphaComponent(0.8)
+        overlayView.backgroundColor = FinancialConnectionsAppearance.Colors.background.withAlphaComponent(0.8)
         overlayView.alpha = 0
         return overlayView
     }()
@@ -38,7 +38,7 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     private func adjustBackgroundColor(isHighlighted: Bool) {
-        contentView.backgroundColor = isHighlighted ? .backgroundContainer : .customBackgroundColor
+        contentView.backgroundColor = isHighlighted ? FinancialConnectionsAppearance.Colors.backgroundHighlighted : FinancialConnectionsAppearance.Colors.background
         backgroundColor = contentView.backgroundColor
 
         // fix a bug where the background color of a
@@ -72,8 +72,8 @@ final class InstitutionTableViewCell: UITableViewCell {
 
 extension InstitutionTableViewCell {
 
-    func customize(with institution: FinancialConnectionsInstitution, theme: FinancialConnectionsTheme) {
-        let institutionCellView = InstitutionCellView(theme: theme)
+    func customize(with institution: FinancialConnectionsInstitution, appearance: FinancialConnectionsAppearance) {
+        let institutionCellView = InstitutionCellView(appearance: appearance)
         institutionIconView.setImageUrl(institution.icon?.default)
 
         institutionCellView.customize(
@@ -99,7 +99,7 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
 
     let showLoadingView: Bool
     let showOverlayView: Bool
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> InstitutionTableViewCell {
         InstitutionTableViewCell(style: .default, reuseIdentifier: "test")
@@ -115,7 +115,7 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
                 icon: nil,
                 logo: nil
             ),
-            theme: theme
+            appearance: appearance
         )
         uiView.showLoadingView(showLoadingView)
         uiView.showOverlayView(showOverlayView)
@@ -129,25 +129,25 @@ struct InstitutionTableViewCell_Previews: PreviewProvider {
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: false,
                 showOverlayView: false,
-                theme: .light
+                appearance: .stripe
             ).frame(width: 343, height: 72)
 
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: true,
                 showOverlayView: false,
-                theme: .light
+                appearance: .stripe
             ).frame(width: 343, height: 72)
 
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: true,
                 showOverlayView: false,
-                theme: .linkLight
+                appearance: .link
             ).frame(width: 343, height: 72)
 
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: false,
                 showOverlayView: true,
-                theme: .light
+                appearance: .stripe
             ).frame(width: 343, height: 72)
             Spacer()
         }
