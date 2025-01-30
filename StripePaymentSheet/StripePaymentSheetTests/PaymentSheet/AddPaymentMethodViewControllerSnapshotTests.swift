@@ -8,7 +8,7 @@
 #if !canImport(CompositorServices)
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
@@ -36,11 +36,11 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.payPal, .card, .cashApp])
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         // ...and a "Save this card" checkbox...
-        config.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        config.customer = .init(id: "id", customerSessionClientSecret: "cuss_123")
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
         let sut = AddPaymentMethodViewController(
             intent: intent,
-            elementsSession: ._testValue(intent: intent),
+            elementsSession: ._testValue(intent: intent, paymentMethodSetAsDefault: true),
             configuration: config,
             previousCustomerInput: previousCustomerInput,
             paymentMethodTypes: [.stripe(.payPal), .stripe(.card), .stripe(.cashApp)],
@@ -62,8 +62,6 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         // ...and a "Save this card" checkbox...
         config.customer = .init(id: "id", ephemeralKeySecret: "ek")
-        // allows set as default so that the set as default checkbox renders
-        config.paymentMethodSetAsDefault = true
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
         let sut = AddPaymentMethodViewController(
             intent: intent,
