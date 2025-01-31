@@ -209,7 +209,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     func didTapViewMoreSavedPaymentMethods() {
-        delegate?.embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: savedPaymentMethodButton?.type.savedPaymentMethod)
+        delegate?.embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: selectedRowButton?.type.savedPaymentMethod)
     }
 
     func updateSavedPaymentMethodRow(_ savedPaymentMethods: [STPPaymentMethod],
