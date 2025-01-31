@@ -40,7 +40,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
             paymentMethodType: .stripe(paymentMethodType),
             previousPaymentOption: previousPaymentOption,
-            analyticsHelper: ._testValue()
+            analyticsHelper: ._testValue(),
+            delegate: self
         )
     }
 
@@ -176,4 +177,18 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+}
+
+extension EmbeddedFormViewControllerSnapshotTests: EmbeddedFormViewControllerDelegate {
+    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+    }
+    
+    func embeddedFormViewControllerDidCompleteConfirmation(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, result: StripePaymentSheet.PaymentSheetResult) {
+    }
+    
+    func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController) {
+    }
+    
+    func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController) {
+    }
 }
