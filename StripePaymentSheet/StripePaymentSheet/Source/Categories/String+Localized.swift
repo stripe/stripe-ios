@@ -467,4 +467,11 @@ extension String.Localized {
             "Label of a checkbox that when checked makes a payment method as the default one."
         )
     }
+
+    static var change: String {
+        STPLocalizedString(
+            "Change",
+            "Label for a button that lets you change the details of a payment method"
+       )
+    }
 }

@@ -143,7 +143,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let selection = VerticalPaymentMethodListSelection.new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
-                subtitle: Self.subtitleText(for: paymentMethodType),
                 hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708)
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
@@ -217,23 +216,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
         label.text = text
         return label
     }
-
-    static func subtitleText(for paymentMethodType: PaymentSheet.PaymentMethodType) -> String? {
-        switch paymentMethodType {
-        case .stripe(.klarna):
-            return String.Localized.buy_now_or_pay_later_with_klarna
-        case .stripe(.afterpayClearpay):
-            if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: Locale.current) {
-                return String.Localized.buy_now_or_pay_later_with_clearpay
-            } else {
-                return String.Localized.buy_now_or_pay_later_with_afterpay
-            }
-        case .stripe(.affirm):
-            return String.Localized.pay_over_time_with_affirm
-        default:
-            return nil
-        }
-    }
 }
 
 // MARK: - VerticalPaymentMethodListViewControllerDelegate
@@ -270,7 +252,7 @@ enum VerticalPaymentMethodListSelection: Equatable, Hashable {
             return false
         }
     }
-    
+
     func hash(into hasher: inout Hasher) {
         switch self {
         case .new(let paymentMethodType):

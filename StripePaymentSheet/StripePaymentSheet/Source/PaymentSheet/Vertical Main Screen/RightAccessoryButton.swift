@@ -18,6 +18,8 @@ extension RowButton {
             case viewMoreChevron
             case viewMore
             case update
+            case change
+            case changeWithChevron
 
             var text: String? {
                 switch self {
@@ -27,14 +29,16 @@ extension RowButton {
                     return .Localized.view_more
                 case .update:
                     return nil
+                case .change, .changeWithChevron:
+                    return .Localized.change
                 }
             }
 
             var accessoryImage: UIImage? {
                 switch self {
-                case .edit, .viewMore:
+                case .edit, .viewMore, .change:
                     return nil
-                case .viewMoreChevron, .update:
+                case .viewMoreChevron, .update, .changeWithChevron:
                     return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
                 }
             }
@@ -124,8 +128,8 @@ extension RowButton {
 
         // MARK: - UIGestureRecognizerDelegate
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-            // Without this, the long press prevents you from scrolling or the tap gesture from triggering.
-            true
+            // Without this, the long press prevents you from scrolling or our tap/pan gesture from triggering together.
+            return otherGestureRecognizer is UIPanGestureRecognizer || (gestureRecognizers?.contains(otherGestureRecognizer) ?? false)
         }
     }
 }
