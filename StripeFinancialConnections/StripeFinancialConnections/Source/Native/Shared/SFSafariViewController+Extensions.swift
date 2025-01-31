@@ -19,6 +19,6 @@ extension SFSafariViewController {
             return
         }
         let safariViewController = SFSafariViewController(url: url)
-        topMostViewController.present(safariViewController, animated: true, completion: nil)
+        PresentationManager.shared.present(safariViewController, from: topMostViewController)
     }
 }

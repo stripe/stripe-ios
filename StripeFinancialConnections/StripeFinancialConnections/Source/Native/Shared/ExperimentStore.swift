@@ -16,4 +16,9 @@ import Foundation
 
     @_spi(STP) public var useAsyncAPIClient: Bool = false
     @_spi(STP) public var supportsDynamicStyle: Bool = false
+
+    @_spi(STP) public func reset() {
+        useAsyncAPIClient = false
+        supportsDynamicStyle = false
+    }
 }

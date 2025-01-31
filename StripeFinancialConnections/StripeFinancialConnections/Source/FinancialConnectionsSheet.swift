@@ -118,7 +118,11 @@ final public class FinancialConnectionsSheet {
     private var wrapperViewController: ModalPresentationWrapperViewController?
 
     /// Contains all configurable properties of Financial Connections.
-    @_spi(STP) public var configuration: FinancialConnectionsSheet.Configuration = .init()
+    @_spi(STP) public var configuration: FinancialConnectionsSheet.Configuration = .init() {
+        didSet {
+            PresentationManager.shared.configuration = configuration
+        }
+    }
 
     /// Any additional Elements context useful for the Financial Connections SDK.
     @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
@@ -303,7 +307,7 @@ final public class FinancialConnectionsSheet {
             toPresent = wrapperViewController!
             animated = false
         }
-        presentingViewController.present(toPresent, animated: animated, completion: nil)
+        PresentationManager.shared.present(toPresent, from: presentingViewController, animated: animated)
     }
 }
 
