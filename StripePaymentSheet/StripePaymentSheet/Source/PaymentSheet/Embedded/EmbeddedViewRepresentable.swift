@@ -6,18 +6,23 @@
 //
 
 import SwiftUI
+@_spi(STP) import StripeCore
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
 
+    init(viewModel: EmbeddedPaymentElementViewModel) {
+        self.viewModel = viewModel
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedSwiftUIProduct.self)
+    }
+    
     public func makeUIView(context: Context) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .clear
         containerView.layoutMargins = .zero
 
         guard let embeddedPaymentElement = viewModel.embeddedPaymentElement else { return containerView }
-
-        embeddedPaymentElement.presentingViewController = UIWindow.topMostViewController
+        embeddedPaymentElement.presentingViewController = UIWindow.visibleViewController
 
         let paymentElementView = embeddedPaymentElement.view
         paymentElementView.translatesAutoresizingMaskIntoConstraints = false
@@ -34,54 +39,54 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
 
     public func updateUIView(_ uiView: UIView, context: Context) {
         // Update the presenting view controller in case it has changed
-        viewModel.embeddedPaymentElement?.presentingViewController = UIWindow.topMostViewController
+        viewModel.embeddedPaymentElement?.presentingViewController = UIWindow.visibleViewController
     }
 }
 
 // MARK: UIWindow and UIViewController helpers
 
 extension UIWindow {
-    static var topMostViewController: UIViewController? {
-        let window: UIWindow? = {
-             // Check for connected scenes (for iOS 13 and later)
-             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                 if let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
-                     return keyWindow
-                 } else if let firstWindow = windowScene.windows.first {
-                     return firstWindow
-                 }
-             }
-
-             // Fallback for older iOS versions or if no scene is found
-             if let appDelegateWindow = UIApplication.shared.delegate?.window ?? nil {
-                 return appDelegateWindow
-             }
-
-             // As a last resort, try to find a keyWindow without a scene.
-             if let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
-                 return keyWindow
-             }
-
-             // No window found
-             return nil
-         }()
-
-        return window?.rootViewController?.topMostViewController()
+    static var current: UIWindow? {
+        #if os(visionOS)
+        return UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.windows }
+            .flatMap { $0 }
+            .sorted { first, _ in first.isKeyWindow }
+            .first
+        #else
+        return UIApplication.shared.connectedScenes
+            .filter { $0.activationState == .foregroundActive }
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first(where: \.isKeyWindow)
+        #endif
+    }
+    
+    static var visibleViewController: UIViewController? {
+        current?.rootViewController?.topMostViewController
     }
 }
 
 extension UIViewController {
-    func topMostViewController() -> UIViewController {
+    var topMostViewController: UIViewController {
         if let nav = self as? UINavigationController {
-            // Use visibleViewController for nav stacks
-            return nav.visibleViewController?.topMostViewController() ?? nav
+            // Use visibleViewController for navigation stacks
+            return nav.visibleViewController?.topMostViewController ?? nav
         } else if let tab = self as? UITabBarController {
             // Use selectedViewController for tab controllers
-            return tab.selectedViewController?.topMostViewController() ?? tab
+            return tab.selectedViewController?.topMostViewController ?? tab
         } else if let presented = presentedViewController {
-            // Recurse for any modally presented controllers
-            return presented.topMostViewController()
+            // Recurse for any presented controllers
+            return presented.topMostViewController
         }
+        
         return self
     }
 }
+
+final class EmbeddedSwiftUIProduct: STPAnalyticsProtocol {
+    public static var stp_analyticsIdentifier: String {
+        return "EmbeddedPaymentElement_SwiftUI"
+    }
+}
+

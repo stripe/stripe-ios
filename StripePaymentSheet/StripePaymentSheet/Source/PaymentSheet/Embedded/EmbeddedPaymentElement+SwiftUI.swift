@@ -180,7 +180,6 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
     /// - Parameter viewModel: The view model for this payment element view.
     public init(viewModel: EmbeddedPaymentElementViewModel) {
         self.viewModel = viewModel
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
     }
 
     public var body: some View {
