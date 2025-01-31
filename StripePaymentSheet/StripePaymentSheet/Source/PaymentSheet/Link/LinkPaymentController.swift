@@ -314,14 +314,7 @@ import UIKit
             )
         )
 
-        let styleConfig: ElementsSessionContext.StyleConfig = {
-            switch configuration.style {
-            case .automatic: return .automatic
-            case .alwaysLight: return .alwaysLight
-            case .alwaysDark: return .alwaysDark
-            }
-        }()
-
+        let styleConfig = ElementsSessionContext.StyleConfig(from: configuration.style)
         return ElementsSessionContext(
             amount: mode.amount,
             currency: mode.currency,
