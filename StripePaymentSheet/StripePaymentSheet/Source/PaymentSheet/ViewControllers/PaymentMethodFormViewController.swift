@@ -275,6 +275,7 @@ extension PaymentMethodFormViewController {
         )
         let linkMode = elementsSession.linkSettings?.linkMode
         let billingDetails = instantDebitsFormElement?.billingDetails
+        let styleConfig = ElementsSessionContext.StyleConfig(from: configuration.style)
 
         return ElementsSessionContext(
             amount: intent.amount,
@@ -283,7 +284,8 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
+            styleConfig: styleConfig
         )
     }
 

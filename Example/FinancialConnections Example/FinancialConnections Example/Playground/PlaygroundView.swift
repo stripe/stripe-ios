@@ -179,6 +179,17 @@ struct PlaygroundView: View {
 
                     Section(header: Text("Experimental")) {
                         Toggle("Use async API client", isOn: viewModel.useAsyncAPIClient)
+
+                        Toggle("Use dynamic style", isOn: viewModel.useDynamicStyle)
+                        if viewModel.useDynamicStyle.wrappedValue {
+                            Picker("Style", selection: viewModel.style) {
+                                ForEach(PlaygroundConfiguration.Style.allCases) {
+                                    Text($0.rawValue)
+                                        .tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
                     }
                 }
 

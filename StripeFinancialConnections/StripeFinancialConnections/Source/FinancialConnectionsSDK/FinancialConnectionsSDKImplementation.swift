@@ -32,6 +32,16 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         financialConnectionsSheet.apiClient = apiClient
         financialConnectionsSheet.elementsSessionContext = elementsSessionContext
         financialConnectionsSheet.onEvent = onEvent
+
+        var configuration = FinancialConnectionsSheet.Configuration()
+        if let styleConfig = elementsSessionContext?.styleConfig {
+            switch styleConfig {
+            case .automatic: configuration.style = .automatic
+            case .alwaysLight: configuration.style = .alwaysLight
+            case .alwaysDark: configuration.style = .alwaysDark
+            }
+        }
+        financialConnectionsSheet.configuration = configuration
         // Captures self explicitly until the callback is invoked
         financialConnectionsSheet.present(
             from: presentingViewController,

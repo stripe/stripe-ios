@@ -225,6 +225,30 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
+    var useDynamicStyle: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.useDynamicStyle
+            },
+            set: {
+                self.playgroundConfiguration.useDynamicStyle = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+    var style: Binding<PlaygroundConfiguration.Style> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.style
+            },
+            set: {
+                self.playgroundConfiguration.style = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     @Published var showConfigurationView = false
     private(set) lazy var playgroundConfigurationViewModel: PlaygroundManageConfigurationViewModel = {
        return PlaygroundManageConfigurationViewModel(
@@ -323,6 +347,7 @@ final class PlaygroundViewModel: ObservableObject {
                     stripeAccount: self.playgroundConfiguration.merchant.stripeAccount,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
                     useAsyncApiClient: self.playgroundConfiguration.useAsyncAPIClient,
+                    style: self.playgroundConfiguration.style,
                     onEvent: { event in
                         if self.liveEvents.wrappedValue == true {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
@@ -472,6 +497,7 @@ private func PresentFinancialConnectionsSheet(
     stripeAccount: String?,
     setupPlaygroundResponseJSON: [String: String],
     useAsyncApiClient: Bool,
+    style: PlaygroundConfiguration.Style,
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
 ) {
@@ -518,6 +544,9 @@ private func PresentFinancialConnectionsSheet(
     )
     financialConnectionsSheet.apiClient.stripeAccount = stripeAccount
     financialConnectionsSheet.onEvent = onEvent
+    var configuration = FinancialConnectionsSheet.Configuration()
+    configuration.style = style.configurationValue
+    financialConnectionsSheet.configuration = configuration
     let topMostViewController = UIViewController.topMostViewController()!
     if useCase == .token {
         financialConnectionsSheet.presentForToken(
@@ -618,6 +647,12 @@ private func PresentPaymentSheet(
     configuration.allowsDelayedPaymentMethods = true
     configuration.defaultBillingDetails.email = config.email
     configuration.defaultBillingDetails.phone = config.phone
+
+    switch config.style {
+    case .automatic: configuration.style = .automatic
+    case .alwaysLight: configuration.style = .alwaysLight
+    case .alwaysDark: configuration.style = .alwaysDark
+    }
 
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
     // disable app-to-app for UI tests
