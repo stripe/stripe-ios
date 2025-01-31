@@ -114,6 +114,17 @@ struct PlaygroundView: View {
                                 .accessibility(identifier: "playground-phone")
                         }
                     }
+                    
+                    Section(header: Text("Relink")) {
+                        TextField("Customer", text: viewModel.customerId)
+                            .keyboardType(.default)
+                            .autocapitalization(.none)
+                            .accessibility(identifier: "playground-customer-id")
+
+                        TextField("Relink authorization", text: viewModel.relinkAuthorization)
+                            .keyboardType(.default)
+                            .accessibility(identifier: "playground-relink-authorization")
+                    }
 
                     Section(header: Text("PERMISSIONS")) {
                         Toggle("Balances", isOn: viewModel.balancesPermission)
