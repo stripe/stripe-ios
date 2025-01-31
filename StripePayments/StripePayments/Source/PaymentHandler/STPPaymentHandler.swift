@@ -1423,6 +1423,11 @@ public class STPPaymentHandler: NSObject {
             block()
         }
     }
+    static func defaultTimeTestStrategy() -> TimeTestStrategy {
+        return { pollingStartTime, _, _, _ in
+            return Int(Date().timeIntervalSince(pollingStartTime)) * 1000
+        }
+    }
 
     func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, retryCount: Int = maxChallengeRetries) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
@@ -1606,7 +1611,7 @@ public class STPPaymentHandler: NSObject {
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
         if let currentAction {
-            currentAction.setPollingStartTime(with: Date(), maxRetries: STPPaymentHandler.maxChallengeRetries, timeStrategy: .realTime)
+            currentAction.setPollingStartTime(with: Date(), maxRetries: STPPaymentHandler.maxChallengeRetries, timeTestStrategy: Self.defaultTimeTestStrategy())
         }
         _retrieveAndCheckIntentForCurrentAction()
     }

@@ -20,6 +20,14 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerPollingTests: XCTestCase {
+
+    func mockedTimeTestStrategy(_ timeDelayInMillseconds: Int) -> TimeTestStrategy {
+        return { _, retryCount, timeBetweenPollingAttemptsInt, maxRetries in
+            let attemptNumber = maxRetries - retryCount
+            return (attemptNumber * timeBetweenPollingAttemptsInt * 1000) + (attemptNumber * timeDelayInMillseconds)
+        }
+    }
+
     func testPaymentIntentPolls_withSimulatedFastNetwork() {
         let expectation = expectation(description: "")
         let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["amazon_pay"],
@@ -45,17 +53,17 @@ class STPPaymentHandlerPollingTests: XCTestCase {
             XCTAssertEqual(.requiresAction, intent?.status)
             XCTAssertNil(error)
             expectation.fulfill()
-
         }
-        currentAction.setPollingStartTime(with: Date(), maxRetries: 5, timeStrategy: .simluatedNetworkDelay(80))
+        currentAction.setPollingStartTime(with: Date(), maxRetries: 5, timeTestStrategy: mockedTimeTestStrategy(80))
 
         let paymentHandler = STPPaymentHandlerMocked(apiClient: apiClientMock)
         paymentHandler.currentAction = currentAction
         paymentHandler._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction)
 
         wait(for: [expectation])
-        XCTAssertEqual(5, paymentHandler.scheduledJobs.count)
+        XCTAssertEqual(5, paymentHandler.numRetries)
     }
+
     func testPaymentIntentPolls_withSimulatedSlowNetwork() {
         let expectation = expectation(description: "")
         let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["amazon_pay"],
@@ -81,16 +89,15 @@ class STPPaymentHandlerPollingTests: XCTestCase {
             XCTAssertEqual(.requiresAction, intent?.status)
             XCTAssertNil(error)
             expectation.fulfill()
-
         }
-        currentAction.setPollingStartTime(with: Date(), maxRetries: 5, timeStrategy: .simluatedNetworkDelay(2000))
+        currentAction.setPollingStartTime(with: Date(), maxRetries: 5, timeTestStrategy: mockedTimeTestStrategy(2000))
 
         let paymentHandler = STPPaymentHandlerMocked(apiClient: apiClientMock)
         paymentHandler.currentAction = currentAction
         paymentHandler._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction)
 
         wait(for: [expectation])
-        XCTAssertEqual(3, paymentHandler.scheduledJobs.count)
+        XCTAssertEqual(3, paymentHandler.numRetries)
     }
 
     // This takes about 5*3 seconds to execute
@@ -124,7 +131,7 @@ class STPPaymentHandlerPollingTests: XCTestCase {
 
         }
         // Note, there is zero network delay since network calls are mocked.
-        currentAction.setPollingStartTime(with: Date(), maxRetries: 5, timeStrategy: .realTime)
+        currentAction.setPollingStartTime(with: Date(), maxRetries: 5, timeTestStrategy: STPPaymentHandler.defaultTimeTestStrategy())
 
         let paymentHandler = STPPaymentHandler(apiClient: apiClientMock)
         paymentHandler.currentAction = currentAction
@@ -136,12 +143,9 @@ class STPPaymentHandlerPollingTests: XCTestCase {
 }
 
 class STPPaymentHandlerMocked: STPPaymentHandler {
-    var scheduledJobs: [DispatchTime] = []
+    var numRetries: Int = 0
     override func _retryAfterDelay(retryCount: Int, delayTime: TimeInterval = 3, block: @escaping STPVoidBlock) {
-
-        let lastScheduledJob = scheduledJobs.first ?? .now()
-        let nextScheduledJob = lastScheduledJob + delayTime
-        scheduledJobs.append(nextScheduledJob)
+        numRetries += 1
 
         DispatchQueue.main.asyncAfter(deadline: .now()) {
             block()

@@ -25,17 +25,16 @@ import Foundation
     /// Returns the payment or setup intent's next action
     func nextAction() -> STPIntentAction?
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
-    func setPollingStartTime(with date: Date, maxRetries: Int, timeStrategy: TimeStrategy)
+    func setPollingStartTime(with date: Date, maxRetries: Int, timeTestStrategy: @escaping TimeTestStrategy)
     func shouldContinueToPoll(retryCount: Int, timeBetweenPollingAttempts: TimeInterval) -> Bool
 }
 
-@_spi(STP) public enum TimeStrategy {
-    case realTime
-    case simluatedNetworkDelay(Int)
-}
+@_spi(STP) public typealias TimeTestStrategy = (Date, Int, Int, Int) -> Int
 
 @_spi(STP)
 public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHandlerActionParams {
+
+
     private var serviceInitialized = false
 
     @_spi(STP) public let authenticationContext: STPAuthenticationContext
@@ -48,7 +47,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(STP) public var threeDS2Transaction: STDSTransaction?
     @_spi(STP) public var pollingStartTime: Date?
     @_spi(STP) public var maxRetries: Int?
-    @_spi(STP) public var timeStrategy: TimeStrategy = .realTime
+    @_spi(STP) public var timeTestStrategy: TimeTestStrategy?
 
     @_spi(STP) public var intentStripeID: String {
         return paymentIntent.stripeId
@@ -112,30 +111,23 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         paymentIntentCompletion(status, paymentIntent, error)
     }
-    @_spi(STP) public func setPollingStartTime(with date: Date, maxRetries: Int, timeStrategy: TimeStrategy = .realTime) {
+    @_spi(STP) public func setPollingStartTime(with date: Date, maxRetries: Int, timeTestStrategy: @escaping TimeTestStrategy) {
         self.pollingStartTime = date
         self.maxRetries = maxRetries
-        self.timeStrategy = timeStrategy
+        self.timeTestStrategy = timeTestStrategy
     }
 
     @_spi(STP) public func shouldContinueToPoll(retryCount: Int, timeBetweenPollingAttempts: TimeInterval) -> Bool {
         guard let maxRetries = self.maxRetries,
-              let pollingStartTime = self.pollingStartTime else {
+              let pollingStartTime = self.pollingStartTime,
+              let timeTestStrategy = self.timeTestStrategy else {
             return true
         }
-        var timeWaitedInMilliseconds: Int
         let timeBetweenPollingAttemptsInt = Int(timeBetweenPollingAttempts)
-        switch timeStrategy {
-        case .realTime:
-            // For production -- Calculate the current time since we started polling
-            timeWaitedInMilliseconds = Int(Date().timeIntervalSince(pollingStartTime)) * 1000
-        case .simluatedNetworkDelay(let networkDelayInMillseconds):
-            // For testing purposes ONLY:
-            // Calculates the time a user waited based on a constant + numberAttempts w/ timeouts
-            let attemptNumber = maxRetries - retryCount
-            timeWaitedInMilliseconds = (attemptNumber * timeBetweenPollingAttemptsInt * 1000) + (attemptNumber * networkDelayInMillseconds)
-        }
         let maximumWaitTime = maxRetries * timeBetweenPollingAttemptsInt * 1000
+
+        let timeWaitedInMilliseconds = timeTestStrategy(pollingStartTime, retryCount, timeBetweenPollingAttemptsInt, maxRetries)
+
         return timeWaitedInMilliseconds < maximumWaitTime
     }
 
@@ -220,7 +212,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
         setupIntentCompletion(status, setupIntent, error)
     }
 
-    func setPollingStartTime(with date: Date, maxRetries: Int, timeStrategy: TimeStrategy = .realTime) {
+    func setPollingStartTime(with date: Date, maxRetries: Int, timeTestStrategy: TimeTestStrategy) {
         // TODO: impl
         self.pollingStartTime = date
     }
