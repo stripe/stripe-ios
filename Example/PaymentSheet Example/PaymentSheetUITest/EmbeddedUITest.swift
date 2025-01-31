@@ -73,7 +73,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_carousel_payment_method_tapped"]
+            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
@@ -122,9 +122,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             klarnaAnalytics,
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_carousel_payment_method_tapped",
-             "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped",
-            ]
+            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
         // ...switching back to payment should keep Klarna selected

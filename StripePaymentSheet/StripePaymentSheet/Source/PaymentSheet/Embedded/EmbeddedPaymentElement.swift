@@ -104,9 +104,13 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        let startTime = Date()
+        analyticsHelper.logEmbeddedUpdateStarted()
         // Do not process any update calls if we have already successfully confirmed an intent
         guard !hasConfirmedIntent else {
-            return .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
+            let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
+            analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
+            return result
         }
 
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
@@ -184,6 +188,7 @@ public final class EmbeddedPaymentElement {
         self.latestUpdateTask = currentUpdateTask
         let updateResult = await currentUpdateTask.value
         embeddedPaymentMethodsView.isUserInteractionEnabled = true
+        analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
     }
 
@@ -192,6 +197,7 @@ public final class EmbeddedPaymentElement {
     /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
+        analyticsHelper.log(event: .mcConfirmEmbedded)
         guard let presentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
             stpAssertionFailure(errorMessage)
