@@ -30,6 +30,7 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         // Create our SwiftUI view
         let viewModel = EmbeddedPaymentElementViewModel()
         let swiftUIView = EmbeddedPaymentElementView(viewModel: viewModel)
+                                            .animation(nil) // Disable animations for testing
         try await viewModel.load(intentConfiguration: intentConfig, configuration: config)
 
         // Embed `swiftUIView` in a UIWindow for rendering
@@ -78,7 +79,7 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
     /// Wraps a SwiftUI `EmbeddedViewRepresentable` in a UIWindow to ensure
     /// the SwiftUI content is actually rendered prior to snapshotting.
     private func makeWindowWithEmbeddedView(
-        _ swiftUIView: EmbeddedPaymentElementView,
+        _ swiftUIView: some View,
         width: CGFloat = 320,
         height: CGFloat = 800
     ) -> UIViewController {

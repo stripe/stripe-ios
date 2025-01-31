@@ -144,8 +144,7 @@ import Combine
         
         let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
 
-        // Disable animations for tests
-        withAnimation(.easeInOut(duration: isUnitOrUITest ? 0.0 : 0.2)) {
+        withAnimation(.easeInOut(duration: 0.2)) {
             self.height = newHeight
         }
     }
@@ -154,14 +153,6 @@ import Combine
 // MARK: EmbeddedPaymentElementDelegate
 
 extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
-    private var isUnitOrUITest: Bool {
-#if targetEnvironment(simulator)
-        return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
-#else
-        return false
-#endif
-    }
-
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
         calculateAndPublishHeight()
     }
