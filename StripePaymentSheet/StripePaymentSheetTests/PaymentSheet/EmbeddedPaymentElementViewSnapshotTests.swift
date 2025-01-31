@@ -91,7 +91,7 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         // Create a UIWindow & set its rootViewController to our hosting controller.
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: width, height: height))
         window.rootViewController = hostingController
-        window.makeKeyAndVisible()
+        window.isHidden = false
 
         // Force layout so SwiftUI draws its content.
         hostingController.view.setNeedsLayout()
