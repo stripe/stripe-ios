@@ -209,7 +209,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
+        embeddedView.didTap(rowButton: embeddedView.rowButtons.last!)
 
         verify(embeddedView)
     }
@@ -448,7 +448,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
+        embeddedView.didTap(rowButton: embeddedView.rowButtons.last!)
 
         verify(embeddedView)
     }
@@ -469,7 +469,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
+        embeddedView.didTap(rowButton: embeddedView.rowButtons.last!)
 
         verify(embeddedView)
     }
@@ -760,7 +760,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
+        embeddedView.didTap(rowButton: embeddedView.rowButtons.last!)
 
         verify(embeddedView)
     }
@@ -781,7 +781,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         // Simulate tapping the last button (Cash App Pay)
-        embeddedView.didTap(rowButton: embeddedView.rowButtons[1])
+        embeddedView.didTap(rowButton: embeddedView.rowButtons.last!)
 
         verify(embeddedView)
     }
