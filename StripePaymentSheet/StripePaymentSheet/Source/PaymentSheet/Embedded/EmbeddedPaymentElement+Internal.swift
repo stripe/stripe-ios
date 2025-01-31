@@ -116,9 +116,9 @@ extension EmbeddedPaymentElement {
             paymentMethodType: paymentMethodType,
             previousPaymentOption: self.selectedFormViewController?.previousPaymentOption,
             analyticsHelper: analyticsHelper,
-            formCache: formCache
+            formCache: formCache,
+            delegate: self
         )
-        formViewController.delegate = self
         guard formViewController.collectsUserInput else {
             return nil
         }
@@ -151,6 +151,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
         stpAssert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+        stpAssert(selectedFormViewController.delegate != nil)
         presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
 
     }
