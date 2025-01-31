@@ -25,6 +25,13 @@ import Foundation
     /// Returns the payment or setup intent's next action
     func nextAction() -> STPIntentAction?
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
+    func setPollingStartTime(with date: Date, maxRetries: Int, timeStrategy: TimeStrategy)
+    func shouldContinueToPoll(retryCount: Int, timeBetweenPollingAttempts: TimeInterval) -> Bool
+}
+
+@_spi(STP) public enum TimeStrategy {
+    case realTime
+    case simluatedNetworkDelay(Int)
 }
 
 @_spi(STP)
@@ -39,6 +46,9 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(STP) public let returnURLString: String?
     @_spi(STP) public var paymentIntent: STPPaymentIntent
     @_spi(STP) public var threeDS2Transaction: STDSTransaction?
+    @_spi(STP) public var pollingStartTime: Date?
+    @_spi(STP) public var maxRetries: Int?
+    @_spi(STP) public var timeStrategy: TimeStrategy = .realTime
 
     @_spi(STP) public var intentStripeID: String {
         return paymentIntent.stripeId
@@ -102,6 +112,32 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         paymentIntentCompletion(status, paymentIntent, error)
     }
+    @_spi(STP) public func setPollingStartTime(with date: Date, maxRetries: Int, timeStrategy: TimeStrategy = .realTime) {
+        self.pollingStartTime = date
+        self.maxRetries = maxRetries
+        self.timeStrategy = timeStrategy
+    }
+
+    @_spi(STP) public func shouldContinueToPoll(retryCount: Int, timeBetweenPollingAttempts: TimeInterval) -> Bool {
+        guard let maxRetries = self.maxRetries,
+              let pollingStartTime = self.pollingStartTime else {
+            return true
+        }
+        var timeWaitedInMilliseconds: Int
+        let timeBetweenPollingAttemptsInt = Int(timeBetweenPollingAttempts)
+        switch timeStrategy {
+        case .realTime:
+            // For production -- Calculate the current time since we started polling
+            timeWaitedInMilliseconds = Int(Date().timeIntervalSince(pollingStartTime)) * 1000
+        case .simluatedNetworkDelay(let networkDelayInMillseconds):
+            // For testing purposes ONLY:
+            // Calculates the time a user waited based on a constant + numberAttempts w/ timeouts
+            let attemptNumber = maxRetries - retryCount
+            timeWaitedInMilliseconds = (attemptNumber * timeBetweenPollingAttemptsInt * 1000) + (attemptNumber * networkDelayInMillseconds)
+        }
+        let maximumWaitTime = maxRetries * timeBetweenPollingAttemptsInt * 1000
+        return timeWaitedInMilliseconds < maximumWaitTime
+    }
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
@@ -119,6 +155,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     let returnURLString: String?
     var setupIntent: STPSetupIntent
     var threeDS2Transaction: STDSTransaction?
+    var pollingStartTime: Date?
 
     var intentStripeID: String {
         return setupIntent.stripeID
@@ -181,6 +218,16 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         setupIntentCompletion(status, setupIntent, error)
+    }
+
+    func setPollingStartTime(with date: Date, maxRetries: Int, timeStrategy: TimeStrategy = .realTime) {
+        // TODO: impl
+        self.pollingStartTime = date
+    }
+
+    func shouldContinueToPoll(retryCount: Int, timeBetweenPollingAttempts: TimeInterval) -> Bool {
+        // TODO: impl
+        return true
     }
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible

@@ -106,7 +106,10 @@ public class STPPaymentHandler: NSObject {
         case invalidState
     }
 
-    private var currentAction: STPPaymentHandlerActionParams?
+    /// This is marked as internal for TESTING PURPOSES ONLY!
+    /// Please do not update current action from outside this class
+    internal var currentAction: STPPaymentHandlerActionParams?
+
     /// YES from when a public method is first called until its associated completion handler is called.
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
     private static var inProgress = false
@@ -1502,7 +1505,9 @@ public class STPPaymentHandler: NSObject {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                     let shouldRetryForCard = paymentMethod.type == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    if retryCount > 0, paymentMethod.type != .card || shouldRetryForCard, let pollingRequirement = paymentMethod.type.pollingRequirement {
+                                    if retryCount > 0, paymentMethod.type != .card || shouldRetryForCard,
+                                       let pollingRequirement = paymentMethod.type.pollingRequirement,
+                                       currentAction.shouldContinueToPoll(retryCount: retryCount, timeBetweenPollingAttempts: pollingRequirement.timeBetweenPollingAttempts) {
                                         self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.timeBetweenPollingAttempts) {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 retryCount: retryCount - 1
@@ -1600,6 +1605,9 @@ public class STPPaymentHandler: NSObject {
             object: nil
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
+        if let currentAction {
+            currentAction.setPollingStartTime(with: Date(), maxRetries: STPPaymentHandler.maxChallengeRetries, timeStrategy: .realTime)
+        }
         _retrieveAndCheckIntentForCurrentAction()
     }
 
