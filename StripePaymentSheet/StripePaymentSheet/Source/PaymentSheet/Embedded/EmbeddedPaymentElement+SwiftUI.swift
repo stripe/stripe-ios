@@ -40,6 +40,8 @@ import Combine
     // MARK: - Internal properties
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
+    
+    @Published var height: CGFloat = 0.0
 
     // MARK: - Private properties
 
@@ -75,6 +77,7 @@ import Combine
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
             self.paymentOption = embeddedPaymentElement.paymentOption
+            calculateAndPublishHeight() // compute initial height
             self.isLoaded = true
         }
 
@@ -134,17 +137,43 @@ import Combine
         embeddedPaymentElement?.testHeightChange()
     }
 #endif
+    
+    private func calculateAndPublishHeight() {
+        guard let embeddedPaymentElement else { return }
+        
+        let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
+
+        withAnimation(.easeInOut(duration: 0.2)) {
+            self.height = newHeight
+        }
+    }
 }
 
 // MARK: EmbeddedPaymentElementDelegate
 
 extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
-
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-        // TODO(porter) Handle height changes when we add the UIViewRepresentable MOBILESDK-3001
+        calculateAndPublishHeight()
     }
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         self.paymentOption = embeddedPaymentElement.paymentOption
+    }
+}
+
+/// A SwiftUI view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
+@_spi(EmbeddedPaymentElementPrivateBeta) public struct EmbeddedPaymentElementView: View {
+    @ObservedObject private var viewModel: EmbeddedPaymentElementViewModel
+
+    /// Initializes a new instance of `EmbeddedPaymentElementView`.
+    ///
+    /// - Parameter viewModel: The view model for this payment element view.
+    public init(viewModel: EmbeddedPaymentElementViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
+        EmbeddedViewRepresentable(viewModel: viewModel)
+            .frame(height: viewModel.height)
     }
 }
