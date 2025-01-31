@@ -77,7 +77,11 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
         return newCardPaymentOption
     }
-
+    private func waitForDefaultPaymentMethodToBePersisted() {
+        // After confirming an intent, it takes about 3 seconds to persist this in the Customer object
+        // Currently working on finding ways to improve this, but will sleep for now.
+        sleep(3)
+    }
     // MARK: - load and confirm tests
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {
@@ -552,7 +556,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 ) { result, _ in
                     switch result {
                     case .completed:
-                        sleep(3)
+                        self.waitForDefaultPaymentMethodToBePersisted()
                         PaymentSheetLoader.load(
                             mode: .deferredIntent(intentConfig),
                             configuration: configuration,
@@ -585,8 +589,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let callbackExpectation = XCTestExpectation(description: "Confirm callback invoked")
         let expectation = XCTestExpectation(description: "Check default payment method set")
         // Create a new customer and new key
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
+        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret()
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         configuration.allowsSetAsDefaultPM = true
@@ -622,6 +625,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 ) { result, _ in
                     switch result {
                     case .completed:
+                        self.waitForDefaultPaymentMethodToBePersisted()
                         PaymentSheetLoader.load(
                             mode: .deferredIntent(intentConfig),
                             configuration: configuration,
