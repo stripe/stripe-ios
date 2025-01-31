@@ -365,7 +365,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        configuration.allowsSetAsDefaultPM = true
         // 0. Create a PI on our test backend
         STPTestingAPIClient.shared.fetchPaymentIntent(types: types, shouldSavePM: true, customerID: configuration.customer?.id) {
             result in
@@ -436,7 +435,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 print(error)
             }
         }
-        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+        await fulfillment(of: [expectation], timeout: 10000)
     }
 
     func testPaymentSheetLoadAndConfirmWithSetupIntentSetAsDefault() async throws {
@@ -447,7 +446,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        configuration.allowsSetAsDefaultPM = true
         // 0. Create a SI on our test backend
         let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: types, customerID: configuration.customer?.id)
         // 1. Load the SI
@@ -519,7 +517,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        configuration.allowsSetAsDefaultPM = true
         let types = ["card"]
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, intentCreationCallback in
             Task { [configuration] in
@@ -589,7 +586,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        configuration.allowsSetAsDefaultPM = true
         let types = ["card"]
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, intentCreationCallback in
             Task { [configuration] in

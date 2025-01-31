@@ -42,7 +42,7 @@ struct CustomerSession: Equatable, Hashable {
                 return nil
             }
             let paymentMethodRemoveLast = mobilePaymentElementFeaturesDict["payment_method_remove_last"] as? String ?? "enabled"
-            let paymentMethodSetAsDefault = mobilePaymentElementFeaturesDict["payment_method_set_as_default"] as? String ?? "disabled"
+            let paymentMethodSetAsDefault = mobilePaymentElementFeaturesDict["payment_method_set_as_default"] as? String ?? "enabled"
 
             var allowRedisplayOverrideValue: STPPaymentMethodAllowRedisplay?
             if let allowRedisplayOverride = mobilePaymentElementFeaturesDict["payment_method_save_allow_redisplay_override"] as? String {

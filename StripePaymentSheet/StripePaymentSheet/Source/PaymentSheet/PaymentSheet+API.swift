@@ -200,7 +200,7 @@ extension PaymentSheet {
                     params,
                     with: authenticationContext,
                     completion: { actionStatus, paymentIntent, error in
-                        if let paymentIntent {
+                        if let paymentIntent, !elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration)
                         }
                         paymentHandlerCompletion(actionStatus, error)
@@ -222,7 +222,7 @@ extension PaymentSheet {
                     setupIntentParams,
                     with: authenticationContext,
                     completion: { actionStatus, setupIntent, error in
-                        if let setupIntent {
+                        if let setupIntent, !elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration)
                         }
                         paymentHandlerCompletion(actionStatus, error)
@@ -242,6 +242,7 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
+                    allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                     completion: completion
                 )
             }
@@ -573,9 +574,7 @@ extension PaymentSheet {
             intent.isSetupFutureUsageSet,
             let paymentMethod = intent.paymentMethod,
             // Can it appear in the list of saved PMs?
-            PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type),
-            // Should we be writing to local storage?
-            !configuration.allowsSetAsDefaultPM
+            PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type)
         else {
             return
         }

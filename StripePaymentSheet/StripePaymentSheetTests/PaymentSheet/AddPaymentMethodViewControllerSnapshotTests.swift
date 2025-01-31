@@ -40,7 +40,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
         let sut = AddPaymentMethodViewController(
             intent: intent,
-            elementsSession: ._testValue(intent: intent, paymentMethodSetAsDefault: true),
+            elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: true),
             configuration: config,
             previousCustomerInput: previousCustomerInput,
             paymentMethodTypes: [.stripe(.payPal), .stripe(.card), .stripe(.cashApp)],
