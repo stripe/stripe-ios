@@ -42,7 +42,7 @@ class CustomerSheetDataSource {
                 await loadFormSpecs()
                 let customerId = try await customerSessionClientSecret.customerId
                 let elementSession = try await elementsSessionResult
-                let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, customer: elementSession.customer)
+                let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, elementsSession: elementSession)
 
                 // Override with specs from elementSession
                 _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)
@@ -196,6 +196,15 @@ extension CustomerSheetDataSource {
             return true
         case .customerSession:
             return elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
+        }
+    }
+
+    func paymentMethodSetAsDefault(elementsSession: STPElementsSession) -> Bool {
+        switch dataSource {
+        case .customerAdapter:
+            return false
+        case .customerSession:
+            return elementsSession.paymentMethodSetAsDefaultForCustomerSheet
         }
     }
 }

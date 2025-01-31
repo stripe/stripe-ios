@@ -141,17 +141,18 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    enum PaymentMethodSetAsDefault: String, PickerEnum {
+        static let enumName: String = "paymentMethodSetAsDefault"
+
+        case enabled
+        case disabled
+    }
+
     enum CardBrandAcceptance: String, PickerEnum {
         static let enumName: String = "cardBrandAcceptance"
         case all
         case blockAmEx
         case allowVisa
-    }
-
-    enum AllowsSetAsDefaultPM: String, PickerEnum {
-        static let enumName: String = "allowsSetAsDefaultPM"
-        case on
-        case off
     }
 
     var customerMode: CustomerMode
@@ -174,8 +175,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodRemoveLast: PaymentMethodRemoveLast
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
+    var paymentMethodSetAsDefault: PaymentMethodSetAsDefault
     var cardBrandAcceptance: CardBrandAcceptance
-    var allowsSetAsDefaultPM: AllowsSetAsDefaultPM
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -197,8 +198,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    paymentMethodRemove: .enabled,
                                                    paymentMethodRemoveLast: .enabled,
                                                    paymentMethodAllowRedisplayFilters: .always,
-                                                   cardBrandAcceptance: .all,
-                                                   allowsSetAsDefaultPM: .off)
+                                                   paymentMethodSetAsDefault: .disabled,
+                                                   cardBrandAcceptance: .all)
     }
 
     var base64Data: String {

@@ -81,8 +81,8 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
+        let paymentMethodSetAsDefault: Bool
         let isTestMode: Bool
-        let allowsSetAsDefaultPM: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -243,7 +243,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
         // when opted into the set as default feature, only show payment methods that can be set as default (card, US bank account)
-        if configuration.allowsSetAsDefaultPM {
+        if configuration.paymentMethodSetAsDefault {
             self.savedPaymentMethods = savedPaymentMethods.filter{ savedPaymentMethod in CustomerSheet.supportedDefaultPaymentMethods.contains{paymentMethodType in
                 savedPaymentMethod.type == paymentMethodType}
             }

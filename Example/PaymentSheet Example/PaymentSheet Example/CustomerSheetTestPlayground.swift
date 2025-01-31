@@ -53,7 +53,7 @@ struct CustomerSheetTestPlayground: View {
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodRemoveLast)
                                 SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
-                                SettingPickerView(setting: $playgroundController.settings.allowsSetAsDefaultPM)
+                                SettingPickerView(setting: $playgroundController.settings.paymentMethodSetAsDefault)
                             }
                         }
                     }
