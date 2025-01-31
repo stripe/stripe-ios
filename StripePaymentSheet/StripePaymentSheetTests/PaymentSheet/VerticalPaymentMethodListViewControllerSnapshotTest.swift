@@ -70,6 +70,7 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
 
     func testDarkMode() {
         let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, incentive: nil, delegate: self)
+        sut.overrideUserInterfaceStyle = .dark
         let window = UIWindow()
         window.isHidden = false
         window.overrideUserInterfaceStyle = .dark
