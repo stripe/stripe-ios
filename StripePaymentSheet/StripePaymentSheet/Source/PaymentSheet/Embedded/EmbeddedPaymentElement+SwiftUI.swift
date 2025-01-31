@@ -78,7 +78,7 @@ import Combine
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
             self.paymentOption = embeddedPaymentElement.paymentOption
-            self.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: embeddedPaymentElement)
+            calculateAndPublishHeight() // compute initial height
             self.isLoaded = true
         }
 
@@ -138,6 +138,17 @@ import Combine
         embeddedPaymentElement?.testHeightChange()
     }
 #endif
+    
+    private func calculateAndPublishHeight() {
+        guard let embeddedPaymentElement else { return }
+        
+        let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
+
+        // Disable animations for tests
+        withAnimation(.easeInOut(duration: isUnitOrUITest ? 0.0 : 0.2)) {
+            self.height = newHeight
+        }
+    }
 }
 
 // MARK: EmbeddedPaymentElementDelegate
@@ -152,12 +163,7 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
     }
 
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-        let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
-
-        // Disable animations for tests
-        withAnimation(.easeInOut(duration: isUnitOrUITest ? 0.0 : 0.2)) {
-            self.height = newHeight
-        }
+        calculateAndPublishHeight()
     }
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
