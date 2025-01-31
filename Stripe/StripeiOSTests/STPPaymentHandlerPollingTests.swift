@@ -23,6 +23,29 @@ class STPPaymentHandlerPollingTests: XCTestCase {
 
     func mockedTimeTestStrategy(_ timeDelayInMillseconds: Int) -> TimeTestStrategy {
         return { _, retryCount, timeBetweenPollingAttemptsInt, maxRetries in
+            // Instead of using wallClock time, calculate the time waited based on the attempt number & number of attempts.
+
+            // Example 2: Fast Network
+            // retryCount == 5
+            // timeBetweenPollingAttemptsInt == 3
+            // timeDelayInMillseconds == 80
+
+            // Attempt Number 0: (0 * 3 * 1000) + (0 * 80) = 0
+            // Attempt Number 1: (1 * 3 * 1000) + (1 * 80) = 3080
+            // Attempt Number 2: (2 * 3 * 1000) + (2 * 80) = 6160
+            // Attempt Number 3: (3 * 3 * 1000) + (3 * 80) = 9240
+            // Attempt Number 4: (4 * 3 * 1000) + (4 * 80) = 12320
+
+            // Example 2: Slow Network
+            // retryCount == 5
+            // timeBetweenPollingAttemptsInt == 3
+            // timeDelayInMillseconds == 2000
+
+            // Attempt Number 0: (0 * 3 * 1000) + (0 * 2000) = 0
+            // Attempt Number 1: (1 * 3 * 1000) + (1 * 2000) = 5000
+            // Attempt Number 2: (2 * 3 * 1000) + (2 * 2000) = 10000
+            // Attempt Number 3: (3 * 3 * 1000) + (3 * 2000) = 15000
+
             let attemptNumber = maxRetries - retryCount
             return (attemptNumber * timeBetweenPollingAttemptsInt * 1000) + (attemptNumber * timeDelayInMillseconds)
         }
@@ -38,6 +61,7 @@ class STPPaymentHandlerPollingTests: XCTestCase {
                                                       ],
                                                       nextAction: .useStripeSDK)
         let onRetrievePaymentIntent: STPAPIClientMockPaymentCallback = { completion in
+            // Each STPPaymentHandler fetches, respond with a PI that requiresAction to force another poll
             let paymentMethod: [String: Any] = ["id": "pm_test", "type": "amazon_pay"]
             let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["amazon_pay"],
                                                           status: .requiresAction,
@@ -49,6 +73,7 @@ class STPPaymentHandlerPollingTests: XCTestCase {
         let currentAction = STPPaymentHandlerPaymentIntentActionParams.makeTestable(apiClient: apiClientMock,
                                                                                     paymentMethodTypes: ["card"],
                                                                                     paymentIntent: paymentIntent) { status, intent, error in
+            // After we have exhausted polling, assert that the PI is canceled and still requires action
             XCTAssertEqual(STPPaymentHandlerActionStatus.canceled, status)
             XCTAssertEqual(.requiresAction, intent?.status)
             XCTAssertNil(error)

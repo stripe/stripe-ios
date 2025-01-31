@@ -127,7 +127,6 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
         let maximumWaitTime = maxRetries * timeBetweenPollingAttemptsInt * 1000
 
         let timeWaitedInMilliseconds = timeTestStrategy(pollingStartTime, retryCount, timeBetweenPollingAttemptsInt, maxRetries)
-
         return timeWaitedInMilliseconds < maximumWaitTime
     }
 
