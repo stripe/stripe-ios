@@ -2,6 +2,9 @@
 ### CardScan
 * [Fixed] Fixed an issue where the UI layout was incorrect after Camera permissions were denied. ([#4487](https://github.com/stripe/stripe-ios/pull/4487)) (Thanks [@matheusbc](https://github.com/matheusbc)!)
 
+### PaymentSheet
+* [Fixed] Embedded Payment Element (private beta) payment method rows now show a 'Change >' button after you fill out form details.
+
 ## 24.4.1 2025-01-21
 ### ApplePay
 * [Added] Added a `dismiss` method to `STPApplePayContext`.
