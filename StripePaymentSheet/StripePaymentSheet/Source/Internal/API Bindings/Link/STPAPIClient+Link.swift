@@ -288,6 +288,7 @@ extension STPAPIClient {
         consumerAccountPublishableKey: String?,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         cvc: String?,
+        expectedPaymentMethodType: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
@@ -298,6 +299,10 @@ extension STPAPIClient {
             "expand": ["payment_method"],
             "id": id,
         ]
+        
+        if let expectedPaymentMethodType {
+            parameters["expected_payment_method_type"] = expectedPaymentMethodType
+        }
 
         if let cvc = cvc {
             parameters["payment_method_options"] = ["card": ["cvc": cvc]]
@@ -330,7 +335,7 @@ extension STPAPIClient {
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
-            "types": ["card"],
+            "types": ["card", "bank_account"],
         ]
 
         post(

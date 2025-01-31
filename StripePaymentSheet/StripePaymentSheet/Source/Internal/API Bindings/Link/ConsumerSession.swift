@@ -239,6 +239,7 @@ extension ConsumerSession {
         id: String,
         cvc: String?,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
+        expectedPaymentMethodType: String?,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -248,6 +249,7 @@ extension ConsumerSession {
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             allowRedisplay: allowRedisplay,
             cvc: cvc,
+            expectedPaymentMethodType: expectedPaymentMethodType,
             completion: completion)
     }
 
