@@ -689,7 +689,8 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 
     func consentViewController(
         _ viewController: ConsentViewController,
-        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest,
+        customNextPane: FinancialConnectionsSessionManifest.NextPane?
     ) {
         delegate?.nativeFlowController(
             self,
@@ -698,7 +699,7 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 
         dataManager.manifest = manifest
 
-        let nextPane = manifest.nextPane
+        let nextPane = customNextPane ?? manifest.nextPane
         if nextPane == .networkingLinkLoginWarmup {
             presentPaneAsSheet(nextPane)
         } else {
@@ -1408,7 +1409,8 @@ private func CreatePaneViewController(
                 merchantLogo: dataManager.merchantLogo,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient
+                analyticsClient: dataManager.analyticsClient,
+                elementsSessionContext: dataManager.elementsSessionContext
             )
             let consentViewController = ConsentViewController(dataSource: consentDataSource)
             consentViewController.delegate = nativeFlowController
@@ -1495,9 +1497,10 @@ private func CreatePaneViewController(
     case .networkingLinkVerification:
         let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress
         let consumerSessionEmailAddress = dataManager.consumerSession?.emailAddress
-        if let accountholderCustomerEmailAddress = consumerSessionEmailAddress ?? accountholderCustomerEmailAddress {
+        let prefillEmailAddress = dataManager.elementsSessionContext?.prefillDetails?.email
+        if let email = consumerSessionEmailAddress ?? accountholderCustomerEmailAddress ?? prefillEmailAddress {
             let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
-                accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
+                accountholderCustomerEmailAddress: email,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
@@ -1621,7 +1624,8 @@ private func CreatePaneViewController(
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient,
-            nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta
+            nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta,
+            elementsSessionContext: dataManager.elementsSessionContext
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
             dataSource: networkingLinkWarmupDataSource,
