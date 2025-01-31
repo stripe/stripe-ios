@@ -40,6 +40,8 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         XCTAssertFalse(hostingVC.view.subviews.isEmpty)
         let subview = hostingVC.view.subviews[0]
 
+        verify(subview, identifier: "before_height_change")
+        
         // Simulate a height change
         viewModel.testHeightChange()
 
