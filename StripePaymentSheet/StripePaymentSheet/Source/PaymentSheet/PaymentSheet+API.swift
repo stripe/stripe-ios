@@ -456,7 +456,11 @@ extension PaymentSheet {
                         case .success(let paymentDetails):
                             if elementsSession.linkPassthroughModeEnabled {
                                 // If passthrough mode, share payment details
-                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc) { result in
+                                linkAccount.sharePaymentDetails(
+                                    id: paymentDetails.stripeID,
+                                    cvc: paymentMethodParams.card?.cvc,
+                                    expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode
+                                ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
                                         confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
@@ -508,7 +512,11 @@ extension PaymentSheet {
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
 
                 if elementsSession.linkPassthroughModeEnabled {
-                    linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentDetails.cvc) { result in
+                    linkAccount.sharePaymentDetails(
+                        id: paymentDetails.stripeID,
+                        cvc: paymentDetails.cvc,
+                        expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode
+                    ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
                             confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
@@ -726,4 +734,16 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
     lhsConverted.phone = lhs.phone
 
     return rhs == lhsConverted
+}
+
+private extension ConsumerPaymentDetails {
+    
+    var expectedPaymentMethodTypeForPassthroughMode: String? {
+        switch type {
+        case .card, .unparsable:
+            return nil
+        case .bankAccount:
+            return "card"
+        }
+    }
 }

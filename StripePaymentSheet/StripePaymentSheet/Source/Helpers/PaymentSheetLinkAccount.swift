@@ -364,7 +364,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func sharePaymentDetails(id: String, cvc: String?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
+    func sharePaymentDetails(
+        id: String,
+        cvc: String?,
+        expectedPaymentMethodType: String?,
+        completion: @escaping (Result<PaymentDetailsShareResponse, Error>
+    ) -> Void) {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
@@ -379,6 +384,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 with: apiClient,
                 id: id,
                 cvc: cvc,
+                expectedPaymentMethodType: expectedPaymentMethodType,
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionRetryingOnAuthErrors
             )
