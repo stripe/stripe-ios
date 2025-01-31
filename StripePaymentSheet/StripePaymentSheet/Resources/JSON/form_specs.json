@@ -877,7 +877,34 @@
                 }
             }
         }
-    },      
+    },
+    {
+        "type": "crypto",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto@3x-94c06c199e78e6d9ff9290210912bd5e.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto-15fd4ffeafd1b13e40688c8a06d79ba4.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto_dark@3x-8f7b0e91b45cb56de550af37d41aac1d.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto_dark-f19bb5c5400c6cde94dd53b7f1ce7217.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+          },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
     {
         "type": "mobilepay",
         "async": false,
