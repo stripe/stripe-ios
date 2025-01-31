@@ -1,8 +1,8 @@
 //
-//  EmbeddedPaymentElementViewSnapshotTests.swift
-//  StripePaymentSheet
+//  EmbeddedViewRepresentableSnapshotTest.swift
+//  StripePaymentSheetTests
 //
-//  Created by Nick Porter on 1/30/25.
+//  Created by Nick Porter on 1/31/25.
 //
 
 import XCTest
@@ -14,7 +14,7 @@ import StripeCoreTestUtils
 @testable import StripeUICore
 
 @MainActor
-class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
+class EmbeddedViewRepresentableSnapshotTest: STPSnapshotTestCase {
 
     func testEmbeddedPaymentElementView() async throws {
         let intentConfig = EmbeddedPaymentElement.IntentConfiguration(
@@ -42,12 +42,12 @@ class EmbeddedPaymentElementViewSnapshotTests: STPSnapshotTestCase {
         let subview = hostingVC.view.subviews[0]
 
         verify(subview, identifier: "before_height_change")
-        
+
         // Simulate a height change
         viewModel.testHeightChange()
 
         verify(subview, identifier: "after_height_change")
-        
+
         // We need to set presentingViewController during testing since the UIApplication.shared.window is nil during testing
         viewModel.embeddedPaymentElement?.presentingViewController = hostingVC
 
