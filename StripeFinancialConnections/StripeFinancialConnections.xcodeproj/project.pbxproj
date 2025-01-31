@@ -68,6 +68,7 @@
 		499EEAFD2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EEAFC2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift */; };
 		49A0B5862C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */; };
 		49AC518C2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */; };
+		49AED8FF2D4D244B00FD7C23 /* bank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AED8FE2D4D244B00FD7C23 /* bank@3x.png */; };
 		49B5BF762D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B5BF752D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift */; };
 		49C911372C597EAF00589E0D /* LinkLoginDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C911332C597EAF00589E0D /* LinkLoginDataSource.swift */; };
 		49C911392C597EAF00589E0D /* LinkLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C911352C597EAF00589E0D /* LinkLoginViewController.swift */; };
@@ -220,7 +221,6 @@
 		EABA08E892B087D89C97AE4F /* FinancialConnectionsEvent+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B23D2BD3CD4071A40D9AE9 /* FinancialConnectionsEvent+Extensions.swift */; };
 		EC74B719F0FA1A977EF4708C /* FinancialConnectionsAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359BF8ACFB35A16EBD96C4F0 /* FinancialConnectionsAccount.swift */; };
 		ED818E10F37230678B9B73CC /* SoftLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A06A97D714450321A5D76D /* SoftLinkTests.swift */; };
-		F0397F4E1D6A91416897F45E /* brandicon_default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7413C9D80DF7190CA6FB82EE /* brandicon_default@3x.png */; };
 		F03F840B9E896F1B09742191 /* PartnerAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BDE722D8A827955C3182E8 /* PartnerAuthViewController.swift */; };
 		F0495231F4C70E054149C03A /* LinkAccountPickerNewAccountRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF070262170A321F5622CCF /* LinkAccountPickerNewAccountRowView.swift */; };
 		F0FB346A0F86C3561CD3C048 /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F27D0FACAE9D4F4D15A73 /* UITableView+Extensions.swift */; };
@@ -335,6 +335,7 @@
 		499EEAFC2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClientLogger.swift; sourceTree = "<group>"; };
 		49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClientTests.swift; sourceTree = "<group>"; };
 		49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLinkLoginPane.swift; sourceTree = "<group>"; };
+		49AED8FE2D4D244B00FD7C23 /* bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank@3x.png"; sourceTree = "<group>"; };
 		49B5BF752D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAppearance.swift; sourceTree = "<group>"; };
 		49C911332C597EAF00589E0D /* LinkLoginDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkLoginDataSource.swift; sourceTree = "<group>"; };
 		49C911352C597EAF00589E0D /* LinkLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkLoginViewController.swift; sourceTree = "<group>"; };
@@ -428,7 +429,6 @@
 		72DEDE8871A732D603E96E2B /* AccountPickerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerSelectionView.swift; sourceTree = "<group>"; };
 		73AB8A480620B5C3567F453C /* FinancialConnectionsAnalyticsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAnalyticsTest.swift; sourceTree = "<group>"; };
 		73C03F4DDC67B50C5E1993F6 /* ManualEntryFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryFormView.swift; sourceTree = "<group>"; };
-		7413C9D80DF7190CA6FB82EE /* brandicon_default@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brandicon_default@3x.png"; sourceTree = "<group>"; };
 		742D94AC4B2D17F8282A6788 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		75B23D2BD3CD4071A40D9AE9 /* FinancialConnectionsEvent+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FinancialConnectionsEvent+Extensions.swift"; sourceTree = "<group>"; };
 		77A71EBB1B98CD285DD17D5F /* AccountFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountFetcherTests.swift; sourceTree = "<group>"; };
@@ -574,7 +574,7 @@
 			children = (
 				782A419DCF59BE6AB6439D04 /* add@3x.png */,
 				C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */,
-				7413C9D80DF7190CA6FB82EE /* brandicon_default@3x.png */,
+				49AED8FE2D4D244B00FD7C23 /* bank@3x.png */,
 				07BCA9D23511A3494C82B632 /* bullet@3x.png */,
 				A4CC00446B086B2987114099 /* cancel_circle@3x.png */,
 				5B77DE6D7A86CC847977396A /* check@3x.png */,
@@ -1276,7 +1276,7 @@
 			files = (
 				4DC8EB63806434ABF4C9CC43 /* add@3x.png in Resources */,
 				D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */,
-				F0397F4E1D6A91416897F45E /* brandicon_default@3x.png in Resources */,
+				49AED8FF2D4D244B00FD7C23 /* bank@3x.png in Resources */,
 				645D6FF67167263F9A1C2BB0 /* bullet@3x.png in Resources */,
 				F10147CF75C2A09D66CB5C14 /* cancel_circle@3x.png in Resources */,
 				755140DEEE50DCD6E939E528 /* check@3x.png in Resources */,
