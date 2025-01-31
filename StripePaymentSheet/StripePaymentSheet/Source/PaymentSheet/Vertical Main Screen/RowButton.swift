@@ -321,7 +321,7 @@ class RowButton: UIView {
     }
 
     // MARK: Tap handling
-    @objc private func handleTap() {
+    @objc func handleTap() {
         guard isEnabled else { return }
         if shouldAnimateOnPress {
             // Fade the text and icon out and back in
