@@ -25,6 +25,10 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
         _ viewController: PartnerAuthViewController,
         didReceiveError error: Error
     )
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    )
 }
 
 final class PartnerAuthViewController: SheetViewController {
@@ -157,7 +161,12 @@ final class PartnerAuthViewController: SheetViewController {
                 },
                 didSelectCancel: { [weak self] in
                     guard let self = self else { return }
-                    self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                    
+                    if panePresentationStyle == .fullscreen {
+                        self.delegate?.partnerAuthViewController(self, didRequestNextPane: .institutionPicker)
+                    } else {
+                        self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                    }
                 }
             )
             self.prepaneViews = prepaneViews
