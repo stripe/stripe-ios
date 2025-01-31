@@ -9,7 +9,7 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import SwiftUI
@@ -449,6 +449,33 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testCardConfirmFlowsSetAsDefault() async throws {
+        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_123", customerSessionClientSecret: "cuss_12345")
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "https://foo.com"
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        configuration.customer = customerConfig
+        configuration.allowsSetAsDefaultPM = true
+        try await _testConfirm(
+            intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+            currency: "USD",
+            paymentMethodType: .card,
+            merchantCountry: .US,
+            configuration: configuration
+        ) { form in
+            form.getCardSection().panElement.setText("4242424242424242")
+            form.getCardSection().expiryElement.setText("1228")
+            form.getCardSection().cvcElement.setText("123")
+            form.getCheckboxElement(startingWith: "Save")?.isSelected = true
+            form.getCheckboxElement(startingWith: "Set as default")?.isSelected = true
+        }
+    }
+
     // MARK: Add tests above this line
     // MARK: - 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
     func testiDEALConfirmFlows() async throws {
@@ -623,7 +650,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         for (description, intent) in intents {
 
             func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
-                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
             }
             // Make the form
             let formVC = makeFormVC(previousCustomerInput: nil)
@@ -985,7 +1012,7 @@ extension IntentConfirmParams: Equatable {
         // Sanity check to make sure when we add new properties, we check them here
         let mirror = Mirror(reflecting: lhs)
         let propertyCount = mirror.children.count
-        XCTAssertEqual(propertyCount, 7)
+        XCTAssertEqual(propertyCount, 8)
 
         return true
     }

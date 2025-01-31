@@ -24,6 +24,17 @@ final class PaymentSheetAnalyticsHelper {
         case flowController
         case complete
         case embedded
+        
+        var analyticsValue: String {
+            switch self {
+            case .flowController:
+                return "flowcontroller"
+            case .complete:
+                return "paymentsheet"
+            case .embedded:
+                return "embedded"
+            }
+        }
     }
 
     init(
@@ -70,7 +81,7 @@ final class PaymentSheetAnalyticsHelper {
 
     func logLoadStarted() {
         loadingStartDate = Date()
-        log(event: .paymentSheetLoadStarted)
+        log(event: .paymentSheetLoadStarted, params: ["integration_shape": integrationShape.analyticsValue])
     }
 
     func logLoadFailed(error: Error) {
@@ -82,7 +93,8 @@ final class PaymentSheetAnalyticsHelper {
         log(
             event: .paymentSheetLoadFailed,
             duration: duration,
-            error: error
+            error: error,
+            params: ["integration_shape": integrationShape.analyticsValue]
         )
     }
 
@@ -114,6 +126,7 @@ final class PaymentSheetAnalyticsHelper {
             "selected_lpm": defaultPaymentMethodAnalyticsValue,
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
+            "integration_shape": integrationShape.analyticsValue
         ]
         let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         if linkEnabled {
@@ -124,6 +137,7 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
+
         log(
             event: .paymentSheetLoadSucceeded,
             duration: duration,
@@ -320,6 +334,25 @@ final class PaymentSheetAnalyticsHelper {
             linkUI: paymentOption.linkUIAnalyticsValue
         )
     }
+    
+    func logEmbeddedUpdateStarted() {
+        stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
+        log(event: .mcUpdateStartedEmbedded)
+    }
+
+    func logEmbeddedUpdateFinished(result: EmbeddedPaymentElement.UpdateResult, duration: TimeInterval) {
+        stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
+        
+        let error: Error? = {
+            switch result {
+            case .failed(let error):
+                return error
+            default:
+                return nil
+            }
+        }()
+        log(event: .mcUpdateFinishedEmbedded, duration: duration, error: error, params: ["status": result.analyticValue])
+    }
 
     func log(
         event: STPAnalyticEvent,
@@ -429,5 +462,18 @@ extension PaymentElementConfiguration {
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
         payload["card_brand_acceptance"] = cardBrandAcceptance != .all
         return payload
+    }
+}
+
+extension EmbeddedPaymentElement.UpdateResult {
+    var analyticValue: String {
+        switch self {
+        case .succeeded:
+            return "succeeded"
+        case .canceled:
+            return "canceled"
+        case .failed(_):
+            return "failed"
+        }
     }
 }
