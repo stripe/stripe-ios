@@ -198,11 +198,13 @@ extension ConsumerSession {
 
     func listPaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
+        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         apiClient.listPaymentDetails(
             for: clientSecret,
+            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
@@ -239,6 +241,7 @@ extension ConsumerSession {
         id: String,
         cvc: String?,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
+        expectedPaymentMethodType: String?,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -248,6 +251,7 @@ extension ConsumerSession {
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             allowRedisplay: allowRedisplay,
             cvc: cvc,
+            expectedPaymentMethodType: expectedPaymentMethodType,
             completion: completion)
     }
 
