@@ -10,6 +10,7 @@ import Foundation
 
 protocol NativeFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var reducedBranding: Bool { get }
     var merchantLogo: [String]? { get }
     var returnURL: String? { get }
@@ -76,6 +77,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var reduceManualEntryProminenceInErrors: Bool {
         return visualUpdate.reduceManualEntryProminenceInErrors
     }
+    let configuration: FinancialConnectionsSheet.Configuration
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent?
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
@@ -111,6 +113,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent?,
@@ -121,6 +124,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.visualUpdate = visualUpdate
         self.returnURL = returnURL
         self.consentPaneModel = consentPaneModel

@@ -1698,6 +1698,8 @@ private func CreatePaneViewController(
             )
     }
 
+    // Applies the style configuration to each view controller.
+    dataManager.configuration.style.configure(viewController)
     return viewController
 }
 

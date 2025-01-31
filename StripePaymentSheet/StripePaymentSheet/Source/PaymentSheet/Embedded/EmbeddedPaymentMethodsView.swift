@@ -46,6 +46,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let incentive: PaymentMethodIncentive?
     /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
     /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
     var mandateText: NSAttributedString? {
@@ -92,6 +93,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.rowButtonAppearance = appearance.embeddedPaymentElement.row.style.appearanceForStyle(appearance: appearance)
         self.customer = customer
         self.analyticsHelper = analyticsHelper
+        self.incentive = incentive
         self.delegate = delegate
         super.init(frame: .zero)
 
@@ -110,15 +112,9 @@ class EmbeddedPaymentMethodsView: UIView {
         // Add card before Apple Pay and Link if present and before any other LPMs
         if paymentMethodTypes.contains(.stripe(.card)) {
             let selection: Selection = .new(paymentMethodType: .stripe(.card))
-            let cardRowButton = RowButton.makeForPaymentMethodType(
+            let cardRowButton = makePaymentMethodRowButton(
                 paymentMethodType: .stripe(.card),
-                hasSavedCard: savedPaymentMethods.hasSavedCard,
-                appearance: rowButtonAppearance,
-                shouldAnimateOnPress: true,
-                isEmbedded: true,
-                didTap: { [weak self] _ in
-                    self?.didTap(selection: selection)
-                }
+                savedPaymentMethods: savedPaymentMethods
             )
             if initialSelection == selection {
                 self.selection = initialSelection
@@ -160,18 +156,9 @@ class EmbeddedPaymentMethodsView: UIView {
         // Add all non-card PMs (card is added above)
         for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) {
             let selection: Selection = .new(paymentMethodType: paymentMethodType)
-            let rowButton = RowButton.makeForPaymentMethodType(
+            let rowButton = makePaymentMethodRowButton(
                 paymentMethodType: paymentMethodType,
-                subtitle: VerticalPaymentMethodListViewController.subtitleText(for: paymentMethodType),
-                hasSavedCard: savedPaymentMethods.hasSavedCard,
-                promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
-                appearance: rowButtonAppearance,
-                originalCornerRadius: appearance.cornerRadius,
-                shouldAnimateOnPress: true,
-                isEmbedded: true,
-                didTap: { [weak self] _ in
-                    self?.didTap(selection: selection)
-                }
+                savedPaymentMethods: savedPaymentMethods
             )
             if initialSelection == selection {
                 self.selection = initialSelection
@@ -299,15 +286,9 @@ class EmbeddedPaymentMethodsView: UIView {
         if let oldCardButton = selectionButtonMapping[.new(paymentMethodType: .stripe(.card))],
            let oldCardButtonIndex = stackView.arrangedSubviews.firstIndex(of: oldCardButton) {
             // Update selectionButtonMapping and add this new one to the stack view and remove old card row
-            let cardRowButton = RowButton.makeForPaymentMethodType(
+            let cardRowButton = makePaymentMethodRowButton(
                 paymentMethodType: .stripe(.card),
-                hasSavedCard: savedPaymentMethods.hasSavedCard,
-                appearance: rowButtonAppearance,
-                shouldAnimateOnPress: true,
-                isEmbedded: true,
-                didTap: { [weak self] _ in
-                    self?.didTap(selection: .new(paymentMethodType: .stripe(.card)))
-                }
+                savedPaymentMethods: savedPaymentMethods
             )
 
             // Remove old card button from selectionButtonMapping and stack view
@@ -318,32 +299,6 @@ class EmbeddedPaymentMethodsView: UIView {
             stackView.insertArrangedSubview(cardRowButton, at: oldCardButtonIndex)
             selectionButtonMapping[.new(paymentMethodType: .stripe(.card))] = cardRowButton
         }
-    }
-
-    func makeSavedPaymentMethodButton(savedPaymentMethod: STPPaymentMethod,
-                                      savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) -> RowButton {
-        let accessoryButton: RowButton.RightAccessoryButton? = {
-            if let savedPaymentMethodAccessoryType {
-                return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance) { [weak self] in
-                    self?.didTapAccessoryButton()
-                }
-            } else {
-                return nil
-            }
-        }()
-        let selection: Selection = .saved(paymentMethod: savedPaymentMethod)
-        let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod,
-                                                                           appearance: rowButtonAppearance,
-                                                                           rightAccessoryView: accessoryButton,
-                                                                           isEmbedded: true,
-                                                                           didTap: { [weak self] _ in
-            CustomerPaymentOption.setDefaultPaymentMethod(
-                .stripeId(savedPaymentMethod.stripeId),
-                forCustomer: self?.customer?.id
-            )
-           self?.didTap(selection: selection)
-        })
-        return savedPaymentMethodButton
     }
 
     // MARK: Mandate handling
@@ -411,6 +366,60 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
 #endif
+    // MARK: - Helpers
+
+    func makeSavedPaymentMethodButton(savedPaymentMethod: STPPaymentMethod,
+                                      savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) -> RowButton {
+        let accessoryButton: RowButton.RightAccessoryButton? = {
+            if let savedPaymentMethodAccessoryType {
+                return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance) { [weak self] in
+                    self?.didTapAccessoryButton()
+                }
+            } else {
+                return nil
+            }
+        }()
+        let selection: Selection = .saved(paymentMethod: savedPaymentMethod)
+        let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
+            paymentMethod: savedPaymentMethod,
+            appearance: rowButtonAppearance,
+            rightAccessoryView: accessoryButton,
+            isEmbedded: true,
+            didTap: { [weak self] _ in
+                CustomerPaymentOption.setDefaultPaymentMethod(
+                    .stripeId(savedPaymentMethod.stripeId),
+                    forCustomer: self?.customer?.id
+                )
+                self?.didTap(selection: selection)
+            }
+        )
+        return savedPaymentMethodButton
+    }
+
+    func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
+        // We always add a hidden accessory button ("Change >") so we can show/hide it easily
+        let accessoryButton = RowButton.RightAccessoryButton(
+            accessoryType: appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? .changeWithChevron : .change,
+            appearance: appearance,
+            didTap: { [weak self] in
+                self?.didTap(selection: .new(paymentMethodType: paymentMethodType))
+            }
+        )
+        accessoryButton.isHidden = true
+        return RowButton.makeForPaymentMethodType(
+            paymentMethodType: paymentMethodType,
+            hasSavedCard: savedPaymentMethods.hasSavedCard,
+            rightAccessoryView: accessoryButton,
+            promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
+            appearance: rowButtonAppearance,
+            originalCornerRadius: appearance.cornerRadius,
+            shouldAnimateOnPress: true,
+            isEmbedded: true,
+            didTap: { [weak self] _ in
+                self?.didTap(selection: .new(paymentMethodType: paymentMethodType))
+            }
+        )
+    }
 }
 
 extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
