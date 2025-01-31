@@ -1106,6 +1106,20 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 }
 
+extension EmbeddedPaymentMethodsViewSnapshotTests: EmbeddedPaymentMethodsViewDelegate {
+    func embeddedPaymentMethodsViewDidUpdateHeight() {
+    }
+    
+    func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
+    }
+    
+    func embeddedPaymentMethodsViewDidUpdateSelection() {
+    }
+    
+    func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: StripePayments.STPPaymentMethod?) {
+    }
+}
+
 class MockMandateProvider: MandateTextProvider {
     private let mandateResolver: (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)
 
@@ -1124,14 +1138,14 @@ class MockMandateProvider: MandateTextProvider {
 
 extension EmbeddedPaymentMethodsView {
     convenience init(
-        initialSelection: RowButtonType?,
-        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-        savedPaymentMethod: STPPaymentMethod?,
-        appearance: PaymentSheet.Appearance,
-        shouldShowApplePay: Bool,
-        shouldShowLink: Bool,
-        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
-        mandateProvider: MandateTextProvider,
+        initialSelection: RowButtonType? = nil,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.card), .stripe(.cashApp)],
+        savedPaymentMethod: STPPaymentMethod? = nil,
+        appearance: PaymentSheet.Appearance = .default,
+        shouldShowApplePay: Bool = true,
+        shouldShowLink: Bool = true,
+        savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? = nil,
+        mandateProvider: MandateTextProvider = MockMandateProvider(),
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
         customer: PaymentSheet.CustomerConfiguration? = nil,
