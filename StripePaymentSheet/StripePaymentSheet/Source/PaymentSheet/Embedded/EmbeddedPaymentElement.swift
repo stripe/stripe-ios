@@ -166,7 +166,7 @@ public final class EmbeddedPaymentElement {
             let fetchPaymentOption = Task.detached(priority: .userInitiated) {
                 // This has the nasty side effect of synchronously downloading the image (see https://jira.corp.stripe.com/browse/MOBILESDK-2604)
                 // This caches it so that DownloadManager doesn't block the main thread when the merchant tries to access the image
-                return await embeddedPaymentMethodsView.selection?.paymentMethodType?.makeImage(updateHandler: nil)
+                return await embeddedPaymentMethodsView.selectedRowButton?.type.paymentMethodType?.makeImage(updateHandler: nil)
             }
             _ = await fetchPaymentOption.value
 
@@ -272,7 +272,7 @@ public final class EmbeddedPaymentElement {
             return selectedFormViewController.selectedPaymentOption
         }
 
-        switch embeddedPaymentMethodsView.selection {
+        switch embeddedPaymentMethodsView.selectedRowButton?.type {
         case .applePay:
             return .applePay
         case .link:

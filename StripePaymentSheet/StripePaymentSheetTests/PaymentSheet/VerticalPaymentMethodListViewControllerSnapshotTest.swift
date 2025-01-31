@@ -11,11 +11,11 @@ import StripeCoreTestUtils
 import XCTest
 
 final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTestCase, VerticalPaymentMethodListViewControllerDelegate {
-    func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) -> Bool {
+    func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) -> Bool {
         return true
     }
 
-    func didTapPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) {
+    func didTapPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) {
 
     }
 
