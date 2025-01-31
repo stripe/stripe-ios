@@ -180,6 +180,14 @@ final class InstitutionSearchBar: UIView {
             height: 1 / UIScreen.main.nativeScale
         )
     }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+    }
 }
 
 // MARK: - UITextFieldDelegate
