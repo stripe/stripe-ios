@@ -116,12 +116,12 @@ struct PlaygroundView: View {
                     }
                     
                     Section(header: Text("Relink")) {
-                        TextField("Customer", text: viewModel.customerId)
+                        TextField("Customer ID (cus_)", text: viewModel.customerId)
                             .keyboardType(.default)
                             .autocapitalization(.none)
                             .accessibility(identifier: "playground-customer-id")
 
-                        TextField("Relink authorization", text: viewModel.relinkAuthorization)
+                        TextField("Relink authorization (fcauth_)", text: viewModel.relinkAuthorization)
                             .keyboardType(.default)
                             .accessibility(identifier: "playground-relink-authorization")
                     }
