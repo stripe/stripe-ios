@@ -77,7 +77,7 @@ import Combine
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
             self.paymentOption = embeddedPaymentElement.paymentOption
-            calculateAndPublishHeight() // compute initial height
+            calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement) // compute initial height
             self.isLoaded = true
         }
 
@@ -138,9 +138,7 @@ import Combine
     }
 #endif
     
-    private func calculateAndPublishHeight() {
-        guard let embeddedPaymentElement else { return }
-        
+    private func calculateAndPublishHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
         let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
 
         withAnimation(.easeInOut(duration: 0.2)) {
@@ -153,7 +151,7 @@ import Combine
 
 extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-        calculateAndPublishHeight()
+        calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement)
     }
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
