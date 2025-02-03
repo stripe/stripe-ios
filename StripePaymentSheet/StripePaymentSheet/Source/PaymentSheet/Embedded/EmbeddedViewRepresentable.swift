@@ -21,7 +21,10 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         containerView.backgroundColor = .clear
         containerView.layoutMargins = .zero
 
-        guard let embeddedPaymentElement = viewModel.embeddedPaymentElement else { return containerView }
+        guard let embeddedPaymentElement = viewModel.embeddedPaymentElement else {
+            stpAssertionFailure("embeddedPaymentElement was nil in EmbeddedViewRepresentable.makeUIView(). Ensure you do not show the EmbeddedPaymentElementView before isLoaded is true on the EmbeddedPaymentElementViewModel.")
+            return containerView
+        }
         embeddedPaymentElement.presentingViewController = UIWindow.visibleViewController
 
         let paymentElementView = embeddedPaymentElement.view
