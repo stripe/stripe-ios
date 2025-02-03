@@ -50,6 +50,14 @@ final class LinkAccountPickerNewAccountRowView: UIView {
     @objc private func didTapView() {
         self.didSelect()
     }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+    }
 }
 
 private func CreateIconView(imageUrl: String, appearance: FinancialConnectionsAppearance) -> UIView {

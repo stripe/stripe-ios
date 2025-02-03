@@ -12,7 +12,7 @@ import UIKit
 extension StripeUICore.Button {
     static func primary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button {
         let button = Button(configuration: .financialConnectionsPrimary(appearance: appearance))
-        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
         button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
         button.layer.shadowOpacity = 0.25
         button.layer.shadowOffset = CGSize(

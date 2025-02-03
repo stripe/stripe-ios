@@ -41,6 +41,8 @@ class InstitutionPickerViewController: UIViewController {
     private let dataSource: InstitutionDataSource
     weak var delegate: InstitutionPickerViewControllerDelegate?
 
+    private var shadowLayer: CALayer?
+
     private lazy var headerView: UIView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -88,6 +90,7 @@ class InstitutionPickerViewController: UIViewController {
             // appear IF the user scrolls up very quickly
             height: -Self.headerAndSearchBarSpacing
         )
+        self.shadowLayer = verticalStackView.layer
         return verticalStackView
     }()
     private lazy var searchBar: InstitutionSearchBar = {
@@ -240,6 +243,14 @@ class InstitutionPickerViewController: UIViewController {
             searchBarContainerFrame,
             animated: true
         )
+    }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        shadowLayer?.shadowColor = FinancialConnectionsAppearance.Colors.background.cgColor
     }
 }
 
