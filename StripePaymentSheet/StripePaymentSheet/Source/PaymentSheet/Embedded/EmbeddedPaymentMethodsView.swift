@@ -27,6 +27,13 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 class EmbeddedPaymentMethodsView: UIView {
 
     typealias Selection = VerticalPaymentMethodListSelection // TODO(porter) Maybe define our own later
+    
+    /// Return the default size to let Auto Layout manage the height.
+    /// Overriding intrinsicContentSize values force SwiftUI to update layout immediately,
+    /// resulting in abrupt, non-animated changes.
+    override var intrinsicContentSize: CGSize {
+        return super.intrinsicContentSize
+    }
 
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
