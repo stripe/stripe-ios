@@ -50,7 +50,9 @@ import Combine
     // MARK: - Public APIs
 
     /// Creates an empty view model. Call `load` to initialize the `EmbeddedPaymentElementViewModel`
-    public init() {}
+    public init() {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+    }
 
     /// Asynchronously loads the EmbeddedPaymentElementViewModel. This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
     /// Loads the Customer's payment methods, their default payment method, etc.

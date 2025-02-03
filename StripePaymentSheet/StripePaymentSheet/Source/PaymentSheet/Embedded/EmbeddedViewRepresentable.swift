@@ -11,11 +11,6 @@ import SwiftUI
 struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
 
-    init(viewModel: EmbeddedPaymentElementViewModel) {
-        self.viewModel = viewModel
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedSwiftUIProduct.self)
-    }
-    
     public func makeUIView(context: Context) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .clear
@@ -84,12 +79,6 @@ extension UIViewController {
         }
         
         return self
-    }
-}
-
-final class EmbeddedSwiftUIProduct: STPAnalyticsProtocol {
-    public static var stp_analyticsIdentifier: String {
-        return "EmbeddedPaymentElement_SwiftUI"
     }
 }
 
