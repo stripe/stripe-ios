@@ -103,7 +103,10 @@ extension EmbeddedPaymentElement {
     }
 
     // Helper method to create Form VC for a payment method row, if applicable.
-    func makeFormViewControllerIfNecessary(selection: EmbeddedPaymentMethodsView.Selection?) -> EmbeddedFormViewController? {
+    func makeFormViewControllerIfNecessary(
+        selection: EmbeddedPaymentMethodsView.Selection?,
+        previousPaymentOption: PaymentOption?
+    ) -> EmbeddedFormViewController? {
         guard case let .new(paymentMethodType) = selection else {
             return nil
         }
@@ -114,11 +117,11 @@ extension EmbeddedPaymentElement {
             elementsSession: elementsSession,
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
             paymentMethodType: paymentMethodType,
-            previousPaymentOption: self.selectedFormViewController?.previousPaymentOption,
+            previousPaymentOption:previousPaymentOption,
             analyticsHelper: analyticsHelper,
-            formCache: formCache
+            formCache: formCache,
+            delegate: self
         )
-        formViewController.delegate = self
         guard formViewController.collectsUserInput else {
             return nil
         }
@@ -136,7 +139,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func embeddedPaymentMethodsViewDidUpdateSelection() {
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
-        self.selectedFormViewController = makeFormViewControllerIfNecessary(selection: embeddedPaymentMethodsView.selection)
+        self.selectedFormViewController = makeFormViewControllerIfNecessary(
+            selection: embeddedPaymentMethodsView.selection,
+            previousPaymentOption:  selectedFormViewController?.previousPaymentOption
+        )
 
         // 2. Inform the delegate of the updated payment option
         informDelegateIfPaymentOptionUpdated()
@@ -151,6 +157,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
         stpAssert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+        stpAssert(selectedFormViewController.delegate != nil)
         presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
 
     }

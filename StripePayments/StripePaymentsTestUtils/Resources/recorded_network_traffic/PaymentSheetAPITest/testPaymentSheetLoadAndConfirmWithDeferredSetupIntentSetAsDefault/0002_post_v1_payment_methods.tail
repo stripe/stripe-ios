@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=aPAALdWLf0r1r1E9Kc1yTT6PpMBesLQMHHmd5dnuJ9_AltcmYcNBkFTRzCuh1sTONe2_Hy3tOMh4-P7o
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=8wljLiUpODt2gA9P1vVi6ruZdmOoanDkynFjsUeFgXKoD9HK5Z_tbkCism1B993s-xSOrgTJSiwr7IXq
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,14 +14,14 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_agUrSUP4DBRB63
+request-id: req_oPPqJOPiEH9IDW
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 966
 Vary: Origin
-Date: Tue, 28 Jan 2025 19:52:42 GMT
-original-request: req_agUrSUP4DBRB63
+Date: Fri, 31 Jan 2025 16:58:16 GMT
+original-request: req_oPPqJOPiEH9IDW
 stripe-version: 2020-08-27
-idempotency-key: af0cf3e5-ffa0-432c-ab1d-4f445d391822
+idempotency-key: e06fdedc-108a-492c-8142-65c407e6fdf8
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -31,7 +31,7 @@ X-Stripe-Mock-Request: allow_redisplay=always&card\[cvc]=123&card\[exp_month]=12
 
 {
   "object" : "payment_method",
-  "id" : "pm_1QmKpxFY0qyl6XeWviHgPogp",
+  "id" : "pm_1QnNXoFY0qyl6XeWThTF3i2m",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -72,7 +72,7 @@ X-Stripe-Mock-Request: allow_redisplay=always&card\[cvc]=123&card\[exp_month]=12
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1738093962,
+  "created" : 1738342696,
   "allow_redisplay" : "always",
   "type" : "card",
   "customer" : null

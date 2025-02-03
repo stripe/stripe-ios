@@ -155,8 +155,6 @@ class EmbeddedFormViewController: UIViewController {
 
     weak var delegate: EmbeddedFormViewControllerDelegate?
 
-    // MARK: - Initializers
-
     init(configuration: EmbeddedPaymentElement.Configuration,
          intent: Intent,
          elementsSession: STPElementsSession,
@@ -164,7 +162,9 @@ class EmbeddedFormViewController: UIViewController {
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
-         formCache: PaymentMethodFormCache = .init()) {
+         formCache: PaymentMethodFormCache = .init(),
+         delegate: EmbeddedFormViewControllerDelegate
+    ) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
@@ -173,6 +173,7 @@ class EmbeddedFormViewController: UIViewController {
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
+        self.delegate = delegate
 
         super.init(nibName: nil, bundle: nil)
 
@@ -250,7 +251,12 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     private func didCancel() {
-        delegate?.embeddedFormViewControllerDidCancel(self)
+        if let delegate {
+            delegate.embeddedFormViewControllerDidCancel(self)
+        } else {
+            stpAssertionFailure()
+            dismiss(animated: true)
+        }
     }
 
     required init?(coder: NSCoder) {
