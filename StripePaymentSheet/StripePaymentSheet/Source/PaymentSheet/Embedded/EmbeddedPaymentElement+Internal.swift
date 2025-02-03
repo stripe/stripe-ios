@@ -143,6 +143,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selection: embeddedPaymentMethodsView.selectedRowButton?.type,
             previousPaymentOption:  selectedFormViewController?.previousPaymentOption
         )
+
         // 2. Inform the delegate of the updated payment option
         informDelegateIfPaymentOptionUpdated()
     }
