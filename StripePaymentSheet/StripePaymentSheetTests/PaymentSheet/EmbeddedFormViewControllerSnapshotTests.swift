@@ -84,7 +84,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
     }
 
     func testDisplayCard_continueFormSheetAction() {
-        var configuration = EmbeddedPaymentElement.Configuration()
+        let configuration = EmbeddedPaymentElement.Configuration()
         let sut = makeEmbeddedFormViewController(
             configuration: configuration,
             paymentMethodType: .card
@@ -180,7 +180,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 }
 
 extension EmbeddedFormViewControllerSnapshotTests: EmbeddedFormViewControllerDelegate {
-    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
     }
     
     func embeddedFormViewControllerDidCompleteConfirmation(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, result: StripePaymentSheet.PaymentSheetResult) {
