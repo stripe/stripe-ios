@@ -155,6 +155,30 @@ final class PlaygroundViewModel: ObservableObject {
             }
         )
     }
+    
+    var customerId: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.customerId
+            },
+            set: {
+                self.playgroundConfiguration.customerId = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+    
+    var relinkAuthorization: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.relinkAuthorization
+            },
+            set: {
+                self.playgroundConfiguration.relinkAuthorization = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
 
     var balancesPermission: Binding<Bool> {
         Binding(
