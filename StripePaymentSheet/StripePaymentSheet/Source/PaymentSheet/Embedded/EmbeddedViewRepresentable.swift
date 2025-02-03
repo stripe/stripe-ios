@@ -7,6 +7,7 @@
 
 import SwiftUI
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
@@ -43,26 +44,8 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
 
 // MARK: UIWindow and UIViewController helpers
 
-extension UIWindow {    
+extension UIWindow {
     static var visibleViewController: UIViewController? {
-        UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow()?.rootViewController?.topMostViewController
+        UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow()?.rootViewController?.findTopMostPresentedViewController()
     }
 }
-
-extension UIViewController {
-    var topMostViewController: UIViewController {
-        if let nav = self as? UINavigationController {
-            // Use visibleViewController for navigation stacks
-            return nav.visibleViewController?.topMostViewController ?? nav
-        } else if let tab = self as? UITabBarController {
-            // Use selectedViewController for tab controllers
-            return tab.selectedViewController?.topMostViewController ?? tab
-        } else if let presented = presentedViewController {
-            // Recurse for any presented controllers
-            return presented.topMostViewController
-        }
-        
-        return self
-    }
-}
-
