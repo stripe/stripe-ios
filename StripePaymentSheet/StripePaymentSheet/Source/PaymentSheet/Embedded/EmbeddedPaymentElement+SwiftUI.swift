@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+@_spi(STP) import StripeCore
 
 /// A view model that manages an `EmbeddedPaymentElement`.
 @MainActor
