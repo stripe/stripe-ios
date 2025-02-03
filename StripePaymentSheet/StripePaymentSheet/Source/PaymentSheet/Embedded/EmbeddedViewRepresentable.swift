@@ -43,25 +43,9 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
 
 // MARK: UIWindow and UIViewController helpers
 
-extension UIWindow {
-    static var current: UIWindow? {
-        #if os(visionOS)
-        return UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.windows }
-            .flatMap { $0 }
-            .sorted { first, _ in first.isKeyWindow }
-            .first
-        #else
-        return UIApplication.shared.connectedScenes
-            .filter { $0.activationState == .foregroundActive }
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first(where: \.isKeyWindow)
-        #endif
-    }
-    
+extension UIWindow {    
     static var visibleViewController: UIViewController? {
-        current?.rootViewController?.topMostViewController
+        UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow()?.rootViewController?.topMostViewController
     }
 }
 
