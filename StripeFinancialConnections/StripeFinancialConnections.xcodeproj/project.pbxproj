@@ -63,6 +63,8 @@
 		492651682C25C0C2001DDBCA /* info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 492651672C25C0C2001DDBCA /* info@3x.png */; };
 		49424EB02D48050A0088F3D9 /* WebPrefillDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49424EAF2D48050A0088F3D9 /* WebPrefillDetails.swift */; };
 		494D62072C45B9B700106519 /* link_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 494D62062C45B9B700106519 /* link_logo@3x.png */; };
+		4964F13A2D4C114800EE6BC9 /* PresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4964F1392D4C114800EE6BC9 /* PresentationManager.swift */; };
+		4964F13C2D4C14D100EE6BC9 /* PresentationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4964F13B2D4C14D100EE6BC9 /* PresentationManagerTests.swift */; };
 		496A6AE72C29E0BB00D34F8E /* testmode@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496A6AE62C29E0BB00D34F8E /* testmode@3x.png */; };
 		497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497142BB2C514B08000DFA64 /* FlowRouterTests.swift */; };
 		499EEAFD2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EEAFC2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift */; };
@@ -330,6 +332,8 @@
 		492651672C25C0C2001DDBCA /* info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@3x.png"; sourceTree = "<group>"; };
 		49424EAF2D48050A0088F3D9 /* WebPrefillDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPrefillDetails.swift; sourceTree = "<group>"; };
 		494D62062C45B9B700106519 /* link_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "link_logo@3x.png"; sourceTree = "<group>"; };
+		4964F1392D4C114800EE6BC9 /* PresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationManager.swift; sourceTree = "<group>"; };
+		4964F13B2D4C14D100EE6BC9 /* PresentationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationManagerTests.swift; sourceTree = "<group>"; };
 		496A6AE62C29E0BB00D34F8E /* testmode@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testmode@3x.png"; sourceTree = "<group>"; };
 		497142BB2C514B08000DFA64 /* FlowRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowRouterTests.swift; sourceTree = "<group>"; };
 		499EEAFC2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClientLogger.swift; sourceTree = "<group>"; };
@@ -1044,6 +1048,7 @@
 				49F047522C63B430006BAD3E /* StripeSchemeAddress.swift */,
 				49424EAF2D48050A0088F3D9 /* WebPrefillDetails.swift */,
 				49F883F72D496D7A00A104B0 /* ExperimentStore.swift */,
+				4964F1392D4C114800EE6BC9 /* PresentationManager.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1098,6 +1103,7 @@
 				CF731140836AE438C7F4F6AB /* StringExtensionsTests.swift */,
 				497142BB2C514B08000DFA64 /* FlowRouterTests.swift */,
 				492039942CA4972B00CE2072 /* FinancialConnectionsWebFlowTests.swift */,
+				4964F13B2D4C14D100EE6BC9 /* PresentationManagerTests.swift */,
 			);
 			path = StripeFinancialConnectionsTests;
 			sourceTree = "<group>";
@@ -1481,6 +1487,7 @@
 				6A78141C2B462D5D00168992 /* LegalDetailsNoticeViewController.swift in Sources */,
 				6A7814112B32462100168992 /* CloseConfirmationViewController.swift in Sources */,
 				AB7C9A26484953762FFBB4A5 /* FinancialConnectionsWebFlowViewController.swift in Sources */,
+				4964F13A2D4C114800EE6BC9 /* PresentationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1500,6 +1507,7 @@
 				846D1D7429B9E414744DEC99 /* FinancialConnectionsSheetTests.swift in Sources */,
 				C19996D0AC7E046DA87B6B32 /* ManualEntryValidatorTests.swift in Sources */,
 				779C729BB49FD4B99DCD517B /* MarkdownBoldAttributedStringTests.swift in Sources */,
+				4964F13C2D4C14D100EE6BC9 /* PresentationManagerTests.swift in Sources */,
 				49A0B5862C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift in Sources */,
 				BF5F964E1CA6312755D4161E /* SessionFetcherTests.swift in Sources */,
 				ED818E10F37230678B9B73CC /* SoftLinkTests.swift in Sources */,
