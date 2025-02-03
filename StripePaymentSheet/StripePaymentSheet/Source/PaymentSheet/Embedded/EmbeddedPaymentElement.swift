@@ -139,7 +139,6 @@ public final class EmbeddedPaymentElement {
 
             // 2. At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             let previousPaymentOption = self._paymentOption
-            let previousDisplayData = self.paymentOption
             self.loadResult = loadResult
             self.savedPaymentMethods = loadResult.savedPaymentMethods
             self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
@@ -150,11 +149,12 @@ public final class EmbeddedPaymentElement {
                 previousPaymentOption: previousPaymentOption,
                 delegate: self
             )
-            self.selectedFormViewController = makeFormViewControllerIfNecessary(selection: self.embeddedPaymentMethodsView.selection)
+            self.selectedFormViewController = makeFormViewControllerIfNecessary(
+                selection: self.embeddedPaymentMethodsView.selection,
+                previousPaymentOption: previousPaymentOption
+            )
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
-            if previousDisplayData != self.paymentOption {
-                self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
-            }
+            informDelegateIfPaymentOptionUpdated()
             return .succeeded
         }
         self.latestUpdateTask = currentUpdateTask
@@ -204,7 +204,7 @@ public final class EmbeddedPaymentElement {
 #endif
 
         // Notify the delegate that the payment option has changed
-        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+        informDelegateIfPaymentOptionUpdated()
     }
 
     #if DEBUG
