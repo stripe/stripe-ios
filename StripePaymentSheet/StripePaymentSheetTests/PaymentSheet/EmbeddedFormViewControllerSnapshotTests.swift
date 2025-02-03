@@ -9,6 +9,7 @@
 @_spi(STP) import StripePayments
 @_spi(STP)  @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 import XCTest
 
 final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
@@ -180,7 +181,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 }
 
 extension EmbeddedFormViewControllerSnapshotTests: EmbeddedFormViewControllerDelegate {
-    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+    func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
     }
     
     func embeddedFormViewControllerDidCompleteConfirmation(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, result: StripePaymentSheet.PaymentSheetResult) {
