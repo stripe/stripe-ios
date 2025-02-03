@@ -34,7 +34,7 @@ extension EmbeddedPaymentElement {
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
-        let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
+        let initialSelection: RowButtonType? = {
             // Select the previous payment option
             switch previousPaymentOption {
             case .applePay:
@@ -104,7 +104,7 @@ extension EmbeddedPaymentElement {
 
     // Helper method to create Form VC for a payment method row, if applicable.
     func makeFormViewControllerIfNecessary(
-        selection: EmbeddedPaymentMethodsView.Selection?,
+        selection: RowButtonType?,
         previousPaymentOption: PaymentOption?
     ) -> EmbeddedFormViewController? {
         guard case let .new(paymentMethodType) = selection else {
@@ -140,7 +140,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = makeFormViewControllerIfNecessary(
-            selection: embeddedPaymentMethodsView.selection,
+            selection: embeddedPaymentMethodsView.selectedRowButton?.type,
             previousPaymentOption:  selectedFormViewController?.previousPaymentOption
         )
 
@@ -226,7 +226,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         }
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
-        let isSelected = embeddedPaymentMethodsView.selection?.isSaved ?? false
+        let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
@@ -265,7 +265,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         // or
         // there are still saved payment methods & the saved payment method was previously selected to presenting
         let isSelected = (latestPaymentMethods.count > 1 && selectedPaymentMethod != nil) ||
-        (embeddedPaymentMethodsView.selection?.isSaved ?? false && latestPaymentMethods.count > 0)
+        (embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false && latestPaymentMethods.count > 0)
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
