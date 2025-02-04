@@ -311,7 +311,7 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
-    private init(
+    internal init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper

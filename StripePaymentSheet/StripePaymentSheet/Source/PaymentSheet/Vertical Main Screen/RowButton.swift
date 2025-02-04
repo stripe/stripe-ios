@@ -123,9 +123,11 @@ class RowButton: UIView {
 
         // Label and sublabel
         label.isAccessibilityElement = false
-        let labelsStackView = UIStackView(arrangedSubviews: [
-            label, sublabel, isFlatWithCheckmarkStyle ? rightAccessoryView : nil // add accessory view below labels if in checkmark style
-        ].compactMap { $0 })
+        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel])
+        // add accessory view below labels if in checkmark style
+        if let rightAccessoryView, isFlatWithCheckmarkStyle {
+            labelsStackView.addArrangedSubview(rightAccessoryView)
+        }
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
@@ -214,12 +216,6 @@ class RowButton: UIView {
         ]
 
         if isFlatWithCheckmarkStyle, let rightAccessoryView, !rightAccessoryView.isHidden {
-            // In flat_with_checkmark, we need additional vertical space around the View More / Change accessory view.
-            if sublabel.isHidden {
-                labelsStackView.setCustomSpacing(8, after: label)
-            } else {
-                labelsStackView.setCustomSpacing(8, after: sublabel)
-            }
             imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor))
         } else {
             imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: centerYAnchor))
@@ -321,7 +317,7 @@ class RowButton: UIView {
     }
 
     // MARK: Tap handling
-    @objc private func handleTap() {
+    @objc func handleTap() {
         guard isEnabled else { return }
         if shouldAnimateOnPress {
             // Fade the text and icon out and back in
@@ -355,10 +351,12 @@ class RowButton: UIView {
         // Don't do this if we are flat_with_checkmark style and have an accessory view - this row button is allowed to be taller than the rest
         let isDisplayingRightAccessoryView = rightAccessoryView?.isHidden == false
         if isFlatWithCheckmarkStyle && isDisplayingRightAccessoryView {
+            heightConstraint?.isActive = false
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
         guard sublabel.text?.isEmpty ?? true else {
+            heightConstraint?.isActive = false
             return
         }
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
