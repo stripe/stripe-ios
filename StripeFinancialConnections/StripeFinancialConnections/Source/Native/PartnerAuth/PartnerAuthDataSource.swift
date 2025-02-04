@@ -25,10 +25,6 @@ protocol PartnerAuthDataSource: AnyObject {
     func retrieveAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
 }
 
-struct RelinkSessionPayload {
-    let coreAuthorization: String
-}
-
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
 
     let institution: FinancialConnectionsInstitution
@@ -36,14 +32,14 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     let returnURL: String?
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
-    private let relinkSessionPayload: RelinkSessionPayload?
+    private let relinkAuthorization: String?
     let analyticsClient: FinancialConnectionsAnalyticsClient
     var disableAuthSessionRetrieval: Bool {
         return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
     }
     
     var isNetworkingRelinkSession: Bool {
-        return relinkSessionPayload != nil
+        return relinkAuthorization != nil
     }
 
     // a "pending" auth session is a session which has started
@@ -57,7 +53,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         authSession: FinancialConnectionsAuthSession?,
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
-        repairSessionPayload: RelinkSessionPayload?,
+        relinkAuthorization: String?,
         returnURL: String?,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
@@ -70,14 +66,14 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-        self.relinkSessionPayload = repairSessionPayload
+        self.relinkAuthorization = relinkAuthorization
     }
 
     func createAuthSession() -> Future<FinancialConnectionsAuthSession> {
-        if let relinkSessionPayload {
+        if let relinkAuthorization {
             return apiClient.repairAuthSession(
                 clientSecret: clientSecret,
-                coreAuthorization: relinkSessionPayload.coreAuthorization
+                coreAuthorization: relinkAuthorization
             ).chained { [weak self] (repairSession: FinancialConnectionsRepairSession) in
                 let authSession = FinancialConnectionsAuthSession(
                     id: repairSession.id,

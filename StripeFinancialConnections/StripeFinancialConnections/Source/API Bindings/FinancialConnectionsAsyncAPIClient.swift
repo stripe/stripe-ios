@@ -272,7 +272,8 @@ protocol FinancialConnectionsAsyncAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) async throws -> (
         manifest: FinancialConnectionsSessionManifest,
         customSuccessPaneMessage: String?
@@ -713,7 +714,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) async throws -> (
         manifest: FinancialConnectionsSessionManifest,
         customSuccessPaneMessage: String?
@@ -730,10 +732,12 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 clientSecret: clientSecret
             )
+            
+            let customSuccessPaneMessage = isRelink ? nil : manifest.displayText?.successPane?.subCaption
 
             return (
                 manifest: manifest,
-                customSuccessPaneMessage: manifest.displayText?.successPane?.subCaption
+                customSuccessPaneMessage: customSuccessPaneMessage
             )
         }
         if

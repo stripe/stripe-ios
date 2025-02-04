@@ -252,7 +252,8 @@ protocol FinancialConnectionsAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) -> Future<SaveAccountsToNetworkAndLinkResponse>
 
     func disableNetworking(
@@ -768,7 +769,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) -> Future<SaveAccountsToNetworkAndLinkResponse> {
         let saveAccountsToLinkHandler: () -> Future<SaveAccountsToNetworkAndLinkResponse> = {
             return self.saveAccountsToLink(
@@ -780,10 +782,11 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 clientSecret: clientSecret
             )
             .chained { manifest in
+                let customSuccessPaneMessage = isRelink ? nil : manifest.displayText?.successPane?.subCaption
                 return Promise(
                     value: (
                         manifest: manifest,
-                        customSuccessPaneMessage: manifest.displayText?.successPane?.subCaption
+                        customSuccessPaneMessage: customSuccessPaneMessage
                     )
                 )
             }
