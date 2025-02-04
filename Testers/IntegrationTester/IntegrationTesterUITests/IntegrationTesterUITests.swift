@@ -78,6 +78,11 @@ class IntegrationTesterUICardTests: IntegrationTesterUITests {
         testSingleSelectAuthentication(cardNumber: alwaysSingleSelectCard)
     }
     
+    let alwaysMultiSelectCard = "4000582600000110"
+    func testMultiSelect3DS2() throws {
+        testMultiSelectAuthentication(cardNumber: alwaysMultiSelectCard)
+    }
+    
     let hsbcCard = "4000582600000292"
     func testHSBCHTMLIssue() throws {
         testHSBCWebViewLinksTrigger(cardNumber: hsbcCard)
@@ -431,6 +436,36 @@ class IntegrationTesterUITests: XCTestCase {
         let challengeText = app.staticTexts.matching(challengeScreenPredicate).element
         XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
 
+        let completeAuth = app.scrollViews.otherElements.staticTexts["Submit"]
+        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+        completeAuth.tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+    
+    func testMultiSelectAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let challengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication for a transaction, showing a sample multi-select flow. In live mode, customers may be asked to answer a security question.'")
+        let challengeText = app.staticTexts.matching(challengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+        
+        for button in app.buttons.matching(identifier: "Complete Authentication").allElementsBoundByIndex {
+            button.tap()
+        }
+        
         let completeAuth = app.scrollViews.otherElements.staticTexts["Submit"]
         XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
         completeAuth.tap()
