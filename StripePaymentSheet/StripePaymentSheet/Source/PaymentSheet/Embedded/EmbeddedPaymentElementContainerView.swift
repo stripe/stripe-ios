@@ -10,7 +10,7 @@ import UIKit
 class EmbeddedPaymentElementContainerView: UIView {
     
     /// Return the default size to let Auto Layout manage the height.
-    /// Overriding intrinsicContentSize values force SwiftUI to update layout immediately,
+    /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
     override var intrinsicContentSize: CGSize {
         return super.intrinsicContentSize
