@@ -475,7 +475,7 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: false
         )
         let iban: Element = makeIban()
-        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
         let checkboxElement: Element? = makeSepaBasedPMCheckbox()
         let mandate: Element? = makeSepaMandate()
         let elements: [Element?] = [contactSection, iban, addressSection, checkboxElement, mandate]
