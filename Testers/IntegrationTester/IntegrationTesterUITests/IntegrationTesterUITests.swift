@@ -87,6 +87,11 @@ class IntegrationTesterUICardTests: IntegrationTesterUITests {
     func testHSBCHTMLIssue() throws {
         testHSBCWebViewLinksTrigger(cardNumber: hsbcCard)
     }
+    
+    let browserFallbackCard = "4000582600000060"
+    func testBrowserFallback() throws {
+        testBrowserFallbackAuthentication(cardNumber: browserFallbackCard)
+    }
 }
 
 class IntegrationTesterUIPMTests: IntegrationTesterUITests {
@@ -470,6 +475,28 @@ class IntegrationTesterUITests: XCTestCase {
         XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
         completeAuth.tap()
 
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+    
+    func testBrowserFallbackAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 30.0))
+        buyButton.forceTapElement()
+        
+        let completeButton = app.buttons["COMPLETE"]
+        XCTAssertTrue(completeButton.waitForExistence(timeout: 30.0))
+        completeButton.forceTapElement()
+        
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
