@@ -78,9 +78,9 @@ class BackendViewModel: ObservableObject {
                 setupFutureUsage: usage
             )
         ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+            guard let self = self else { return }
             Task {
                 do {
-                    guard let self = self else { return }
                     let clientSecret = try await self.confirmIntent(
                         paymentMethodID: paymentMethod.stripeId,
                         shouldSavePaymentMethod: shouldSavePaymentMethod,
