@@ -25,6 +25,10 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
         _ viewController: PartnerAuthViewController,
         didReceiveError error: Error
     )
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    )
 }
 
 final class PartnerAuthViewController: SheetViewController {
@@ -157,7 +161,20 @@ final class PartnerAuthViewController: SheetViewController {
                 },
                 didSelectCancel: { [weak self] in
                     guard let self = self else { return }
-                    self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                    let isModal = panePresentationStyle == .sheet
+                    
+                    self.dataSource.analyticsClient.log(
+                        eventName: isModal ? "click.prepane.cancel" : "click.prepane.choose_another_bank",
+                        pane: .partnerAuth
+                    )
+                    
+                    self.dataSource.cancelPendingAuthSessionIfNeeded()
+                    
+                    if isModal {
+                        self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                    } else {
+                        self.delegate?.partnerAuthViewController(self, didRequestNextPane: .institutionPicker)
+                    }
                 }
             )
             self.prepaneViews = prepaneViews

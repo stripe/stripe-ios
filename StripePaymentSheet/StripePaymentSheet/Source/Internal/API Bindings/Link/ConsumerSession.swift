@@ -238,6 +238,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
         cvc: String?,
+        allowRedisplay: STPPaymentMethodAllowRedisplay?,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -245,6 +246,7 @@ extension ConsumerSession {
             for: clientSecret,
             id: id,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
+            allowRedisplay: allowRedisplay,
             cvc: cvc,
             completion: completion)
     }
