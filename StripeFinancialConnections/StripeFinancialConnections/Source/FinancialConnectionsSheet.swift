@@ -44,6 +44,44 @@ final public class FinancialConnectionsSheet {
         }
     }
 
+    /// Configuration for the Financial Connections Sheet.
+    @_spi(STP) public struct Configuration {
+        /// Style options for colors in Financial Connections.
+        @_spi(STP) @frozen public enum UserInterfaceStyle {
+            /// Financial Connections will automatically switch between light and dark mode compatible colors based on device settings.
+            case automatic
+
+            /// (default) Financial Connections will always use colors appropriate for light mode UI.
+            case alwaysLight
+
+            /// Financial Connections will always use colors appropriate for dark mode UI.
+            case alwaysDark
+
+            /// Applies the specified user interface style to the given view controller.
+            func configure(_ viewController: UIViewController?) {
+                guard ExperimentStore.shared.supportsDynamicStyle else {
+                    return
+                }
+                guard let viewController else { return }
+
+                switch self {
+                case .automatic:
+                    break
+                case .alwaysLight:
+                    viewController.overrideUserInterfaceStyle = .light
+                case .alwaysDark:
+                    viewController.overrideUserInterfaceStyle = .dark
+                }
+            }
+        }
+
+        @_spi(STP) public var style: UserInterfaceStyle
+
+        @_spi(STP) public init(style: UserInterfaceStyle = .alwaysLight) {
+            self.style = style
+        }
+    }
+
     // MARK: - Properties
 
     /**
@@ -79,10 +117,17 @@ final public class FinancialConnectionsSheet {
 
     private var wrapperViewController: ModalPresentationWrapperViewController?
 
-    // Any additional Elements context useful for the Financial Connections SDK.
+    /// Contains all configurable properties of Financial Connections.
+    @_spi(STP) public var configuration: FinancialConnectionsSheet.Configuration = .init() {
+        didSet {
+            PresentationManager.shared.configuration = configuration
+        }
+    }
+
+    /// Any additional Elements context useful for the Financial Connections SDK.
     @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
 
-    // Analytics client to use for logging analytics
+    /// Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
     // MARK: - Init
@@ -220,8 +265,7 @@ final public class FinancialConnectionsSheet {
         }
 
         let financialConnectionsApiClient: any FinancialConnectionsAPI
-        let shouldUseAsyncClient = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_USE_ASYNC_API_CLIENT")
-        if shouldUseAsyncClient {
+        if ExperimentStore.shared.useAsyncAPIClient {
             financialConnectionsApiClient = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
         } else {
             financialConnectionsApiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
@@ -230,8 +274,9 @@ final public class FinancialConnectionsSheet {
             apiClient: financialConnectionsApiClient,
             analyticsClientV1: analyticsClient,
             clientSecret: financialConnectionsSessionClientSecret,
-            elementsSessionContext: elementsSessionContext,
             returnURL: returnURL,
+            configuration: configuration,
+            elementsSessionContext: elementsSessionContext,
             publishableKey: apiClient.publishableKey,
             stripeAccount: apiClient.stripeAccount
         )
@@ -262,7 +307,7 @@ final public class FinancialConnectionsSheet {
             toPresent = wrapperViewController!
             animated = false
         }
-        presentingViewController.present(toPresent, animated: animated, completion: nil)
+        PresentationManager.shared.present(toPresent, from: presentingViewController, animated: animated)
     }
 }
 

@@ -50,6 +50,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Reload"].waitForExistence(timeout: 10))
         // ...should cause Card to no longer be the selected payment method.
         XCTAssertFalse(app.staticTexts["Payment method"].exists)
+        XCTAssertFalse(app.buttons["Card"].isSelected)
 
         // ....Tapping card should show the card form with details preserved
         app.buttons["Card"].waitForExistenceAndTap()
@@ -65,6 +66,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // ...card entered for setup should be preserved after update
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+        XCTAssertTrue(app.buttons["Card"].isSelected)
 
         // ...selecting Alipay w/ deferred PaymentIntent...
         app.buttons["Alipay"].waitForExistenceAndTap()
@@ -73,7 +75,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_carousel_payment_method_tapped"]
+            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
@@ -82,6 +84,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Reload"].waitForExistence(timeout: 10))
         // ...should cause Alipay to no longer be the selected payment method, since it is not valid for setup.
         XCTAssertFalse(app.staticTexts["Payment method"].exists)
+        XCTAssertFalse(app.buttons["Alipay"].exists)
 
         // ...go back into deferred PaymentIntent mode
         app.buttons.matching(identifier: "Payment").element(boundBy: 1).waitForExistenceAndTap()
@@ -96,6 +99,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Reload"].waitForExistence(timeout: 10))
         // ...should cause Cash App Pay to be the selected payment method, since it is valid for setup.
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Cash App Pay")
+        XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
 
         // ...go back into deferred PaymentIntent mode
         app.buttons.matching(identifier: "Payment").element(boundBy: 1).waitForExistenceAndTap()
@@ -115,16 +119,16 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Reload"].waitForExistence(timeout: 10))
         // ...should cause Klarna to no longer be the selected payment method.
         XCTAssertFalse(app.staticTexts["Payment method"].exists)
+        XCTAssertFalse(app.buttons["Klarna"].isSelected)
         // ...selecting Klarna should present a Klarna form with the previously entered email
         app.buttons["Klarna"].waitForExistenceAndTap()
         app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Klarna"].isSelected)
 
         let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             klarnaAnalytics,
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_carousel_payment_method_tapped",
-             "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped",
-            ]
+            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
         // ...switching back to payment should keep Klarna selected
@@ -133,6 +137,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Reload"].waitForExistence(timeout: 10))
         // ... Klarna should still be selected
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Klarna")
+        XCTAssertTrue(app.buttons["Klarna"].isSelected)
 
         // Confirm the Klarna payment
         XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))

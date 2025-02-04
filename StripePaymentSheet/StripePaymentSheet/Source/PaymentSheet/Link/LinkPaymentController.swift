@@ -314,6 +314,7 @@ import UIKit
             )
         )
 
+        let styleConfig = ElementsSessionContext.StyleConfig(from: configuration.style)
         return ElementsSessionContext(
             amount: mode.amount,
             currency: mode.currency,
@@ -321,7 +322,8 @@ import UIKit
             intentId: nil,
             linkMode: nil,
             billingDetails: billingDetails,
-            eligibleForIncentive: false
+            eligibleForIncentive: false,
+            styleConfig: styleConfig
         )
     }
 

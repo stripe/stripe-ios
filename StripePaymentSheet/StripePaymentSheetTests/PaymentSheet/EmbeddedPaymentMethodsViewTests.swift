@@ -46,24 +46,24 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
 
         // Delegate methods should not be called upon initialization
         XCTAssertEqual(mockDelegate.calls, [])
-        XCTAssertNil(embeddedView.selection)
+        XCTAssertNil(embeddedView.selectedRowButton)
 
         // Simulate tapping Cash App and verify delegate is called
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        embeddedView.didTap(rowButton: embeddedView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         XCTAssertEqual(mockDelegate.calls, [.didUpdateHeight, .didUpdateSelection, .didTapPaymentMethodRow])
-        XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.cashApp)), "Cash App Pay should be the current selection")
+        XCTAssertEqual(embeddedView.selectedRowButton?.type, .new(paymentMethodType: .stripe(.cashApp)), "Cash App Pay should be the current selection")
         mockDelegate.calls = []
 
         // Simulate tapping Klarna and verify delegate is called
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.klarna)))
+        embeddedView.didTap(rowButton: embeddedView.getRowButton(accessibilityIdentifier: "Klarna"))
         XCTAssertEqual(mockDelegate.calls, [.didUpdateHeight, .didUpdateSelection, .didTapPaymentMethodRow])
-        XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.klarna)), "Klarna should be the current selection")
+        XCTAssertEqual(embeddedView.selectedRowButton?.type, .new(paymentMethodType: .stripe(.klarna)), "Klarna should be the current selection")
         mockDelegate.calls = []
 
         // Resetting selection to last selection...
         embeddedView.resetSelectionToLastSelection()
         // ...should go back to Cash App
-        XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.cashApp)))
+        XCTAssertEqual(embeddedView.selectedRowButton?.type, .new(paymentMethodType: .stripe(.cashApp)))
         // ...and call/not call the various delegate methods
         XCTAssertEqual(mockDelegate.calls, [.didUpdateHeight, .didUpdateSelection])
         mockDelegate.calls = []
@@ -71,21 +71,21 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         // Resetting...
         embeddedView.resetSelection()
         // ...should go to nil
-        XCTAssertNil(embeddedView.selection)
+        XCTAssertNil(embeddedView.selectedRowButton)
         // ...and call/not call the various delegate methods
         XCTAssertEqual(mockDelegate.calls, [.didUpdateHeight, .didUpdateSelection])
         mockDelegate.calls = []
 
         // Simulate tapping PayPal and verify delegate is called
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.payPal)))
+        embeddedView.didTap(rowButton: embeddedView.getRowButton(accessibilityIdentifier: "PayPal"))
         XCTAssertEqual(mockDelegate.calls, [.didUpdateHeight, .didUpdateSelection, .didTapPaymentMethodRow])
-        XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.payPal)), "PayPal should be the current selection")
+        XCTAssertEqual(embeddedView.selectedRowButton?.type, .new(paymentMethodType: .stripe(.payPal)), "PayPal should be the current selection")
         mockDelegate.calls = []
 
         // Simulate tapping PayPal again (same selection) and verify delegate is NOT called
-        embeddedView.didTap(selection: .new(paymentMethodType: .stripe(.payPal)))
+        embeddedView.didTap(rowButton: embeddedView.getRowButton(accessibilityIdentifier: "PayPal"))
         XCTAssertEqual(mockDelegate.calls, [.didTapPaymentMethodRow])
-        XCTAssertEqual(embeddedView.selection, .new(paymentMethodType: .stripe(.payPal)), "PayPal should still be the current selection")
+        XCTAssertEqual(embeddedView.selectedRowButton?.type, .new(paymentMethodType: .stripe(.payPal)), "PayPal should still be the current selection")
     }
 }
 

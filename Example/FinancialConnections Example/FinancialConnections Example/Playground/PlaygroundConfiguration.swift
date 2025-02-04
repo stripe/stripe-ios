@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeFinancialConnections
 
 /// Provides an interface to customize the playground configuration
 /// (which is stored as a JSON in NSUserDefaults).
@@ -370,6 +371,36 @@ final class PlaygroundConfiguration {
             configurationStore[Self.phoneKey] = newValue
         }
     }
+    
+    // MARK: - Relink Authorization
+    
+    private static let customerIdKey = "customer_id"
+    var customerId: String {
+        get {
+            if let customerId = configurationStore[Self.customerIdKey] as? String {
+                return customerId
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationStore[Self.customerIdKey] = newValue
+        }
+    }
+
+    private static let relinkAuthorizationKey = "relink_authorization"
+    var relinkAuthorization: String {
+        get {
+            if let relinkAuthorization = configurationStore[Self.relinkAuthorizationKey] as? String {
+                return relinkAuthorization
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationStore[Self.relinkAuthorizationKey] = newValue
+        }
+    }
 
     // MARK: - Permissions
 
@@ -444,12 +475,6 @@ final class PlaygroundConfiguration {
 
     // MARK: - Experimental
 
-    @UserDefault(
-        key: "FINANCIAL_CONNECTIONS_EXAMPLE_USE_ASYNC_API_CLIENT",
-        defaultValue: false
-    )
-    private static var useAsyncAPIClientStorage: Bool
-
     private static let useAsyncAPIClientKey = "use_async_api_client"
     var useAsyncAPIClient: Bool {
         get {
@@ -462,8 +487,59 @@ final class PlaygroundConfiguration {
         set {
             // Save to configuration string
             configurationStore[Self.useAsyncAPIClientKey] = newValue
-            // Save to user defaults
-            Self.useAsyncAPIClientStorage = newValue
+            // Save to experiment store
+            ExperimentStore.shared.useAsyncAPIClient = newValue
+        }
+    }
+
+    private static let useDynamicStyleKey = "use_dynamic_style"
+    var useDynamicStyle: Bool {
+        get {
+            if let useDynamicStyle = configurationStore[Self.useDynamicStyleKey] as? Bool {
+                return useDynamicStyle
+            } else {
+                return false
+            }
+        }
+        set {
+            // Save to configuration string
+            configurationStore[Self.useDynamicStyleKey] = newValue
+            // Save to experiment store
+            ExperimentStore.shared.supportsDynamicStyle = newValue
+        }
+    }
+
+    enum Style: String, CaseIterable, Identifiable, Hashable {
+        case automatic = "automatic"
+        case alwaysLight = "always_light"
+        case alwaysDark = "always_dark"
+
+        var id: String {
+            return rawValue
+        }
+
+        var configurationValue: FinancialConnectionsSheet.Configuration.UserInterfaceStyle {
+            switch self {
+            case .automatic: return .automatic
+            case .alwaysLight: return .alwaysLight
+            case .alwaysDark: return .alwaysDark
+            }
+        }
+    }
+
+    private static let styleKey = "dynamic_style"
+    var style: PlaygroundConfiguration.Style {
+        get {
+            if let styleString = configurationStore[Self.styleKey] as? String,
+               let style = PlaygroundConfiguration.Style(rawValue: styleString) {
+                return style
+            } else {
+                return .alwaysLight
+            }
+        }
+        set {
+            // Save to configuration string
+            configurationStore[Self.styleKey] = newValue.rawValue
         }
     }
 
@@ -578,6 +654,18 @@ final class PlaygroundConfiguration {
             self.useAsyncAPIClient = useAsyncAPIClient
         } else {
             self.useAsyncAPIClient = false
+        }
+
+        if let useDynamicStyle = dictionary[Self.useDynamicStyleKey] as? Bool {
+            self.useDynamicStyle = useDynamicStyle
+        } else {
+            self.useDynamicStyle = false
+        }
+        if let styleString = dictionary[Self.styleKey] as? String,
+           let style = PlaygroundConfiguration.Style(rawValue: styleString) {
+            self.style = style
+        } else {
+            self.style = .alwaysLight
         }
     }
 }

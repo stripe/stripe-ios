@@ -179,7 +179,10 @@ extension NativeFlowController {
         //
         // keeping this logic in `pushPane` is helpful because we want to
         // reuse `skipSuccessPane` and `manualEntryMode == .custom` logic
-        clearNavigationStack: Bool = false
+        clearNavigationStack: Bool = false,
+        // Useful for cases where we want to prevent the current pane from being shown again,
+        // but not affect any previous panes.
+        removeCurrent: Bool = false
     ) {
         if pane == .success && dataManager.manifest.skipSuccessPane == true {
             closeAuthFlow(error: nil)
@@ -192,8 +195,11 @@ extension NativeFlowController {
                 nativeFlowController: self,
                 dataManager: dataManager
             )
-            if clearNavigationStack, let paneViewController = paneViewController {
+            if clearNavigationStack, let paneViewController {
                 setNavigationControllerViewControllers([paneViewController], animated: animated)
+            } else if removeCurrent, let paneViewController {
+                let viewControllers = Array(navigationController.viewControllers.dropLast())
+                setNavigationControllerViewControllers(viewControllers + [paneViewController], animated: animated)
             } else {
                 pushViewController(paneViewController, animated: animated)
             }
@@ -828,6 +834,14 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         dataManager.authSession = nil // clear any lingering auth sessions
 
         showErrorPane(forError: error, referrerPane: .partnerAuth)
+    }
+    
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        dataManager.authSession = nil // clear any lingering auth sessions
+        pushPane(nextPane, animated: true, removeCurrent: true)
     }
 }
 
@@ -1698,6 +1712,8 @@ private func CreatePaneViewController(
             )
     }
 
+    // Applies the style configuration to each view controller.
+    dataManager.configuration.style.configure(viewController)
     return viewController
 }
 

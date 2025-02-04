@@ -118,6 +118,9 @@
 /* Text on a screen that indicates card details cannot be changed. */
 "Card details cannot be changed." = "Card details cannot be changed.";
 
+/* Label for a button that lets you change the details of a payment method */
+"Change" = "Change";
+
 /* Title for a button that allows the user to use a different email in the signup flow. */
 "Change email" = "Change email";
 

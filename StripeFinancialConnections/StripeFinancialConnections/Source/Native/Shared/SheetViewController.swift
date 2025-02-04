@@ -386,7 +386,7 @@ class SheetViewController: UIViewController {
     func present(on viewController: UIViewController) {
         modalPresentationStyle = .custom
         transitioningDelegate = transitionDelegate
-        viewController.present(self, animated: true)
+        PresentationManager.shared.present(self, from: viewController)
     }
 }
 

@@ -114,6 +114,17 @@ struct PlaygroundView: View {
                                 .accessibility(identifier: "playground-phone")
                         }
                     }
+                    
+                    Section(header: Text("Relink")) {
+                        TextField("Customer ID (cus_)", text: viewModel.customerId)
+                            .keyboardType(.default)
+                            .autocapitalization(.none)
+                            .accessibility(identifier: "playground-customer-id")
+
+                        TextField("Relink authorization (fcauth_)", text: viewModel.relinkAuthorization)
+                            .keyboardType(.default)
+                            .accessibility(identifier: "playground-relink-authorization")
+                    }
 
                     Section(header: Text("PERMISSIONS")) {
                         Toggle("Balances", isOn: viewModel.balancesPermission)
@@ -179,6 +190,17 @@ struct PlaygroundView: View {
 
                     Section(header: Text("Experimental")) {
                         Toggle("Use async API client", isOn: viewModel.useAsyncAPIClient)
+
+                        Toggle("Use dynamic style", isOn: viewModel.useDynamicStyle)
+                        if viewModel.useDynamicStyle.wrappedValue {
+                            Picker("Style", selection: viewModel.style) {
+                                ForEach(PlaygroundConfiguration.Style.allCases) {
+                                    Text($0.rawValue)
+                                        .tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
                     }
                 }
 

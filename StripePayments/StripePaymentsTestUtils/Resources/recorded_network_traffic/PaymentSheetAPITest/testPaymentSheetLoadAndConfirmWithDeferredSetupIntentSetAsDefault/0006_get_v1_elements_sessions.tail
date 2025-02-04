@@ -1,9 +1,9 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_RfgC3ItA3trytRBWAnaF37x6xGG1RM2JJkvIGdT1zkAnU6C&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_Rgl3dt57WDTrNH2pQbCGSFIIFFz2IrpIW0T12vnNLU10Xxc&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=wxbct_ZnKP7msHNbO3FchfnkjhtBcBUGwKdtjmbXCW7wNCtpe2tq8Pxcdlj5leY3rpEqFgOo505CQ_bE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=8wljLiUpODt2gA9P1vVi6ruZdmOoanDkynFjsUeFgXKoD9HK5Z_tbkCism1B993s-xSOrgTJSiwr7IXq
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,16 +14,15 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_tgMDWP7GLXlVGE
-Content-Length: 15450
+request-id: req_xpGPUAbbHkaEUG
+Content-Length: 18245
 Vary: Origin
-Date: Tue, 28 Jan 2025 19:52:41 GMT
+Date: Fri, 31 Jan 2025 16:58:22 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
 
 {
   "payment_method_preference" : {
@@ -193,7 +192,7 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_mybank" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1Jw7rWevdO8",
+  "session_id" : "elements_session_1NMfoyHbRGz",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
@@ -222,9 +221,9 @@ x-content-type-options: nosniff
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "068530bf-00b4-4ed1-bc7d-c13b60f5a126",
+    "arb_id" : "72cbe332-422b-4e86-9d50-46f37b8e2e0e",
     "experiment_metadata" : {
-      "seed" : "d5c3834c45b4c146f026511c88653a3f02d6f2192904d31b0f78d9c1207964cd",
+      "seed" : "b0163e9cf440b89cf81077daeea505b888c2d2c769df3dd770fa36728ed2d1e8",
       "semi_dominant_payment_methods" : [
 
       ]
@@ -289,6 +288,7 @@ x-content-type-options: nosniff
     "link_popup_smart_defaults_enabled" : false,
     "link_hcaptcha_site_key" : "20000000-ffff-ffff-ffff-000000000002",
     "link_crypto_onramp_force_cvc_reverification" : false,
+    "link_wanderlust_in_elements_enabled" : false,
     "link_email_verification_login_enabled" : false,
     "link_only_for_payment_method_types_enabled" : false,
     "link_bank_incentives_enabled" : false,
@@ -330,16 +330,113 @@ x-content-type-options: nosniff
   "apple_pay_merchant_token_webhook_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
   "customer" : {
     "payment_methods" : [
-
+      {
+        "object" : "payment_method",
+        "id" : "pm_1QnNXoFY0qyl6XeWThTF3i2m",
+        "billing_details" : {
+          "email" : null,
+          "phone" : null,
+          "name" : null,
+          "address" : {
+            "state" : null,
+            "country" : null,
+            "line2" : null,
+            "city" : null,
+            "line1" : null,
+            "postal_code" : null
+          }
+        },
+        "card" : {
+          "regulated_status" : "unregulated",
+          "last4" : "4242",
+          "funding" : "credit",
+          "generated_from" : null,
+          "networks" : {
+            "available" : [
+              "visa"
+            ],
+            "preferred" : null
+          },
+          "brand" : "visa",
+          "checks" : {
+            "address_postal_code_check" : null,
+            "cvc_check" : null,
+            "address_line1_check" : null
+          },
+          "three_d_secure_usage" : {
+            "supported" : true
+          },
+          "wallet" : null,
+          "display_brand" : "visa",
+          "exp_month" : 12,
+          "exp_year" : 2032,
+          "country" : "US"
+        },
+        "livemode" : false,
+        "created" : 1738342696,
+        "allow_redisplay" : "always",
+        "type" : "card",
+        "customer" : "cus_Rgl30fpuXslWZx"
+      }
     ],
     "payment_methods_with_link_details" : [
-
+      {
+        "payment_method" : {
+          "object" : "payment_method",
+          "id" : "pm_1QnNXoFY0qyl6XeWThTF3i2m",
+          "billing_details" : {
+            "email" : null,
+            "phone" : null,
+            "name" : null,
+            "address" : {
+              "state" : null,
+              "country" : null,
+              "line2" : null,
+              "city" : null,
+              "line1" : null,
+              "postal_code" : null
+            }
+          },
+          "card" : {
+            "regulated_status" : "unregulated",
+            "last4" : "4242",
+            "funding" : "credit",
+            "generated_from" : null,
+            "networks" : {
+              "available" : [
+                "visa"
+              ],
+              "preferred" : null
+            },
+            "brand" : "visa",
+            "checks" : {
+              "address_postal_code_check" : null,
+              "cvc_check" : null,
+              "address_line1_check" : null
+            },
+            "three_d_secure_usage" : {
+              "supported" : true
+            },
+            "wallet" : null,
+            "display_brand" : "visa",
+            "exp_month" : 12,
+            "exp_year" : 2032,
+            "country" : "US"
+          },
+          "livemode" : false,
+          "created" : 1738342696,
+          "allow_redisplay" : "always",
+          "type" : "card",
+          "customer" : "cus_Rgl30fpuXslWZx"
+        },
+        "link_payment_details" : null
+      }
     ],
-    "default_payment_method" : null,
+    "default_payment_method" : "pm_1QnNXoFY0qyl6XeWThTF3i2m",
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1738095761,
-      "id" : "cuss_1QmKpxFY0qyl6XeWqfyP6EKD",
+      "api_key_expiry" : 1738344496,
+      "id" : "cuss_1QnNXnFY0qyl6XeWQmAQad6r",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -372,8 +469,8 @@ x-content-type-options: nosniff
           "enabled" : false
         }
       },
-      "customer" : "cus_RfgCWYdop9BDFr",
-      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLGwxaEVZQkxBcnRpVW9sd0tvdHptS1ZsYWdCSG5KcGI_008Bhd7ewt"
+      "customer" : "cus_Rgl30fpuXslWZx",
+      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLGlJN0pRanI5S2p5UXRIQTdwaUdjOWNmeUtvNWtrT2w_00qUKnCYDv"
     }
   },
   "klarna_express_config" : {

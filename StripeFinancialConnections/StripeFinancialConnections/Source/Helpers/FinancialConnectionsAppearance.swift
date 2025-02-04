@@ -22,8 +22,9 @@ struct FinancialConnectionsAppearance: Equatable {
         static let icon: UIColor = .dynamic(light: .neutral700, dark: .neutral25)
         static let borderNeutral: UIColor = .dynamic(light: .neutral100, dark: .neutral100Dark)
         static let spinnerNeutral: UIColor = .neutral200
-        static let warningLight: UIColor = .attention50
+        static let warningLight: UIColor = .dynamic(light: .attention50, dark: .attention50Dark)
         static let warning: UIColor = .attention300
+        static let shadow: UIColor = .dynamic(light: .black, dark: .neutral0)
 
         // These colors change based on the manifest's theme.
         let primary: UIColor
@@ -138,6 +139,10 @@ private extension UIColor {
         return UIColor(red: 254 / 255.0, green: 249 / 255.0, blue: 218 / 255.0, alpha: 1)  // #fef9da
     }
 
+    static var attention50Dark: UIColor {
+        return UIColor(red: 64 / 255.0, green: 10 / 255.0, blue: 0 / 255.0, alpha: 1)  // #400a00
+    }
+
     static var attention300: UIColor {
         return UIColor(red: 247 / 255.0, green: 135 / 255.0, blue: 15 / 255.0, alpha: 1)  // #f7870f
     }
@@ -178,9 +183,12 @@ private extension UIColor {
     }
 
     // MARK: Helpers
-    static func dynamic(light: UIColor, dark: UIColor, supportsDynamicColors: Bool = false) -> UIColor {
-        guard supportsDynamicColors else { return light }
+    static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
         return UIColor(dynamicProvider: {
+            guard ExperimentStore.shared.supportsDynamicStyle else {
+                return light
+            }
+
             switch $0.userInterfaceStyle {
             case .light, .unspecified:
                 return light

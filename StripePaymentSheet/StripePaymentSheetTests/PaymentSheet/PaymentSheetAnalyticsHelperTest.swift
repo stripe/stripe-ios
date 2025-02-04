@@ -112,33 +112,63 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     }
 
     func testLogLoadFailed() {
-        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        // Load started -> failed
-        sut.logLoadStarted()
-        sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
-        XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
-        XCTAssertEqual(analyticsClient._testLogHistory[1]["event"] as? String, "mc_load_failed")
-        XCTAssertLessThan(analyticsClient._testLogHistory[1]["duration"] as! Double, 1.0)
+        let integrationShapes: [(PaymentSheetAnalyticsHelper.IntegrationShape, String)] = [
+            (.complete, "paymentsheet"),
+            (.embedded, "embedded"),
+            (.flowController, "flowcontroller")
+        ]
+        
+        for (shape, shapeString) in integrationShapes {
+            let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+            
+            // Reset the analytics client for each iteration
+            analyticsClient._testLogHistory.removeAll()
+            
+            // Load started -> failed
+            sut.logLoadStarted()
+            sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
+            
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
+            XCTAssertEqual(analyticsClient._testLogHistory[1]["event"] as? String, "mc_load_failed")
+            XCTAssertLessThan(analyticsClient._testLogHistory[1]["duration"] as! Double, 1.0)
+            XCTAssertEqual(analyticsClient._testLogHistory[1]["integration_shape"] as? String, shapeString)
+        }
     }
 
     func testLogLoadSucceeded() {
-        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        // Load started -> succeeded
-        sut.logLoadStarted()
-        sut.logLoadSucceeded(
-            intent: ._testValue(),
-            elementsSession: ._testCardValue(),
-            defaultPaymentMethod: .applePay,
-            orderedPaymentMethodTypes: [.stripe(.card), .external(._testPayPalValue())]
-        )
-        XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
-
-        let loadSucceededPayload = analyticsClient._testLogHistory[1]
-        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
-        XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
-        XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "apple_pay")
-        XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
-        XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,external_paypal")
+        let integrationShapes: [(PaymentSheetAnalyticsHelper.IntegrationShape, String)] = [
+            (.complete, "paymentsheet"),
+            (.embedded, "embedded"),
+            (.flowController, "flowcontroller")
+        ]
+        
+        for (shape, shapeString) in integrationShapes {
+            let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+            
+            // Reset the analytics client for each iteration
+            analyticsClient._testLogHistory.removeAll()
+            
+            // Load started -> succeeded
+            sut.logLoadStarted()
+            sut.logLoadSucceeded(
+                intent: ._testValue(),
+                elementsSession: ._testCardValue(),
+                defaultPaymentMethod: .applePay,
+                orderedPaymentMethodTypes: [.stripe(.card), .external(._testPayPalValue())]
+            )
+            
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
+            
+            let loadSucceededPayload = analyticsClient._testLogHistory[1]
+            XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+            XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
+            XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "apple_pay")
+            XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
+            XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,external_paypal")
+            XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
+        }
     }
 
     func testLogShow() {
@@ -368,6 +398,42 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             deferredIntentConfirmationType: nil
         )
         XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "link_card_brand")
+    }
+    
+    func testLogEmbeddedUpdate() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        let testDuration: TimeInterval = 10.5
+        
+        // Test update started
+        sut.logEmbeddedUpdateStarted()
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_started")
+        
+        // Test successful update
+        sut.logEmbeddedUpdateFinished(result: .succeeded, duration: testDuration)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "succeeded")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["duration"] as? TimeInterval, testDuration)
+        XCTAssertNil(analyticsClient._testLogHistory.last!["error_type"])
+        XCTAssertNil(analyticsClient._testLogHistory.last!["error_code"])
+        
+        // Test failed update
+        sut.logEmbeddedUpdateStarted()
+        let error = NSError(domain: "test", code: 123)
+        sut.logEmbeddedUpdateFinished(result: .failed(error: error), duration: testDuration)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "failed")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["duration"] as? TimeInterval, testDuration)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["error_type"] as? String, "test")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["error_code"] as? String, "123")
+        
+        // Test canceled update
+        sut.logEmbeddedUpdateStarted()
+        sut.logEmbeddedUpdateFinished(result: .canceled, duration: testDuration)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_embedded_update_finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "canceled")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["duration"] as? TimeInterval, testDuration)
+        XCTAssertNil(analyticsClient._testLogHistory.last!["error_type"])
+        XCTAssertNil(analyticsClient._testLogHistory.last!["error_code"])
     }
 
     // MARK: - Helpers
