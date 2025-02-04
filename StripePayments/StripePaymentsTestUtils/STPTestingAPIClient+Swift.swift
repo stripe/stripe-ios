@@ -6,12 +6,10 @@
 //
 
 import Foundation
-@testable import StripePaymentSheet
 @_exported import StripePaymentsObjcTestUtils
 
 extension STPTestingAPIClient {
     static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
-
     public static var shared: STPTestingAPIClient {
         return .shared()
     }
@@ -145,16 +143,18 @@ extension STPTestingAPIClient {
     func fetchCustomerAndCustomerSessionClientSecret(
         customerID: String? = nil,
         merchantCountry: String? = "us",
-        features: MobilePaymentElementComponentFeature = .init(paymentMethodSave: true, paymentMethodRemove: true, paymentMethodRemoveLast: false, paymentMethodSaveAllowRedisplayOverride: nil, paymentMethodSetAsDefault: false)
+        paymentMethodSave: Bool = true,
+        paymentMethodRemove: Bool = true,
+        paymentMethodSetAsDefault: Bool = false
     ) async throws -> CreateCustomerSessionResponse {
         let params: [String: Any?] = [
             "component_name": "mobile_payment_element",
             "customer_id": customerID,
             "account": merchantCountry,
             "features": [
-                "payment_method_save": features.paymentMethodSave ? "enabled" : "disabled",
-                "payment_method_remove": features.paymentMethodRemove ? "enabled" : "disabled",
-                "payment_method_set_as_default": features.paymentMethodSetAsDefault ? "enabled" : "disabled"
+                "payment_method_save": paymentMethodSave ? "enabled" : "disabled",
+                "payment_method_remove": paymentMethodRemove ? "enabled" : "disabled",
+                "payment_method_set_as_default": paymentMethodSetAsDefault ? "enabled" : "disabled"
             ]
         ]
         return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
