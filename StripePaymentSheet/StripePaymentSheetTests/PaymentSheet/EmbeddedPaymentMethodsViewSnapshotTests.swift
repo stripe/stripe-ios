@@ -74,7 +74,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         appearance.embeddedPaymentElement.row.additionalInsets = 20
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
-                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.klarna)],
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
                                                       savedPaymentMethod: nil,
                                                       appearance: appearance,
                                                       shouldShowApplePay: true,

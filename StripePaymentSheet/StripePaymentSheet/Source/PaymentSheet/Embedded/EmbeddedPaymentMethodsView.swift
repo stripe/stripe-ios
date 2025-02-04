@@ -25,7 +25,14 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
-
+    
+    /// Return the default size to let Auto Layout manage the height.
+    /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
+    /// resulting in abrupt, non-animated height changes.
+    override var intrinsicContentSize: CGSize {
+        return super.intrinsicContentSize
+    }
+  
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
