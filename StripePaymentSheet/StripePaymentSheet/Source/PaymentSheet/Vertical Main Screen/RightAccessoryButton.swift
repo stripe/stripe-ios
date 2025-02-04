@@ -88,7 +88,12 @@ extension RowButton {
             self.appearance = appearance
             self.didTap = didTap
             super.init(frame: .zero)
-            addAndPinSubview(stackView)
+            if accessoryType == .change || accessoryType == .viewMore {
+                directionalLayoutMargins = .insets(top: 8)
+            } else {
+                directionalLayoutMargins = .zero
+            }
+            addAndPinSubview(stackView, directionalLayoutMargins: directionalLayoutMargins)
 
             accessibilityLabel = accessoryType.text
             accessibilityIdentifier = accessoryType.text

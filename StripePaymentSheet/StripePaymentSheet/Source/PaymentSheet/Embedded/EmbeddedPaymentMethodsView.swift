@@ -383,7 +383,7 @@ class EmbeddedPaymentMethodsView: UIView {
     func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
         // We always add a hidden accessory button ("Change >") so we can show/hide it easily
         let accessoryButton = RowButton.RightAccessoryButton(
-            accessoryType: appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? .changeWithChevron : .change,
+            accessoryType: appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? .change : .changeWithChevron,
             appearance: appearance,
             didTap: { [weak self] in
                 guard let self, let selectedRowButton else { return }
@@ -447,6 +447,7 @@ extension RowButton {
             self.sublabel.text = sublabel
             self.sublabel.isHidden = sublabel.isEmpty
         }
+        makeSameHeightAsOtherRowButtonsIfNecessary()
     }
     
     func removeChangeButton(shouldClearSublabel: Bool) {
