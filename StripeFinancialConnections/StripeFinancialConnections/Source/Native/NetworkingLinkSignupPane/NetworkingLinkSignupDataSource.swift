@@ -111,7 +111,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
                     phoneNumber: nil,
                     country: nil,
                     consumerSessionClientSecret: response.consumerSession.clientSecret,
-                    clientSecret: clientSecret
+                    clientSecret: clientSecret,
+                    isRelink: false
                 )
             }
             .chained { (_, customSuccessPaneMessage) in
@@ -125,7 +126,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
                 phoneNumber: phoneNumber,
                 country: countryCode, // ex. "US"
                 consumerSessionClientSecret: nil,
-                clientSecret: clientSecret
+                clientSecret: clientSecret,
+                isRelink: false
             ).chained { (_, customSuccessPaneMessage) in
                 return Promise(value: customSuccessPaneMessage)
             }
