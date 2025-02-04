@@ -131,7 +131,7 @@ class BooksAndBeansBackendModel: ObservableObject {
             configuration.customer = .init(id: customerId, ephemeralKeySecret: ephemeralKeySecret)
 
             // Return URL for 3D Secure or other web-based flows
-            configuration.returnURL = "books-and-beans://stripe-redirect"
+            configuration.returnURL = "payments-example://stripe-redirect"
 
             // Create a FlowController for a PaymentIntent
             PaymentSheet.FlowController.create(

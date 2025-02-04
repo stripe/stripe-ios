@@ -6,6 +6,7 @@
 
 import SwiftUI
 import StripePaymentSheet
+import PassKit
 
 struct FitFlowContentView: View {
     @StateObject private var viewModel = FitFlowViewModel()
@@ -18,36 +19,36 @@ struct FitFlowContentView: View {
                     .fontWeight(.bold)
 
                 // Display payment sheet buttons when ready
-                if let paymentSheet = viewModel.paymentSheet {
+//                if let paymentSheet = viewModel.paymentSheet {
                     VStack(spacing: 16) {
                         Text("Select your plan:")
                             .font(.headline)
 
                         Button("Monthly Plan - $19.99/month") {
                             viewModel.selectedPlan = .monthly
-                            viewModel.presentPaymentSheet()
+                            viewModel.prepareAndLaunchPaymentSheet(flow: .monthly)
                         }
                         .buttonStyle(.borderedProminent)
 
                         Button("Yearly Plan - $199.99/year") {
                             viewModel.selectedPlan = .yearly
-                            viewModel.presentPaymentSheet()
+                            viewModel.prepareAndLaunchPaymentSheet(flow: .yearly)
                         }
                         .buttonStyle(.borderedProminent)
 
                         // Simulate a free trial (requires card authentication)
                         Button("Free Trial with Card Auth") {
                             viewModel.selectedPlan = .freeTrial
-                            viewModel.presentPaymentSheet()
+                            viewModel.prepareAndLaunchPaymentSheet(flow: .freeTrial)
                         }
                         .buttonStyle(.bordered)
                     }
-                } else if viewModel.isLoading {
-                    ProgressView("Loading…")
-                } else {
-                    Text("Failed to load payment sheet.")
-                        .foregroundColor(.red)
-                }
+//                } else if viewModel.isLoading {
+//                    ProgressView("Loading…")
+//                } else {
+//                    Text("Failed to load payment sheet.")
+//                        .foregroundColor(.red)
+//                }
 
                 // Display active plan if any
                 if let activePlan = viewModel.activePlan {
@@ -57,10 +58,6 @@ struct FitFlowContentView: View {
                         .background(Color.green.opacity(0.2))
                         .cornerRadius(8)
                 }
-            }
-            .onAppear {
-                // Load PaymentSheet when the view appears
-                viewModel.preparePaymentSheet()
             }
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(
@@ -103,19 +100,37 @@ class FitFlowViewModel: ObservableObject {
     }
 
     // MARK: - Main Flow
+    enum Flow {
+        case monthly
+        case yearly
+        case freeTrial
+    }
 
     /// Sets up the PaymentSheet using a SetupIntent from the stripedemos.com backend.
     /// This approach allows for collecting a user's payment method details once. Then
     /// your backend can create a subscription or handle recurring charges off-session.
-    func preparePaymentSheet() {
+    func prepareAndLaunchPaymentSheet(flow: Flow) {
         isLoading = true
         var request = URLRequest(url: backendEndpoint)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        var isSetupIntent = false
+        var amount = 0
+        var mode = "payment_with_setup"
+        switch flow {
+        case .yearly:
+            amount = 19999
+        case .monthly:
+            amount = 1999
+        case .freeTrial:
+            isSetupIntent = true
+            mode = "setup"
+        }
+            
         // We'll request a SetupIntent by specifying `mode: "setup"`.
         let bodyDict: [String: Any] = [
-            "mode": "setup",
+            "mode": isSetupIntent ? "setup": "payment_with_setup",
+            "amount": amount,                   // Amount in cents (e.g. $19.99)
             "customer": "new",               // Options: "returning" or "cus_xxx" to re-use a test customer
             "merchant_country_code": "US",   // You can change this if needed
             "automatic_payment_methods": true
@@ -154,11 +169,99 @@ class FitFlowViewModel: ObservableObject {
             config.allowsDelayedPaymentMethods = true
             config.returnURL = "payments-example://stripe-redirect" // Adjust if needed
 
-            // If you want Apple Pay, configure it here:
-            // config.applePay = PaymentSheet.ApplePayConfiguration(
-            //     merchantId: "merchant.com.stripe.umbrella.test",
-            //     merchantCountryCode: "US"
-            // )
+            let customHandlers = { switch flow {
+            case .monthly:
+                return PaymentSheet.ApplePayConfiguration.Handlers(
+                    paymentRequestHandler: { request in
+                        let billing = PKRecurringPaymentSummaryItem(label: "Monthly Plan", amount: NSDecimalNumber(string: "19.99"))
+                        
+                        // Payment starts today
+                        billing.startDate = Date()
+                        
+                        // Payment ends in one year
+                        billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
+                        
+                        // Pay once a month.
+                        billing.intervalUnit = .month
+                        billing.intervalCount = 1
+                        
+                        // recurringPaymentRequest is only available on iOS 16 or later
+                        if #available(iOS 16.0, *) {
+                            request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
+                                                                                        regularBilling: billing,
+                                                                                        managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
+                            request.recurringPaymentRequest?.billingAgreement = "You'll be billed $19.99 every month for the next 12 months. To cancel at any time, go to Account and click 'Cancel Membership.'"
+                        }
+                        request.paymentSummaryItems = [billing]
+                        request.currencyCode = "USD"
+                        
+                        return request
+                    }
+                )
+            case .yearly:
+                return PaymentSheet.ApplePayConfiguration.Handlers(
+                    paymentRequestHandler: { request in
+                        let billing = PKRecurringPaymentSummaryItem(label: "Yearly Subscription", amount: NSDecimalNumber(string: "199.99"))
+                        
+                        // Payment starts today
+                        billing.startDate = Date()
+                        
+                        // Payment ends in one year
+                        billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
+                        
+                        // Pay once a month.
+                        billing.intervalUnit = .year
+                        billing.intervalCount = 1
+                        
+                        // recurringPaymentRequest is only available on iOS 16 or later
+                        if #available(iOS 16.0, *) {
+                            request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
+                                                                                        regularBilling: billing,
+                                                                                        managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
+                            request.recurringPaymentRequest?.billingAgreement = "You'll be billed $199.99 per year. To cancel at any time, go to Account and click 'Cancel Membership.'"
+                        }
+                        request.paymentSummaryItems = [billing]
+                        request.currencyCode = "USD"
+                        
+                        return request
+                    }
+                )
+            case .freeTrial:
+                return PaymentSheet.ApplePayConfiguration.Handlers(
+                    paymentRequestHandler: { request in
+                        let billing = PKRecurringPaymentSummaryItem(label: "Monthly Subscription starting in one month", amount: NSDecimalNumber(string: "19.99"))
+                        
+                        // Payment starts in 30 days
+                        billing.startDate = Date().addingTimeInterval(60 * 60 * 24 * 30)
+                        
+                        // Payment ends in one year
+                        billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
+                        
+                        // Pay once a month.
+                        billing.intervalUnit = .month
+                        billing.intervalCount = 1
+                        
+                        // recurringPaymentRequest is only available on iOS 16 or later
+                        if #available(iOS 16.0, *) {
+                            request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
+                                                                                        regularBilling: billing,
+                                                                                        managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
+                            request.recurringPaymentRequest?.billingAgreement = "You'll be billed $19.99 every month starting next month for the next 12 months. To cancel at any time, go to Account and click 'Cancel Membership.'"
+                        }
+                        request.paymentSummaryItems = [billing]
+                        request.currencyCode = "USD"
+                        
+                        return request
+                    }
+                )
+            }}()
+                
+            config.applePay = PaymentSheet.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.umbrella.test",
+                merchantCountryCode: "US",
+                customHandlers: customHandlers
+            )
+
 
             // If you retrieved a customer
             if let customerId = customerId, let ephemeralKeySecret = ephemeralKeySecret {
@@ -167,13 +270,74 @@ class FitFlowViewModel: ObservableObject {
 
             DispatchQueue.main.async {
                 // Initialize PaymentSheet with the SetupIntent.
-                let ps = PaymentSheet(setupIntentClientSecret: clientSecret, configuration: config)
+//                let ps = PaymentSheet(setupIntentClientSecret: clientSecret, configuration: config)
+                let ps = PaymentSheet(intentConfiguration: .init(mode: isSetupIntent ? .setup(currency: "USD", setupFutureUsage: .offSession) : .payment(amount: amount, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic), confirmHandler: { paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
+//                    self.confirm
+                    self!.confirmHandler(clientSecret, mode, paymentMethod, shouldSavePaymentMethod, intentCreationCallback)
+                }), configuration: config)
                 self?.paymentSheet = ps
+                self?.presentPaymentSheet()
             }
         }
         .resume()
     }
+    
+    // Deferred confirmation handler
+    func confirmHandler(_ clientSecret: String, _ mode: String, _ paymentMethod: STPPaymentMethod,
+                        _ shouldSavePaymentMethod: Bool,
+                        _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
 
+        let body = [
+            "client_secret": clientSecret,
+            "payment_method_id": paymentMethod.stripeId,
+            "merchant_country_code": "US",
+            "should_save_payment_method": shouldSavePaymentMethod,
+            "mode": mode,
+//            "link_mode": .native,
+            "return_url": "payments-example://stripe-redirect" ?? "",
+        ] as [String: Any]
+
+        makeRequest(with:  "https://stp-mobile-playground-backend-v7.stripedemos.com/confirm_intent", body: body, completionHandler: { data, response, error in
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            else {
+                if let data = data,
+                   (response as? HTTPURLResponse)?.statusCode == 400 {
+                    let errorMessage = String(data: data, encoding: .utf8)!
+                    // read the error message
+                    intentCreationCallback(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
+                } else {
+                        intentCreationCallback(.failure(NSError(domain: "error", code: 0, userInfo: nil)))
+                }
+                return
+            }
+
+            guard let clientSecret = json["client_secret"] as? String else {
+                            intentCreationCallback(.failure(NSError(domain: "error", code: 0, userInfo: nil)))
+                return
+            }
+
+            intentCreationCallback(.success(clientSecret))
+        })
+    }
+
+    func makeRequest(with url: String, body: [String: Any], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        let session = URLSession.shared
+        let url = URL(string: url)!
+
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = json
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let task = session.dataTask(with: urlRequest) { data, response, error in
+            completionHandler(data, response, error)
+        }
+
+        task.resume()
+    }
     /// Presents the PaymentSheet UI. If the user completes the setup, we mark the plan as active.
     func presentPaymentSheet() {
         guard let paymentSheet = paymentSheet else {

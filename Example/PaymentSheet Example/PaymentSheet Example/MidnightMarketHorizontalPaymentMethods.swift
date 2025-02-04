@@ -100,7 +100,7 @@ class MidnightMarketBackendModel: ObservableObject {
             )
             
             // (d) Let the PaymentSheet know where to return after 3DS
-            configuration.returnURL = "midnight-market://stripe-redirect"
+            configuration.returnURL = "payments-example://stripe-redirect"
             
             // (e) Enable delayed payment methods. Great if you also want bank debits or buy now/pay later.
             configuration.allowsDelayedPaymentMethods = true

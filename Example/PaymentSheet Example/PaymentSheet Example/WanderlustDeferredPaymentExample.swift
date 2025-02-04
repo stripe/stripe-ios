@@ -106,7 +106,7 @@ class WanderlustDeferredPaymentModel: ObservableObject {
             var config = PaymentSheet.Configuration()
             config.merchantDisplayName = "Wanderlust Travel Agency"
             config.customer = .init(id: customerId, ephemeralKeySecret: ephemeralKeySecret)
-            config.applePay = .init( merchantId: "merchant.com.yourApp",
+            config.applePay = .init( merchantId: "merchant.com.stripe.umbrella.test",
                                      merchantCountryCode: "US" )
             // We want to allow delayed payment methods and require the user to manually opt in to saving
             config.allowsDelayedPaymentMethods = true

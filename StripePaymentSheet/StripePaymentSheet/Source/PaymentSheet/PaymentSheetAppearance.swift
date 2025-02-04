@@ -9,12 +9,10 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-public extension PaymentSheet {
-
     /// Describes the appearance of PaymentSheet
-    struct Appearance: Equatable {
+    public struct PaymentElementAppearance: Equatable {
         /// The default appearance for PaymentSheet
-        public static let `default` = Appearance()
+        public static let `default` = PaymentElementAppearance()
 
         /// Creates a `PaymentSheet.Appearance` with default values
         public init() {}
@@ -231,6 +229,9 @@ public extension PaymentSheet {
             public var shadow: Shadow?
         }
     }
+
+extension PaymentSheet {
+    public typealias Appearance = PaymentElementAppearance
 }
 
 @_spi(EmbeddedPaymentElementPrivateBeta) public extension PaymentSheet.Appearance {
