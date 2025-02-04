@@ -52,7 +52,7 @@ import Combine
 
     /// Creates an empty view model. Call `load` to initialize the `EmbeddedPaymentElementViewModel`
     public init() {
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: Self.self)
     }
 
     /// Asynchronously loads the EmbeddedPaymentElementViewModel. This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
@@ -160,6 +160,12 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         self.paymentOption = embeddedPaymentElement.paymentOption
     }
+}
+
+// MARK: STPAnalyticsProtocol
+
+@_spi(STP) extension EmbeddedPaymentElementViewModel: STPAnalyticsProtocol {
+    nonisolated public static let stp_analyticsIdentifier = "EmbeddedPaymentElementViewModel"
 }
 
 /// A SwiftUI view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
