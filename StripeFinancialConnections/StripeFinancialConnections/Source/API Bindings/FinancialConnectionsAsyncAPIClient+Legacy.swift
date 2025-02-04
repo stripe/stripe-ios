@@ -252,7 +252,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) -> Future<(manifest: FinancialConnectionsSessionManifest, customSuccessPaneMessage: String?)> {
         wrapAsyncToFuture {
             try await self.saveAccountsToNetworkAndLink(
@@ -262,7 +263,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 phoneNumber: phoneNumber,
                 country: country,
                 consumerSessionClientSecret: consumerSessionClientSecret,
-                clientSecret: clientSecret
+                clientSecret: clientSecret,
+                isRelink: isRelink
             )
         }
     }

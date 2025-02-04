@@ -70,7 +70,8 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
             phoneNumber: nil,
             country: nil,
             consumerSessionClientSecret: consumerSession.clientSecret,
-            clientSecret: clientSecret
+            clientSecret: clientSecret,
+            isRelink: false
         )
         .chained { (_, customSuccessPaneMessage) in
             return Promise(value: customSuccessPaneMessage)

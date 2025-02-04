@@ -393,9 +393,7 @@ extension NativeFlowController {
                         )
                         finishAuthSession(.failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
                     } else {
-                        if !session.accounts.data.isEmpty || session.paymentAccount != nil
-                            || session.bankAccountToken != nil
-                        {
+                        if session.didCompleteSuccessfully || dataManager.pendingRelinkAuthorization != nil {
                             if dataManager.manifest.isProductInstantDebits {
                                 // For Instant Debits, create a payment method and complete with it.
                                 createPaymentMethod(for: session) { result in
@@ -1176,7 +1174,7 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         forAuthorization authorization: String
     ) {
         dataManager.institution = institution
-        dataManager.pendingRepairAuthorization = authorization
+        dataManager.pendingRelinkAuthorization = authorization
         pushPane(.bankAuthRepair, animated: true, clearNavigationStack: true)
     }
 
@@ -1388,7 +1386,8 @@ private func CreatePaneViewController(
                 analyticsClient: dataManager.analyticsClient,
                 reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors,
                 dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice,
-                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret
+                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret,
+                isRelink: dataManager.pendingRelinkAuthorization != nil
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = nativeFlowController
@@ -1422,12 +1421,12 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .bankAuthRepair:
-        if let institution = dataManager.institution, let coreAuthorization = dataManager.pendingRepairAuthorization {
+        if let institution = dataManager.institution, let relinkAuthorization = dataManager.pendingRelinkAuthorization {
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
                 authSession: dataManager.authSession,
                 institution: institution,
                 manifest: dataManager.manifest,
-                repairSessionPayload: RelinkSessionPayload(coreAuthorization: coreAuthorization),
+                relinkAuthorization: relinkAuthorization,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
@@ -1603,7 +1602,7 @@ private func CreatePaneViewController(
                 authSession: dataManager.authSession,
                 institution: institution,
                 manifest: dataManager.manifest,
-                repairSessionPayload: nil,
+                relinkAuthorization: nil,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
@@ -1763,5 +1762,12 @@ private func ShouldHideLogoInNavigationBar(
         }
     } else {
         return reducedBranding
+    }
+}
+
+private extension StripeAPI.FinancialConnectionsSession {
+    
+    var didCompleteSuccessfully: Bool {
+        return !accounts.data.isEmpty || paymentAccount != nil || bankAccountToken != nil
     }
 }
