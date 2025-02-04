@@ -198,11 +198,13 @@ extension ConsumerSession {
 
     func listPaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
+        supportedPaymentMethodTypes: [String],
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         apiClient.listPaymentDetails(
             for: clientSecret,
+            supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }

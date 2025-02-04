@@ -298,6 +298,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     func listPaymentDetails(
+        passthroughMode: Bool,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
@@ -309,6 +310,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
             session.listPaymentDetails(
                 with: self.apiClient,
+                supportedPaymentMethodTypes: session.supportedPaymentMethodTypes(passthroughMode: passthroughMode),
                 consumerAccountPublishableKey: self.publishableKey,
                 completion: completionRetryingOnAuthErrors
             )
@@ -607,4 +609,15 @@ struct UpdatePaymentDetailsParams {
 
 protocol PaymentSheetLinkAccountDelegate {
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void)
+}
+
+private extension ConsumerSession {
+    
+    func supportedPaymentMethodTypes(passthroughMode: Bool) -> [String] {
+        var paymentMethodTypes = supportedPaymentDetailsTypes.filter { $0 != .unparsable }
+        if passthroughMode {
+            paymentMethodTypes.remove(.bankAccount)
+        }
+        return paymentMethodTypes.map { $0.rawValue }
+    }
 }
