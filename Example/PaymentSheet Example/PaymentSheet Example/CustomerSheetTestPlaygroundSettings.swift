@@ -141,8 +141,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
-    enum PaymentMethodSetAsDefault: String, PickerEnum {
-        static let enumName: String = "paymentMethodSetAsDefault"
+    enum PaymentMethodSyncDefault: String, PickerEnum {
+        static let enumName: String = "PaymentMethodSyncDefault"
 
         case enabled
         case disabled
@@ -175,7 +175,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodRemoveLast: PaymentMethodRemoveLast
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
-    var paymentMethodSetAsDefault: PaymentMethodSetAsDefault
+    var paymentMethodSyncDefault: PaymentMethodSyncDefault
     var cardBrandAcceptance: CardBrandAcceptance
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
@@ -198,7 +198,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    paymentMethodRemove: .enabled,
                                                    paymentMethodRemoveLast: .enabled,
                                                    paymentMethodAllowRedisplayFilters: .always,
-                                                   paymentMethodSetAsDefault: .disabled,
+                                                   paymentMethodSyncDefault: .disabled,
                                                    cardBrandAcceptance: .all)
     }
 

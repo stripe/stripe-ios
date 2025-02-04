@@ -199,12 +199,12 @@ extension CustomerSheetDataSource {
         }
     }
 
-    func paymentMethodSetAsDefault(elementsSession: STPElementsSession) -> Bool {
+    func paymentMethodSyncDefault(elementsSession: STPElementsSession) -> Bool {
         switch dataSource {
         case .customerAdapter:
             return false
         case .customerSession:
-            return elementsSession.paymentMethodSetAsDefaultForCustomerSheet
+            return elementsSession.paymentMethodSyncDefaultForCustomerSheet
         }
     }
 }

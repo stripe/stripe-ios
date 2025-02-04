@@ -231,8 +231,8 @@ extension STPElementsSession {
         return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
     }
 
-    var paymentMethodSetAsDefaultForCustomerSheet: Bool {
-        return customer?.customerSession.customerSheetComponent.features?.paymentMethodSetAsDefault ?? false
+    var paymentMethodSyncDefaultForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.features?.paymentMethodSyncDefault ?? false
     }
 
     var isLinkCardBrand: Bool {

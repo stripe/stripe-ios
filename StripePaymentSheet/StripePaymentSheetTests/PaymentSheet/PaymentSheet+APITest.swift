@@ -362,7 +362,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let expectation = XCTestExpectation(description: "Check default payment method set")
         // Create a new customer and new key
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
+        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil, features: .init(paymentMethodSave: true, paymentMethodRemove: true, paymentMethodRemoveLast: true, paymentMethodSaveAllowRedisplayOverride: .always, paymentMethodSetAsDefault: true))
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         // 0. Create a PI on our test backend
@@ -443,7 +443,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let expectation = XCTestExpectation(description: "Check default payment method set")
         // Create a new customer and new key
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
+        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil, features: .init(paymentMethodSave: true, paymentMethodRemove: true, paymentMethodRemoveLast: true, paymentMethodSaveAllowRedisplayOverride: .always, paymentMethodSetAsDefault: true))
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         // 0. Create a SI on our test backend
@@ -514,7 +514,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let expectation = XCTestExpectation(description: "Check default payment method set")
         // Create a new customer and new key
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
+        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil, features: .init(paymentMethodSave: true, paymentMethodRemove: true, paymentMethodRemoveLast: true, paymentMethodSaveAllowRedisplayOverride: .always, paymentMethodSetAsDefault: true))
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         let types = ["card"]
@@ -583,7 +583,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let expectation = XCTestExpectation(description: "Check default payment method set")
         // Create a new customer and new key
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil)
+        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil, features: .init(paymentMethodSave: true, paymentMethodRemove: true, paymentMethodRemoveLast: true, paymentMethodSaveAllowRedisplayOverride: .always, paymentMethodSetAsDefault: true))
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         let types = ["card"]
@@ -618,6 +618,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 ) { result, _ in
                     switch result {
                     case .completed:
+                        sleep(3)
                         PaymentSheetLoader.load(
                             mode: .deferredIntent(intentConfig),
                             configuration: configuration,

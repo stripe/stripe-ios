@@ -73,6 +73,8 @@ public class ClassForBundle {}
     case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
     case elementsSessions_customerSessionsCustomerSheet_200 = "MockFiles/elements_sessions_customerSessionCustomerSheet_200"
     case elementsSessions_customerSessionsCustomerSheetWithSavedPM_200 = "MockFiles/elements_sessions_customerSessionCustomerSheetWithSavedPM_200"
+    case elementsSessions_customerSessionsCustomerSheet_DefaultEnabled_200 = "MockFiles/elements_sessions_customerSessionCustomerSheet_DefaultEnabled_200"
+    case elementsSessions_customerSessionsCustomerSheetWithSavedPM_DefaultEnabled_200 = "MockFiles/elements_sessions_customerSessionCustomerSheetWithSavedPM_DefaultEnabled_200"
 
     case elementsSessionsPaymentMethod_savedPM_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_200"
     case elementsSessionsPaymentMethod_link_200 = "MockFiles/elements_sessions_paymentMethod_link_200"

@@ -23,7 +23,8 @@
         "customer_sheet": {
           "enabled": true,
           "features": {
-            "payment_method_remove": "enabled"
+            "payment_method_remove": "enabled",
+            "payment_method_sync_default": "enabled"
           }
         },
         "pricing_table": {

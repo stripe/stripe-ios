@@ -267,7 +267,9 @@ class STPElementsSessionTest: XCTestCase {
                                                             customerSessionData: [
                                                                 "mobile_payment_element": [
                                                                     "enabled": true,
-                                                                    "features": ["payment_method_set_as_default": "enabled"],
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                 "payment_method_set_as_default": "enabled"],
                                                                 ],
                                                                 "customer_sheet": [
                                                                     "enabled": false,
@@ -283,7 +285,9 @@ class STPElementsSessionTest: XCTestCase {
                                                             customerSessionData: [
                                                                 "mobile_payment_element": [
                                                                     "enabled": true,
-                                                                    "features": ["payment_method_set_as_default": "disabled"]
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                 "payment_method_set_as_default": "disabled"]
                                                                 ],
                                                                 "customer_sheet": [
                                                                     "enabled": false,
@@ -381,11 +385,12 @@ class STPElementsSessionTest: XCTestCase {
                                                                 ],
                                                                 "customer_sheet": [
                                                                     "enabled": true,
-                                                                    "features": ["payment_method_set_as_default": "enabled"],
+                                                                    "features": ["payment_method_remove": "enabled",
+                                                                        "payment_method_sync_default": "enabled"],
                                                                 ],
                                                             ])
 
-        let allowsSetAsDefault = elementsSession.paymentMethodSetAsDefaultForCustomerSheet
+        let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
         XCTAssertTrue(allowsSetAsDefault)
     }
     func testSetAsDefaultForCustomerSheet_disabled() {
@@ -396,11 +401,11 @@ class STPElementsSessionTest: XCTestCase {
                                                                 ],
                                                                 "customer_sheet": [
                                                                     "enabled": true,
-                                                                    "features": ["payment_method_set_as_default": "disabled"],
+                                                                    "features": ["payment_method_sync_default": "disabled"],
                                                                 ],
                                                             ])
 
-        let allowsSetAsDefault = elementsSession.paymentMethodSetAsDefaultForCustomerSheet
+        let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
         XCTAssertFalse(allowsSetAsDefault)
     }
     private let testCardJSON = [

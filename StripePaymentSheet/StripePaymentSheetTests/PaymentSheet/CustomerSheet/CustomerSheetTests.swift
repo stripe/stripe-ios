@@ -7,7 +7,7 @@ import Foundation
 
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) @_spi(AllowsSetAsDefaultPM) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) @_spi(AllowsSetAsDefaultPM) @testable import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -330,7 +330,7 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_CustomerSession_NoDefaultPMHasSavedPaymentMethod() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheetWithSavedPM_200)
+        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheetWithSavedPM_DefaultEnabled_200)
         var configuration = CustomerSheet.Configuration()
         configuration.apiClient = stubbedAPIClient
 
@@ -353,7 +353,7 @@ class CustomerSheetTests: APIStubbedTestCase {
 
     func testLoadPaymentMethodInfo_CustomerSession_NoDefaultPMNoSavedPaymentMethod() throws {
         let stubbedAPIClient = stubbedAPIClient()
-        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheet_200)
+        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheet_DefaultEnabled_200)
         var configuration = CustomerSheet.Configuration()
         configuration.apiClient = stubbedAPIClient
 
