@@ -16,8 +16,8 @@ class ViewController: UIViewController {
     }
 
     @IBSegueAction func showSwiftUIExample(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 14.0, *) {
-            return UIHostingController(coder: coder, rootView: ExampleSwiftUIPaymentSheet())
+        if #available(iOS 16.0, *) {
+            return UIHostingController(coder: coder, rootView: ExampleFlowsNavigationView())
         } else {
             return nil
         }

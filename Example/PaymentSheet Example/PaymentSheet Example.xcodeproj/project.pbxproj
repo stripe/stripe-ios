@@ -18,6 +18,14 @@
 		2CD71F097C7CD0D9BFC7499D /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD340D0C93E93B9E9DB7691F /* PaymentSheetTestPlaygroundSettings.swift */; };
 		31AB49B72C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */; };
 		31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */; };
+		31E7CCA92D4C357E0053D60B /* OrionShoesSingleStepExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7CCA82D4C357E0053D60B /* OrionShoesSingleStepExampleView.swift */; };
+		31E7CCAB2D4C454E0053D60B /* CozyRestaurantCustomFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7CCAA2D4C454E0053D60B /* CozyRestaurantCustomFlow.swift */; };
+		31E7CCAD2D4C47300053D60B /* FitForwardSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7CCAC2D4C47300053D60B /* FitForwardSubscriptionView.swift */; };
+		31E7CCAF2D4C47760053D60B /* HighlandsHotelBookingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7CCAE2D4C47760053D60B /* HighlandsHotelBookingExample.swift */; };
+		31E7CCB12D4C48B00053D60B /* MidnightMarketHorizontalPaymentMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7CCB02D4C48B00053D60B /* MidnightMarketHorizontalPaymentMethods.swift */; };
+		31E7CCB32D4C48E10053D60B /* BooksAndBeansCafeTopUpExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7CCB22D4C48E10053D60B /* BooksAndBeansCafeTopUpExample.swift */; };
+		31E7CCB52D4C4A0F0053D60B /* WanderlustDeferredPaymentExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7CCB42D4C4A0F0053D60B /* WanderlustDeferredPaymentExample.swift */; };
+		31E7CCB72D4C4AD30053D60B /* ExampleFlowsNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7CCB62D4C4AD30053D60B /* ExampleFlowsNavigationView.swift */; };
 		3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */; };
 		37CDE2E21F00571F147FCFF7 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		424BBBEBF25E5F020FF40F36 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -171,6 +179,14 @@
 		31A510FDEA3F1AAED0507251 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
 		31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+PaymentSheetDebugging.swift"; sourceTree = "<group>"; };
 		31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		31E7CCA82D4C357E0053D60B /* OrionShoesSingleStepExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrionShoesSingleStepExampleView.swift; sourceTree = "<group>"; };
+		31E7CCAA2D4C454E0053D60B /* CozyRestaurantCustomFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CozyRestaurantCustomFlow.swift; sourceTree = "<group>"; };
+		31E7CCAC2D4C47300053D60B /* FitForwardSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitForwardSubscriptionView.swift; sourceTree = "<group>"; };
+		31E7CCAE2D4C47760053D60B /* HighlandsHotelBookingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlandsHotelBookingExample.swift; sourceTree = "<group>"; };
+		31E7CCB02D4C48B00053D60B /* MidnightMarketHorizontalPaymentMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidnightMarketHorizontalPaymentMethods.swift; sourceTree = "<group>"; };
+		31E7CCB22D4C48E10053D60B /* BooksAndBeansCafeTopUpExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksAndBeansCafeTopUpExample.swift; sourceTree = "<group>"; };
+		31E7CCB42D4C4A0F0053D60B /* WanderlustDeferredPaymentExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WanderlustDeferredPaymentExample.swift; sourceTree = "<group>"; };
+		31E7CCB62D4C4AD30053D60B /* ExampleFlowsNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleFlowsNavigationView.swift; sourceTree = "<group>"; };
 		34CCC286E48ADD9F586832D9 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Main.strings"; sourceTree = "<group>"; };
 		36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+Utilities.swift"; sourceTree = "<group>"; };
 		3C2A8BAE3842A0E892D06BB9 /* CustomerSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
@@ -454,6 +470,14 @@
 				0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */,
 				447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */,
 				B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */,
+				31E7CCAA2D4C454E0053D60B /* CozyRestaurantCustomFlow.swift */,
+				31E7CCA82D4C357E0053D60B /* OrionShoesSingleStepExampleView.swift */,
+				31E7CCAC2D4C47300053D60B /* FitForwardSubscriptionView.swift */,
+				31E7CCAE2D4C47760053D60B /* HighlandsHotelBookingExample.swift */,
+				31E7CCB02D4C48B00053D60B /* MidnightMarketHorizontalPaymentMethods.swift */,
+				31E7CCB22D4C48E10053D60B /* BooksAndBeansCafeTopUpExample.swift */,
+				31E7CCB42D4C4A0F0053D60B /* WanderlustDeferredPaymentExample.swift */,
+				31E7CCB62D4C4AD30053D60B /* ExampleFlowsNavigationView.swift */,
 				D20765908089ACB79B556592 /* ExampleSwiftUIViews.swift */,
 				61FB6BC62C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift */,
 				B615E86E2CA4B266007D684C /* ExampleEmbeddedElementCheckoutViewController.swift */,
@@ -687,6 +711,7 @@
 				6BFE613D2D407C420094DFE2 /* CustomerSessionPlaygroundView.swift in Sources */,
 				4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */,
 				DDF30DE9D7AA4BCC47CC12FB /* CustomerSheetTestPlayground.swift in Sources */,
+				31E7CCAF2D4C47760053D60B /* HighlandsHotelBookingExample.swift in Sources */,
 				8D9AAFD1D1D49112A7777414 /* CustomerSheetTestPlaygroundController.swift in Sources */,
 				CC9090D573972E8B14D204CB /* CustomerSheetTestPlaygroundSettings.swift in Sources */,
 				84CFB1ACA4915EE5B2E25341 /* EndpointSelectorViewController.swift in Sources */,
@@ -695,18 +720,25 @@
 				D235E82A7173E8051BC5A261 /* ExampleCustomCheckoutViewController.swift in Sources */,
 				3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */,
 				61FB6BC72C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift in Sources */,
+				31E7CCB32D4C48E10053D60B /* BooksAndBeansCafeTopUpExample.swift in Sources */,
 				56EF0879D7EAC041B147680C /* ExampleLinkPaymentCheckoutViewController.swift in Sources */,
+				31E7CCAB2D4C454E0053D60B /* CozyRestaurantCustomFlow.swift in Sources */,
 				A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */,
 				27233E85B0B6E1114E9AF6E8 /* ExampleSwiftUICustomerSheet.swift in Sources */,
+				31E7CCB72D4C4AD30053D60B /* ExampleFlowsNavigationView.swift in Sources */,
 				432E82C3F5EC56E89D257563 /* ExampleSwiftUIPaymentSheet.swift in Sources */,
+				31E7CCA92D4C357E0053D60B /* OrionShoesSingleStepExampleView.swift in Sources */,
 				A071C07B6FFACC5DEFC6AA01 /* ExampleSwiftUIViews.swift in Sources */,
 				17D626E890FD11B84654C846 /* PaymentSheetTestPlayground.swift in Sources */,
 				79E8C77C99A25E38F96747F1 /* PaymentSheetTestPlaygroundSettings.swift in Sources */,
 				2CB72F11E36DB65E8BA9205A /* PlaygroundController.swift in Sources */,
+				31E7CCB12D4C48B00053D60B /* MidnightMarketHorizontalPaymentMethods.swift in Sources */,
 				31AB49B72C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift in Sources */,
 				973DA944730BD761CE479F8E /* QRView.swift in Sources */,
 				E3D7A04974C35D2D8D31CDCD /* SceneDelegate.swift in Sources */,
+				31E7CCAD2D4C47300053D60B /* FitForwardSubscriptionView.swift in Sources */,
 				8F5C48FC825539B96F592315 /* ViewController.swift in Sources */,
+				31E7CCB52D4C4A0F0053D60B /* WanderlustDeferredPaymentExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +866,7 @@
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;
@@ -857,6 +890,7 @@
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;

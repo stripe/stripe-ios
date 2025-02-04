@@ -53,9 +53,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window!.rootViewController = navController
     }
     
-    @available(iOS 15.0, *)
+    @available(iOS 16.0, *)
     func launchExampleSwiftUI() {
-        let hvc = UIHostingController(rootView: ExampleSwiftUIPaymentSheet())
+        let hvc = UIHostingController(rootView: ExampleFlowsNavigationView())
         let navController = UINavigationController(rootViewController: hvc)
         self.window!.rootViewController = navController
     }
@@ -78,7 +78,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.async {
             // Open URL contexts on app launch if available
             self.scene(scene, openURLContexts: connectionOptions.urlContexts)
-            STPWeirdStuff.weirdStuffEnabled = true
+            STPWeirdStuff.weirdStuffEnabled = false
 
         }
 
@@ -96,7 +96,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
 
-        if #available(iOS 15.0, *) {
+        if #available(iOS 16.0, *) {
             launchExampleSwiftUI()
         } else {
             // Fallback on earlier versions
