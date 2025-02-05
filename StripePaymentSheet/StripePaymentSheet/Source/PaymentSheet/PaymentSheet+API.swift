@@ -459,8 +459,7 @@ extension PaymentSheet {
                                 linkAccount.sharePaymentDetails(
                                     id: paymentDetails.stripeID,
                                     cvc: paymentMethodParams.card?.cvc,
-                                    allowRedisplay: paymentMethodParams.allowRedisplay,
-                                    expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode
+                                    allowRedisplay: paymentMethodParams.allowRedisplay
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
@@ -522,8 +521,7 @@ extension PaymentSheet {
                     linkAccount.sharePaymentDetails(
                         id: paymentDetails.stripeID,
                         cvc: paymentDetails.cvc,
-                        allowRedisplay: nil,
-                        expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode
+                        allowRedisplay: nil
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
@@ -742,16 +740,4 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
     lhsConverted.phone = lhs.phone
 
     return rhs == lhsConverted
-}
-
-private extension ConsumerPaymentDetails {
-    
-    var expectedPaymentMethodTypeForPassthroughMode: String? {
-        switch type {
-        case .card, .unparsable:
-            return nil
-        case .bankAccount:
-            return "card"
-        }
-    }
 }

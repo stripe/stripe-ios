@@ -370,7 +370,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         id: String,
         cvc: String?,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
-        expectedPaymentMethodType: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>
     ) -> Void) {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
@@ -388,7 +387,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 id: id,
                 cvc: cvc,
                 allowRedisplay: allowRedisplay,
-                expectedPaymentMethodType: expectedPaymentMethodType,
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionRetryingOnAuthErrors
             )
