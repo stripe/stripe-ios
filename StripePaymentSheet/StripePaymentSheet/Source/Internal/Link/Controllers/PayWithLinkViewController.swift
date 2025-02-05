@@ -256,8 +256,10 @@ private extension PayWithLinkViewController {
             stpAssertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
             return
         }
-
-        linkAccount.listPaymentDetails { result in
+        
+        linkAccount.listPaymentDetails(
+            passthroughMode: context.elementsSession.linkPassthroughModeEnabled
+        ) { result in
             switch result {
             case .success(let paymentDetails):
                 if paymentDetails.isEmpty {

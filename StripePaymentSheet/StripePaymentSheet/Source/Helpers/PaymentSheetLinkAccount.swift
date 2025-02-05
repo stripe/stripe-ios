@@ -298,6 +298,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     func listPaymentDetails(
+        passthroughMode: Bool,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
@@ -309,6 +310,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
             session.listPaymentDetails(
                 with: self.apiClient,
+                supportedPaymentMethodTypes: session.supportedPaymentMethodTypes(passthroughMode: passthroughMode),
                 consumerAccountPublishableKey: self.publishableKey,
                 completion: completionRetryingOnAuthErrors
             )
@@ -364,7 +366,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func sharePaymentDetails(id: String, cvc: String?, allowRedisplay: STPPaymentMethodAllowRedisplay?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
+    func sharePaymentDetails(
+        id: String,
+        cvc: String?,
+        allowRedisplay: STPPaymentMethodAllowRedisplay?,
+        completion: @escaping (Result<PaymentDetailsShareResponse, Error>
+    ) -> Void) {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
@@ -600,4 +607,15 @@ struct UpdatePaymentDetailsParams {
 
 protocol PaymentSheetLinkAccountDelegate {
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void)
+}
+
+private extension ConsumerSession {
+    
+    func supportedPaymentMethodTypes(passthroughMode: Bool) -> [String] {
+        var paymentMethodTypes = supportedPaymentDetailsTypes.filter { $0 != .unparsable }
+        if passthroughMode {
+            paymentMethodTypes.remove(.bankAccount)
+        }
+        return paymentMethodTypes.map { $0.rawValue }
+    }
 }

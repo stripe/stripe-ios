@@ -322,6 +322,7 @@ extension STPAPIClient {
 
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
+        supportedPaymentMethodTypes: [String],
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
@@ -330,7 +331,7 @@ extension STPAPIClient {
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
-            "types": ["card"],
+            "types": supportedPaymentMethodTypes,
         ]
 
         post(
