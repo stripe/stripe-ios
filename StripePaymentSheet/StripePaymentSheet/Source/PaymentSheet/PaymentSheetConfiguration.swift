@@ -182,6 +182,8 @@ extension PaymentSheet {
 
         /// Configuration for external payment methods.
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
+        
+        public var customPaymentMethodConfiguration: CustomPaymentMethodConfiguration?
 
         /// By default, PaymentSheet will use a dynamic ordering that optimizes payment method display for the customer.
         /// You can override the default order in which payment methods are displayed in PaymentSheet with a list of payment method types.
@@ -511,6 +513,34 @@ extension PaymentSheet {
         /// Your implementation should complete the payment and call the `completion` parameter with the result.
         /// - Note: This is always called on the main thread.
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
+    }
+    
+    public struct CustomPaymentMethodConfiguration {
+
+        public struct CustomPaymentMethodType {
+            let id: String
+            let subcopy: String?
+            
+            public init(id: String, subcopy: String? = nil) {
+                self.id = id
+                self.subcopy = subcopy
+            }
+        }
+        
+        public init(customPaymentMethods: [CustomPaymentMethodType], customPaymentMethodConfirmHandler: @escaping PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler) {
+            self.customPaymentMethods = customPaymentMethods
+            self.customPaymentMethodConfirmHandler = customPaymentMethodConfirmHandler
+        }
+
+        public var customPaymentMethods: [CustomPaymentMethodType] = []
+
+        public typealias CustomPaymentMethodConfirmHandler = (
+            _ customPaymentMethodType: String,
+            _ billingDetails: STPPaymentMethodBillingDetails,
+            _ completion: @escaping ((PaymentSheetResult) -> Void)
+        ) -> Void
+
+        public var customPaymentMethodConfirmHandler: CustomPaymentMethodConfirmHandler
     }
 }
 

@@ -15,11 +15,13 @@ extension STPAPIClient {
 
     func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode,
                                     epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
+                                    cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
                                     clientDefaultPaymentMethod: String?,
                                     customerAccessProvider: PaymentSheet.CustomerAccessProvider?) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
+            "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id.lowercased() } ?? [],
         ]
         if let appId = Bundle.main.bundleIdentifier {
             parameters["mobile_app_id"] = appId
@@ -77,6 +79,7 @@ extension STPAPIClient {
             endpoint: APIEndpointElementsSessions,
             parameters: makeElementsSessionsParams(mode: .paymentIntentClientSecret(paymentIntentClientSecret),
                                                    epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                   cpmConfiguration: configuration.customPaymentMethodConfiguration,
                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                    customerAccessProvider: configuration.customer?.customerAccessProvider)
         )
@@ -100,6 +103,7 @@ extension STPAPIClient {
             endpoint: APIEndpointElementsSessions,
             parameters: makeElementsSessionsParams(mode: .setupIntentClientSecret(setupIntentClientSecret),
                                                    epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                   cpmConfiguration: configuration.customPaymentMethodConfiguration,
                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                    customerAccessProvider: configuration.customer?.customerAccessProvider)
         )
@@ -120,6 +124,7 @@ extension STPAPIClient {
     ) async throws -> STPElementsSession {
         let parameters = makeElementsSessionsParams(mode: .deferredIntent(intentConfig),
                                                     epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                                                    cpmConfiguration: configuration.customPaymentMethodConfiguration,
                                                     clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                     customerAccessProvider: configuration.customer?.customerAccessProvider)
         return try await APIRequest<STPElementsSession>.getWith(

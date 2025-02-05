@@ -112,6 +112,10 @@ class PlaygroundController: ObservableObject {
         case .off, .all: // When using all EPMs, alphabetize the order by not setting `paymentMethodOrder`.
             break
         }
+        configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpm_paypal")], customPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails, completion in
+            // TODO
+            print("handle confirm")
+        })
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration

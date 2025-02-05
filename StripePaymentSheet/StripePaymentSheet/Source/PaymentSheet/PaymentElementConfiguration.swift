@@ -32,6 +32,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration { get set }
     var removeSavedPaymentMethodMessage: String? { get set }
     var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? { get set }
+    var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration? { get set }
     var paymentMethodOrder: [String]? { get set }
     var allowsRemovalOfLastSavedPaymentMethod: Bool { get set }
     var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance { get set }
