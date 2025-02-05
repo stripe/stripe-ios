@@ -439,7 +439,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 print(error)
             }
         }
-        await fulfillment(of: [expectation], timeout: 10000)
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testPaymentSheetLoadAndConfirmWithSetupIntentSetAsDefault() async throws {
