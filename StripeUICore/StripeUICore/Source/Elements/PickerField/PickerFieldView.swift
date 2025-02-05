@@ -28,6 +28,9 @@ final class PickerFieldView: UIView {
     private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
     private lazy var textField: PickerTextField = {
         let textField = PickerTextField()
+        // Disable autocorrect and spellcheck to prevent suggestions from appearing on non-common words in dropdown fields
+        textField.autocorrectionType = .no
+        textField.spellCheckingType = .no
         // Input views are not supported on Catalyst (and are non-optimal on visionOS)
 #if !targetEnvironment(macCatalyst) && !canImport(CompositorServices)
         textField.inputView = pickerView
