@@ -786,6 +786,56 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheet_LPM_sepaDebit_paymentIntent_customerSession() {
+        stubSessions(
+            fileMock: .elementsSessions_customerSessionsMobilePaymentElement_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"sepa_debit\"",
+                        "<currency>": "\"eur\"",
+                    ]
+                )
+            }
+        )
+        preparePaymentSheet(
+            currency: "eur",
+            override_payment_methods_types: ["sepa_debit"],
+            automaticPaymentMethods: false,
+            useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_sepaDebit_setupIntent_customerSession() {
+        stubSessions(
+            fileMock: .elementsSessions_customerSessionsMobilePaymentElement_setupIntent_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"sepa_debit\"",
+                        "<currency>": "\"eur\"",
+                    ]
+                )
+            }
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "eur", setupFutureUsage: .offSession),
+                                                            paymentMethodTypes: ["sepa_debit"],
+                                                            confirmHandler: confirmHandler(_:_:_:),
+                                                            requireCVCRecollection: false)
+        preparePaymentSheet(
+            currency: "eur",
+            override_payment_methods_types: ["sepa_debit"],
+            automaticPaymentMethods: false,
+            useLink: false,
+            intentConfig: intentConfig
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
     func testPaymentSheet_LPM_sepaDebit_only() {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
