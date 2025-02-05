@@ -117,8 +117,7 @@ final class PaymentSheetLoader {
                     customerID: configuration.customer?.id,
                     showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
                     showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
-                    paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                    customer: elementsSession.customer
+                    elementsSession: elementsSession
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
 
