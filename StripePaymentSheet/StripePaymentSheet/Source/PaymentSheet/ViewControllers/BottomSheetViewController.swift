@@ -478,7 +478,7 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 extension BottomSheetViewController: PaymentSheetAuthenticationContext {
 
     func authenticationPresentingViewController() -> UIViewController {
-        return findTopMostPresentedViewController() ?? self
+        return findTopMostPresentedViewController()
     }
 
     func configureSafariViewController(_ viewController: SFSafariViewController) {
