@@ -36,6 +36,11 @@ extension PaymentOption {
                 forDarkBackground: traitCollection?.isDarkMode ?? false,
                 updateHandler: nil
             )
+        case .custom(paymentMethod: let paymentMethod, _):
+            return PaymentSheet.PaymentMethodType.custom(paymentMethod).makeImage(
+                forDarkBackground: traitCollection?.isDarkMode ?? false,
+                updateHandler: nil
+            )
         }
     }
 
@@ -52,6 +57,9 @@ extension PaymentOption {
         case .link:
             return Image.link_logo.makeImage()
         case .external:
+            assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
+            return UIImage()
+        case .custom:
             assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
             return UIImage()
         }

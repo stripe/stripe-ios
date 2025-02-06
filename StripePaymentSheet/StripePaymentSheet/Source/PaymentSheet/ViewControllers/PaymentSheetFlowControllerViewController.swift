@@ -186,6 +186,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 let params = IntentConfirmParams(type: .external(paymentMethod))
                 params.paymentMethodParams.billingDetails = billingDetails
                 return params
+            case let .custom(paymentMethod, billingDetails):
+                let params = IntentConfirmParams(type: .custom(paymentMethod))
+                params.paymentMethodParams.billingDetails = billingDetails
+                return params
             }
         }()
 

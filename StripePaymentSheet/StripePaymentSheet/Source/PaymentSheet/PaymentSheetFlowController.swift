@@ -24,6 +24,7 @@ extension PaymentSheet {
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
         case external(paymentMethod: ExternalPaymentMethod, billingDetails: STPPaymentMethodBillingDetails)
+        case custom(paymentMethod: CustomPaymentMethod, billingDetails: STPPaymentMethodBillingDetails)
 
         var paymentMethodTypeAnalyticsValue: String {
             switch self {
@@ -37,12 +38,14 @@ extension PaymentSheet {
                 return STPPaymentMethodType.link.identifier
             case .external(let paymentMethod, _):
                 return paymentMethod.type
+            case .custom(paymentMethod: let paymentMethod, _):
+                return "\(paymentMethod.displayName) (\(paymentMethod.type))"
             }
         }
 
         var savedPaymentMethod: STPPaymentMethod? {
             switch self {
-            case .applePay, .link, .new, .external:
+            case .applePay, .link, .new, .external, .custom:
                 return nil
             case .saved(let paymentMethod, _):
                 return paymentMethod
@@ -59,6 +62,8 @@ extension PaymentSheet {
                 return nil
             case let .external(paymentMethod: paymentMethod, _):
                 return .external(paymentMethod)
+            case let .custom(paymentMethod: paymentMethod, _):
+                return .custom(paymentMethod)
             }
         }
 
@@ -158,6 +163,10 @@ extension PaymentSheet {
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                 case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.label
+                    paymentMethodType = paymentMethod.type
+                    billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
+                case .custom(paymentMethod: let paymentMethod, billingDetails: let stpBillingDetails):
+                    label = paymentMethod.displayName
                     paymentMethodType = paymentMethod.type
                     billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
                 }

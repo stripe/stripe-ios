@@ -152,7 +152,7 @@ class PaymentSheetFormFactory {
         switch paymentMethod {
         case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
-        case .external:
+        case .external, .custom:
             return makeExternalPaymentMethodForm()
         case .stripe(let paymentMethod):
             var additionalElements = [Element]()

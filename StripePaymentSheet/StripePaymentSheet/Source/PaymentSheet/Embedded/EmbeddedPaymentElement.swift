@@ -156,6 +156,8 @@ public final class EmbeddedPaymentElement {
                     return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
                 case .external(paymentMethod: let paymentMethod, billingDetails: _):
                     return loadResult.paymentMethodTypes.contains(.external(paymentMethod))
+                case .custom(paymentMethod: let paymentMethod, billingDetails: _):
+                    return loadResult.paymentMethodTypes.contains(.custom(paymentMethod))
                 }
             }()
             let previousSelectedRowType = self.embeddedPaymentMethodsView.selectedRowButton?.type
@@ -298,6 +300,8 @@ public final class EmbeddedPaymentElement {
                     return nil
                 }
                 return .saved(paymentMethod: paymentMethod, confirmParams: params)
+            case .custom(let type):
+                return .custom(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
         case .saved(paymentMethod: let paymentMethod):
             return .saved(paymentMethod: paymentMethod, confirmParams: nil)

@@ -300,7 +300,7 @@ final class PaymentSheetAnalyticsHelper {
             switch integrationShape {
             case .flowController:
                 switch paymentOption {
-                case .new, .external:
+                case .new, .external, .custom:
                     return success ? .mcPaymentCustomNewPMSuccess : .mcPaymentCustomNewPMFailure
                 case .saved:
                     return success ? .mcPaymentCustomSavedPMSuccess : .mcPaymentCustomSavedPMFailure
@@ -311,7 +311,7 @@ final class PaymentSheetAnalyticsHelper {
                 }
             case .complete:
                 switch paymentOption {
-                case .new, .external:
+                case .new, .external, .custom:
                     return success ? .mcPaymentCompleteNewPMSuccess : .mcPaymentCompleteNewPMFailure
                 case .saved:
                     return success ? .mcPaymentCompleteSavedPMSuccess : .mcPaymentCompleteSavedPMFailure

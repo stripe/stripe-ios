@@ -303,6 +303,10 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             label = paymentMethod.label
             paymentMethodType = paymentMethod.type
             billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
+        case .custom(let paymentMethod, let stpBillingDetails):
+            label = paymentMethod.displayName
+            paymentMethodType = paymentMethod.type
+            billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
         }
     }
 }

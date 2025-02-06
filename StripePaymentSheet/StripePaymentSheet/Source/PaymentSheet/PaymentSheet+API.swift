@@ -540,6 +540,19 @@ extension PaymentSheet {
                     completion(result, nil)
                 }
             }
+        case let .custom(paymentMethod, billingDetails):
+            guard let confirmHandler = configuration.customPaymentMethodConfiguration?.customPaymentMethodConfirmHandler else {
+                assertionFailure("Attempting to confirm a custom payment method, but customPaymentMethodConfirmHandler isn't set!")
+                completion(.canceled, nil)
+                return
+            }
+            DispatchQueue.main.async {
+                // Call confirmHandler so that the merchant completes the payment
+                confirmHandler(paymentMethod.type, billingDetails) { result in
+                    // This closure is invoked by the merchant when payment is finished
+                    completion(result, nil)
+                }
+            }
         }
     }
 

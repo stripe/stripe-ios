@@ -39,6 +39,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
                 case .instantDebits, .linkCardBrand:
                     return .new(confirmParams: params)
+                case .custom(let paymentMethod):
+                    return .custom(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
                 }
             case .saved(paymentMethod: let paymentMethod):
                 return .saved(paymentMethod: paymentMethod, confirmParams: nil)
@@ -306,6 +308,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 } else {
                     return .new(paymentMethodType: confirmParams.paymentMethodType)
                 }
+            case .custom(paymentMethod: let paymentMethod, _):
+                return .new(paymentMethodType: .custom(paymentMethod))
             }
         }
         // If there's no previous customer input, use the previous paymentMethodListViewController's selection:

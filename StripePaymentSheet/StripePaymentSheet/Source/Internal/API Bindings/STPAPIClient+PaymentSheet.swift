@@ -21,7 +21,7 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
-            "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id.lowercased() } ?? [],
+            "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
         ]
         if let appId = Bundle.main.bundleIdentifier {
             parameters["mobile_app_id"] = appId

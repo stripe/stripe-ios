@@ -16,6 +16,7 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
+        case custom(CustomPaymentMethod)
 
         // Synthetic payment methods. These are payment methods which don't have an `STPPaymentMethodType` defined for the same name.
         // That is, the payment method manifest for a synthetic PMT will show a PMT that doesn't match the form name.
@@ -33,6 +34,8 @@ extension PaymentSheet {
                 return externalPaymentMethod.label
             case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
+            case .custom(let customPaymentMethod):
+                return customPaymentMethod.displayName
             }
         }
 
@@ -48,13 +51,15 @@ extension PaymentSheet {
                 return "instant_debits"
             case .linkCardBrand:
                 return "link_card_brand"
+            case .custom(let customPaymentMethod):
+                return customPaymentMethod.type
             }
         }
         
         /// Returns the Stripe API identifier used for incentives for this payment method type, which can be different from `identifier`.
         var incentiveIdentifier: String? {
             switch self {
-            case .stripe, .external:
+            case .stripe, .external, .custom:
                 return nil
             case .instantDebits, .linkCardBrand:
                 return "link_instant_debits"
@@ -81,6 +86,13 @@ extension PaymentSheet {
                 let url = forDarkBackground ? paymentMethod.darkImageUrl : paymentMethod.lightImageUrl
                 return DownloadManager.sharedManager.downloadImage(
                     url: url ?? paymentMethod.lightImageUrl,
+                    placeholder: nil,
+                    updateHandler: updateHandler
+                )
+            case .custom(let customPaymentMethod):
+                let url = customPaymentMethod.logoUrl
+                return DownloadManager.sharedManager.downloadImage(
+                    url: url,
                     placeholder: nil,
                     updateHandler: updateHandler
                 )
@@ -128,7 +140,7 @@ extension PaymentSheet {
             switch self {
             case .stripe(let stpPaymentMethodType):
                 return stpPaymentMethodType.iconRequiresTinting
-            case .external:
+            case .external, .custom:
                 return false
             case .instantDebits, .linkCardBrand:
                 return true
@@ -174,12 +186,15 @@ extension PaymentSheet {
                 logIfNecessary("PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
             }
 
+            // TODO, maybe add a log for error'd out CPMs
+            
             // The full ordered list of recommended payment method types:
             var recommendedPaymentMethodTypes: [PaymentMethodType] =
                 // Stripe PaymentMethod types
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
+                + elementsSession.customPaymentMethods.map { PaymentMethodType.custom($0) }
 
             // We support Instant Bank Payments as a payment method when:
             // - (Primary condition) Link is an available payment method.
@@ -602,7 +617,7 @@ extension PaymentSheet.PaymentMethodType {
 
     var isLinkBankPayment: Bool {
         switch self {
-        case .stripe, .external:
+        case .stripe, .external, .custom:
             return false
         case .instantDebits, .linkCardBrand:
             return true
@@ -613,7 +628,7 @@ extension PaymentSheet.PaymentMethodType {
         switch self {
         case .stripe(let type):
             return type == .USBankAccount
-        case .external:
+        case .external, .custom:
             return false
         case .instantDebits, .linkCardBrand:
             return true
