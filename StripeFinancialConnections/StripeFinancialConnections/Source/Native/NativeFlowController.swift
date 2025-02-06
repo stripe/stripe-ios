@@ -393,9 +393,7 @@ extension NativeFlowController {
                         )
                         finishAuthSession(.failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
                     } else {
-                        if !session.accounts.data.isEmpty || session.paymentAccount != nil
-                            || session.bankAccountToken != nil
-                        {
+                        if session.didCompleteSuccessfully || dataManager.pendingRelinkAuthorization != nil {
                             if dataManager.manifest.isProductInstantDebits {
                                 // For Instant Debits, create a payment method and complete with it.
                                 createPaymentMethod(for: session) { result in
@@ -1169,6 +1167,16 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         dataManager.institution = institution
         pushPane(.partnerAuth, animated: true)
     }
+    
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
+        requestedBankAuthRepairWithInstitution institution: FinancialConnectionsInstitution,
+        forAuthorization authorization: String
+    ) {
+        dataManager.institution = institution
+        dataManager.pendingRelinkAuthorization = authorization
+        pushPane(.bankAuthRepair, animated: true, clearNavigationStack: true)
+    }
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
@@ -1378,7 +1386,8 @@ private func CreatePaneViewController(
                 analyticsClient: dataManager.analyticsClient,
                 reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors,
                 dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice,
-                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret
+                consumerSessionClientSecret: dataManager.consumerSession?.clientSecret,
+                isRelink: dataManager.pendingRelinkAuthorization != nil
             )
             let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
             accountPickerViewController.delegate = nativeFlowController
@@ -1412,8 +1421,27 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .bankAuthRepair:
-        assertionFailure("Not supported")
-        viewController = nil
+        if let institution = dataManager.institution, let relinkAuthorization = dataManager.pendingRelinkAuthorization {
+            let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
+                authSession: dataManager.authSession,
+                institution: institution,
+                manifest: dataManager.manifest,
+                relinkAuthorization: relinkAuthorization,
+                returnURL: dataManager.returnURL,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let partnerAuthViewController = PartnerAuthViewController(
+                dataSource: partnerAuthDataSource,
+                panePresentationStyle: panePresentationStyle
+            )
+            partnerAuthViewController.delegate = nativeFlowController
+            viewController = partnerAuthViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
     case .consent:
         if let consentPaneModel = dataManager.consentPaneModel {
             let consentDataSource = ConsentDataSourceImplementation(
@@ -1574,6 +1602,7 @@ private func CreatePaneViewController(
                 authSession: dataManager.authSession,
                 institution: institution,
                 manifest: dataManager.manifest,
+                relinkAuthorization: nil,
                 returnURL: dataManager.returnURL,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
@@ -1733,5 +1762,12 @@ private func ShouldHideLogoInNavigationBar(
         }
     } else {
         return reducedBranding
+    }
+}
+
+private extension StripeAPI.FinancialConnectionsSession {
+    
+    var didCompleteSuccessfully: Bool {
+        return !accounts.data.isEmpty || paymentAccount != nil || bankAccountToken != nil
     }
 }
