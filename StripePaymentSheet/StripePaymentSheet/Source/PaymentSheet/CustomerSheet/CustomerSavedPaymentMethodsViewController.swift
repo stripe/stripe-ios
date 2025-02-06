@@ -662,7 +662,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             mostRecentlyAddedPaymentMethod: mostRecentlyAddedPaymentMethod,
             savedPaymentMethodsConfiguration: self.configuration,
             configuration: .init(
-                showApplePay: isApplePayEnabled,
+                showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
                 paymentMethodSyncDefault: paymentMethodSyncDefault,
