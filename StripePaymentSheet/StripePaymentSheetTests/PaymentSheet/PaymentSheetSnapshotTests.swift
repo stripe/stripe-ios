@@ -733,7 +733,33 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-
+    func testPaymentSheet_LPM_iDeal_setupIntent_customerSession() {
+        stubSessions(
+            fileMock: .elementsSessions_customerSessionsMobilePaymentElement_setupIntent_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"ideal\"",
+                        "<currency>": "\"eur\"",
+                    ]
+                )
+            }
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "eur", setupFutureUsage: .offSession),
+                                                            paymentMethodTypes: ["ideal"],
+                                                            confirmHandler: confirmHandler(_:_:_:),
+                                                            requireCVCRecollection: false)
+        preparePaymentSheet(
+            currency: "eur",
+            override_payment_methods_types: ["ideal"],
+            automaticPaymentMethods: false,
+            useLink: false,
+            intentConfig: intentConfig
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
     func testPaymentSheet_LPM_bancontact_only() {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
@@ -781,6 +807,34 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             override_payment_methods_types: ["sofort"],
             automaticPaymentMethods: false,
             useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_sofort_setupIntent_customerSession() {
+        stubSessions(
+            fileMock: .elementsSessions_customerSessionsMobilePaymentElement_setupIntent_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"sofort\"",
+                        "<currency>": "\"eur\"",
+                    ]
+                )
+            }
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "eur", setupFutureUsage: .offSession),
+                                                            paymentMethodTypes: ["sofort"],
+                                                            confirmHandler: confirmHandler(_:_:_:),
+                                                            requireCVCRecollection: false)
+        preparePaymentSheet(
+            currency: "eur",
+            override_payment_methods_types: ["sofort"],
+            automaticPaymentMethods: false,
+            useLink: false,
+            intentConfig: intentConfig
         )
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -836,6 +890,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
+
     func testPaymentSheet_LPM_sepaDebit_only() {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
