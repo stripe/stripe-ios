@@ -193,6 +193,11 @@ protocol FinancialConnectionsAPI {
         clientSecret: String,
         authSessionId: String
     ) -> Future<FinancialConnectionsAuthSession>
+    
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession>
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
         FinancialConnectionsMixedOAuthParams
@@ -499,6 +504,36 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             parameters: body,
             useConsumerPublishableKeyIfNeeded: true
         )
+    }
+    
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession> {
+        let body: [String: Any] = [
+            "client_secret": clientSecret,
+            "id": authSessionId,
+        ]
+        let pollingHelper = APIPollingHelper(
+            apiCall: { [weak self] in
+                guard let self = self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
+                    )
+                }
+                return self.post(
+                    resource: APIEndpointAuthSessionsRetrieve,
+                    parameters: body,
+                    useConsumerPublishableKeyIfNeeded: true
+                )
+            },
+            pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSession>.PollTimingOptions(
+                initialPollDelay: 0,
+                maxNumberOfRetries: 360,  // Stripe.js has 360 retries and 500ms intervals
+                retryInterval: 0.5
+            )
+        )
+        return pollingHelper.startPollingApiCall()
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<

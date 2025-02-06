@@ -72,6 +72,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     ) -> Future<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
+    
+    func retrieveAuthSessionPolling(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsAuthSession> {
+        return Promise<FinancialConnectionsAuthSession>()
+    }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
         FinancialConnectionsMixedOAuthParams
@@ -143,7 +147,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) -> Future<(
         manifest: FinancialConnectionsSessionManifest,
         customSuccessPaneMessage: String?

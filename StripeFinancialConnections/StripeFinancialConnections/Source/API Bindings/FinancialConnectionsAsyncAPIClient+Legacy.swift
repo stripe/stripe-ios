@@ -126,6 +126,15 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
             try await self.retrieveAuthSession(clientSecret: clientSecret, authSessionId: authSessionId)
         }
     }
+    
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession> {
+        wrapAsyncToFuture {
+            try await self.retrieveAuthSessionPolling(clientSecret: clientSecret, authSessionId: authSessionId)
+        }
+    }
 
     func fetchAuthSessionOAuthResults(
         clientSecret: String,

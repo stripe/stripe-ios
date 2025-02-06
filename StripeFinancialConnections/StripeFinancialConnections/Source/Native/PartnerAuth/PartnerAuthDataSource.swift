@@ -23,6 +23,7 @@ protocol PartnerAuthDataSource: AnyObject {
     func recordAuthSessionEvent(eventName: String, authSessionId: String)
     func clearReturnURL(authSession: FinancialConnectionsAuthSession, authURL: String) -> Future<FinancialConnectionsAuthSession>
     func retrieveAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
+    func pollAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
 }
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
@@ -183,12 +184,19 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             }
         )
     }
+    
+    func pollAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
+        return apiClient.retrieveAuthSessionPolling(
+            clientSecret: clientSecret,
+            authSessionId: authSession.id
+        )
+    }
 
     func recordAuthSessionEvent(
         eventName: String,
         authSessionId: String
     ) {
-        guard ShouldRecordAuthSessionEvent() else {
+        guard ShouldRecordAuthSessionEvent(), isNetworkingRelinkSession == false else {
             // on Stripe SDK Core analytics client we don't send events
             // for simulator or tests, so don't send these either...
             return

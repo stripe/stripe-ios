@@ -229,7 +229,9 @@ final class PartnerAuthViewController: SheetViewController {
                 authSessionId: authSession.id
             )
 
-            if authSession.isOauthNonOptional {
+            if dataSource.isNetworkingRelinkSession {
+                self.pollAuthSession(authSession)
+            } else if authSession.isOauthNonOptional {
                 // for OAuth flows, we need to fetch OAuth results
                 self.authorizeAuthSession(authSession)
             } else {
@@ -515,28 +517,40 @@ final class PartnerAuthViewController: SheetViewController {
         dataSource
             .authorizeAuthSession(authSession)
             .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let authSession):
-                    self.didComplete(withAuthSession: authSession)
-
-                    // hide the loading view after a delay to prevent
-                    // the screen from flashing _while_ the transition
-                    // to the next screen takes place
-                    //
-                    // note that it should be impossible to view this screen
-                    // after a successful `authorizeAuthSession`, so
-                    // calling `showEstablishingConnectionLoadingView(false)` is
-                    // defensive programming anyway
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-                        self?.showLoadingView(false)
-                    }
-                case .failure(let error):
-                    self.showLoadingView(false)  // important to come BEFORE showing error view so we avoid showing back button
-                    self.showErrorView(error)
-                    assert(self.navigationItem.hidesBackButton)
-                }
+                self?.handleAuthSessionRetrieved(result)
             }
+    }
+    
+    private func pollAuthSession(_ authSession: FinancialConnectionsAuthSession) {
+        showLoadingView(true)
+        dataSource
+            .pollAuthSession(authSession)
+            .observe(on: .main) { [weak self] result in
+                self?.handleAuthSessionRetrieved(result)
+            }
+    }
+    
+    private func handleAuthSessionRetrieved(_ result: Result<FinancialConnectionsAuthSession, any Error>) {
+        switch result {
+        case .success(let authSession):
+            self.didComplete(withAuthSession: authSession)
+            
+            // hide the loading view after a delay to prevent
+            // the screen from flashing _while_ the transition
+            // to the next screen takes place
+            //
+            // note that it should be impossible to view this screen
+            // after a successful `authorizeAuthSession`, so
+            // calling `showEstablishingConnectionLoadingView(false)` is
+            // defensive programming anyway
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                self?.showLoadingView(false)
+            }
+        case .failure(let error):
+            self.showLoadingView(false)  // important to come BEFORE showing error view so we avoid showing back button
+            self.showErrorView(error)
+            assert(self.navigationItem.hidesBackButton)
+        }
     }
 
     private func navigateBack() {
