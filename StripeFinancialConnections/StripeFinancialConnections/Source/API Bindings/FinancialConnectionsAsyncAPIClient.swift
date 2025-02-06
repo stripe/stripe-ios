@@ -215,6 +215,11 @@ protocol FinancialConnectionsAsyncAPI {
         clientSecret: String,
         authSessionId: String
     ) async throws -> FinancialConnectionsAuthSession
+    
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) async throws -> FinancialConnectionsAuthSession
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsMixedOAuthParams
 
@@ -484,6 +489,27 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             "id": authSessionId,
         ]
         return try await post(endpoint: .authSessionsRetrieve, parameters: parameters)
+    }
+    
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) async throws -> FinancialConnectionsAuthSession {
+        let parameters = [
+            "client_secret": clientSecret,
+            "id": authSessionId,
+        ]
+        
+        return try await poll(
+            initialPollDelay: 0,
+            maxNumberOfRetries: 300, // Stripe.js has 360 retries and 500ms intervals
+            retryInterval: 0.5
+        ) { [weak self] in
+            guard let self else {
+                throw FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAsyncAPIClient deallocated.")
+            }
+            return try await self.post(endpoint: .authSessionsRetrieve, parameters: parameters)
+        }
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsMixedOAuthParams {
