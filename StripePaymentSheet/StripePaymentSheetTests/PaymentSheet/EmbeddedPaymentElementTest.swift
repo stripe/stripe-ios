@@ -502,7 +502,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         cbcDropdown?.selectedIndex = 1
         // ...the label should read "Cartes Bancaire ****1001"
         changeButtonState = sut.getChangeButtonState(for: .new(paymentMethodType: .stripe(.card)))
-        XCTAssertEqual(changeButtonState.sublabel, "Cartes Bancaire •••• 1001")
+        XCTAssertEqual(changeButtonState.sublabel, "Cartes Bancaires •••• 1001")
     }
 }
 
