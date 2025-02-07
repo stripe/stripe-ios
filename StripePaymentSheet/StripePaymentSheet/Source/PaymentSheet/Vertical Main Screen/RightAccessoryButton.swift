@@ -42,6 +42,16 @@ extension RowButton {
                     return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
                 }
             }
+            
+            var directionalLayoutMargins: NSDirectionalEdgeInsets {
+                switch self {
+                case .change, .viewMore:
+                    // Hacky - I happen to know that these are only used by the flatWithRadio style and require extra padding
+                    return .insets(top: 8)
+                default:
+                    return .zero
+                }
+            }
         }
 
         private var label: UILabel {
@@ -88,11 +98,7 @@ extension RowButton {
             self.appearance = appearance
             self.didTap = didTap
             super.init(frame: .zero)
-            if accessoryType == .change || accessoryType == .viewMore {
-                directionalLayoutMargins = .insets(top: 8)
-            } else {
-                directionalLayoutMargins = .zero
-            }
+            directionalLayoutMargins = accessoryType.directionalLayoutMargins
             addAndPinSubview(stackView, directionalLayoutMargins: directionalLayoutMargins)
 
             accessibilityLabel = accessoryType.text
