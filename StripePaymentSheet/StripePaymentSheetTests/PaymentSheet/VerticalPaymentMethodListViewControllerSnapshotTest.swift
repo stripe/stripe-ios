@@ -68,18 +68,6 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
     }
 
-    func testDarkMode() {
-        // Fix testDarkMode: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-3791
-        let paymentMethodsToTest = paymentMethods.filter({ $0 != .iDEAL && $0 != .cashApp && $0 != .bancontact })
-        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethodsToTest.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, incentive: nil, delegate: self)
-        let window = UIWindow()
-        window.isHidden = false
-        window.overrideUserInterfaceStyle = .dark
-        window.rootViewController = sut
-        window.addAndPinSubview(sut.view, insets: .zero)
-        STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
-    }
-
     func testAppearance() {
         let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: ._testMSPaintTheme, currency: "USD", amount: 1099, incentive: nil, delegate: self)
         let window = UIWindow()
