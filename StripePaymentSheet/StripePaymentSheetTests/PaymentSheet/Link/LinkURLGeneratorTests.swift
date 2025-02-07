@@ -28,7 +28,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                    locale: Locale.init(identifier: "en_US").toLanguageTag(),
                                    intentMode: .payment,
                                    setupFutureUsage: false,
-                                   linkFundingSources: ["CARD"]
+                                   linkFundingSources: [.card]
     )
 
     func testURLCreation() {
@@ -137,7 +137,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            cardBrandChoice: nil,
-                                           linkFundingSources: ["CARD"]
+                                           linkFundingSources: [.card]
         )
 
         XCTAssertEqual(params, expectedParams)
@@ -171,7 +171,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            cardBrandChoice: nil,
-                                           linkFundingSources: ["CARD", "BANK_ACCOUNT"]
+                                           linkFundingSources: [.card, .bankAccount]
         )
 
         XCTAssertEqual(params, expectedParams)

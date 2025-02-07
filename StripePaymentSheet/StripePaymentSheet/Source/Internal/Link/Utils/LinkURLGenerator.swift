@@ -50,7 +50,7 @@ struct LinkURLParams: Encodable {
     var intentMode: IntentMode
     var setupFutureUsage: Bool
     var cardBrandChoice: CardBrandChoiceInfo?
-    var linkFundingSources: [String]
+    var linkFundingSources: Set<LinkSettings.FundingSource>
 }
 
 class LinkURLGenerator {
@@ -99,7 +99,7 @@ class LinkURLGenerator {
         }()
 
         let flags = elementsSession.linkFlags.merging(elementsSession.flags) { (current, _) in current }
-        let linkFundingSources = elementsSession.linkFundingSources?.map { $0.rawValue } ?? []
+        let linkFundingSources = elementsSession.linkFundingSources ?? Set()
 
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
