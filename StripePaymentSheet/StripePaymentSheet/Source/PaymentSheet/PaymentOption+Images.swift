@@ -56,11 +56,8 @@ extension PaymentOption {
             return UIImage()
         case .link:
             return Image.link_logo.makeImage()
-        case .external:
-            assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
-            return UIImage()
-        case .custom:
-            assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
+        case .external, .custom:
+            assertionFailure("This shouldn't be called - we don't show EPMs or CPMs in the saved PM collection view")
             return UIImage()
         }
     }

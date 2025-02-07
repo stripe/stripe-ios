@@ -115,8 +115,11 @@ extension PaymentSheet {
             }
         }
 
-        var isExternal: Bool {
+        var isExternalOrCustom: Bool {
             if case .external = self {
+                return true
+            }
+            if case .custom = self {
                 return true
             }
             return false

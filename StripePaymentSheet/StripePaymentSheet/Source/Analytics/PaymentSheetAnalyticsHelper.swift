@@ -288,7 +288,7 @@ final class PaymentSheetAnalyticsHelper {
         case .completed:
             success = true
             if intent?.isDeferredIntent ?? true {
-                if !paymentOption.isExternal {
+                if !paymentOption.isExternalOrCustom {
                     stpAssert(deferredIntentConfirmationType != nil, "Successful deferred intent payments should always know the deferred intent confirm type")
                 }
             } else {
