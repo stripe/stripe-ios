@@ -1106,20 +1106,6 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 }
 
-extension EmbeddedPaymentMethodsViewSnapshotTests: EmbeddedPaymentMethodsViewDelegate {
-    func embeddedPaymentMethodsViewDidUpdateHeight() {
-    }
-    
-    func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
-    }
-    
-    func embeddedPaymentMethodsViewDidUpdateSelection() {
-    }
-    
-    func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: StripePayments.STPPaymentMethod?) {
-    }
-}
-
 class MockMandateProvider: MandateTextProvider {
     private let mandateResolver: (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)
 

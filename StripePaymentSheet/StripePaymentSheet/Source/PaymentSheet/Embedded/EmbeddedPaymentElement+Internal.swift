@@ -370,14 +370,11 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         let sublabel: String? = {
             switch type.paymentMethodType {
             case .stripe(.card):
-                guard
-                    case .new(confirmParams: let params) = _paymentOption,
-                    let cardNumber = params.paymentMethodParams.card?.number
-                else {
+                guard case .new(confirmParams: let params) = _paymentOption else {
                     return nil
                 }
-                let brand = STPCardValidator.brand(forNumber: cardNumber)
-                let brandString = STPCardBrandUtilities.stringFrom(brand)
+                let brand = STPCardValidator.brand(for: params.paymentMethodParams.card)
+                let brandString = brand == .unknown ? nil : STPCardBrandUtilities.stringFrom(brand)
                 return [brandString, displayData.label].compactMap({ $0 }).joined(separator: " ")
             case .stripe(.USBankAccount):
                 return displayData.label
