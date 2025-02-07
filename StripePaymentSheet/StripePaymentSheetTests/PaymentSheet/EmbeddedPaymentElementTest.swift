@@ -520,7 +520,7 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
     }
 }
 
-extension EmbeddedPaymentElement.UpdateResult: @retroactive Equatable {
+extension EmbeddedPaymentElement.UpdateResult: Equatable {
     public static func == (lhs: StripePaymentSheet.EmbeddedPaymentElement.UpdateResult, rhs: StripePaymentSheet.EmbeddedPaymentElement.UpdateResult) -> Bool {
         switch (lhs, rhs) {
         case (.succeeded, .succeeded): return true
@@ -537,7 +537,7 @@ extension EmbeddedPaymentMethodsView {
     }
 }
 
-extension PaymentSheetResult: @retroactive Equatable {
+extension PaymentSheetResult: Equatable {
     public static func == (lhs: StripePaymentSheet.PaymentSheetResult, rhs: StripePaymentSheet.PaymentSheetResult) -> Bool {
         switch (lhs, rhs) {
         case (.completed, .completed): return true
