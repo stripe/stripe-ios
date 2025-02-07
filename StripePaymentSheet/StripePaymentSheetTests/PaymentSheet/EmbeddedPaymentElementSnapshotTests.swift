@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
+@_spi(STP) @testable import StripeCore
 import XCTest
 
 class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentElementDelegate {
