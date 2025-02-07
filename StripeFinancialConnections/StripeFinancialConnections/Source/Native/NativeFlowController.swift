@@ -393,7 +393,9 @@ extension NativeFlowController {
                         )
                         finishAuthSession(.failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
                     } else {
-                        if session.didCompleteSuccessfully || dataManager.pendingRelinkAuthorization != nil {
+                        if !session.accounts.data.isEmpty || session.paymentAccount != nil
+                            || session.bankAccountToken != nil
+                        {
                             if dataManager.manifest.isProductInstantDebits {
                                 // For Instant Debits, create a payment method and complete with it.
                                 createPaymentMethod(for: session) { result in
@@ -1762,12 +1764,5 @@ private func ShouldHideLogoInNavigationBar(
         }
     } else {
         return reducedBranding
-    }
-}
-
-private extension StripeAPI.FinancialConnectionsSession {
-    
-    var didCompleteSuccessfully: Bool {
-        return !accounts.data.isEmpty || paymentAccount != nil || bankAccountToken != nil
     }
 }
