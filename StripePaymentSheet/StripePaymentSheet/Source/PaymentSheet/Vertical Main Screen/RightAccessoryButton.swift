@@ -88,6 +88,15 @@ extension RowButton {
             stackView.spacing = 4
             return stackView
         }
+        
+        override var isHidden: Bool {
+            get { super.isHidden }
+            set {
+                super.isHidden = newValue
+                // This shouldn't be necessary, but for unknown reasons VoiceOver sometimes reads this button even when it's hidden
+                isAccessibilityElement = !isHidden
+            }
+        }
 
         let accessoryType: AccessoryType
         let appearance: PaymentSheet.Appearance
