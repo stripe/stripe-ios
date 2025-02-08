@@ -24,7 +24,7 @@ extension PaymentSheet {
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
         case external(paymentMethod: ExternalPaymentMethod, billingDetails: STPPaymentMethodBillingDetails)
-        case custom(paymentMethod: CustomPaymentMethod, billingDetails: STPPaymentMethodBillingDetails)
+        case custom(paymentMethod: DisplayableCustomPaymentMethod, billingDetails: STPPaymentMethodBillingDetails)
 
         var paymentMethodTypeAnalyticsValue: String {
             switch self {

@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-struct CustomPaymentMethod: Decodable, Equatable, Hashable {
+struct CustomPaymentMethod: Decodable {
     /// The type of the external payment method. e.g. `"external_foopay"`
     /// These match the strings specified by the merchant in `ExternalPaymentMethodConfiguration`.
     let displayName: String
@@ -32,5 +32,29 @@ struct CustomPaymentMethod: Decodable, Equatable, Hashable {
         } catch {
             return nil
         }
+    }
+}
+
+struct DisplayableCustomPaymentMethod: Equatable, Hashable {
+    let displayName: String
+    let type: String
+    let logoUrl: URL
+    let subcopy: String?
+    
+    init(customPaymentMethod: CustomPaymentMethod, subcopy: String? = nil) {
+        self.displayName = customPaymentMethod.displayName
+        self.type = customPaymentMethod.type
+        self.logoUrl = customPaymentMethod.logoUrl
+        self.subcopy = subcopy
+    }
+}
+
+extension PaymentSheet.CustomPaymentMethodConfiguration {
+    func subcopy(for id: String) -> String? {
+        guard let cpm = customPaymentMethods.first(where: {$0.id == id}) else {
+            return nil
+        }
+        
+        return cpm.subcopy
     }
 }

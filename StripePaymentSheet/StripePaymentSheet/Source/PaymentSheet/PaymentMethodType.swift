@@ -16,7 +16,7 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentMethod)
-        case custom(CustomPaymentMethod)
+        case custom(DisplayableCustomPaymentMethod)
 
         // Synthetic payment methods. These are payment methods which don't have an `STPPaymentMethodType` defined for the same name.
         // That is, the payment method manifest for a synthetic PMT will show a PMT that doesn't match the form name.
@@ -194,7 +194,8 @@ extension PaymentSheet {
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
-                + elementsSession.customPaymentMethods.map { PaymentMethodType.custom($0) }
+            + elementsSession.customPaymentMethods.map { PaymentMethodType.custom(DisplayableCustomPaymentMethod(customPaymentMethod: $0,
+                                                                                                                 subcopy: configuration.customPaymentMethodConfiguration?.subcopy(for: $0.type))) }
 
             // We support Instant Bank Payments as a payment method when:
             // - (Primary condition) Link is an available payment method.
@@ -263,7 +264,7 @@ extension PaymentSheet {
                 for pmIdentifier in merchantPaymentMethodOrder {
                     guard
                         // Ignore the PM if it's not in allPaymentMethodTypes
-                        let index = recommendedPaymentMethodTypes.firstIndex(where: { $0.identifier == pmIdentifier }),
+                        let index = recommendedPaymentMethodTypes.firstIndex(where: { $0.identifier.lowercased() == pmIdentifier }),
                         let paymentMethod = recommendedPaymentMethodTypes.stp_boundSafeObject(at: index),
                         // Ignore duplicate PMs
                         !reorderedPaymentMethodTypes.contains(paymentMethod)
