@@ -83,7 +83,25 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
 
 // MARK: - Mocks and helpers
 
+typealias STPAPIClientMockPaymentCallback = (STPPaymentIntentCompletionBlock) -> Void
+typealias STPAPIClientMockSetupCallback = (STPSetupIntentCompletionBlock) -> Void
+
 class STPAPIClientMock: STPAPIClient {
+    init(onRefreshPaymentIntent: STPAPIClientMockPaymentCallback? = nil,
+         onRefreshSetupIntent: STPAPIClientMockSetupCallback? = nil,
+         onRetrievePaymentIntent: STPAPIClientMockPaymentCallback? = nil,
+         onRetrieveSetupIntent: STPAPIClientMockSetupCallback? = nil) {
+        self.onRefreshPaymentIntent = onRefreshPaymentIntent
+        self.onRefreshSetupIntent = onRefreshSetupIntent
+        self.onRetrievePaymentIntent = onRetrievePaymentIntent
+        self.onRetrieveSetupIntent = onRetrieveSetupIntent
+    }
+
+    let onRefreshPaymentIntent: STPAPIClientMockPaymentCallback?
+    let onRefreshSetupIntent: STPAPIClientMockSetupCallback?
+    let onRetrievePaymentIntent: STPAPIClientMockPaymentCallback?
+    let onRetrieveSetupIntent: STPAPIClientMockSetupCallback?
+
     var refreshPaymentIntentCalled = false
     var refreshSetupIntentCalled = false
     var retrievePaymentIntentCalled = false
@@ -91,10 +109,12 @@ class STPAPIClientMock: STPAPIClient {
 
     override func refreshPaymentIntent(withClientSecret secret: String, completion: @escaping STPPaymentIntentCompletionBlock) {
         refreshPaymentIntentCalled = true
+        onRefreshPaymentIntent?(completion)
     }
 
     override func refreshSetupIntent(withClientSecret secret: String, completion: @escaping STPSetupIntentCompletionBlock) {
         refreshSetupIntentCalled = true
+        onRefreshSetupIntent?(completion)
     }
 
     override func retrievePaymentIntent(
@@ -103,6 +123,7 @@ class STPAPIClientMock: STPAPIClient {
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         retrievePaymentIntentCalled = true
+        onRetrievePaymentIntent?(completion)
     }
 
     override func retrieveSetupIntent(
@@ -111,21 +132,25 @@ class STPAPIClientMock: STPAPIClient {
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
         retrieveSetupIntentCalled = true
+        onRetrieveSetupIntent?(completion)
     }
 }
 
 extension STPPaymentHandlerPaymentIntentActionParams {
     static func makeTestable(apiClient: STPAPIClient,
                              paymentMethodTypes: [String],
-                             paymentIntent: STPPaymentIntent) -> STPPaymentHandlerPaymentIntentActionParams {
+                             paymentIntent: STPPaymentIntent,
+                             completion: STPPaymentHandlerActionPaymentIntentCompletionBlock? = nil) -> STPPaymentHandlerPaymentIntentActionParams {
 
+        let completion = completion ?? { _, _, _ in
+            // Default no-op
+        }
         return .init(apiClient: apiClient,
                      authenticationContext: STPAuthenticationContextMock(),
                      threeDSCustomizationSettings: .init(),
                      paymentIntent: paymentIntent,
-                     returnURL: nil) { _, _, _ in
-            // no-op
-        }
+                     returnURL: nil,
+                     completion: completion)
     }
 }
 
@@ -141,6 +166,11 @@ extension STPPaymentHandlerSetupIntentActionParams {
                      returnURL: nil) { _, _, _ in
             // no-op
         }
+    }
+}
+extension STPPaymentHandler {
+    func makeTestable(currentAction: STPPaymentHandlerActionParams) {
+        self.currentAction = currentAction
     }
 }
 
