@@ -1,0 +1,167 @@
+{
+  "account_id": "acct_1Hv",
+  "apple_pay_merchant_token_webhook_url": "https://pm-hooks.stripe.com/apple_pay/merchant_token/pDq7tf9uieoQWMVJixFwuOve/acct_1Hv/",
+  "apple_pay_preference": "enabled",
+  "business_name": "Mobile Example Account",
+  "capability_enabled_card_networks": [
+    "cartes_bancaires"
+  ],
+  "card_brand_choice": {
+    "eligible": false,
+    "preferred_networks": [
+      "cartes_bancaires"
+    ],
+    "supported_cobranded_networks": {
+      "cartes_bancaires": true
+    }
+  },
+  "card_installments_enabled": false,
+  "custom_payment_method_data": null,
+  "customer": {
+    "customer_session": {
+      "id": "cuss_1QpC",
+      "object": "customer_session",
+      "api_key": "ek_test_YWNjdF8xS",
+      "api_key_expiry": 1738780224,
+      "components": {
+        "buy_button": {
+          "enabled": false
+        },
+        "customer_sheet": {
+          "enabled": false,
+          "features": null
+        },
+        "mobile_payment_element": {
+          "enabled": true,
+          "features": {
+            "payment_method_allow_redisplay_filters": [
+              "always"
+            ],
+            "payment_method_redisplay": "enabled",
+            "payment_method_remove": "enabled",
+            "payment_method_remove_last": "enabled",
+            "payment_method_save": "enabled",
+            "payment_method_save_allow_redisplay_override": null,
+            "payment_method_set_as_default": "disabled"
+          }
+        },
+        "payment_element": {
+          "enabled": false,
+          "features": null
+        },
+        "pricing_table": {
+          "enabled": false
+        }
+      },
+      "customer": "cus_RiHO0Q5uMhLQF6",
+      "livemode": false
+    },
+    "default_payment_method": "pm_1QoqqLLu5o3P18ZpXPopo6B5",
+    "payment_methods": [
+    ],
+    "payment_methods_with_link_details": [
+    ]
+  },
+  "customer_error": null,
+  "experiments": {
+    "miui_payment_element_aa_experiment": "control"
+  },
+  "experiments_data": {
+    "arb_id": "949448d1-44fe-4fc6-a356-2d5aaa9b24e5",
+    "experiment_assignments": {
+      "default_values_prefill_holdback": "control",
+      "elements_merchant_ui_api_srv": "control",
+      "link_global_holdback": "control",
+      "link_global_holdback_aa": "control",
+      "link_popup_webview_option_ios": "control",
+      "ocs_buyer_xp_elements_lpm_holdback": "control"
+    },
+    "experiment_metadata": {
+      "seed": "20a743d3101f6866ca9c40097c896eb99e7287093f060bfc904d",
+      "semi_dominant_payment_methods": []
+    }
+  },
+  "external_payment_method_data": null,
+  "flags": {
+  },
+  "google_pay_preference": "enabled",
+  "klarna_express_config": {
+    "klarna_mid": null
+  },
+  "legacy_customer": null,
+  "link_purchase_protections_data": {
+    "is_eligible": false,
+    "type": null
+  },
+  "lpm_promotions": null,
+  "merchant_country": "US",
+  "merchant_currency": <currency>,
+  "merchant_id": "acct_1HvTI7L",
+  "merchant_logo_url": null,
+  "meta_pay_signed_container_context": null,
+  "order": null,
+  "ordered_payment_method_types_and_wallets": [
+      <paymentMethods>
+  ],
+  "passive_captcha": {
+    "rqdata": null,
+    "site_key": "20000000-ffff-ffff-ffff-000000000002"
+  },
+  "payment_method_preference": {
+    "object": "payment_method_preference",
+    "country_code": "US",
+    "ordered_payment_method_types": [
+        <paymentMethods>
+    ],
+    "setup_intent": {
+      "id": "seti_1QpCtfLu5o3P18ZpdEABNMyd",
+      "object": "setup_intent",
+      "automatic_payment_methods": {
+        "allow_redirects": "always",
+        "enabled": true
+      },
+      "cancellation_reason": null,
+      "client_secret": "seti_1QpCtfLu5oEABNMyd_secret_RieC2mUW2zQojb97pNv",
+      "created": 1738778423,
+      "description": null,
+      "last_setup_error": null,
+      "livemode": false,
+      "next_action": null,
+      "payment_method": null,
+      "payment_method_configuration_details": {
+        "id": "pmc_1JcZxfLu5o3P18Zp6oYzNhiP",
+        "parent": null
+      },
+      "payment_method_options": {
+      },
+      "payment_method_types": [
+          <paymentMethods>
+      ],
+      "status": "requires_payment_method",
+      "usage": "off_session"
+    },
+    "type": "setup_intent"
+  },
+  "paypal_express_config": {
+    "client_id": null,
+    "paypal_merchant_id": null
+  },
+  "prefill_selectors": {
+    "default_values": {
+      "email": [],
+      "merchant_provides_default_values_on_update": true
+    }
+  },
+  "sepa_debit_info": {
+    "creditor_id": "DE16ZZZ000019",
+    "creditor_name": "Mobile Example Account"
+  },
+  "session_id": "elements_session_0lvIyTkmVBs",
+  "shipping_address_settings": {
+    "autocomplete_allowed": true
+  },
+  "unactivated_payment_method_types": [],
+  "unverified_payment_methods_on_domain": [
+    "apple_pay"
+  ]
+}
