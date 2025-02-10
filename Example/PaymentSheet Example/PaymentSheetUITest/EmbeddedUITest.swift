@@ -667,7 +667,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
         app.buttons["Apple Pay"].waitForExistenceAndTap()
+        app.swipeUp() // scroll to see the checkout button
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         app.buttons["Checkout"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
@@ -1018,6 +1021,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
         continueButton.tap()
 
+        app.swipeUp() // scroll to see the confirm button
         let confirmButton = app.buttons["Confirm Payment"]
         XCTAssertTrue(confirmButton.waitForExistenceAndTap())
 
