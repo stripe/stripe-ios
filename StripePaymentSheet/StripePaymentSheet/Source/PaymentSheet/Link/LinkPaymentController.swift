@@ -248,6 +248,7 @@ import UIKit
         )
 
         let elementsSessionContext = makeElementsSessionContext()
+        let bankAccountCollectorConfiguration = makeBankAccountCollectorConfiguration()
 
         switch mode {
         case .paymentIntentClientSecret(let string):
@@ -255,6 +256,7 @@ import UIKit
                 clientSecret: string,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -266,6 +268,7 @@ import UIKit
                 clientSecret: string,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -291,6 +294,7 @@ import UIKit
                 currency: currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 from: presentingViewController,
                 financialConnectionsCompletion: completionHandler

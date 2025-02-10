@@ -1725,6 +1725,7 @@
 				617C1C862BB496FC00B10AC5 /* STPPaymentMethodAlma.swift in Sources */,
 				5C525B22CAAC7F5AECD9A2E1 /* STPPaymentMethodCashApp.swift in Sources */,
 				A654AC171329ED0CAF201AA6 /* STPPaymentMethodCashAppParams.swift in Sources */,
+				491785432D5A5D10007B4BDF /* STPBankAccountCollectorConfiguration.swift in Sources */,
 				C27F356B376711748348CF7A /* STPPaymentMethodEPS.swift in Sources */,
 				E64BE0DAFA6617118654F975 /* STPPaymentMethodEPSParams.swift in Sources */,
 				A2E2D049AA993AF599BA8809 /* STPPaymentMethodFPX.swift in Sources */,
