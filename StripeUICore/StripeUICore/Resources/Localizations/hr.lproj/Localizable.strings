@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (neobavezno)";
 
+"(not accepted)" = "(nije prihvaćena)";
+
 "Account number" = "Broj računa";
 
 "Address" = "Adresa";
