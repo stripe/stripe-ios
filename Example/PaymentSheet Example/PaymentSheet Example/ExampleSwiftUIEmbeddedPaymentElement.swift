@@ -178,6 +178,7 @@ struct MyEmbeddedCheckoutView: View {
                     EmbeddedPaymentElementView(viewModel: embeddedViewModel)
                     
                     // Display the selected payment option
+                    // A real integration probably wouldn't show the selected payment option on the same screen as the embedded payment element. We display it as an example.
                     if let paymentOption = embeddedViewModel.paymentOption {
                         HStack {
                             Image(uiImage: paymentOption.image)
