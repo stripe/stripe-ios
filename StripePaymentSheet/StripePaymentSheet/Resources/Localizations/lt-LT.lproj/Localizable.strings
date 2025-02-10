@@ -18,6 +18,8 @@
 
 "Add your payment information" = "Pridėkite mokėjimo informaciją";
 
+"Agree and continue" = "Sutikti ir tęsti";
+
 "Approve payment" = "Patvirtinti mokėjimą";
 
 "Are you sure you want to remove this card?" = "Ar tikrai norite pašalinti šią kortelę?";
@@ -38,33 +40,37 @@
 
 "Buy now or pay later with Clearpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Clearpay\"";
 
-"Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami „Klarna“";
+"Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\"";
 
 "Buy using a UPI ID" = "Pirkti naudojant UPI ID";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą „PayPal“ leidžiate „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą \"PayPal\" leidžiate \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie „Amazon Pay“ leisite „%@“ nuskaityti mokestį nuo jūsų „Amazon Pay“ sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie \"Amazon Pay\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"Amazon Pay\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pereidami prie „Klarna“ leidžiate „%1$@“ nuskaityti mokestį nuo jūsų „Klarna“ sąskaitos vėlesniems mokėjimams pagal jų ir „Klarna“ sąlygas. Galite bet kada tai pakeisti „Klarna“ programėlėje arba susisiekdami su „%2$@“.";
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pereidami prie \"Klarna\" leidžiate \"%1$@\" nuskaityti mokestį nuo jūsų \"Klarna\" sąskaitos vėlesniems mokėjimams pagal jų ir \"Klarna\" sąlygas. Galite bet kada tai pakeisti \"Klarna\" programėlėje arba susisiekdami su \"%2$@\".";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į „PayPal“ leisite „%@“ nuskaityti mokestį nuo jūsų „PayPal“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į \"PayPal\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pereidami į „Revolut Pay“ leisite %@ nuskaityti mokestį nuo jūsų „Revolut Pay“ sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pereidami į \"Revolut Pay\" leisite %@ nuskaityti mokestį nuo jūsų \"Revolut Pay\" sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Tęsdami sutinkate su <terms>sąlygomis</terms> ir <privacy>privatumo politika</privacy>.";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate „%1$@“ nurašyti mokestį nuo jūsų „Cash App“ sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal „%2$@“ sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti „Cash App“ nuostatose.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate \"%1$@\" nurašyti mokestį nuo jūsų \"Cash App\" sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal \"%2$@\" sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti \"Cash App\" nuostatose.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Pateikdami kortelės duomenis sutinkate, kad „%@“ nuskaičiuotų nuo jūsų kortelės būsimus mokėjimus pagal jų sąlygas.";
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Pateikdami savo banko sąskaitos duomenis ir patvirtindami šį mokėjimą, jūs sutinkate su šiuo tiesioginio debeto prašymu ir <terms>tiesioginio debeto užklausos paslaugų sutartimi</terms> bei įgaliojate \"Stripe Payments Australia Pty Ltd\", ACN 160 180 343, tiesioginio debeto naudotojo ID numeris 507156 (toliau – \"Stripe\") nurašyti nuo jūsų sąskaitos per masinę elektroninę tarpuskaitos sistemą (BECS) %@ vardu (toliau – \"Prekybininkas\") bet kokias sumas, atskirai jums nurodytas prekybininko. Jūs patvirtinate, kad esate sąskaitos turėtojas arba įgaliotas pasirašyti minėtą sąskaitą asmuo.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo el. pašto adresą sutinkate susikurti „Link“ paskyrą bei įrašyti savo mokėjimo informaciją į „Link“ pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Pateikdami kortelės duomenis sutinkate, kad \"%@\" nuskaičiuotų nuo jūsų kortelės būsimus mokėjimus pagal jų sąlygas.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Pateikdami mokėjimo duomenis ir patvirtindami šį mokėjimą, leidžiate (A) „%@“ ir „Stripe“ (mūsų mokėjimo paslaugų teikėjui) jūsų bankui siųsti nurodymus nurašyti pinigus iš jūsų sąskaitos ir (B) leidžiate savo bankui, gavus tokius nurodymus, nurašyti pinigus iš jūsų sąskaitos. Pagal jūsų su banku sudarytos sutarties sąlygas turite teisę iš banko reikalauti pinigų grąžinimo. Prašymą grąžinti pinigus turite pateikti per 8 savaites nuo pinigų iš jūsų sąskaitos nurašymo dienos. Jūsų teisės paaiškintos pareiškime, kurį galite gauti iš savo banko. Sutinkate gauti pranešimus apie būsimus nurašymus likus iki 2 dienų iki jų įvykdymo momento.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo el. pašto adresą sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo telefono numerį sutinkate susikurti „Link“ paskyrą bei įrašyti savo mokėjimo informaciją į „Link“ pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Pateikdami mokėjimo duomenis ir patvirtindami šį mokėjimą, leidžiate (A) \"%@\" ir \"Stripe\" (mūsų mokėjimo paslaugų teikėjui) jūsų bankui siųsti nurodymus nurašyti pinigus iš jūsų sąskaitos ir (B) leidžiate savo bankui, gavus tokius nurodymus, nurašyti pinigus iš jūsų sąskaitos. Pagal jūsų su banku sudarytos sutarties sąlygas turite teisę iš banko reikalauti pinigų grąžinimo. Prašymą grąžinti pinigus turite pateikti per 8 savaites nuo pinigų iš jūsų sąskaitos nurašymo dienos. Jūsų teisės paaiškintos pareiškime, kurį galite gauti iš savo banko. Sutinkate gauti pranešimus apie būsimus nurašymus likus iki 2 dienų iki jų įvykdymo momento.";
+
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo telefono numerį sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
@@ -73,6 +79,8 @@
 "Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
 
 "Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
+
+"Change" = "Keisti";
 
 "Change email" = "Pakeiskite el. paštą";
 
@@ -83,6 +91,8 @@
 "Code sent" = "Kodas išsiųstas";
 
 "Confirm" = "Patvirtinti";
+
+"Confirm it's you" = "Patvirtinkite, kad tai jūs";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
 
@@ -98,7 +108,11 @@
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
 
+"Enter the code sent to %@ to use your saved information." = "Norėdami naudoti savo išsaugotą informaciją, įveskite %@ gautą kodą.";
+
 "FPX Bank" = "FPX bankas";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Greitas ir saugus atsiskaitymas vienu spustelėjimu";
 
 "For security, please re-enter your card’s security code." = "Saugumo sumetimais dar kartą įveskite kortelės saugumo kodą.";
 
@@ -106,11 +120,11 @@
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Atgaukite %@ mokėdami per savo banką. <terms>Žr. sąlygas</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Suprantu, kad „Stripe“ atliks tiesioginio debeto nuskaitymus „%@“ vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Suprantu, kad \"Stripe\" atliks tiesioginio debeto nuskaitymus \"%@\" vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
 
 "IBAN" = "IBAN";
 
-"Log out of Link" = "Atsijungti nuo „Link“";
+"Log out of Link" = "Atsijungti nuo \"Link\"";
 
 "Manage SEPA debit" = "Tvarkyti SEPA debetą";
 
@@ -154,13 +168,13 @@
 
 "Pay another way" = "Mokėkite kitu būdu";
 
-"Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau „%@“ ir daugybei kitų įmonių.";
+"Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau \"%@\" ir daugybei kitų įmonių.";
 
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 
 "Pay over time with Affirm" = "Mokėkite per tam tikrą laikotarpį naudodami \"Affirm\"";
 
-"Pay with Link" = "Mokėti naudojant „Link“";
+"Pay with Link" = "Mokėti naudojant \"Link\"";
 
 "Pay with your bank account in just a few steps." = "Mokėkite naudodami savo banko sąskaitą vos keliais veiksmais.";
 
@@ -176,7 +190,7 @@
 
 "Processing..." = "Apdorojama...";
 
-"Przelewy24 Bank" = "Bankas „Przelewy24“";
+"Przelewy24 Bank" = "Bankas \"Przelewy24\"";
 
 "Remove card?" = "Ištraukti kortelę?";
 
@@ -194,13 +208,15 @@
 
 "Save for future payments" = "Išsaugokite vėlesniems mokėjimams";
 
-"Save payment details to %@ for future purchases" = "Išsaugoti mokėjimo duomenis „%@” būsimiems pirkimams";
+"Save payment details to %@ for future purchases" = "Išsaugoti mokėjimo duomenis \"%@” būsimiems pirkimams";
 
 "Save this account for future %@ payments" = "Išsaugoti šią sąskaitą vėlesniems %@ mokėjimams";
 
 "Save your bank account in just a few steps." = "Vos keliais veiksmais įrašykite savo banko sąskaitą.";
 
-"Save your info for secure 1-click checkout with Link" = "Išsaugokite savo informaciją saugiam atsiskaitymui vienu spustelėjimu su „Link“";
+"Save your info for secure 1-click checkout with Link" = "Išsaugokite savo informaciją saugiam atsiskaitymui vienu spustelėjimu su \"Link\"";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Išsaugokite savo mokėjimų informaciją naudodami \"Link\" ir saugiai atsiskaitykite vienu spustelėjimu \"Link\" palaikomose svetainėse.";
 
 "Saved" = "Įrašyta";
 
@@ -222,15 +238,19 @@
 
 "Simple, secure one-click payments" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant „%@“.";
+"Something went wrong when linking your account.\nPlease try again later." = "Susiejant jūsų sąskaitą įvyko klaida.\nBandykite dar kartą vėliau.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas „Stripe“ į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant \"%@\".";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
 
 "Tap to close" = "Bakstelėkite, kad uždarytumėte";
 
 "Tap to expand" = "Bakstelėkite, kad išplėstumėte";
 
 "The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Įvedėte neteisingą IBAN kodą, \"%@\" nėra palaikomas šalies kodas.";
 
 "The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
 
