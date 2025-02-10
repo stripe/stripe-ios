@@ -89,4 +89,7 @@ missing_translations = missing_translations.uniq
 puts(missing_translations)
 if missing_translations.any?
   File.open("missing_translations.txt", 'w') { |f| f.write missing_translations.join(", ") }
+else
+  puts 'No missing translations
+  File.delete("missing_translations.txt") if File.exist?("missing_translations.txt")
 end
