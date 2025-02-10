@@ -247,6 +247,7 @@ import UIKit
         )
 
         let elementsSessionContext = makeElementsSessionContext()
+        let bankAccountCollectorConfiguration = makeBankAccountCollectorConfiguration()
 
         switch mode {
         case .paymentIntentClientSecret(let string):
@@ -254,6 +255,7 @@ import UIKit
                 clientSecret: string,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -265,6 +267,7 @@ import UIKit
                 clientSecret: string,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -290,6 +293,7 @@ import UIKit
                 currency: currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 from: presentingViewController,
                 financialConnectionsCompletion: completionHandler
@@ -314,7 +318,6 @@ import UIKit
             )
         )
 
-        let styleConfig = ElementsSessionContext.StyleConfig(from: configuration.style)
         return ElementsSessionContext(
             amount: mode.amount,
             currency: mode.currency,
@@ -322,9 +325,19 @@ import UIKit
             intentId: nil,
             linkMode: nil,
             billingDetails: billingDetails,
-            eligibleForIncentive: false,
-            styleConfig: styleConfig
+            eligibleForIncentive: false
         )
+    }
+
+    private func makeBankAccountCollectorConfiguration() -> STPBankAccountCollectorConfiguration {
+        let style: STPBankAccountCollectorConfiguration.UserInterfaceStyle = {
+            switch configuration.style {
+            case .automatic: return .automatic
+            case .alwaysLight: return .alwaysLight
+            case .alwaysDark: return .alwaysDark
+            }
+        }()
+        return .init(style: style)
     }
 
     private func makePrefillDetails() -> ElementsSessionContext.PrefillDetails {

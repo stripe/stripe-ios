@@ -275,7 +275,6 @@ extension PaymentMethodFormViewController {
         )
         let linkMode = elementsSession.linkSettings?.linkMode
         let billingDetails = instantDebitsFormElement?.billingDetails
-        let styleConfig = ElementsSessionContext.StyleConfig(from: configuration.style)
 
         return ElementsSessionContext(
             amount: intent.amount,
@@ -284,9 +283,19 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
-            styleConfig: styleConfig
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
         )
+    }
+
+    private var bankAccountCollectorConfiguration: STPBankAccountCollectorConfiguration {
+        let style: STPBankAccountCollectorConfiguration.UserInterfaceStyle = {
+            switch configuration.style {
+            case .automatic: return .automatic
+            case .alwaysLight: return .alwaysLight
+            case .alwaysDark: return .alwaysDark
+            }
+        }()
+        return .init(style: style)
     }
 
     private var shouldOverridePrimaryButton: Bool {
@@ -394,6 +403,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -405,6 +415,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -430,6 +441,7 @@ extension PaymentMethodFormViewController {
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
@@ -495,6 +507,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -506,6 +519,7 @@ extension PaymentMethodFormViewController {
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -531,6 +545,7 @@ extension PaymentMethodFormViewController {
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
+                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
