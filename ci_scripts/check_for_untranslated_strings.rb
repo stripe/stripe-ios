@@ -28,8 +28,24 @@ def get_added_strings(current_dir)
     end
 
     new_strings[file] = added_lines.map do |line|
-      line.delete_prefix('+').strip.split('=')[0].gsub(/\"/, '').strip
-    end
+      clean_line = line.delete_prefix('+').strip
+      # Collect all positions of '=' in the line.
+      eq_positions = []
+      clean_line.enum_for(:scan, /=/).each do
+        eq_positions << Regexp.last_match.begin(0)
+      end
+
+      # If for some reason there's no '=' at all, skip
+      next if eq_positions.empty?
+
+      # Grab the middle '=' index
+      middle_eq_index = eq_positions[eq_positions.size / 2]
+
+      # Everything before the middle '=' is the key
+      key_part = clean_line[0...middle_eq_index].gsub(/\"/, '').strip
+
+      key_part
+    end.compact
   end
 
   new_strings
