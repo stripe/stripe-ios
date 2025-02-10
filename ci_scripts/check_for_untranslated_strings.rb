@@ -43,7 +43,7 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
     puts "Checking translation for file #{file_path}"
 
     new_strings.each do |str|
-      key = keys['keys'].find { |k| k['key_name']['ios'] == str }
+      key = keys['keys'].find { |k| normalize_string(k['key_name']['ios']) == normalize_string(str) }
 
       if key
         translated_count = key['translations'].count { |t| !t['translation'].empty? }
@@ -61,6 +61,10 @@ def check_lokalise_translations(api_token, project_id, new_added_strings)
   end
 
   missing_translations
+end
+
+def normalize_string(str)
+  str.gsub(/[\\"]/, '')
 end
 
 new_strings_added = get_added_strings($ROOT_DIR)
