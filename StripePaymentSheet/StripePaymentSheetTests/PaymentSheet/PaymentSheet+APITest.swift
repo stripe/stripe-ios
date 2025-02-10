@@ -49,10 +49,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         return makeNewCardPaymentOption()
     }()
 
-    lazy var newCardDefaultPaymentOption: PaymentSheet.PaymentOption = {
-        return makeNewCardPaymentOption(setAsDefaultPM: true)
-    }()
-
     private func makeNewCardPaymentOption(setAsDefaultPM: Bool = false) -> PaymentSheet.PaymentOption {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
@@ -390,7 +386,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                             authenticationContext: self,
                             intent: loadResult.intent,
                             elementsSession: loadResult.elementsSession,
-                            paymentOption: self.newCardDefaultPaymentOption,
+                            paymentOption: self.makeNewCardPaymentOption(setAsDefaultPM: loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet),
                             paymentHandler: self.paymentHandler,
                             analyticsHelper: ._testValue()
                         ) { result, _ in
@@ -468,7 +464,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     authenticationContext: self,
                     intent: loadResult.intent,
                     elementsSession: loadResult.elementsSession,
-                    paymentOption: self.newCardDefaultPaymentOption,
+                    paymentOption: self.makeNewCardPaymentOption(setAsDefaultPM: loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet),
                     paymentHandler: self.paymentHandler,
                     analyticsHelper: ._testValue()
                 ) { result, _ in
@@ -547,7 +543,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     authenticationContext: self,
                     intent: .deferredIntent(intentConfig: intentConfig),
                     elementsSession: loadResult.elementsSession,
-                    paymentOption: self.newCardDefaultPaymentOption,
+                    paymentOption: self.makeNewCardPaymentOption(setAsDefaultPM: loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet),
                     paymentHandler: self.paymentHandler,
                     analyticsHelper: ._testValue()
                 ) { result, _ in
@@ -616,7 +612,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     authenticationContext: self,
                     intent: .deferredIntent(intentConfig: intentConfig),
                     elementsSession: loadResult.elementsSession,
-                    paymentOption: self.newCardDefaultPaymentOption,
+                    paymentOption: self.makeNewCardPaymentOption(setAsDefaultPM: loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet),
                     paymentHandler: self.paymentHandler,
                     analyticsHelper: ._testValue()
                 ) { result, _ in

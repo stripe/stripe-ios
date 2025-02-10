@@ -53,8 +53,8 @@ extension PaymentSheet {
 
                 // Overwrite `completion` to ensure we set the default if necessary before completing.
                 let completion = { (status: STPPaymentHandlerActionStatus, paymentOrSetupIntent: PaymentOrSetupIntent?, error: NSError?, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType) in
-                    if let paymentOrSetupIntent, !allowsSetAsDefaultPM {
-                        setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: paymentOrSetupIntent, configuration: configuration)
+                    if let paymentOrSetupIntent {
+                        setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: paymentOrSetupIntent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                     }
                     completion(makePaymentSheetResult(for: status, error: error), deferredIntentConfirmationType)
                 }

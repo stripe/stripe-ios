@@ -200,8 +200,8 @@ extension PaymentSheet {
                     params,
                     with: authenticationContext,
                     completion: { actionStatus, paymentIntent, error in
-                        if let paymentIntent, !elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration)
+                        if let paymentIntent {
+                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                         }
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -222,8 +222,8 @@ extension PaymentSheet {
                     setupIntentParams,
                     with: authenticationContext,
                     completion: { actionStatus, setupIntent, error in
-                        if let setupIntent, !elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration)
+                        if let setupIntent {
+                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                         }
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -571,7 +571,7 @@ extension PaymentSheet {
 
     /// A helper method that sets the Customer's default payment method if necessary.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
-    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration) {
+    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration, paymentMethodSetAsDefault: Bool) {
 
         guard
             // Did we successfully save this payment method?
@@ -580,7 +580,9 @@ extension PaymentSheet {
             intent.isSetupFutureUsageSet,
             let paymentMethod = intent.paymentMethod,
             // Can it appear in the list of saved PMs?
-            PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type)
+            PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type),
+            // Should it write to local storage?
+            !paymentMethodSetAsDefault
         else {
             return
         }
