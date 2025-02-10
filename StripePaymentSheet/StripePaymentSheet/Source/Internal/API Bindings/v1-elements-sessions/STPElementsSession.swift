@@ -211,6 +211,10 @@ extension STPElementsSession {
         return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
     }
 
+    var paymentMethodSetAsDefaultForPaymentSheet: Bool {
+        return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodSetAsDefault ?? false
+    }
+
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {
@@ -225,6 +229,10 @@ extension STPElementsSession {
     }
     var paymentMethodRemoveLastForCustomerSheet: Bool {
         return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
+    }
+
+    var paymentMethodSyncDefaultForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.features?.paymentMethodSyncDefault ?? false
     }
 
     var isLinkCardBrand: Bool {
