@@ -2569,6 +2569,50 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
 
+    // MARK: Native Link bank payments
+
+    func testBankPaymentInNativeLinkInPaymentMethodMode() {
+        testBankPaymentInNativeLink(passthroughMode: false)
+    }
+    
+    func testBankPaymentInNativeLinkInPassthroughMode() {
+        testBankPaymentInNativeLink(passthroughMode: true)
+    }
+    
+    private func testBankPaymentInNativeLink(passthroughMode: Bool) {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.linkPassthroughMode = passthroughMode ? .passthrough : .pm
+        settings.defaultBillingAddress = .customEmail
+        settings.customEmail = "foo@bar.com"
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = passthroughMode ? "card" : "card,link"
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        
+        // Enter OTC in dialog
+        let textField = app.textViews["Code field"]
+        XCTAssertTrue(textField.waitForExistence(timeout: 10.0))
+        textField.typeText("000000")
+
+        app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
+
+        let bankRow = app
+            .otherElements
+            .matching(NSPredicate(format: "label CONTAINS 'Test Institution'"))
+            .firstMatch
+        XCTAssertTrue(bankRow.waitForExistenceAndTap())
+
+            
+        app.buttons
+            .matching(identifier: "Pay $50.99")
+            .matching(NSPredicate(format: "isEnabled == true"))
+            .firstMatch
+            .waitForExistenceAndTap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
     // MARK: Link test helpers
 
     private enum LinkMode {
