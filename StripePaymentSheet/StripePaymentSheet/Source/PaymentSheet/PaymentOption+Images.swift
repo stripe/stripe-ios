@@ -129,16 +129,7 @@ extension STPPaymentMethod {
     func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
-            guard let card = card, let number = card.number else {
-                return STPImageLibrary.unknownCardCardImage()
-            }
-
-            var brand = STPCardValidator.brand(forNumber: number)
-            // Handle co-banded cards for flow controller
-            if let networks = card.networks {
-                brand = networks.preferred?.toCardBrand ?? .unknown
-            }
-
+            let brand = STPCardValidator.brand(for: card)
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon

@@ -118,12 +118,12 @@ public final class EmbeddedPaymentElement {
         latestUpdateTask?.cancel()
         _ = await latestUpdateTask?.value
         // Start the new update task
-        let currentUpdateTask = Task { @MainActor [weak self, configuration, analyticsHelper] in
-            // ⚠️ Don't modify `self` until the end to avoid being canceled halfway through and leaving self in a partially updated state.
+        let currentUpdateTask: Task<UpdateResult, Never> = Task { @MainActor [weak self, configuration, analyticsHelper] in
+            // ⚠️ Don't modify `self` until after all `awaits` to avoid being canceled halfway through and leaving self in a partially updated state.
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
             do {
-                // TODO(nice to have): Make `load` respect task cancellation to reduce network consumption
+                // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3079): Make `load` respect task cancellation to reduce network consumption
                 loadResult = try await PaymentSheetLoader.load(
                     mode: .deferredIntent(intentConfiguration),
                     configuration: configuration,
@@ -133,56 +133,63 @@ public final class EmbeddedPaymentElement {
             } catch {
                 return UpdateResult.failed(error: error)
             }
-            guard !Task.isCancelled else {
+            guard let self, !Task.isCancelled else {
                 return UpdateResult.canceled
             }
 
-            // Store the old payment option before we update self.formViewController
-            let oldPaymentOption = self?.paymentOption
-
-            // 2.1. Re-initialize embedded form view controller to update the UI to match the newly loaded data.
-            if let formPaymentMethodType = self?.selectedFormViewController?.selectedPaymentOption?.paymentMethodType {
-                self?.selectedFormViewController = EmbeddedFormViewController(configuration: configuration,
-                                                                intent: loadResult.intent,
-                                                                elementsSession: loadResult.elementsSession,
-                                                                shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
-                                                                paymentMethodType: formPaymentMethodType,
-                                                                previousPaymentOption: self?.selectedFormViewController?.selectedPaymentOption,
-                                                                analyticsHelper: analyticsHelper)
-
-            }
-
-            // 2.4 Re-initialize embedded view to update the UI to match the newly loaded data.
-            let embeddedPaymentMethodsView = Self.makeView(
+            // 2. At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
+            let previousPaymentOption = self._paymentOption
+            self.loadResult = loadResult
+            self.savedPaymentMethods = loadResult.savedPaymentMethods
+            self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
+            let isPreviousPaymentOptionStillDisplayed: Bool = {
+                switch previousPaymentOption {
+                case .none:
+                    return true
+                case .applePay:
+                    return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+                case .link:
+                    return PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+                case .saved(paymentMethod: let paymentMethod, confirmParams: _):
+                    return loadResult.savedPaymentMethods.contains(paymentMethod)
+                case .new(confirmParams: let confirmParams):
+                    return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
+                case .external(paymentMethod: let paymentMethod, billingDetails: _):
+                    return loadResult.paymentMethodTypes.contains(.external(paymentMethod))
+                }
+            }()
+            let previousSelectedRowType = self.embeddedPaymentMethodsView.selectedRowButton?.type
+            // Make the new form VC for the previously selected row type if it's still in the list
+            let selectedFormViewController = Self.makeFormViewControllerIfNecessary(
+                selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
+                previousPaymentOption: previousPaymentOption,
+                configuration: self.configuration,
+                intent: loadResult.intent,
+                elementsSession: loadResult.elementsSession,
+                savedPaymentMethods: loadResult.savedPaymentMethods,
+                analyticsHelper: self.analyticsHelper,
+                formCache: self.formCache,
+                delegate: self
+            )
+            self.selectedFormViewController = selectedFormViewController
+            // Make the new list view, selecting the previous row if it's still in the list and it doesn't have a form or it's form is valid
+            let shouldSelectPreviousRow: Bool = {
+                guard isPreviousPaymentOptionStillDisplayed else { return false }
+                if let selectedFormViewController {
+                    return selectedFormViewController.selectedPaymentOption != nil
+                } else {
+                    return true
+                }
+            }()
+            self.embeddedPaymentMethodsView = Self.makeView(
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                previousPaymentOption: self?._paymentOption,
+                previousSelection: shouldSelectPreviousRow ? previousSelectedRowType : nil,
                 delegate: self
             )
-
-            // 3. Pre-load image into cache
-            // Call this on a detached Task b/c this synchronously (!) loads the image from network and we don't want to block the main actor
-            let fetchPaymentOption = Task.detached(priority: .userInitiated) {
-                // This has the nasty side effect of synchronously downloading the image (see https://jira.corp.stripe.com/browse/MOBILESDK-2604)
-                // This caches it so that DownloadManager doesn't block the main thread when the merchant tries to access the image
-                return await embeddedPaymentMethodsView.selection?.paymentMethodType?.makeImage(updateHandler: nil)
-            }
-            _ = await fetchPaymentOption.value
-
-            guard let self, !Task.isCancelled else {
-                return .canceled
-            }
-            // At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
-            self.savedPaymentMethods = loadResult.savedPaymentMethods
-            self.elementsSession = loadResult.elementsSession
-            self.intent = loadResult.intent
-            self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
-            self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
-            if oldPaymentOption != self.paymentOption {
-                self.delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
-            }
+            informDelegateIfPaymentOptionUpdated()
             return .succeeded
         }
         self.latestUpdateTask = currentUpdateTask
@@ -232,7 +239,7 @@ public final class EmbeddedPaymentElement {
 #endif
 
         // Notify the delegate that the payment option has changed
-        delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+        informDelegateIfPaymentOptionUpdated()
     }
 
     #if DEBUG
@@ -245,11 +252,12 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) var containerView: EmbeddedPaymentElementContainerView
     internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
-    internal private(set) var elementsSession: STPElementsSession
-    internal private(set) var intent: Intent
+    internal var loadResult: PaymentSheetLoader.LoadResult
+    internal var elementsSession: STPElementsSession { loadResult.elementsSession }
+    internal var intent: Intent { loadResult.intent }
+    internal var savedPaymentMethods: [STPPaymentMethod]
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
-    internal var savedPaymentMethods: [STPPaymentMethod]
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     /// The form view controller for the currently selected payment method.
     internal var selectedFormViewController: EmbeddedFormViewController?
@@ -272,7 +280,7 @@ public final class EmbeddedPaymentElement {
             return selectedFormViewController.selectedPaymentOption
         }
 
-        switch embeddedPaymentMethodsView.selection {
+        switch embeddedPaymentMethodsView.selectedRowButton?.type {
         case .applePay:
             return .applePay
         case .link:
@@ -303,15 +311,14 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
-    private init(
+    internal init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
-        self.elementsSession = loadResult.elementsSession
+        self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
-        self.intent = loadResult.intent
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,

@@ -205,9 +205,8 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
         XCTAssertTrue(viewModel.isLoaded)
 
         // Simulate user selecting a payment method
-        viewModel.embeddedPaymentElement?.embeddedPaymentMethodsView.didTap(
-            selection: .new(paymentMethodType: .stripe(.cashApp))
-        )
+        let embeddedView = viewModel.embeddedPaymentElement!.embeddedPaymentMethodsView
+        embeddedView.didTap(rowButton: embeddedView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         XCTAssertNotNil(viewModel.paymentOption, "Expected a payment option after user selection.")
 
         // Clear

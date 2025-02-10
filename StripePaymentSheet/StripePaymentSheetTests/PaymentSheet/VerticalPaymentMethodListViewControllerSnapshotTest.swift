@@ -11,11 +11,11 @@ import StripeCoreTestUtils
 import XCTest
 
 final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTestCase, VerticalPaymentMethodListViewControllerDelegate {
-    func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) -> Bool {
+    func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) -> Bool {
         return true
     }
 
-    func didTapPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) {
+    func didTapPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) {
 
     }
 
@@ -66,16 +66,6 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
     func testSavedCard_ApplePayLink() {
         let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, incentive: nil, delegate: self)
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
-    }
-
-    func testDarkMode() {
-        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, incentive: nil, delegate: self)
-        let window = UIWindow()
-        window.isHidden = false
-        window.overrideUserInterfaceStyle = .dark
-        window.rootViewController = sut
-        window.addAndPinSubview(sut.view, insets: .zero)
-        STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
     }
 
     func testAppearance() {

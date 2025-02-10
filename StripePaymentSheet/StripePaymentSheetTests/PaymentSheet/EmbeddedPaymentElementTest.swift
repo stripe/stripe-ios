@@ -6,6 +6,7 @@
 //
 
 @testable@_spi(STP) import StripeCore
+@testable@_spi(STP) import StripeUICore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
@@ -58,7 +59,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
         // ...with cash app selected...
-        sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         delegateDidUpdatePaymentOptionCalled = false // This gets set to true when we select cash app ^
         XCTAssertNil(sut.paymentOption?.mandateText)
         // ...its intent should match the initial intent config...
@@ -192,7 +193,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        sut.embeddedPaymentMethodsView.didTap(selection: .applePay)
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         async let _ = sut.update(intentConfiguration: brokenConfig)
@@ -213,7 +214,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        sut.embeddedPaymentMethodsView.didTap(selection: .applePay)
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
         _ = await sut.update(intentConfiguration: brokenConfig)
@@ -307,7 +308,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertNil(sut.paymentOption)
 
         // Select the "Card" payment method
-        sut.embeddedPaymentMethodsView.didTap(selection: .new(paymentMethodType: .stripe(.cashApp)))
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // The delegate should have been notified
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
         XCTAssertEqual(sut.paymentOption?.label, "Cash App Pay")
@@ -459,6 +460,50 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut._test_paymentOption = .saved(paymentMethod: ._testCard(), confirmParams: confirmParams)
         XCTAssertEqual(sut.paymentOption?.label, "••••6789")
     }
+    
+    func testChangeButtonStateRespectsCardBrandChoice() async throws {
+        // Given an EmbeddedPaymentElement w/ CBC enabled...
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in }
+        let elementsSession = STPElementsSession._testValue(cardBrandChoice: ._testValue())
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
+        )
+        let sut = EmbeddedPaymentElement(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        await FormSpecProvider.shared.load()
+        // ...with card selected...
+        let cardRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardRowButton)
+        // ...and filling out the form using a CBC-enabled card...
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4000002500001001")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+        // ...the change button state label (the label that appears on the selected row) should read ****1001 w/o a network (b/c no network was selected)...
+        var changeButtonState = sut.getChangeButtonState(for: .new(paymentMethodType: .stripe(.card)))
+        XCTAssertEqual(changeButtonState.sublabel, "•••• 1001")
+        // ...and setting a preferred network (ie what happens if you select a brand from the dropdown)...
+        // Hack: Since the dropdown field isn't properly hooked up to the Element hierarchy, we can't access it via `cardForm.getDropdownFieldElement`
+        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3088): Make the CBC dropdown field participate in the Element hierarchy correctly!
+        let cbcDropdown = (cardForm.getTextFieldElement("Card number").configuration as! TextFieldElement.PANConfiguration).cardBrandDropDown
+        cbcDropdown?.selectedIndex = 1
+        // ...the label should read "Cartes Bancaire ****1001"
+        changeButtonState = sut.getChangeButtonState(for: .new(paymentMethodType: .stripe(.card)))
+        XCTAssertEqual(changeButtonState.sublabel, "Cartes Bancaires •••• 1001")
+    }
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
@@ -487,10 +532,6 @@ extension EmbeddedPaymentElement.UpdateResult: Equatable {
 }
 
 extension EmbeddedPaymentMethodsView {
-    var rowButtons: [RowButton] {
-        return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
-    }
-
     func getRowButton(accessibilityIdentifier: String) -> RowButton {
         return rowButtons.first { $0.accessibilityIdentifier == accessibilityIdentifier }!
     }

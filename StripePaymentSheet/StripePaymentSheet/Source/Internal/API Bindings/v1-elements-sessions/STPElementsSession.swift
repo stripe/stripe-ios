@@ -53,7 +53,7 @@ final class STPElementsSession: NSObject {
 
     let allResponseFields: [AnyHashable: Any]
 
-    private init(
+    internal init(
         allResponseFields: [AnyHashable: Any],
         sessionID: String,
         orderedPaymentMethodTypes: [STPPaymentMethodType],

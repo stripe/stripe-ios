@@ -57,7 +57,7 @@ final class RoundedTextField: UIView {
             trailing: 16
         )
         containerStackView.layer.cornerRadius = 12
-        containerStackView.layer.shadowColor = UIColor.black.cgColor
+        containerStackView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
         containerStackView.layer.shadowRadius = 2 / UIScreen.main.nativeScale
         containerStackView.layer.shadowOpacity = 0.1
         containerStackView.layer.shadowOffset = CGSize(
@@ -190,8 +190,6 @@ final class RoundedTextField: UIView {
     }
 
     private func updateBorder(highlighted: Bool) {
-        let highlighted = textField.isFirstResponder
-
         if errorText != nil && !highlighted {
             containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.textCritical.cgColor
             containerHorizontalStackView.layer.borderWidth = 2.0
@@ -208,6 +206,15 @@ final class RoundedTextField: UIView {
 
     @IBAction private func textFieldDidChange() {
         delegate?.roundedTextField(self, textDidChange: text)
+    }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        updateBorder(highlighted: textField.isFirstResponder)
+        containerHorizontalStackView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
     }
 }
 

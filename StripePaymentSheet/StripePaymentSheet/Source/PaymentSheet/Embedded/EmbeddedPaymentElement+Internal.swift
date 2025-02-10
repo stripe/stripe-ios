@@ -16,7 +16,7 @@ extension EmbeddedPaymentElement {
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        previousPaymentOption: PaymentOption? = nil,
+        previousSelection: RowButtonType? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         // Restore the customer's previous payment method.
@@ -34,21 +34,10 @@ extension EmbeddedPaymentElement {
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
-        let initialSelection: EmbeddedPaymentMethodsView.Selection? = {
-            // Select the previous payment option
-            switch previousPaymentOption {
-            case .applePay:
-                return .applePay
-            case .link:
-                return .link
-            case .external(paymentMethod: let paymentMethod, billingDetails: _):
-                return .new(paymentMethodType: .external(paymentMethod))
-            case .saved(paymentMethod: let paymentMethod, confirmParams: _):
-                return .saved(paymentMethod: paymentMethod)
-            case .new(confirmParams: let confirmParams):
-                return .new(paymentMethodType: confirmParams.paymentMethodType)
-            case nil:
-                break
+        let initialSelection: RowButtonType? = {
+            // First, respect the previous selection
+            if let previousSelection {
+                return previousSelection
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
@@ -103,7 +92,17 @@ extension EmbeddedPaymentElement {
     }
 
     // Helper method to create Form VC for a payment method row, if applicable.
-    func makeFormViewControllerIfNecessary(selection: EmbeddedPaymentMethodsView.Selection?) -> EmbeddedFormViewController? {
+    static func makeFormViewControllerIfNecessary(
+        selection: RowButtonType?,
+        previousPaymentOption: PaymentOption?,
+        configuration: Configuration,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        savedPaymentMethods: [STPPaymentMethod],
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        formCache: PaymentMethodFormCache,
+        delegate: EmbeddedFormViewControllerDelegate
+    ) -> EmbeddedFormViewController? {
         guard case let .new(paymentMethodType) = selection else {
             return nil
         }
@@ -114,11 +113,11 @@ extension EmbeddedPaymentElement {
             elementsSession: elementsSession,
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
             paymentMethodType: paymentMethodType,
-            previousPaymentOption: self.selectedFormViewController?.previousPaymentOption,
+            previousPaymentOption: previousPaymentOption,
             analyticsHelper: analyticsHelper,
-            formCache: formCache
+            formCache: formCache,
+            delegate: delegate
         )
-        formViewController.delegate = self
         guard formViewController.collectsUserInput else {
             return nil
         }
@@ -136,7 +135,17 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func embeddedPaymentMethodsViewDidUpdateSelection() {
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
-        self.selectedFormViewController = makeFormViewControllerIfNecessary(selection: embeddedPaymentMethodsView.selection)
+        self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
+            selection: embeddedPaymentMethodsView.selectedRowButton?.type,
+            previousPaymentOption:  selectedFormViewController?.previousPaymentOption,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: savedPaymentMethods,
+            analyticsHelper: analyticsHelper,
+            formCache: formCache,
+            delegate: self
+        )
 
         // 2. Inform the delegate of the updated payment option
         informDelegateIfPaymentOptionUpdated()
@@ -151,6 +160,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
         stpAssert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+        stpAssert(selectedFormViewController.delegate != nil)
         presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
 
     }
@@ -219,7 +229,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         }
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
-        let isSelected = embeddedPaymentMethodsView.selection?.isSaved ?? false
+        let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
@@ -258,7 +268,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         // or
         // there are still saved payment methods & the saved payment method was previously selected to presenting
         let isSelected = (latestPaymentMethods.count > 1 && selectedPaymentMethod != nil) ||
-        (embeddedPaymentMethodsView.selection?.isSaved ?? false && latestPaymentMethods.count > 0)
+        (embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false && latestPaymentMethods.count > 0)
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
@@ -321,13 +331,59 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         // If the formViewController was populated with a previous payment option don't reset
         if embeddedFormViewController.previousPaymentOption == nil {
             embeddedPaymentMethodsView.resetSelectionToLastSelection()
+            // Show change button if the newly selected row needs it
+            if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
+                let changeButtonState = getChangeButtonState(for: newSelectedType)
+                if changeButtonState.shouldShowChangeButton {
+                    embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+                }
+            }
         }
         embeddedFormViewController.dismiss(animated: true)
     }
 
     func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: EmbeddedFormViewController) {
+        // Show change button if the selected row needs it
+        if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
+            let changeButtonState = getChangeButtonState(for: newSelectedType)
+            if changeButtonState.shouldShowChangeButton {
+                embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+            }
+        }
         embeddedFormViewController.dismiss(animated: true)
         informDelegateIfPaymentOptionUpdated()
+    }
+    
+    func getChangeButtonState(for type: RowButtonType) -> (shouldShowChangeButton: Bool, sublabel: String?) {
+        guard let _paymentOption, let displayData = paymentOption else {
+            return (false, nil)
+        }
+        // Show change button for new PMs that have a valid form
+        let shouldShowChangeButton: Bool = {
+            if case .new = type, selectedFormViewController != nil {
+               return true
+            }
+            return false
+        }()
+        
+        // Add a sublabel to the selected row for cards and us bank account like "Visa 4242"
+        let sublabel: String? = {
+            switch type.paymentMethodType {
+            case .stripe(.card):
+                guard case .new(confirmParams: let params) = _paymentOption else {
+                    return nil
+                }
+                let brand = STPCardValidator.brand(for: params.paymentMethodParams.card)
+                let brandString = brand == .unknown ? nil : STPCardBrandUtilities.stringFrom(brand)
+                return [brandString, displayData.label].compactMap({ $0 }).joined(separator: " ")
+            case .stripe(.USBankAccount):
+                return displayData.label
+            default:
+                return nil
+            }
+        }()
+        
+        return (shouldShowChangeButton: shouldShowChangeButton, sublabel: sublabel)
     }
 }
 

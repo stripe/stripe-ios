@@ -22,8 +22,9 @@ struct FinancialConnectionsAppearance: Equatable {
         static let icon: UIColor = .dynamic(light: .neutral700, dark: .neutral25)
         static let borderNeutral: UIColor = .dynamic(light: .neutral100, dark: .neutral100Dark)
         static let spinnerNeutral: UIColor = .neutral200
-        static let warningLight: UIColor = .attention50
+        static let warningLight: UIColor = .dynamic(light: .attention50, dark: .attention50Dark)
         static let warning: UIColor = .attention300
+        static let shadow: UIColor = .dynamic(light: .black, dark: .neutral0)
 
         // These colors change based on the manifest's theme.
         let primary: UIColor
@@ -60,7 +61,7 @@ extension FinancialConnectionsAppearance.Colors {
         textFieldFocused: .brand600,
         logo: .dynamic(light: .brand600, dark: .neutral0),
         iconTint: .brand500,
-        iconBackground: .brand25,
+        iconBackground: .dynamic(light: .brand25, dark: .brand25Dark),
         spinner: .brand500,
         border: .brand600
     )
@@ -72,7 +73,7 @@ extension FinancialConnectionsAppearance.Colors {
         textFieldFocused: .linkGreen200,
         logo: .dynamic(light: .linkGreen900, dark: .neutral0),
         iconTint: .linkGreen500,
-        iconBackground: .linkGreen50,
+        iconBackground: .dynamic(light: .linkGreen50, dark: .linkGreen50Dark),
         spinner: .linkGreen200,
         border: .linkGreen200
     )
@@ -138,6 +139,10 @@ private extension UIColor {
         return UIColor(red: 254 / 255.0, green: 249 / 255.0, blue: 218 / 255.0, alpha: 1)  // #fef9da
     }
 
+    static var attention50Dark: UIColor {
+        return UIColor(red: 64 / 255.0, green: 10 / 255.0, blue: 0 / 255.0, alpha: 1)  // #400a00
+    }
+
     static var attention300: UIColor {
         return UIColor(red: 247 / 255.0, green: 135 / 255.0, blue: 15 / 255.0, alpha: 1)  // #f7870f
     }
@@ -152,6 +157,10 @@ private extension UIColor {
         return UIColor(red: 247 / 255.0, green: 245 / 255.0, blue: 253 / 255.0, alpha: 1)  // #f7f5fd
     }
 
+    static var brand25Dark: UIColor {
+        return UIColor(red: 26 / 255.0, green: 27 / 255.0, blue: 46 / 255.0, alpha: 1)  // #1A1B2E
+    }
+
     static var brand500: UIColor {
         return UIColor(red: 103 / 255.0, green: 93 / 255.0, blue: 255 / 255.0, alpha: 1)  // #675dff
     }
@@ -163,6 +172,10 @@ private extension UIColor {
     // MARK: Link
     static var linkGreen50: UIColor {
         return UIColor(red: 230 / 255.0, green: 255 / 255.0, blue: 237 / 255.0, alpha: 1)  // #e6ffed
+    }
+
+    static var linkGreen50Dark: UIColor {
+        return UIColor(red: 22 / 255.0, green: 33 / 255.0, blue: 31 / 255.0, alpha: 1)  // #16211f
     }
 
     static var linkGreen200: UIColor {

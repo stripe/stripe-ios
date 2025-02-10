@@ -286,6 +286,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         consumerAccountPublishableKey: String?,
+        allowRedisplay: STPPaymentMethodAllowRedisplay?,
         cvc: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -300,6 +301,9 @@ extension STPAPIClient {
 
         if let cvc = cvc {
             parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+        }
+        if let allowRedisplay {
+            parameters["allow_redisplay"] = allowRedisplay.stringValue
         }
 
         APIRequest<PaymentDetailsShareResponse>.post(

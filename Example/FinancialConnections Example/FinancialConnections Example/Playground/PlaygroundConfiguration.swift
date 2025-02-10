@@ -371,6 +371,36 @@ final class PlaygroundConfiguration {
             configurationStore[Self.phoneKey] = newValue
         }
     }
+    
+    // MARK: - Relink Authorization
+    
+    private static let customerIdKey = "customer_id"
+    var customerId: String {
+        get {
+            if let customerId = configurationStore[Self.customerIdKey] as? String {
+                return customerId
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationStore[Self.customerIdKey] = newValue
+        }
+    }
+
+    private static let relinkAuthorizationKey = "relink_authorization"
+    var relinkAuthorization: String {
+        get {
+            if let relinkAuthorization = configurationStore[Self.relinkAuthorizationKey] as? String {
+                return relinkAuthorization
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationStore[Self.relinkAuthorizationKey] = newValue
+        }
+    }
 
     // MARK: - Permissions
 

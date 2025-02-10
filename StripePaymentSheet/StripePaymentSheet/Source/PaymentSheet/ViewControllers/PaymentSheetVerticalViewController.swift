@@ -173,7 +173,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     /// Regenerates the main content - either the PM list or the PM form and updates all UI elements (pay button, error, mandate)
-    func regenerateUI(updatedListSelection: VerticalPaymentMethodListSelection? = nil) {
+    func regenerateUI(updatedListSelection: RowButtonType? = nil) {
         // Remove any content vcs; we'll rebuild and add them now
         if let paymentMethodListViewController {
             remove(childViewController: paymentMethodListViewController)
@@ -289,7 +289,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     /// Returns the default selected row in the vertical list - the previous payment option, the last VC's selection, or the customer's default.
-    func calculateInitialSelection() -> VerticalPaymentMethodListSelection? {
+    func calculateInitialSelection() -> RowButtonType? {
         if let previousPaymentOption {
             switch previousPaymentOption {
             case .applePay:
@@ -380,7 +380,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         return nil
     }
 
-    func makePaymentMethodListViewController(selection: VerticalPaymentMethodListSelection?) -> VerticalPaymentMethodListViewController {
+    func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
         let initialSelection = selection ?? calculateInitialSelection()
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
@@ -672,7 +672,7 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
     ) {
         // Update our list of saved payment methods to be the latest from the manage screen in case of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
-        var selection: VerticalPaymentMethodListSelection?
+        var selection: RowButtonType?
         if let selectedPaymentMethod {
             selection = .saved(paymentMethod: selectedPaymentMethod)
         }
@@ -691,7 +691,7 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
 
 extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewControllerDelegate {
 
-    func shouldSelectPaymentMethod(_ selection: VerticalPaymentMethodListSelection) -> Bool {
+    func shouldSelectPaymentMethod(_ selection: RowButtonType) -> Bool {
         switch selection {
         case .applePay, .link:
             return true
@@ -703,7 +703,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         }
     }
 
-    func didTapPaymentMethod(_ selection: VerticalPaymentMethodListSelection) {
+    func didTapPaymentMethod(_ selection: RowButtonType) {
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
         error = nil
 #if !canImport(CompositorServices)

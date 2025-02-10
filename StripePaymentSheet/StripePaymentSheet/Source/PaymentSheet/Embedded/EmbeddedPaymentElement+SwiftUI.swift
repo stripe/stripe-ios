@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+@_spi(STP) import StripeCore
 
 /// A view model that manages an `EmbeddedPaymentElement`.
 @MainActor
@@ -40,6 +41,8 @@ import Combine
     // MARK: - Internal properties
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
+    
+    @Published var height: CGFloat = 0.0
 
     // MARK: - Private properties
 
@@ -48,7 +51,9 @@ import Combine
     // MARK: - Public APIs
 
     /// Creates an empty view model. Call `load` to initialize the `EmbeddedPaymentElementViewModel`
-    public init() {}
+    public init() {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: Self.self)
+    }
 
     /// Asynchronously loads the EmbeddedPaymentElementViewModel. This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
     /// Loads the Customer's payment methods, their default payment method, etc.
@@ -75,6 +80,7 @@ import Combine
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
             self.paymentOption = embeddedPaymentElement.paymentOption
+            calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement) // compute initial height
             self.isLoaded = true
         }
 
@@ -134,17 +140,47 @@ import Combine
         embeddedPaymentElement?.testHeightChange()
     }
 #endif
+    
+    private func calculateAndPublishHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
+        let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
+
+        withAnimation(.easeInOut(duration: 0.2)) {
+            self.height = newHeight
+        }
+    }
 }
 
 // MARK: EmbeddedPaymentElementDelegate
 
 extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
-
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-        // TODO(porter) Handle height changes when we add the UIViewRepresentable MOBILESDK-3001
+        calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement)
     }
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         self.paymentOption = embeddedPaymentElement.paymentOption
+    }
+}
+
+// MARK: STPAnalyticsProtocol
+
+@_spi(STP) extension EmbeddedPaymentElementViewModel: STPAnalyticsProtocol {
+    nonisolated public static let stp_analyticsIdentifier = "EmbeddedPaymentElementViewModel"
+}
+
+/// A SwiftUI view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
+@_spi(EmbeddedPaymentElementPrivateBeta) public struct EmbeddedPaymentElementView: View {
+    @ObservedObject private var viewModel: EmbeddedPaymentElementViewModel
+
+    /// Initializes a new instance of `EmbeddedPaymentElementView`.
+    ///
+    /// - Parameter viewModel: The view model for this payment element view.
+    public init(viewModel: EmbeddedPaymentElementViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
+        EmbeddedViewRepresentable(viewModel: viewModel)
+            .frame(height: viewModel.height)
     }
 }

@@ -40,15 +40,20 @@ import UIKit
         return self
     }
 
-    /// Walks the presented view controller hierarchy and return the top most presented controller.
-    /// - Returns: Returns the top most presented view controller, or `nil` if this view controller is not presenting another controller.
-    func findTopMostPresentedViewController() -> UIViewController? {
-        var topMostController = self.presentedViewController
-
-        while let presented = topMostController?.presentedViewController {
-            topMostController = presented
+    /// Returns the topmost view controller in the hierarchy.
+    /// - Returns: The topmost `UIViewController`, or `self` if no higher controller is found.
+    func findTopMostPresentedViewController() -> UIViewController {
+        if let nav = self as? UINavigationController {
+            // Use visibleViewController for navigation stacks
+            return nav.visibleViewController?.findTopMostPresentedViewController() ?? nav
+        } else if let tab = self as? UITabBarController {
+            // Use selectedViewController for tab controllers
+            return tab.selectedViewController?.findTopMostPresentedViewController() ?? tab
+        } else if let presented = presentedViewController {
+            // Recurse for any presented controllers
+            return presented.findTopMostPresentedViewController()
         }
-
-        return topMostController
+        
+        return self
     }
 }
