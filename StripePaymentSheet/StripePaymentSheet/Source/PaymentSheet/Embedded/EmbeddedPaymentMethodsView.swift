@@ -38,19 +38,33 @@ class EmbeddedPaymentMethodsView: UIView {
     private let customer: PaymentSheet.CustomerConfiguration?
     private var previousSelectedRowButton: RowButton? {
         didSet {
-            previousSelectedRowButton?.isSelected = false
+            guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
+                return
+            }
+            previousSelectedRowButton.isSelected = false
+            // Clear out the 'Change >' button and any sublabel (eg 4242) we set for new PM rows
+            switch previousSelectedRowButton.type {
+            case .new(paymentMethodType: let paymentMethodType):
+                let isCardOrUSBankAccount = paymentMethodType == .stripe(.card) || paymentMethodType == .stripe(.USBankAccount)
+                previousSelectedRowButton.removeChangeButton(shouldClearSublabel: isCardOrUSBankAccount)
+            default:
+               break
+            }
         }
     }
     private(set) var selectedRowButton: RowButton? {
         didSet {
             previousSelectedRowButton = oldValue
-            selectedRowButton?.isSelected = true
-            updateMandate()
             if oldValue?.type != selectedRowButton?.type {
                 delegate?.embeddedPaymentMethodsViewDidUpdateSelection()
             }
+            if let selectedRowButton {
+                selectedRowButton.isSelected = true
+            }
+            updateMandate()
         }
     }
+    
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -376,7 +390,7 @@ class EmbeddedPaymentMethodsView: UIView {
     func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
         // We always add a hidden accessory button ("Change >") so we can show/hide it easily
         let accessoryButton = RowButton.RightAccessoryButton(
-            accessoryType: appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? .changeWithChevron : .change,
+            accessoryType: appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? .change : .changeWithChevron,
             appearance: appearance,
             didTap: { [weak self] in
                 guard let self, let selectedRowButton else { return }
@@ -430,5 +444,24 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
 extension Array where Element == STPPaymentMethod {
     var hasSavedCard: Bool {
         return !self.filter { $0.type == .card }.isEmpty
+    }
+}
+
+extension RowButton {
+    func addChangeButton(sublabel: String?) {
+        rightAccessoryView?.isHidden = false
+        if let sublabel {
+            self.sublabel.text = sublabel
+            self.sublabel.isHidden = sublabel.isEmpty
+        }
+        makeSameHeightAsOtherRowButtonsIfNecessary()
+    }
+    
+    func removeChangeButton(shouldClearSublabel: Bool) {
+        rightAccessoryView?.isHidden = true
+        if shouldClearSublabel {
+            sublabel.text = nil
+            sublabel.isHidden = true
+        }
     }
 }

@@ -56,6 +56,14 @@ class FormSpecProvider {
             }
         }
     }
+    
+    func load() async {
+        await withCheckedContinuation { continuation in
+            load { _ in
+                continuation.resume()
+            }
+        }
+    }
 
     /// Allows overwriting of formSpecs given a NSDictionary.  Typically, the specs comes
     /// from the sessions endpoint.
