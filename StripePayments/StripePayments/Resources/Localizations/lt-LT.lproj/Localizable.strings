@@ -4,13 +4,13 @@
 
 "Afterpay" = "Afterpay";
 
-"Alipay" = "„Alipay“";
+"Alipay" = "\"Alipay\"";
 
 "BLIK" = "BLIK";
 
-"Bacs Direct Debit" = "„Bacs“ tiesioginis debetas";
+"Bacs Direct Debit" = "\"Bacs\" tiesioginis debetas";
 
-"Bancontact" = "„Bancontact“";
+"Bancontact" = "\"Bancontact\"";
 
 "Boleto" = "Boleto";
 
@@ -56,7 +56,7 @@
 
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nepavyko autentifikuoti mokėjimo būdo. Pasirinkite kitą mokėjimo būdą ir bandykite dar kartą.";
 
-"WeChat Pay" = "„WeChat“ mokėjimas";
+"WeChat Pay" = "\"WeChat\" mokėjimas";
 
 "giropay" = "giropay";
 
