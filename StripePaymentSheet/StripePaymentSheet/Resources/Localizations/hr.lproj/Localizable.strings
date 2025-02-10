@@ -18,6 +18,8 @@
 
 "Add your payment information" = "Dodavanje informacija o plaćanju";
 
+"Agree and continue" = "Pristani i nastavi";
+
 "Approve payment" = "Odobri plaćanje";
 
 "Are you sure you want to remove this card?" = "Jeste li sigurni da želite ukloniti ovu karticu?";
@@ -52,11 +54,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Nastavljanjem na Revolut Pay, dopuštate poduzeću %@ da tereti vaš Revolut Pay račun za buduća plaćanja u skladu s njihovim uvjetima.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Nastavkom pristajte na <terms>Uvjete</terms> i <privacy>Pravila o privatnosti</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ako nastavite, autorizirate %1$@ da tereti vaš račun Cash App za ovo plaćanje i buduća plaćanja u skladu s uvjetima poduzeća %2$@, dok se ova autorizacija ne opozove. Ovo možete promijeniti bilo kada u postavkama aplikacije Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisupanjem u Link, prihvaćate <terms>Uvjete</terms> i <privacy>Pravila privatnosti</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Pružanjem podataka o svom bankovnom računu i potvrđivanjem ove uplate pristajete na ovaj zahtjev za izravno terećenje i <terms>Ugovor o usluzi Zahtjeva za izravno terećenje</terms>, te ovlašćujete Stripe Payments Australia Pty Ltd ACN 160 180 343 Korisnički ID broj izravnog terećenja 507156 (“Stripe”) da tereti vaš račun putem Sustava skupnog elektroničkog obračuna (BECS) u ime %@ (\"Trgovac\") za sve iznose koji su zasebno dogovreni s Trgovcem. Potvrđujete da ste vlasnik računa ili ovlašteni potpisnik za gore navedeni račun.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Davanjem podataka o kartici dopuštate poduzeću %@ da tereti vašu karticu za buduća plaćanja u skladu sa svojim uvjetima.";
 
@@ -74,6 +80,8 @@
 
 "Card details cannot be changed." = "Podaci o kartici ne mogu se mijenjati.";
 
+"Change" = "Promijeni";
+
 "Change email" = "Izmijeni e-poštu";
 
 "Choose a payment method" = "Odaberite način plaćanja";
@@ -83,6 +91,8 @@
 "Code sent" = "Kod je poslan";
 
 "Confirm" = "Potvrdi";
+
+"Confirm it's you" = "Potvrdite da ste to vi";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potvrdite plaćanje u aplikaciji svoje banke ili aplikaciji za plaćanje unutar %@ da biste dovršili kupnju.";
 
@@ -98,7 +108,11 @@
 
 "Enter address manually" = "Unesite adresu ručno";
 
+"Enter the code sent to %@ to use your saved information." = "Unesite kôd poslan na %@ za korištenje vaših spremljenih podataka.";
+
 "FPX Bank" = "FPX Bank";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Brzo i sigurno plaćanje jednim klikom";
 
 "For security, please re-enter your card’s security code." = "Radi sigurnosti, ponovno unesite sigurnosni kod vaše kartice.";
 
@@ -202,6 +216,8 @@
 
 "Save your info for secure 1-click checkout with Link" = "Spremite svoje podatke za sigurno plaćanje jednim klikom putem Linka";
 
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Spremite svoje podatke o plaćanju pomoću Linka i sigurno platite jednim klikom na stranicama koje podržavaju Link.";
+
 "Saved" = "Spremljeno";
 
 "Select card" = "Odaberite karticu";
@@ -222,6 +238,8 @@
 
 "Simple, secure one-click payments" = "Jednostavna sigurna plaćanja jednim klikom";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Došlo je do pogreške prilikom povezivanja vašeg računa.\nMolimo pokušajte kasnije.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe će uplatiti polog u iznosu od 0,01 USD na vaš račun u roku od 1-2 radna dana. Zatim ćete zaprimiti poruku e-pošte s uputama za dovršetak spremanja svog bankovnog računa kod %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe će uplatiti polog u iznosu od 0,01 USD na vaš račun u roku od 1-2 radna dana. Zatim ćete zaprimiti poruku e-pošte s uputama za dovršetak plaćanja za %@.";
@@ -231,6 +249,8 @@
 "Tap to expand" = "Dodirnite za proširivanje";
 
 "The IBAN you entered is incomplete." = "Uneseni IBAN nije potpun.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN koji ste unijeli je nevažeći, \"%@\" nije podržani broj zemlje.";
 
 "The provided verification code has expired." = "Navedeni kontrolni kôd je istekao.";
 

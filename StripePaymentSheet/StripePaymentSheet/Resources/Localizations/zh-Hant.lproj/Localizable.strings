@@ -18,6 +18,8 @@
 
 "Add your payment information" = "添加您的支付資訊";
 
+"Agree and continue" = "同意並繼續";
+
 "Approve payment" = "批准付款";
 
 "Are you sure you want to remove this card?" = "您確定要移除此卡嗎？";
@@ -52,11 +54,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "繼續前往 Revolut Pay 即表示您允許 %@ 按照他們的條款從您的 Revolut Pay 扣取未來款項。";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "繼續即表示您同意<terms>條款</terms>和<privacy>隱私政策</privacy>。";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "繼續操作即表示您同意按照<terms>這些條款</terms>授權付款。";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "繼續操作，即表示您授權 %1$@ 按照 %2$@ 的條款從您的 Cash App 帳戶中扣取該款項及未來的款項，直至撤銷授權。您可以隨時在 Cash App 設定中進行修改。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>條款</terms>和<privacy>隱私政策</privacy>。";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "提供您的銀行帳戶詳情並確認這筆付款即表示您同意該「直接借記請求」以及<terms>「直接借記請求」服務協議</terms>，並授權 Payments Australia Pty Ltd ACN 160 180 343，直接借記使用者 ID 507156 (「Stripe」)透過「批量電子清算系統」(BECS) 代 %@（「商家」）向您收取「商家」單獨與您議定的金額。您確認您是上述所列帳戶的開戶人或授權簽字者。";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "提供您的金融卡資訊，即表示您允許 %@ 按照他們的條款從您的金融卡扣取未來款項。";
 
@@ -74,6 +80,8 @@
 
 "Card details cannot be changed." = "無法更改金融卡詳情。";
 
+"Change" = "更改";
+
 "Change email" = "更改電郵地址";
 
 "Choose a payment method" = "選擇一個支付方式";
@@ -83,6 +91,8 @@
 "Code sent" = "驗證碼已發送";
 
 "Confirm" = "確定";
+
+"Confirm it's you" = "確認是您本人";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的銀行或支付應用程式中確認向 %@ 的付款，以完成購物。";
 
@@ -98,7 +108,11 @@
 
 "Enter address manually" = "手動輸入地址";
 
+"Enter the code sent to %@ to use your saved information." = "輸入發送到 %@ 的驗證碼來使用您保存的資訊。";
+
 "FPX Bank" = "FPX Bank";
+
+"Fast, secure, 1⁠-⁠click checkout" = "快速安全地一鍵結帳";
 
 "For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您的金融卡的安全碼。";
 
@@ -202,6 +216,8 @@
 
 "Save your info for secure 1-click checkout with Link" = "保存您的資訊，用 Link 安全地一鍵結帳";
 
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "用 Link 保存您的支付資訊，並在支援 Link 的網站上一鍵安全結帳。";
+
 "Saved" = "已保存";
 
 "Select card" = "選擇金融卡";
@@ -222,6 +238,8 @@
 
 "Simple, secure one-click payments" = "簡單、安全地一鍵支付";
 
+"Something went wrong when linking your account.\nPlease try again later." = "關聯您的帳戶時發生了錯誤。\n請稍後重試。";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封包含說明的電子郵件，指導您用 %@ 保存您的銀行帳戶。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封郵件，指導您完成向 %@ 的付款。";
@@ -231,6 +249,8 @@
 "Tap to expand" = "點擊以展開";
 
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您輸入的 IBAN 無效，「%@」是不支援的國家代碼。";
 
 "The provided verification code has expired." = "提供的驗證碼已過期。";
 

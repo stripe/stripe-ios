@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (valinnainen)";
 
+"(not accepted)" = "(ei hyväksytty)";
+
 "Account number" = "Tilinumero";
 
 "Address" = "Osoite";

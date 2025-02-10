@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (optional)";
 
+"(not accepted)" = "(nicht akzeptiert)";
+
 "Account number" = "Kontonummer";
 
 "Address" = "Adresse";

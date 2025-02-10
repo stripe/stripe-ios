@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (izbirno)";
 
+"(not accepted)" = "(ni sprejeto)";
+
 "Account number" = "Številka računa";
 
 "Address" = "Naslov";

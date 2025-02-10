@@ -18,6 +18,8 @@
 
 "Add your payment information" = "Adicione as suas informações de pagamento";
 
+"Agree and continue" = "Aceitar e continuar";
+
 "Approve payment" = "Aprovar pagamento";
 
 "Are you sure you want to remove this card?" = "Tem a certeza de que quer remover este cartão?";
@@ -52,11 +54,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ao continuar para o Revolut Pay, autoriza %@ a cobrar pagamentos futuros à sua conta Revolut Pay de acordo com as respetivas condições.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao continuar, concorda com as <terms>Condições</terms> e <privacy>Política de Privacidade</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ao continuar, autoriza %1$@ a debitar a sua conta Cash App para este pagamento e pagamentos futuros de acordo com as condições de %2$@, até que esta autorização seja revogada. Pode alterar isto a qualquer altura nas definições da sua Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao juntar-se ao Link, concorda com as <terms>Condições</terms> e com a <privacy>Política de Privacidade</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ao fornecer os seus dados de conta bancária e ao confirmar este pagamento, declara que concorda com este Pedido de Débito Direto e com o <terms>contrato de serviços de Pedido de Débito Direto</terms> e autoriza a Stripe Payments Australia Pty Ltd ACN 160 180 343, número de ID de Utilizador de Débito Direto 507156 (“Stripe”) a debitar a sua conta através do Sistema BECS (Bulk Electronic Clearing System) em nome de %@ (o \"Comerciante\") em quaisquer montantes comunicados separadamente a si pelo Comerciante. Certifica ainda que é um titular da conta ou um signatário autorizado da conta acima indicada.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Quando fornecer as informações do seu cartão, autoriza %@ a cobrar futuros pagamentos do seu cartão de acordo com as respetivas condições.";
 
@@ -74,6 +80,8 @@
 
 "Card details cannot be changed." = "Os detalhes do cartão não podem ser alterados.";
 
+"Change" = "Alterar";
+
 "Change email" = "Alterar email";
 
 "Choose a payment method" = "Selecione um método de pagamento";
@@ -83,6 +91,8 @@
 "Code sent" = "Código enviado";
 
 "Confirm" = "Confirmar";
+
+"Confirm it's you" = "Confirme a sua identidade";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirme o pagamento na aplicação do seu banco ou de pagamento dentro de %@ para concluir a compra.";
 
@@ -98,7 +108,11 @@
 
 "Enter address manually" = "Introduzir endereço manualmente";
 
+"Enter the code sent to %@ to use your saved information." = "Introduza o código enviado para %@ para utilizar as suas informações guardadas.";
+
 "FPX Bank" = "Banco FPX";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Finalização de compra de 1 clique, rápida e segura";
 
 "For security, please re-enter your card’s security code." = "Por motivos de segurança, volte a introduzir o código de segurança do seu cartão.";
 
@@ -202,6 +216,8 @@
 
 "Save your info for secure 1-click checkout with Link" = "Guardar as suas informações para finalização de compra de 1 clique com Link";
 
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Guarde as suas informações de pagamento com Link, e finalize as suas compras num clique em páginas de Internet que suportam o Link.";
+
 "Saved" = "Guardado";
 
 "Select card" = "Selecione um cartão";
@@ -222,6 +238,8 @@
 
 "Simple, secure one-click payments" = "Pagamentos simples e seguros com um clique";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Ocorreu um problema ao associar a sua conta.\nTente novamente mais tarde.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe efetuará um depósito de 0,01 USD na sua conta dentro de 1 a 2 dias úteis. Receberá posteriormente um email com instruções para concluir o registo da sua conta bancária com %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe efetuará um depósito de 0,01 USD na sua conta dentro de 1 a 2 dias úteis. Receberá posteriormente um email com instruções para concluir o pagamento a %@.";
@@ -231,6 +249,8 @@
 "Tap to expand" = "Toque para expandir";
 
 "The IBAN you entered is incomplete." = "O IBAN que introduziu está incompleto.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "O IBAN que introduziu é inválido, \"%@\" não é um código de país suportado.";
 
 "The provided verification code has expired." = "O código de verificação fornecido expirou.";
 

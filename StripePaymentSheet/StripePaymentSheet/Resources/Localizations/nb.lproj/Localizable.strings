@@ -18,6 +18,8 @@
 
 "Add your payment information" = "Legg til betalingsinformasjon";
 
+"Agree and continue" = "Godta og fortsett";
+
 "Approve payment" = "Godkjenn betaling";
 
 "Are you sure you want to remove this card?" = "Er du sikker på at du vil fjerne dette kortet?";
@@ -52,11 +54,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ved å fortsette til Revolut Pay, tillater du %@ å belaste Revolut Pay-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å fortsette godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å fortsette godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved å fortsette, godkjenner du at %1$@ belaster Cash App-kontoen din for denne og fremtidige betalinger, i henhold til vilkårene fra %2$@, frem til autorisasjonen er tilbakekalt. Du kan når som helst endre dette i Cash App-innstillingene.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link, godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved å oppgi bankkontoopplysningene dine og bekrefte denne innbetalingen samtykker du til denne forespørselen om direktedebitering og til <terms>serviceavtalen for direktedebitering</terms> og autoriserer Stripe Payments Australia Pty Ltd ACN 160 180 343 direktedebitering bruker-ID nummer 507156 («Stripe») til å debitere din konto gjennom Bulk Electronic Clearing System (BECS) på vegne av %@ («forhandleren») for beløp som kommuniseres til deg separat av forhandleren. Du bekrefter at du er enten en kontoinnehaver eller en som er autorisert til å signere for kontoen vist ovenfor.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Ved å oppgi kortinformasjonen din tillater du %@ å belaste kortet ditt for fremtidige betalinger i samsvar med vilkårene deres.";
 
@@ -74,6 +80,8 @@
 
 "Card details cannot be changed." = "Kortopplysninger kan ikke endres.";
 
+"Change" = "Endre";
+
 "Change email" = "Endre e-post";
 
 "Choose a payment method" = "Velg en betalingsmetode";
@@ -83,6 +91,8 @@
 "Code sent" = "Kode sendt";
 
 "Confirm" = "Bekreft";
+
+"Confirm it's you" = "Bekreft at det er deg";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekreft betalingen i bankens app eller i betalingsapp innen %@ for å fullføre kjøpet.";
 
@@ -98,7 +108,11 @@
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
+"Enter the code sent to %@ to use your saved information." = "Skriv inn koden som ble sendt til %@ for å bruke den lagrede informasjonen.";
+
 "FPX Bank" = "FPX Bank";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Rask og sikker betaling med ett klikk";
 
 "For security, please re-enter your card’s security code." = "For sikkerhets skyld må du skrive inn sikkerhetskoden for kortet ditt på nytt.";
 
@@ -202,6 +216,8 @@
 
 "Save your info for secure 1-click checkout with Link" = "Lagre informasjonen din for sikker 1-klikk-utsjekking med Link";
 
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Lagre betalingsinformasjonen din med Link, og sjekk ut sikkert med ett klikk på Link-støttede nettsteder.";
+
 "Saved" = "Lagret";
 
 "Select card" = "Velg kort";
@@ -222,6 +238,8 @@
 
 "Simple, secure one-click payments" = "Enkle, trygge betalinger med ett klikk";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Noe gikk galt under tilkobling av kontoen din.\nPrøv igjen senere.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe setter inn $0,01 på kontoen din i løpet av 1–2 virkedager. Deretter får du en e-post med instruksjoner for å fullføre lagringen av bankkontoen din med %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sette inn et innskudd på USD 0,01 på kontoen din innen 1–2 virkedager. Deretter vil du få en e-post med instruksjoner for å fullføre betalingen til %@.";
@@ -231,6 +249,8 @@
 "Tap to expand" = "Trykk for å utvide";
 
 "The IBAN you entered is incomplete." = "IBAN-nummeret du la inn er ufullstendig.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN-nummeret du la inn er ugyldig, «%@» er ikke en gyldig landskode.";
 
 "The provided verification code has expired." = "Den oppgitte verifiseringskoden er utløpt.";
 
