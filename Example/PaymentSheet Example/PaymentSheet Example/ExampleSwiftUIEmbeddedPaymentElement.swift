@@ -254,7 +254,7 @@ struct MyEmbeddedCheckoutView: View {
             }
         }
         .padding()
-        .onAppear {
+        .task {
             Task {
                 if !embeddedViewModel.isLoaded {
                     await prepareEmbeddedPaymentElement()
