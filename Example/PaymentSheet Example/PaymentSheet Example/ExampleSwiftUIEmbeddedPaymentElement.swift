@@ -172,80 +172,78 @@ struct MyEmbeddedCheckoutView: View {
     
     // MARK: Body
     var body: some View {
-        VStack(spacing: 24) {
+        ScrollView {
             if embeddedViewModel.isLoaded {
-                ScrollView {
-                    // Embedded Payment Element
-                    EmbeddedPaymentElementView(viewModel: embeddedViewModel)
-                    
-                    // Display the selected payment option
-                    // A real integration probably wouldn't show the selected payment option on the same screen as the embedded payment element. We display it as an example.
-                    if let paymentOption = embeddedViewModel.paymentOption {
-                        HStack {
-                            Image(uiImage: paymentOption.image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 30)
-                            Text(paymentOption.label)
-                            Spacer()
-                        }
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(8)
-                    }
-                    
-                    // Subscribe switch
-                    Toggle("Subscribe for 5% discount", isOn: $isSubscribing)
-                        .padding()
-                        .onChange(of: isSubscribing) { newValue in
-                            Task {
-                                await handleSubscriptionToggle(newValue)
-                            }
-                        }
-                    
+                // Embedded Payment Element
+                EmbeddedPaymentElementView(viewModel: embeddedViewModel)
+                
+                // Display the selected payment option
+                // A real integration probably wouldn't show the selected payment option on the same screen as the embedded payment element. We display it as an example.
+                if let paymentOption = embeddedViewModel.paymentOption {
                     HStack {
-                        // Total label
-                        Text("Total \(backendViewModel.currentTotal.formatAsDollars())")
+                        Image(uiImage: paymentOption.image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 30)
+                        Text(paymentOption.label)
                         Spacer()
                     }
                     .padding()
-                    
-                    // Confirm Payment button
-                    Button(action: {
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
+                }
+                
+                // Subscribe switch
+                Toggle("Subscribe for 5% discount", isOn: $isSubscribing)
+                    .padding()
+                    .onChange(of: isSubscribing) { newValue in
                         Task {
-                            self.confirmationResult = await embeddedViewModel.confirm()
-                        }
-                    }) {
-                        if embeddedViewModel.paymentOption == nil {
-                            Text("Select a payment method")
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            Text("Confirm Payment")
-                                .frame(maxWidth: .infinity)
+                            await handleSubscriptionToggle(newValue)
                         }
                     }
-                    .disabled(embeddedViewModel.paymentOption == nil)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(
-                        embeddedViewModel.paymentOption == nil
-                        ? Color.gray
-                        : Color.blue
-                    )
-                    .cornerRadius(6)
-                    
-                    // Test height change button
-                    Button(action: {
-                        embeddedViewModel.testHeightChange()
-                    }) {
-                        Text("Test height change")
+                
+                HStack {
+                    // Total label
+                    Text("Total \(backendViewModel.currentTotal.formatAsDollars())")
+                    Spacer()
+                }
+                .padding()
+                
+                // Confirm Payment button
+                Button(action: {
+                    Task {
+                        self.confirmationResult = await embeddedViewModel.confirm()
+                    }
+                }) {
+                    if embeddedViewModel.paymentOption == nil {
+                        Text("Select a payment method")
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Text("Confirm Payment")
                             .frame(maxWidth: .infinity)
                     }
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color.orange)
-                    .cornerRadius(6)
                 }
+                .disabled(embeddedViewModel.paymentOption == nil)
+                .padding()
+                .foregroundColor(.white)
+                .background(
+                    embeddedViewModel.paymentOption == nil
+                    ? Color.gray
+                    : Color.blue
+                )
+                .cornerRadius(6)
+                
+                // Test height change button
+                Button(action: {
+                    embeddedViewModel.testHeightChange()
+                }) {
+                    Text("Test height change")
+                        .frame(maxWidth: .infinity)
+                }
+                .padding()
+                .foregroundColor(.white)
+                .background(Color.orange)
+                .cornerRadius(6)
             } else if loadFailed {
                 // Show a reload prompt if loading failed
                 VStack(spacing: 16) {
