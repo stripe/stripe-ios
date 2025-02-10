@@ -248,8 +248,6 @@ struct MyEmbeddedCheckoutView: View {
             } else {
                 if !embeddedViewModel.isLoaded {
                     ProgressView("Preparing Payment...")
-                } else {
-                    Text("Payment element not loaded.")
                 }
             }
         }
