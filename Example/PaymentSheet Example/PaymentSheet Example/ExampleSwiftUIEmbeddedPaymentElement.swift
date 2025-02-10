@@ -166,6 +166,7 @@ struct MyEmbeddedCheckoutView: View {
     @StateObject var backendViewModel = BackendViewModel()
     @State var confirmationResult: EmbeddedPaymentElementResult?
     @State private var isSubscribing: Bool = false
+    @State private var loadFailed = false
     
     @Environment(\.dismiss) private var dismiss
     
@@ -245,6 +246,16 @@ struct MyEmbeddedCheckoutView: View {
                     .background(Color.orange)
                     .cornerRadius(6)
                 }
+            } else if loadFailed {
+                // Show a reload prompt if loading failed
+                VStack(spacing: 16) {
+                    Text("Failed to load Payment Element.")
+                    Button("Try Again") {
+                        Task {
+                            await prepareEmbeddedPaymentElement()
+                        }
+                    }
+                }
             } else {
                 if !embeddedViewModel.isLoaded {
                     ProgressView("Preparing Payment...")
@@ -300,7 +311,12 @@ struct MyEmbeddedCheckoutView: View {
         )
         configuration.returnURL = "payments-example://stripe-redirect"
         
-        try? await embeddedViewModel.load(intentConfiguration: intentConfig, configuration: configuration)
+        do {
+            try await embeddedViewModel.load(intentConfiguration: intentConfig, configuration: configuration)
+            loadFailed = false
+        } catch {
+            loadFailed = true
+        }
     }
     
     /// Called whenever the user toggles subscription
