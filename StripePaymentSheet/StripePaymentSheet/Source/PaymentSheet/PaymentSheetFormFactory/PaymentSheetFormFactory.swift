@@ -152,8 +152,10 @@ class PaymentSheetFormFactory {
         switch paymentMethod {
         case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
-        case .external, .custom:
-            return makeExternalPaymentMethodForm()
+        case .external:
+            return makeExternalPaymentMethodForm(subcopy: nil)
+        case .custom(let customPaymentMethod):
+            return makeExternalPaymentMethodForm(subcopy: customPaymentMethod.subcopy)
         case .stripe(let paymentMethod):
             var additionalElements = [Element]()
 
@@ -587,10 +589,18 @@ extension PaymentSheetFormFactory {
     }
 
     /// All external payment methods use the same form that collects no user input except for any details the merchant configured PaymentSheet to collect (name, email, phone, billing address).
-    func makeExternalPaymentMethodForm() -> PaymentMethodElement {
+    func makeExternalPaymentMethodForm(subcopy: String?) -> PaymentMethodElement {
+        var subcopyElement: StaticElement?
+        if let subcopy {
+            subcopyElement = makeCopyLabel(text: subcopy)
+        }
+        
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+        
+        let elements = [subcopyElement, contactInfoSection, billingDetails].compactMap { $0 }
+        
+        return FormElement(elements: elements, theme: theme)
     }
 
     func makeSwish() -> PaymentMethodElement {
@@ -670,9 +680,7 @@ extension PaymentSheetFormFactory {
         return country
     }
 
-    func makeKlarnaCopyLabel() -> StaticElement {
-        let text = String.Localized.buy_now_or_pay_later_with_klarna
-
+    func makeCopyLabel(text: String) -> StaticElement {
         let label = UILabel()
         label.text = text
         label.font = theme.fonts.subheadline

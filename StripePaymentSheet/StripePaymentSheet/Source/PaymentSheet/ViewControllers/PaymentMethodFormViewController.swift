@@ -54,6 +54,10 @@ class PaymentMethodFormViewController: UIViewController {
             if case .external(let paymentMethod) = paymentMethodType {
                 return .external(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             }
+            
+            if case .custom(let paymentMethod) = paymentMethodType {
+                return .custom(paymentMethod: paymentMethod, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
+            }
 
             if paymentMethodType.isLinkBankPayment {
                 // We create the final payment method in the bank auth flow, therefore treating

@@ -125,7 +125,7 @@ extension PaymentSheetFormFactory {
         case .affirm_header:
             return StaticElement(view: AffirmCopyLabel(theme: theme))
         case .klarna_header:
-            return makeKlarnaCopyLabel()
+            return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
         case .klarna_country(let spec):
             return makeKlarnaCountry(apiPath: spec.apiPath?["v1"])!
         case .au_becs_bsb_number(let spec):

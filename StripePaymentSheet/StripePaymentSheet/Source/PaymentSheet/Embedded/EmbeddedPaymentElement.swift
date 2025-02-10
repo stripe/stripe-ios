@@ -41,6 +41,7 @@ public final class EmbeddedPaymentElement {
         /// A string representation of the customer's desired payment method
         /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
+        ///  TODO update this for CPMs
         /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
         /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
@@ -425,6 +426,7 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
+    // TODO add CPMs
 }
 
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData

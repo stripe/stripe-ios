@@ -266,9 +266,55 @@ extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
         self.view.layoutIfNeeded()
     }
 
-    func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
-        checkoutButton.isEnabled = embeddedPaymentElement.paymentOption != nil
-        paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
+func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
+    checkoutButton.isEnabled = embeddedPaymentElement.paymentOption != nil
+    paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
+    if embeddedPaymentElement.paymentOption?.paymentMethodType == "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I" {
+            // Present a simple alert with text fields
+            let alert = UIAlertController(
+                title: "BufoPay Details",
+                message: "Enter any required info for BufoPay",
+                preferredStyle: .alert
+            )
+            
+            // Example text fields
+            alert.addTextField { textField in
+                textField.placeholder = "Email"
+                textField.keyboardType = .emailAddress
+            }
+            alert.addTextField { textField in
+                textField.placeholder = "Phone number"
+                textField.keyboardType = .phonePad
+            }
+            
+            let alertTitle = {
+                switch configuration.formSheetAction {
+                case .confirm:
+                    return "Confirm Now"
+                case .continue:
+                    return "Continue"
+                }
+            }()
+
+            // Actions
+            let confirmAction = UIAlertAction(title: alertTitle, style: .default) { _ in
+                switch self.configuration.formSheetAction {
+                case .confirm(let completion):
+                    Task {
+                        let result = await embeddedPaymentElement.confirm()
+                        completion(result)
+                    }
+                case .continue:
+                    break
+                }
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+            alert.addAction(confirmAction)
+            alert.addAction(cancelAction)
+
+            present(alert, animated: true, completion: nil)
+        }
     }
 }
 
