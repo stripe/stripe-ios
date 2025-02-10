@@ -44,14 +44,6 @@ import Foundation
         }
     }
 
-    /// Intermediary object between `PaymentSheet.Configuration.UserInterfaceStyle`
-    /// and `FinancialConnectionsSheet.Configuration.UserInterfaceStyle`.
-    @_spi(STP) @frozen public enum StyleConfig {
-        case automatic
-        case alwaysLight
-        case alwaysDark
-    }
-
     @_spi(STP) public let amount: Int?
     @_spi(STP) public let currency: String?
     @_spi(STP) public let prefillDetails: PrefillDetails?
@@ -59,7 +51,6 @@ import Foundation
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let billingDetails: BillingDetails?
     @_spi(STP) public let eligibleForIncentive: Bool
-    @_spi(STP) public let styleConfig: StyleConfig?
 
     @_spi(STP) public var billingAddress: BillingAddress? {
         BillingAddress(from: billingDetails)
@@ -79,8 +70,7 @@ import Foundation
         intentId: IntentID? = nil,
         linkMode: LinkMode? = nil,
         billingDetails: BillingDetails? = nil,
-        eligibleForIncentive: Bool = false,
-        styleConfig: StyleConfig? = nil
+        eligibleForIncentive: Bool = false
     ) {
         self.amount = amount
         self.currency = currency
@@ -89,7 +79,6 @@ import Foundation
         self.linkMode = linkMode
         self.billingDetails = billingDetails
         self.eligibleForIncentive = eligibleForIncentive
-        self.styleConfig = styleConfig
     }
 }
 

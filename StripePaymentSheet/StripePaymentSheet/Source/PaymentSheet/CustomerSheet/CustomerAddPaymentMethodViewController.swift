@@ -320,6 +320,17 @@ extension CustomerAddPaymentMethodViewController {
             }
         }
 
+        let bankAccountCollectorConfiguration: STPBankAccountCollectorConfiguration = {
+            let style: STPBankAccountCollectorConfiguration.UserInterfaceStyle = {
+                switch configuration.style {
+                case .automatic: return .automatic
+                case .alwaysLight: return .alwaysLight
+                case .alwaysDark: return .alwaysDark
+                }
+            }()
+            return .init(style: style)
+        }()
+
         let additionalParameters: [String: Any] = [
             "hosted_surface": "customer_sheet",
         ]
@@ -327,6 +338,7 @@ extension CustomerAddPaymentMethodViewController {
             clientSecret: clientSecret,
             returnURL: configuration.returnURL,
             additionalParameters: additionalParameters,
+            configuration: bankAccountCollectorConfiguration,
             onEvent: nil,
             params: params,
             from: viewController,

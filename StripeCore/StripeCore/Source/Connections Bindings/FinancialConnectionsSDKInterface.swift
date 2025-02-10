@@ -14,6 +14,7 @@ import UIKit
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        sheetConfiguration: FinancialConnectionsConfiguration?,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
