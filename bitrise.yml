@@ -154,7 +154,7 @@ workflows:
         inputs:
         - content: bundle exec ./ci_scripts/export_builds.rb
         is_always_run: true
-        title: Export builds        
+        title: Export builds
     before_run:
     - prep_all
     after_run:
@@ -493,13 +493,17 @@ workflows:
     - prep_all
     after_run:
     - upload_logs
-    - notify_ci   
+    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2.mac.large     
+        machine_type_id: g2.mac.large
   lint-tests:
     steps:
+    - git-clone@8.2:
+        inputs:
+        - merge_pr: "no"
+        - fetch_tags: "yes"
     - script@1:
         inputs:
         - content: ./ci_scripts/lint_modified_files.sh
@@ -520,8 +524,6 @@ workflows:
         inputs:
         - lane: analyze
         title: fastlane analyze
-    before_run:
-    - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
@@ -547,7 +549,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2.mac.large   
+        machine_type_id: g2.mac.large
   pod-lint-tests:
     steps:
     - script@1:
@@ -622,7 +624,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.3.x
-        machine_type_id: g2.mac.large        
+        machine_type_id: g2.mac.large
   ui-tests-1:
     steps:
     - script@1:
@@ -650,7 +652,7 @@ workflows:
     - script@1:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)    
+        title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -672,7 +674,7 @@ workflows:
     - script@1:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)      
+        title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -694,7 +696,7 @@ workflows:
     - script@1:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)    
+        title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -716,7 +718,7 @@ workflows:
     - script@1:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)    
+        title: Warm up emulator (iPhone 12 mini, OS=16.4)
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -732,7 +734,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-15.0.x
-        machine_type_id: g2.mac.large             
+        machine_type_id: g2.mac.large
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
