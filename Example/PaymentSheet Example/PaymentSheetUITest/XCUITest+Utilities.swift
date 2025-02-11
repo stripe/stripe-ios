@@ -249,6 +249,7 @@ extension XCTestCase {
         app.tapCoordinate(at: .init(x: 150, y: 150))
     }
     func fillSepaData(_ app: XCUIApplication,
+                      iban: String = "DE89370400440532013000",
                       tapCheckboxWithText checkboxText: String? = nil,
                       container: XCUIElement? = nil) throws {
         let context = container ?? app
@@ -262,7 +263,7 @@ extension XCTestCase {
 
         let ibanField = context.textFields["IBAN"]
         ibanField.forceTapWhenHittableInTestCase(self)
-        app.typeText("DE89370400440532013000")
+        app.typeText(iban)
 
         let addressLine1 = context.textFields["Address line 1"]
         addressLine1.forceTapWhenHittableInTestCase(self)

@@ -557,10 +557,7 @@ extension PaymentSheetFormFactory {
         }
         let saveCheckbox = makeSaveCheckbox(
             label: String(
-                format: STPLocalizedString(
-                    "Save this account for future %@ payments",
-                    "Prompt next to checkbox to save bank account."
-                ),
+                format: .Localized.save_this_account_for_future_payments,
                 merchantName
             )
         ) { value in
@@ -631,10 +628,7 @@ extension PaymentSheetFormFactory {
         let isSaving = BoolReference()
         let saveCheckbox = makeSaveCheckbox(
             label: String(
-                format: STPLocalizedString(
-                    "Save this account for future %@ payments",
-                    "Prompt next to checkbox to save bank account."
-                ),
+                format: .Localized.save_this_account_for_future_payments,
                 configuration.merchantDisplayName
             )
         ) { value in
