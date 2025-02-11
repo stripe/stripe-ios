@@ -13,7 +13,7 @@ protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent,
                                                         elementsSession: STPElementsSession,
                                                         with paymentOption: PaymentOption,
-                                                        completion: @escaping(InternalCustomerSheetResult) -> Void)
+                                                        completion: @escaping (InternalCustomerSheetResult) -> Void)
     func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
     func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
 }

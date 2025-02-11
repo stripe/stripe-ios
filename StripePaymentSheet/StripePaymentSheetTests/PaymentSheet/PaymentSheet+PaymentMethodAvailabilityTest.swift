@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 1/22/25.
 //
 
-import XCTest
 @testable @_spi(STP) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
+import XCTest
 
 final class PaymentMethodAvailabilityTest: XCTestCase {
 
@@ -20,7 +20,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
 
         XCTAssertFalse(isLinkEnabled, "Link should be disabled when supportsLink is false and link is not in payment method types")
     }
-    
+
     func testIsLinkEnabled_supportsLinkTrue_linkPresent() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card", "link"],
@@ -65,7 +65,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        
+
         XCTAssertFalse(isLinkEnabled, "Link should be disabled when card brand acceptance is not 'all'")
     }
 
@@ -77,10 +77,10 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         )
         let configuration = PaymentSheet.Configuration()
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        
+
         XCTAssertTrue(isLinkEnabled, "Link should be enabled when all conditions are met")
     }
-    
+
     func testIsLinkEnabled_linkNotExplicitlyAllowedButPassthroughEnabled() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],
@@ -88,7 +88,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         )
         let configuration = PaymentSheet.Configuration()
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        
+
         XCTAssertTrue(isLinkEnabled, "Link should be enabled when passthrough mode is enabled, even if 'link' is not explicitly in payment method types")
     }
 }
