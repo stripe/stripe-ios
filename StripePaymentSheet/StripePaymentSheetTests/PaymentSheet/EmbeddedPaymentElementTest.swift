@@ -6,9 +6,9 @@
 //
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeUICore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(STP) import StripeUICore
 import XCTest
 
 @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @testable import StripePaymentSheet
@@ -136,7 +136,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
         await fulfillment(of: [secondUpdateExpectation])
     }
-    
+
     func testUpdateFailsWhenFormPresented() async throws {
         // Set up a test window so the view controllers "present"
         let testWindow = UIWindow(frame: .zero)
@@ -151,14 +151,14 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = testWindow.rootViewController
         sut.view.autosizeHeight(width: 320)
-        
+
         // Tap card to present the form
         let cardRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
         sut.embeddedPaymentMethodsView.didTap(rowButton: cardRowButton)
-        
+
         // Assert the form is shown
         XCTAssertTrue(delegateWillPresentCalled)
-        
+
         // Updates should fail while the form is presented
         async let _updateResult = sut.update(intentConfiguration: setupIntentConfig)
         let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
@@ -286,7 +286,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         case .canceled:
             XCTFail("Expected confirm to succeed, but it was canceled")
         }
-        
+
         // Check our confirm analytics
         let analytics = STPAnalyticsClient.sharedClient._testLogHistory
         let confirmEvents = analytics.filter { $0["event"] as? String == "mc_embedded_confirm" }
@@ -488,7 +488,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut._test_paymentOption = .saved(paymentMethod: ._testCard(), confirmParams: confirmParams)
         XCTAssertEqual(sut.paymentOption?.label, "••••6789")
     }
-    
+
     func testChangeButtonStateRespectsCardBrandChoice() async throws {
         // Given an EmbeddedPaymentElement w/ CBC enabled...
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in }

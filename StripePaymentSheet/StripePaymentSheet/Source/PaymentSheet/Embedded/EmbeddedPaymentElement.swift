@@ -112,7 +112,7 @@ public final class EmbeddedPaymentElement {
             analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
             return result
         }
-        
+
         // If we currently have a sheet presented fail the update
         guard !(presentingViewController?.presentedViewController is StripePaymentSheet.BottomSheetViewController) else {
             let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
