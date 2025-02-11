@@ -271,7 +271,8 @@ class STPElementsSessionTest: XCTestCase {
                                                                     "enabled": true,
                                                                     "features": ["payment_method_save": "enabled",
                                                                                  "payment_method_remove": "enabled",
-                                                                                 "payment_method_set_as_default": "enabled",],
+                                                                                 "payment_method_set_as_default": "enabled",
+                                                                                ],
                                                                 ],
                                                                 "customer_sheet": [
                                                                     "enabled": false,
@@ -289,7 +290,8 @@ class STPElementsSessionTest: XCTestCase {
                                                                     "enabled": true,
                                                                     "features": ["payment_method_save": "enabled",
                                                                                  "payment_method_remove": "enabled",
-                                                                                 "payment_method_set_as_default": "disabled",],
+                                                                                 "payment_method_set_as_default": "disabled",
+                                                                                ],
                                                                 ],
                                                                 "customer_sheet": [
                                                                     "enabled": false,
@@ -388,7 +390,8 @@ class STPElementsSessionTest: XCTestCase {
                                                                 "customer_sheet": [
                                                                     "enabled": true,
                                                                     "features": ["payment_method_remove": "enabled",
-                                                                        "payment_method_sync_default": "enabled",],
+                                                                        "payment_method_sync_default": "enabled",
+                                                                                ],
                                                                 ],
                                                             ])
 

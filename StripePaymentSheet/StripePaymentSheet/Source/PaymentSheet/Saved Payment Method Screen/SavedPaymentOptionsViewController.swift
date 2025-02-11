@@ -133,7 +133,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             collectionView.isRemovingPaymentMethods = newValue
             collectionView.performBatchUpdates({
                 collectionView.reloadSections(IndexSet(integer: 0))
-                animateHeightChange{ self.collectionView.updateLayout() }
+                animateHeightChange { self.collectionView.updateLayout() }
             })
             UIView.transition(with: collectionView,
                               duration: 0.3,
