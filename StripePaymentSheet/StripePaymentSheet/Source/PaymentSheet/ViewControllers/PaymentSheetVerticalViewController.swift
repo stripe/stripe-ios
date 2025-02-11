@@ -335,16 +335,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        var customerDefault: CustomerPaymentOption?
-        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-            // if opted in to the "set as default" feature, try to get default payment method from elements session
-            if let customer = elementsSession.customer,
-               let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
-                customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-            }
-        } else {
-            customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
-        }
+        let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: elementsSession, surface: .paymentSheet)
 
         if let customerDefault, willDisplay(customerDefault: customerDefault) {
             switch customerDefault {
@@ -755,7 +746,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             } else {
                 incentive
             }
-            
+
             if shouldDisplayFormOnly, let wallet = makeWalletHeaderView() {
                 // Special case: if there is only one payment method type and it's not a card and wallet options are available
                 // Display the wallet, then the FormHeaderView below it
@@ -891,7 +882,7 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
         if viewController.paymentOption != nil {
             analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
         }
-        
+
         if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
             let incentive = instantDebitsFormElement.displayableIncentive
             paymentMethodListViewController?.setIncentive(incentive)

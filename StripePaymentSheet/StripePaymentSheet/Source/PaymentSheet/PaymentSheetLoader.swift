@@ -298,7 +298,7 @@ final class PaymentSheetLoader {
     }
 
     static func defaultStripePaymentMethodId(forCustomerID customerID: String?) -> String? {
-        guard let defaultPaymentMethod = CustomerPaymentOption.defaultPaymentMethod(for: customerID),
+        guard let defaultPaymentMethod = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: nil, surface: .paymentSheet),
               case .stripeId(let paymentMethodId) = defaultPaymentMethod else {
             return nil
         }
@@ -316,15 +316,7 @@ final class PaymentSheetLoader {
 
         // Move default PM to front
         if let customerID = configuration.customer?.id {
-            var defaultPaymentMethodOption: CustomerPaymentOption?
-            // if opted in to the "set as default" feature, try to get default payment method from elements session
-            if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-                guard let customer = elementsSession.customer,
-                  let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return [] }
-                defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-            } else {
-                defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
-            }
+            let defaultPaymentMethodOption = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
             if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
                 $0.stripeId == defaultPaymentMethodOption?.value
             }) {

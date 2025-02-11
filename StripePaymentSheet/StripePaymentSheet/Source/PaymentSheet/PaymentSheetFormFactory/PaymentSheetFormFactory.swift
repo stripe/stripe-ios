@@ -530,7 +530,7 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    func makeUSBankAccount(merchantName: String, showSetAsDefaultCheckbox: Bool = false) -> PaymentMethodElement {
+    func makeUSBankAccount(merchantName: String, showSetAsDefaultCheckbox: Bool) -> PaymentMethodElement {
         let isSaving = BoolReference()
         var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
         if showSetAsDefaultCheckbox {

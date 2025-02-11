@@ -111,7 +111,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerAppearance() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
-    
+
     func test_UpdatePaymentMethodViewControllerLightMode_blockedBrands() {
         let cardBrandFilter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.amex]))
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, cardBrandFilter: cardBrandFilter)
@@ -123,12 +123,10 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
             case .card:
                 if expired {
                     return STPFixtures.paymentMethod()
-                }
-                else {
+                } else {
                     if isCBCEligible {
                         return STPPaymentMethod._testCardCoBranded()
-                    }
-                    else {
+                    } else {
                         return STPPaymentMethod._testCard()
                     }
                 }

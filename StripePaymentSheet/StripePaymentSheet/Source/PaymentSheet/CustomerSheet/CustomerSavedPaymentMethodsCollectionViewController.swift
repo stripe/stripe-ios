@@ -247,8 +247,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             self.savedPaymentMethods = savedPaymentMethods.filter{ savedPaymentMethod in CustomerSheet.supportedDefaultPaymentMethods.contains{paymentMethodType in
                 savedPaymentMethod.type == paymentMethodType}
             }
-        }
-        else {
+        } else {
             self.savedPaymentMethods = savedPaymentMethods
         }
         self.originalSelectedSavedPaymentMethod = selectedPaymentMethodOption

@@ -42,15 +42,7 @@ extension EmbeddedPaymentElement {
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
-            var customerDefault: CustomerPaymentOption?
-            // if opted in to the "set as default" feature, try to get default payment method from elements session
-            if loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-                if let defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
-                    customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-                }
-            } else {
-                customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
-            }
+            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
             switch customerDefault {
             case .applePay:
                 return .applePay
@@ -139,7 +131,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
             selection: embeddedPaymentMethodsView.selectedRowButton?.type,
-            previousPaymentOption:  selectedFormViewController?.previousPaymentOption,
+            previousPaymentOption: selectedFormViewController?.previousPaymentOption,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -361,7 +353,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         embeddedFormViewController.dismiss(animated: true)
         informDelegateIfPaymentOptionUpdated()
     }
-    
+
     func getChangeButtonState(for type: RowButtonType) -> (shouldShowChangeButton: Bool, sublabel: String?) {
         guard let _paymentOption, let displayData = paymentOption else {
             return (false, nil)
@@ -373,7 +365,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
             return false
         }()
-        
+
         // Add a sublabel to the selected row for cards and us bank account like "Visa 4242"
         let sublabel: String? = {
             switch type.paymentMethodType {
@@ -390,7 +382,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 return nil
             }
         }()
-        
+
         return (shouldShowChangeButton: shouldShowChangeButton, sublabel: sublabel)
     }
 }

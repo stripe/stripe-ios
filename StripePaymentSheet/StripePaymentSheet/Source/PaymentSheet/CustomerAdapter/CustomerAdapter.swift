@@ -225,7 +225,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
     open func fetchSelectedPaymentOption() async throws -> CustomerPaymentOption? {
         let customerEphemeralKey = try await customerEphemeralKey
 
-        return CustomerPaymentOption.defaultPaymentMethod(for: customerEphemeralKey.id)
+        return CustomerPaymentOption.selectedPaymentMethod(for: customerEphemeralKey.id, elementsSession: nil, surface: nil)
     }
 
     open func setupIntentClientSecretForCustomerAttach() async throws -> String {

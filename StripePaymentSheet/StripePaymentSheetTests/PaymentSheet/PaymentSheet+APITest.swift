@@ -55,7 +55,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         cardParams.cvc = "123"
         cardParams.expYear = 32
         cardParams.expMonth = 12
-        var confirmParams: IntentConfirmParams = .init(
+        let confirmParams: IntentConfirmParams = .init(
             params: .init(
                 card: cardParams,
                 billingDetails: .init(),
@@ -508,7 +508,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
-    
     func testPaymentSheetLoadAndConfirmWithDeferredPaymentIntentSetAsDefault() async throws {
         let callbackExpectation = XCTestExpectation(description: "Confirm callback invoked")
         let expectation = XCTestExpectation(description: "Check default payment method set")
@@ -1484,7 +1483,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             analyticsHelper: ._testValue()
         ) { _, deferredConfirmationType in
             // ...should set the newly saved PM as the default
-            let defaultPM = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
+            let defaultPM = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: elementsSession, surface: .paymentSheet)
             if shouldSetDefaultPM {
                 // It's hard to know what the PM ID is, so let's just check what it _shouldn't_ be
                 XCTAssertNotNil(defaultPM)

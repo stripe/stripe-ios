@@ -235,7 +235,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
-    
     enum PaymentMethodSetAsDefault: String, PickerEnum {
         static let enumName: String = "PaymentMethodSetAsDefault"
         case enabled

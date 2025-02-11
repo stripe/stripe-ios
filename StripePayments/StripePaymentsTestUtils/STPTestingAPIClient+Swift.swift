@@ -154,8 +154,8 @@ extension STPTestingAPIClient {
             "features": [
                 "payment_method_save": paymentMethodSave ? "enabled" : "disabled",
                 "payment_method_remove": paymentMethodRemove ? "enabled" : "disabled",
-                "payment_method_set_as_default": paymentMethodSetAsDefault ? "enabled" : "disabled"
-            ]
+                "payment_method_set_as_default": paymentMethodSetAsDefault ? "enabled" : "disabled",
+            ],
         ]
         return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
     }
