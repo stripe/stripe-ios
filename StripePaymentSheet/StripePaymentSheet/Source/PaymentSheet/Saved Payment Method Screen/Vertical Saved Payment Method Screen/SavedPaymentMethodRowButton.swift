@@ -25,11 +25,11 @@ final class SavedPaymentMethodRowButton: UIView {
     }
 
     // MARK: Internal properties
-    
+
     let paymentMethod: STPPaymentMethod
     let showDefaultPMBadge: Bool
     weak var delegate: SavedPaymentMethodRowButtonDelegate?
-    
+
     var state: State = .unselected {
         didSet {
             if oldValue == .selected || oldValue == .unselected {
@@ -49,11 +49,11 @@ final class SavedPaymentMethodRowButton: UIView {
             return false
         }
     }
-    
+
     // MARK: - Private properties
 
     private let appearance: PaymentSheet.Appearance
-    
+
     private var isEditing: Bool {
         switch state {
         case .selected, .unselected:
@@ -62,7 +62,7 @@ final class SavedPaymentMethodRowButton: UIView {
             return true
         }
     }
-    
+
     private(set) var previousSelectedState: State = .unselected
 
     // MARK: Private views
@@ -110,8 +110,7 @@ final class SavedPaymentMethodRowButton: UIView {
     @objc private func handleRowButtonTapped(_: RowButton) {
         if isEditing {
             delegate?.didSelectUpdateButton(self, with: paymentMethod)
-        }
-        else {
+        } else {
             state = .selected
             delegate?.didSelectButton(self, with: paymentMethod)
         }
