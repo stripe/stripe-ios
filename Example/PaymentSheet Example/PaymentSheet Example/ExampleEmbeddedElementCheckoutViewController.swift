@@ -55,7 +55,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                         intentCreationCallback(.failure(ExampleError()))
                         return
                     }
-                    let clientSecret = try await self.confirmIntent(paymentMethodID: paymentMethod.stripeId, shouldSavePaymentMethod: shouldSavePaymentMethod)
+                    let clientSecret = try await self.createIntent(paymentMethodID: paymentMethod.stripeId, shouldSavePaymentMethod: shouldSavePaymentMethod)
                     intentCreationCallback(.success(clientSecret))
                 } catch {
                     intentCreationCallback(.failure(error))
@@ -106,8 +106,10 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     func didTapCheckoutButton() {
         Task {
             // MARK: - Confirm the payment
+            view.isUserInteractionEnabled = false
             let result = await embeddedPaymentElement.confirm()
             handlePaymentResult(result)
+            view.isUserInteractionEnabled = true
         }
     }
 
@@ -261,9 +263,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
             // MARK: - Create a EmbeddedPaymentElement instance
             var configuration = EmbeddedPaymentElement.Configuration()
-            configuration.formSheetAction = .confirm(completion: { [weak self] result in
-                self?.handlePaymentResult(result)
-            })
+            configuration.formSheetAction = .continue
             // This example displays the buy button in a screen that is separate from screen that displays the embedded view, so we disable the mandate text in the embedded view and show it near our buy button.
             configuration.embeddedViewDisplaysMandateText = false
             configuration.merchantDisplayName = "Example, Inc."
@@ -300,7 +300,6 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
     // MARK: - Handle payment result
     func handlePaymentResult(_ result: EmbeddedPaymentElementResult) {
-        paymentMethodsViewController?.dismiss(animated: true)
         switch result {
         case .completed:
             displayAlert("Your order is confirmed!", shouldDismiss: true)
@@ -312,7 +311,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         }
     }
 
-    func confirmIntent(paymentMethodID: String, shouldSavePaymentMethod: Bool) async throws -> String {
+    func createIntent(paymentMethodID: String, shouldSavePaymentMethod: Bool) async throws -> String {
         var request = URLRequest(url: confirmIntentUrl)
         request.httpMethod = "POST"
 
