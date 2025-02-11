@@ -50,7 +50,7 @@ extension PaymentSheet {
                 return "link_card_brand"
             }
         }
-        
+
         /// Returns the Stripe API identifier used for incentives for this payment method type, which can be different from `identifier`.
         var incentiveIdentifier: String? {
             switch self {
@@ -457,7 +457,7 @@ extension PaymentSheet {
             }
             // This payment method and its requirements are hardcoded on the client
             switch paymentMethodType {
-            case .card, .USBankAccount:
+            case .card, .USBankAccount, .iDEAL, .sofort, .bancontact, .SEPADebit:
                 return true
             default:
                 return false

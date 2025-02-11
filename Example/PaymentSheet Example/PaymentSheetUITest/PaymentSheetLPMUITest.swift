@@ -552,7 +552,8 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         settings.customerMode = .new
         settings.applePayEnabled = .off // disable Apple Pay
         settings.mode = .setup
-        settings.customerKeyType = .legacy // TODO: Change to customerSessions when adding save checkbox for SEPA        settings.allowsDelayedPMs = .on
+        settings.customerKeyType = .customerSession
+        settings.allowsDelayedPMs = .on
         loadPlayground(app, settings)
 
         let paymentMethodButton = app.buttons["Payment method"]
@@ -562,17 +563,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         // Save SEPA
         app.buttons["+ Add"].waitForExistenceAndTap()
         tapPaymentMethod("SEPA Debit")
-
-        app.textFields["Full name"].tap()
-        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Address line 1"].tap()
-        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["ZIP"].tap()
-        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+        try! fillSepaData(app, iban: "AT611904300234573201", tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         app.buttons["Continue"].tap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
