@@ -137,14 +137,7 @@ class LinkURLGenerator {
 extension Set where Element == LinkSettings.FundingSource {
     func toSortedArray() -> [LinkSettings.FundingSource] {
         return self.sorted { a, b in
-            switch (a, b) {
-            case (.card, .bankAccount):
-                return true
-            case (.bankAccount, .card):
-                return false
-            default:
-                return false
-            }
+            a.rawValue.localizedCaseInsensitiveCompare(b.rawValue) == .orderedAscending
         }
     }
 }

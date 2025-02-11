@@ -171,7 +171,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            cardBrandChoice: nil,
-                                           linkFundingSources: [.card, .bankAccount]
+                                           linkFundingSources: [.bankAccount, .card]
         )
 
         XCTAssertEqual(params, expectedParams)
@@ -221,7 +221,7 @@ extension STPElementsSession {
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
                                           "apple_pay_preference": "enabled",
-                                          "link_settings": ["link_funding_sources": ["CARD", "BANK_ACCOUNT"],
+                                          "link_settings": ["link_funding_sources": ["BANK_ACCOUNT", "CARD"],
                                             "link_passthrough_mode_enabled": true]
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
