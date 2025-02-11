@@ -50,7 +50,7 @@ struct LinkURLParams: Encodable {
     var intentMode: IntentMode
     var setupFutureUsage: Bool
     var cardBrandChoice: CardBrandChoiceInfo?
-    var linkFundingSources: Set<LinkSettings.FundingSource>
+    var linkFundingSources: [LinkSettings.FundingSource]
 }
 
 class LinkURLGenerator {
@@ -99,7 +99,7 @@ class LinkURLGenerator {
         }()
 
         let flags = elementsSession.linkFlags.merging(elementsSession.flags) { (current, _) in current }
-        let linkFundingSources = elementsSession.linkFundingSources ?? Set()
+        let linkFundingSources = elementsSession.linkFundingSources?.toSortedArray() ?? []
 
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
@@ -130,6 +130,22 @@ class LinkURLGenerator {
     static func url(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) throws -> URL {
         let params = try Self.linkParams(configuration: configuration, intent: intent, elementsSession: elementsSession)
         return try url(params: params)
+    }
+}
+
+// Used to get deterministic ordering for FundingSource tests
+extension Set where Element == LinkSettings.FundingSource {
+    func toSortedArray() -> [LinkSettings.FundingSource] {
+        return self.sorted { a, b in
+            switch (a, b) {
+            case (.card, .bankAccount):
+                return true
+            case (.bankAccount, .card):
+                return false
+            default:
+                return false
+            }
+        }
     }
 }
 
