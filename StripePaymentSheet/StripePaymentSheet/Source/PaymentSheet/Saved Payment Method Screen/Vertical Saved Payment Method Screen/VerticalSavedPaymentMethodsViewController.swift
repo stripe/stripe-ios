@@ -377,11 +377,14 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         }
 
         // Create the new button
-        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance, showDefaultPMBadge: isDefaultPaymentMethod(paymentMethodId: updatedPaymentMethod.stripeId))
+        let isDefaultPaymentMethod = isDefaultPaymentMethod(paymentMethodId: updatedPaymentMethod.stripeId)
+        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod,
+                                                    appearance: configuration.appearance,
+                                                    showDefaultPMBadge: isDefaultPaymentMethod,
+                                                    previousSelectedState: oldButton.previousSelectedState,
+                                                    currentState: oldButton.state)
 
         newButton.delegate = self
-        newButton.previousSelectedState = oldButton.previousSelectedState
-        newButton.state = oldButton.state
 
         // Replace the old button with the new button in the model
         paymentMethodRows[oldButtonModelIndex] = newButton

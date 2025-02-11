@@ -87,7 +87,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             form.getTextFieldElement("City").setText("asdf")
             form.getTextFieldElement("ZIP").setText("12345")
             XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 17)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 16)
         }
     }
 
