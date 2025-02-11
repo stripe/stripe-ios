@@ -54,7 +54,7 @@ class LinkURLGeneratorTests: XCTestCase {
         // Create a session ID
         AnalyticsHelper.shared.generateSessionID()
         let sessionID = AnalyticsHelper.shared.sessionID!
-        
+
         let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .emptyElementsSession)
 
         let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
@@ -97,7 +97,8 @@ class LinkURLGeneratorTests: XCTestCase {
                                            paymentInfo: LinkURLParams.PaymentInfo(currency: "EUR", amount: 100),
                                            experiments: [:],
                                            flags: ["cbc_in_link_popup": true,
-                                                   "disable_cbc_in_link_popup": false],
+                                                   "disable_cbc_in_link_popup": false,
+                                                  ],
                                            loggerMetadata: ["mobile_session_id": sessionID],
                                            locale: Locale.init(identifier: "en_US").toLanguageTag(),
                                            intentMode: .payment,
@@ -108,7 +109,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
         XCTAssertEqual(params, expectedParams)
     }
-    
+
     func testURLParamsWithCardFundingSource() {
         var config = PaymentSheet.Configuration()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _, _ in
@@ -142,7 +143,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
         XCTAssertEqual(params, expectedParams)
     }
-    
+
     func testURLParamsWithCardAndBankFundingSources() {
         var config = PaymentSheet.Configuration()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _, _ in
@@ -198,31 +199,35 @@ extension STPElementsSession {
                                           "session_id": "123",
                                           "card_brand_choice": ["eligible": true,
                                                                 "preferred_networks": ["cartes_bancaires"],
-                                                                "supported_cobranded_networks": ["cartes_bancaires": true]
+                                                                "supported_cobranded_networks": ["cartes_bancaires": true],
                                                                ],
-                                          "merchant_country" : "FR"
+                                          "merchant_country": "FR",
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
-    
+
     static var linkPassthroughElementsSession: STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
                                           "apple_pay_preference": "enabled",
                                           "link_settings": ["link_funding_sources": ["CARD"],
-                                            "link_passthrough_mode_enabled": true]
+                                                            "link_passthrough_mode_enabled": true,
+                                                           ],
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
-    
+
     static var linkPassthroughWithBankElementsSession: STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
                                           "apple_pay_preference": "enabled",
-                                          "link_settings": ["link_funding_sources": ["BANK_ACCOUNT", "CARD"],
-                                            "link_passthrough_mode_enabled": true]
+                                          "link_settings": ["link_funding_sources": ["BANK_ACCOUNT",
+                                                                                     "CARD",
+                                                                                    ],
+                                                            "link_passthrough_mode_enabled": true,
+                                                           ],
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
