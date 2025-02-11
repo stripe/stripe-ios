@@ -751,8 +751,10 @@ private extension ConsumerPaymentDetails {
         _ elementsSession: STPElementsSession
     ) -> String? {
         switch type {
-        case .card, .unparsable:
+        case .card:
             return "card"
+        case .unparsable:
+            return nil
         case .bankAccount:
             let canAcceptACH = elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount)
             let isLinkCardBrand = elementsSession.linkSettings?.linkMode?.isPantherPayment ?? false
