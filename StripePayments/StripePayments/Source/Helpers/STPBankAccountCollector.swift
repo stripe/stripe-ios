@@ -118,7 +118,6 @@ public class STPBankAccountCollector: NSObject {
     ///   - clientSecret:      Client secret of the payment intent
     ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
     ///   - params:            Parameters for this call
-    ///   - configuration:     Configuration  for the bank account collector.
     ///   - viewController:    Presenting view controller that will present the modal
     ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
     ///   - completion:        Completion block to be called on completion of the operation.
@@ -128,7 +127,6 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         params: STPCollectBankAccountParams,
-        configuration: STPBankAccountCollectorConfiguration = .init(),
         from viewController: UIViewController,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         completion: @escaping STPCollectBankAccountForPaymentCompletionBlock
@@ -190,7 +188,6 @@ public class STPBankAccountCollector: NSObject {
         _collectBankAccountForPayment(
             clientSecret: clientSecret,
             returnURL: returnURL,
-            configuration: configuration,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -203,7 +200,6 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
-        configuration: STPBankAccountCollectorConfiguration,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
@@ -223,7 +219,6 @@ public class STPBankAccountCollector: NSObject {
             clientSecret: clientSecret,
             returnURL: returnURL,
             additionalParameters: additionalParameters,
-            configuration: configuration,
             elementsSessionContext: elementsSessionContext,
             onEvent: onEvent,
             params: params,
@@ -236,7 +231,6 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
-        configuration: STPBankAccountCollectorConfiguration,
         elementsSessionContext: ElementsSessionContext? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
@@ -386,7 +380,6 @@ public class STPBankAccountCollector: NSObject {
     ///   - clientSecret:      Client secret of the setup intent
     ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
     ///   - params:            Parameters for this call
-    ///   - configuration:     Configuration  for the bank account collector.
     ///   - viewController:    Presenting view controller that will present the modal
     ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
     ///   - completion:        Completion block to be called on completion of the operation.
@@ -396,7 +389,6 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         params: STPCollectBankAccountParams,
-        configuration: STPBankAccountCollectorConfiguration = .init(),
         from viewController: UIViewController,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         completion: @escaping STPCollectBankAccountForSetupCompletionBlock
@@ -457,7 +449,6 @@ public class STPBankAccountCollector: NSObject {
         collectBankAccountForSetup(
             clientSecret: clientSecret,
             returnURL: returnURL,
-            configuration: configuration,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -469,7 +460,6 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
-        configuration: STPBankAccountCollectorConfiguration,
         elementsSessionContext: ElementsSessionContext? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
@@ -489,7 +479,6 @@ public class STPBankAccountCollector: NSObject {
             clientSecret: clientSecret,
             returnURL: returnURL,
             additionalParameters: additionalParameters,
-            configuration: configuration,
             elementsSessionContext: elementsSessionContext,
             onEvent: onEvent,
             params: params,
@@ -502,7 +491,6 @@ public class STPBankAccountCollector: NSObject {
         clientSecret: String,
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
-        configuration: STPBankAccountCollectorConfiguration,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
@@ -593,7 +581,6 @@ public class STPBankAccountCollector: NSObject {
         currency: String?,
         onBehalfOf: String?,
         additionalParameters: [String: Any] = [:],
-        configuration: STPBankAccountCollectorConfiguration,
         elementsSessionContext: ElementsSessionContext?,
         from viewController: UIViewController,
         financialConnectionsCompletion: @escaping (
