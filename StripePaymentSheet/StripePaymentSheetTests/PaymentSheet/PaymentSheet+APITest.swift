@@ -78,9 +78,9 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         return newCardPaymentOption
     }
     private func waitForDefaultPaymentMethodToBePersisted() {
-        // After confirming an intent w/ set_as_default, it takes about 2 seconds to persist the default PM.
-        // Working on finding ways to improve this, and will sleep(2) for now.
-        sleep(2)
+        // After confirming an intent w/ set_as_default, it takes about 3 seconds to persist the default PM.
+        // Working on finding ways to improve this, and will sleep(3) for now.
+        sleep(3)
     }
     // MARK: - load and confirm tests
 
