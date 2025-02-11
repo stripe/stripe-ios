@@ -157,7 +157,7 @@ import UIKit
         didUpdate: DidUpdateSelectedIndex? = nil,
         didTapClose: DidTapClose? = nil
     ) {
-        assert(!items.filter{!$0.isDisabled}.isEmpty, "`items` must contain at least one non-disabled item")
+        stpAssert(!items.filter{!$0.isDisabled}.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
         
         self.label = label
         self.theme = theme

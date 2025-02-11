@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (mhux obbligatorja)";
 
+"(not accepted)" = "(ma tistax tintuża)";
+
 "Account number" = "In-numru tal-kont";
 
 "Address" = "Indirizz";

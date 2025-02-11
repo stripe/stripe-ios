@@ -17,6 +17,7 @@ extension EmbeddedPaymentElement {
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousSelection: RowButtonType? = nil,
+        previousSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         // Restore the customer's previous payment method.
@@ -66,7 +67,8 @@ extension EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         return EmbeddedPaymentMethodsView(
-            initialSelection: initialSelection,
+            initialSelectedRowType: initialSelection,
+            initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             appearance: configuration.appearance,
@@ -331,13 +333,65 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         // If the formViewController was populated with a previous payment option don't reset
         if embeddedFormViewController.previousPaymentOption == nil {
             embeddedPaymentMethodsView.resetSelectionToLastSelection()
+            // Show change button if the newly selected row needs it
+            if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
+                let changeButtonState = getChangeButtonState(for: newSelectedType)
+                if changeButtonState.shouldShowChangeButton {
+                    embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+                    embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
+                } else {
+                    embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
+                }
+            }
         }
         embeddedFormViewController.dismiss(animated: true)
     }
 
     func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: EmbeddedFormViewController) {
+        // Show change button if the selected row needs it
+        if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
+            let changeButtonState = getChangeButtonState(for: newSelectedType)
+            if changeButtonState.shouldShowChangeButton {
+                embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+                embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
+            } else {
+                embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
+            }
+        }
         embeddedFormViewController.dismiss(animated: true)
         informDelegateIfPaymentOptionUpdated()
+    }
+    
+    func getChangeButtonState(for type: RowButtonType) -> (shouldShowChangeButton: Bool, sublabel: String?) {
+        guard let _paymentOption, let displayData = paymentOption else {
+            return (false, nil)
+        }
+        // Show change button for new PMs that have a valid form
+        let shouldShowChangeButton: Bool = {
+            if case .new = type, selectedFormViewController != nil {
+               return true
+            }
+            return false
+        }()
+        
+        // Add a sublabel to the selected row for cards and us bank account like "Visa 4242"
+        let sublabel: String? = {
+            switch type.paymentMethodType {
+            case .stripe(.card):
+                guard case .new(confirmParams: let params) = _paymentOption else {
+                    return nil
+                }
+                let brand = STPCardValidator.brand(for: params.paymentMethodParams.card)
+                let brandString = brand == .unknown ? nil : STPCardBrandUtilities.stringFrom(brand)
+                return [brandString, displayData.label].compactMap({ $0 }).joined(separator: " ")
+            case .stripe(.USBankAccount):
+                return displayData.label
+            default:
+                return nil
+            }
+        }()
+        
+        return (shouldShowChangeButton: shouldShowChangeButton, sublabel: sublabel)
     }
 }
 
