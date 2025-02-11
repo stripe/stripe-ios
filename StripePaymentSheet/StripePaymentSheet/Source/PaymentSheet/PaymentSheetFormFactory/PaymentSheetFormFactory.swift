@@ -485,7 +485,6 @@ extension PaymentSheetFormFactory {
         )
     }
 
-
     func makeBancontact() -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
             nameRequiredByPaymentMethod: true,

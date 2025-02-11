@@ -1046,7 +1046,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheet_LPM_InstantDebits_only_promotion() {
         UserDefaults.standard.setValue(true, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
         stubSessions(
