@@ -503,7 +503,7 @@ workflows:
     - git-clone@8.2:
         inputs:
         - merge_pr: "no"
-        - fetch_tags: "yes"
+        - clone_depth: -1
     - script@1:
         inputs:
         - content: ./ci_scripts/lint_modified_files.sh
