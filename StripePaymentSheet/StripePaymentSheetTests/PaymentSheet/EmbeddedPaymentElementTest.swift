@@ -136,6 +136,34 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
         await fulfillment(of: [secondUpdateExpectation])
     }
+    
+    func testUpdateFailsWhenFormPresented() async throws {
+        // Set up a test window so the view controllers "present"
+        let testWindow = UIWindow(frame: .zero)
+        testWindow.isHidden = false
+        testWindow.rootViewController = UIViewController()
+
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = testWindow.rootViewController
+        sut.view.autosizeHeight(width: 320)
+        
+        // Tap card to present the form
+        let cardRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardRowButton)
+        
+        // Assert the form is shown
+        XCTAssertTrue(delegateWillPresentCalled)
+        
+        // Updates should fail while the form is presented
+        async let _updateResult = sut.update(intentConfiguration: setupIntentConfig)
+        let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
+        XCTAssertEqual(updateResult, .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented))
+    }
 
     func testUpdateCancelsInFlightUpdate() async throws {
         // Given a EmbeddedPaymentElement instance...
