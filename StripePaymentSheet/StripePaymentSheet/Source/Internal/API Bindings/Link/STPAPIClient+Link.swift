@@ -326,7 +326,7 @@ extension STPAPIClient {
 
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
-        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>,
+        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {

@@ -450,6 +450,7 @@ extension PaymentSheet {
                         confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
                         return
                     }
+                    
 
                     linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
                         switch result {
@@ -460,7 +461,7 @@ extension PaymentSheet {
                                     id: paymentDetails.stripeID,
                                     cvc: paymentMethodParams.card?.cvc,
                                     allowRedisplay: paymentMethodParams.allowRedisplay,
-                                    expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode
+                                    expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession)
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
@@ -523,7 +524,7 @@ extension PaymentSheet {
                         id: paymentDetails.stripeID,
                         cvc: paymentDetails.cvc,
                         allowRedisplay: nil,
-                        expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode
+                        expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession)
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
@@ -746,12 +747,16 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
 
 private extension ConsumerPaymentDetails {
     
-    var expectedPaymentMethodTypeForPassthroughMode: String? {
+    func expectedPaymentMethodTypeForPassthroughMode(
+        _ elementsSession: STPElementsSession
+    ) -> String? {
         switch type {
         case .card, .unparsable:
-            return nil
-        case .bankAccount:
             return "card"
+        case .bankAccount:
+            let canAcceptACH = elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount)
+            let isLinkCardBrand = elementsSession.linkSettings?.linkMode?.isPantherPayment ?? false
+            return isLinkCardBrand && !canAcceptACH ? "card" : "bank_account"
         }
     }
 }

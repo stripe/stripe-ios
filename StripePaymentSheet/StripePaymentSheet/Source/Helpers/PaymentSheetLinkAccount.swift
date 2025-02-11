@@ -298,7 +298,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     func listPaymentDetails(
-        supportedTypes: Set<ConsumerPaymentDetails.DetailsType>,
+        supportedTypes: [ConsumerPaymentDetails.DetailsType],
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in

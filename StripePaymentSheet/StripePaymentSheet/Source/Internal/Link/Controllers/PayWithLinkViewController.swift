@@ -257,7 +257,9 @@ private extension PayWithLinkViewController {
             return
         }
         
-        let supportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
+        let supportedPaymentDetailsTypes = linkAccount
+            .supportedPaymentDetailsTypes(for: context.elementsSession)
+            .toSortedArray()
         
         linkAccount.listPaymentDetails(
             supportedTypes: supportedPaymentDetailsTypes
@@ -466,4 +468,13 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
 
     }
 
+}
+
+// Used to get deterministic ordering
+private extension Set where Element == ConsumerPaymentDetails.DetailsType {
+    func toSortedArray() -> [ConsumerPaymentDetails.DetailsType] {
+        return self.sorted { lhs, rhs in
+            lhs.rawValue.localizedCaseInsensitiveCompare(rhs.rawValue) == .orderedAscending
+        }
+    }
 }
