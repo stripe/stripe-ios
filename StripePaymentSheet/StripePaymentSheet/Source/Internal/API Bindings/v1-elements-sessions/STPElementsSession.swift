@@ -51,7 +51,7 @@ import Foundation
     /// A flag that indicates that this instance was created as a best-effort
     let isBackupInstance: Bool
 
-    let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     internal init(
         allResponseFields: [AnyHashable: Any],
