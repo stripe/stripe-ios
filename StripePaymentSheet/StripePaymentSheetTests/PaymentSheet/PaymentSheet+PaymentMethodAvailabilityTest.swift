@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable @_spi(CardBrandFilteringBeta) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
 
 final class PaymentMethodAvailabilityTest: XCTestCase {
 
