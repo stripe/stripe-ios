@@ -106,6 +106,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     func didTapCheckoutButton() {
         Task {
             // MARK: - Confirm the payment
+            // Disable interaction so that customers can't e.g. update their cart or tap the buy button again while we complete payment
             view.isUserInteractionEnabled = false
             let result = await embeddedPaymentElement.confirm()
             handlePaymentResult(result)
