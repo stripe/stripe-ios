@@ -67,6 +67,7 @@
 		4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */; };
 		41A2A5642C5ABD6C0077FC74 /* StripeConnectTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */; };
 		41A2A5682C5AC5120077FC74 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A2A5672C5AC5120077FC74 /* StripeCore.framework */; };
+		41B64AA82D5B8CF70026DD7A /* ComponentAccountSessionClaimed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B64AA72D5B8CEE0026DD7A /* ComponentAccountSessionClaimed.swift */; };
 		41BCCFEB2C8B348500797E01 /* AppearanceWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFEA2C8B348500797E01 /* AppearanceWrapper.swift */; };
 		41BCCFED2C8B34F600797E01 /* StringCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFEC2C8B34F600797E01 /* StringCodingKey.swift */; };
 		41BCCFF02C8B3C8900797E01 /* AppearanceWrapper+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */; };
@@ -221,6 +222,7 @@
 		4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandler.swift; sourceTree = "<group>"; };
 		41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectTests.xctestplan; sourceTree = "<group>"; };
 		41A2A5672C5AC5120077FC74 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		41B64AA72D5B8CEE0026DD7A /* ComponentAccountSessionClaimed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentAccountSessionClaimed.swift; sourceTree = "<group>"; };
 		41BCCFEA2C8B348500797E01 /* AppearanceWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceWrapper.swift; sourceTree = "<group>"; };
 		41BCCFEC2C8B34F600797E01 /* StringCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringCodingKey.swift; sourceTree = "<group>"; };
 		41BCCFEF2C8B3C8900797E01 /* AppearanceWrapper+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppearanceWrapper+Default.swift"; sourceTree = "<group>"; };
@@ -691,6 +693,7 @@
 				E6660DAC2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift */,
 				E6660DAE2CDC576F002A7631 /* AuthenticatedWebViewErrorEvent.swift */,
 				E6660DA82CDC563C002A7631 /* AuthenticatedWebViewOpenedEvent.swift */,
+				41B64AA72D5B8CEE0026DD7A /* ComponentAccountSessionClaimed.swift */,
 				E6660DAA2CDC5702002A7631 /* AuthenticatedWebViewRedirectedEvent.swift */,
 				E6660D922CDC4194002A7631 /* ComponentCreatedEvent.swift */,
 				E6660D932CDC4194002A7631 /* ComponentLoadedEvent.swift */,
@@ -899,6 +902,7 @@
 				E65691252CA52F9D00E0DB00 /* NotificationBannerViewController.swift in Sources */,
 				E6695A1D2CC1C895008049D1 /* OpenFinancialConnectionsMessageHandler.swift in Sources */,
 				410D0FE32C6D31C6009B0E26 /* StripeConnectConstants.swift in Sources */,
+				41B64AA82D5B8CF70026DD7A /* ComponentAccountSessionClaimed.swift in Sources */,
 				E6660DAD2CDC5745002A7631 /* AuthenticatedWebViewCanceledEvent.swift in Sources */,
 				4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */,
 				E6D3C8EE2CBE1404003CE967 /* HTTPStatusError.swift in Sources */,
