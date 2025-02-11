@@ -285,7 +285,18 @@ extension CustomerAddPaymentMethodViewController {
             with: name,
             email: email
         )
+        let bankAccountCollectorConfiguration: STPBankAccountCollectorConfiguration = {
+            let style: STPBankAccountCollectorConfiguration.UserInterfaceStyle = {
+                switch configuration.style {
+                case .automatic: return .automatic
+                case .alwaysLight: return .alwaysLight
+                case .alwaysDark: return .alwaysDark
+                }
+            }()
+            return .init(style: style)
+        }()
         let client = STPBankAccountCollector()
+        client.configuration = bankAccountCollectorConfiguration
         let errorText = STPLocalizedString(
             "Something went wrong when linking your account.\nPlease try again later.",
             "Error message when an error case happens when linking your account"
@@ -320,17 +331,6 @@ extension CustomerAddPaymentMethodViewController {
             }
         }
 
-        let bankAccountCollectorConfiguration: STPBankAccountCollectorConfiguration = {
-            let style: STPBankAccountCollectorConfiguration.UserInterfaceStyle = {
-                switch configuration.style {
-                case .automatic: return .automatic
-                case .alwaysLight: return .alwaysLight
-                case .alwaysDark: return .alwaysDark
-                }
-            }()
-            return .init(style: style)
-        }()
-
         let additionalParameters: [String: Any] = [
             "hosted_surface": "customer_sheet",
         ]
@@ -338,7 +338,6 @@ extension CustomerAddPaymentMethodViewController {
             clientSecret: clientSecret,
             returnURL: configuration.returnURL,
             additionalParameters: additionalParameters,
-            configuration: bankAccountCollectorConfiguration,
             onEvent: nil,
             params: params,
             from: viewController,

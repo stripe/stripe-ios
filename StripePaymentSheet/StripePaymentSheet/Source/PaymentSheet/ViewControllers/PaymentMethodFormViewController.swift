@@ -369,6 +369,7 @@ extension PaymentMethodFormViewController {
             email: email
         )
         let client = STPBankAccountCollector()
+        client.configuration = bankAccountCollectorConfiguration
         let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: STPBankAccountCollector.CollectBankAccountCompletionBlock = { result, _, error in
@@ -403,7 +404,6 @@ extension PaymentMethodFormViewController {
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
-                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -415,7 +415,6 @@ extension PaymentMethodFormViewController {
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
-                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -441,7 +440,6 @@ extension PaymentMethodFormViewController {
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
-                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
@@ -464,6 +462,7 @@ extension PaymentMethodFormViewController {
             email: instantDebitsFormElement.email
         )
         let client = STPBankAccountCollector()
+        client.configuration = bankAccountCollectorConfiguration
         let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: STPBankAccountCollector.CollectBankAccountCompletionBlock = { result, _, error in
@@ -507,7 +506,6 @@ extension PaymentMethodFormViewController {
                 clientSecret: paymentIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
-                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -519,7 +517,6 @@ extension PaymentMethodFormViewController {
                 clientSecret: setupIntent.clientSecret,
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
-                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: nil,
                 params: params,
@@ -545,7 +542,6 @@ extension PaymentMethodFormViewController {
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
-                configuration: bankAccountCollectorConfiguration,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
