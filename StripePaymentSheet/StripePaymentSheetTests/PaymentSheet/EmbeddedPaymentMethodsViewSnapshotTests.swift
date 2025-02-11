@@ -1139,7 +1139,8 @@ extension EmbeddedPaymentMethodsView {
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
         self.init(
-            initialSelection: initialSelection,
+            initialSelectedRowType: initialSelection,
+            initialSelectedRowChangeButtonState: nil,
             paymentMethodTypes: paymentMethodTypes,
             savedPaymentMethod: savedPaymentMethod,
             appearance: appearance,

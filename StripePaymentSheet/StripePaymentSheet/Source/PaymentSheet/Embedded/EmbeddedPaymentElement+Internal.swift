@@ -17,6 +17,7 @@ extension EmbeddedPaymentElement {
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousSelection: RowButtonType? = nil,
+        previousSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         // Restore the customer's previous payment method.
@@ -66,7 +67,8 @@ extension EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         return EmbeddedPaymentMethodsView(
-            initialSelection: initialSelection,
+            initialSelectedRowType: initialSelection,
+            initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             appearance: configuration.appearance,
@@ -336,6 +338,9 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 let changeButtonState = getChangeButtonState(for: newSelectedType)
                 if changeButtonState.shouldShowChangeButton {
                     embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+                    embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
+                } else {
+                    embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
                 }
             }
         }
@@ -348,6 +353,9 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             let changeButtonState = getChangeButtonState(for: newSelectedType)
             if changeButtonState.shouldShowChangeButton {
                 embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+                embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
+            } else {
+                embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
             }
         }
         embeddedFormViewController.dismiss(animated: true)

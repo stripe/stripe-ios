@@ -35,6 +35,11 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
     let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "us_bank_account"]) { _, _, _ in
         // These tests don't confirm, so this is unused
     }
+    
+    override func setUp() async throws {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        await FormSpecProvider.shared.load()
+    }
 
     func testUpdateFromCardToCardAndUSBankAccount() async throws {
         // Given a EmbeddedPaymentElement instance...
@@ -88,8 +93,6 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)]
         )
-        await AddressSpecProvider.shared.loadAddressSpecs()
-        await FormSpecProvider.shared.load()
         let sut = EmbeddedPaymentElement(
             configuration: configuration,
             loadResult: loadResult,
@@ -144,5 +147,31 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
 
         // ...should show the row w/ 'Change >'
         STPSnapshotVerifyView(sut.view, identifier: "afterpay")
+    }
+    
+    func testRetainsChangeButtonAcrossUpdate() async throws {
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.view.autosizeHeight(width: 300)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        // Tapping card and filling out the form...
+        sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card").handleTap()
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number")?.setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+        
+        // ...and updating the amount...
+        var updatedIntentConfig = paymentIntentConfig
+        updatedIntentConfig.mode = .payment(amount: 1234, currency: "USD")
+        let result = await sut.update(intentConfiguration: updatedIntentConfig)
+        guard case .succeeded = result else {
+            XCTFail()
+            return
+        }
+        // ...should keep the card row selected w/ 'Change >' and 'Visa 4242' displayed
+        STPSnapshotVerifyView(sut.view)
     }
 }
