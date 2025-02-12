@@ -15,20 +15,20 @@ import UIKit
 final class ConsumerSession: Decodable {
     let clientSecret: String
     let emailAddress: String
-    let redactedPhoneNumber: String
+    let redactedFormattedPhoneNumber: String
     let verificationSessions: [VerificationSession]
     let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
 
     init(
         clientSecret: String,
         emailAddress: String,
-        redactedPhoneNumber: String,
+        redactedFormattedPhoneNumber: String,
         verificationSessions: [VerificationSession],
         supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
-        self.redactedPhoneNumber = redactedPhoneNumber
+        self.redactedFormattedPhoneNumber = redactedFormattedPhoneNumber
         self.verificationSessions = verificationSessions
         self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
     }
@@ -36,7 +36,7 @@ final class ConsumerSession: Decodable {
     private enum CodingKeys: String, CodingKey {
         case clientSecret
         case emailAddress
-        case redactedPhoneNumber
+        case redactedFormattedPhoneNumber
         case verificationSessions
         case supportedPaymentDetailsTypes = "supportPaymentDetailsTypes"
     }
@@ -45,7 +45,7 @@ final class ConsumerSession: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.clientSecret = try container.decode(String.self, forKey: .clientSecret)
         self.emailAddress = try container.decode(String.self, forKey: .emailAddress)
-        self.redactedPhoneNumber = try container.decode(String.self, forKey: .redactedPhoneNumber)
+        self.redactedFormattedPhoneNumber = try container.decode(String.self, forKey: .redactedFormattedPhoneNumber)
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
         self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
     }

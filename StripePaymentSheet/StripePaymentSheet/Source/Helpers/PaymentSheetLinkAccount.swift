@@ -65,7 +65,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     let email: String
 
     var redactedPhoneNumber: String? {
-        return currentSession?.redactedPhoneNumber
+        return currentSession?.redactedFormattedPhoneNumber.replacingOccurrences(of: "*", with: "•")
     }
 
     var isRegistered: Bool {
