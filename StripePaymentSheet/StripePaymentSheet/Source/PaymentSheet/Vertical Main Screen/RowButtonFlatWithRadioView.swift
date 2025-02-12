@@ -104,6 +104,12 @@ private extension RowButtonFlatWithRadioView {
 
         // MARK: - Constraints
 
+        // Resolve ambiguous height warning by setting these constraints w/ low priority
+        let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 14)
+        imageViewTopConstraint.priority = .defaultLow
+        let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
+        imageViewBottomConstraint.priority = .defaultLow
+
         let insets = appearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
             // Radio button constraints
@@ -119,6 +125,8 @@ private extension RowButtonFlatWithRadioView {
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageViewTopConstraint,
+            imageViewBottomConstraint,
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
