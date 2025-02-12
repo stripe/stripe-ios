@@ -59,14 +59,6 @@ class RowButton: UIView {
         return appearance.embeddedPaymentElement.row.style == .flatWithCheckmark && isEmbedded
     }
     var heightConstraint: NSLayoutConstraint?
-
-    private var selectedDefaultBadgeFont: UIFont {
-        return appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
-    }
-
-    private var defaultBadgeFont: UIFont {
-        return appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
-    }
     
     private var rowButtonFlatWithRadioView: RowButtonFlatWithRadioView?
 
@@ -93,22 +85,8 @@ class RowButton: UIView {
         self.isEmbedded = isEmbedded
         self.rightAccessoryView = rightAccessoryView
         self.sublabel = Self.makeRowButtonSublabel(text: subtext, appearance: appearance)
-        if let badgeText {
-            self.defaultBadge = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
-        } else {
-            self.defaultBadge = nil
-        }
-        if let promoText {
-            self.promoBadge = PromoBadgeView(
-                appearance: appearance,
-                cornerRadius: originalCornerRadius,
-                tinyMode: false,
-                text: promoText
-            )
-        } else {
-            self.promoBadge = nil
-        }
-        
+        self.defaultBadge = Self.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
+        self.promoBadge = promoBadge
         super.init(frame: .zero)
         
         addAndPinSubview(shadowRoundedRect)
@@ -133,20 +111,18 @@ class RowButton: UIView {
                 text: text,
                 subtext: subtext,
                 rightAccessoryView: rightAccessoryView,
-                defaultBadgeText: badgeText) { [weak self] in
+                defaultBadgeText: badgeText,
+                promoBadge: promoBadge) { [weak self] in
                     self?.handleTap()
                 }
             addAndPinSubview(rowButtonFlatWithRadioView)
             self.rowButtonFlatWithRadioView = rowButtonFlatWithRadioView
             makeSameHeightAsOtherRowButtonsIfNecessary()
-            // TODO
             // accessibility
-            // default badge
-            // promo badge
-            return // Skip the rest of the legacy layout code
+            return // Skip the rest of the complicated layout
         }
         
-        // MARK: OLD
+        // TOOD(porter) Refactor the rest of this for other row styles
 
         addAndPinSubview(shadowRoundedRect)
 
@@ -480,7 +456,8 @@ extension RowButton {
         return sublabel
     }
     
-    static func makeRowButtonDefaultBadgeLabel(badgeText: String, appearance: PaymentSheet.Appearance) -> UILabel {
+    static func makeRowButtonDefaultBadgeLabel(badgeText: String?, appearance: PaymentSheet.Appearance) -> UILabel? {
+        guard let badgeText else { return nil }
         let defaultBadge = UILabel()
         defaultBadge.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
         defaultBadge.textColor = appearance.colors.textSecondary
@@ -536,7 +513,7 @@ extension RowButton {
                 return nil
             }
         }()
-
+        
         let promoBadge: PromoBadgeView? = {
             guard let promoText else { return nil }
             return PromoBadgeView(
@@ -546,7 +523,7 @@ extension RowButton {
                 text: promoText
             )
         }()
-
+        
         return RowButton(
             appearance: appearance,
             type: .new(paymentMethodType: paymentMethodType),

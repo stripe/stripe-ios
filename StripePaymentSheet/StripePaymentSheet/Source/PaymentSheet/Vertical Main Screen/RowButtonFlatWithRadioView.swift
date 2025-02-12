@@ -31,11 +31,15 @@ final class RowButtonFlatWithRadioView: UIView {
     
     private let defaultBadgeLabel: UILabel?
     
+    private let promoBadge: PromoBadgeView?
+    
     // MARK: - State
     
     var isSelected: Bool = false {
         didSet {
             radioButton.isOn = isSelected
+            // Default badge font is heavier when the row is selected
+            defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         }
     }
 
@@ -46,6 +50,7 @@ final class RowButtonFlatWithRadioView: UIView {
         subtext: String? = nil,
         rightAccessoryView: UIView? = nil,
         defaultBadgeText: String?,
+        promoBadge: PromoBadgeView?,
         didTap: @escaping () -> Void
     ) {
         self.appearance = appearance
@@ -53,11 +58,8 @@ final class RowButtonFlatWithRadioView: UIView {
         self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance)
         self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance)
         self.rightAccessoryView = rightAccessoryView
-        if let defaultBadgeText {
-            self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
-        } else {
-            self.defaultBadgeLabel = nil
-        }
+        self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
+        self.promoBadge = promoBadge
         self.radioButton = RadioButton(appearance: appearance) {
             didTap()
         }
@@ -80,10 +82,10 @@ private extension RowButtonFlatWithRadioView {
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
         
-        
         let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
+                                                                 promoBadge,
                                                                  rightAccessoryView].compactMap { $0 })
         horizontalStackView.spacing = 8
         
