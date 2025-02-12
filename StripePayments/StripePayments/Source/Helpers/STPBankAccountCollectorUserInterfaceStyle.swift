@@ -1,5 +1,5 @@
 //
-//  STPBankAccountCollectorStyle.swift
+//  STPBankAccountCollectorUserInterfaceStyle.swift
 //  StripePayments
 //
 //  Created by Mat Schmid on 2025-02-12.
@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 /// Style options for colors in the bank account collector.
-@objc @frozen public enum STPBankAccountCollectorStyle: Int {
+@objc @frozen public enum STPBankAccountCollectorUserInterfaceStyle: Int {
     /// (default) The bank account collector will automatically switch between light and dark mode compatible colors based on device settings.
     case automatic = 0
 
@@ -20,7 +20,7 @@ import Foundation
     case alwaysDark
 }
 
-extension STPBankAccountCollectorStyle {
+extension STPBankAccountCollectorUserInterfaceStyle {
     var asFinancialConnectionsConfigurationStyle: FinancialConnectionsStyle {
         switch self {
         case .automatic: return .automatic

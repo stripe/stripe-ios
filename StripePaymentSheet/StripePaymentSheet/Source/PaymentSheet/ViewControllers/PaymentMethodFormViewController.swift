@@ -287,7 +287,7 @@ extension PaymentMethodFormViewController {
         )
     }
 
-    private var bankAccountCollectorStyle: STPBankAccountCollectorStyle {
+    private var bankAccountCollectorStyle: STPBankAccountCollectorUserInterfaceStyle {
         switch configuration.style {
         case .automatic: return .automatic
         case .alwaysLight: return .alwaysLight

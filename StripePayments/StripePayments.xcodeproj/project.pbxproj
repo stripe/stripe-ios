@@ -99,7 +99,7 @@
 		457AB5EDA3C13FF9FE9FBD9A /* STPBlocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AD8DAB423F22BE6FC2FFCB /* STPBlocks.swift */; };
 		466FD050408B0678FE5B60FC /* STPPaymentIntentEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD1E8C2A561AF7E6CDFCD97 /* STPPaymentIntentEnums.swift */; };
 		47677A8DE9E3D36E3392F7DE /* STPPaymentMethodAlipay.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF5E4108B8BF1C30BECC326 /* STPPaymentMethodAlipay.swift */; };
-		4941EB5B2D5CEE450004806A /* STPBankAccountCollectorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4941EB5A2D5CEE450004806A /* STPBankAccountCollectorStyle.swift */; };
+		493FAADB2D5D2F75001B2C71 /* STPBankAccountCollectorUserInterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FAADA2D5D2F75001B2C71 /* STPBankAccountCollectorUserInterfaceStyle.swift */; };
 		4A93430C40F5C73BC76447B2 /* StripePaymentsBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468FAF1D4D81DB5F5854287B /* StripePaymentsBundleLocator.swift */; };
 		4C7486A126100F8F067F248A /* STPPaymentMethodGiropay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444BEF2E8A83B5B489062595 /* STPPaymentMethodGiropay.swift */; };
 		4C9A78FBE900C635CC3AA400 /* STPThreeDSUICustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07382674619AEF657397B21 /* STPThreeDSUICustomization.swift */; };
@@ -481,7 +481,7 @@
 		48A73DA27ABEC6115513F315 /* STPPaymentMethodNetBanking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodNetBanking.swift; sourceTree = "<group>"; };
 		48EE0DEDAB9A8BFF0523FF9F /* STPPaymentMethodBLIKParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBLIKParams.swift; sourceTree = "<group>"; };
 		48F636D8CADF68EB74B88313 /* STPFixtures+Swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPFixtures+Swift.swift"; sourceTree = "<group>"; };
-		4941EB5A2D5CEE450004806A /* STPBankAccountCollectorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPBankAccountCollectorStyle.swift; sourceTree = "<group>"; };
+		493FAADA2D5D2F75001B2C71 /* STPBankAccountCollectorUserInterfaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPBankAccountCollectorUserInterfaceStyle.swift; sourceTree = "<group>"; };
 		4C3628526271ABA16C3994EE /* STPConnectAccountAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPConnectAccountAddress.swift; sourceTree = "<group>"; };
 		4D99D2C6C436F6FAFB3960EE /* STPPaymentMethodBancontactParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBancontactParams.swift; sourceTree = "<group>"; };
 		4FED7EC426D937D69C4B2D3B /* STPCollectBankAccountParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCollectBankAccountParams.swift; sourceTree = "<group>"; };
@@ -1132,7 +1132,7 @@
 				2382674B84CA7425010A90D9 /* STPPaymentConfirmation+SwiftUI.swift */,
 				64C6DBBF4EED92890747C305 /* StripePayments+Export.swift */,
 				468FAF1D4D81DB5F5854287B /* StripePaymentsBundleLocator.swift */,
-				4941EB5A2D5CEE450004806A /* STPBankAccountCollectorStyle.swift */,
+				493FAADA2D5D2F75001B2C71 /* STPBankAccountCollectorUserInterfaceStyle.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1697,7 +1697,6 @@
 				610DB7FAF395AEBE6CBEFAC8 /* STPPaymentMethodAffirmParams.swift in Sources */,
 				0A0F8D842C98441D08F8D14E /* STPPaymentMethodAfterpayClearpay.swift in Sources */,
 				7D1A50DC86AA9993EB1640E9 /* STPPaymentMethodAfterpayClearpayParams.swift in Sources */,
-				4941EB5B2D5CEE450004806A /* STPBankAccountCollectorStyle.swift in Sources */,
 				47677A8DE9E3D36E3392F7DE /* STPPaymentMethodAlipay.swift in Sources */,
 				2A2E28C3C248CBE96D52A192 /* STPPaymentMethodAlipayParams.swift in Sources */,
 				7FFBE4CBDC4D3476819CBF4A /* STPPaymentMethodBLIK.swift in Sources */,
@@ -1864,6 +1863,7 @@
 				F60858EA2CEF040400D62278 /* STPPaymentMethodCryptoParams.swift in Sources */,
 				CAC80EC52C33368E001E3D0D /* STPPaymentMethodSatispayParams.swift in Sources */,
 				9893D9DC84A0AB2AA2230555 /* NSDecimalNumber+Stripe_Currency.swift in Sources */,
+				493FAADB2D5D2F75001B2C71 /* STPBankAccountCollectorUserInterfaceStyle.swift in Sources */,
 				84DF21A5711A6CB12B2EDBCA /* NSDictionary+Stripe.swift in Sources */,
 				BBC2EEFCD179683318E96CF0 /* NSString+Stripe.swift in Sources */,
 				FB33420154165650EAD32165 /* STPAPIClient+PaymentsCore.swift in Sources */,

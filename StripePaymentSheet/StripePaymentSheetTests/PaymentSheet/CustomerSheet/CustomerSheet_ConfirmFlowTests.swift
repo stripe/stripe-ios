@@ -381,7 +381,6 @@ extension CustomerSheet_ConfirmFlowTests {
             client.collectBankAccountForSetup(clientSecret: clientSecret,
                                               returnURL: returnURL,
                                               additionalParameters: additionalParameters,
-                                              configuration: .init(),
                                               onEvent: nil,
                                               params: params,
                                               from: UIViewController()) { result, _, error in

@@ -285,7 +285,7 @@ extension CustomerAddPaymentMethodViewController {
             with: name,
             email: email
         )
-        let bankAccountCollectorStyle: STPBankAccountCollectorStyle = {
+        let bankAccountCollectorStyle: STPBankAccountCollectorUserInterfaceStyle = {
             switch configuration.style {
             case .automatic: return .automatic
             case .alwaysLight: return .alwaysLight
