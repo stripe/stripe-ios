@@ -1697,7 +1697,6 @@
 				610DB7FAF395AEBE6CBEFAC8 /* STPPaymentMethodAffirmParams.swift in Sources */,
 				0A0F8D842C98441D08F8D14E /* STPPaymentMethodAfterpayClearpay.swift in Sources */,
 				7D1A50DC86AA9993EB1640E9 /* STPPaymentMethodAfterpayClearpayParams.swift in Sources */,
-				4941EB5B2D5CEE450004806A /* STPBankAccountCollectorStyle.swift in Sources */,
 				47677A8DE9E3D36E3392F7DE /* STPPaymentMethodAlipay.swift in Sources */,
 				2A2E28C3C248CBE96D52A192 /* STPPaymentMethodAlipayParams.swift in Sources */,
 				7FFBE4CBDC4D3476819CBF4A /* STPPaymentMethodBLIK.swift in Sources */,
