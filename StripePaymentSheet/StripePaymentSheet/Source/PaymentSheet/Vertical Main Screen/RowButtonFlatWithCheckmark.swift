@@ -122,7 +122,7 @@ private extension RowButtonFlatWithCheckmark {
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            horizontalStackView.trailingAnchor.constraint(equalTo: checkmarkImageView.leadingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
