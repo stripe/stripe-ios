@@ -256,11 +256,11 @@ private extension PayWithLinkViewController {
             stpAssertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
             return
         }
-        
+
         let supportedPaymentDetailsTypes = linkAccount
             .supportedPaymentDetailsTypes(for: context.elementsSession)
             .toSortedArray()
-        
+
         linkAccount.listPaymentDetails(
             supportedTypes: supportedPaymentDetailsTypes
         ) { result in

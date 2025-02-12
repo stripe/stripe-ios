@@ -450,7 +450,6 @@ extension PaymentSheet {
                         confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
                         return
                     }
-                    
 
                     linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
                         switch result {
@@ -746,7 +745,7 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
 }
 
 private extension ConsumerPaymentDetails {
-    
+
     func expectedPaymentMethodTypeForPassthroughMode(
         _ elementsSession: STPElementsSession
     ) -> String? {

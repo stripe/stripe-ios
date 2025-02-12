@@ -121,7 +121,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
-        
+
         app.buttons["Card"].waitForExistenceAndTap()
         let numberField = app.textFields["Card number"]
         XCTAssertTrue(numberField.waitForExistence(timeout: 60.0))
@@ -2574,11 +2574,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testBankPaymentInNativeLinkInPaymentMethodMode() {
         testBankPaymentInNativeLink(passthroughMode: false)
     }
-    
+
     func testBankPaymentInNativeLinkInPassthroughMode() {
         testBankPaymentInNativeLink(passthroughMode: true)
     }
-    
+
     private func testBankPaymentInNativeLink(passthroughMode: Bool) {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .guest
@@ -2589,7 +2589,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.supportedPaymentMethods = passthroughMode ? "card" : "card,link"
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        
+
         // Enter OTC in dialog
         let textField = app.textViews["Code field"]
         XCTAssertTrue(textField.waitForExistence(timeout: 10.0))
@@ -2603,7 +2603,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
             .firstMatch
         XCTAssertTrue(bankRow.waitForExistenceAndTap())
 
-            
         app.buttons
             .matching(identifier: "Pay $50.99")
             .matching(NSPredicate(format: "isEnabled == true"))
