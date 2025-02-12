@@ -1004,7 +1004,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(paymentMethodLabel.exists)
         XCTAssertFalse(cashAppPayButton.isSelected)
     }
-    
+
     func testSwiftUI() throws {
         app.launch()
         XCTAssertTrue(app.buttons["EmbeddedPaymentElement (SwiftUI)"].waitForExistenceAndTap())
@@ -1013,6 +1013,14 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         try fillCardData(app)
         let continueButton = app.buttons["Continue"]
         XCTAssertTrue(continueButton.isEnabled)
+        continueButton.tap()
+
+        // Ensure we can present the card form via the "Change" button
+        let changeButton = app.buttons["Change"].firstMatch
+        let allButtons = app.buttons.allElementsBoundByIndex
+
+        XCTAssertTrue(changeButton.waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
         continueButton.tap()
 
         let confirmButton = app.buttons["Confirm Payment"]

@@ -107,15 +107,8 @@ extension CustomerSessionAdapter {
         return stripePaymentMethodId
     }
 
-    func fetchSelectedPaymentOption(for customerId: String, customer: ElementsCustomer? = nil) -> CustomerPaymentOption? {
-        // if opted in to the "set as default" feature, try to get default payment method from elements session
-        if configuration.allowsSetAsDefaultPM {
-            guard let customer = customer,
-                 let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return nil }
-            return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-        }
-
-        return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
+    func fetchSelectedPaymentOption(for customerId: String, elementsSession: STPElementsSession? = nil) -> CustomerPaymentOption? {
+        return CustomerPaymentOption.selectedPaymentMethod(for: customerId, elementsSession: elementsSession, surface: .customerSheet)
     }
 
     func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {

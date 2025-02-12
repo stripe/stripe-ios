@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// The response returned by v1/elements/sessions
-final class STPElementsSession: NSObject {
+@_spi(STP) public final class STPElementsSession: NSObject {
     #if DEBUG && targetEnvironment(simulator)
     public static let countryCodeOverride: String? = nil
     #endif
@@ -51,7 +51,7 @@ final class STPElementsSession: NSObject {
     /// A flag that indicates that this instance was created as a best-effort
     let isBackupInstance: Bool
 
-    let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     internal init(
         allResponseFields: [AnyHashable: Any],
@@ -211,6 +211,10 @@ extension STPElementsSession {
         return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
     }
 
+    var paymentMethodSetAsDefaultForPaymentSheet: Bool {
+        return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodSetAsDefault ?? false
+    }
+
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {
@@ -227,10 +231,14 @@ extension STPElementsSession {
         return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
     }
 
+    var paymentMethodSyncDefaultForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.features?.paymentMethodSyncDefault ?? false
+    }
+
     var isLinkCardBrand: Bool {
         linkSettings?.linkMode == .linkCardBrand
     }
-    
+
     var incentive: PaymentMethodIncentive? {
         linkSettings?.linkConsumerIncentive.flatMap(PaymentMethodIncentive.init)
     }
