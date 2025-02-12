@@ -26,7 +26,10 @@ final class RowButtonFloating: UIView, RowButtonContent {
     private let defaultBadgeLabel: UILabel?
     /// The view indicating any incentives associated with this payment method
     private let promoBadge: PromoBadgeView?
-
+    
+    private let insets: CGFloat
+    
+    
     // MARK: - State
 
     var isSelected: Bool = false {
@@ -43,7 +46,8 @@ final class RowButtonFloating: UIView, RowButtonContent {
         subtext: String? = nil,
         rightAccessoryView: UIView? = nil,
         defaultBadgeText: String?,
-        promoBadge: PromoBadgeView?
+        promoBadge: PromoBadgeView?,
+        insets: CGFloat
     ) {
         self.appearance = appearance
         self.imageView = imageView
@@ -52,7 +56,8 @@ final class RowButtonFloating: UIView, RowButtonContent {
         self.rightAccessoryView = rightAccessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
         self.promoBadge = promoBadge
-
+        self.insets = insets
+        
         super.init(frame: .zero)
         setupUI()
     }
@@ -97,8 +102,6 @@ private extension RowButtonFloating {
             }
 
         // MARK: - Constraints
-
-        let insets = appearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
             // Image view constraints
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
