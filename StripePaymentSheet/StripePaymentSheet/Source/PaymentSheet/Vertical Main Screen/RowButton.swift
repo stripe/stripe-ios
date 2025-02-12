@@ -78,7 +78,7 @@ class RowButton: UIView {
     ) {
         self.appearance = appearance
         self.type = type
-        self.shouldAnimateOnPress = true
+        self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.imageView = imageView
