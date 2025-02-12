@@ -47,8 +47,7 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
         subtext: String? = nil,
         rightAccessoryView: UIView? = nil,
         defaultBadgeText: String?,
-        promoBadge: PromoBadgeView?,
-        didTap: @escaping () -> Void
+        promoBadge: PromoBadgeView?
     ) {
         self.appearance = appearance
         self.imageView = imageView
@@ -57,9 +56,8 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
         self.rightAccessoryView = rightAccessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
         self.promoBadge = promoBadge
-        self.radioButton = RadioButton(appearance: appearance) {
-            didTap()
-        }
+        self.radioButton = RadioButton(appearance: appearance)
+        self.radioButton.isUserInteractionEnabled = false
 
         super.init(frame: .zero)
         setupUI()

@@ -104,7 +104,7 @@ class RowButton: UIView {
         shadowRoundedRect.isAccessibilityElement = true
         updateAccessibilityTraits()
 
-        // New early-exit for flatWithRadio
+        // Early-exit for flatWithRadio
         if isEmbedded && appearance.embeddedPaymentElement.row.style == .flatWithRadio {
             let rowButtonFlatWithRadioView = RowButtonFlatWithRadioView(
                 appearance: appearance,
@@ -113,16 +113,15 @@ class RowButton: UIView {
                 subtext: subtext,
                 rightAccessoryView: rightAccessoryView,
                 defaultBadgeText: badgeText,
-                promoBadge: promoBadge) { [weak self] in
-                    self?.handleTap()
-                }
+                promoBadge: promoBadge)
+
             addAndPinSubview(rowButtonFlatWithRadioView)
             self.content = rowButtonFlatWithRadioView
             makeSameHeightAsOtherRowButtonsIfNecessary()
             return // Skip the rest of the complicated layout
         }
 
-        // TOOD(porter) Refactor the rest of this for other row styles
+        // TOOD(porter) Refactor the rest of this for other row styles (floating and flat w/ check)
 
         // Label and sublabel
         label.isAccessibilityElement = false

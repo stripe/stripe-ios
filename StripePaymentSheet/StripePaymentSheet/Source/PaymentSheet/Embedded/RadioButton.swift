@@ -31,7 +31,7 @@ class RadioButton: UIView {
         appearance.embeddedPaymentElement.row.flat.radio.unselectedColor?.cgColor ?? appearance.colors.componentBorder.cgColor
     }
 
-    private let didTap: () -> Void
+    private let didTap: (() -> Void)?
 
     private lazy var outerCircle: CALayer = {
         let layer = CALayer()
@@ -56,7 +56,7 @@ class RadioButton: UIView {
         return CGSize(width: Constants.diameter, height: Constants.diameter)
     }
 
-    init(appearance: PaymentSheet.Appearance = .default, didTap: @escaping () -> Void) {
+    init(appearance: PaymentSheet.Appearance = .default, didTap: (() -> Void)? = nil) {
         self.appearance = appearance
         self.didTap = didTap
         super.init(frame: .zero)
@@ -92,7 +92,7 @@ class RadioButton: UIView {
     }
 
     @objc private func handleTap() {
-        didTap()
+        didTap?()
     }
 
 }
