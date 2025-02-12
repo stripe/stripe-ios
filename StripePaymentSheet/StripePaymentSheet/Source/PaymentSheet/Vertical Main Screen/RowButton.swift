@@ -120,8 +120,24 @@ class RowButton: UIView {
             makeSameHeightAsOtherRowButtonsIfNecessary()
             return // Skip the rest of the complicated layout
         }
+        
+        if appearance.embeddedPaymentElement.row.style == .floatingButton {
+            let rowButtonFloating = RowButtonFloating(
+                appearance: appearance,
+                imageView: imageView,
+                text: text,
+                subtext: subtext,
+                rightAccessoryView: rightAccessoryView,
+                defaultBadgeText: badgeText,
+                promoBadge: promoBadge)
 
-        // TOOD(porter) Refactor the rest of this for other row styles (floating and flat w/ check)
+            addAndPinSubview(rowButtonFloating)
+            self.content = rowButtonFloating
+            makeSameHeightAsOtherRowButtonsIfNecessary()
+            return // Skip the rest of the complicated layout
+        }
+
+        // TOOD(porter) Refactor the rest of this for other row styles (flat w/ check)
 
         addAndPinSubview(shadowRoundedRect)
 
