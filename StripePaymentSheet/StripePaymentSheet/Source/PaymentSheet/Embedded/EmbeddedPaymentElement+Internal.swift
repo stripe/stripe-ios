@@ -413,7 +413,8 @@ extension EmbeddedPaymentElement {
                 return (.failed(error: error), nil)
             }
         }
-
+        
+        embeddedPaymentMethodsView.isUserInteractionEnabled = false
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: authContext,
@@ -430,10 +431,11 @@ extension EmbeddedPaymentElement {
             deferredIntentConfirmationType: deferredIntentConfirmationType
         )
 
-        // If the confirmation was successful, disable user interaction
         if case .completed = result {
             hasConfirmedIntent = true
-            containerView.isUserInteractionEnabled = false
+        } else {
+            // Re-enable interaction for failed and canceled results
+            embeddedPaymentMethodsView.isUserInteractionEnabled = true
         }
 
         return (result, deferredIntentConfirmationType)
