@@ -5,9 +5,9 @@
 //  Created by Nick Porter on 1/30/25.
 //
 
-import SwiftUI
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import SwiftUI
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
@@ -30,7 +30,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         NSLayoutConstraint.activate([
             paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
             paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
         ])
 
         return containerView
@@ -38,7 +38,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
 
     public func updateUIView(_ uiView: UIView, context: Context) {
         guard let visibleVC = UIWindow.visibleViewController else { return }
-        
+
         // If visibleVC in the process of dismissing, skip for now and retry shortly.
         // updateUIView can be trigged by a view controller (such as a form) being dismissed
         guard !visibleVC.isBeingDismissed else {
