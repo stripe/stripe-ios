@@ -33,6 +33,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         let sheet = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: mockClientSecret,
             returnURL: nil,
+            configuration: .init(),
             analyticsClient: mockAnalyticsClient
         )
         sheet.present(from: mockViewController) { (_: FinancialConnectionsSheet.Result) in }
@@ -74,6 +75,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         _ = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: mockClientSecret,
             returnURL: nil,
+            configuration: .init(),
             analyticsClient: mockAnalyticsClient
         )
         XCTAssertEqual(mockAnalyticsClient.productUsage, ["FinancialConnectionsSheet"])
