@@ -80,11 +80,14 @@ private extension RowButtonFlatWithRadioView {
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
         
-        let trailingStackView = UIStackView(arrangedSubviews: [defaultBadgeLabel, rightAccessoryView].compactMap { $0 })
-        trailingStackView.alignment = .leading
-        trailingStackView.spacing = 8
         
-        [radioButton, imageView, labelsStackView, trailingStackView].compactMap { $0 }
+        let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView,
+                                                                 defaultBadgeLabel,
+                                                                 UIView.makeSpacerView(),
+                                                                 rightAccessoryView].compactMap { $0 })
+        horizontalStackView.spacing = 8
+        
+        [radioButton, imageView, horizontalStackView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
@@ -110,24 +113,11 @@ private extension RowButtonFlatWithRadioView {
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             // Label constraints
-            labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
-            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
-            
-            // Trailing view constraints
-            trailingStackView.leadingAnchor.constraint(equalTo: labelsStackView.trailingAnchor, constant: 0),
-            trailingStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            trailingStackView.centerYAnchor.constraint(equalTo: centerYAnchor)
+            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
+            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
+            horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
         ])
-        
-        // If we have an accessory, it goes to the right; else pin label to trailing
-//        if let accessory = rightAccessoryView {
-//            NSLayoutConstraint.activate([
-//                accessory.centerYAnchor.constraint(equalTo: centerYAnchor),
-//                accessory.leadingAnchor.constraint(greaterThanOrEqualTo: labelsStackView.trailingAnchor, constant: 8),
-//                accessory.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-//            ])
-//        }
     }
 }

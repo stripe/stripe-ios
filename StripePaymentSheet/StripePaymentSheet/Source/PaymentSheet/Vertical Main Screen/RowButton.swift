@@ -134,7 +134,7 @@ class RowButton: UIView {
                 text: text,
                 subtext: subtext,
                 rightAccessoryView: rightAccessoryView,
-                defaultBadgeText: "Default") { [weak self] in
+                defaultBadgeText: badgeText) { [weak self] in
                     self?.handleTap()
                 }
             addAndPinSubview(rowButtonFlatWithRadioView)
