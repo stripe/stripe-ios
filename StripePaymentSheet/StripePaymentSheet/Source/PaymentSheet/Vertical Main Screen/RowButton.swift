@@ -397,7 +397,12 @@ class RowButton: UIView {
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        let isSublabelTextEmpty = sublabel.text?.isEmpty ?? !(content?.hasSubtext ?? true)
+        let isSublabelTextEmpty = {
+            if let content {
+                return !content.hasSubtext
+            }
+            return sublabel.text?.isEmpty ?? true
+        }()
         guard isSublabelTextEmpty else {
             heightConstraint?.isActive = false
             return
