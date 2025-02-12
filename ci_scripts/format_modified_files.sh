@@ -24,11 +24,11 @@ if ! command -v swiftlint &> /dev/null; then
 fi
 
 IS_HOOK=false
-if [ $(dirname $0) == ".git/hooks" ]; then
+if [ $(dirname "$0") == ".git/hooks" ]; then
   IS_HOOK=true
 fi
 
-START=`date +%s`
+START=$(date +%s)
 
 if [ "$IS_HOOK" = true ]; then
   echo "Formatting before commit (use $(tput setaf 7)git commit --no-verify$(tput sgr0) to skip)."
@@ -41,10 +41,12 @@ if [ "$CURRENT_BRANCH" == "master" ]; then
   echo "Can't format on master branch"
   exit 1
 else
+  # Calculate the merge base between origin/master and HEAD.
+  MERGE_BASE=$(git merge-base origin/master HEAD)
   while IFS= read -r file; do
     export SCRIPT_INPUT_FILE_$count="$file"
     count=$((count + 1))
-  done < <(git diff --diff-filter=AM --name-only origin/master  | grep ".swift$")
+  done < <(git diff --diff-filter=AM --name-only "$MERGE_BASE" | grep ".swift$")
 fi
 
 export SCRIPT_INPUT_FILE_COUNT=$count
@@ -55,7 +57,7 @@ fi
 
 EXIT_CODE=$?
 
-END=`date +%s`
+END=$(date +%s)
 echo ""
 echo "Formatted in $(($END - $START))s."
 if [ "$EXIT_CODE" == '0' ]; then

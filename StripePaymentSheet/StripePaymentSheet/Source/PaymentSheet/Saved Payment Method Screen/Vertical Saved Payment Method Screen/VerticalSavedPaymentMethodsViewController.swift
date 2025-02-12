@@ -35,6 +35,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let elementsSession: STPElementsSession
     private let configuration: PaymentElementConfiguration
     private let paymentMethodRemove: Bool
+    private let paymentMethodSetAsDefault: Bool
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
@@ -98,7 +99,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         guard hasSupportedSavedPaymentMethods else {
             fatalError("Saved payment methods contain unsupported payment methods.")
         }
-        return configuration.allowsSetAsDefaultPM || canRemovePaymentMethods || canEditPaymentMethods
+        return paymentMethodSetAsDefault || canRemovePaymentMethods || canEditPaymentMethods
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
@@ -172,6 +173,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
@@ -180,7 +182,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func isDefaultPaymentMethod(paymentMethodId: String) -> Bool {
-        guard configuration.allowsSetAsDefaultPM, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
+        guard paymentMethodSetAsDefault, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
         return paymentMethodId == defaultPaymentMethod.stripeId
     }
 
@@ -339,8 +341,10 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                            cardBrandFilter: configuration.cardBrandFilter,
                                                            canRemove: canRemovePaymentMethods,
                                                            isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
-                                                           allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
-                                                           isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
+                                                           canSetAsDefaultPM: paymentMethodSetAsDefault,
+                                                           isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId)
+        )
+
         let updateViewController = UpdatePaymentMethodViewController(
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                             isTestMode: configuration.apiClient.isTestmode,
@@ -387,11 +391,14 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         }
 
         // Create the new button
-        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance, showDefaultPMBadge: isDefaultPaymentMethod(paymentMethodId: updatedPaymentMethod.stripeId))
+        let isDefaultPaymentMethod = isDefaultPaymentMethod(paymentMethodId: updatedPaymentMethod.stripeId)
+        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod,
+                                                    appearance: configuration.appearance,
+                                                    showDefaultPMBadge: isDefaultPaymentMethod,
+                                                    previousSelectedState: oldButton.previousSelectedState,
+                                                    currentState: oldButton.state)
 
         newButton.delegate = self
-        newButton.previousSelectedState = oldButton.previousSelectedState
-        newButton.state = oldButton.state
 
         // Replace the old button with the new button in the model
         paymentMethodRows[oldButtonModelIndex] = newButton

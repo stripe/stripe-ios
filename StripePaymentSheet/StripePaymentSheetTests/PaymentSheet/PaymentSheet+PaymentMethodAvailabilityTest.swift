@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 1/22/25.
 //
 
-@testable @_spi(CardBrandFilteringBeta) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
 import XCTest
 
 final class PaymentMethodAvailabilityTest: XCTestCase {

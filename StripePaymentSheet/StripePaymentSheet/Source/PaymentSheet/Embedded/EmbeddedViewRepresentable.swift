@@ -37,8 +37,21 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
     }
 
     public func updateUIView(_ uiView: UIView, context: Context) {
-        // Update the presenting view controller in case it has changed
-        viewModel.embeddedPaymentElement?.presentingViewController = UIWindow.visibleViewController
+        guard let visibleVC = UIWindow.visibleViewController else { return }
+
+        // If visibleVC in the process of dismissing, skip for now and retry shortly.
+        // updateUIView can be trigged by a view controller (such as a form) being dismissed
+        guard !visibleVC.isBeingDismissed else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                // Re-trigger SwiftUI’s update cycle
+                viewModel.objectWillChange.send()
+            }
+            return
+        }
+
+        if !(visibleVC is StripePaymentSheet.BottomSheetViewController) {
+            viewModel.embeddedPaymentElement?.presentingViewController = visibleVC
+        }
     }
 }
 

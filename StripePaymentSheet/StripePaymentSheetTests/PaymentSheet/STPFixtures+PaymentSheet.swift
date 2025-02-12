@@ -41,6 +41,37 @@ public extension EmbeddedPaymentElement.Configuration {
 }
 
 extension STPElementsSession {
+    static func _testValue(
+        orderedPaymentMethodTypes: [STPPaymentMethodType] = [.card],
+        unactivatedPaymentMethodTypes: [STPPaymentMethodType] = [],
+        countryCode: String? = nil,
+        merchantCountryCode: String? = nil,
+        linkSettings: LinkSettings? = nil,
+        flags: [String: Bool] = [:],
+        paymentMethodSpecs: [[AnyHashable: Any]]? = nil,
+        cardBrandChoice: STPCardBrandChoice? = nil,
+        isApplePayEnabled: Bool = true,
+        externalPaymentMethods: [ExternalPaymentMethod] = [],
+        customer: ElementsCustomer? = nil,
+        isBackupInstance: Bool = false
+    ) -> STPElementsSession {
+        return .init(
+            allResponseFields: [:],
+            sessionID: "test_123",
+            orderedPaymentMethodTypes: orderedPaymentMethodTypes,
+            unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
+            countryCode: countryCode,
+            merchantCountryCode: merchantCountryCode,
+            linkSettings: linkSettings,
+            flags: flags,
+            paymentMethodSpecs: paymentMethodSpecs,
+            cardBrandChoice: cardBrandChoice,
+            isApplePayEnabled: isApplePayEnabled,
+            externalPaymentMethods: externalPaymentMethods,
+            customer: customer
+        )
+    }
+
     static func _testCardValue() -> STPElementsSession {
         return _testValue(paymentMethodTypes: ["card"])
     }
@@ -51,11 +82,12 @@ extension STPElementsSession {
                 "enabled": true,
                 "features": ["payment_method_save": "enabled",
                              "payment_method_remove": "enabled",
+                             "payment_method_set_as_default": "enabled",
                             ],
             ],
             "customer_sheet": [
                 "enabled": false,
-            ], ], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
+            ], ], defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
     }
 
     static func _testValue(
@@ -67,7 +99,6 @@ extension STPElementsSession {
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         disableLinkSignup: Bool? = nil,
-        allowsSetAsDefaultPM: Bool = false,
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
@@ -95,7 +126,7 @@ extension STPElementsSession {
                                     "components": customerSessionData,
                                     ],
                                 ]
-            if allowsSetAsDefaultPM, let defaultPaymentMethod {
+            if let defaultPaymentMethod {
                 json[jsonDict: "customer"]?["default_payment_method"] = defaultPaymentMethod
             }
             if let paymentMethods {
@@ -168,6 +199,7 @@ extension STPElementsSession {
                     "enabled": true,
                     "features": ["payment_method_save": "enabled",
                                  "payment_method_remove": "enabled",
+                                 "payment_method_set_as_default": "enabled",
                                 ],
                 ],
                 "customer_sheet": [
@@ -179,8 +211,7 @@ extension STPElementsSession {
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
             linkMode: linkMode,
-            linkFundingSources: linkFundingSources,
-            allowsSetAsDefaultPM: allowsSetAsDefaultPM
+            linkFundingSources: linkFundingSources
         )
     }
 }
@@ -386,5 +417,16 @@ extension PaymentSheetFormFactory {
 extension LinkAccountService {
     static func _testValue() -> Self {
         .init(apiClient: STPAPIClient(publishableKey: "pk_test"), elementsSession: .emptyElementsSession)
+    }
+}
+
+extension STPCardBrandChoice {
+    static func _testValue() -> STPCardBrandChoice {
+        return .init(
+            eligible: true,
+            preferredNetworks: [],
+            supportedCobrandedNetworks: [:],
+            allResponseFields: [:]
+        )
     }
 }

@@ -105,7 +105,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
-        guard viewModel.allowsSetAsDefaultPM && PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
+        guard viewModel.canSetAsDefaultPM && PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
             viewModel.paymentMethod.type == $0
         }) else { return nil }
         return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [weak self] isSelected in

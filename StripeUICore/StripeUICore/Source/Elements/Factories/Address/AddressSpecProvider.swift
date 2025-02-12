@@ -56,6 +56,14 @@ let addressDataFilename = "localized_address_data"
         }
     }
 
+    public func loadAddressSpecs() async {
+        await withCheckedContinuation { continuation in
+            loadAddressSpecs {
+                continuation.resume()
+            }
+        }
+    }
+
     func addressSpec(for country: String) -> AddressSpec {
         guard let spec = addressSpecs[country] else {
             return AddressSpec.default

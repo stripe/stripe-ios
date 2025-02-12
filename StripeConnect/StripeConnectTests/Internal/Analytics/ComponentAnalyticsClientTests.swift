@@ -100,6 +100,15 @@ class ComponentAnalyticsClientTests: XCTestCase {
         XCTAssertEqual(mockClient.loggedAnalyticsPayloads.count, 1)
     }
 
+    func testLogAccountSessionClaimed() throws {
+        client.pageViewId = "1234"
+
+        client.logAccountSessionClaimed()
+        let payload = try XCTUnwrap(mockClient.loggedAnalyticsPayloads.last)
+        XCTAssertEqual(payload["event_name"] as? String, "component.web.account_session_claimed")
+        XCTAssertEqual(payload["page_view_id"] as? String, "1234")
+    }
+
     func testLogUnexpectedLoadErrorType() throws {
         client.pageViewId = "1234"
         client.logUnexpectedLoadErrorType(type: "some_type")

@@ -87,7 +87,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             form.getTextFieldElement("City").setText("asdf")
             form.getTextFieldElement("ZIP").setText("12345")
             XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 17)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 16)
         }
     }
 
@@ -460,13 +460,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         configuration.returnURL = "https://foo.com"
         configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.customer = customerConfig
-        configuration.allowsSetAsDefaultPM = true
         try await _testConfirm(
             intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
             currency: "USD",
             paymentMethodType: .card,
             merchantCountry: .US,
-            configuration: configuration
+            configuration: configuration,
+            allowsSetAsDefaultPM: true
         ) { form in
             form.getCardSection().panElement.setText("4242424242424242")
             form.getCardSection().expiryElement.setText("1228")
@@ -586,6 +586,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
         defaultCountry: String = "US",
+        allowsSetAsDefaultPM: Bool = false,
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
         for intentKind in intentKinds {
@@ -597,6 +598,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 merchantCountry: merchantCountry,
                 configuration: configuration,
                 defaultCountry: defaultCountry,
+                allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 formCompleter: formCompleter
             )
         }
@@ -620,6 +622,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
         defaultCountry: String,
+        allowsSetAsDefaultPM: Bool = false,
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
@@ -650,7 +653,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         for (description, intent) in intents {
 
             func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
-                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
             }
             // Make the form
             let formVC = makeFormVC(previousCustomerInput: nil)

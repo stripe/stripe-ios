@@ -167,6 +167,7 @@ public class CustomerSheet {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
+                let paymentMethodSyncDefault = customerSheetDataSource.paymentMethodSyncDefault(elementsSession: elementsSession)
                 let allowsRemovalOfLastSavedPaymentMethod = CustomerSheet.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: self.configuration)
                 self.present(from: presentingViewController,
                              customerID: elementsSession.customer?.customerSession.customer,
@@ -175,6 +176,7 @@ public class CustomerSheet {
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                              customerSheetDataSource: customerSheetDataSource,
                              paymentMethodRemove: paymentMethodRemove,
+                             paymentMethodSyncDefault: paymentMethodSyncDefault,
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
@@ -200,6 +202,7 @@ public class CustomerSheet {
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
                  customerSheetDataSource: CustomerSheetDataSource,
                  paymentMethodRemove: Bool,
+                 paymentMethodSyncDefault: Bool,
                  allowsRemovalOfLastSavedPaymentMethod: Bool,
                  cbcEligible: Bool) {
         let loadSpecsPromise = Promise<Void>()
@@ -217,6 +220,7 @@ public class CustomerSheet {
                                                                                 customerSheetDataSource: customerSheetDataSource,
                                                                                 isApplePayEnabled: isApplePayEnabled,
                                                                                 paymentMethodRemove: paymentMethodRemove,
+                                                                                paymentMethodSyncDefault: paymentMethodSyncDefault,
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
                                                                                 csCompletion: self.csCompletion,
@@ -329,18 +333,7 @@ extension CustomerSheet {
         switch customerSheetDataSource.dataSource {
         case .customerSession(let customerSessionAdapter):
             let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
-
-            var selectedPaymentOption: CustomerPaymentOption?
-
-            // if opted in to the "set as default" feature, try to get default payment method from elements session
-            if configuration.allowsSetAsDefaultPM {
-                guard let customer = elementsSession.customer,
-                    let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return nil }
-                selectedPaymentOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-            } else {
-                selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
-            }
-
+            let selectedPaymentOption = CustomerPaymentOption.selectedPaymentMethod(for: customerSessionClientSecret.customerId, elementsSession: elementsSession, surface: .customerSheet)
             switch selectedPaymentOption {
             case .applePay:
                 return .applePay()

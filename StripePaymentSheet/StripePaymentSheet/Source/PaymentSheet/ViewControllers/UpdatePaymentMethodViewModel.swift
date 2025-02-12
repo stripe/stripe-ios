@@ -20,7 +20,7 @@ class UpdatePaymentMethodViewModel {
     let cardBrandFilter: CardBrandFilter
     let canRemove: Bool
     let isCBCEligible: Bool
-    let allowsSetAsDefaultPM: Bool
+    let canSetAsDefaultPM: Bool
     let isDefault: Bool
 
     var selectedCardBrand: STPCardBrand?
@@ -28,7 +28,7 @@ class UpdatePaymentMethodViewModel {
     var hasChangedCardBrand: Bool = false
     var hasChangedDefaultPaymentMethodCheckbox: Bool = false
     var canEdit: Bool {
-        return canUpdateCardBrand || allowsSetAsDefaultPM
+        return canUpdateCardBrand || canSetAsDefaultPM
     }
     var hasUpdates: Bool {
         return hasChangedCardBrand || hasChangedDefaultPaymentMethodCheckbox
@@ -68,7 +68,7 @@ class UpdatePaymentMethodViewModel {
         }
     }()
 
-    init(customerID: String?, paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    init(customerID: String?, paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, canSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         guard PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) else {
             fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
@@ -79,7 +79,7 @@ class UpdatePaymentMethodViewModel {
         self.cardBrandFilter = cardBrandFilter
         self.canRemove = canRemove
         self.isCBCEligible = isCBCEligible
-        self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
+        self.canSetAsDefaultPM = canSetAsDefaultPM
         self.isDefault = isDefault
     }
 }

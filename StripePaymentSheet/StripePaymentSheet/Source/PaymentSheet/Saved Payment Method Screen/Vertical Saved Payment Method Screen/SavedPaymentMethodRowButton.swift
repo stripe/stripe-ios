@@ -25,6 +25,11 @@ final class SavedPaymentMethodRowButton: UIView {
     }
 
     // MARK: Internal properties
+
+    let paymentMethod: STPPaymentMethod
+    let showDefaultPMBadge: Bool
+    weak var delegate: SavedPaymentMethodRowButtonDelegate?
+
     var state: State = .unselected {
         didSet {
             if oldValue == .selected || oldValue == .unselected {
@@ -32,11 +37,9 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            chevronButton.isHidden = !canUpdate && !canRemove
+            chevronButton.isHidden = !isEditing
         }
     }
-
-    var previousSelectedState: State = .unselected
 
     var isSelected: Bool {
         switch state {
@@ -47,7 +50,9 @@ final class SavedPaymentMethodRowButton: UIView {
         }
     }
 
-    let showDefaultPMBadge: Bool
+    // MARK: - Private properties
+
+    private let appearance: PaymentSheet.Appearance
 
     private var isEditing: Bool {
         switch state {
@@ -58,40 +63,17 @@ final class SavedPaymentMethodRowButton: UIView {
         }
     }
 
-    private var canUpdate: Bool {
-        switch state {
-        case .selected, .unselected:
-            return false
-        case .editing(_, let allowsUpdating):
-            return allowsUpdating
-        }
-    }
-
-    private var canRemove: Bool {
-        switch state {
-        case .selected, .unselected:
-            return false
-        case .editing(let allowsRemoval, _):
-            return allowsRemoval
-        }
-    }
-
-    weak var delegate: SavedPaymentMethodRowButtonDelegate?
-
-    // MARK: Internal/private properties
-    let paymentMethod: STPPaymentMethod
-    private let appearance: PaymentSheet.Appearance
+    private(set) var previousSelectedState: State = .unselected
 
     // MARK: Private views
 
-    private lazy var chevronButton: RowButton.RightAccessoryButton = {
+    private(set) lazy var chevronButton: RowButton.RightAccessoryButton = {
         let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: appearance, didTap: handleUpdateButtonTapped)
-        chevronButton.isHidden = true
-        chevronButton.isUserInteractionEnabled = isEditing
+        chevronButton.isHidden = !isEditing
         return chevronButton
     }()
 
-    private lazy var rowButton: RowButton = {
+    private(set) lazy var rowButton: RowButton = {
         let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: badgeText, rightAccessoryView: chevronButton, didTap: handleRowButtonTapped)
 
         return button
@@ -103,10 +85,14 @@ final class SavedPaymentMethodRowButton: UIView {
 
     init(paymentMethod: STPPaymentMethod,
          appearance: PaymentSheet.Appearance,
-         showDefaultPMBadge: Bool = false) {
+         showDefaultPMBadge: Bool = false,
+         previousSelectedState: State = .unselected,
+         currentState: State = .unselected) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
         self.showDefaultPMBadge = showDefaultPMBadge
+        self.previousSelectedState = previousSelectedState
+        self.state = currentState
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)

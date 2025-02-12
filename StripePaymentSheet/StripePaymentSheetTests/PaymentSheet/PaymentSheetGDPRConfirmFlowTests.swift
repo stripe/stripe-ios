@@ -9,7 +9,7 @@ import XCTest
 import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 

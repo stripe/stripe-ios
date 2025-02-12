@@ -25,6 +25,7 @@ class EmbeddedViewRepresentableSnapshotTest: STPSnapshotTestCase {
         }
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        config.paymentMethodOrder = intentConfig.paymentMethodTypes
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         // Create our SwiftUI view

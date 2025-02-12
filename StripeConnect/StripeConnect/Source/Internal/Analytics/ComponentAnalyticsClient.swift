@@ -132,6 +132,14 @@ class ComponentAnalyticsClient {
         loggedComponentLoaded = true
     }
 
+    /// The component successfully claimed the session within the web view.
+    /// Triggered from `accountSessionClaimed` message handler from the web view.
+    func logAccountSessionClaimed() {
+        log(event: ComponentAccountSessionClaimed(metadata: .init(
+            pageViewId: pageViewId
+        )))
+    }
+
     /// The web view sends an onLoadError that can’t be deserialized by the SDK.
     /// - Parameter type: The error `type` property from web
     func logUnexpectedLoadErrorType(type: String) {

@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (オプション)";
 
+"(not accepted)" = "(受け付けられません)";
+
 "Account number" = "アカウント番号";
 
 "Address" = "住所";

@@ -142,12 +142,20 @@ extension STPTestingAPIClient {
 
     func fetchCustomerAndCustomerSessionClientSecret(
         customerID: String? = nil,
-        merchantCountry: String? = "us"
+        merchantCountry: String? = "us",
+        paymentMethodSave: Bool = true,
+        paymentMethodRemove: Bool = true,
+        paymentMethodSetAsDefault: Bool = false
     ) async throws -> CreateCustomerSessionResponse {
-        let params = [
+        let params: [String: Any?] = [
             "component_name": "mobile_payment_element",
             "customer_id": customerID,
             "account": merchantCountry,
+            "features": [
+                "payment_method_save": paymentMethodSave ? "enabled" : "disabled",
+                "payment_method_remove": paymentMethodRemove ? "enabled" : "disabled",
+                "payment_method_set_as_default": paymentMethodSetAsDefault ? "enabled" : "disabled",
+            ],
         ]
         return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
     }
@@ -156,7 +164,7 @@ extension STPTestingAPIClient {
 
     fileprivate func makeRequest<ResponseType: Decodable>(
         endpoint: String,
-        params: [String: String?]
+        params: [String: Any?]
     ) async throws -> ResponseType {
         let session = URLSession(configuration: sessionConfig)
         let url = URL(string: STPTestingAPIClient.STPTestingBackendURL + endpoint)!
