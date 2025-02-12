@@ -22,5 +22,6 @@ protocol RowButtonContent: UIView {
     /// - Parameter text: The text to be displayed in the sublabel. If nil or empty, the sublabel should be hidden.
     func setSublabel(text: String?)
 
-    var sublabel: UILabel { get }
+    /// A boolean that indicates if this content view is displaying any subtext
+    var hasSubtext: Bool { get }
 }
