@@ -120,7 +120,8 @@ class RowButton: UIView {
             makeSameHeightAsOtherRowButtonsIfNecessary()
             return // Skip the rest of the complicated layout
         }
-        
+
+        // Added this!
         if !isEmbedded || appearance.embeddedPaymentElement.row.style == .floatingButton {
             let insets = isEmbedded ? appearance.embeddedPaymentElement.row.additionalInsets : 4
             let rowButtonFloating = RowButtonFloating(
@@ -372,7 +373,7 @@ class RowButton: UIView {
         [imageView, label, sublabel, defaultBadge, promoBadge].compactMap { $0 }.forEach {
             $0.alpha = alpha
         }
-        
+
         content?.subviews.map { $0 }.forEach {
             $0.alpha = alpha
         }
@@ -397,7 +398,8 @@ class RowButton: UIView {
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        guard sublabel.text?.isEmpty ?? true else {
+        let isSublabelTextEmpty = sublabel.text?.isEmpty ?? content?.sublabel.text?.isEmpty ?? true
+        guard isSublabelTextEmpty else {
             heightConstraint?.isActive = false
             return
         }
@@ -471,6 +473,7 @@ extension RowButton {
         sublabel.text = text
         sublabel.textColor = appearance.colors.componentPlaceholderText
         sublabel.isHidden = text?.isEmpty ?? true
+        sublabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         return sublabel
     }
 
