@@ -19,14 +19,14 @@ final class RowButtonFloating: UIView, RowButtonContent {
     /// The main label for the payment method name
     private let label: UILabel
     /// The subtitle label, e.g. “Pay over time with Affirm”
-    let sublabel: UILabel
+    private let sublabel: UILabel
     /// For layout convenience: if we have an accessory view to the right (e.g. a brand logo, etc.)
     private let rightAccessoryView: UIView?
     /// The label indicating if this is the default saved payment method
     private let defaultBadgeLabel: UILabel?
     /// The view indicating any incentives associated with this payment method
     private let promoBadge: PromoBadgeView?
-
+    /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
     private let insets: CGFloat
 
     // MARK: - State
