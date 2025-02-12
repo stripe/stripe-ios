@@ -95,7 +95,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            paymentInfo: LinkURLParams.PaymentInfo(currency: "EUR", amount: 100),
                                            experiments: [:],
                                            flags: ["cbc_in_link_popup": true,
-                                                   "disable_cbc_in_link_popup": false,],
+                                                   "disable_cbc_in_link_popup": false, ],
                                            loggerMetadata: ["mobile_session_id": sessionID],
                                            locale: Locale.init(identifier: "en_US").toLanguageTag(),
                                            intentMode: .payment,
@@ -140,7 +140,7 @@ extension STPElementsSession {
                                           "session_id": "123",
                                           "apple_pay_preference": "enabled",
                                           "link_settings": ["link_funding_sources": ["card"],
-                                            "link_passthrough_mode_enabled": true,],
+                                            "link_passthrough_mode_enabled": true, ],
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
