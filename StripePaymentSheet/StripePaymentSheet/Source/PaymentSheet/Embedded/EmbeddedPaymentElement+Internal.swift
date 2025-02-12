@@ -169,7 +169,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
-            let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+            let updateViewModel = UpdatePaymentMethodViewModel(customerID: elementsSession.customer?.customerSession.customer,
+                                                               paymentMethod: paymentMethod,
                                                                appearance: configuration.appearance,
                                                                hostedSurface: .paymentSheet,
                                                                cardBrandFilter: configuration.cardBrandFilter,
@@ -218,7 +219,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         presentingViewController?.dismiss(animated: true)
     }
 
-    func didUpdate(viewController: UpdatePaymentMethodViewController,
+    func didUpdateCardBrand(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod,
                    updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
@@ -227,6 +228,23 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
+
+        let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
+        let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
+        embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
+                                                               isSelected: isSelected,
+                                                               accessoryType: accessoryType)
+        presentingViewController?.dismiss(animated: true)
+    }
+
+    func didUpdateDefault(viewController: UpdatePaymentMethodViewController,
+                   paymentMethod: StripePayments.STPPaymentMethod,
+                   customerID: String) async throws {
+        let _ = try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
+
+        // Update savedPaymentMethods
+        self.savedPaymentMethods.remove(paymentMethod)
+        self.savedPaymentMethods.insert(paymentMethod, at: 0)
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false

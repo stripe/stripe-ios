@@ -1400,6 +1400,40 @@ extension STPAPIClient {
             }
         })
     }
+
+    @_spi(STP) public func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        for customerID: String,
+        using ephemeralKey: String,
+        completion: @escaping STPCustomerCompletionBlock
+    ) {
+        APIRequest<STPCustomer>.post(
+            with: self,
+            endpoint: "elements/customers/\(customerID)/set_default_payment_method",
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            parameters: [
+                "payment_method": paymentMethodID
+            ]
+        ) { customer, _, error in
+            completion(customer, error)
+        }
+    }
+
+    @_spi(STP) public func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        for customerID: String,
+        using ephemeralKey: String
+    ) async throws -> STPCustomer {
+        try await withCheckedThrowingContinuation({ continuation in
+            self.setAsDefaultPaymentMethod(paymentMethodID, for: customerID, using: ephemeralKey) { customer, error in
+                guard let customer = customer else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
+                    return
+                }
+                continuation.resume(returning: customer)
+            }
+        })
+    }
 }
 
 private let APIEndpointToken = "tokens"
@@ -1409,6 +1443,7 @@ private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 @_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpointElementsPaymentMethods = "elements/payment_methods"
+private let APIEndpointElementsCustomer = "elements/customer"
 private let APIEndpoint3DS2 = "3ds2"
 private let PaymentMethodDataHash = "payment_method_data"
 private let SourceDataHash = "source_data"

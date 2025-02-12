@@ -490,7 +490,8 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
     func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
         // no-op
     }
-    func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
+
+    func didSelectUpdateCardBrand(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection else {
@@ -499,6 +500,16 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
         return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
                                                           with: updateParams)
+    }
+
+    func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,
+                         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+                                customerID: String) async throws -> STPCustomer {
+        guard case .saved(let paymentMethod) = paymentMethodSelection else {
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
+        }
+
+        return try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
     }
 
     func didUpdateSelection(

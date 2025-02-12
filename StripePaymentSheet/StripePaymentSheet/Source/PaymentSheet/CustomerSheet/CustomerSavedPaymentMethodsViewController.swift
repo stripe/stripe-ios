@@ -29,6 +29,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     // MARK: - Read-only Properties
+    let customerID: String?
     let selectedPaymentMethodOption: CustomerPaymentOption?
     let isApplePayEnabled: Bool
     let configuration: CustomerSheet.Configuration
@@ -100,6 +101,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     private lazy var savedPaymentOptionsViewController: CustomerSavedPaymentMethodsCollectionViewController = {
         return CustomerSavedPaymentMethodsCollectionViewController(
+            customerID: customerID,
             savedPaymentMethods: savedPaymentMethods,
             selectedPaymentMethodOption: selectedPaymentMethodOption,
             mostRecentlyAddedPaymentMethod: nil,
@@ -144,6 +146,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     required init(
+        customerID: String?,
         savedPaymentMethods: [STPPaymentMethod],
         selectedPaymentMethodOption: CustomerPaymentOption?,
         merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
@@ -156,6 +159,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
     ) {
+        self.customerID = customerID
         self.savedPaymentMethods = savedPaymentMethods
         self.selectedPaymentMethodOption = selectedPaymentMethodOption
         self.merchantSupportedPaymentMethodTypes = merchantSupportedPaymentMethodTypes
@@ -654,6 +658,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
     private func reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: CustomerPaymentOption?) {
         self.savedPaymentOptionsViewController = CustomerSavedPaymentMethodsCollectionViewController(
+            customerID: customerID,
             savedPaymentMethods: self.savedPaymentMethods,
             selectedPaymentMethodOption: selectedPaymentMethodOption,
             mostRecentlyAddedPaymentMethod: mostRecentlyAddedPaymentMethod,
@@ -927,7 +932,7 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
             }
         }
 
-    func didSelectUpdate(viewController: CustomerSavedPaymentMethodsCollectionViewController,
+    func didSelectUpdateCardBrand(viewController: CustomerSavedPaymentMethodsCollectionViewController,
                          paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
                          updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection
@@ -935,6 +940,16 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method")
         }
         return try await customerSheetDataSource.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
+    }
+
+    func didSelectUpdateDefault(viewController: CustomerSavedPaymentMethodsCollectionViewController,
+                         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
+                         customerID: String) async throws -> STPCustomer? {
+        guard case .saved(let paymentMethod) = paymentMethodSelection
+        else {
+            throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method")
+        }
+        return try await customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId, customerID: customerID)
     }
 
     func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController) {

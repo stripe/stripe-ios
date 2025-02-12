@@ -613,7 +613,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
-            let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+            let updateViewModel = UpdatePaymentMethodViewModel(customerID: elementsSession.customer?.customerSession.customer,
+                                                               paymentMethod: paymentMethod,
                                                                appearance: configuration.appearance,
                                                                hostedSurface: .paymentSheet,
                                                                cardBrandFilter: configuration.cardBrandFilter,
@@ -865,7 +866,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    func didUpdateCardBrand(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         // Update the payment method
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
@@ -873,6 +874,19 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
+
+        // Update UI
+        regenerateUI()
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    func didUpdateDefault(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, customerID: String) async throws {
+        // Update the payment method
+        let _ = try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
+
+        // Update savedPaymentMethods
+        self.savedPaymentMethods.remove(paymentMethod)
+        self.savedPaymentMethods.insert(paymentMethod, at: 0)
 
         // Update UI
         regenerateUI()

@@ -231,8 +231,8 @@ import Foundation
     case paymentSheetOpenCardBrandDropdown = "mc_open_cbc_dropdown"
     case paymentSheetCloseCardBrandDropDown = "mc_close_cbc_dropdown"
     case paymentSheetOpenCardBrandEditScreen = "mc_open_edit_screen"
-    case paymentSheetUpdateCardBrand = "mc_update_card"
-    case paymentSheetUpdateCardBrandFailed = "mc_update_card_failed"
+    case paymentSheetUpdateCard = "mc_update_card"
+    case paymentSheetUpdateCardFailed = "mc_update_card_failed"
     case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
     case paymentSheetDisallowedCardBrand = "mc_disallowed_card_brand"
 
@@ -241,8 +241,8 @@ import Foundation
     case customerSheetOpenCardBrandDropdown = "cs_open_cbc_dropdown"
     case customerSheetCloseCardBrandDropDown = "cs_close_cbc_dropdown"
     case customerSheetOpenCardBrandEditScreen = "cs_open_edit_screen"
-    case customerSheetUpdateCardBrand = "cs_update_card"
-    case customerSheetUpdateCardBrandFailed = "cs_update_card_failed"
+    case customerSheetUpdateCard = "cs_update_card"
+    case customerSheetUpdateCardFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
     // MARK: - Basic Integration

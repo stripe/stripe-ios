@@ -22,7 +22,7 @@ enum HostedSurface {
         }
     }
 
-    func analyticEvent(for event: CardBrandChoiceEvents) -> STPAnalyticEvent {
+    func analyticEvent(for event: CardUpdateEvents) -> STPAnalyticEvent {
         switch (event, self) {
         case (.displayCardBrandDropdownIndicator, .paymentSheet):
             return .paymentSheetDisplayCardBrandDropdownIndicator
@@ -33,9 +33,13 @@ enum HostedSurface {
         case (.openCardBrandEditScreen, .paymentSheet):
             return .paymentSheetOpenCardBrandEditScreen
         case (.updateCardBrand, .paymentSheet):
-            return .paymentSheetUpdateCardBrand
+            return .paymentSheetUpdateCard
         case (.updateCardBrandFailed, .paymentSheet):
-            return .paymentSheetUpdateCardBrandFailed
+            return .paymentSheetUpdateCardFailed
+        case (.updateDefaultPaymentMethod, .paymentSheet):
+            return .paymentSheetUpdateCard
+        case (.updateDefaultPaymentMethodFailed, .paymentSheet):
+            return .paymentSheetUpdateCardFailed
         case (.closeEditScreen, .paymentSheet):
             return .paymentSheetClosesEditScreen
         case (.displayCardBrandDropdownIndicator, .customerSheet):
@@ -47,16 +51,20 @@ enum HostedSurface {
         case (.openCardBrandEditScreen, .customerSheet):
             return .customerSheetOpenCardBrandEditScreen
         case (.updateCardBrand, .customerSheet):
-            return .customerSheetUpdateCardBrand
+            return .customerSheetUpdateCard
         case (.updateCardBrandFailed, .customerSheet):
-            return .customerSheetUpdateCardBrandFailed
+            return .customerSheetUpdateCardFailed
+        case (.updateDefaultPaymentMethod, .customerSheet):
+            return .customerSheetUpdateCard
+        case (.updateDefaultPaymentMethodFailed, .customerSheet):
+            return .customerSheetUpdateCardFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
         }
     }
 
     // Helper for mapping between PaymentSheet and CustomerSheet CBC events
-    enum CardBrandChoiceEvents {
+    enum CardUpdateEvents {
         case displayCardBrandDropdownIndicator
         case openCardBrandDropdown
         case closeCardBrandDropDown
@@ -64,5 +72,7 @@ enum HostedSurface {
         case updateCardBrand
         case updateCardBrandFailed
         case closeEditScreen
+        case updateDefaultPaymentMethod
+        case updateDefaultPaymentMethodFailed
     }
 }

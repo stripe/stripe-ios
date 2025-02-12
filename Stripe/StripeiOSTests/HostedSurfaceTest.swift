@@ -54,7 +54,7 @@ class HostedSurfaceTest: XCTestCase {
             .openCardBrandDropdown: .paymentSheetOpenCardBrandDropdown,
             .closeCardBrandDropDown: .paymentSheetCloseCardBrandDropDown,
             .openCardBrandEditScreen: .paymentSheetOpenCardBrandEditScreen,
-            .updateCardBrand: .paymentSheetUpdateCardBrand,
+            .updateCardBrand: .paymentSheetUpdateCard,
             .updateCardBrandFailed: .paymentSheetUpdateCardBrandFailed,
             .closeEditScreen: .paymentSheetClosesEditScreen,
         ]
