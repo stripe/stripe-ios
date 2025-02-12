@@ -68,6 +68,17 @@ final class RowButtonFlatWithRadioView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func setSublabel(text: String?) {
+        guard let text else {
+            sublabel.text = nil
+            sublabel.isHidden = true
+            return
+        }
+        
+        sublabel.text = text
+        sublabel.isHidden = text.isEmpty
+    }
 }
 
 // MARK: - UI Setup

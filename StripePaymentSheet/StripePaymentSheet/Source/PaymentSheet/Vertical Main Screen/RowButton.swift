@@ -60,7 +60,7 @@ class RowButton: UIView {
     }
     var heightConstraint: NSLayoutConstraint?
 
-    private var rowButtonFlatWithRadioView: RowButtonFlatWithRadioView?
+    private(set) var rowButtonFlatWithRadioView: RowButtonFlatWithRadioView?
 
     init(
         appearance: PaymentSheet.Appearance,
