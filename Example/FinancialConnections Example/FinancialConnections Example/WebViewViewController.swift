@@ -105,10 +105,11 @@ extension WebViewViewController: WKUIDelegate {
         {
             UIApplication.shared.open(url, options: [.universalLinksOnly:true], completionHandler: { success in
                 if success {
-                    // 
-                    print("Successfully opened URL in an external app: \(url)")
+                    // The bank authentication URL was successfully opened in a bank application that supports it.
+                    print("Successfully opened the authentication URL in a bank app: \(url)")
                 } else {
-                    print("Failed to open URL: \(url).")
+                    // No bank app found that can handle authentication: 
+                    // Create an ASWebAuthenticationSession to handle the authentication in a browser.
                     let webAuthenticationSession = ASWebAuthenticationSession(
                         url: url,
                         callbackURLScheme: redirectURL.scheme,
