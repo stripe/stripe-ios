@@ -285,18 +285,14 @@ extension CustomerAddPaymentMethodViewController {
             with: name,
             email: email
         )
-        let bankAccountCollectorConfiguration: STPBankAccountCollectorConfiguration = {
-            let style: STPBankAccountCollectorConfiguration.UserInterfaceStyle = {
-                switch configuration.style {
-                case .automatic: return .automatic
-                case .alwaysLight: return .alwaysLight
-                case .alwaysDark: return .alwaysDark
-                }
-            }()
-            return .init(style: style)
+        let bankAccountCollectorStyle: STPBankAccountCollectorStyle = {
+            switch configuration.style {
+            case .automatic: return .automatic
+            case .alwaysLight: return .alwaysLight
+            case .alwaysDark: return .alwaysDark
+            }
         }()
-        let client = STPBankAccountCollector()
-        client.configuration = bankAccountCollectorConfiguration
+        let client = STPBankAccountCollector(style: bankAccountCollectorStyle)
         let errorText = STPLocalizedString(
             "Something went wrong when linking your account.\nPlease try again later.",
             "Error message when an error case happens when linking your account"

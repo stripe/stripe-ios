@@ -31,8 +31,9 @@ public class STPBankAccountCollector: NSObject {
     /// By default `sharedHandler` initializes with STPAPIClient.shared.
     public var apiClient: STPAPIClient
 
-    /// Configuration for the bank account collector.
-    public var configuration: STPBankAccountCollectorConfiguration
+    /// Style options for the bank account collector.
+    /// By default, the bank account collector will automatically switch between light and dark mode compatible colors based on device settings.
+    public let style: STPBankAccountCollectorStyle
 
     @objc(`init`)
     @available(swift, deprecated: 0.0.1, obsoleted: 0.0.1, renamed: "init()")
@@ -40,12 +41,18 @@ public class STPBankAccountCollector: NSObject {
         self.init(apiClient: STPAPIClient.shared)
     }
 
+    @objc(initWithStyle:)
+    @available(swift, deprecated: 0.0.1, obsoleted: 0.0.1, renamed: "init()")
+    public convenience init(style: STPBankAccountCollectorStyle) {
+        self.init(style: style)
+    }
+
     public init(
         apiClient: STPAPIClient = .shared,
-        configuration: STPBankAccountCollectorConfiguration = .init()
+        style: STPBankAccountCollectorStyle = .automatic
     ) {
         self.apiClient = apiClient
-        self.configuration = configuration
+        self.style = style
     }
 
     // MARK: Collect Bank Account - Payment Intent
@@ -262,7 +269,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
-                sheetConfiguration: self.configuration.asFinancialConnectionsConfiguration,
+                style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: onEvent,
                 from: viewController
@@ -521,7 +528,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
-                sheetConfiguration: self.configuration.asFinancialConnectionsConfiguration,
+                style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: onEvent,
                 from: viewController
@@ -615,7 +622,7 @@ public class STPBankAccountCollector: NSObject {
                 apiClient: self.apiClient,
                 clientSecret: linkAccountSession.clientSecret,
                 returnURL: returnURL,
-                sheetConfiguration: self.configuration.asFinancialConnectionsConfiguration,
+                style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
                 onEvent: onEvent,
                 from: viewController
