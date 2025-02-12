@@ -515,7 +515,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
-    
     func testPaymentSheetLoadAndConfirmWithDeferredPaymentIntentSetAsDefault() async throws {
         let callbackExpectation = XCTestExpectation(description: "Confirm callback invoked")
         let expectation = XCTestExpectation(description: "Check default payment method set")
