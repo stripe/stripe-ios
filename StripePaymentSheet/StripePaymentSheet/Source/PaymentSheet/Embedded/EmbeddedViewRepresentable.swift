@@ -5,9 +5,9 @@
 //  Created by Nick Porter on 1/30/25.
 //
 
-import SwiftUI
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import SwiftUI
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
@@ -30,7 +30,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
         NSLayoutConstraint.activate([
             paymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor),
             paymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+            paymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
         ])
 
         return containerView

@@ -208,7 +208,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [loadPaymentMethodInfo], timeout: 10.0)
     }
-    
+
     func testLoadPaymentMethodInfo_filtersCard() throws {
         let stubbedAPIClient = stubbedAPIClient()
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
@@ -305,7 +305,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         }
         wait(for: [expectedFailure], timeout: 5.0)
     }
-    
+
     func testLoadPaymentMethodInfo_CustomerSessionFiltersSavedCard() throws {
         let stubbedAPIClient = stubbedAPIClient()
         StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheetWithSavedPM_200)

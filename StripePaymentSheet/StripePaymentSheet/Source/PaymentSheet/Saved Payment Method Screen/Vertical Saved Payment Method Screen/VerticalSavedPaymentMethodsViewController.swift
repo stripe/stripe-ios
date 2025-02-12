@@ -371,7 +371,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: setAsDefault ? paymentMethod.stripeId : "")
 
         _ = viewController.bottomSheetController?.popContentViewController()
-        
+
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
