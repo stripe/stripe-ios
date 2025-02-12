@@ -45,13 +45,13 @@ final public class FinancialConnectionsSheet {
     }
 
     /// Configuration for the Financial Connections Sheet.
-    @_spi(STP) public struct Configuration {
+    public struct Configuration {
         /// Style options for colors in Financial Connections.
-        @_spi(STP) @frozen public enum UserInterfaceStyle {
-            /// Financial Connections will automatically switch between light and dark mode compatible colors based on device settings.
+        @frozen public enum UserInterfaceStyle {
+            /// (default)  Financial Connections will automatically switch between light and dark mode compatible colors based on device settings.
             case automatic
 
-            /// (default) Financial Connections will always use colors appropriate for light mode UI.
+            /// Financial Connections will always use colors appropriate for light mode UI.
             case alwaysLight
 
             /// Financial Connections will always use colors appropriate for dark mode UI.
@@ -75,9 +75,9 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        @_spi(STP) public var style: UserInterfaceStyle
+        public var style: UserInterfaceStyle
 
-        @_spi(STP) public init(style: UserInterfaceStyle = .alwaysLight) {
+        public init(style: UserInterfaceStyle = .automatic) {
             self.style = style
         }
     }
@@ -110,19 +110,15 @@ final public class FinancialConnectionsSheet {
         }
     }
 
+    /// Contains all configurable properties of Financial Connections.
+    public let configuration: FinancialConnectionsSheet.Configuration
+
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((HostControllerResult) -> Void)?
 
     private var hostController: HostController?
 
     private var wrapperViewController: ModalPresentationWrapperViewController?
-
-    /// Contains all configurable properties of Financial Connections.
-    @_spi(STP) public var configuration: FinancialConnectionsSheet.Configuration = .init() {
-        didSet {
-            PresentationManager.shared.configuration = configuration
-        }
-    }
 
     /// Any additional Elements context useful for the Financial Connections SDK.
     @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
@@ -138,11 +134,17 @@ final public class FinancialConnectionsSheet {
      - Parameters:
        - financialConnectionsSessionClientSecret: The [client secret](https://stripe.com/docs/api/financial_connections/sessions/object#financial_connections_session_object-client_secret) of a Stripe FinancialConnectionsSession object.
        - returnURL: A URL that redirects back to your application. FinancialConnectionsSheet uses it after completing authentication in another application (such as a bank application or Safari).
+       - configuration: Allows configuring the FinancialConnectionsSheet, such as style options for appearance preferences.
      */
-    public convenience init(financialConnectionsSessionClientSecret: String, returnURL: String? = nil) {
+    public convenience init(
+        financialConnectionsSessionClientSecret: String,
+        returnURL: String? = nil,
+        configuration: FinancialConnectionsSheet.Configuration = .init()
+    ) {
         self.init(
             financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret,
             returnURL: returnURL,
+            configuration: configuration,
             analyticsClient: STPAnalyticsClient.sharedClient
         )
     }
@@ -150,14 +152,17 @@ final public class FinancialConnectionsSheet {
     init(
         financialConnectionsSessionClientSecret: String,
         returnURL: String?,
+        configuration: FinancialConnectionsSheet.Configuration,
         analyticsClient: STPAnalyticsClientProtocol
     ) {
         self.financialConnectionsSessionClientSecret = financialConnectionsSessionClientSecret
         self.returnURL = returnURL
+        self.configuration = configuration
         self.analyticsClient = analyticsClient
 
         analyticsClient.addClass(toProductUsageIfNecessary: FinancialConnectionsSheet.self)
         APIVersion.configureFinancialConnectionsAPIVersion(apiClient: apiClient)
+        PresentationManager.shared.configuration = configuration
     }
 
     // MARK: - Public
