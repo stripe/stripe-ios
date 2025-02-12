@@ -287,15 +287,12 @@ extension PaymentMethodFormViewController {
         )
     }
 
-    private var bankAccountCollectorConfiguration: STPBankAccountCollectorConfiguration {
-        let style: STPBankAccountCollectorConfiguration.UserInterfaceStyle = {
-            switch configuration.style {
-            case .automatic: return .automatic
-            case .alwaysLight: return .alwaysLight
-            case .alwaysDark: return .alwaysDark
-            }
-        }()
-        return .init(style: style)
+    private var bankAccountCollectorStyle: STPBankAccountCollectorStyle {
+        switch configuration.style {
+        case .automatic: return .automatic
+        case .alwaysLight: return .alwaysLight
+        case .alwaysDark: return .alwaysDark
+        }
     }
 
     private var shouldOverridePrimaryButton: Bool {
@@ -368,8 +365,7 @@ extension PaymentMethodFormViewController {
             with: name,
             email: email
         )
-        let client = STPBankAccountCollector()
-        client.configuration = bankAccountCollectorConfiguration
+        let client = STPBankAccountCollector(style: bankAccountCollectorStyle)
         let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: STPBankAccountCollector.CollectBankAccountCompletionBlock = { result, _, error in
@@ -461,8 +457,7 @@ extension PaymentMethodFormViewController {
         let params = STPCollectBankAccountParams.collectInstantDebitsParams(
             email: instantDebitsFormElement.email
         )
-        let client = STPBankAccountCollector()
-        client.configuration = bankAccountCollectorConfiguration
+        let client = STPBankAccountCollector(style: bankAccountCollectorStyle)
         let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: STPBankAccountCollector.CollectBankAccountCompletionBlock = { result, _, error in

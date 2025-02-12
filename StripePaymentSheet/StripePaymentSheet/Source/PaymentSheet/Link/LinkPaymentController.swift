@@ -236,8 +236,8 @@ import UIKit
         from presentingViewController: UIViewController,
         completionHandler: @escaping (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void
     ) {
-        let bankAccountCollector = STPBankAccountCollector()
-        bankAccountCollector.configuration = makeBankAccountCollectorConfiguration()
+        let bankAccountCollectorStyle = makeBankAccountCollectorStyle()
+        let bankAccountCollector = STPBankAccountCollector(style: bankAccountCollectorStyle)
 
         let additionalParameters: [String: Any] = [
             "product": "instant_debits",
@@ -326,15 +326,12 @@ import UIKit
         )
     }
 
-    private func makeBankAccountCollectorConfiguration() -> STPBankAccountCollectorConfiguration {
-        let style: STPBankAccountCollectorConfiguration.UserInterfaceStyle = {
-            switch configuration.style {
-            case .automatic: return .automatic
-            case .alwaysLight: return .alwaysLight
-            case .alwaysDark: return .alwaysDark
-            }
-        }()
-        return .init(style: style)
+    private func makeBankAccountCollectorStyle() -> STPBankAccountCollectorStyle {
+        switch configuration.style {
+        case .automatic: return .automatic
+        case .alwaysLight: return .alwaysLight
+        case .alwaysDark: return .alwaysDark
+        }
     }
 
     private func makePrefillDetails() -> ElementsSessionContext.PrefillDetails {

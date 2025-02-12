@@ -20,7 +20,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
-        sheetConfiguration: FinancialConnectionsConfiguration?,
+        style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((StripeCore.FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
@@ -35,12 +35,10 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         financialConnectionsSheet.onEvent = onEvent
 
         var configuration = FinancialConnectionsSheet.Configuration()
-        if let styleConfig = sheetConfiguration?.styleConfig {
-            switch styleConfig {
-            case .automatic: configuration.style = .automatic
-            case .alwaysLight: configuration.style = .alwaysLight
-            case .alwaysDark: configuration.style = .alwaysDark
-            }
+        switch style {
+        case .automatic: configuration.style = .automatic
+        case .alwaysLight: configuration.style = .alwaysLight
+        case .alwaysDark: configuration.style = .alwaysDark
         }
         financialConnectionsSheet.configuration = configuration
         // Captures self explicitly until the callback is invoked
