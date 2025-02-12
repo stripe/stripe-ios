@@ -15,9 +15,9 @@ import UIKit
 /// A standalone view dedicated to the "flat with radio" RowButton style.
 final class RowButtonFlatWithRadioView: UIView {
     let appearance: PaymentSheet.Appearance
-    
+
     // MARK: - Subviews
-    
+
     /// The radio control
     private let radioButton: RadioButton
     /// Typically the payment method icon or brand image
@@ -32,9 +32,9 @@ final class RowButtonFlatWithRadioView: UIView {
     private let defaultBadgeLabel: UILabel?
     /// The view indicating any incentives associated with this payment method
     private let promoBadge: PromoBadgeView?
-    
+
     // MARK: - State
-    
+
     var isSelected: Bool = false {
         didSet {
             radioButton.isOn = isSelected
@@ -42,7 +42,7 @@ final class RowButtonFlatWithRadioView: UIView {
             defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         }
     }
-    
+
     init(
         appearance: PaymentSheet.Appearance,
         imageView: UIImageView,
@@ -63,11 +63,11 @@ final class RowButtonFlatWithRadioView: UIView {
         self.radioButton = RadioButton(appearance: appearance) {
             didTap()
         }
-        
+
         super.init(frame: .zero)
         setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -81,23 +81,23 @@ private extension RowButtonFlatWithRadioView {
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
-        
+
         let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 rightAccessoryView].compactMap { $0 })
+                                                                 rightAccessoryView,].compactMap { $0 })
         horizontalStackView.spacing = 8
-        
+
         [radioButton, imageView, horizontalStackView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
                 addSubview(view)
             }
-        
+
         // MARK: - Constraints
-        
+
         let insets = appearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
             // Radio button constraints
@@ -105,7 +105,7 @@ private extension RowButtonFlatWithRadioView {
             radioButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             radioButton.widthAnchor.constraint(equalToConstant: 18),
             radioButton.heightAnchor.constraint(equalToConstant: 18),
-            
+
             // Image view constraints
             imageView.leadingAnchor.constraint(equalTo: radioButton.trailingAnchor, constant: 12),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
@@ -113,7 +113,7 @@ private extension RowButtonFlatWithRadioView {
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
+
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
