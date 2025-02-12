@@ -23,7 +23,7 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
     private let label: UILabel
     /// The subtitle label, e.g. “Pay over time with Affirm”
     private let sublabel: UILabel
-    /// For layout convenience: if we have an accessory view to the right (e.g. a brand logo, etc.)
+    /// An accessory view that is displayed on the trailing end of the content view, e.g. "View More"
     private let rightAccessoryView: UIView?
     /// The label indicating if this is the default saved payment method
     private let defaultBadgeLabel: UILabel?
