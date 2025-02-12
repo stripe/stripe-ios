@@ -138,6 +138,22 @@ class RowButton: UIView {
             makeSameHeightAsOtherRowButtonsIfNecessary()
             return // Skip the rest of the complicated layout
         }
+        
+        if appearance.embeddedPaymentElement.row.style == .flatWithCheckmark {
+            let rowButtonFlatWithCheckmarkView = RowButtonFlatWithCheckmark(
+                appearance: appearance,
+                imageView: imageView,
+                text: text,
+                subtext: subtext,
+                bottomAccessoryView: rightAccessoryView,
+                defaultBadgeText: badgeText,
+                promoBadge: promoBadge)
+
+            addAndPinSubview(rowButtonFlatWithCheckmarkView)
+            self.content = rowButtonFlatWithCheckmarkView
+            makeSameHeightAsOtherRowButtonsIfNecessary()
+            return // Skip the rest of the complicated layout
+        }
 
         // TOOD(porter) Refactor the rest of this for other row styles (flat w/ check)
 

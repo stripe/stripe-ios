@@ -255,7 +255,7 @@ public extension PaymentSheet {
             }
             
             /// The display style of the row
-            public var style: Style = .flatWithRadio
+            public var style: Style = .flatWithCheckmark
             
             /// Additional vertical insets applied to a payment method row
             /// - Note: Increasing this value increases the height of each row
