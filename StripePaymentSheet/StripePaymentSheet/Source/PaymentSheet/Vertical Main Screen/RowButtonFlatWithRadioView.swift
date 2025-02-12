@@ -28,9 +28,9 @@ final class RowButtonFlatWithRadioView: UIView {
     private let sublabel: UILabel
     /// For layout convenience: if we have an accessory view to the right (e.g. a brand logo, etc.)
     private let rightAccessoryView: UIView?
-    
+    /// The label indicating if this is the default saved payment method
     private let defaultBadgeLabel: UILabel?
-    
+    /// The view indicating any incentives associated with this payment method
     private let promoBadge: PromoBadgeView?
     
     // MARK: - State
@@ -42,7 +42,7 @@ final class RowButtonFlatWithRadioView: UIView {
             defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         }
     }
-
+    
     init(
         appearance: PaymentSheet.Appearance,
         imageView: UIImageView,
