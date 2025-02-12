@@ -93,7 +93,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     /// Indicates whether the chevron should be shown
     /// True if any saved payment methods can be removed or edited
     var canRemoveOrEdit: Bool {
-        let hasSupportedSavedPaymentMethods = paymentMethods.allSatisfy{ PaymentSheet.supportedSavedPaymentMethods.contains($0.type) }
+        let hasSupportedSavedPaymentMethods = paymentMethods.allSatisfy { PaymentSheet.supportedSavedPaymentMethods.contains($0.type) }
         guard hasSupportedSavedPaymentMethods else {
             fatalError("Saved payment methods contain unsupported payment methods.")
         }
@@ -369,7 +369,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     }
 
     func didUpdateDefault(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, customerID: String) async throws {
-        let _ = try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
+        _ = try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
         defaultPaymentMethod = paymentMethod
     }
 

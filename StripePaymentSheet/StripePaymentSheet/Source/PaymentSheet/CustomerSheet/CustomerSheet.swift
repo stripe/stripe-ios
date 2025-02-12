@@ -337,8 +337,7 @@ extension CustomerSheet {
                 guard let customer = elementsSession.customer,
                     let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() else { return nil }
                 selectedPaymentOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-            }
-            else {
+            } else {
                 selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
             }
 

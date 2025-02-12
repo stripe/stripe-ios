@@ -124,8 +124,7 @@ final class SavedPaymentMethodRowButton: UIView {
     @objc private func handleRowButtonTapped(_: RowButton) {
         if isEditing {
             delegate?.didSelectUpdateButton(self, with: paymentMethod)
-        }
-        else {
+        } else {
             state = .selected
             delegate?.didSelectButton(self, with: paymentMethod)
         }

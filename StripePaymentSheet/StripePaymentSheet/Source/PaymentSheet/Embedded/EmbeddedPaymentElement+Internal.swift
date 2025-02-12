@@ -137,7 +137,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
             selection: embeddedPaymentMethodsView.selectedRowButton?.type,
-            previousPaymentOption:  selectedFormViewController?.previousPaymentOption,
+            previousPaymentOption: selectedFormViewController?.previousPaymentOption,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -240,7 +240,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     func didUpdateDefault(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod,
                    customerID: String) async throws {
-        let _ = try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
+        _ = try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
 
         // Update savedPaymentMethods
         self.savedPaymentMethods.remove(paymentMethod)

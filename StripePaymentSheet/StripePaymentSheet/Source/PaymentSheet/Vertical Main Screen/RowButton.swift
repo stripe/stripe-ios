@@ -61,7 +61,7 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
-        
+
     var isFlatWithCheckmarkStyle: Bool {
         return appearance.embeddedPaymentElement.row.style == .flatWithCheckmark && isEmbedded
     }

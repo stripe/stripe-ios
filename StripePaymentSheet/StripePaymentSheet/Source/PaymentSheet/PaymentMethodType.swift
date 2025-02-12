@@ -50,7 +50,7 @@ extension PaymentSheet {
                 return "link_card_brand"
             }
         }
-        
+
         /// Returns the Stripe API identifier used for incentives for this payment method type, which can be different from `identifier`.
         var incentiveIdentifier: String? {
             switch self {

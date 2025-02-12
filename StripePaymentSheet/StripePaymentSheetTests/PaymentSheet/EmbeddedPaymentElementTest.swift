@@ -257,7 +257,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         case .canceled:
             XCTFail("Expected confirm to succeed, but it was canceled")
         }
-        
+
         // Check our confirm analytics
         let analytics = STPAnalyticsClient.sharedClient._testLogHistory
         let confirmEvents = analytics.filter { $0["event"] as? String == "mc_embedded_confirm" }

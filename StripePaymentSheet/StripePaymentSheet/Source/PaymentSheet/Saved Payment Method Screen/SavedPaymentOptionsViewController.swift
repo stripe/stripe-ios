@@ -137,7 +137,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             collectionView.isRemovingPaymentMethods = newValue
             collectionView.performBatchUpdates({
                 collectionView.reloadSections(IndexSet(integer: 0))
-                animateHeightChange{self.collectionView.updateLayout()}
+                animateHeightChange { self.collectionView.updateLayout() }
             })
             UIView.transition(with: collectionView,
                               duration: 0.3,
@@ -472,8 +472,7 @@ class SavedPaymentOptionsViewController: UIViewController {
               let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
                defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
            }
-        }
-        else {
+        } else {
             defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
         }
 
@@ -702,7 +701,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         }
 
         let viewModel = viewModels[row]
-        let _ = try await delegate.didSelectUpdateDefault(viewController: self,
+        _ = try await delegate.didSelectUpdateDefault(viewController: self,
                                                     paymentMethodSelection: viewModel,
                                                                         customerID: customerID)
         defaultPaymentMethod = paymentMethod

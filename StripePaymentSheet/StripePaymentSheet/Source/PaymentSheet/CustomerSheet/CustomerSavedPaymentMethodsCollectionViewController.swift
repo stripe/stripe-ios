@@ -252,8 +252,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             self.savedPaymentMethods = savedPaymentMethods.filter{ savedPaymentMethod in CustomerSheet.supportedDefaultPaymentMethods.contains{paymentMethodType in
                 savedPaymentMethod.type == paymentMethodType}
             }
-        }
-        else {
+        } else {
             self.savedPaymentMethods = savedPaymentMethods
         }
         self.originalSelectedSavedPaymentMethod = selectedPaymentMethodOption
@@ -538,7 +537,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         }
 
         let viewModel = viewModels[row]
-        let _ = try await delegate.didSelectUpdateDefault(viewController: self,
+        _ = try await delegate.didSelectUpdateDefault(viewController: self,
                                                     paymentMethodSelection: viewModel,
                                                                       customerID: customerID)
         updateUI(selectedSavedPaymentOption: .stripeId(paymentMethod.stripeId))

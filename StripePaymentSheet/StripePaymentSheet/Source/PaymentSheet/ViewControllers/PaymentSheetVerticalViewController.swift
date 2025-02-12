@@ -748,7 +748,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         let headerView: UIView = {
             let incentive = paymentMethodListViewController?.incentive?.takeIfAppliesTo(paymentMethodType)
             let currentForm = formCache[paymentMethodType]
-            
+
             let displayedIncentive = if let instantDebitsForm = currentForm as? InstantDebitsPaymentMethodElement {
                 // If we have shown this form before and the incentive has been cleared, make sure we don't show it again
                 // when re-rendering the form.
@@ -756,7 +756,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             } else {
                 incentive
             }
-            
+
             if shouldDisplayFormOnly, let wallet = makeWalletHeaderView() {
                 // Special case: if there is only one payment method type and it's not a card and wallet options are available
                 // Display the wallet, then the FormHeaderView below it
@@ -882,7 +882,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
 
     func didUpdateDefault(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, customerID: String) async throws {
         // Update the payment method
-        let _ = try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
+        _ = try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
 
         // Update savedPaymentMethods
         self.savedPaymentMethods.remove(paymentMethod)
@@ -905,7 +905,7 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
         if viewController.paymentOption != nil {
             analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
         }
-        
+
         if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
             let incentive = instantDebitsFormElement.displayableIncentive
             paymentMethodListViewController?.setIncentive(incentive)

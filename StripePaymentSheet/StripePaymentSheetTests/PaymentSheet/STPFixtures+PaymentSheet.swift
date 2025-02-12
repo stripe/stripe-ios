@@ -122,7 +122,7 @@ extension STPElementsSession {
         if let linkSuppress2FA {
             json[jsonDict: "link_settings"]!["link_mobile_suppress_2fa_modal"] = linkSuppress2FA
         }
-        
+
         if hasLinkConsumerIncentive {
             json[jsonDict: "link_settings"]!["link_consumer_incentive"] = [
                 "campaign": "bankaccountsignup",
@@ -131,7 +131,7 @@ extension STPElementsSession {
                     "amount_flat": 500,
                     "currency": "USD",
                     "payment_method": "link_instant_debits",
-                ]
+                ],
             ]
         }
 
@@ -172,7 +172,7 @@ extension STPElementsSession {
                 ],
                 "customer_sheet": [
                     "enabled": false,
-                ]
+                ],
             ]
         }
         return STPElementsSession._testValue(

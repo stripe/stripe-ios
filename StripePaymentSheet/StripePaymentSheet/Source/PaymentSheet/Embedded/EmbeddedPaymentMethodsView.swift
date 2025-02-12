@@ -25,14 +25,14 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
-    
+
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
     override var intrinsicContentSize: CGSize {
         return super.intrinsicContentSize
     }
-  
+
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
@@ -148,7 +148,7 @@ class EmbeddedPaymentMethodsView: UIView {
             )
             rowButtons.append(rowButton)
         }
-        
+
         // Add the row buttons to our stack view
         rowButtons.forEach { rowButton in
             stackView.addArrangedSubview(rowButton)
@@ -168,7 +168,7 @@ class EmbeddedPaymentMethodsView: UIView {
             rowButtonMatchingInitialSelection.isSelected = true
             self.selectedRowButton = rowButtonMatchingInitialSelection
         }
-        
+
         // Set up mandate
         stackView.addArrangedSubview(mandateView)
         updateMandate(animated: false)
@@ -268,7 +268,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Update text on card row based on the new selected payment method
         // It can vary between "Card" if the customer has no saved cards or "New card" if the customer has saved cards
-        if let oldCardButton = rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card))}),
+        if let oldCardButton = rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card)) }),
            let oldCardButtonIndex = stackView.arrangedSubviews.firstIndex(of: oldCardButton) {
             // Update selectionButtonMapping and add this new one to the stack view and remove old card row
             let cardRowButton = makePaymentMethodRowButton(
