@@ -365,7 +365,7 @@ class RowButton: UIView {
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        let isSublabelTextEmpty = sublabel.text?.isEmpty ?? content?.sublabel.text?.isEmpty ?? true
+        let isSublabelTextEmpty = sublabel.text?.isEmpty ?? !(content?.hasSubtext ?? true)
         guard isSublabelTextEmpty else {
             heightConstraint?.isActive = false
             return
@@ -440,7 +440,6 @@ extension RowButton {
         sublabel.text = text
         sublabel.textColor = appearance.colors.componentPlaceholderText
         sublabel.isHidden = text?.isEmpty ?? true
-        sublabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         return sublabel
     }
 

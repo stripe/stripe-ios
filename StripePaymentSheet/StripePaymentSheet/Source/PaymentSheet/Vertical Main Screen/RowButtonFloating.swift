@@ -38,6 +38,11 @@ final class RowButtonFloating: UIView, RowButtonContent {
         }
     }
 
+    var hasSubtext: Bool {
+        guard let subtext = sublabel.text else { return false }
+        return !subtext.isEmpty
+    }
+
     init(
         appearance: PaymentSheet.Appearance,
         imageView: UIImageView,

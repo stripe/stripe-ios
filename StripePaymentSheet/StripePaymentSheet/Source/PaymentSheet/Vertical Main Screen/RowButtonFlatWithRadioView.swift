@@ -22,7 +22,7 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
     /// The main label for the payment method name
     private let label: UILabel
     /// The subtitle label, e.g. “Pay over time with Affirm”
-    let sublabel: UILabel
+    private let sublabel: UILabel
     /// For layout convenience: if we have an accessory view to the right (e.g. a brand logo, etc.)
     private let rightAccessoryView: UIView?
     /// The label indicating if this is the default saved payment method
@@ -38,6 +38,11 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
             // Default badge font is heavier when the row is selected
             defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         }
+    }
+
+    var hasSubtext: Bool {
+        guard let subtext = sublabel.text else { return false }
+        return !subtext.isEmpty
     }
 
     init(
