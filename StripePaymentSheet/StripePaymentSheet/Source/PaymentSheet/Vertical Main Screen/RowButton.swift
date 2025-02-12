@@ -121,7 +121,8 @@ class RowButton: UIView {
             return // Skip the rest of the complicated layout
         }
         
-        if appearance.embeddedPaymentElement.row.style == .floatingButton {
+        if !isEmbedded || appearance.embeddedPaymentElement.row.style == .floatingButton {
+            let insets = isEmbedded ? appearance.embeddedPaymentElement.row.additionalInsets : 4
             let rowButtonFloating = RowButtonFloating(
                 appearance: appearance,
                 imageView: imageView,
@@ -129,7 +130,8 @@ class RowButton: UIView {
                 subtext: subtext,
                 rightAccessoryView: rightAccessoryView,
                 defaultBadgeText: badgeText,
-                promoBadge: promoBadge)
+                promoBadge: promoBadge,
+                insets: insets)
 
             addAndPinSubview(rowButtonFloating)
             self.content = rowButtonFloating
@@ -334,7 +336,11 @@ class RowButton: UIView {
 
     /// Sets icon, text, and sublabel alpha
     func setContentViewAlpha(_ alpha: CGFloat) {
-        [imageView, label, sublabel, defaultBadge, content].compactMap { $0 }.forEach {
+        [imageView, label, sublabel, defaultBadge, promoBadge].compactMap { $0 }.forEach {
+            $0.alpha = alpha
+        }
+        
+        content?.subviews.map { $0 }.forEach {
             $0.alpha = alpha
         }
     }
@@ -370,13 +376,11 @@ class RowButton: UIView {
 // MARK: - EventHandler
 extension RowButton: EventHandler {
     func handleEvent(_ event: STPEvent) {
-        let views = [label, sublabel, imageView, promoBadge, content].compactMap { $0.self }
-
         switch event {
         case .shouldEnableUserInteraction:
-            views.forEach { $0.alpha = 1 }
+            setContentViewAlpha(1.0)
         case .shouldDisableUserInteraction:
-            views.forEach { $0.alpha = 0.5 }
+            setContentViewAlpha(0.5)
         default:
             break
         }
