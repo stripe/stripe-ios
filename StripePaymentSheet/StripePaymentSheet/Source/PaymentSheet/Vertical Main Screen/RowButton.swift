@@ -39,7 +39,7 @@ class RowButton: UIView {
     var isSelected: Bool = false {
         didSet {
             shadowRoundedRect.isSelected = isSelected
-            rowButtonFlatWithRadioView?.isSelected = isSelected
+            content?.isSelected = isSelected
             checkmarkImageView?.isHidden = !isSelected
             updateAccessibilityTraits()
             updateDefaultBadgeFont()
@@ -60,7 +60,8 @@ class RowButton: UIView {
     }
     var heightConstraint: NSLayoutConstraint?
 
-    private(set) var rowButtonFlatWithRadioView: RowButtonFlatWithRadioView?
+    // TODO(porter) Make this not optional once we have all the styles implemented
+    private(set) var content: RowButtonContent?
 
     init(
         appearance: PaymentSheet.Appearance,
@@ -116,9 +117,8 @@ class RowButton: UIView {
                     self?.handleTap()
                 }
             addAndPinSubview(rowButtonFlatWithRadioView)
-            self.rowButtonFlatWithRadioView = rowButtonFlatWithRadioView
+            self.content = rowButtonFlatWithRadioView
             makeSameHeightAsOtherRowButtonsIfNecessary()
-            // accessibility
             return // Skip the rest of the complicated layout
         }
 
@@ -352,7 +352,7 @@ class RowButton: UIView {
 
     /// Sets icon, text, and sublabel alpha
     func setContentViewAlpha(_ alpha: CGFloat) {
-        [imageView, label, sublabel, defaultBadge, rowButtonFlatWithRadioView].compactMap { $0 }.forEach {
+        [imageView, label, sublabel, defaultBadge, content].compactMap { $0 }.forEach {
             $0.alpha = alpha
         }
     }
@@ -388,7 +388,7 @@ class RowButton: UIView {
 // MARK: - EventHandler
 extension RowButton: EventHandler {
     func handleEvent(_ event: STPEvent) {
-        let views = [label, sublabel, imageView, promoBadge, rowButtonFlatWithRadioView].compactMap { $0.self }
+        let views = [label, sublabel, imageView, promoBadge, content].compactMap { $0.self }
 
         switch event {
         case .shouldEnableUserInteraction:

@@ -1472,6 +1472,7 @@
 				B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */,
 				610EAAEF2C0F5D9400124AB2 /* FormHeaderView.swift */,
 				B667BF0A2BF2B7C60050EFD8 /* RowButton.swift */,
+				6155F0842D5D2420000DCD3A /* RowButtonContent.swift */,
 				6185901A2D5BF1D200D533D6 /* RowButtonFlatWithRadioView.swift */,
 				B63B2CF22BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift */,
 				61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */,
