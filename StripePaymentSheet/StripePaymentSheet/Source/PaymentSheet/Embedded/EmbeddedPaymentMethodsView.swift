@@ -465,8 +465,8 @@ extension RowButton {
         if let sublabel {
             self.sublabel.text = sublabel
             self.sublabel.isHidden = sublabel.isEmpty
+            rowButtonFlatWithRadioView?.setSublabel(text: sublabel)
         }
-        rowButtonFlatWithRadioView?.setSublabel(text: sublabel)
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }
     
