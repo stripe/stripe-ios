@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// A standalone view dedicated to the "flat with radio" RowButton style.
-final class RowButtonFlatWithRadioView: UIView {
+final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
     let appearance: PaymentSheet.Appearance
 
     // MARK: - Subviews
