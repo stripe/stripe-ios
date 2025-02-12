@@ -139,7 +139,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
             selection: embeddedPaymentMethodsView.selectedRowButton?.type,
-            previousPaymentOption:  selectedFormViewController?.previousPaymentOption,
+            previousPaymentOption: selectedFormViewController?.previousPaymentOption,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -361,7 +361,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         embeddedFormViewController.dismiss(animated: true)
         informDelegateIfPaymentOptionUpdated()
     }
-    
+
     func getChangeButtonState(for type: RowButtonType) -> (shouldShowChangeButton: Bool, sublabel: String?) {
         guard let _paymentOption, let displayData = paymentOption else {
             return (false, nil)
@@ -373,7 +373,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
             return false
         }()
-        
+
         // Add a sublabel to the selected row for cards and us bank account like "Visa 4242"
         let sublabel: String? = {
             switch type.paymentMethodType {
@@ -390,7 +390,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 return nil
             }
         }()
-        
+
         return (shouldShowChangeButton: shouldShowChangeButton, sublabel: sublabel)
     }
 }
@@ -404,6 +404,11 @@ extension EmbeddedPaymentElement {
         guard !hasConfirmedIntent else {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), nil)
         }
+
+        guard !isUpdating else {
+            return (.failed(error: PaymentSheetError.embeddedPaymentElementConfirmDuringUpdate), nil)
+        }
+
         // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
         if let latestUpdateTask {
             switch await latestUpdateTask.value {
@@ -421,7 +426,7 @@ extension EmbeddedPaymentElement {
                 return (.failed(error: error), nil)
             }
         }
-        
+
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
