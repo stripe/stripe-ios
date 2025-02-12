@@ -121,7 +121,6 @@ class RowButton: UIView {
             return // Skip the rest of the complicated layout
         }
 
-        // Added this!
         if !isEmbedded || appearance.embeddedPaymentElement.row.style == .floatingButton {
             let insets = isEmbedded ? appearance.embeddedPaymentElement.row.additionalInsets : 4
             let rowButtonFloating = RowButtonFloating(
