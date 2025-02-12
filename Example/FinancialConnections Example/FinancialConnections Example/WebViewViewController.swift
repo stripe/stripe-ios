@@ -103,34 +103,41 @@ extension WebViewViewController: WKUIDelegate {
             navigationAction.targetFrame?.isMainFrame != true,
             let url = navigationAction.request.url
         {
-            // Open the link in a "secure browser"
-            let webAuthenticationSession = ASWebAuthenticationSession(
-                url: url,
-                callbackURLScheme: redirectURL.scheme,
-                completionHandler: { redirectURL, error in
-                    if let error = error {
-                        if
-                            (error as NSError).domain == ASWebAuthenticationSessionErrorDomain,
-                            (error as NSError).code == ASWebAuthenticationSessionError.canceledLogin.rawValue
-                        {
-                            print("User manually closed the browser by pressing 'Cancel' at the top-left corner.")
-                        } else {
-                            print("Received an error from ASWebAuthenticationSession: \(error)")
+            UIApplication.shared.open(url, options: [.universalLinksOnly:true], completionHandler: { success in
+                if success {
+                    // 
+                    print("Successfully opened URL in an external app: \(url)")
+                } else {
+                    print("Failed to open URL: \(url).")
+                    let webAuthenticationSession = ASWebAuthenticationSession(
+                        url: url,
+                        callbackURLScheme: redirectURL.scheme,
+                        completionHandler: { redirectURL, error in
+                            if let error = error {
+                                if
+                                    (error as NSError).domain == ASWebAuthenticationSessionErrorDomain,
+                                    (error as NSError).code == ASWebAuthenticationSessionError.canceledLogin.rawValue
+                                {
+                                    print("User manually closed the browser by pressing 'Cancel' at the top-left corner.")
+                                } else {
+                                    print("Received an error from ASWebAuthenticationSession: \(error)")
+                                }
+                            } else {
+                                // ======================
+                                // IMPORTANT NOTE:
+                                // ======================
+                                // The browser will automatically close when
+                                // the `callbackURLScheme` is called.
+                                print("Received a redirect URL: \(redirectURL?.absoluteString ?? "null")")
+                            }
                         }
-                    } else {
-                        // ======================
-                        // IMPORTANT NOTE:
-                        // ======================
-                        // The browser will automatically close when
-                        // the `callbackURLScheme` is called.
-                        print("Received a redirect URL: \(redirectURL?.absoluteString ?? "null")")
-                    }
+                    )
+                    self.webAuthenticationSession = webAuthenticationSession
+                    webAuthenticationSession.presentationContextProvider = self
+                    webAuthenticationSession.prefersEphemeralWebBrowserSession = true // disable the initial Apple alert
+                    webAuthenticationSession.start()
                 }
-            )
-            self.webAuthenticationSession = webAuthenticationSession
-            webAuthenticationSession.presentationContextProvider = self
-            webAuthenticationSession.prefersEphemeralWebBrowserSession = true // disable the initial Apple alert
-            webAuthenticationSession.start()
+            })
         }
         return nil
     }
