@@ -54,12 +54,12 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
-        
+
     var isFlatWithCheckmarkStyle: Bool {
         return appearance.embeddedPaymentElement.row.style == .flatWithCheckmark && isEmbedded
     }
     var heightConstraint: NSLayoutConstraint?
-    
+
     private var rowButtonFlatWithRadioView: RowButtonFlatWithRadioView?
 
     init(
@@ -88,9 +88,9 @@ class RowButton: UIView {
         self.defaultBadge = Self.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
         self.promoBadge = promoBadge
         super.init(frame: .zero)
-        
+
         addAndPinSubview(shadowRoundedRect)
-        
+
         setupTapGestures()
 
         // Accessibility
@@ -102,7 +102,7 @@ class RowButton: UIView {
         shadowRoundedRect.accessibilityLabel = text
         shadowRoundedRect.isAccessibilityElement = true
         updateAccessibilityTraits()
-        
+
         // New early-exit for flatWithRadio
         if isEmbedded && appearance.embeddedPaymentElement.row.style == .flatWithRadio {
             let rowButtonFlatWithRadioView = RowButtonFlatWithRadioView(
@@ -121,7 +121,7 @@ class RowButton: UIView {
             // accessibility
             return // Skip the rest of the complicated layout
         }
-        
+
         // TOOD(porter) Refactor the rest of this for other row styles
 
         // Label and sublabel
@@ -133,7 +133,6 @@ class RowButton: UIView {
         }
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
-
 
         if let rightAccessoryView, !isFlatWithCheckmarkStyle {
             let rightAccessoryViewPadding: CGFloat = {
@@ -240,7 +239,7 @@ class RowButton: UIView {
             imageViewTopConstraint,
         ].compactMap({ $0 }))
     }
-    
+
     private func setupTapGestures() {
         // Add tap gesture
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -422,7 +421,7 @@ extension RowButton {
         sublabel.isHidden = text?.isEmpty ?? true
         return sublabel
     }
-    
+
     static func makeRowButtonDefaultBadgeLabel(badgeText: String?, appearance: PaymentSheet.Appearance) -> UILabel? {
         guard let badgeText else { return nil }
         let defaultBadge = UILabel()
@@ -470,7 +469,7 @@ extension RowButton {
                 return nil
             }
         }()
-        
+
         let promoBadge: PromoBadgeView? = {
             guard let promoText else { return nil }
             return PromoBadgeView(
@@ -480,7 +479,7 @@ extension RowButton {
                 text: promoText
             )
         }()
-        
+
         return RowButton(
             appearance: appearance,
             type: .new(paymentMethodType: paymentMethodType),
