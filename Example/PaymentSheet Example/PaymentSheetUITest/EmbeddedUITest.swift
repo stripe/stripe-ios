@@ -1014,7 +1014,15 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let continueButton = app.buttons["Continue"]
         XCTAssertTrue(continueButton.isEnabled)
         continueButton.tap()
-
+        
+        // Ensure we can present the card form via the "Change" button
+        let changeButton = app.buttons["Change"].firstMatch
+        let allButtons = app.buttons.allElementsBoundByIndex
+        
+        XCTAssertTrue(changeButton.waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
+        continueButton.tap()
+        
         let confirmButton = app.buttons["Confirm Payment"]
         XCTAssertTrue(confirmButton.waitForExistenceAndTap())
 
