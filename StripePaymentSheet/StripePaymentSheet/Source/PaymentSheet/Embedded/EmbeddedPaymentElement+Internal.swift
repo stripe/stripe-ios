@@ -413,7 +413,7 @@ extension EmbeddedPaymentElement {
                 return (.failed(error: error), nil)
             }
         }
-        
+
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
