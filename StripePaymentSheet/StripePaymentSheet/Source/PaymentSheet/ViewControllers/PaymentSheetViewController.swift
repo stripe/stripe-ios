@@ -559,12 +559,13 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
 
     func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,
                          paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
-                                customerID: String) async throws -> STPCustomer {
+                                customerID: String,
+                                setAsDefault: Bool) async throws -> STPCustomer {
         guard case .saved(let paymentMethod) = paymentMethodSelection else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.setAsDefault(customerId: customerID, defaultPaymentMethod: paymentMethod.stripeId)
+        return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: setAsDefault ? paymentMethod.stripeId: "")
     }
 
     func didUpdateSelection(

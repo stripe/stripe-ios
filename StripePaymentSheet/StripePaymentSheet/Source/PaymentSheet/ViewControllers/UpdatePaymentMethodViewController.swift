@@ -19,7 +19,8 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
                    updateParams: STPPaymentMethodUpdateParams) async throws
     func didUpdateDefault(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   customerID: String) async throws
+                   customerID: String,
+                          setAsDefault: Bool) async throws
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
 }
 
@@ -218,10 +219,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     private func updateCustomerDefaultPaymentMethod() async {
-        guard let customerID = viewModel.customerID, let delegate = delegate else { return }
+        guard let checkbox = setAsDefaultCheckbox, let customerID = viewModel.customerID, let delegate = delegate else { return }
         // Make the API request to update the payment method
         do {
-            try await delegate.didUpdateDefault(viewController: self, paymentMethod: viewModel.paymentMethod, customerID: customerID)
+            try await delegate.didUpdateDefault(viewController: self, paymentMethod: viewModel.paymentMethod, customerID: customerID, setAsDefault: checkbox.isSelected)
 //            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrand),
 //                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         } catch {

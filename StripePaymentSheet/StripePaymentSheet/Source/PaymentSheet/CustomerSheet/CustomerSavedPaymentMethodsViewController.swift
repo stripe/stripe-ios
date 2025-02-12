@@ -944,12 +944,13 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
 
     func didSelectUpdateDefault(viewController: CustomerSavedPaymentMethodsCollectionViewController,
                          paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
-                         customerID: String) async throws -> STPCustomer? {
+                         customerID: String,
+                         setAsDefault: Bool) async throws -> STPCustomer? {
         guard case .saved(let paymentMethod) = paymentMethodSelection
         else {
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method")
         }
-        return try await customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId, customerID: customerID)
+        return try await customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: setAsDefault ? paymentMethod.stripeId : "", customerID: customerID)
     }
 
     func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController) {

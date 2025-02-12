@@ -28,7 +28,8 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didSelectUpdateDefault(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
-        customerID: String) async throws -> STPCustomer
+        customerID: String,
+        setAsDefault: Bool) async throws -> STPCustomer
     func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController)
 }
 
@@ -692,7 +693,8 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
 
     func didUpdateDefault(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   customerID: String) async throws {
+                   customerID: String,
+                   setAsDefault: Bool) async throws {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -703,7 +705,8 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         let viewModel = viewModels[row]
         _ = try await delegate.didSelectUpdateDefault(viewController: self,
                                                     paymentMethodSelection: viewModel,
-                                                                        customerID: customerID)
+                                                                        customerID: customerID,
+                                                      setAsDefault: setAsDefault)
         defaultPaymentMethod = paymentMethod
         collectionView.reloadData()
         _ = viewController.bottomSheetController?.popContentViewController()

@@ -29,7 +29,8 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
     func didSelectUpdateDefault(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
-        customerID: String) async throws -> STPCustomer?
+        customerID: String,
+        setAsDefault: Bool) async throws -> STPCustomer?
     func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController)
 }
 /*
@@ -528,7 +529,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdateDefault(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, customerID: String) async throws {
+    func didUpdateDefault(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, customerID: String, setAsDefault: Bool) async throws {
         guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -539,7 +540,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         let viewModel = viewModels[row]
         _ = try await delegate.didSelectUpdateDefault(viewController: self,
                                                     paymentMethodSelection: viewModel,
-                                                                      customerID: customerID)
+                                                                      customerID: customerID,
+                                                      setAsDefault: setAsDefault)
         updateUI(selectedSavedPaymentOption: .stripeId(paymentMethod.stripeId))
         _ = viewController.bottomSheetController?.popContentViewController()
     }
