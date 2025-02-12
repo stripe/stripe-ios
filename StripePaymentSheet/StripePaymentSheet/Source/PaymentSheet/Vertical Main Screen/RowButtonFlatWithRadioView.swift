@@ -6,9 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -86,7 +83,7 @@ private extension RowButtonFlatWithRadioView {
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 rightAccessoryView,].compactMap { $0 })
+                                                                 rightAccessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
 
         [radioButton, imageView, horizontalStackView].compactMap { $0 }
