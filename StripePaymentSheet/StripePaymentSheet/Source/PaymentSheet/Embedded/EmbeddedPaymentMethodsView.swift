@@ -467,6 +467,7 @@ extension RowButton {
             self.sublabel.isHidden = sublabel.isEmpty
             content?.setSublabel(text: sublabel)
         }
+        rowButtonFlatWithRadioView?.setSublabel(text: sublabel)
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }
 
@@ -475,7 +476,7 @@ extension RowButton {
         if shouldClearSublabel {
             sublabel.text = nil
             sublabel.isHidden = true
-            content?.setSublabel(text: nil)
+            rowButtonFlatWithRadioView?.setSublabel(text: nil)
         }
     }
 }
