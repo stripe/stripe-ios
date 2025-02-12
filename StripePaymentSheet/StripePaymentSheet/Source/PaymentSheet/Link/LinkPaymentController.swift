@@ -326,7 +326,7 @@ import UIKit
         )
     }
 
-    private func makeBankAccountCollectorStyle() -> STPBankAccountCollectorStyle {
+    private func makeBankAccountCollectorStyle() -> STPBankAccountCollectorUserInterfaceStyle {
         switch configuration.style {
         case .automatic: return .automatic
         case .alwaysLight: return .alwaysLight

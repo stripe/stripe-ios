@@ -33,7 +33,7 @@ public class STPBankAccountCollector: NSObject {
 
     /// Style options for the bank account collector.
     /// By default, the bank account collector will automatically switch between light and dark mode compatible colors based on device settings.
-    public let style: STPBankAccountCollectorStyle
+    public let style: STPBankAccountCollectorUserInterfaceStyle
 
     @objc(`init`)
     @available(swift, deprecated: 0.0.1, obsoleted: 0.0.1, renamed: "init()")
@@ -43,13 +43,13 @@ public class STPBankAccountCollector: NSObject {
 
     @objc(initWithStyle:)
     @available(swift, deprecated: 0.0.1, obsoleted: 0.0.1, renamed: "init()")
-    public convenience init(style: STPBankAccountCollectorStyle) {
+    public convenience init(style: STPBankAccountCollectorUserInterfaceStyle) {
         self.init(style: style)
     }
 
     public init(
         apiClient: STPAPIClient = .shared,
-        style: STPBankAccountCollectorStyle = .automatic
+        style: STPBankAccountCollectorUserInterfaceStyle = .automatic
     ) {
         self.apiClient = apiClient
         self.style = style
