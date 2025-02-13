@@ -107,6 +107,9 @@ private extension RowButtonFlatWithCheckmark {
                                                                  promoBadge,
                                                                  checkmarkImageView].compactMap { $0 })
         horizontalStackView.spacing = 8
+        if let promoBadge {
+            horizontalStackView.setCustomSpacing(12, after: promoBadge)
+        }
 
         [imageView, horizontalStackView].compactMap { $0 }
             .forEach { view in

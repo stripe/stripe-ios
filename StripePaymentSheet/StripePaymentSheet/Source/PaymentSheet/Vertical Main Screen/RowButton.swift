@@ -15,14 +15,6 @@ import UIKit
 class RowButton: UIView {
     let type: RowButtonType
     private let shadowRoundedRect: ShadowedRoundedRectangle
-    private lazy var checkmarkImageView: UIImageView? = {
-        guard isFlatWithCheckmarkStyle else { return nil }
-        let checkmarkImageView = UIImageView(image: Image.embedded_check.makeImage(template: true))
-        checkmarkImageView.tintColor = appearance.embeddedPaymentElement.row.flat.checkmark.color ?? appearance.colors.primary
-        checkmarkImageView.contentMode = .scaleAspectFit
-        checkmarkImageView.isHidden = true
-        return checkmarkImageView
-    }()
     let imageView: UIImageView
     let label: UILabel
     let sublabel: UILabel
@@ -40,11 +32,7 @@ class RowButton: UIView {
         didSet {
             shadowRoundedRect.isSelected = isSelected
             content?.isSelected = isSelected
-            checkmarkImageView?.isHidden = !isSelected
             updateAccessibilityTraits()
-            if isFlatWithCheckmarkStyle {
-                alignBadgeAndCheckmark()
-            }
         }
     }
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
@@ -167,24 +155,6 @@ class RowButton: UIView {
             longPressGesture.minimumPressDuration = 0.2
             longPressGesture.delegate = self
             addGestureRecognizer(longPressGesture)
-        }
-    }
-
-    private func alignBadgeAndCheckmark(initialRender: Bool = false) {
-        guard let promoBadge, let checkmarkImageView else {
-            return
-        }
-
-        if promoBadgeConstraintToCheckmark == nil {
-            promoBadgeConstraintToCheckmark = promoBadge.trailingAnchor.constraint(equalTo: checkmarkImageView.leadingAnchor, constant: -12)
-        }
-
-        promoBadgeConstraintToCheckmark?.isActive = isSelected
-
-        if !initialRender {
-            UIView.animate(withDuration: 0.2) {
-                self.layoutIfNeeded()
-            }
         }
     }
 
