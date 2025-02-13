@@ -383,8 +383,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
             updatedPaymentMethodsList.remove(paymentMethod)
             updatedPaymentMethodsList.insert(paymentMethod, at: 0)
             defaultPaymentMethod = paymentMethod
-        }
-        else {
+        } else {
             defaultPaymentMethod = nil
         }
         // if there was a previously set default, replace it to remove the badge and deselect it
