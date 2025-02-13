@@ -1409,7 +1409,7 @@ extension STPAPIClient {
     ) {
         APIRequest<STPCustomer>.post(
             with: self,
-            endpoint: "elements/customers/\(customerID)/set_default_payment_method",
+            endpoint: "\(APIEndpointElementsCustomers)/\(customerID)/set_default_payment_method",
             additionalHeaders: authorizationHeader(using: ephemeralKey),
             parameters: [
                 "payment_method": paymentMethodID
@@ -1444,6 +1444,7 @@ private let APIEndpointSetupIntents = "setup_intents"
 @_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpointElementsPaymentMethods = "elements/payment_methods"
 private let APIEndpointElementsCustomer = "elements/customer"
+private let APIEndpointElementsCustomers = "elements/customers"
 private let APIEndpoint3DS2 = "3ds2"
 private let PaymentMethodDataHash = "payment_method_data"
 private let SourceDataHash = "source_data"

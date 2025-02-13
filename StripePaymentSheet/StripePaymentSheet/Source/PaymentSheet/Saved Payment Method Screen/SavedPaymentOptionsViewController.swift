@@ -339,7 +339,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.intent = intent
         self.appearance = appearance
         self.elementsSession = elementsSession
-        self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
+        if configuration.allowsSetAsDefaultPM {
+            self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
+        }
         self.cbcEligible = cbcEligible
         self.delegate = delegate
         self.analyticsHelper = analyticsHelper
@@ -384,7 +386,8 @@ class SavedPaymentOptionsViewController: UIViewController {
             customerID: configuration.customerID,
             showApplePay: configuration.showApplePay,
             showLink: configuration.showLink,
-            elementsSession: elementsSession
+            elementsSession: elementsSession,
+            defaultPaymentMethod: defaultPaymentMethod
         )
 
         collectionView.reloadData()
@@ -455,7 +458,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     private func isDefaultPaymentMethod(savedPaymentMethodId: String?) -> Bool {
-        guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod = defaultPaymentMethod else { return false }
+        guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod else { return false }
         return savedPaymentMethodId == defaultPaymentMethod.stripeId
     }
 
@@ -463,9 +466,13 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
-    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, elementsSession: STPElementsSession?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, elementsSession: STPElementsSession?, defaultPaymentMethod: STPPaymentMethod?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
-        let selectedPaymentMethodOption = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
+        var defaultPaymentOption: CustomerPaymentOption?
+        if let defaultPaymentMethod {
+            defaultPaymentOption = .stripeId(defaultPaymentMethod.stripeId)
+        }
+        let selectedPaymentMethodOption = defaultPaymentOption ?? CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
 
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
@@ -697,8 +704,14 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                                                     paymentMethodSelection: viewModel,
                                                                         customerID: customerID,
                                                       setAsDefault: setAsDefault)
-        defaultPaymentMethod = paymentMethod
-        collectionView.reloadData()
+        if setAsDefault {
+            defaultPaymentMethod = paymentMethod
+            updateUI()
+        }
+        else {
+            defaultPaymentMethod = nil
+            unselectPaymentMethod()
+        }
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 

@@ -239,8 +239,12 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: setAsDefault ? paymentMethod.stripeId : "")
 
         // Update savedPaymentMethods
-        self.savedPaymentMethods.remove(paymentMethod)
-        self.savedPaymentMethods.insert(paymentMethod, at: 0)
+        if setAsDefault {
+            defaultPaymentMethod = paymentMethod
+        }
+        else {
+            defaultPaymentMethod = nil
+        }
 
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
@@ -275,6 +279,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.savedPaymentMethods = latestPaymentMethods
+        self.defaultPaymentMethod = defaultPaymentMethod
         let accessoryType = getAccessoryButton(
             savedPaymentMethods: latestPaymentMethods
         )
