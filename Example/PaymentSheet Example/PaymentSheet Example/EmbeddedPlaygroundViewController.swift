@@ -279,12 +279,10 @@ func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: Embedd
             
             // Example text fields
             alert.addTextField { textField in
-                textField.placeholder = "Email"
-                textField.keyboardType = .emailAddress
+                textField.placeholder = "Username"
             }
             alert.addTextField { textField in
-                textField.placeholder = "Phone number"
-                textField.keyboardType = .phonePad
+                textField.placeholder = "Password"
             }
             
             let alertTitle = {

@@ -116,12 +116,15 @@ class PlaygroundController: ObservableObject {
         let customPaymentMethod = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
                                                                                                         subcopy: "Pay now with BufoPay")
         
-        configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [customPaymentMethod]) { customPaymentMethodId, billingDetails, completion in
+        configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [customPaymentMethod, customPaymentMethod]) { customPaymentMethodId, billingDetails, completion in
             print(customPaymentMethod) // cpmt_1QpIMNLu5o3P18Zpwln1Sm6I
             // Handle CPM integration and confirm payment
             
             // Pass the confirm result back to Stripe
-            completion(.completed) // Can also pass canceled and failed(error)
+            
+            self.handleExternalPaymentMethod(type: customPaymentMethodId, billingDetails: billingDetails) { result in
+                completion(result)
+            }
         }
         configuration.paymentMethodOrder = ["cpmt_1QpIMNLu5o3P18Zpwln1Sm6I"]
         configuration.merchantDisplayName = "Example, Inc."
