@@ -14,7 +14,6 @@ import UIKit
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 class RowButton: UIView {
     let type: RowButtonType
-    private let shadowRoundedRect: ShadowedRoundedRectangle
     let content: RowButtonContent
     let shouldAnimateOnPress: Bool
     let appearance: PaymentSheet.Appearance
@@ -25,7 +24,6 @@ class RowButton: UIView {
     let isEmbedded: Bool
     var isSelected: Bool = false {
         didSet {
-            shadowRoundedRect.isSelected = isSelected
             content.isSelected = isSelected
             updateAccessibilityTraits()
         }
@@ -61,7 +59,6 @@ class RowButton: UIView {
         self.didTap = didTap
         self.isEmbedded = isEmbedded
         self.text = text
-        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.content = Self.makeRowButtonView(appearance: appearance,
                                               isEmbedded: isEmbedded,
                                               imageView: imageView,
@@ -72,7 +69,6 @@ class RowButton: UIView {
                                               accessoryView: rightAccessoryView)
         super.init(frame: .zero)
 
-        addAndPinSubview(shadowRoundedRect)
         addAndPinSubview(content)
         makeSameHeightAsOtherRowButtonsIfNecessary()
 
@@ -82,10 +78,10 @@ class RowButton: UIView {
         // Subviews of an accessibility element are ignored
         isAccessibilityElement = false
         accessibilityIdentifier = text // Just for test purposes
-        accessibilityElements = [shadowRoundedRect, rightAccessoryView].compactMap { $0 }
-        shadowRoundedRect.accessibilityIdentifier = text
-        shadowRoundedRect.accessibilityLabel = text
-        shadowRoundedRect.isAccessibilityElement = true
+        accessibilityElements = [content, rightAccessoryView].compactMap { $0 }
+        content.accessibilityIdentifier = text
+        content.accessibilityLabel = text
+        content.isAccessibilityElement = true
         updateAccessibilityTraits()
     }
 
@@ -125,7 +121,7 @@ class RowButton: UIView {
         if !isEnabled {
             traits.insert(.notEnabled)
         }
-        shadowRoundedRect.accessibilityTraits = traits
+        content.accessibilityTraits = traits
     }
 
     // MARK: Tap handling
@@ -133,28 +129,21 @@ class RowButton: UIView {
         guard isEnabled else { return }
         if shouldAnimateOnPress {
             // Fade the text and icon out and back in
-            setContentViewAlpha(0.5)
+            content.setContentViewAlpha(0.5)
             UIView.animate(withDuration: 0.2, delay: 0.1) { [self] in
-                setContentViewAlpha(1.0)
+                content.setContentViewAlpha(1.0)
             }
         }
         self.didTap(self)
-    }
-
-    /// Sets icon, text, and sublabel alpha
-    func setContentViewAlpha(_ alpha: CGFloat) {
-        content.subviews.map { $0 }.forEach {
-            $0.alpha = alpha
-        }
     }
 
     @objc private func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
         // Fade the text and icon out while the button is long pressed
         switch gesture.state {
         case .began:
-            setContentViewAlpha(0.5)
+            content.setContentViewAlpha(0.5)
         default:
-            setContentViewAlpha(1.0)
+            content.setContentViewAlpha(1.0)
         }
     }
 
@@ -180,9 +169,9 @@ extension RowButton: EventHandler {
     func handleEvent(_ event: STPEvent) {
         switch event {
         case .shouldEnableUserInteraction:
-            setContentViewAlpha(1.0)
+            content.setContentViewAlpha(1.0)
         case .shouldDisableUserInteraction:
-            setContentViewAlpha(0.5)
+            content.setContentViewAlpha(0.5)
         default:
             break
         }
@@ -379,7 +368,7 @@ extension RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
         let button = RowButton(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, isEmbedded: isEmbedded, didTap: didTap)
-        button.shadowRoundedRect.accessibilityLabel = String.Localized.pay_with_link
+        button.content.accessibilityLabel = String.Localized.pay_with_link
         return button
     }
 
@@ -387,7 +376,7 @@ extension RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
         let button = RowButton(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
-        button.shadowRoundedRect.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+        button.content.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }
 }
