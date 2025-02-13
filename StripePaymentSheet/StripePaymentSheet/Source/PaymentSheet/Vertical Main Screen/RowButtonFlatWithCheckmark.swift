@@ -42,6 +42,7 @@ final class RowButtonFlatWithCheckmark: UIView, RowButtonContent {
             checkmarkImageView.isHidden = !isSelected
             // Default badge font is heavier when the row is selected
             defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
+            layoutIfNeeded() // Required to prevent checkmarkImageView from animating in strangely
         }
     }
 
@@ -91,17 +92,23 @@ final class RowButtonFlatWithCheckmark: UIView, RowButtonContent {
 
 private extension RowButtonFlatWithCheckmark {
     func setupUI() {
-        // Add common subviews
-        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel, bottomAccessoryView].compactMap { $0 })
+        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
+        
+        let stackView = UIStackView(arrangedSubviews: [labelsStackView, bottomAccessoryView].compactMap { $0 })
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.setCustomSpacing(8, after: labelsStackView)
 
-        let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView,
+        let horizontalStackView = UIStackView(arrangedSubviews: [stackView,
                                                                  defaultBadgeLabel,
-                                                                 ].compactMap { $0 })
+                                                                 UIView.makeSpacerView(),
+                                                                 promoBadge,
+                                                                 checkmarkImageView].compactMap { $0 })
         horizontalStackView.spacing = 8
 
-        [imageView, horizontalStackView, checkmarkImageView].compactMap { $0 }
+        [imageView, horizontalStackView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
@@ -109,6 +116,20 @@ private extension RowButtonFlatWithCheckmark {
             }
 
         // MARK: - Constraints
+
+        // Resolve ambiguous height warning by setting these constraints w/ low priority
+        let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 14)
+        imageViewTopConstraint.priority = .defaultLow
+        let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
+        imageViewBottomConstraint.priority = .defaultLow
+        
+        let imageViewCenterYConstraint: NSLayoutConstraint
+        // If we have an accessory view align the image with the top label
+        if let bottomAccessoryView, !bottomAccessoryView.isHidden {
+            imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor)
+        } else {
+            imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
+        }
 
         let insets = appearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
@@ -118,20 +139,16 @@ private extension RowButtonFlatWithCheckmark {
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageViewCenterYConstraint,
+            imageViewTopConstraint,
+            imageViewBottomConstraint,
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: checkmarkImageView.leadingAnchor, constant: -12),
+            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
-            
-            // Checkmark
-            checkmarkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            checkmarkImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            checkmarkImageView.widthAnchor.constraint(equalToConstant: 16),
-            checkmarkImageView.heightAnchor.constraint(equalToConstant: 16),
         ])
     }
 }
