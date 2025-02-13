@@ -235,6 +235,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    enum PaymentMethodSetAsDefault: String, PickerEnum {
+        static let enumName: String = "PaymentMethodSetAsDefault"
+        case enabled
+        case disabled
+    }
+
     enum DefaultBillingAddress: String, PickerEnum {
         static var enumName: String { "Default billing address" }
 
@@ -446,12 +452,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum AllowsSetAsDefaultPM: String, PickerEnum {
-        static let enumName: String = "allowsSetAsDefaultPM"
-        case on
-        case off
-    }
-
     enum ConfigurationStyle: String, PickerEnum {
         static let enumName: String = "Style"
         case automatic
@@ -482,6 +482,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodRemoveLast: PaymentMethodRemoveLast
     var paymentMethodRedisplay: PaymentMethodRedisplay
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
+    var paymentMethodSetAsDefault: PaymentMethodSetAsDefault
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
     var linkPassthroughMode: LinkPassthroughMode
@@ -506,7 +507,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var cardBrandAcceptance: CardBrandAcceptance
-    var allowsSetAsDefaultPM: AllowsSetAsDefaultPM
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -531,6 +531,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             paymentMethodRemoveLast: .enabled,
             paymentMethodRedisplay: .enabled,
             paymentMethodAllowRedisplayFilters: .always,
+            paymentMethodSetAsDefault: .disabled,
             defaultBillingAddress: .off,
             customEmail: nil,
             linkPassthroughMode: .passthrough,
@@ -553,8 +554,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectAddress: .automatic,
             formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
-            cardBrandAcceptance: .all,
-            allowsSetAsDefaultPM: .off)
+            cardBrandAcceptance: .all)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

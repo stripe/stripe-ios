@@ -159,6 +159,7 @@ public final class EmbeddedPaymentElement {
                 }
             }()
             let previousSelectedRowType = self.embeddedPaymentMethodsView.selectedRowButton?.type
+            let previousSelectedRowChangeButtonState = self.embeddedPaymentMethodsView.selectedRowChangeButtonState
             // Make the new form VC for the previously selected row type if it's still in the list
             let selectedFormViewController = Self.makeFormViewControllerIfNecessary(
                 selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
@@ -186,6 +187,7 @@ public final class EmbeddedPaymentElement {
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 previousSelection: shouldSelectPreviousRow ? previousSelectedRowType : nil,
+                previousSelectedRowChangeButtonState: shouldSelectPreviousRow ? previousSelectedRowChangeButtonState : nil,
                 delegate: self
             )
             self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)

@@ -55,7 +55,9 @@ class EmbeddedPaymentMethodsView: UIView {
     private(set) var selectedRowButton: RowButton? {
         didSet {
             previousSelectedRowButton = oldValue
-            if oldValue?.type != selectedRowButton?.type {
+            let selectedRowButtonTypeDidChange = oldValue?.type != selectedRowButton?.type
+            if selectedRowButtonTypeDidChange {
+                selectedRowChangeButtonState = nil
                 delegate?.embeddedPaymentMethodsViewDidUpdateSelection()
             }
             if let selectedRowButton {
@@ -90,9 +92,13 @@ class EmbeddedPaymentMethodsView: UIView {
     private var savedPaymentMethodButton: RowButton?
     private(set) var rowButtons: [RowButton]
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
+    /// Keeps track of whether we're showing a change button/sublabel on the selected row
+    /// Hacky - ideally we have a RowButtonViewModel type of object that keeps track of this state.
+    var selectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)?
 
     init(
-        initialSelection: RowButtonType?,
+        initialSelectedRowType: RowButtonType?,
+        initialSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)?,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         savedPaymentMethod: STPPaymentMethod?,
         appearance: PaymentSheet.Appearance,
@@ -178,8 +184,14 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         // If we have a row button that matches the initial selection, make it selected
-        if let initialSelection, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelection }).first {
+        if let initialSelectedRowType, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelectedRowType }).first {
             rowButtonMatchingInitialSelection.isSelected = true
+            if let initialSelectedRowChangeButtonState {
+                selectedRowChangeButtonState = initialSelectedRowChangeButtonState
+                if initialSelectedRowChangeButtonState.shouldShowChangeButton {
+                    rowButtonMatchingInitialSelection.addChangeButton(sublabel: initialSelectedRowChangeButtonState.sublabel)
+                }
+            }
             self.selectedRowButton = rowButtonMatchingInitialSelection
         }
         
@@ -220,7 +232,7 @@ class EmbeddedPaymentMethodsView: UIView {
     func resetSelection() {
         selectedRowButton = nil
     }
-
+    
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
         self.selectedRowButton = rowButton

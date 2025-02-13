@@ -33,7 +33,7 @@ struct LinkURLParams: Encodable {
         var stripePreferredNetworks: [String]
         var supportedCobrandedNetworks: [String: Bool]
     }
-    
+
     var path = "mobile_pay"
     var integrationType = "mobile"
     var paymentObject: PaymentObjectMode
@@ -50,7 +50,7 @@ struct LinkURLParams: Encodable {
     var intentMode: IntentMode
     var setupFutureUsage: Bool
     var cardBrandChoice: CardBrandChoiceInfo?
-    var linkFundingSources: Set<LinkSettings.FundingSource>
+    var linkFundingSources: [LinkSettings.FundingSource]
 }
 
 class LinkURLGenerator {
@@ -90,7 +90,7 @@ class LinkURLGenerator {
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
         let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
-        
+
         let cardBrandChoiceInfo: LinkURLParams.CardBrandChoiceInfo? = {
             guard let cardBrandChoice = elementsSession.cardBrandChoice else { return nil }
             return LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: cardBrandChoice.eligible,
@@ -99,7 +99,7 @@ class LinkURLGenerator {
         }()
 
         let flags = elementsSession.linkFlags.merging(elementsSession.flags) { (current, _) in current }
-        let linkFundingSources = elementsSession.linkFundingSources ?? Set()
+        let linkFundingSources = elementsSession.linkFundingSources?.toSortedArray() ?? []
 
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
@@ -130,6 +130,15 @@ class LinkURLGenerator {
     static func url(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) throws -> URL {
         let params = try Self.linkParams(configuration: configuration, intent: intent, elementsSession: elementsSession)
         return try url(params: params)
+    }
+}
+
+// Used to get deterministic ordering for FundingSource tests
+extension Set where Element == LinkSettings.FundingSource {
+    func toSortedArray() -> [LinkSettings.FundingSource] {
+        return self.sorted { a, b in
+            a.rawValue.localizedCaseInsensitiveCompare(b.rawValue) == .orderedAscending
+        }
     }
 }
 

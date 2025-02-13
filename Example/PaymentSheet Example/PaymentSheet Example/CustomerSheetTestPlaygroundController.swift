@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) @_spi(AllowsSetAsDefaultPM) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -147,7 +147,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-        configuration.allowsSetAsDefaultPM = settings.allowsSetAsDefaultPM == .on
         return configuration
     }
 
@@ -328,6 +327,7 @@ class CustomerSheetBackend {
                      "merchant_country_code": settings.merchantCountryCode.rawValue,
                      "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
                      "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
+                     "customer_session_payment_method_sync_default": settings.paymentMethodSyncDefault.rawValue,
         ] as [String: Any]
 
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {

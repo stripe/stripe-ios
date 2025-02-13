@@ -82,7 +82,7 @@ extension LinkStubs {
         return ConsumerSession(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
-            redactedPhoneNumber: "+1********55",
+            redactedFormattedPhoneNumber: "(***) *** **55",
             verificationSessions: [],
             supportedPaymentDetailsTypes: [.card, .bankAccount]
         )

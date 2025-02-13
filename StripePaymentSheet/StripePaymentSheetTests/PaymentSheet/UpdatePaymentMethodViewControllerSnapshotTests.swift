@@ -41,11 +41,11 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     }
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, allowsSetAsDefaultPM: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, canSetAsDefaultPM: true)
     }
 
     func test_UpdatePaymentMethodViewControllerDefaultCard() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, allowsSetAsDefaultPM: true, isDefault: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, canSetAsDefaultPM: true, isDefault: true)
     }
 
     func test_UpdatePaymentMethodViewControllerRemoveOnlyCard() {
@@ -65,11 +65,11 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     }
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultUSBankAccount() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, allowsSetAsDefaultPM: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, canSetAsDefaultPM: true)
     }
 
     func test_UpdatePaymentMethodViewControllerDefaultUSBankAccount() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, allowsSetAsDefaultPM: true, isDefault: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, canSetAsDefaultPM: true, isDefault: true)
     }
 
     func test_EmbeddedSingleUSBankAccount_UpdatePaymentMethodViewControllerDarkMode() {
@@ -97,7 +97,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     }
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultSEPADebit() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, allowsSetAsDefaultPM: true)
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, canSetAsDefaultPM: true)
     }
 
     func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerDarkMode() {
@@ -111,24 +111,22 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerAppearance() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
-    
+
     func test_UpdatePaymentMethodViewControllerLightMode_blockedBrands() {
         let cardBrandFilter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.amex]))
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, cardBrandFilter: cardBrandFilter)
     }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, isCBCEligible: Bool = false, expired: Bool = false, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false, cardBrandFilter: CardBrandFilter = .default) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, isCBCEligible: Bool = false, expired: Bool = false, canSetAsDefaultPM: Bool = false, isDefault: Bool = false, cardBrandFilter: CardBrandFilter = .default) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
                 if expired {
                     return STPFixtures.paymentMethod()
-                }
-                else {
+                } else {
                     if isCBCEligible {
                         return STPPaymentMethod._testCardCoBranded()
-                    }
-                    else {
+                    } else {
                         return STPPaymentMethod._testCard()
                     }
                 }
@@ -146,7 +144,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                            cardBrandFilter: cardBrandFilter,
                                                            canRemove: canRemove,
                                                            isCBCEligible: isCBCEligible,
-                                                           allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                                                           canSetAsDefaultPM: canSetAsDefaultPM,
                                                            isDefault: isDefault
         )
         let sut = UpdatePaymentMethodViewController(

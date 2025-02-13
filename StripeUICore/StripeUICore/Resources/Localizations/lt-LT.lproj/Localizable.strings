@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (pasirenkamas)";
 
+"(not accepted)" = "(nepriimama)";
+
 "Account number" = "Sąskaitos numeris";
 
 "Address" = "Adresas";

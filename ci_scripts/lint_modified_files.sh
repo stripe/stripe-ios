@@ -19,7 +19,7 @@ if which swiftlint >/dev/null; then
     IS_HOOK=true
   fi
 
-  START=`date +%s`
+  START=$(date +%s)
 
   z40=0000000000000000000000000000000000000000
 
@@ -34,10 +34,12 @@ if which swiftlint >/dev/null; then
     echo "Ignoring lint on master branch"
     exit 0
   else
+    # Compute the merge base between origin/master and HEAD so we only lint changes since we diverged.
+    MERGE_BASE=$(git merge-base origin/master HEAD)
     while IFS= read -r file; do
       export SCRIPT_INPUT_FILE_$count="$file"
       count=$((count + 1))
-    done < <(git diff --diff-filter=AM --name-only origin/master  | grep ".swift$")
+    done < <(git diff --diff-filter=AM --name-only "$MERGE_BASE" | grep ".swift$")
   fi
 
   export SCRIPT_INPUT_FILE_COUNT=$count
@@ -48,7 +50,7 @@ if which swiftlint >/dev/null; then
 
   EXIT_CODE=$?
 
-  END=`date +%s`
+  END=$(date +%s)
   echo ""
   echo "Linted in $(($END - $START))s."
   if [ "$EXIT_CODE" == '0' ]; then

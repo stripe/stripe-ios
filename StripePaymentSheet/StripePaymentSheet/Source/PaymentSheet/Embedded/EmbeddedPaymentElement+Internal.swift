@@ -17,6 +17,7 @@ extension EmbeddedPaymentElement {
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousSelection: RowButtonType? = nil,
+        previousSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         // Restore the customer's previous payment method.
@@ -41,15 +42,7 @@ extension EmbeddedPaymentElement {
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
-            var customerDefault: CustomerPaymentOption?
-            // if opted in to the "set as default" feature, try to get default payment method from elements session
-            if configuration.allowsSetAsDefaultPM {
-                if let defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
-                    customerDefault = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-                }
-            } else {
-                customerDefault = CustomerPaymentOption.defaultPaymentMethod(for: configuration.customer?.id)
-            }
+            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
             switch customerDefault {
             case .applePay:
                 return .applePay
@@ -66,7 +59,8 @@ extension EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         return EmbeddedPaymentMethodsView(
-            initialSelection: initialSelection,
+            initialSelectedRowType: initialSelection,
+            initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
             appearance: configuration.appearance,
@@ -137,7 +131,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
             selection: embeddedPaymentMethodsView.selectedRowButton?.type,
-            previousPaymentOption:  selectedFormViewController?.previousPaymentOption,
+            previousPaymentOption: selectedFormViewController?.previousPaymentOption,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -175,7 +169,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
-                                                               allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+                                                               canSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
             )
             let updateViewController = UpdatePaymentMethodViewController(
@@ -336,6 +330,9 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 let changeButtonState = getChangeButtonState(for: newSelectedType)
                 if changeButtonState.shouldShowChangeButton {
                     embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+                    embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
+                } else {
+                    embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
                 }
             }
         }
@@ -348,12 +345,15 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             let changeButtonState = getChangeButtonState(for: newSelectedType)
             if changeButtonState.shouldShowChangeButton {
                 embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+                embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
+            } else {
+                embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
             }
         }
         embeddedFormViewController.dismiss(animated: true)
         informDelegateIfPaymentOptionUpdated()
     }
-    
+
     func getChangeButtonState(for type: RowButtonType) -> (shouldShowChangeButton: Bool, sublabel: String?) {
         guard let _paymentOption, let displayData = paymentOption else {
             return (false, nil)
@@ -365,7 +365,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
             return false
         }()
-        
+
         // Add a sublabel to the selected row for cards and us bank account like "Visa 4242"
         let sublabel: String? = {
             switch type.paymentMethodType {
@@ -382,7 +382,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 return nil
             }
         }()
-        
+
         return (shouldShowChangeButton: shouldShowChangeButton, sublabel: sublabel)
     }
 }
@@ -414,6 +414,7 @@ extension EmbeddedPaymentElement {
             }
         }
 
+        embeddedPaymentMethodsView.isUserInteractionEnabled = false
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: authContext,
@@ -430,10 +431,11 @@ extension EmbeddedPaymentElement {
             deferredIntentConfirmationType: deferredIntentConfirmationType
         )
 
-        // If the confirmation was successful, disable user interaction
         if case .completed = result {
             hasConfirmedIntent = true
-            containerView.isUserInteractionEnabled = false
+        } else {
+            // Re-enable interaction for failed and canceled results
+            embeddedPaymentMethodsView.isUserInteractionEnabled = true
         }
 
         return (result, deferredIntentConfirmationType)

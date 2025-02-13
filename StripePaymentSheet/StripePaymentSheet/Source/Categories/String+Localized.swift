@@ -428,6 +428,13 @@ extension String.Localized {
         )
     }
 
+    static var save_this_account_for_future_payments: String {
+        STPLocalizedString(
+            "Save this account for future %@ payments",
+            "Prompt next to checkbox to save bank account."
+        )
+    }
+
     static var by_providing_your_card_information_text: String {
         STPLocalizedString(
             "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",

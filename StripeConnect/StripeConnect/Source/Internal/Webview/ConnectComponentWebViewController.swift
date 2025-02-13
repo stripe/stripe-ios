@@ -266,6 +266,7 @@ private extension ConnectComponentWebViewController {
         })
         addMessageHandler(AccountSessionClaimedMessageHandler(analyticsClient: analyticsClient) { [analyticsClient] payload in
             analyticsClient.merchantId = payload.merchantId
+            analyticsClient.logAccountSessionClaimed()
         })
         addMessageHandler(OpenAuthenticatedWebViewMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
             self?.openAuthenticatedWebView(payload)

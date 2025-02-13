@@ -204,6 +204,20 @@ class STPAnalyticsClientTest: XCTestCase {
                       params: ["selected_lpm": "card"], observer: observer)
         wait(for: [e], timeout: 1)
     }
+    func testMcOptionSelectEmbeddedSavedPM() {
+        let e = expectation(description: "")
+        let observer = TestObserver { eventName in
+            guard case .selectedSavedPaymentMethod(let data) = eventName else {
+                XCTFail("Failed to convert eventName")
+                return
+            }
+            XCTAssertEqual(data.paymentMethodType, "card")
+            e.fulfill()
+        }
+        _testLogEvent(event: .mcOptionSelectEmbeddedSavedPM,
+                      params: ["selected_lpm": "card"], observer: observer)
+        wait(for: [e], timeout: 1)
+    }
     func testMcOptionRemoveCustomSavedPM() {
         let e = expectation(description: "")
         let observer = TestObserver { eventName in
@@ -229,6 +243,20 @@ class STPAnalyticsClientTest: XCTestCase {
             e.fulfill()
         }
         _testLogEvent(event: .mcOptionRemoveCompleteSavedPM,
+                      params: ["selected_lpm": "card"], observer: observer)
+        wait(for: [e], timeout: 1)
+    }
+    func testMcOptionRemoveEmbeddedSavedPM(){
+        let e = expectation(description: "")
+        let observer = TestObserver { eventName in
+            guard case .removedSavedPaymentMethod(let data) = eventName else {
+                XCTFail("Failed to convert eventName")
+                return
+            }
+            XCTAssertEqual(data.paymentMethodType, "card")
+            e.fulfill()
+        }
+        _testLogEvent(event: .mcOptionRemoveEmbeddedSavedPM,
                       params: ["selected_lpm": "card"], observer: observer)
         wait(for: [e], timeout: 1)
     }

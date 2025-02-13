@@ -64,12 +64,12 @@ struct STPAnalyticsEventTranslator {
             return .tappedConfirmButton(.init(paymentMethodType: paymentMethodType))
 
         // Saved Payment Methods
-        case .mcOptionSelectCustomSavedPM, .mcOptionSelectCompleteSavedPM:
+        case .mcOptionSelectCustomSavedPM, .mcOptionSelectCompleteSavedPM, .mcOptionSelectEmbeddedSavedPM:
             guard let paymentMethodType else {
                 return nil
             }
             return .selectedSavedPaymentMethod(.init(paymentMethodType: paymentMethodType))
-        case .mcOptionRemoveCustomSavedPM, .mcOptionRemoveCompleteSavedPM:
+        case .mcOptionRemoveCustomSavedPM, .mcOptionRemoveCompleteSavedPM, .mcOptionRemoveEmbeddedSavedPM:
             guard let paymentMethodType else {
                 return nil
             }

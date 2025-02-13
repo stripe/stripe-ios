@@ -36,6 +36,7 @@ class PaymentSheetFormFactory {
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
+    let showSetAsDefaultCheckbox: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
 
@@ -107,6 +108,7 @@ class PaymentSheetFormFactory {
                   isSettingUp: intent.isSettingUp,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
+                  showSetAsDefaultCheckbox: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive)
     }
@@ -124,6 +126,7 @@ class PaymentSheetFormFactory {
         isSettingUp: Bool,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
+        showSetAsDefaultCheckbox: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?
     ) {
@@ -144,6 +147,7 @@ class PaymentSheetFormFactory {
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
+        self.showSetAsDefaultCheckbox = showSetAsDefaultCheckbox
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
     }
@@ -160,9 +164,9 @@ class PaymentSheetFormFactory {
             // We have two ways to create the form for a payment method
             // 1. Custom, one-off forms
             if paymentMethod == .card {
-                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
+                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible, showSetAsDefaultCheckbox: showSetAsDefaultCheckbox)
             } else if paymentMethod == .USBankAccount {
-                return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
+                return makeUSBankAccount(merchantName: configuration.merchantDisplayName, showSetAsDefaultCheckbox: showSetAsDefaultCheckbox)
             } else if paymentMethod == .UPI {
                 return makeUPI()
             } else if paymentMethod == .cashApp && isSettingUp {
@@ -206,6 +210,8 @@ class PaymentSheetFormFactory {
                 return makeiDEAL(spec: spec)
             } else if paymentMethod == .sofort {
                 return makeSofort(spec: spec)
+            } else if paymentMethod == .SEPADebit {
+                return makeSepaDebit()
             }
 
             // 2. Element-based forms defined in JSON
@@ -458,7 +464,25 @@ extension PaymentSheetFormFactory {
             }
         }()
         let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
-        let elements: [Element?] = [contactSection, addressSection, mandate]
+        let checkboxElement: Element? = makeSepaBasedPMCheckbox()
+        let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
+        return FormElement(
+            autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
+    }
+
+    func makeSepaDebit() -> PaymentMethodElement {
+        let contactSection: Element? = makeContactInformationSection(
+            nameRequiredByPaymentMethod: true,
+            emailRequiredByPaymentMethod: true,
+            phoneRequiredByPaymentMethod: false
+        )
+        let iban: Element = makeIban()
+        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
+        let checkboxElement: Element? = makeSepaBasedPMCheckbox()
+        let mandate: Element? = makeSepaMandate()
+        let elements: [Element?] = [contactSection, iban, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
             theme: theme
@@ -472,8 +496,9 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: false
         )
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let checkboxElement: Element? = makeSepaBasedPMCheckbox()
         let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
-        let elements: [Element?] = [contactSection, addressSection, mandate]
+        let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
             theme: theme
@@ -519,25 +544,23 @@ extension PaymentSheetFormFactory {
 
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
-        let elements: [Element?] = [contactSection, bankDropdown, addressSection, mandate]
+        let checkboxElement = makeSepaBasedPMCheckbox()
+        let elements: [Element?] = [contactSection, bankDropdown, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
             theme: theme
         )
     }
 
-    func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
+    func makeUSBankAccount(merchantName: String, showSetAsDefaultCheckbox: Bool) -> PaymentMethodElement {
         let isSaving = BoolReference()
         var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
-        if configuration.allowsSetAsDefaultPM {
+        if showSetAsDefaultCheckbox {
             defaultCheckbox = makeDefaultCheckbox()
         }
         let saveCheckbox = makeSaveCheckbox(
             label: String(
-                format: STPLocalizedString(
-                    "Save this account for future %@ payments",
-                    "Prompt next to checkbox to save bank account."
-                ),
+                format: .Localized.save_this_account_for_future_payments,
                 merchantName
             )
         ) { value in
@@ -601,6 +624,23 @@ extension PaymentSheetFormFactory {
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    // Only show checkbox for PI+SFU & Setup Intent
+    func makeSepaBasedPMCheckbox() -> Element? {
+        let isSaving = BoolReference()
+        let saveCheckbox = makeSaveCheckbox(
+            label: String(
+                format: .Localized.save_this_account_for_future_payments,
+                configuration.merchantDisplayName
+            )
+        ) { value in
+            isSaving.value = value
+        }
+        isSaving.value = shouldDisplaySaveCheckbox && isSettingUp
+            ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : isSettingUp
+
+        return shouldDisplaySaveCheckbox && isSettingUp ? saveCheckbox : nil
     }
 
     func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {

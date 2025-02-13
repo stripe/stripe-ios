@@ -288,6 +288,7 @@ extension STPAPIClient {
         consumerAccountPublishableKey: String?,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         cvc: String?,
+        expectedPaymentMethodType: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
@@ -304,6 +305,9 @@ extension STPAPIClient {
         }
         if let allowRedisplay {
             parameters["allow_redisplay"] = allowRedisplay.stringValue
+        }
+        if let expectedPaymentMethodType {
+            parameters["expected_payment_method_type"] = expectedPaymentMethodType
         }
 
         APIRequest<PaymentDetailsShareResponse>.post(
@@ -322,6 +326,7 @@ extension STPAPIClient {
 
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
+        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
@@ -330,7 +335,7 @@ extension STPAPIClient {
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
-            "types": ["card"],
+            "types": supportedPaymentDetailsTypes.map(\.rawValue),
         ]
 
         post(

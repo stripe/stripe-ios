@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (nem kötelező)";
 
+"(not accepted)" = "(nem elfogadott)";
+
 "Account number" = "Számlaszám";
 
 "Address" = "Cím";

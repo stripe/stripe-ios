@@ -133,7 +133,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             collectionView.isRemovingPaymentMethods = newValue
             collectionView.performBatchUpdates({
                 collectionView.reloadSections(IndexSet(integer: 0))
-                animateHeightChange{self.collectionView.updateLayout()}
+                animateHeightChange { self.collectionView.updateLayout() }
             })
             UIView.transition(with: collectionView,
                               duration: 0.3,
@@ -377,8 +377,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             customerID: configuration.customerID,
             showApplePay: configuration.showApplePay,
             showLink: configuration.showLink,
-            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
-            customer: elementsSession.customer
+            elementsSession: elementsSession
         )
 
         collectionView.reloadData()
@@ -457,19 +456,9 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
-    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, allowsSetAsDefaultPM: Bool, customer: ElementsCustomer?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, elementsSession: STPElementsSession?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
-        var defaultPaymentMethodOption: CustomerPaymentOption?
-        // if opted in to the "set as default" feature, try to get default payment method from elements session
-        if allowsSetAsDefaultPM {
-           if let customer = customer,
-              let defaultPaymentMethod = customer.getDefaultOrFirstPaymentMethod() {
-               defaultPaymentMethodOption = CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
-           }
-        }
-        else {
-            defaultPaymentMethodOption = CustomerPaymentOption.defaultPaymentMethod(for: customerID)
-        }
+        let selectedPaymentMethodOption = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
 
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
@@ -490,7 +479,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let firstPaymentMethodIsLink = !showApplePay && showLink
         let defaultIndex = firstPaymentMethodIsLink ? 2 : 1
 
-        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethodOption }) ?? defaultIndex
+        let defaultSelectedIndex = viewModels.firstIndex(where: { $0 == selectedPaymentMethodOption }) ?? defaultIndex
         return (defaultSelectedIndex, viewModels)
     }
 }
@@ -590,8 +579,8 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
-                                                           allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
-                                                           isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
+                                                           canSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
+                                                           isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId)
         )
         let editVc = UpdatePaymentMethodViewController(
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,

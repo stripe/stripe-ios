@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (valikuline)";
 
+"(not accepted)" = "(pole aktsepteeritud)";
+
 "Account number" = "Kontonumber";
 
 "Address" = "Aadress";

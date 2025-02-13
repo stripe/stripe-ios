@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift

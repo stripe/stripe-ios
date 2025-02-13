@@ -201,7 +201,7 @@ extension PaymentSheet {
                     with: authenticationContext,
                     completion: { actionStatus, paymentIntent, error in
                         if let paymentIntent {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration)
+                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                         }
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -223,7 +223,7 @@ extension PaymentSheet {
                     with: authenticationContext,
                     completion: { actionStatus, setupIntent, error in
                         if let setupIntent {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration)
+                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                         }
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -242,6 +242,7 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
+                    allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                     completion: completion
                 )
             }
@@ -456,7 +457,12 @@ extension PaymentSheet {
                         case .success(let paymentDetails):
                             if elementsSession.linkPassthroughModeEnabled {
                                 // If passthrough mode, share payment details
-                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc, allowRedisplay: paymentMethodParams.allowRedisplay) { result in
+                                linkAccount.sharePaymentDetails(
+                                    id: paymentDetails.stripeID,
+                                    cvc: paymentMethodParams.card?.cvc,
+                                    allowRedisplay: paymentMethodParams.allowRedisplay,
+                                    expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession)
+                                ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
                                         confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
@@ -514,7 +520,12 @@ extension PaymentSheet {
 
                 if elementsSession.linkPassthroughModeEnabled {
                     // allowRedisplay is nil since we are not saving a payment method.
-                    linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentDetails.cvc, allowRedisplay: nil) { result in
+                    linkAccount.sharePaymentDetails(
+                        id: paymentDetails.stripeID,
+                        cvc: paymentDetails.cvc,
+                        allowRedisplay: nil,
+                        expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession)
+                    ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
                             confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
@@ -570,7 +581,7 @@ extension PaymentSheet {
 
     /// A helper method that sets the Customer's default payment method if necessary.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
-    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration) {
+    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration, paymentMethodSetAsDefault: Bool) {
 
         guard
             // Did we successfully save this payment method?
@@ -580,8 +591,8 @@ extension PaymentSheet {
             let paymentMethod = intent.paymentMethod,
             // Can it appear in the list of saved PMs?
             PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type),
-            // Should we be writing to local storage?
-            !configuration.allowsSetAsDefaultPM
+            // Should it write to local storage?
+            !paymentMethodSetAsDefault
         else {
             return
         }
@@ -732,4 +743,22 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
     lhsConverted.phone = lhs.phone
 
     return rhs == lhsConverted
+}
+
+private extension ConsumerPaymentDetails {
+
+    func expectedPaymentMethodTypeForPassthroughMode(
+        _ elementsSession: STPElementsSession
+    ) -> String? {
+        switch type {
+        case .card:
+            return "card"
+        case .unparsable:
+            return nil
+        case .bankAccount:
+            let canAcceptACH = elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount)
+            let isLinkCardBrand = elementsSession.linkSettings?.linkMode?.isPantherPayment ?? false
+            return isLinkCardBrand && !canAcceptACH ? "card" : "bank_account"
+        }
+    }
 }

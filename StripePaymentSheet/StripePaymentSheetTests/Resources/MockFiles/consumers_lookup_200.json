@@ -5,7 +5,7 @@
   "consumer_session": {
       "client_secret": "pscs_abc123",
       "email_address": "foo@bar.com",
-      "redacted_phone_number": "+1********12",
+      "redacted_formatted_phone_number": "(***) *** **12",
       "verification_sessions": [],
       "support_paymnet_details_types": ["CARD"],
   }

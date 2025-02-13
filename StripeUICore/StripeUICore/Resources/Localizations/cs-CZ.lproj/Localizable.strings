@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (volitelné)";
 
+"(not accepted)" = "(nepřijímá se)";
+
 "Account number" = "Číslo účtu";
 
 "Address" = "Adresa";

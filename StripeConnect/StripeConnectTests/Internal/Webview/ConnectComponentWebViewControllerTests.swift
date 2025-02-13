@@ -379,8 +379,15 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       loadContent: false,
                                                       analyticsClientFactory: MockComponentAnalyticsClient.init,
                                                       didFailLoadWithError: { _ in })
+        
+        let analyticsClient = try XCTUnwrap(webVC.analyticsClient as? MockComponentAnalyticsClient)
+        analyticsClient.pageViewId = "123"
+        
         try await webVC.webView.evaluateAccountSessionClaimed(merchantId: "acct_123")
         XCTAssertEqual(webVC.analyticsClient.merchantId, "acct_123")
+        
+        let sessionClaimed = try analyticsClient.lastEvent(ofType: ComponentAccountSessionClaimed.self)
+        XCTAssertEqual(sessionClaimed.metadata.pageViewId, "123")
     }
 
     @MainActor

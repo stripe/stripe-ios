@@ -71,7 +71,7 @@ extension STPElementsSession {
             customer: customer
         )
     }
-    
+
     static func _testCardValue() -> STPElementsSession {
         return _testValue(paymentMethodTypes: ["card"])
     }
@@ -82,11 +82,12 @@ extension STPElementsSession {
                 "enabled": true,
                 "features": ["payment_method_save": "enabled",
                              "payment_method_remove": "enabled",
+                             "payment_method_set_as_default": "enabled",
                             ],
             ],
             "customer_sheet": [
                 "enabled": false,
-            ], ], allowsSetAsDefaultPM: true, defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
+            ], ], defaultPaymentMethod: defaultPaymentMethod, paymentMethods: paymentMethods)
     }
 
     static func _testValue(
@@ -98,7 +99,6 @@ extension STPElementsSession {
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         disableLinkSignup: Bool? = nil,
-        allowsSetAsDefaultPM: Bool = false,
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
@@ -126,7 +126,7 @@ extension STPElementsSession {
                                     "components": customerSessionData,
                                     ],
                                 ]
-            if allowsSetAsDefaultPM, let defaultPaymentMethod {
+            if let defaultPaymentMethod {
                 json[jsonDict: "customer"]?["default_payment_method"] = defaultPaymentMethod
             }
             if let paymentMethods {
@@ -153,7 +153,7 @@ extension STPElementsSession {
         if let linkSuppress2FA {
             json[jsonDict: "link_settings"]!["link_mobile_suppress_2fa_modal"] = linkSuppress2FA
         }
-        
+
         if hasLinkConsumerIncentive {
             json[jsonDict: "link_settings"]!["link_consumer_incentive"] = [
                 "campaign": "bankaccountsignup",
@@ -162,7 +162,7 @@ extension STPElementsSession {
                     "amount_flat": 500,
                     "currency": "USD",
                     "payment_method": "link_instant_debits",
-                ]
+                ],
             ]
         }
 
@@ -199,19 +199,19 @@ extension STPElementsSession {
                     "enabled": true,
                     "features": ["payment_method_save": "enabled",
                                  "payment_method_remove": "enabled",
+                                 "payment_method_set_as_default": "enabled",
                                 ],
                 ],
                 "customer_sheet": [
                     "enabled": false,
-                ]
+                ],
             ]
         }
         return STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
             linkMode: linkMode,
-            linkFundingSources: linkFundingSources,
-            allowsSetAsDefaultPM: allowsSetAsDefaultPM
+            linkFundingSources: linkFundingSources
         )
     }
 }

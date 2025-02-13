@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (по желание)";
 
+"(not accepted)" = "(не се приема)";
+
 "Account number" = "Номер на сметката";
 
 "Address" = "Адрес";
