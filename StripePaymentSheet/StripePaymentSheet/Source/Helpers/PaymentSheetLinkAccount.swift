@@ -298,6 +298,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     func listPaymentDetails(
+        supportedTypes: [ConsumerPaymentDetails.DetailsType],
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
@@ -309,6 +310,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
             session.listPaymentDetails(
                 with: self.apiClient,
+                supportedPaymentDetailsTypes: supportedTypes,
                 consumerAccountPublishableKey: self.publishableKey,
                 completion: completionRetryingOnAuthErrors
             )
@@ -364,7 +366,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func sharePaymentDetails(id: String, cvc: String?, allowRedisplay: STPPaymentMethodAllowRedisplay?, completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void) {
+    func sharePaymentDetails(
+        id: String,
+        cvc: String?,
+        allowRedisplay: STPPaymentMethodAllowRedisplay?,
+        expectedPaymentMethodType: String?,
+        completion: @escaping (Result<PaymentDetailsShareResponse, Error>
+    ) -> Void) {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
@@ -380,6 +388,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 id: id,
                 cvc: cvc,
                 allowRedisplay: allowRedisplay,
+                expectedPaymentMethodType: expectedPaymentMethodType,
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionRetryingOnAuthErrors
             )

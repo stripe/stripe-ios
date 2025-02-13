@@ -29,9 +29,8 @@ final class LinkInstantDebitMandateView: UIView {
         static let lineHeight: CGFloat = 1.5
     }
 
-    // TODO(ramont): Update with final URLs
     private let links: [String: URL] = [
-        "terms": URL(string: "https://stripe.com/ach-payments/authorization")!
+        "terms": URL(string: "https://link.com/terms/ach-authorization")!
     ]
 
     weak var delegate: LinkInstantDebitMandateViewDelegate?

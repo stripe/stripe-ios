@@ -457,7 +457,12 @@ extension PaymentSheet {
                         case .success(let paymentDetails):
                             if elementsSession.linkPassthroughModeEnabled {
                                 // If passthrough mode, share payment details
-                                linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentMethodParams.card?.cvc, allowRedisplay: paymentMethodParams.allowRedisplay) { result in
+                                linkAccount.sharePaymentDetails(
+                                    id: paymentDetails.stripeID,
+                                    cvc: paymentMethodParams.card?.cvc,
+                                    allowRedisplay: paymentMethodParams.allowRedisplay,
+                                    expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession)
+                                ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
                                         confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
@@ -515,7 +520,12 @@ extension PaymentSheet {
 
                 if elementsSession.linkPassthroughModeEnabled {
                     // allowRedisplay is nil since we are not saving a payment method.
-                    linkAccount.sharePaymentDetails(id: paymentDetails.stripeID, cvc: paymentDetails.cvc, allowRedisplay: nil) { result in
+                    linkAccount.sharePaymentDetails(
+                        id: paymentDetails.stripeID,
+                        cvc: paymentDetails.cvc,
+                        allowRedisplay: nil,
+                        expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession)
+                    ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
                             confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
@@ -733,4 +743,22 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
     lhsConverted.phone = lhs.phone
 
     return rhs == lhsConverted
+}
+
+private extension ConsumerPaymentDetails {
+
+    func expectedPaymentMethodTypeForPassthroughMode(
+        _ elementsSession: STPElementsSession
+    ) -> String? {
+        switch type {
+        case .card:
+            return "card"
+        case .unparsable:
+            return nil
+        case .bankAccount:
+            let canAcceptACH = elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount)
+            let isLinkCardBrand = elementsSession.linkSettings?.linkMode?.isPantherPayment ?? false
+            return isLinkCardBrand && !canAcceptACH ? "card" : "bank_account"
+        }
+    }
 }
