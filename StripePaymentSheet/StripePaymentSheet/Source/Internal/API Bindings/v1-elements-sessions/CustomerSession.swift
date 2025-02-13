@@ -42,6 +42,7 @@ struct CustomerSession: Equatable, Hashable {
                 return nil
             }
             let paymentMethodRemoveLast = mobilePaymentElementFeaturesDict["payment_method_remove_last"] as? String ?? "enabled"
+            let paymentMethodSetAsDefault = mobilePaymentElementFeaturesDict["payment_method_set_as_default"] as? String ?? "disabled"
 
             var allowRedisplayOverrideValue: STPPaymentMethodAllowRedisplay?
             if let allowRedisplayOverride = mobilePaymentElementFeaturesDict["payment_method_save_allow_redisplay_override"] as? String {
@@ -52,7 +53,8 @@ struct CustomerSession: Equatable, Hashable {
                                                                           features: MobilePaymentElementComponentFeature(paymentMethodSave: paymentMethodSave == "enabled",
                                                                                                                          paymentMethodRemove: paymentMethodRemove == "enabled",
                                                                                                                          paymentMethodRemoveLast: paymentMethodRemoveLast == "enabled",
-                                                                                                                         paymentMethodSaveAllowRedisplayOverride: allowRedisplayOverrideValue))
+                                                                                                                         paymentMethodSaveAllowRedisplayOverride: allowRedisplayOverrideValue,
+                                                                                                                         paymentMethodSetAsDefault: paymentMethodSetAsDefault == "enabled"))
         } else {
             mobilePaymentElementComponent = MobilePaymentElementComponent(enabled: false, features: nil)
         }
@@ -64,10 +66,11 @@ struct CustomerSession: Equatable, Hashable {
                 return nil
             }
             let paymentMethodRemoveLast = customerSheetFeaturesDict["payment_method_remove_last"] as? String ?? "enabled"
-
+            let paymentMethodSyncDefault = customerSheetFeaturesDict["payment_method_sync_default"] as? String ?? "disabled"
             customerSheetComponent = CustomerSheetComponent(enabled: true,
                                                             features: CustomerSheetComponentFeature(paymentMethodRemove: paymentMethodRemove == "enabled",
-                                                                                                    paymentMethodRemoveLast: paymentMethodRemoveLast == "enabled"))
+                                                                                                    paymentMethodRemoveLast: paymentMethodRemoveLast == "enabled",
+                                                                                                    paymentMethodSyncDefault: paymentMethodSyncDefault == "enabled"))
         } else {
             customerSheetComponent = CustomerSheetComponent(enabled: false, features: nil)
         }
@@ -94,6 +97,7 @@ struct MobilePaymentElementComponentFeature: Equatable, Hashable {
     let paymentMethodRemove: Bool
     let paymentMethodRemoveLast: Bool
     let paymentMethodSaveAllowRedisplayOverride: STPPaymentMethodAllowRedisplay?
+    let paymentMethodSetAsDefault: Bool
 }
 
 struct CustomerSheetComponent: Equatable, Hashable {
@@ -104,4 +108,5 @@ struct CustomerSheetComponent: Equatable, Hashable {
 struct CustomerSheetComponentFeature: Equatable, Hashable {
     let paymentMethodRemove: Bool
     let paymentMethodRemoveLast: Bool
+    let paymentMethodSyncDefault: Bool
 }

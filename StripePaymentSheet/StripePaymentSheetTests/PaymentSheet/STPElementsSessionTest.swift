@@ -53,6 +53,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.cardBrandChoice?.eligible, true)
         XCTAssertEqual(elementsSession.flags, ["cbc_in_link_popup": true, "disable_cbc_in_link_popup": false])
         XCTAssertTrue(elementsSession.isApplePayEnabled)
+        XCTAssertFalse(elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }
 
@@ -263,6 +264,44 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(.legacy, savePaymentMethodConsentBehavior)
     }
 
+    func testSetAsDefault_enabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "mobile_payment_element": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                 "payment_method_set_as_default": "enabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false,
+                                                                ],
+                                                            ])
+
+        let allowsSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
+        XCTAssertTrue(allowsSetAsDefault)
+    }
+
+    func testSetAsDefault_disabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "mobile_payment_element": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                 "payment_method_set_as_default": "disabled",
+                                                                                ],
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": false,
+                                                                ],
+                                                            ])
+
+        let allowsSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
+        XCTAssertFalse(allowsSetAsDefault)
+    }
+
     func testAllowsRemovalOfPaymentMethodsForCustomerSheet_legacy() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: nil)
@@ -341,6 +380,38 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
         XCTAssertTrue(allowsRemoval)
         XCTAssertFalse(elementsSession.paymentMethodRemoveLastForCustomerSheet)
+    }
+    func testSetAsDefaultForCustomerSheet_enabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "mobile_payment_element": [
+                                                                    "enabled": false
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_remove": "enabled",
+                                                                        "payment_method_sync_default": "enabled",
+                                                                                ],
+                                                                ],
+                                                            ])
+
+        let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
+        XCTAssertTrue(allowsSetAsDefault)
+    }
+    func testSetAsDefaultForCustomerSheet_disabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "mobile_payment_element": [
+                                                                    "enabled": false
+                                                                ],
+                                                                "customer_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_sync_default": "disabled"],
+                                                                ],
+                                                            ])
+
+        let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
+        XCTAssertFalse(allowsSetAsDefault)
     }
     private let testCardJSON = [
         "id": "pm_123card",

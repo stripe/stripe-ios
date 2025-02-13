@@ -50,7 +50,12 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
-    var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases)
+    var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases) {
+        didSet {
+            // TODO(tillh-stripe) Update this as soon as adding bank accounts is supported
+            addPaymentMethodButton.isHidden = !supportedPaymentMethodTypes.contains(.card)
+        }
+    }
 
     var selectedPaymentMethod: ConsumerPaymentDetails? {
         let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0

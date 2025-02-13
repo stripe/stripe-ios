@@ -51,10 +51,23 @@ public enum CustomerPaymentOption: Equatable {
         UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
     }
 
-    /// Returns the identifier of the default payment method for a customer.
+    /// Returns the identifier of the selected by default payment method for a customer.
     /// - Parameter customerID: ID of the customer. Pass `nil` for anonymous users.
-    /// - Returns: Default payment method.
-    @_spi(STP) public static func defaultPaymentMethod(for customerID: String?) -> CustomerPaymentOption? {
+    /// - Parameter elementsSession: the ElementsSession.
+    /// - Parameter surface: `.paymentSheet` or `.customerSheet`
+    /// - Returns: Selected payment method.
+    @_spi(STP) public static func selectedPaymentMethod(for customerID: String?, elementsSession: STPElementsSession?, surface: HostedSurface?) -> CustomerPaymentOption? {
+        // if opted in to the "set as default" feature, get default or first payment method from elements session
+        guard let elementsSession = elementsSession,
+              let surface = surface,
+              surface == .paymentSheet ? elementsSession.paymentMethodSetAsDefaultForPaymentSheet : elementsSession.paymentMethodSyncDefaultForCustomerSheet
+        // otherwise, get default payment method from local storage
+        else { return localDefaultPaymentMethod(for: customerID) }
+        guard let selectedPaymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() else { return nil }
+        return CustomerPaymentOption.stripeId(selectedPaymentMethod.stripeId)
+    }
+
+    private static func localDefaultPaymentMethod(for customerID: String?) -> CustomerPaymentOption? {
         let key = customerID ?? ""
 
         guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key] else {
