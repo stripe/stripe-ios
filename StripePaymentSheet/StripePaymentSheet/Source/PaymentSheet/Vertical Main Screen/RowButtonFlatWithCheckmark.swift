@@ -51,6 +51,18 @@ final class RowButtonFlatWithCheckmark: UIView, RowButtonContent {
         return !subtext.isEmpty
     }
 
+    var isDisplayingAccessoryView: Bool {
+        set {
+            bottomAccessoryView?.isHidden = !newValue
+        }
+        get {
+            guard let bottomAccessoryView else {
+                return false
+            }
+            return !bottomAccessoryView.isHidden
+        }
+    }
+
     init(
         appearance: PaymentSheet.Appearance,
         imageView: UIImageView,
@@ -95,7 +107,7 @@ private extension RowButtonFlatWithCheckmark {
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
-        
+
         let stackView = UIStackView(arrangedSubviews: [labelsStackView, bottomAccessoryView].compactMap { $0 })
         stackView.axis = .vertical
         stackView.alignment = .leading
@@ -105,7 +117,7 @@ private extension RowButtonFlatWithCheckmark {
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 checkmarkImageView].compactMap { $0 })
+                                                                 checkmarkImageView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
         if let promoBadge {
             horizontalStackView.setCustomSpacing(12, after: promoBadge)
@@ -125,7 +137,7 @@ private extension RowButtonFlatWithCheckmark {
         imageViewTopConstraint.priority = .defaultLow
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
-        
+
         let imageViewCenterYConstraint: NSLayoutConstraint
         // If we have an accessory view align the image with the top label
         if let bottomAccessoryView, !bottomAccessoryView.isHidden {
@@ -148,7 +160,7 @@ private extension RowButtonFlatWithCheckmark {
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -12),
+            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),

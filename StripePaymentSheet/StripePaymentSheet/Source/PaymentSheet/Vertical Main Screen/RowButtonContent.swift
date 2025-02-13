@@ -24,4 +24,7 @@ protocol RowButtonContent: UIView {
 
     /// A boolean that indicates if this content view is displaying any subtext
     var hasSubtext: Bool { get }
+
+    /// A boolean indicating if this content view is displaying an accessory view
+    var isDisplayingAccessoryView: Bool { get set }
 }

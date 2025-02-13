@@ -78,7 +78,7 @@ extension RowButton {
             stackView.spacing = 4
             return stackView
         }
-        
+
         override var isHidden: Bool {
             get { super.isHidden }
             set {
