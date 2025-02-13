@@ -42,7 +42,6 @@ class RowButton: UIView {
             content?.isSelected = isSelected
             checkmarkImageView?.isHidden = !isSelected
             updateAccessibilityTraits()
-            updateDefaultBadgeFont()
             if isFlatWithCheckmarkStyle {
                 alignBadgeAndCheckmark()
             }
@@ -154,123 +153,6 @@ class RowButton: UIView {
             makeSameHeightAsOtherRowButtonsIfNecessary()
             return // Skip the rest of the complicated layout
         }
-
-        // TOOD(porter) Refactor the rest of this for other row styles (flat w/ check)
-
-        // Label and sublabel
-        label.isAccessibilityElement = false
-        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel])
-        // add accessory view below labels if in checkmark style
-        if let rightAccessoryView, isFlatWithCheckmarkStyle {
-            labelsStackView.addArrangedSubview(rightAccessoryView)
-        }
-        labelsStackView.axis = .vertical
-        labelsStackView.alignment = .leading
-
-        if let rightAccessoryView, !isFlatWithCheckmarkStyle {
-            let rightAccessoryViewPadding: CGFloat = {
-                guard isEmbedded else {
-                    return -12
-                }
-
-                switch appearance.embeddedPaymentElement.row.style {
-                case .flatWithRadio, .flatWithCheckmark:
-                    return 0
-                case .floatingButton:
-                    return -12
-                }
-            }()
-            rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(rightAccessoryView)
-            NSLayoutConstraint.activate([
-                rightAccessoryView.topAnchor.constraint(equalTo: topAnchor),
-                rightAccessoryView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                rightAccessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: rightAccessoryViewPadding),
-            ])
-        }
-
-        if let checkmarkImageView {
-            checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(checkmarkImageView)
-            NSLayoutConstraint.activate([
-                checkmarkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-                checkmarkImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                checkmarkImageView.widthAnchor.constraint(equalToConstant: 16),
-                checkmarkImageView.heightAnchor.constraint(equalToConstant: 16),
-            ])
-        }
-
-        if let promoBadge {
-            let promoBadgePadding: CGFloat = {
-                guard isEmbedded else {
-                    return -12
-                }
-
-                switch appearance.embeddedPaymentElement.row.style {
-                case .flatWithRadio:
-                    return 0
-                case .flatWithCheckmark, .floatingButton:
-                    return -12
-                }
-            }()
-            promoBadge.translatesAutoresizingMaskIntoConstraints = false
-            promoBadge.isUserInteractionEnabled = false
-            addSubview(promoBadge)
-            NSLayoutConstraint.activate([
-                promoBadge.centerYAnchor.constraint(equalTo: centerYAnchor),
-                promoBadge.trailingAnchor.constraint(equalTo: trailingAnchor, constant: promoBadgePadding),
-            ])
-
-            if isFlatWithCheckmarkStyle {
-                alignBadgeAndCheckmark(initialRender: true)
-            }
-        }
-
-        for view in [imageView, labelsStackView, defaultBadge].compactMap({ $0 }) {
-            view.translatesAutoresizingMaskIntoConstraints = false
-            view.isAccessibilityElement = false
-            addSubview(view)
-        }
-
-        // Resolve ambiguous height warning by setting these constraints w/ low priority
-        let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 14)
-        imageViewTopConstraint.priority = .defaultLow
-        let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
-        imageViewBottomConstraint.priority = .defaultLow
-
-        makeSameHeightAsOtherRowButtonsIfNecessary()
-        let insets = isEmbedded ? appearance.embeddedPaymentElement.row.additionalInsets : 4
-
-        var imageViewConstraints = [
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
-            imageView.heightAnchor.constraint(equalToConstant: 20),
-            imageView.widthAnchor.constraint(equalToConstant: 24),
-        ]
-
-        if isFlatWithCheckmarkStyle, let rightAccessoryView, !rightAccessoryView.isHidden {
-            imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor))
-        } else {
-            imageViewConstraints.append(imageView.centerYAnchor.constraint(equalTo: centerYAnchor))
-        }
-
-        NSLayoutConstraint.activate(imageViewConstraints)
-
-        let labelTrailingConstant = isFlatWithCheckmarkStyle ? checkmarkImageView?.leadingAnchor ?? trailingAnchor : rightAccessoryView?.leadingAnchor ?? trailingAnchor
-        NSLayoutConstraint.activate([
-            labelsStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            labelsStackView.trailingAnchor.constraint(equalTo: promoBadge?.leadingAnchor ?? labelTrailingConstant, constant: -12),
-            labelsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            labelsStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
-            labelsStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
-
-            defaultBadge?.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
-            defaultBadge?.centerYAnchor.constraint(equalTo: centerYAnchor),
-
-            imageViewBottomConstraint,
-            imageViewTopConstraint,
-        ].compactMap({ $0 }))
     }
 
     private func setupTapGestures() {
@@ -304,13 +186,6 @@ class RowButton: UIView {
                 self.layoutIfNeeded()
             }
         }
-    }
-
-    private func updateDefaultBadgeFont() {
-        guard let defaultBadge else {
-            return
-        }
-        defaultBadge.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
     }
 
     required init?(coder: NSCoder) {
