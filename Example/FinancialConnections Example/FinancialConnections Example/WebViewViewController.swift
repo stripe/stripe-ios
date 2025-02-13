@@ -37,7 +37,7 @@ import WebKit
 // 2. Add client code (shown below) that will open an extra browser that
 //    will handle the bank OAuth pop-up.
 //
-// 3. Optional, but recommended: Handle app-to-app authentication flows by
+// 3. Handle app-to-app authentication flows by
 //    attempting to open new window URLs as universal links.
 //    This is done via `UIApplication.shared.open` and passing
 //    `[.universalLinksOnly: true]` as the `options`.
