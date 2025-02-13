@@ -25,32 +25,35 @@ class AccountOnboardingViewControllerTests: XCTestCase {
 
     @MainActor
     func testDelegate() async throws {
-        let delegate = AccountOnboardingViewControllerDelegatePassThrough()
-        let vc = componentManager.createAccountOnboardingViewController()
-        vc.delegate = delegate
+        let delegate = AccountOnboardingControllerDelegatePassThrough()
+        let controller = componentManager.createAccountOnboardingController()
+        controller.delegate = delegate
 
         let expectationDidExit = XCTestExpectation(description: "didExit called")
-        delegate.accountOnboardingDidExit = { onboardingVC in
-            XCTAssertEqual(vc, onboardingVC)
+        delegate.accountOnboardingDidExit = { onboarding in
+            XCTAssert(controller === onboarding)
+
             expectationDidExit.fulfill()
         }
-        try await vc.webVC.webView.evaluateSetOnExit()
+        
+        controller.webVC.onDismiss?()
+//        try await controller.webVC.webView.evaluateSetOnExit()
         await fulfillment(of: [expectationDidExit], timeout: TestHelpers.defaultTimeout)
 
         let expectationDidFail = XCTestExpectation(description: "didFail called")
         delegate.accountOnboardingDidFailLoadWithError = { onboardingVC, error in
-            XCTAssertEqual(vc, onboardingVC)
+            XCTAssert(controller === onboardingVC)
             XCTAssertEqual((error as? EmbeddedComponentError)?.type, .rateLimitError)
             XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
             expectationDidFail.fulfill()
         }
-        try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await controller.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         await fulfillment(of: [expectationDidFail], timeout: TestHelpers.defaultTimeout)
     }
 
     @MainActor
     func testFetchInitComponentProps() async throws {
-        let vc = componentManager.createAccountOnboardingViewController(
+        let vc = componentManager.createAccountOnboardingController(
             fullTermsOfServiceUrl: URL(string: "https://fullTermsOfServiceUrl.com")!,
             recipientTermsOfServiceUrl: URL(string: "https://recipientTermsOfServiceUrl.com")!,
             privacyPolicyUrl: URL(string: "https://privacyPolicyUrl.com")!,
@@ -70,20 +73,26 @@ class AccountOnboardingViewControllerTests: XCTestCase {
             """)
     }
 
-    private class AccountOnboardingViewControllerDelegatePassThrough: AccountOnboardingViewControllerDelegate {
+    private class AccountOnboardingControllerDelegatePassThrough: AccountOnboardingControllerDelegate {
 
-        var accountOnboardingDidExit: ((_ accountOnboarding: AccountOnboardingViewController) -> Void)?
+        var accountOnboardingDidRequestDismissalFromUser: ((_ accountOnboarding: AccountOnboardingController) -> Void)?
 
-        var accountOnboardingDidFailLoadWithError: ((_ accountOnboarding: AccountOnboardingViewController, _ error: Error) -> Void)?
-
-        func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingViewController) {
-            accountOnboardingDidExit?(accountOnboarding)
+        var accountOnboardingDidFailLoadWithError: ((_ accountOnboarding: AccountOnboardingController, _ error: Error) -> Void)?
+        
+        var accountOnboardingDidExit: ((_ accountOnboarding: AccountOnboardingController)->Void)? = nil
+        
+        func accountOnboardingDidRequestDismissalFromUser(_ accountOnboarding: AccountOnboardingController) {
+            accountOnboardingDidRequestDismissalFromUser?(accountOnboarding)
         }
 
-        func accountOnboarding(_ accountOnboarding: AccountOnboardingViewController,
+        func accountOnboarding(_ accountOnboarding: AccountOnboardingController,
                                didFailLoadWithError error: Error)
         {
             accountOnboardingDidFailLoadWithError?(accountOnboarding, error)
+        }
+        
+        func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController) {
+            accountOnboardingDidExit?(accountOnboarding)
         }
     }
 
