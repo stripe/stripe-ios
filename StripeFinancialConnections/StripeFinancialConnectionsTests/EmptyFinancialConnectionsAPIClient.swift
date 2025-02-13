@@ -57,7 +57,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
-    
+
     func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
         return Promise<FinancialConnectionsRepairSession>()
     }
@@ -72,7 +72,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     ) -> Future<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
-    
+
     func retrieveAuthSessionPolling(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }

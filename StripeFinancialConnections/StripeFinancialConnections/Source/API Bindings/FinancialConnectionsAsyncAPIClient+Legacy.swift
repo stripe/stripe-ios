@@ -102,7 +102,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
             try await self.createAuthSession(clientSecret: clientSecret, institutionId: institutionId)
         }
     }
-    
+
     func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
         wrapAsyncToPromise {
             try await self.repairAuthSession(clientSecret: clientSecret, coreAuthorization: coreAuthorization)
@@ -126,7 +126,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
             try await self.retrieveAuthSession(clientSecret: clientSecret, authSessionId: authSessionId)
         }
     }
-    
+
     func retrieveAuthSessionPolling(
         clientSecret: String,
         authSessionId: String

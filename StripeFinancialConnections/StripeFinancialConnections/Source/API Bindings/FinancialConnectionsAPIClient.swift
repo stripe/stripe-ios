@@ -184,7 +184,7 @@ protocol FinancialConnectionsAPI {
     func fetchInstitutions(clientSecret: String, query: String) -> Future<FinancialConnectionsInstitutionSearchResultResource>
 
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession>
-    
+
     func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession>
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
@@ -193,7 +193,7 @@ protocol FinancialConnectionsAPI {
         clientSecret: String,
         authSessionId: String
     ) -> Future<FinancialConnectionsAuthSession>
-    
+
     func retrieveAuthSessionPolling(
         clientSecret: String,
         authSessionId: String
@@ -465,7 +465,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             useConsumerPublishableKeyIfNeeded: true
         )
     }
-    
+
     func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
         let body: [String: Any] = [
             "client_secret": clientSecret,
@@ -505,7 +505,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             useConsumerPublishableKeyIfNeeded: true
         )
     }
-    
+
     func retrieveAuthSessionPolling(
         clientSecret: String,
         authSessionId: String

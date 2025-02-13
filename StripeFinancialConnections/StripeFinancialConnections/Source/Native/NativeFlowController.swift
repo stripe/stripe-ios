@@ -835,7 +835,7 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
 
         showErrorPane(forError: error, referrerPane: .partnerAuth)
     }
-    
+
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
@@ -1169,7 +1169,7 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
         dataManager.institution = institution
         pushPane(.partnerAuth, animated: true)
     }
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         requestedBankAuthRepairWithInstitution institution: FinancialConnectionsInstitution,

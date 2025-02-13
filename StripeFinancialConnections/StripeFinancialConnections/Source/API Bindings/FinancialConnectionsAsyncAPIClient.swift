@@ -215,7 +215,7 @@ protocol FinancialConnectionsAsyncAPI {
         clientSecret: String,
         authSessionId: String
     ) async throws -> FinancialConnectionsAuthSession
-    
+
     func retrieveAuthSessionPolling(
         clientSecret: String,
         authSessionId: String
@@ -462,7 +462,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         ]
         return try await post(endpoint: .authSessions, parameters: parameters)
     }
-    
+
     func repairAuthSession(clientSecret: String, coreAuthorization: String) async throws -> FinancialConnectionsRepairSession {
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
@@ -490,7 +490,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         ]
         return try await post(endpoint: .authSessionsRetrieve, parameters: parameters)
     }
-    
+
     func retrieveAuthSessionPolling(
         clientSecret: String,
         authSessionId: String
@@ -499,7 +499,6 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        
         return try await poll(
             initialPollDelay: 0,
             maxNumberOfRetries: 300, // Stripe.js has 360 retries and 500ms intervals
@@ -758,7 +757,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 clientSecret: clientSecret
             )
-            
+
             let customSuccessPaneMessage = isRelink ? nil : manifest.displayText?.successPane?.subCaption
 
             return (

@@ -38,7 +38,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     var disableAuthSessionRetrieval: Bool {
         return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
     }
-    
+
     var isNetworkingRelinkSession: Bool {
         return relinkAuthorization != nil
     }
@@ -87,7 +87,6 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
                     isOauth: repairSession.isOauth,
                     display: repairSession.display
                 )
-                
                 self?.pendingAuthSession = authSession
                 return Promise(value: authSession)
             }
@@ -184,7 +183,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             }
         )
     }
-    
+
     func pollAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
         return apiClient.retrieveAuthSessionPolling(
             clientSecret: clientSecret,

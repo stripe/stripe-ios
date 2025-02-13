@@ -33,7 +33,7 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
         _ viewController: LinkAccountPickerViewController,
         requestedPartnerAuthWithInstitution institution: FinancialConnectionsInstitution
     )
-    
+
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
         requestedBankAuthRepairWithInstitution institution: FinancialConnectionsInstitution,

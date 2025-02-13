@@ -54,7 +54,7 @@ final class PartnerAuthViewController: SheetViewController {
     private var loadingView: UIView?
     private var legacyLoadingView: UIView?
     private var showLegacyBrowserOnViewDidAppear = false
-    
+
     var pane: FinancialConnectionsSessionManifest.NextPane {
         return dataSource.isNetworkingRelinkSession ? .bankAuthRepair : .partnerAuth
     }
@@ -166,14 +166,14 @@ final class PartnerAuthViewController: SheetViewController {
                 didSelectCancel: { [weak self] in
                     guard let self = self else { return }
                     let isModal = panePresentationStyle == .sheet
-                    
+
                     self.dataSource.analyticsClient.log(
                         eventName: isModal ? "click.prepane.cancel" : "click.prepane.choose_another_bank",
                         pane: .partnerAuth
                     )
-                    
+
                     self.dataSource.cancelPendingAuthSessionIfNeeded()
-                    
+
                     if isModal {
                         self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
                     } else {
@@ -520,7 +520,7 @@ final class PartnerAuthViewController: SheetViewController {
                 self?.handleAuthSessionRetrieved(result)
             }
     }
-    
+
     private func pollAuthSession(_ authSession: FinancialConnectionsAuthSession) {
         showLoadingView(true)
         dataSource
@@ -529,12 +529,12 @@ final class PartnerAuthViewController: SheetViewController {
                 self?.handleAuthSessionRetrieved(result)
             }
     }
-    
+
     private func handleAuthSessionRetrieved(_ result: Result<FinancialConnectionsAuthSession, any Error>) {
         switch result {
         case .success(let authSession):
             self.didComplete(withAuthSession: authSession)
-            
+
             // hide the loading view after a delay to prevent
             // the screen from flashing _while_ the transition
             // to the next screen takes place
