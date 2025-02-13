@@ -27,7 +27,6 @@ class MainViewController: UITableViewController {
     /// Rows that display inside this table
     enum Row: String, CaseIterable {
         case onboarding = "Account onboarding"
-        case payouts = "Payouts"
 
         var label: String { rawValue }
 
@@ -56,8 +55,6 @@ class MainViewController: UITableViewController {
             switch self {
             case .onboarding:
                 return "Show a localized onboarding form that validates data."
-            case .payouts:
-                return "Show payout information and allow your users to perform payouts."
             }
         }
     }
@@ -69,7 +66,6 @@ class MainViewController: UITableViewController {
             do {
                 return try await API.accountSession(merchantId: merchant.id).get().clientSecret
             } catch {
-                self?.presentAlert(title: "An error occurred retrieving client secret", message: (error as CustomDebugStringConvertible).debugDescription)
                 return nil
             }
         })
@@ -78,7 +74,6 @@ class MainViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = merchant.displayName.map { "Demo account: \($0)" } ?? merchant.merchantId
-        navigationController?.delegate = self
         addChangeAppearanceButtonNavigationItem(to: self)
 
         navigationItem.leftBarButtonItem = .init(
@@ -110,71 +105,20 @@ class MainViewController: UITableViewController {
 
     /// Called when table row is selected
     func performAction(_ row: Row, cell: UITableViewCell) {
-        var viewControllerToPresent: UIViewController
 
         // Create a view controller for the selected component
         switch row {
         case .onboarding:
             let savedOnboardingSettings = AppSettings.shared.onboardingSettings
-            let onboardingVC = embeddedComponentManager.createAccountOnboardingViewController(
+            let onboardingConfig = embeddedComponentManager.createAccountOnboardingController(
                 fullTermsOfServiceUrl: savedOnboardingSettings.fullTermsOfServiceUrl,
                 recipientTermsOfServiceUrl: savedOnboardingSettings.recipientTermsOfServiceUrl,
                 privacyPolicyUrl: savedOnboardingSettings.privacyPolicyUrl,
                 skipTermsOfServiceCollection: savedOnboardingSettings.skipTermsOfService.boolValue,
                 collectionOptions: savedOnboardingSettings.accountCollectionOptions)
-            onboardingVC.delegate = self
-            viewControllerToPresent = onboardingVC
-        case .payouts:
-            let payoutsVC = embeddedComponentManager.createPayoutsViewController()
-            payoutsVC.delegate = self
-            viewControllerToPresent = payoutsVC
-        }
-
-        // Fetch ViewController presentation settings
-        let presentationSettings = AppSettings.shared.presentationSettings
-
-        if presentationSettings.embedInTabBar {
-            // Embed in a tab bar
-            let tabBarController = UITabBarController()
-            viewControllerToPresent.tabBarItem = .init(title: row.label, image: UIImage(systemName: "star"), tag: 0)
-
-            tabBarController.viewControllers = [viewControllerToPresent]
-
-            viewControllerToPresent = tabBarController
-        }
-
-        // Configure the component VC's navbar
-        viewControllerToPresent.navigationItem.backButtonDisplayMode = .minimal
-        addChangeAppearanceButtonNavigationItem(to: viewControllerToPresent)
-        viewControllerToPresent.title = row.label
-
-        if presentationSettings.presentationStyleIsPush {
-            // Push to navigation stack
-            navigationController?.pushViewController(viewControllerToPresent, animated: true)
-        } else {
-            // Modally present
-
-            let closeAction = UIAction { [weak viewControllerToPresent] _ in
-                viewControllerToPresent?.dismiss(animated: true)
-            }
-
-            if presentationSettings.embedInNavBar {
-                // Add a close button to navbar
-                viewControllerToPresent.navigationItem.leftBarButtonItem = .init(systemItem: .close, primaryAction: closeAction)
-
-                // Embed inside a navbar
-                viewControllerToPresent = UINavigationController(rootViewController: viewControllerToPresent)
-            } else {
-                // Add floating close button
-                let closeButton = UIButton(type: .close, primaryAction: closeAction)
-                closeButton.translatesAutoresizingMaskIntoConstraints = false
-                viewControllerToPresent.view.addSubview(closeButton)
-                NSLayoutConstraint.activate([
-                    closeButton.topAnchor.constraint(equalTo: viewControllerToPresent.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-                    closeButton.trailingAnchor.constraint(equalTo: viewControllerToPresent.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-                ])
-            }
-            present(viewControllerToPresent, animated: true)
+            onboardingConfig.delegate = self
+            onboardingConfig.title = row.label
+            onboardingConfig.present(from: self, animated: true)
         }
     }
 
@@ -253,52 +197,14 @@ class MainViewController: UITableViewController {
     }
 }
 
-// MARK: - AccountOnboardingViewControllerDelegate
+// MARK: - AccountOnboardingControllerDelegate
 
-extension MainViewController: AccountOnboardingViewControllerDelegate {
-    func accountOnboarding(_ accountOnboarding: AccountOnboardingViewController, didFailLoadWithError error: any Error) {
+extension MainViewController: AccountOnboardingControllerDelegate {
+    func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController) {
+        //  Retrieve account details to check the status of details_submitted, charges_enabled, payouts_enabled, and other capabilities
+    }
+
+    func accountOnboarding(_ accountOnboarding: AccountOnboardingController, didFailLoadWithError error: any Error) {
         presentAlert(title: "Error loading account onboarding", message: (error as NSError).debugDescription)
-    }
-}
-
-// MARK: - PayoutsViewControllerDelegate
-
-extension MainViewController: PayoutsViewControllerDelegate {
-    func payouts(_ payouts: PayoutsViewController, didFailLoadWithError error: any Error) {
-        presentAlert(title: "Error loading payouts", message: (error as NSError).debugDescription)
-    }
-}
-
-// MARK: - UINavigationControllerDelegate
-
-extension MainViewController: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-
-        // Hide the navbar on the component VC if it's disabled in presentation settings
-
-        navigationController.isNavigationBarHidden = !AppSettings.shared.presentationSettings.embedInNavBar && viewController != self
-
-        if navigationController.isNavigationBarHidden {
-
-            // Add floating back button so we can still navigate back
-
-            let backButton = UIButton(
-                type: .system,
-                primaryAction: UIAction(
-                    title: "Back",
-                    image: UIImage(systemName: "chevron.backward"),
-                    handler: { _ in
-                        navigationController.popViewController(animated: true)
-                    }
-                ))
-            backButton.backgroundColor = .systemBackground.withAlphaComponent(0.5)
-            backButton.layer.cornerRadius = 4
-            backButton.translatesAutoresizingMaskIntoConstraints = false
-            viewController.view.addSubview(backButton)
-            NSLayoutConstraint.activate([
-                backButton.topAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-                backButton.leadingAnchor.constraint(equalTo: viewController.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            ])
-        }
     }
 }
