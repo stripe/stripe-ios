@@ -101,6 +101,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     /// Variable to decide we should collect CVC
     var isCVCRecollectionEnabled: Bool
 
+    var defaultPaymentMethod: STPPaymentMethod?
+
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
@@ -156,6 +158,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
+        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+            defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
+        }
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
@@ -290,6 +295,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     /// Returns the default selected row in the vertical list - the previous payment option, the last VC's selection, or the customer's default.
     func calculateInitialSelection() -> RowButtonType? {
+        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+            guard let selectedPaymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() else { return nil }
+            return .saved(paymentMethod: selectedPaymentMethod)
+        }
         if let previousPaymentOption {
             switch previousPaymentOption {
             case .applePay:
@@ -628,7 +637,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            defaultPaymentMethod: defaultPaymentMethod
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
@@ -660,10 +670,12 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         viewController: VerticalSavedPaymentMethodsViewController,
         with selectedPaymentMethod: STPPaymentMethod?,
         latestPaymentMethods: [STPPaymentMethod],
-        didTapToDismiss: Bool
+        didTapToDismiss: Bool,
+        defaultPaymentMethod: STPPaymentMethod?
     ) {
         // Update our list of saved payment methods to be the latest from the manage screen in case of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
+        self.defaultPaymentMethod = defaultPaymentMethod
         var selection: RowButtonType?
         if let selectedPaymentMethod {
             selection = .saved(paymentMethod: selectedPaymentMethod)
