@@ -37,10 +37,9 @@ import WebKit
 // 2. Add client code (shown below) that will open an extra browser that
 //    will handle the bank OAuth pop-up.
 //
-// 3. Handle app-to-app authentication flows by
-//    attempting to open new window URLs as universal links.
-//    This is done via `UIApplication.shared.open` and passing
-//    `[.universalLinksOnly: true]` as the `options`.
+// 3. Handle app-to-app authentication flows by attempting to open new-window
+//    URLs as universal links. This is done via `UIApplication.shared.open`
+//    and passing `[.universalLinksOnly: true]` as the `options`.
 //
 // 4. When Financial Connections calls the `return_url`, your website code
 //    should redirect to a custom URL. In this example code, the redirect URL
