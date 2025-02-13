@@ -44,14 +44,14 @@ final class RowButtonFloating: UIView, RowButtonContent {
     }
 
     var isDisplayingAccessoryView: Bool {
-        set {
-            rightAccessoryView?.isHidden = !newValue
-        }
         get {
             guard let rightAccessoryView else {
                 return false
             }
             return !rightAccessoryView.isHidden
+        }
+        set {
+            rightAccessoryView?.isHidden = !newValue
         }
     }
 

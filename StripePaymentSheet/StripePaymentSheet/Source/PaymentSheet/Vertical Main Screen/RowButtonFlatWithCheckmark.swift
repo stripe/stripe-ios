@@ -52,14 +52,14 @@ final class RowButtonFlatWithCheckmark: UIView, RowButtonContent {
     }
 
     var isDisplayingAccessoryView: Bool {
-        set {
-            bottomAccessoryView?.isHidden = !newValue
-        }
         get {
             guard let bottomAccessoryView else {
                 return false
             }
             return !bottomAccessoryView.isHidden
+        }
+        set {
+            bottomAccessoryView?.isHidden = !newValue
         }
     }
 
