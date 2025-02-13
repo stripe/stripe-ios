@@ -49,7 +49,7 @@ class ShadowedRoundedRectangle: UIView {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
 
-        // 2. Style-specific logic
+        // Style-specific logic
         switch style {
         case .floatingRounded:
             // Corner radius
@@ -63,6 +63,7 @@ class ShadowedRoundedRectangle: UIView {
             // Border
             if isSelected {
                 let selectedBorderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth
+                // Without a border, the customer can't tell this is selected and it looks bad
                 layer.borderWidth = selectedBorderWidth > 0 ? (selectedBorderWidth * 1.5) : 1.5
                 layer.borderColor = appearance.colors.selectedComponentBorder?.cgColor
                 ?? appearance.colors.primary.cgColor
@@ -72,11 +73,11 @@ class ShadowedRoundedRectangle: UIView {
             }
 
         case .flat:
-            // Ignore (or override) the appearance-based corner radius
+            // Ignore the appearance-based corner radius
             roundedRectangle.layer.cornerRadius = 0
             layer.cornerRadius = 0
 
-            // Ignore (or override) the appearance-based shadow
+            // Ignore the appearance-based shadow
             layer.shadowColor = nil
             layer.shadowPath = nil
 
