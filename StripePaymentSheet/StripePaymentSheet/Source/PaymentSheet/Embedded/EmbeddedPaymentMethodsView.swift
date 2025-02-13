@@ -25,16 +25,15 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
-    
+
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
     override var intrinsicContentSize: CGSize {
         return super.intrinsicContentSize
     }
-  
+
     private let appearance: PaymentSheet.Appearance
-    private let rowButtonAppearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private var previousSelectedRowButton: RowButton? {
         didSet {
@@ -66,7 +65,7 @@ class EmbeddedPaymentMethodsView: UIView {
             updateMandate()
         }
     }
-    
+
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -116,7 +115,6 @@ class EmbeddedPaymentMethodsView: UIView {
         self.appearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
-        self.rowButtonAppearance = appearance.embeddedPaymentElement.row.style.appearanceForStyle(appearance: appearance)
         self.customer = customer
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
@@ -143,7 +141,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowApplePay {
-            let applePayRowButton = RowButton.makeForApplePay(appearance: rowButtonAppearance,
+            let applePayRowButton = RowButton.makeForApplePay(appearance: appearance,
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
@@ -153,7 +151,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: rowButtonAppearance, isEmbedded: true) { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
@@ -168,7 +166,7 @@ class EmbeddedPaymentMethodsView: UIView {
             )
             rowButtons.append(rowButton)
         }
-        
+
         // Add the row buttons to our stack view
         rowButtons.forEach { rowButton in
             stackView.addArrangedSubview(rowButton)
@@ -194,7 +192,7 @@ class EmbeddedPaymentMethodsView: UIView {
             }
             self.selectedRowButton = rowButtonMatchingInitialSelection
         }
-        
+
         // Set up mandate
         stackView.addArrangedSubview(mandateView)
         updateMandate(animated: false)
@@ -232,7 +230,7 @@ class EmbeddedPaymentMethodsView: UIView {
     func resetSelection() {
         selectedRowButton = nil
     }
-    
+
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
         self.selectedRowButton = rowButton
@@ -294,7 +292,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Update text on card row based on the new selected payment method
         // It can vary between "Card" if the customer has no saved cards or "New card" if the customer has saved cards
-        if let oldCardButton = rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card))}),
+        if let oldCardButton = rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card)) }),
            let oldCardButtonIndex = stackView.arrangedSubviews.firstIndex(of: oldCardButton) {
             // Update selectionButtonMapping and add this new one to the stack view and remove old card row
             let cardRowButton = makePaymentMethodRowButton(
@@ -436,21 +434,6 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
             return .zero
         }
     }
-
-    fileprivate func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
-        switch self {
-        case .flatWithRadio, .flatWithCheckmark:
-            // TODO(porter) See if there is a better way to do this, less sneaky
-            var appearance = appearance
-            appearance.borderWidth = 0.0
-            appearance.colors.selectedComponentBorder = .clear
-            appearance.cornerRadius = 0.0
-            appearance.shadow = .disabled
-            return appearance
-        case .floatingButton:
-            return appearance
-        }
-    }
 }
 
 extension Array where Element == STPPaymentMethod {
@@ -468,7 +451,7 @@ extension RowButton {
         }
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }
-    
+
     func removeChangeButton(shouldClearSublabel: Bool) {
         rightAccessoryView?.isHidden = true
         if shouldClearSublabel {

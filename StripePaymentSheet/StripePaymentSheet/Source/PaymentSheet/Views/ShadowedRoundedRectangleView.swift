@@ -11,7 +11,17 @@ import UIKit
 
 /// The shadowed rounded rectangle that our cells use to display content
 class ShadowedRoundedRectangle: UIView {
+    /// Our two display styles.
+    /// - `floatingRounded` (default) retains original appearance-based styling (corner radius, shadow, border, etc.).
+    /// - `flat` omits specific appearance-based properties (borderWidth, selectedComponentBorder, cornerRadius, shadow).
+    enum Style {
+        case floatingRounded
+        case flat
+    }
+
     private let roundedRectangle: UIView
+    private let style: Style
+
     var appearance: PaymentSheet.Appearance {
         didSet {
             update()
@@ -39,32 +49,46 @@ class ShadowedRoundedRectangle: UIView {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
 
-        // Corner radius
-        roundedRectangle.layer.cornerRadius = appearance.cornerRadius
-        layer.cornerRadius = appearance.cornerRadius
+        // 2. Style-specific logic
+        switch style {
+        case .floatingRounded:
+            // Corner radius
+            roundedRectangle.layer.cornerRadius = appearance.cornerRadius
+            layer.cornerRadius = appearance.cornerRadius
 
-        // Shadow
-        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
-        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+            // Shadow
+            layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
+            layer.shadowPath = UIBezierPath(rect: bounds).cgPath
 
-        // Border
-        if isSelected {
-            let selectedBorderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth
-            if selectedBorderWidth > 0 {
-                layer.borderWidth = selectedBorderWidth * 1.5
+            // Border
+            if isSelected {
+                let selectedBorderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth
+                layer.borderWidth = selectedBorderWidth > 0 ? (selectedBorderWidth * 1.5) : 1.5
+                layer.borderColor = appearance.colors.selectedComponentBorder?.cgColor
+                ?? appearance.colors.primary.cgColor
             } else {
-                // Without a border, the customer can't tell this is selected and it looks bad
-                layer.borderWidth = 1.5
+                layer.borderWidth = appearance.borderWidth
+                layer.borderColor = appearance.colors.componentBorder.cgColor
             }
-            layer.borderColor = appearance.colors.selectedComponentBorder?.cgColor ?? appearance.colors.primary.cgColor
-        } else {
-            layer.borderWidth = appearance.borderWidth
-            layer.borderColor = appearance.colors.componentBorder.cgColor
+
+        case .flat:
+            // Ignore (or override) the appearance-based corner radius
+            roundedRectangle.layer.cornerRadius = 0
+            layer.cornerRadius = 0
+
+            // Ignore (or override) the appearance-based shadow
+            layer.shadowColor = nil
+            layer.shadowPath = nil
+
+            // Minimal border — in both normal and selected states
+            layer.borderWidth = 0
+            layer.borderColor = UIColor.clear.cgColor
         }
     }
 
-    required init(appearance: PaymentSheet.Appearance) {
+    required init(appearance: PaymentSheet.Appearance, style: Style = .floatingRounded) {
         self.appearance = appearance
+        self.style = style
         roundedRectangle = UIView()
         roundedRectangle.layer.masksToBounds = true
         super.init(frame: .zero)

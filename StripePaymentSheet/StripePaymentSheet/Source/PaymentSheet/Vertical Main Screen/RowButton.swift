@@ -14,7 +14,21 @@ import UIKit
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 class RowButton: UIView {
     let type: RowButtonType
-    private let shadowRoundedRect: ShadowedRoundedRectangle
+    private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
+        let style: ShadowedRoundedRectangle.Style = {
+            guard isEmbedded else { return .floatingRounded }
+
+            switch appearance.embeddedPaymentElement.row.style {
+            case .flatWithRadio, .flatWithCheckmark:
+                return .flat
+            case .floatingButton:
+                return .floatingRounded
+            }
+
+        }()
+
+        return ShadowedRoundedRectangle(appearance: appearance, style: style)
+    }()
     private lazy var radioButton: RadioButton? = {
         guard isEmbedded, appearance.embeddedPaymentElement.row.style == .flatWithRadio else { return nil }
         return RadioButton(appearance: appearance) { [weak self] in
@@ -61,7 +75,7 @@ class RowButton: UIView {
             updateAccessibilityTraits()
         }
     }
-        
+
     var isFlatWithCheckmarkStyle: Bool {
         return appearance.embeddedPaymentElement.row.style == .flatWithCheckmark && isEmbedded
     }
@@ -93,7 +107,6 @@ class RowButton: UIView {
         self.type = type
         self.shouldAnimateOnPress = true
         self.didTap = didTap
-        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.imageView = imageView
         self.label = Self.makeRowButtonLabel(text: text, appearance: appearance)
         self.isEmbedded = isEmbedded
