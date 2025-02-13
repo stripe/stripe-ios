@@ -98,6 +98,9 @@ final class RowButtonFloating: UIView, RowButtonContent {
 
 private extension RowButtonFloating {
     func setupUI() {
+        let shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
+        addAndPinSubview(shadowRoundedRect)
+
         // Add common subviews
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
