@@ -155,7 +155,7 @@ final class PlaygroundViewModel: ObservableObject {
             }
         )
     }
-    
+
     var customerId: Binding<String> {
         Binding(
             get: {
@@ -167,7 +167,7 @@ final class PlaygroundViewModel: ObservableObject {
             }
         )
     }
-    
+
     var relinkAuthorization: Binding<String> {
         Binding(
             get: {
@@ -561,16 +561,16 @@ private func PresentFinancialConnectionsSheet(
     STPAPIClient.shared.publishableKey = publishableKey
 
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
+    var configuration = FinancialConnectionsSheet.Configuration()
+    configuration.style = style.configurationValue
     let financialConnectionsSheet = FinancialConnectionsSheet(
         financialConnectionsSessionClientSecret: clientSecret,
         // disable app-to-app for UI tests
-        returnURL: isUITest ? nil : "financial-connections-example://redirect"
+        returnURL: isUITest ? nil : "financial-connections-example://redirect",
+        configuration: configuration
     )
     financialConnectionsSheet.apiClient.stripeAccount = stripeAccount
     financialConnectionsSheet.onEvent = onEvent
-    var configuration = FinancialConnectionsSheet.Configuration()
-    configuration.style = style.configurationValue
-    financialConnectionsSheet.configuration = configuration
     let topMostViewController = UIViewController.topMostViewController()!
     if useCase == .token {
         financialConnectionsSheet.presentForToken(
