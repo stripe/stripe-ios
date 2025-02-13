@@ -45,6 +45,18 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
         return !subtext.isEmpty
     }
 
+    var isDisplayingAccessoryView: Bool {
+        set {
+            rightAccessoryView?.isHidden = !newValue
+        }
+        get {
+            guard let rightAccessoryView else {
+                return false
+            }
+            return !rightAccessoryView.isHidden
+        }
+    }
+
     init(
         appearance: PaymentSheet.Appearance,
         imageView: UIImageView,

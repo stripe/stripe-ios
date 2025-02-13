@@ -15,15 +15,10 @@ import UIKit
 class RowButton: UIView {
     let type: RowButtonType
     private let shadowRoundedRect: ShadowedRoundedRectangle
-    let imageView: UIImageView
-    let label: UILabel
-    let sublabel: UILabel
-    let defaultBadge: UILabel?
-    let rightAccessoryView: UIView?
-    let promoBadge: PromoBadgeView?
-    private var promoBadgeConstraintToCheckmark: NSLayoutConstraint?
+    let content: RowButtonContent
     let shouldAnimateOnPress: Bool
     let appearance: PaymentSheet.Appearance
+    let text: String
     typealias DidTapClosure = (RowButton) -> Void
     let didTap: DidTapClosure
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
@@ -31,7 +26,7 @@ class RowButton: UIView {
     var isSelected: Bool = false {
         didSet {
             shadowRoundedRect.isSelected = isSelected
-            content?.isSelected = isSelected
+            content.isSelected = isSelected
             updateAccessibilityTraits()
         }
     }
@@ -46,9 +41,6 @@ class RowButton: UIView {
         return appearance.embeddedPaymentElement.row.style == .flatWithCheckmark && isEmbedded
     }
     var heightConstraint: NSLayoutConstraint?
-
-    // TODO(porter) Make this not optional once we have all the styles implemented
-    private(set) var content: RowButtonContent?
 
     init(
         appearance: PaymentSheet.Appearance,
@@ -67,17 +59,22 @@ class RowButton: UIView {
         self.type = type
         self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
-        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
-        self.imageView = imageView
-        self.label = Self.makeRowButtonLabel(text: text, appearance: appearance)
         self.isEmbedded = isEmbedded
-        self.rightAccessoryView = rightAccessoryView
-        self.sublabel = Self.makeRowButtonSublabel(text: subtext, appearance: appearance)
-        self.defaultBadge = Self.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
-        self.promoBadge = promoBadge
+        self.text = text
+        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
+        self.content = Self.makeRowButtonView(appearance: appearance,
+                                              isEmbedded: isEmbedded,
+                                              imageView: imageView,
+                                              text: text,
+                                              subtext: subtext,
+                                              badgeText: badgeText,
+                                              promoBadge: promoBadge,
+                                              accessoryView: rightAccessoryView)
         super.init(frame: .zero)
 
         addAndPinSubview(shadowRoundedRect)
+        addAndPinSubview(content)
+        makeSameHeightAsOtherRowButtonsIfNecessary()
 
         setupTapGestures()
 
@@ -90,57 +87,6 @@ class RowButton: UIView {
         shadowRoundedRect.accessibilityLabel = text
         shadowRoundedRect.isAccessibilityElement = true
         updateAccessibilityTraits()
-
-        // Early-exit for flatWithRadio
-        if isEmbedded && appearance.embeddedPaymentElement.row.style == .flatWithRadio {
-            let rowButtonFlatWithRadioView = RowButtonFlatWithRadioView(
-                appearance: appearance,
-                imageView: imageView,
-                text: text,
-                subtext: subtext,
-                rightAccessoryView: rightAccessoryView,
-                defaultBadgeText: badgeText,
-                promoBadge: promoBadge)
-
-            addAndPinSubview(rowButtonFlatWithRadioView)
-            self.content = rowButtonFlatWithRadioView
-            makeSameHeightAsOtherRowButtonsIfNecessary()
-            return // Skip the rest of the complicated layout
-        }
-
-        if !isEmbedded || appearance.embeddedPaymentElement.row.style == .floatingButton {
-            let insets = isEmbedded ? appearance.embeddedPaymentElement.row.additionalInsets : 4
-            let rowButtonFloating = RowButtonFloating(
-                appearance: appearance,
-                imageView: imageView,
-                text: text,
-                subtext: subtext,
-                rightAccessoryView: rightAccessoryView,
-                defaultBadgeText: badgeText,
-                promoBadge: promoBadge,
-                insets: insets)
-
-            addAndPinSubview(rowButtonFloating)
-            self.content = rowButtonFloating
-            makeSameHeightAsOtherRowButtonsIfNecessary()
-            return // Skip the rest of the complicated layout
-        }
-        
-        if appearance.embeddedPaymentElement.row.style == .flatWithCheckmark {
-            let rowButtonFlatWithCheckmarkView = RowButtonFlatWithCheckmark(
-                appearance: appearance,
-                imageView: imageView,
-                text: text,
-                subtext: subtext,
-                bottomAccessoryView: rightAccessoryView,
-                defaultBadgeText: badgeText,
-                promoBadge: promoBadge)
-
-            addAndPinSubview(rowButtonFlatWithCheckmarkView)
-            self.content = rowButtonFlatWithCheckmarkView
-            makeSameHeightAsOtherRowButtonsIfNecessary()
-            return // Skip the rest of the complicated layout
-        }
     }
 
     private func setupTapGestures() {
@@ -197,11 +143,7 @@ class RowButton: UIView {
 
     /// Sets icon, text, and sublabel alpha
     func setContentViewAlpha(_ alpha: CGFloat) {
-        [imageView, label, sublabel, defaultBadge, promoBadge].compactMap { $0 }.forEach {
-            $0.alpha = alpha
-        }
-
-        content?.subviews.map { $0 }.forEach {
+        content.subviews.map { $0 }.forEach {
             $0.alpha = alpha
         }
     }
@@ -219,19 +161,12 @@ class RowButton: UIView {
     func makeSameHeightAsOtherRowButtonsIfNecessary() {
         // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
         // Don't do this if we are flat_with_checkmark style and have an accessory view - this row button is allowed to be taller than the rest
-        let isDisplayingRightAccessoryView = rightAccessoryView?.isHidden == false
-        if isFlatWithCheckmarkStyle && isDisplayingRightAccessoryView {
+        if isFlatWithCheckmarkStyle && content.isDisplayingAccessoryView {
             heightConstraint?.isActive = false
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        let isSublabelTextEmpty = {
-            if let content {
-                return !content.hasSubtext
-            }
-            return sublabel.text?.isEmpty ?? true
-        }()
-        guard isSublabelTextEmpty else {
+        guard !content.hasSubtext else {
             heightConstraint?.isActive = false
             return
         }
@@ -277,6 +212,58 @@ extension RowButton: UIGestureRecognizerDelegate {
 
 // MARK: - Helpers
 extension RowButton {
+    private static func makeRowButtonView(appearance: PaymentSheet.Appearance,
+                                          isEmbedded: Bool,
+                                          imageView: UIImageView,
+                                          text: String,
+                                          subtext: String? = nil,
+                                          badgeText: String? = nil,
+                                          promoBadge: PromoBadgeView? = nil,
+                                          accessoryView: UIView? = nil) -> RowButtonContent {
+        if isEmbedded && appearance.embeddedPaymentElement.row.style == .flatWithRadio {
+            return RowButtonFlatWithRadioView(
+                appearance: appearance,
+                imageView: imageView,
+                text: text,
+                subtext: subtext,
+                rightAccessoryView: accessoryView,
+                defaultBadgeText: badgeText,
+                promoBadge: promoBadge
+            )
+        }
+
+        if !isEmbedded || appearance.embeddedPaymentElement.row.style == .floatingButton {
+            let insets = isEmbedded
+                ? appearance.embeddedPaymentElement.row.additionalInsets
+                : 4
+            return RowButtonFloating(
+                appearance: appearance,
+                imageView: imageView,
+                text: text,
+                subtext: subtext,
+                rightAccessoryView: accessoryView,
+                defaultBadgeText: badgeText,
+                promoBadge: promoBadge,
+                insets: insets
+            )
+        }
+
+        if appearance.embeddedPaymentElement.row.style == .flatWithCheckmark {
+            return RowButtonFlatWithCheckmark(
+                appearance: appearance,
+                imageView: imageView,
+                text: text,
+                subtext: subtext,
+                bottomAccessoryView: accessoryView,
+                defaultBadgeText: badgeText,
+                promoBadge: promoBadge
+            )
+        }
+
+        stpAssertionFailure("Unsupported row button style: \(appearance.embeddedPaymentElement.row.style)")
+        fatalError()
+    }
+
     static func calculateTallestHeight(appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> CGFloat {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
