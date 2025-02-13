@@ -93,6 +93,13 @@ final class RowButtonFloating: UIView, RowButtonContent {
         sublabel.text = text
         sublabel.isHidden = text.isEmpty
     }
+
+    func setContentViewAlpha(_ alpha: CGFloat) {
+        // Always keep the shadowRoundedRect alpha at 1.0
+        subviews.filter { $0 != shadowRoundedRect }.map { $0 }.forEach {
+            $0.alpha = alpha
+        }
+    }
 }
 
 // MARK: - UI Setup

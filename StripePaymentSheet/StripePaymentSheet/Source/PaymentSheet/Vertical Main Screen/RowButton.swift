@@ -129,28 +129,21 @@ class RowButton: UIView {
         guard isEnabled else { return }
         if shouldAnimateOnPress {
             // Fade the text and icon out and back in
-            setContentViewAlpha(0.5)
+            content.setContentViewAlpha(0.5)
             UIView.animate(withDuration: 0.2, delay: 0.1) { [self] in
-                setContentViewAlpha(1.0)
+                content.setContentViewAlpha(1.0)
             }
         }
         self.didTap(self)
-    }
-
-    /// Sets icon, text, and sublabel alpha
-    func setContentViewAlpha(_ alpha: CGFloat) {
-        content.subviews.map { $0 }.forEach {
-            $0.alpha = alpha
-        }
     }
 
     @objc private func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
         // Fade the text and icon out while the button is long pressed
         switch gesture.state {
         case .began:
-            setContentViewAlpha(0.5)
+            content.setContentViewAlpha(0.5)
         default:
-            setContentViewAlpha(1.0)
+            content.setContentViewAlpha(1.0)
         }
     }
 
@@ -176,9 +169,9 @@ extension RowButton: EventHandler {
     func handleEvent(_ event: STPEvent) {
         switch event {
         case .shouldEnableUserInteraction:
-            setContentViewAlpha(1.0)
+            content.setContentViewAlpha(1.0)
         case .shouldDisableUserInteraction:
-            setContentViewAlpha(0.5)
+            content.setContentViewAlpha(0.5)
         default:
             break
         }
