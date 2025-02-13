@@ -53,7 +53,7 @@
 		416E9E892C76B36F00A0B917 /* PayoutsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E872C76B36F00A0B917 /* PayoutsViewControllerTests.swift */; };
 		416E9ECF2C77EAA400A0B917 /* EmbeddedComponentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ECE2C77EAA400A0B917 /* EmbeddedComponentError.swift */; };
 		416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */; };
-		4171B1592C9A5EEC00547F7D /* AccountOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4171B1582C9A5EEC00547F7D /* AccountOnboardingViewController.swift */; };
+		4171B1592C9A5EEC00547F7D /* AccountOnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4171B1582C9A5EEC00547F7D /* AccountOnboardingController.swift */; };
 		41810D692C88C4B100F10EB7 /* AppearanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D682C88C4B100F10EB7 /* AppearanceTests.swift */; };
 		41810D6B2C88E71D00F10EB7 /* Appearance+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D6A2C88E71D00F10EB7 /* Appearance+Encoding.swift */; };
 		41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */; };
@@ -212,7 +212,7 @@
 		416E9E872C76B36F00A0B917 /* PayoutsViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PayoutsViewControllerTests.swift; sourceTree = "<group>"; };
 		416E9ECE2C77EAA400A0B917 /* EmbeddedComponentError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedComponentError.swift; sourceTree = "<group>"; };
 		416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKScriptMessage+extension.swift"; sourceTree = "<group>"; };
-		4171B1582C9A5EEC00547F7D /* AccountOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOnboardingViewController.swift; sourceTree = "<group>"; };
+		4171B1582C9A5EEC00547F7D /* AccountOnboardingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOnboardingController.swift; sourceTree = "<group>"; };
 		41810D682C88C4B100F10EB7 /* AppearanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceTests.swift; sourceTree = "<group>"; };
 		41810D6A2C88E71D00F10EB7 /* Appearance+Encoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Appearance+Encoding.swift"; sourceTree = "<group>"; };
 		41810D792C8A0AAC00F10EB7 /* CustomFontSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontSource.swift; sourceTree = "<group>"; };
@@ -449,7 +449,7 @@
 			isa = PBXGroup;
 			children = (
 				E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */,
-				4171B1582C9A5EEC00547F7D /* AccountOnboardingViewController.swift */,
+				4171B1582C9A5EEC00547F7D /* AccountOnboardingController.swift */,
 				416E9E832C76AE0900A0B917 /* ComponentType.swift */,
 				E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */,
 				E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */,
@@ -894,7 +894,7 @@
 				413987C92C63F34B001D375E /* FetchClientSecretMessageHandler.swift in Sources */,
 				41BCCFEB2C8B348500797E01 /* AppearanceWrapper.swift in Sources */,
 				413987E12C641688001D375E /* PageDidLoadMessageHandler.swift in Sources */,
-				4171B1592C9A5EEC00547F7D /* AccountOnboardingViewController.swift in Sources */,
+				4171B1592C9A5EEC00547F7D /* AccountOnboardingController.swift in Sources */,
 				41054E432C989AAD00383C09 /* Font+Extension.swift in Sources */,
 				E65A28822D14009000B606F4 /* Docs.docc in Sources */,
 				E6EF91C72CBA3BED0082DD1B /* UIViewController+StripeConnect.swift in Sources */,

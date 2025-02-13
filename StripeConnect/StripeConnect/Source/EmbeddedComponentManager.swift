@@ -16,7 +16,7 @@ import UIKit
 @_spi(PrivateBetaConnect)
 @_documentation(visibility: public)
 @available(iOS 15, *)
-public class EmbeddedComponentManager {
+public final class EmbeddedComponentManager {
     let apiClient: STPAPIClient
 
     // Weakly held web views who get notified when appearance updates.
@@ -98,7 +98,7 @@ public class EmbeddedComponentManager {
 
     /// Creates a `PayoutsViewController`
     /// - Seealso: [Payouts component documentation](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios)
-    @_documentation(visibility: public)
+    @_spi(DashboardOnly)
     public func createPayoutsViewController() -> PayoutsViewController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
@@ -117,24 +117,23 @@ public class EmbeddedComponentManager {
        - collectionOptions: Specifies the requirements that Stripe collects from connected accounts
      */
     @_documentation(visibility: public)
-    public func createAccountOnboardingViewController(
+    public func createAccountOnboardingController(
         fullTermsOfServiceUrl: URL? = nil,
         recipientTermsOfServiceUrl: URL? = nil,
         privacyPolicyUrl: URL? = nil,
         skipTermsOfServiceCollection: Bool? = nil,
         collectionOptions: AccountCollectionOptions = .init()
-    ) -> AccountOnboardingViewController {
-        return .init(
-            props: .init(
-                fullTermsOfServiceUrl: fullTermsOfServiceUrl,
-                recipientTermsOfServiceUrl: recipientTermsOfServiceUrl,
-                privacyPolicyUrl: privacyPolicyUrl,
-                skipTermsOfServiceCollection: skipTermsOfServiceCollection,
-                collectionOptions: collectionOptions
-            ),
-            componentManager: self,
-            loadContent: shouldLoadContent,
-            analyticsClientFactory: analyticsClientFactory)
+    ) -> AccountOnboardingController {
+        .init(props: .init(
+            fullTermsOfServiceUrl: fullTermsOfServiceUrl,
+            recipientTermsOfServiceUrl: recipientTermsOfServiceUrl,
+            privacyPolicyUrl: privacyPolicyUrl,
+            skipTermsOfServiceCollection: skipTermsOfServiceCollection,
+            collectionOptions: collectionOptions
+        ),
+              componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     @_spi(DashboardOnly)
