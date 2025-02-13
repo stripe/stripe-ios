@@ -13,7 +13,7 @@ final class RowButtonFloating: UIView, RowButtonContent {
     let appearance: PaymentSheet.Appearance
 
     // MARK: - Subviews
-
+    private let shadowRoundedRect: ShadowedRoundedRectangle
     /// Typically the payment method icon or brand image
     private let imageView: UIImageView
     /// The main label for the payment method name
@@ -33,6 +33,7 @@ final class RowButtonFloating: UIView, RowButtonContent {
 
     var isSelected: Bool = false {
         didSet {
+            shadowRoundedRect.isSelected = isSelected
             // Default badge font is heavier when the row is selected
             defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         }
@@ -73,7 +74,7 @@ final class RowButtonFloating: UIView, RowButtonContent {
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
         self.promoBadge = promoBadge
         self.insets = insets
-
+        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         super.init(frame: .zero)
         setupUI()
     }
@@ -98,7 +99,6 @@ final class RowButtonFloating: UIView, RowButtonContent {
 
 private extension RowButtonFloating {
     func setupUI() {
-        let shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         addAndPinSubview(shadowRoundedRect)
 
         // Add common subviews
