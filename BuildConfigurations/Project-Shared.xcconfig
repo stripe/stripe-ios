@@ -102,9 +102,6 @@ CLANG_ENABLE_OBJC_WEAK = YES
 // 
 // The compiler to use for C, C++, and Objective-C.
 
-GCC_VERSION = com.apple.compilers.llvm.clang.1_0
-
-
 GCC_WARN_64_TO_32_BIT_CONVERSION = YES
 
 
