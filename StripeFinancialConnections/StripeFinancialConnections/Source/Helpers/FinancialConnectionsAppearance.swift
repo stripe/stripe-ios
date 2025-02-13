@@ -197,13 +197,20 @@ private extension UIColor {
                 return light
             }
 
-            switch $0.userInterfaceStyle {
-            case .light, .unspecified:
+            switch PresentationManager.shared.configuration.style {
+            case .alwaysLight:
                 return light
-            case .dark:
+            case .alwaysDark:
                 return dark
-            @unknown default:
-                return light
+            case .automatic:
+                switch $0.userInterfaceStyle {
+                case .light, .unspecified:
+                    return light
+                case .dark:
+                    return dark
+                @unknown default:
+                    return light
+                }
             }
         })
     }
