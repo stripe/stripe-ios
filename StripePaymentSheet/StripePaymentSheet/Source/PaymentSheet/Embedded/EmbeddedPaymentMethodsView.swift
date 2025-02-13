@@ -383,7 +383,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }()
         let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
             paymentMethod: savedPaymentMethod,
-            appearance: rowButtonAppearance,
+            appearance: appearance,
             rightAccessoryView: accessoryButton,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
@@ -413,7 +413,7 @@ class EmbeddedPaymentMethodsView: UIView {
             hasSavedCard: savedPaymentMethods.hasSavedCard,
             rightAccessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
-            appearance: rowButtonAppearance,
+            appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
             shouldAnimateOnPress: true,
             isEmbedded: true,
