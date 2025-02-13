@@ -366,16 +366,31 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdateCardBrand(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
+                   paymentMethod: STPPaymentMethod,
+                   updateParams: STPPaymentMethodUpdateParams?,
+                   customerID: String?,
+                   setAsDefault: Bool?) async throws {
+        if let updateParams {
+            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
+        }
+        if let customerID, let setAsDefault {
+            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID, setAsDefault: setAsDefault)
+        }
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    private func updateCardBrand(paymentMethod: STPPaymentMethod,
+                                 updateParams: STPPaymentMethodUpdateParams) async throws {
         // Update the payment method
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
         replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
-
-        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdateDefault(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, customerID: String, setAsDefault: Bool) async throws {
+    private func updateDefault(paymentMethod: STPPaymentMethod,
+                               customerID: String,
+                               setAsDefault: Bool) async throws {
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: setAsDefault ? paymentMethod.stripeId : "")
         let previousDefaultPaymentMethod = defaultPaymentMethod
         var updatedPaymentMethodsList = elementsSession.customer?.paymentMethods ?? []
@@ -394,8 +409,6 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         if let defaultPaymentMethod {
             replace(paymentMethod: defaultPaymentMethod, with: defaultPaymentMethod, selectedState: setAsDefault ? .selected : .unselected)
         }
-        _ = viewController.bottomSheetController?.popContentViewController()
-
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {

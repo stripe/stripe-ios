@@ -14,13 +14,11 @@ import UIKit
 @MainActor
 protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod)
-    func didUpdateCardBrand(viewController: UpdatePaymentMethodViewController,
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: STPPaymentMethodUpdateParams) async throws
-    func didUpdateDefault(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod,
-                   customerID: String,
-                          setAsDefault: Bool) async throws
+                   updateParams: STPPaymentMethodUpdateParams?,
+                   customerID: String?,
+                   setAsDefault: Bool?) async throws
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
 }
 
@@ -153,7 +151,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .openCardBrandEditScreen))
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .openEditScreen))
     }
 
     // MARK: Private helpers
@@ -186,52 +184,36 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private func update() async {
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
-        if viewModel.hasChangedCardBrand {
-            await updateCardBrand()
+        guard let delegate else { return }
+        var analyticsParams: [String: Any] = [:]
+        var updateParams: STPPaymentMethodUpdateParams?
+        if viewModel.hasChangedCardBrand, let selectedBrand = viewModel.selectedCardBrand {
+            // Create the update card params
+            let cardParams = STPPaymentMethodCardParams()
+            cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+            updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
+            analyticsParams["selected_card_brand"] = STPCardBrandUtilities.apiValue(from: selectedBrand)
         }
-        if viewModel.hasChangedDefaultPaymentMethodCheckbox {
-            await updateCustomerDefaultPaymentMethod()
+        var customerID: String?
+        var setAsDefault: Bool?
+        if viewModel.hasChangedDefaultPaymentMethodCheckbox, let checkbox = setAsDefaultCheckbox {
+            customerID = viewModel.customerID
+            setAsDefault = checkbox.isSelected
+            analyticsParams["set_as_default"] = setAsDefault
+        }
+        do {
+            try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams, customerID: customerID, setAsDefault: setAsDefault)
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCard),
+                                                      params: analyticsParams)
+        } catch {
+            updateButton.update(state: .enabled)
+            latestError = error
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardFailed),
+                                                      error: error,
+                                                      params: analyticsParams)
         }
         updateButton.update(state: .disabled)
         view.isUserInteractionEnabled = true
-    }
-
-    private func updateCardBrand() async {
-        guard let selectedBrand = viewModel.selectedCardBrand, let delegate = delegate else { return }
-
-        // Create the update card params
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
-        let updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
-
-        // Make the API request to update the payment method
-        do {
-            try await delegate.didUpdateCardBrand(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams)
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrand),
-                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
-        } catch {
-            updateButton.update(state: .enabled)
-            latestError = error
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrandFailed),
-                                                                 error: error,
-                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
-        }
-    }
-
-    private func updateCustomerDefaultPaymentMethod() async {
-        guard let checkbox = setAsDefaultCheckbox, let customerID = viewModel.customerID, let delegate = delegate else { return }
-        // Make the API request to update the payment method
-        do {
-            try await delegate.didUpdateDefault(viewController: self, paymentMethod: viewModel.paymentMethod, customerID: customerID, setAsDefault: checkbox.isSelected)
-//            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrand),
-//                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
-        } catch {
-            updateButton.update(state: .enabled)
-            latestError = error
-//            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrandFailed),
-//                                                                 error: error,
-//                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
-        }
     }
 }
 

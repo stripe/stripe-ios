@@ -504,9 +504,22 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 // MARK: - UpdatePaymentMethodViewControllerDelegate
 /// :nodoc:
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
-    func didUpdateCardBrand(viewController: UpdatePaymentMethodViewController,
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
+                   updateParams: STPPaymentMethodUpdateParams?,
+                   customerID: String?,
+                   setAsDefault: Bool?) async throws {
+        if let updateParams {
+            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
+        }
+        if let customerID, let setAsDefault {
+            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID, setAsDefault: setAsDefault)
+        }
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    private func updateCardBrand(paymentMethod: STPPaymentMethod,
+                                 updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -526,10 +539,11 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
         collectionView.reloadData()
-        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdateDefault(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, customerID: String, setAsDefault: Bool) async throws {
+    private func updateDefault(paymentMethod: STPPaymentMethod,
+                       customerID: String,
+                       setAsDefault: Bool) async throws {
         guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -543,7 +557,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
                                                                       customerID: customerID,
                                                       setAsDefault: setAsDefault)
         updateUI(selectedSavedPaymentOption: .stripeId(paymentMethod.stripeId))
-        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
     func didRemove(viewController: UpdatePaymentMethodViewController,

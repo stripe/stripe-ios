@@ -558,7 +558,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     }
 
     func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,
-                         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+                                paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
                                 customerID: String,
                                 setAsDefault: Bool) async throws -> STPCustomer {
         guard case .saved(let paymentMethod) = paymentMethodSelection else {

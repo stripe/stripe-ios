@@ -30,15 +30,11 @@ import Foundation
             return .paymentSheetOpenCardBrandDropdown
         case (.closeCardBrandDropDown, .paymentSheet):
             return .paymentSheetCloseCardBrandDropDown
-        case (.openCardBrandEditScreen, .paymentSheet):
-            return .paymentSheetOpenCardBrandEditScreen
-        case (.updateCardBrand, .paymentSheet):
+        case (.openEditScreen, .paymentSheet):
+            return .paymentSheetOpenEditScreen
+        case (.updateCard, .paymentSheet):
             return .paymentSheetUpdateCard
-        case (.updateCardBrandFailed, .paymentSheet):
-            return .paymentSheetUpdateCardFailed
-        case (.updateDefaultPaymentMethod, .paymentSheet):
-            return .paymentSheetUpdateCard
-        case (.updateDefaultPaymentMethodFailed, .paymentSheet):
+        case (.updateCardFailed, .paymentSheet):
             return .paymentSheetUpdateCardFailed
         case (.closeEditScreen, .paymentSheet):
             return .paymentSheetClosesEditScreen
@@ -48,15 +44,11 @@ import Foundation
             return .customerSheetOpenCardBrandDropdown
         case (.closeCardBrandDropDown, .customerSheet):
             return .customerSheetCloseCardBrandDropDown
-        case (.openCardBrandEditScreen, .customerSheet):
-            return .customerSheetOpenCardBrandEditScreen
-        case (.updateCardBrand, .customerSheet):
+        case (.openEditScreen, .customerSheet):
+            return .customerSheetOpenEditScreen
+        case (.updateCard, .customerSheet):
             return .customerSheetUpdateCard
-        case (.updateCardBrandFailed, .customerSheet):
-            return .customerSheetUpdateCardFailed
-        case (.updateDefaultPaymentMethod, .customerSheet):
-            return .customerSheetUpdateCard
-        case (.updateDefaultPaymentMethodFailed, .customerSheet):
+        case (.updateCardFailed, .customerSheet):
             return .customerSheetUpdateCardFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
@@ -68,11 +60,9 @@ import Foundation
         case displayCardBrandDropdownIndicator
         case openCardBrandDropdown
         case closeCardBrandDropDown
-        case openCardBrandEditScreen
-        case updateCardBrand
-        case updateCardBrandFailed
+        case openEditScreen
+        case updateCard
+        case updateCardFailed
         case closeEditScreen
-        case updateDefaultPaymentMethod
-        case updateDefaultPaymentMethodFailed
     }
 }

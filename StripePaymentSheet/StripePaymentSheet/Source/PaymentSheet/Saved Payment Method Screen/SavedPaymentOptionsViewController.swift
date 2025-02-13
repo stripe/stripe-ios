@@ -389,7 +389,11 @@ class SavedPaymentOptionsViewController: UIViewController {
             elementsSession: elementsSession,
             defaultPaymentMethod: defaultPaymentMethod
         )
-
+        collectionView.needsVerticalPaddingForBadge = hasDefault
+        collectionView.performBatchUpdates({
+            collectionView.reloadSections(IndexSet(integer: 0))
+            animateHeightChange { self.collectionView.updateLayout() }
+        })
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
@@ -663,9 +667,22 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         }
     }
 
-    func didUpdateCardBrand(viewController: UpdatePaymentMethodViewController,
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: STPPaymentMethodUpdateParams) async throws {
+                   updateParams: STPPaymentMethodUpdateParams?,
+                   customerID: String?,
+                   setAsDefault: Bool?) async throws {
+        if let updateParams {
+            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
+        }
+        if let customerID, let setAsDefault {
+            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID, setAsDefault: setAsDefault)
+        }
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    private func updateCardBrand(paymentMethod: STPPaymentMethod,
+                                 updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -685,13 +702,11 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
         collectionView.reloadData()
-        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdateDefault(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod,
-                   customerID: String,
-                   setAsDefault: Bool) async throws {
+    private func updateDefault(paymentMethod: STPPaymentMethod,
+                               customerID: String,
+                               setAsDefault: Bool) async throws {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -706,13 +721,11 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                                                       setAsDefault: setAsDefault)
         if setAsDefault {
             defaultPaymentMethod = paymentMethod
-            updateUI()
-        }
-        else {
+        } else {
             defaultPaymentMethod = nil
             unselectPaymentMethod()
         }
-        _ = viewController.bottomSheetController?.popContentViewController()
+        updateUI()
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {

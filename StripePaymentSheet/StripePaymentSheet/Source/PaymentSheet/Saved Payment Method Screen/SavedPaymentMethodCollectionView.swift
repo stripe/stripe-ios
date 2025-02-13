@@ -45,7 +45,7 @@ class SavedPaymentMethodCollectionView: UICollectionView {
     }
 
     var isRemovingPaymentMethods: Bool = false
-    let needsVerticalPaddingForBadge: Bool
+    var needsVerticalPaddingForBadge: Bool
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -226,7 +226,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: contentView.trailingAnchor, constant: 0),
                 accessoryButton.topAnchor.constraint(
                     equalTo: contentView.topAnchor, constant: 0),
-                
+
             ])
         }
 
@@ -259,7 +259,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: label.bottomAnchor, constant: 4),
                 defaultBadge.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
-                defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+                defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             ]
         }()
 
@@ -274,6 +274,7 @@ extension SavedPaymentMethodCollectionView {
             self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
             self.showDefaultPMBadge = showDefaultPMBadge
+            updateVerticalConstraintsIfNeeded()
             update()
         }
 
