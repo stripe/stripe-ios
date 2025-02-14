@@ -150,7 +150,7 @@ extension PaymentSheet {
         shouldSavePaymentMethod: Bool
     ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 intentConfig.confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
                     continuation.resume(with: result)
                 }

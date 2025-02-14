@@ -81,11 +81,12 @@ extension DownloadManager {
         do {
             let (data, _) = try await session.data(from: url)
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
-            DispatchQueue.global(qos: .userInteractive).async {
+            Task {
                 // Cache the image in memory
-                self.imageCacheLock.lock()
-                self.imageCache[url] = image
-                self.imageCacheLock.unlock()
+                self.imageCacheLock.withLock {
+                    self.imageCache[url] = image
+                }
+
             }
             return image
         } catch {

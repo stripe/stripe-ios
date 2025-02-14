@@ -1,3 +1,7 @@
+## X.Y.Z 2025-XX-YY
+* [Fixed] The SDK and example apps now compile in Xcode 16.2
+
+
 ## 24.5.0 2025-02-10
 ### CardScan
 * [Fixed] Fixed an issue where the UI layout was incorrect after Camera permissions were denied. ([#4487](https://github.com/stripe/stripe-ios/pull/4487)) (Thanks [@matheusbc](https://github.com/matheusbc)!)

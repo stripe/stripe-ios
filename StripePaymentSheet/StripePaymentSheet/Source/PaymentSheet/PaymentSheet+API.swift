@@ -124,7 +124,7 @@ extension PaymentSheet {
         paymentMethodID: String? = nil
     ) async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) {
         await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 confirm(
                     configuration: configuration,
                     authenticationContext: authenticationContext,
