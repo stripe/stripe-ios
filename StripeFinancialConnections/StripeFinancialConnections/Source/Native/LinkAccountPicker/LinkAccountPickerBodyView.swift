@@ -142,7 +142,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                             ),
                             logo: nil
                         ),
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
                 (
@@ -171,7 +172,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelectionMessage: nil,
                         status: "disabled",
                         institution: nil,
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
                 (
@@ -198,7 +200,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelectionMessage: nil,
                         status: "disabled",
                         institution: nil,
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
             ],
