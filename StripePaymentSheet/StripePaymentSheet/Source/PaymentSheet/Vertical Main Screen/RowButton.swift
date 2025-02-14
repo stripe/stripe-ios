@@ -23,7 +23,6 @@ class RowButton: UIView {
         checkmarkImageView.isHidden = true
         return checkmarkImageView
     }()
-    let imageView: UIImageView
     let label: UILabel
     let sublabel: UILabel
     let defaultBadge: UILabel?
@@ -81,7 +80,6 @@ class RowButton: UIView {
         self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
-        self.imageView = imageView
         self.label = Self.makeRowButtonLabel(text: text, appearance: appearance)
         self.isEmbedded = isEmbedded
         self.rightAccessoryView = rightAccessoryView
