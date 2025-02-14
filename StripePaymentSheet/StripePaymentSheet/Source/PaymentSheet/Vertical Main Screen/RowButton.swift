@@ -457,16 +457,6 @@ extension RowButton {
         return defaultBadge
     }
 
-    static func makeRowButtonDefaultBadgeLabel(badgeText: String?, appearance: PaymentSheet.Appearance) -> UILabel? {
-        guard let badgeText else { return nil }
-        let defaultBadge = UILabel()
-        defaultBadge.font = appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20)
-        defaultBadge.textColor = appearance.colors.textSecondary
-        defaultBadge.adjustsFontForContentSizeCategory = true
-        defaultBadge.text = badgeText
-        return defaultBadge
-    }
-
     static func makeForPaymentMethodType(
         paymentMethodType: PaymentSheet.PaymentMethodType,
         hasSavedCard: Bool,
