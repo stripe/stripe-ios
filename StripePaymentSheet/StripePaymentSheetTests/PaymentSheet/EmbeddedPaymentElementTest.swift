@@ -6,9 +6,9 @@
 //
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeUICore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(STP) import StripeUICore
 import XCTest
 
 @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @testable import StripePaymentSheet
@@ -258,7 +258,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         case .canceled:
             XCTFail("Expected confirm to succeed, but it was canceled")
         }
-        
+
         // Check our confirm analytics
         let analytics = STPAnalyticsClient.sharedClient._testLogHistory
         let confirmEvents = analytics.filter { $0["event"] as? String == "mc_embedded_confirm" }
@@ -460,7 +460,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut._test_paymentOption = .saved(paymentMethod: ._testCard(), confirmParams: confirmParams)
         XCTAssertEqual(sut.paymentOption?.label, "••••6789")
     }
-    
+
     func testChangeButtonStateRespectsCardBrandChoice() async throws {
         // Given an EmbeddedPaymentElement w/ CBC enabled...
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in }
