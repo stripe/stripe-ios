@@ -456,8 +456,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             Task {
                 do {
                     _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: customerID)
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
                 } catch {
-                    self.set(error: error)
+                    self.error = error
                     let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
                                                       error: Error.updateCardFailed)
                     STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)

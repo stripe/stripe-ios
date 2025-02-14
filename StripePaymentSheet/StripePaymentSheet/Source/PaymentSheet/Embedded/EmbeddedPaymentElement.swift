@@ -328,7 +328,9 @@ public final class EmbeddedPaymentElement {
         self.configuration = configuration
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
-        self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
+        if loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+            self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
+        }
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,

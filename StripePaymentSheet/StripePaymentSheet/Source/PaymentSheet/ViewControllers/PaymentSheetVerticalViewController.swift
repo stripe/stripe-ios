@@ -295,10 +295,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     /// Returns the default selected row in the vertical list - the previous payment option, the last VC's selection, or the customer's default.
     func calculateInitialSelection() -> RowButtonType? {
-        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-            guard let selectedPaymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() else { return nil }
-            return .saved(paymentMethod: selectedPaymentMethod)
-        }
         if let previousPaymentOption {
             switch previousPaymentOption {
             case .applePay:
@@ -613,7 +609,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
-            let updateViewModel = UpdatePaymentMethodViewModel(customerID: elementsSession.customer?.customerSession.customer,
+            let updateViewModel = UpdatePaymentMethodViewModel(customerID: configuration.customer?.id,
                                                                paymentMethod: paymentMethod,
                                                                appearance: configuration.appearance,
                                                                hostedSurface: .paymentSheet,
