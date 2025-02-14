@@ -371,9 +371,9 @@ final class PlaygroundConfiguration {
             configurationStore[Self.phoneKey] = newValue
         }
     }
-    
+
     // MARK: - Relink Authorization
-    
+
     private static let customerIdKey = "customer_id"
     var customerId: String {
         get {
@@ -492,23 +492,6 @@ final class PlaygroundConfiguration {
         }
     }
 
-    private static let useDynamicStyleKey = "use_dynamic_style"
-    var useDynamicStyle: Bool {
-        get {
-            if let useDynamicStyle = configurationStore[Self.useDynamicStyleKey] as? Bool {
-                return useDynamicStyle
-            } else {
-                return false
-            }
-        }
-        set {
-            // Save to configuration string
-            configurationStore[Self.useDynamicStyleKey] = newValue
-            // Save to experiment store
-            ExperimentStore.shared.supportsDynamicStyle = newValue
-        }
-    }
-
     enum Style: String, CaseIterable, Identifiable, Hashable {
         case automatic = "automatic"
         case alwaysLight = "always_light"
@@ -534,7 +517,7 @@ final class PlaygroundConfiguration {
                let style = PlaygroundConfiguration.Style(rawValue: styleString) {
                 return style
             } else {
-                return .alwaysLight
+                return .automatic
             }
         }
         set {
@@ -656,16 +639,11 @@ final class PlaygroundConfiguration {
             self.useAsyncAPIClient = false
         }
 
-        if let useDynamicStyle = dictionary[Self.useDynamicStyleKey] as? Bool {
-            self.useDynamicStyle = useDynamicStyle
-        } else {
-            self.useDynamicStyle = false
-        }
         if let styleString = dictionary[Self.styleKey] as? String,
            let style = PlaygroundConfiguration.Style(rawValue: styleString) {
             self.style = style
         } else {
-            self.style = .alwaysLight
+            self.style = .automatic
         }
     }
 }

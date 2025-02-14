@@ -59,9 +59,6 @@ final public class FinancialConnectionsSheet {
 
             /// Applies the specified user interface style to the given view controller.
             func configure(_ viewController: UIViewController?) {
-                guard ExperimentStore.shared.supportsDynamicStyle else {
-                    return
-                }
                 guard let viewController else { return }
 
                 switch self {
