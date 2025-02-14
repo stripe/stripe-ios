@@ -74,7 +74,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             incentive: nil,
             delegate: self
         )
-        XCTAssertEqual(["SEPA Debit", "Card", "Apple Pay", "Link"], sut.rowButtons.map { $0.label.text })
+        XCTAssertEqual(["SEPA Debit", "Card", "Apple Pay", "Link"], sut.rowButtons.map { $0.text })
 
         // If cards only, Apple Pay / Link appear after it
         let sut_cards_only = VerticalPaymentMethodListViewController(
@@ -91,7 +91,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             incentive: nil,
             delegate: self
         )
-        XCTAssertEqual(["Card", "Apple Pay", "Link"], sut_cards_only.rowButtons.map { $0.label.text })
+        XCTAssertEqual(["Card", "Apple Pay", "Link"], sut_cards_only.rowButtons.map { $0.text })
 
         // Without cards, Apple Pay / Link appear first
         let sut_no_cards = VerticalPaymentMethodListViewController(
@@ -108,7 +108,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             incentive: nil,
             delegate: self
         )
-        XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
+        XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.text })
     }
 }
 

@@ -43,6 +43,18 @@ final class RowButtonFloating: UIView, RowButtonContent {
         return !subtext.isEmpty
     }
 
+    var isDisplayingAccessoryView: Bool {
+        get {
+            guard let rightAccessoryView else {
+                return false
+            }
+            return !rightAccessoryView.isHidden
+        }
+        set {
+            rightAccessoryView?.isHidden = !newValue
+        }
+    }
+
     init(
         appearance: PaymentSheet.Appearance,
         imageView: UIImageView,
