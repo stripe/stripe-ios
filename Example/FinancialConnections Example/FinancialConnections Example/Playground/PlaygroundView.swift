@@ -114,7 +114,21 @@ struct PlaygroundView: View {
                                 .accessibility(identifier: "playground-phone")
                         }
                     }
-                    
+
+                    Section(header: Text("Configuration")) {
+                        HStack {
+                            Text("Style")
+                                .font(.subheadline)
+                            Picker("Style", selection: viewModel.style) {
+                                ForEach(PlaygroundConfiguration.Style.allCases) {
+                                    Text($0.rawValue)
+                                        .tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                    }
+
                     Section(header: Text("Relink")) {
                         TextField("Customer ID (cus_)", text: viewModel.customerId)
                             .keyboardType(.default)
@@ -190,17 +204,6 @@ struct PlaygroundView: View {
 
                     Section(header: Text("Experimental")) {
                         Toggle("Use async API client", isOn: viewModel.useAsyncAPIClient)
-
-                        Toggle("Use dynamic style", isOn: viewModel.useDynamicStyle)
-                        if viewModel.useDynamicStyle.wrappedValue {
-                            Picker("Style", selection: viewModel.style) {
-                                ForEach(PlaygroundConfiguration.Style.allCases) {
-                                    Text($0.rawValue)
-                                        .tag($0)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                        }
                     }
                 }
 

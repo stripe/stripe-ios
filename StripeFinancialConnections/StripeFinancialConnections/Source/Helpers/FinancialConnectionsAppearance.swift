@@ -193,10 +193,6 @@ private extension UIColor {
     // MARK: Helpers
     static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
         return UIColor(dynamicProvider: {
-            guard ExperimentStore.shared.supportsDynamicStyle else {
-                return light
-            }
-
             switch PresentationManager.shared.configuration.style {
             case .alwaysLight:
                 return light

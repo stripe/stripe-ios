@@ -10,14 +10,8 @@ import UIKit
 import XCTest
 
 class PresentationManagerTests: XCTestCase {
-    override func setUp() {
-        super.setUp()
-        ExperimentStore.shared.supportsDynamicStyle = true
-    }
-
     override func tearDown() {
         super.tearDown()
-        ExperimentStore.shared.reset()
         PresentationManager.shared.configuration = .init()
     }
 
