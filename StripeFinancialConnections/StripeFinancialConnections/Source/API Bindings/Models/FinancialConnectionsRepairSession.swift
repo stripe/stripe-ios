@@ -9,9 +9,9 @@ import Foundation
 
 struct FinancialConnectionsRepairSession: Decodable {
     let id: String
-    let flow: FinancialConnectionsAuthSession.Flow
-    let url: String
-    let isOauth: Bool
-    let display: FinancialConnectionsAuthSession.Display
-    let institution: FinancialConnectionsInstitution
+    let flow: FinancialConnectionsAuthSession.Flow?
+    let url: String?
+    let isOauth: Bool?
+    let display: FinancialConnectionsAuthSession.Display?
+    let institution: FinancialConnectionsInstitution?
 }

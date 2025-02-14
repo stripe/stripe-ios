@@ -195,7 +195,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         eventName: String,
         authSessionId: String
     ) {
-        guard ShouldRecordAuthSessionEvent(), isNetworkingRelinkSession == false else {
+        guard shouldRecordAuthSessionEvent() else {
             // on Stripe SDK Core analytics client we don't send events
             // for simulator or tests, so don't send these either...
             return
@@ -224,12 +224,12 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             return Promise(value: authSession)
         }
     }
-}
 
-private func ShouldRecordAuthSessionEvent() -> Bool {
-    #if targetEnvironment(simulator)
-    return false
-    #else
-    return NSClassFromString("XCTest") == nil
-    #endif
+    private func shouldRecordAuthSessionEvent() -> Bool {
+        #if targetEnvironment(simulator)
+        return false
+        #else
+        return isNetworkingRelinkSession == false && NSClassFromString("XCTest") == nil
+        #endif
+    }
 }
