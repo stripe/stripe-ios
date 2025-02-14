@@ -465,6 +465,7 @@ extension RowButton {
         if let sublabel {
             self.sublabel.text = sublabel
             self.sublabel.isHidden = sublabel.isEmpty
+            content?.setSublabel(text: sublabel)
         }
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }
@@ -474,6 +475,7 @@ extension RowButton {
         if shouldClearSublabel {
             sublabel.text = nil
             sublabel.isHidden = true
+            content?.setSublabel(text: nil)
         }
     }
 }

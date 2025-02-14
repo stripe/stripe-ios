@@ -196,13 +196,40 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
         let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
-        async let _ = sut.update(intentConfiguration: brokenConfig)
+        _ = await sut.update(intentConfiguration: brokenConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
         async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
         // ...should make the confirm call wait for the update and then fail b/c the update failed
         switch await confirmResult {
         case let .failed(error: error):
             XCTAssertEqual(error.nonGenericDescription.prefix(101), "An error occurred in PaymentSheet. The amount in `PaymentSheet.IntentConfiguration` must be non-zero!")
+        default:
+            XCTFail("Expected confirm to fail")
+        }
+    }
+
+    func testConfirmHandlesInProgressUpdate() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
+        // ...updating w/ a valid config...
+        let validConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 2000, currency: "USD"), confirmHandler: { _, _, _ in })
+        Task {
+            await sut.update(intentConfiguration: validConfig)
+        }
+        // Wait until the EmbeddedPaymentElement actually sets `isUpdating = true`.
+        while !sut.isUpdating {
+            try await Task.sleep(nanoseconds: 10_000_000) // 10ms
+        }
+        // ...and immediately calling confirm, before the 1st update finishes...
+        let confirmResult = await sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
+        // ...should make the confirm call fail b/c the previous update is in progress
+        switch confirmResult {
+        case let .failed(error: error):
+            XCTAssertEqual(error.nonGenericDescription, "An error occurred in PaymentSheet. `confirm` cannot be called while an update is in progress. Please try again after the update completes")
         default:
             XCTFail("Expected confirm to fail")
         }
