@@ -363,7 +363,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // Select the "Card" payment method
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
-        // The delegate should have been notified with proper data
+        // The delegate should have been notified
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
         XCTAssertEqual(sut.paymentOption?.label, "Cash App Pay")
 
