@@ -108,6 +108,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return paymentMethodRows.first { $0.isSelected }?.paymentMethod
     }
 
+    private var previousSelectedPaymentMethod: STPPaymentMethod? {
+        return paymentMethodRows.first { $0.previousSelectedState == .selected }?.paymentMethod
+    }
+
     private var paymentMethods: [STPPaymentMethod] {
         return paymentMethodRows.map { $0.paymentMethod }
     }
@@ -369,13 +373,12 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams?,
-                   customerID: String?,
-                   setAsDefault: Bool?) async throws {
+                   customerID: String?) async throws {
         if let updateParams {
             try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
         }
-        if let customerID, let setAsDefault {
-            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID, setAsDefault: setAsDefault)
+        if let customerID {
+            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID)
         }
         _ = viewController.bottomSheetController?.popContentViewController()
     }
@@ -389,25 +392,16 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod,
-                               customerID: String,
-                               setAsDefault: Bool) async throws {
-        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: setAsDefault ? paymentMethod.stripeId : "")
-        let previousDefaultPaymentMethod = defaultPaymentMethod
-        var updatedPaymentMethodsList = elementsSession.customer?.paymentMethods ?? []
-        if setAsDefault {
-            updatedPaymentMethodsList.remove(paymentMethod)
-            updatedPaymentMethodsList.insert(paymentMethod, at: 0)
-            defaultPaymentMethod = paymentMethod
-        } else {
-            defaultPaymentMethod = nil
-        }
-        // if there was a previously set default, replace it to remove the badge and deselect it
-        if let previousDefaultPaymentMethod {
-            replace(paymentMethod: previousDefaultPaymentMethod, with: previousDefaultPaymentMethod, selectedState: .unselected)
+                               customerID: String) async throws {
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: paymentMethod.stripeId)
+        defaultPaymentMethod = paymentMethod
+        // if there was a previously selected payment method, replace it to deselect it and remove the badge if it was default
+        if let previousSelectedPaymentMethod {
+            replace(paymentMethod: previousSelectedPaymentMethod, with: previousSelectedPaymentMethod, selectedState: .unselected)
         }
         // if we just set a new default, replace it to add the badge and select it
         if let defaultPaymentMethod {
-            replace(paymentMethod: defaultPaymentMethod, with: defaultPaymentMethod, selectedState: setAsDefault ? .selected : .unselected)
+            replace(paymentMethod: defaultPaymentMethod, with: defaultPaymentMethod, selectedState: .selected)
         }
     }
 

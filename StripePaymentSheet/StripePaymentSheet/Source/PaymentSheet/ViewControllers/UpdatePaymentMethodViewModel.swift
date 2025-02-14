@@ -28,7 +28,7 @@ class UpdatePaymentMethodViewModel {
     var hasChangedCardBrand: Bool = false
     var hasChangedDefaultPaymentMethodCheckbox: Bool = false
     var canEdit: Bool {
-        return canUpdateCardBrand || canSetAsDefaultPM
+        return canUpdateCardBrand || (canSetAsDefaultPM && !isDefault)
     }
     var hasUpdates: Bool {
         return hasChangedCardBrand || hasChangedDefaultPaymentMethodCheckbox

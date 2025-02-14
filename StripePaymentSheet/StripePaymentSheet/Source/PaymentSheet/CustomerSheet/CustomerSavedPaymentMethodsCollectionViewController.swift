@@ -29,8 +29,7 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
     func didSelectUpdateDefault(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
-        customerID: String,
-        setAsDefault: Bool) async throws -> STPCustomer?
+        customerID: String) async throws -> STPCustomer?
     func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController)
 }
 /*
@@ -507,13 +506,12 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams?,
-                   customerID: String?,
-                   setAsDefault: Bool?) async throws {
+                   customerID: String?) async throws {
         if let updateParams {
             try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
         }
-        if let customerID, let setAsDefault {
-            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID, setAsDefault: setAsDefault)
+        if let customerID {
+            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID)
         }
         _ = viewController.bottomSheetController?.popContentViewController()
     }
@@ -542,8 +540,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod,
-                       customerID: String,
-                       setAsDefault: Bool) async throws {
+                       customerID: String) async throws {
         guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -553,9 +550,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
 
         let viewModel = viewModels[row]
         _ = try await delegate.didSelectUpdateDefault(viewController: self,
-                                                    paymentMethodSelection: viewModel,
-                                                                      customerID: customerID,
-                                                      setAsDefault: setAsDefault)
+                                                      paymentMethodSelection: viewModel,
+                                                      customerID: customerID)
         updateUI(selectedSavedPaymentOption: .stripeId(paymentMethod.stripeId))
     }
 

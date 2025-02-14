@@ -17,8 +17,7 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams?,
-                   customerID: String?,
-                   setAsDefault: Bool?) async throws
+                   customerID: String?) async throws
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
 }
 
@@ -103,9 +102,11 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
-        guard viewModel.canSetAsDefaultPM && PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
-            viewModel.paymentMethod.type == $0
-        }) else { return nil }
+        guard viewModel.canSetAsDefaultPM,
+              PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
+                  viewModel.paymentMethod.type == $0
+              }),
+              !viewModel.isDefault else { return nil }
         return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [weak self] isSelected in
             self?.viewModel.hasChangedDefaultPaymentMethodCheckbox = self?.viewModel.isDefault != isSelected
             self?.updateButton.update(state: self?.viewModel.hasUpdates ?? false ? .enabled : .disabled)
@@ -202,7 +203,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
             analyticsParams["set_as_default"] = setAsDefault
         }
         do {
-            try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams, customerID: customerID, setAsDefault: setAsDefault)
+            try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams, customerID: customerID)
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCard),
                                                       params: analyticsParams)
         } catch {

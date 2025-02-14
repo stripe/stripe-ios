@@ -872,13 +872,12 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams?,
-                   customerID: String?,
-                   setAsDefault: Bool?) async throws {
+                   customerID: String?) async throws {
         if let updateParams {
             try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
         }
-        if let customerID, let setAsDefault {
-            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID, setAsDefault: setAsDefault)
+        if let customerID {
+            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID)
         }
         // Update UI
         regenerateUI()
@@ -897,8 +896,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod,
-                               customerID: String,
-                               setAsDefault: Bool) async throws {
+                               customerID: String) async throws {
         // Update the payment method
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: paymentMethod.stripeId)
 
