@@ -33,7 +33,6 @@ public enum PaymentSheetError: Error, LocalizedError {
     case setupIntentClientSecretProviderNil
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
-    case embeddedPaymentElementConfirmDuringUpdate
 
     // MARK: Loading errors
     case paymentIntentInTerminalState(status: STPPaymentIntentStatus)
@@ -133,8 +132,6 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "This instance of EmbeddedPaymentElement has already confirmed an intent successfully. Create a new instance of EmbeddedPaymentElement to confirm a new intent."
             case .integrationError(nonPIIDebugDescription: let nonPIIDebugDescription):
                 return "There's a problem with your integration. \(nonPIIDebugDescription)"
-            case .embeddedPaymentElementConfirmDuringUpdate:
-                return "`confirm` cannot be called while an update is in progress. Please try again after the update completes"
             }
         }()
 
