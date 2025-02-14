@@ -14,6 +14,8 @@ import WebKit
 @available(iOS 15, *)
 class ConnectComponentWebViewController: ConnectWebViewController {
 
+    var onDismiss: (() -> Void)?
+
     /// The embedded component manager that will be used for requests.
     let componentManager: EmbeddedComponentManager
 
@@ -214,19 +216,44 @@ extension ConnectComponentWebViewController {
         contentController.addScriptMessageHandler(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
     }
 
+    func sendMessageAsync(_ sender: any MessageSender) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            do {
+                let message = try sender.javascriptMessage()
+                webView.evaluateJavaScript(message, completionHandler: { _, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                })
+            } catch {
+                continuation.resume(throwing: error)
+            }
+        }
+    }
+
     /// Convenience method to send messages to the webview.
     func sendMessage(_ sender: any MessageSender) {
-        do {
-            let message = try sender.javascriptMessage()
-            webView.evaluateJavaScript(message)
-        } catch {
-            analyticsClient.logClientError(error)
+        Task { @MainActor in
+            do {
+                try await sendMessageAsync(sender)
+            } catch {
+                analyticsClient.logClientError(error)
+            }
         }
     }
 
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: appearance, traitCollection: traitCollection))))
         updateColors(appearance: appearance)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isBeingDismissed {
+            onDismiss?()
+        }
     }
 }
 
@@ -274,6 +301,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(OpenFinancialConnectionsMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
             self?.openFinancialConnections(payload)
         })
+        addMessageHandler(CloseWebViewMessageHandler(analyticsClient: analyticsClient, didReceiveMessage: { [weak self] _ in
+            self?.dismiss(animated: true)
+        }))
     }
 
     /// Adds NotificationCenter observers
