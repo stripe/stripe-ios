@@ -55,7 +55,7 @@ import UIKit
 
         /// If true, this item will be styled with greyed out secondary text
         public let isPlaceholder: Bool
-        
+
         public let isDisabled: Bool
     }
 
@@ -157,8 +157,7 @@ import UIKit
         didUpdate: DidUpdateSelectedIndex? = nil,
         didTapClose: DidTapClose? = nil
     ) {
-        stpAssert(!items.filter{!$0.isDisabled}.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
-        
+        stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
         self.label = label
         self.theme = theme
         self.items = items
@@ -281,7 +280,7 @@ extension DropdownFieldElement {
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: true)
             return
         }
-        
+
         selectedIndex = row
     }
 }

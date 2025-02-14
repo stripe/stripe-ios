@@ -170,6 +170,7 @@ public class CustomerSheet {
                 let paymentMethodSyncDefault = customerSheetDataSource.paymentMethodSyncDefault(elementsSession: elementsSession)
                 let allowsRemovalOfLastSavedPaymentMethod = CustomerSheet.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: self.configuration)
                 self.present(from: presentingViewController,
+                             customerID: elementsSession.customer?.customerSession.customer,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
@@ -195,6 +196,7 @@ public class CustomerSheet {
     }
 
     func present(from presentingViewController: UIViewController,
+                 customerID: String?,
                  savedPaymentMethods: [STPPaymentMethod],
                  selectedPaymentMethodOption: CustomerPaymentOption?,
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
@@ -210,7 +212,8 @@ public class CustomerSheet {
 
         loadSpecsPromise.observe(on: .main) { _ in
             let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
-            let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
+            let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(customerID: customerID,
+                                                                                savedPaymentMethods: savedPaymentMethods,
                                                                                 selectedPaymentMethodOption: selectedPaymentMethodOption,
                                                                                 merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                                                                                 configuration: self.configuration,
@@ -330,9 +333,7 @@ extension CustomerSheet {
         switch customerSheetDataSource.dataSource {
         case .customerSession(let customerSessionAdapter):
             let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
-
             let selectedPaymentOption = CustomerPaymentOption.selectedPaymentMethod(for: customerSessionClientSecret.customerId, elementsSession: elementsSession, surface: .customerSheet)
-
             switch selectedPaymentOption {
             case .applePay:
                 return .applePay()

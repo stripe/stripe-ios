@@ -42,7 +42,7 @@ extension RowButton {
                     return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
                 }
             }
-            
+
             var directionalLayoutMargins: NSDirectionalEdgeInsets {
                 switch self {
                 case .change, .viewMore:
@@ -88,7 +88,7 @@ extension RowButton {
             stackView.spacing = 4
             return stackView
         }
-        
+
         override var isHidden: Bool {
             get { super.isHidden }
             set {

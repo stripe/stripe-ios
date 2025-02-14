@@ -514,7 +514,7 @@ extension STPCardValidator {
 
         return sum % 10 == 0
     }
-    
+
     /// Returns the brand (eg VISA) for a card, respecting card brand choice.
     @_spi(STP) public class func brand(for card: STPPaymentMethodCardParams?) -> STPCardBrand {
         guard let card, let number = card.number else {

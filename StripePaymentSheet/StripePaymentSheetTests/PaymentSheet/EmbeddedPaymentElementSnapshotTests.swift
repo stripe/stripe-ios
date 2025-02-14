@@ -5,12 +5,12 @@
 //  Created by Yuki Tokuhiro on 10/16/24.
 //
 
+@_spi(STP) @testable import StripeCore
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
 @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
-@_spi(STP) @testable import StripeCore
 import XCTest
 
 class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentElementDelegate {
@@ -35,7 +35,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
     let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "us_bank_account"]) { _, _, _ in
         // These tests don't confirm, so this is unused
     }
-    
+
     override func setUp() async throws {
         await AddressSpecProvider.shared.loadAddressSpecs()
         await FormSpecProvider.shared.load()
@@ -66,22 +66,22 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         XCTAssertEqual(sut.view.directionalLayoutMargins, .zero)
         XCTAssertFalse(sut.view.hasAmbiguousLayout)
     }
-    
+
     // MARK: - 'Change >' button and sublabel (eg Visa 4242)
-    
+
     func testShowsChangeButton_flatRadio() async throws {
         await _testShowsChangeButton(rowStyle: .flatWithRadio)
     }
-    
+
     func testShowsChangeButton_floatingButton() async throws {
         await _testShowsChangeButton(rowStyle: .floatingButton)
 
     }
-    
+
     func testShowsChangeButton_flatCheckmark() async throws {
         await _testShowsChangeButton(rowStyle: .flatWithCheckmark)
     }
-    
+
     func _testShowsChangeButton(rowStyle: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style) async {
         var configuration = configuration
         configuration.appearance.embeddedPaymentElement.row.style = rowStyle
@@ -114,7 +114,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
 
         // ...should show the card row w/ the 'Change >' + "Visa 4242"
         STPSnapshotVerifyView(sut.view, identifier: "card")
-        
+
         // 2️⃣
         // Tapping US Bank Account...
         sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "US bank account").handleTap()
@@ -123,7 +123,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         // ...should keep the card row selected...
         // (this tests that setting the selection back to the previous works)
         STPSnapshotVerifyView(sut.view, identifier: "us_bank_account_canceled")
-        
+
         // Filling out US Bank account...
         sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "US bank account").handleTap()
         let bankForm = sut.formCache[.stripe(.USBankAccount)] as! USBankAccountPaymentMethodElement
@@ -148,7 +148,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         // ...should show the row w/ 'Change >'
         STPSnapshotVerifyView(sut.view, identifier: "afterpay")
     }
-    
+
     func testRetainsChangeButtonAcrossUpdate() async throws {
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.view.autosizeHeight(width: 300)
@@ -162,7 +162,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         cardForm.getTextFieldElement("CVC").setText("123")
         cardForm.getTextFieldElement("ZIP").setText("65432")
         sut.selectedFormViewController?.didTapPrimaryButton()
-        
+
         // ...and updating the amount...
         var updatedIntentConfig = paymentIntentConfig
         updatedIntentConfig.mode = .payment(amount: 1234, currency: "USD")

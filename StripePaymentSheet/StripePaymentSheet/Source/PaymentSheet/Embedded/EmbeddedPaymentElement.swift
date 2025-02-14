@@ -258,6 +258,7 @@ public final class EmbeddedPaymentElement {
     internal var elementsSession: STPElementsSession { loadResult.elementsSession }
     internal var intent: Intent { loadResult.intent }
     internal var savedPaymentMethods: [STPPaymentMethod]
+    internal var defaultPaymentMethod: STPPaymentMethod?
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
     internal private(set) var formCache: PaymentMethodFormCache = .init()
@@ -321,6 +322,9 @@ public final class EmbeddedPaymentElement {
         self.configuration = configuration
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
+        if loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+            self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
+        }
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,

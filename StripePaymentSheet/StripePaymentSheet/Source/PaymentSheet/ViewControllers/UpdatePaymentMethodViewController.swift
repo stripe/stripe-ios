@@ -16,7 +16,8 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: STPPaymentMethodUpdateParams) async throws
+                   updateParams: STPPaymentMethodUpdateParams?,
+                   customerID: String?) async throws
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
 }
 
@@ -77,13 +78,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: viewModel.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
-            if self.viewModel.hasChangedCardBrand {
+            if self.viewModel.hasUpdates {
                 Task {
-                    await self.updateCard()
+                    await self.update()
                 }
-            }
-            if self.viewModel.hasChangedDefaultPaymentMethodCheckbox {
-                // TODO: update default payment method in the back end
             }
         })
         button.isHidden = !viewModel.canEdit
@@ -104,9 +102,11 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
-        guard viewModel.canSetAsDefaultPM && PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
-            viewModel.paymentMethod.type == $0
-        }) else { return nil }
+        guard viewModel.canSetAsDefaultPM,
+              PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
+                  viewModel.paymentMethod.type == $0
+              }),
+              !viewModel.isDefault else { return nil }
         return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [weak self] isSelected in
             self?.viewModel.hasChangedDefaultPaymentMethodCheckbox = self?.viewModel.isDefault != isSelected
             self?.updateButton.update(state: self?.viewModel.hasUpdates ?? false ? .enabled : .disabled)
@@ -152,7 +152,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .openCardBrandEditScreen))
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .openEditScreen))
     }
 
     // MARK: Private helpers
@@ -182,32 +182,40 @@ final class UpdatePaymentMethodViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    private func updateCard() async {
-        guard let selectedBrand = viewModel.selectedCardBrand, let delegate = delegate else { return }
-
+    private func update() async {
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
-
-        // Create the update card params
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
-        let updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
-
-        // Make the API request to update the payment method
+        guard let delegate else { return }
+        var analyticsParams: [String: Any] = [:]
+        var updateParams: STPPaymentMethodUpdateParams?
+        if viewModel.hasChangedCardBrand, let selectedBrand = viewModel.selectedCardBrand {
+            // Create the update card params
+            let cardParams = STPPaymentMethodCardParams()
+            cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
+            updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
+            analyticsParams["selected_card_brand"] = STPCardBrandUtilities.apiValue(from: selectedBrand)
+        }
+        var customerID: String?
+        var setAsDefault: Bool?
+        if viewModel.hasChangedDefaultPaymentMethodCheckbox, let checkbox = setAsDefaultCheckbox {
+            customerID = viewModel.customerID
+            setAsDefault = checkbox.isSelected
+            analyticsParams["set_as_default"] = setAsDefault
+        }
         do {
-            try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams)
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrand),
-                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
+            try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams, customerID: customerID)
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCard),
+                                                      params: analyticsParams)
         } catch {
             updateButton.update(state: .enabled)
             latestError = error
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrandFailed),
-                                                                 error: error,
-                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardFailed),
+                                                      error: error,
+                                                      params: analyticsParams)
         }
+        updateButton.update(state: .disabled)
         view.isUserInteractionEnabled = true
     }
-
 }
 
 // MARK: BottomSheetContentViewController
