@@ -501,7 +501,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         ]
         return try await poll(
             initialPollDelay: 0,
-            maxNumberOfRetries: 300, // Stripe.js has 360 retries and 500ms intervals
+            maxNumberOfRetries: 360, // Stripe.js has 360 retries and 500ms intervals
             retryInterval: 0.5
         ) { [weak self] in
             guard let self else {
