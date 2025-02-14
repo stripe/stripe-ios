@@ -56,6 +56,7 @@ class EmbeddedPaymentMethodsView: UIView {
         didSet {
             previousSelectedRowButton = oldValue
             let selectedRowButtonTypeDidChange = oldValue?.type != selectedRowButton?.type
+            updateMandate()
             if selectedRowButtonTypeDidChange {
                 selectedRowChangeButtonState = nil
                 delegate?.embeddedPaymentMethodsViewDidUpdateSelection()
@@ -63,7 +64,6 @@ class EmbeddedPaymentMethodsView: UIView {
             if let selectedRowButton {
                 selectedRowButton.isSelected = true
             }
-            updateMandate()
         }
     }
 
