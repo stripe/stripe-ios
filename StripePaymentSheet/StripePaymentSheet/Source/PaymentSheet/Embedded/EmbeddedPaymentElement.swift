@@ -104,11 +104,6 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
-        isUpdating = true
-        // Ensure `isUpdating` is reset by using a defer block, preventing accidental omissions in early returns.
-        defer {
-            isUpdating = false
-        }
         let startTime = Date()
         analyticsHelper.logEmbeddedUpdateStarted()
         // Do not process any update calls if we have already successfully confirmed an intent
@@ -271,7 +266,6 @@ public final class EmbeddedPaymentElement {
     internal var selectedFormViewController: EmbeddedFormViewController?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
-    internal var isUpdating = false
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif
