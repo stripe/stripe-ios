@@ -326,32 +326,21 @@ class RowButton: UIView {
         guard isEnabled else { return }
         if shouldAnimateOnPress {
             // Fade the text and icon out and back in
-            setContentViewAlpha(0.5)
+            content?.setKeyContent(alpha: 0.5)
             UIView.animate(withDuration: 0.2, delay: 0.1) { [self] in
-                setContentViewAlpha(1.0)
+                content?.setKeyContent(alpha: 1.0)
             }
         }
         self.didTap(self)
-    }
-
-    /// Sets icon, text, sublabel, default badge, and promo badge alpha
-    func setContentViewAlpha(_ alpha: CGFloat) {
-        [imageView, label, sublabel, defaultBadge, promoBadge].compactMap { $0 }.forEach {
-            $0.alpha = alpha
-        }
-
-        content?.subviews.map { $0 }.forEach {
-            $0.alpha = alpha
-        }
     }
 
     @objc private func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
         // Fade the text and icon out while the button is long pressed
         switch gesture.state {
         case .began:
-            setContentViewAlpha(0.5)
+            content?.setKeyContent(alpha: 0.5)
         default:
-            setContentViewAlpha(1.0)
+            content?.setKeyContent(alpha: 1.0)
         }
     }
 
@@ -376,20 +365,6 @@ class RowButton: UIView {
         }
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
         heightConstraint?.isActive = true
-    }
-}
-
-// MARK: - EventHandler
-extension RowButton: EventHandler {
-    func handleEvent(_ event: STPEvent) {
-        switch event {
-        case .shouldEnableUserInteraction:
-            setContentViewAlpha(1.0)
-        case .shouldDisableUserInteraction:
-            setContentViewAlpha(0.5)
-        default:
-            break
-        }
     }
 }
 
