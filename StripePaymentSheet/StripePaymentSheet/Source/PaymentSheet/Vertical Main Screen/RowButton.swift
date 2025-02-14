@@ -141,39 +141,6 @@ class RowButton: UIView {
 
         // TOOD(porter) Refactor the rest of this for other row styles (flat w/ check)
 
-        addAndPinSubview(shadowRoundedRect)
-
-        setupTapGestures()
-
-        // Accessibility
-        // Subviews of an accessibility element are ignored
-        isAccessibilityElement = false
-        accessibilityIdentifier = text // Just for test purposes
-        accessibilityElements = [shadowRoundedRect, rightAccessoryView].compactMap { $0 }
-        shadowRoundedRect.accessibilityIdentifier = text
-        shadowRoundedRect.accessibilityLabel = text
-        shadowRoundedRect.isAccessibilityElement = true
-        updateAccessibilityTraits()
-
-        // Early-exit for flatWithRadio
-        if isEmbedded && appearance.embeddedPaymentElement.row.style == .flatWithRadio {
-            let rowButtonFlatWithRadioView = RowButtonFlatWithRadioView(
-                appearance: appearance,
-                imageView: imageView,
-                text: text,
-                subtext: subtext,
-                rightAccessoryView: rightAccessoryView,
-                defaultBadgeText: badgeText,
-                promoBadge: promoBadge)
-
-            addAndPinSubview(rowButtonFlatWithRadioView)
-            self.content = rowButtonFlatWithRadioView
-            makeSameHeightAsOtherRowButtonsIfNecessary()
-            return // Skip the rest of the complicated layout
-        }
-
-        // TOOD(porter) Refactor the rest of this for other row styles (floating and flat w/ check)
-
         // Label and sublabel
         label.isAccessibilityElement = false
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel])
