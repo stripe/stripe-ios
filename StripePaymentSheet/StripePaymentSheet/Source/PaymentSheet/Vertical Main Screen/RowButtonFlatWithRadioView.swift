@@ -23,7 +23,7 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
     private let label: UILabel
     /// The subtitle label, e.g. “Pay over time with Affirm”
     private let sublabel: UILabel
-    /// For layout convenience: if we have an accessory view to the right (e.g. a brand logo, etc.)
+    /// An accessory view that is displayed on the trailing end of the content view, e.g. "View More"
     private let rightAccessoryView: UIView?
     /// The label indicating if this is the default saved payment method
     private let defaultBadgeLabel: UILabel?
@@ -109,6 +109,12 @@ private extension RowButtonFlatWithRadioView {
 
         // MARK: - Constraints
 
+        // Resolve ambiguous height warning by setting these constraints w/ low priority
+        let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 14)
+        imageViewTopConstraint.priority = .defaultLow
+        let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
+        imageViewBottomConstraint.priority = .defaultLow
+
         let insets = appearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
             // Radio button constraints
@@ -124,6 +130,8 @@ private extension RowButtonFlatWithRadioView {
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageViewTopConstraint,
+            imageViewBottomConstraint,
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),

@@ -334,7 +334,7 @@ class RowButton: UIView {
         self.didTap(self)
     }
 
-    /// Sets icon, text, and sublabel alpha
+    /// Sets icon, text, sublabel, default badge, and promo badge alpha
     func setContentViewAlpha(_ alpha: CGFloat) {
         [imageView, label, sublabel, defaultBadge, promoBadge].compactMap { $0 }.forEach {
             $0.alpha = alpha
