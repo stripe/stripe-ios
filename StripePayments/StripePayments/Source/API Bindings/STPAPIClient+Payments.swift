@@ -1427,7 +1427,7 @@ extension STPAPIClient {
         try await withCheckedThrowingContinuation({ continuation in
             self.setAsDefaultPaymentMethod(paymentMethodID, for: customerID, using: ephemeralKey) { customer, error in
                 guard let customer = customer else {
-                    continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
+                    continuation.resume(throwing: error ?? NSError.stp_defaultPaymentMethodNotChangedError())
                     return
                 }
                 continuation.resume(returning: customer)

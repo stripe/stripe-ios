@@ -22,14 +22,10 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         originalPaymentMethodSelection: CustomerPaymentOption?)
-    func didSelectUpdateCardBrand(
+    func didSelectUpdate(
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
-    func didSelectUpdateDefault(
-        viewController: CustomerSavedPaymentMethodsCollectionViewController,
-        paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
-        customerID: String) async throws -> STPCustomer?
     func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController)
 }
 /*
@@ -415,7 +411,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         }
         let viewModel = viewModels[indexPath.item]
         if case .add = viewModel {
-            delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
+            self.delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
             return false
         }
         return true
@@ -507,12 +503,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
                    paymentMethod: STPPaymentMethod,
                    updateParams: STPPaymentMethodUpdateParams?,
                    customerID: String?) async throws {
-        if let updateParams {
-            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
+        guard let updateParams else {
+            throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")
         }
-        if let customerID {
-            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID)
-        }
+        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
@@ -526,7 +520,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         }
 
         let viewModel = viewModels[row]
-        let updatedPaymentMethod = try await delegate.didSelectUpdateCardBrand(viewController: self,
+        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
                                                     paymentMethodSelection: viewModel,
                                                                       updateParams: updateParams)
 
@@ -537,22 +531,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
         collectionView.reloadData()
-    }
-
-    private func updateDefault(paymentMethod: STPPaymentMethod,
-                       customerID: String) async throws {
-        guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
-              let delegate = delegate
-        else {
-            stpAssertionFailure()
-            throw CustomerSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
-        }
-
-        let viewModel = viewModels[row]
-        _ = try await delegate.didSelectUpdateDefault(viewController: self,
-                                                      paymentMethodSelection: viewModel,
-                                                      customerID: customerID)
-        updateUI(selectedSavedPaymentOption: .stripeId(paymentMethod.stripeId))
     }
 
     func didRemove(viewController: UpdatePaymentMethodViewController,
