@@ -275,7 +275,6 @@ extension PaymentMethodFormViewController {
         )
         let linkMode = elementsSession.linkSettings?.linkMode
         let billingDetails = instantDebitsFormElement?.billingDetails
-        let styleConfig = ElementsSessionContext.StyleConfig(from: configuration.style)
 
         return ElementsSessionContext(
             amount: intent.amount,
@@ -284,9 +283,16 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
-            styleConfig: styleConfig
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
         )
+    }
+
+    private var bankAccountCollectorStyle: STPBankAccountCollectorUserInterfaceStyle {
+        switch configuration.style {
+        case .automatic: return .automatic
+        case .alwaysLight: return .alwaysLight
+        case .alwaysDark: return .alwaysDark
+        }
     }
 
     private var shouldOverridePrimaryButton: Bool {
@@ -359,7 +365,7 @@ extension PaymentMethodFormViewController {
             with: name,
             email: email
         )
-        let client = STPBankAccountCollector()
+        let client = STPBankAccountCollector(style: bankAccountCollectorStyle)
         let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: STPBankAccountCollector.CollectBankAccountCompletionBlock = { result, _, error in
@@ -451,7 +457,7 @@ extension PaymentMethodFormViewController {
         let params = STPCollectBankAccountParams.collectInstantDebitsParams(
             email: instantDebitsFormElement.email
         )
-        let client = STPBankAccountCollector()
+        let client = STPBankAccountCollector(style: bankAccountCollectorStyle)
         let genericError = PaymentSheetError.accountLinkFailure
 
         let financialConnectionsCompletion: STPBankAccountCollector.CollectBankAccountCompletionBlock = { result, _, error in

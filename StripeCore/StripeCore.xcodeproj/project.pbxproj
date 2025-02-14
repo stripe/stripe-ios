@@ -44,6 +44,7 @@
 		4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */; };
 		492039932CA47A8600CE2072 /* ElementsSessionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492039922CA47A8600CE2072 /* ElementsSessionContext.swift */; };
 		493B33062CA3015600E3622F /* LinkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B33052CA3015600E3622F /* LinkMode.swift */; };
+		4941EB5D2D5CFB840004806A /* FinancialConnectionsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4941EB5C2D5CFB840004806A /* FinancialConnectionsStyle.swift */; };
 		49E8CE2A2CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */; };
 		49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ECDA402CA340E100F647F0 /* AsyncTests.swift */; };
 		49F3828D2CC02D43001CE69A /* BillingAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F3828C2CC02D43001CE69A /* BillingAddress.swift */; };
@@ -247,6 +248,7 @@
 		4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Extensions.swift"; sourceTree = "<group>"; };
 		492039922CA47A8600CE2072 /* ElementsSessionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsSessionContext.swift; sourceTree = "<group>"; };
 		493B33052CA3015600E3622F /* LinkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMode.swift; sourceTree = "<group>"; };
+		4941EB5C2D5CFB840004806A /* FinancialConnectionsStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsStyle.swift; sourceTree = "<group>"; };
 		49424775D3233411D9C2473B /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
 		49538DBF8457D96707A2DA56 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedEncodingContainer+Extensions.swift"; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 				CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */,
 				CB8035292D31BA79008F0556 /* AvailableIncentives.swift */,
 				CB80352B2D31BAC7008F0556 /* LinkConsumerIncentive.swift */,
+				4941EB5C2D5CFB840004806A /* FinancialConnectionsStyle.swift */,
 			);
 			path = "Connections Bindings";
 			sourceTree = "<group>";
@@ -1054,6 +1057,7 @@
 				310E6B5C2C580C06006A03EC /* StripeAttest.swift in Sources */,
 				9DCBC08C182ED76A962961E7 /* NSURLComponents+Stripe.swift in Sources */,
 				563A42FA383FA9AA5FA4CDCE /* String+StripeCore.swift in Sources */,
+				4941EB5D2D5CFB840004806A /* FinancialConnectionsStyle.swift in Sources */,
 				CA09DC1EC4142701B31F9673 /* UIImage+StripeCore.swift in Sources */,
 				C7C0EC68130760F73201F81B /* StripeCodable.swift in Sources */,
 				44DE84C8BFB403E1FB7E2E82 /* StripeJSONDecoder.swift in Sources */,
