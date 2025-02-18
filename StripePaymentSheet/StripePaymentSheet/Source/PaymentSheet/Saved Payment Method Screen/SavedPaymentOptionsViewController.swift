@@ -173,7 +173,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     private let intent: Intent
     private let paymentSheetConfiguration: PaymentSheet.Configuration
     private let analyticsHelper: PaymentSheetAnalyticsHelper
-    private var defaultPaymentMethod: STPPaymentMethod?
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
@@ -217,6 +216,21 @@ class SavedPaymentOptionsViewController: UIViewController {
     private(set) var savedPaymentMethods: [STPPaymentMethod] {
         didSet {
             updateUI()
+        }
+    }
+    private(set) var defaultPaymentMethod: STPPaymentMethod? {
+        didSet {
+            collectionView.needsVerticalPaddingForBadge = hasDefault
+            collectionView.performBatchUpdates({
+                collectionView.reloadSections(IndexSet(integer: 0))
+                animateHeightChange { self.collectionView.updateLayout() }
+            })
+            UIView.transition(with: collectionView,
+                              duration: 0.3,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                self.collectionView.reloadData()
+            })
         }
     }
     /// Whether or not there are any payment options we can show
@@ -388,11 +402,6 @@ class SavedPaymentOptionsViewController: UIViewController {
             elementsSession: elementsSession,
             defaultPaymentMethod: defaultPaymentMethod
         )
-        collectionView.needsVerticalPaddingForBadge = hasDefault
-        collectionView.performBatchUpdates({
-            collectionView.reloadSections(IndexSet(integer: 0))
-            animateHeightChange { self.collectionView.updateLayout() }
-        })
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
@@ -716,7 +725,6 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                                                       paymentMethodSelection: viewModel,
                                                       customerID: customerID)
         defaultPaymentMethod = paymentMethod
-        updateUI()
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
