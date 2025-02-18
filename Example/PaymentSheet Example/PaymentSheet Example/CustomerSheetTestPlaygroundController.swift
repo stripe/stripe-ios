@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
