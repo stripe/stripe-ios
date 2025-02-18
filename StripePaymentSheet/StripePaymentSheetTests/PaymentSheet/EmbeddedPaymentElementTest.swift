@@ -199,7 +199,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         async let _ = sut.update(intentConfiguration: brokenConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
         async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
-        // ...should make the confirm call wait for the update and then fail b/c the update failed
+        // ...should make the confirm call fail b/c the update is in progress
         switch await confirmResult {
         case let .failed(error: error):
             XCTAssertEqual(error.nonGenericDescription, "confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm.")
