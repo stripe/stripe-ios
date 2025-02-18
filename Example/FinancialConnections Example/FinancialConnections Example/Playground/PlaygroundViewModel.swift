@@ -249,18 +249,6 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
-    var useDynamicStyle: Binding<Bool> {
-        Binding(
-            get: {
-                self.playgroundConfiguration.useDynamicStyle
-            },
-            set: {
-                self.playgroundConfiguration.useDynamicStyle = $0
-                self.objectWillChange.send()
-            }
-        )
-    }
-
     var style: Binding<PlaygroundConfiguration.Style> {
         Binding(
             get: {
