@@ -400,7 +400,6 @@ extension EmbeddedPaymentElement {
         if let latestUpdateContext {
             switch latestUpdateContext.status {
             case .inProgress:
-                _ = await latestUpdateTask?.value
                 let errorMessage = "confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm."
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: errorMessage)
                 return (.failed(error: error), nil)
