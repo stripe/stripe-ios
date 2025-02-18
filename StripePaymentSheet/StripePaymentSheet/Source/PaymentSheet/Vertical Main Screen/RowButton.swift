@@ -23,7 +23,6 @@ class RowButton: UIView {
         checkmarkImageView.isHidden = true
         return checkmarkImageView
     }()
-    let imageView: UIImageView
     let label: UILabel
     let sublabel: UILabel
     let defaultBadge: UILabel?
@@ -81,7 +80,6 @@ class RowButton: UIView {
         self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
         self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
-        self.imageView = imageView
         self.label = Self.makeRowButtonLabel(text: text, appearance: appearance)
         self.isEmbedded = isEmbedded
         self.rightAccessoryView = rightAccessoryView
@@ -121,7 +119,25 @@ class RowButton: UIView {
             return // Skip the rest of the complicated layout
         }
 
-        // TOOD(porter) Refactor the rest of this for other row styles (floating and flat w/ check)
+        if !isEmbedded || appearance.embeddedPaymentElement.row.style == .floatingButton {
+            let insets = isEmbedded ? appearance.embeddedPaymentElement.row.additionalInsets : 4
+            let rowButtonFloating = RowButtonFloating(
+                appearance: appearance,
+                imageView: imageView,
+                text: text,
+                subtext: subtext,
+                rightAccessoryView: rightAccessoryView,
+                defaultBadgeText: badgeText,
+                promoBadge: promoBadge,
+                insets: insets)
+
+            addAndPinSubview(rowButtonFloating)
+            self.content = rowButtonFloating
+            makeSameHeightAsOtherRowButtonsIfNecessary()
+            return // Skip the rest of the complicated layout
+        }
+
+        // TOOD(porter) Refactor the rest of this for other row styles (flat w/ check)
 
         // Label and sublabel
         label.isAccessibilityElement = false
@@ -308,28 +324,21 @@ class RowButton: UIView {
         guard isEnabled else { return }
         if shouldAnimateOnPress {
             // Fade the text and icon out and back in
-            setContentViewAlpha(0.5)
+            content?.setKeyContent(alpha: 0.5)
             UIView.animate(withDuration: 0.2, delay: 0.1) { [self] in
-                setContentViewAlpha(1.0)
+                content?.setKeyContent(alpha: 1.0)
             }
         }
         self.didTap(self)
-    }
-
-    /// Sets icon, text, and sublabel alpha
-    func setContentViewAlpha(_ alpha: CGFloat) {
-        [imageView, label, sublabel, defaultBadge, content].compactMap { $0 }.forEach {
-            $0.alpha = alpha
-        }
     }
 
     @objc private func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
         // Fade the text and icon out while the button is long pressed
         switch gesture.state {
         case .began:
-            setContentViewAlpha(0.5)
+            content?.setKeyContent(alpha: 0.5)
         default:
-            setContentViewAlpha(1.0)
+            content?.setKeyContent(alpha: 1.0)
         }
     }
 
@@ -342,28 +351,18 @@ class RowButton: UIView {
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        guard sublabel.text?.isEmpty ?? true else {
+        let isSublabelTextEmpty = {
+            if let content {
+                return !content.hasSubtext
+            }
+            return sublabel.text?.isEmpty ?? true
+        }()
+        guard isSublabelTextEmpty else {
             heightConstraint?.isActive = false
             return
         }
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
         heightConstraint?.isActive = true
-    }
-}
-
-// MARK: - EventHandler
-extension RowButton: EventHandler {
-    func handleEvent(_ event: STPEvent) {
-        let views = [label, sublabel, imageView, promoBadge, content].compactMap { $0.self }
-
-        switch event {
-        case .shouldEnableUserInteraction:
-            views.forEach { $0.alpha = 1 }
-        case .shouldDisableUserInteraction:
-            views.forEach { $0.alpha = 0.5 }
-        default:
-            break
-        }
     }
 }
 

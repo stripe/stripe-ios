@@ -1,4 +1,4 @@
-## X.Y.Z 2025-XX-YY
+## 24.6.0 2025-02-18
 * [Fixed] The SDK and example apps now compile in Xcode 16.2
 
 ### Financial Connections
