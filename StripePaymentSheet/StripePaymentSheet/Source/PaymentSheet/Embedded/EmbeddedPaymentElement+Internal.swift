@@ -396,20 +396,25 @@ extension EmbeddedPaymentElement {
         guard !hasConfirmedIntent else {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), nil)
         }
-        // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
-        if let latestUpdateTask {
-            switch await latestUpdateTask.value {
+
+        if let latestUpdateContext {
+            switch latestUpdateContext.status {
+            case .inProgress:
+                _ = await latestUpdateTask?.value
+                let errorMessage = "confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm."
+                let error = PaymentSheetError.flowControllerConfirmFailed(message: errorMessage)
+                return (.failed(error: error), nil)
             case .succeeded:
                 // The view is in sync with the intent. Continue on with confirm!
                 break
-            case .failed(error: let error):
-                return (.failed(error: error), nil)
             case .canceled:
                 let errorMessage = "confirm was called when the current update task is canceled. This shouldn't be possible; the current update task should only cancel if another task began."
                 stpAssertionFailure(errorMessage)
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: errorMessage)
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: error)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                return (.failed(error: error), nil)
+            case .failed(let error):
                 return (.failed(error: error), nil)
             }
         }

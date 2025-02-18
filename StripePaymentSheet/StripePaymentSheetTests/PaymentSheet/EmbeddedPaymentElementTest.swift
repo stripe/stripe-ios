@@ -202,7 +202,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...should make the confirm call wait for the update and then fail b/c the update failed
         switch await confirmResult {
         case let .failed(error: error):
-            XCTAssertEqual(error.nonGenericDescription.prefix(101), "An error occurred in PaymentSheet. The amount in `PaymentSheet.IntentConfiguration` must be non-zero!")
+            XCTAssertEqual(error.nonGenericDescription, "confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm.")
         default:
             XCTFail("Expected confirm to fail")
         }

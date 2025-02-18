@@ -104,6 +104,9 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        let newUpdateContext = EmbeddedUpdateContext(status: .inProgress)
+        self.latestUpdateContext = newUpdateContext
+
         let startTime = Date()
         analyticsHelper.logEmbeddedUpdateStarted()
         // Do not process any update calls if we have already successfully confirmed an intent
@@ -196,6 +199,16 @@ public final class EmbeddedPaymentElement {
         }
         self.latestUpdateTask = currentUpdateTask
         let updateResult = await currentUpdateTask.value
+        if latestUpdateContext?.id == newUpdateContext.id {
+            switch updateResult {
+            case .succeeded:
+                self.latestUpdateContext?.status = .succeeded
+            case .failed(let error):
+                self.latestUpdateContext?.status = .failed(error: error)
+            case .canceled:
+                self.latestUpdateContext?.status = .canceled
+            }
+        }
         embeddedPaymentMethodsView.isUserInteractionEnabled = true
         analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
@@ -265,6 +278,8 @@ public final class EmbeddedPaymentElement {
     internal var selectedFormViewController: EmbeddedFormViewController?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
+    /// Tracks info about the currently in-flight or most recent update attempt.
+    internal var latestUpdateContext: EmbeddedUpdateContext?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif
