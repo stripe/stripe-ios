@@ -103,6 +103,12 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         }
     }
 
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
+        wrapAsyncToPromise {
+            try await self.repairAuthSession(clientSecret: clientSecret, coreAuthorization: coreAuthorization)
+        }
+    }
+
     func cancelAuthSession(
         clientSecret: String,
         authSessionId: String
@@ -118,6 +124,15 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     ) -> Future<FinancialConnectionsAuthSession> {
         wrapAsyncToFuture {
             try await self.retrieveAuthSession(clientSecret: clientSecret, authSessionId: authSessionId)
+        }
+    }
+
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession> {
+        wrapAsyncToFuture {
+            try await self.retrieveAuthSessionPolling(clientSecret: clientSecret, authSessionId: authSessionId)
         }
     }
 
@@ -246,7 +261,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) -> Future<(manifest: FinancialConnectionsSessionManifest, customSuccessPaneMessage: String?)> {
         wrapAsyncToFuture {
             try await self.saveAccountsToNetworkAndLink(
@@ -256,7 +272,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 phoneNumber: phoneNumber,
                 country: country,
                 consumerSessionClientSecret: consumerSessionClientSecret,
-                clientSecret: clientSecret
+                clientSecret: clientSecret,
+                isRelink: isRelink
             )
         }
     }
