@@ -10,7 +10,7 @@ import XCTest
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripeElements
 @testable@_spi(STP) import StripePaymentsUI
 
 class ImageTest: XCTestCase {
@@ -18,7 +18,7 @@ class ImageTest: XCTestCase {
         for image in Image.allCases {
             let image = UIImage(
                 named: image.rawValue,
-                in: StripePaymentSheetBundleLocator.resourcesBundle,
+                in: StripeElementsBundleLocator.resourcesBundle,
                 compatibleWith: nil
             )
             XCTAssertNotNil(image)

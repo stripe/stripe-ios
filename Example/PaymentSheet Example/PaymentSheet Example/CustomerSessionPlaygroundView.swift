@@ -3,7 +3,7 @@
 //  PaymentSheet Example
 //
 
-import StripePaymentSheet
+import StripeElements
 
 import SwiftUI
 

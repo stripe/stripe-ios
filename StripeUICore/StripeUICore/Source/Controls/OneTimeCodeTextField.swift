@@ -1,6 +1,6 @@
 //
 //  OneTimeCodeTextField.swift
-//  StripePaymentSheet
+//  StripeElements
 //
 //  Created by Ramon Torres on 11/4/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

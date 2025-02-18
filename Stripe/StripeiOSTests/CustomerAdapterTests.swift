@@ -1,6 +1,6 @@
 //
 //  CustomerAdapterTests.swift
-//  StripePaymentSheetTests
+//  StripeElementsTests
 //
 
 import Foundation
@@ -9,7 +9,7 @@ import OHHTTPStubsSwift
 @_spi(STP) @testable import StripeCore
 @testable import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripeElements
 @_spi(STP) @testable import StripePaymentsTestUtils
 import XCTest
 

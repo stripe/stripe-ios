@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-import StripePaymentSheet
+import StripeElements
 import SwiftUI
 
 struct ExampleSwiftUIPaymentSheet: View {

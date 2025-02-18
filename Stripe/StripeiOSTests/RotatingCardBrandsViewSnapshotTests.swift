@@ -12,7 +12,7 @@ import StripeCoreTestUtils
 import XCTest
 
 @testable import Stripe
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripeElements
 
 class RotatingCardBrandsViewSnapshotTests: STPSnapshotTestCase {
     func testAllCardBrands() {

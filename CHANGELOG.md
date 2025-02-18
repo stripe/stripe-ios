@@ -612,11 +612,11 @@ This release was made in error, and contains changes from 23.29.0, 23.29.1, and 
 
 ## 23.0.0 2022-10-24
 ### Payments
-* [Changed] Reduced the size of the SDK by splitting the `Stripe` module into `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
+* [Changed] Reduced the size of the SDK by splitting the `Stripe` module into `StripeElements`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
 
 |Module|Description|Compressed|Uncompressed|
 |------|-----------|----------|------------|
-|StripePaymentSheet|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|2.7MB|6.3MB|
+|StripeElements|Stripe's [prebuilt payment UI](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet).|2.7MB|6.3MB|
 |Stripe|Contains all the below frameworks, plus [Issuing](https://stripe.com/docs/issuing/cards/digital-wallets?platform=iOS) and [Basic Integration](/docs/mobile/ios/basic).|2.3MB|5.1MB|
 |StripeApplePay|[Apple Pay support](/docs/apple-pay), including `STPApplePayContext`.|0.4MB|1.0MB|
 |StripePayments|Bindings for the Stripe Payments API.|1.0MB|2.6MB|

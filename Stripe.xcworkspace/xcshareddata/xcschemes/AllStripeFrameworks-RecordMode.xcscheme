@@ -113,9 +113,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A74928FD0171C3213676E29C"
-               BuildableName = "StripePaymentSheet.framework"
-               BlueprintName = "StripePaymentSheet"
-               ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
+               BuildableName = "StripeElements.framework"
+               BlueprintName = "StripeElements"
+               ReferencedContainer = "container:StripeElements/StripeElements.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -278,9 +278,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9A93AB1D98A0A1EC6ADEA65D"
-               BuildableName = "StripePaymentSheetTests.xctest"
-               BlueprintName = "StripePaymentSheetTests"
-               ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
+               BuildableName = "StripeElementsTests.xctest"
+               BlueprintName = "StripeElementsTests"
+               ReferencedContainer = "container:StripeElements/StripeElements.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference

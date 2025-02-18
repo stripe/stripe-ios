@@ -6,7 +6,7 @@
 //
 // This is an example of an integration using PaymentSheet where you collect payment details before creating an Intent.
 
-import StripePaymentSheet
+import StripeElements
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred

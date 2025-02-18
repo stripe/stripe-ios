@@ -77,7 +77,7 @@ import UIKit
 }
 
 /// Describes the appearance of an Element
-/// A superset of `StripePaymentSheet.PaymentSheetAppearance`. This exists b/c we can't see that type from `StripeUICore`, and we don't want to the public StripePaymentSheet API to be a typealias of this.
+/// A superset of `StripeElements.PaymentSheetAppearance`. This exists b/c we can't see that type from `StripeUICore`, and we don't want to the public StripeElements API to be a typealias of this.
 @_spi(STP) public struct ElementsAppearance {
 
     /// The default appearance used for Elements

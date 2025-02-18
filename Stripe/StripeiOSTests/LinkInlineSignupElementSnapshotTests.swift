@@ -11,7 +11,7 @@ import UIKit
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripeElements
 @testable@_spi(STP) import StripePaymentsUI
 
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
@@ -105,7 +105,7 @@ extension LinkInlineSignupElementSnapshotTests {
     struct MockAccountService: LinkAccountServiceProtocol {
         func lookupAccount(
             withEmail email: String?,
-            emailSource: StripePaymentSheet.EmailSource,
+            emailSource: StripeElements.EmailSource,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             completion(

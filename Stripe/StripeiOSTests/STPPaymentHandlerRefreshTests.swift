@@ -15,7 +15,7 @@ import XCTest
 @testable@_spi(STP) import Stripe3DS2
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripeElements
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 

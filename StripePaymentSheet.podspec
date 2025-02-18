@@ -5,10 +5,10 @@ Pod::Spec.new do |s|
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
   s.version                        = '24.6.0'
 
-  s.summary                        = "Stripe's prebuilt payment UI."
+  s.summary                        = "Legacy alias package for StripeElements. Please change your Podfile to depend on StripeElements."
   s.license                        = { type: 'MIT', file: 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
-  s.readme                         = 'StripePaymentSheet/README.md'
+  s.readme                         = 'StripeElements/README.md'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { git: 'https://github.com/stripe/stripe-ios.git', tag: s.version.to_s }
   s.frameworks                     = 'Foundation', 'UIKit'
@@ -18,9 +18,9 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
   s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'StripePaymentSheet/StripePaymentSheet/Source/**/*.swift'
-  s.ios.resource_bundle            = { 'StripePaymentSheetBundle' => ['StripePaymentSheet/StripePaymentSheet/Resources/**/*.{lproj,png,xcassets,json}', 'StripePaymentSheet/StripePaymentSheet/PrivacyInfo.xcprivacy'] }
   s.dependency                       'StripeCore', s.version.to_s
   s.dependency                       'StripePayments', s.version.to_s
   s.dependency                       'StripePaymentsUI', s.version.to_s
   s.dependency                       'StripeApplePay', s.version.to_s
+  s.dependency                       'StripeElements', s.version.to_s
 end

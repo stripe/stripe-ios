@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(LinkOnly) import StripePaymentSheet
+@_spi(LinkOnly) import StripeElements
 import UIKit
 
 class ExampleLinkPaymentCheckoutViewController: UIViewController {

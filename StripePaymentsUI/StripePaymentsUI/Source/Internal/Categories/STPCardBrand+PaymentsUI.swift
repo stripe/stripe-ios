@@ -1,6 +1,6 @@
 //
 //  STPCardBrand+PaymentSheet.swift
-//  StripePaymentSheet
+//  StripeElements
 //
 //  Created by Nick Porter on 9/21/23.
 //

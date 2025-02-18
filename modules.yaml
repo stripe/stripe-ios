@@ -112,18 +112,28 @@ modules:
   size_report:
     max_incremental_uncompressed_size: 100
 
-- podspec: StripePaymentSheet.podspec
-  scheme: StripePaymentSheet
-  framework_name: StripePaymentSheet
-  localization_dir: StripePaymentSheet/StripePaymentSheet
+- podspec: StripeElements.podspec
+  scheme: StripeElements
+  framework_name: StripeElements
+  localization_dir: StripeElements/StripeElements
   supports_catalyst: true
   docs:
-    output: docs/stripepaymentsheet
-    readme: StripePaymentSheet/README.md
+    output: docs/stripeelements
+    readme: StripeElements/README.md
     include:
       - StripeCore
   size_report:
     max_incremental_uncompressed_size: 100
+    
+- podspec: StripePaymentSheet.podspec
+  scheme: StripePaymentSheet
+  framework_name: StripePaymentSheet
+  supports_catalyst: true
+  docs:
+    output: docs/stripepaymentsheet
+    readme: StripeElements/README.md
+    include:
+      - StripeElements
 
 - podspec: StripeCameraCore.podspec
   scheme: StripeCameraCore
@@ -210,7 +220,7 @@ pod_push_order:
 - StripeApplePay.podspec
 - StripePayments.podspec
 - StripePaymentsUI.podspec
-- StripePaymentSheet.podspec
+- StripeElements.podspec
 - Stripe.podspec
 - StripeIdentity.podspec
 - StripeCardScan.podspec

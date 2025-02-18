@@ -1,6 +1,6 @@
 //
 //  UIView+PaymentSheetDebugging.swift
-//  StripePaymentSheet
+//  StripeElements
 //
 
 import UIKit

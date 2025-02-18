@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripeElements
 
 class Error_PaymentSheetTests: XCTestCase {
 

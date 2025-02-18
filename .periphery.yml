@@ -18,7 +18,7 @@ targets:
   - StripeCore
   - StripeFinancialConnections
   - StripeIdentity
-  - StripePaymentSheet
+  - StripeElements
   - StripePayments
   - StripePaymentsUI
   - StripeUICore

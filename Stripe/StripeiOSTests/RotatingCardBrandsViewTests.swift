@@ -10,7 +10,7 @@
 import XCTest
 
 @testable import Stripe
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripeElements
 
 class RotatingCardBrandsViewTests: XCTestCase {
 

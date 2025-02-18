@@ -3,7 +3,7 @@
 //  PaymentSheet Example
 //
 
-import StripePaymentSheet
+import StripeElements
 import SwiftUI
 struct ExampleSwiftUICustomerSheet: View {
     @State private var showingCustomerSheet = false

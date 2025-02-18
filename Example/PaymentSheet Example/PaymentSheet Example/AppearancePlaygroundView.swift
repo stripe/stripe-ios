@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) import StripeElements
 import SwiftUI
 
 @available(iOS 14.0, *)

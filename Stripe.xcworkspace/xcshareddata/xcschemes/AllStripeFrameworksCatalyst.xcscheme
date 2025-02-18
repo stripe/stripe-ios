@@ -85,9 +85,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A74928FD0171C3213676E29C"
-               BuildableName = "StripePaymentSheet.framework"
-               BlueprintName = "StripePaymentSheet"
-               ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
+               BuildableName = "StripeElements.framework"
+               BlueprintName = "StripeElements"
+               ReferencedContainer = "container:StripeElements/StripeElements.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry

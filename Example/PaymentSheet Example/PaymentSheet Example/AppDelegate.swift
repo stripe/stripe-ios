@@ -6,7 +6,7 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import StripePaymentSheet
+import StripeElements
 import UIKit
 
 @UIApplicationMain

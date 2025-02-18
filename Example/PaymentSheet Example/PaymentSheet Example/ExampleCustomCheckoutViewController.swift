@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import StripePaymentSheet
+import StripeElements
 import UIKit
 
 class ExampleCustomCheckoutViewController: UIViewController {

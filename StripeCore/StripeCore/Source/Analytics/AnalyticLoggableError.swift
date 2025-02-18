@@ -48,7 +48,7 @@ extension AnalyticLoggableError where Self: Error {}
     ///
     /// It sends the following fields:
     /// - error_type: For Stripe API errors, the error’s [type](https://docs.stripe.com/api/errors#errors-type) e.g. “invalid_request_error”.
-    ///           For Swift errors, the fully qualified type name e.g. “StripePaymentSheet.LinkURLGeneratorError”.
+    ///           For Swift errors, the fully qualified type name e.g. “StripeElements.LinkURLGeneratorError”.
     ///           For NSErrors, the error domain e.g. “NSURLErrorDomain”.
     /// - error_code: For Stripe API errors, the error's code e.g. "invalid_number".
     ///            For NSErrors, the error code e.g. “-1009”.
@@ -82,7 +82,7 @@ extension AnalyticLoggableError where Self: Error {}
 
     /// Extracts a value suitable for the `"error_type"` analytic parameter
     /// - For Stripe API errors, the error’s [type](https://docs.stripe.com/api/errors#errors-type) e.g. “invalid_request_error”.
-    /// - For Swift errors, the fully qualified type name e.g. “StripePaymentSheet.LinkURLGeneratorError”.
+    /// - For Swift errors, the fully qualified type name e.g. “StripeElements.LinkURLGeneratorError”.
     /// - For NSErrors, the error domain e.g. “NSURLErrorDomain”.
     static func extractErrorType(from error: Error) -> String {
         if type(of: error) is NSError.Type {
@@ -96,7 +96,7 @@ extension AnalyticLoggableError where Self: Error {}
                 return "\(error.domain)"
             }
         } else {
-            // This is a Swift Error, use the qualified type name e.g. "Swift.DecodingError" or "StripePaymentSheet.PaymentSheetError"
+            // This is a Swift Error, use the qualified type name e.g. "Swift.DecodingError" or "StripeElements.PaymentSheetError"
             return String(reflecting: type(of: error))
         }
     }

@@ -7,7 +7,7 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@testable import StripePaymentSheet
+@testable import StripeElements
 import XCTest
 
 // Link mapping tests

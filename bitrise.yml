@@ -273,7 +273,7 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripePaymentSheet
+        - scheme: StripeElements
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -411,7 +411,7 @@ workflows:
     steps:
     - xcode-build-for-test@2:
         inputs:
-        - scheme: StripePaymentSheet
+        - scheme: StripeElements
         - destination: generic/platform=visionOS Simulator
     - deploy-to-bitrise-io@2: {}
     before_run:

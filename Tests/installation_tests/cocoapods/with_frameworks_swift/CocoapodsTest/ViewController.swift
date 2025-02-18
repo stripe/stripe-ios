@@ -12,7 +12,7 @@ import StripeCardScan
 @_spi(PrivateBetaConnect) import StripeConnect
 import StripeFinancialConnections
 import StripeIdentity
-import StripePaymentSheet
+import StripeElements
 import UIKit
 
 class ViewController: UIViewController {

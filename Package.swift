@@ -21,8 +21,8 @@ let package = Package(
             targets: ["StripePaymentsUI"]
         ),
         .library(
-            name: "StripePaymentSheet",
-            targets: ["StripePaymentSheet"]
+            name: "StripeElements",
+            targets: ["StripeElements"]
         ),
         .library(
             name: "StripeApplePay",
@@ -137,12 +137,12 @@ let package = Package(
             ]
         ),
         .target(
-            name: "StripePaymentSheet",
+            name: "StripeElements",
             dependencies: ["StripePaymentsUI", "StripeApplePay", "StripePayments", "StripeCore", "StripeUICore"],
-            path: "StripePaymentSheet/StripePaymentSheet",
+            path: "StripeElements/StripeElements",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/StripePaymentSheet.xcassets"),
+                .process("Resources/StripeElements.xcassets"),
                 .process("Resources/JSON"),
                 .process("PrivacyInfo.xcprivacy")
             ]

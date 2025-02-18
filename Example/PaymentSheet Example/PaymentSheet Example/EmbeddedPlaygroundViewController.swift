@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripeElements
 import UIKit
 import Combine
 import SwiftUI
@@ -261,7 +261,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 // MARK: - EmbeddedPaymentElementDelegate
 
 extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
-    func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
+    func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: StripeElements.EmbeddedPaymentElement) {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
     }

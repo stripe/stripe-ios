@@ -10,7 +10,7 @@
 import Contacts
 import Foundation
 import PassKit
-import StripePaymentSheet
+import StripeElements
 import SwiftUI
 import UIKit
 

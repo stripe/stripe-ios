@@ -10,7 +10,7 @@ import Combine
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeFinancialConnections
-import StripePaymentSheet
+import StripeElements
 import SwiftUI
 import UIKit
 

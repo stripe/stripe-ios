@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		31138ECF28DE66F5008AF554 /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 31138ECE28DE66F5008AF554 /* StripePaymentSheet */; };
+		31138ECF28DE66F5008AF554 /* StripeElements in Frameworks */ = {isa = PBXBuildFile; productRef = 31138ECE28DE66F5008AF554 /* StripeElements */; };
 		3137B6922743799C00CE7F5C /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = 3137B6912743799C00CE7F5C /* StripeApplePay */; };
 		317C4FFD27604B54003771D7 /* SPMAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C4FFC27604B54003771D7 /* SPMAnalyticsTests.swift */; };
 		31DC3DB12537D02000623028 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* Stripe */; };
@@ -81,7 +81,7 @@
 				31DC3DB12537D02000623028 /* Stripe in Frameworks */,
 				E6C5F5FA2CA0FAC100861709 /* StripeConnect in Frameworks */,
 				E6A36A5A26BA4C34002A4427 /* StripeIdentity in Frameworks */,
-				31138ECF28DE66F5008AF554 /* StripePaymentSheet in Frameworks */,
+				31138ECF28DE66F5008AF554 /* StripeElements in Frameworks */,
 				3C4D20A9273C644500BC6444 /* StripeFinancialConnections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,7 +181,7 @@
 				3C4D20A8273C644500BC6444 /* StripeFinancialConnections */,
 				3BD980882743194F00B09BCD /* StripeCardScan */,
 				3137B6912743799C00CE7F5C /* StripeApplePay */,
-				31138ECE28DE66F5008AF554 /* StripePaymentSheet */,
+				31138ECE28DE66F5008AF554 /* StripeElements */,
 				E6C5F5F92CA0FAC100861709 /* StripeConnect */,
 			);
 			productName = CocoapodsTest;
@@ -538,9 +538,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		31138ECE28DE66F5008AF554 /* StripePaymentSheet */ = {
+		31138ECE28DE66F5008AF554 /* StripeElements */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = StripePaymentSheet;
+			productName = StripeElements;
 		};
 		3137B6912743799C00CE7F5C /* StripeApplePay */ = {
 			isa = XCSwiftPackageProductDependency;
