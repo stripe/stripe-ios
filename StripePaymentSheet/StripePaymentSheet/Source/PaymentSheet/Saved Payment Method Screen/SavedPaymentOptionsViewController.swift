@@ -225,12 +225,7 @@ class SavedPaymentOptionsViewController: UIViewController {
                 collectionView.reloadSections(IndexSet(integer: 0))
                 animateHeightChange { self.collectionView.updateLayout() }
             })
-            UIView.transition(with: collectionView,
-                              duration: 0.3,
-                              options: .transitionCrossDissolve,
-                              animations: {
-                self.collectionView.reloadData()
-            })
+            updateUI()
         }
     }
     /// Whether or not there are any payment options we can show

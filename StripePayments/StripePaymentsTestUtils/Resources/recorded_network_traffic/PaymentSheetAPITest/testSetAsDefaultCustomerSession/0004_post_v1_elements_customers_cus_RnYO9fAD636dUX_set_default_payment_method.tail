@@ -1,0 +1,40 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/elements\/customers\/cus_RnYO9fAD636dUX\/set_default_payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=TuGf9tBVeHcBlIGgmUToOZqPXC1geYxp0xgh_TLRD3U4w-upCdZQ0vAeRHLxeIgSSDoSWb2Nw79qdH9-
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report"
+x-wc: AB
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+request-id: req_M4NqjhP93XO2kb
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 188
+Vary: Origin
+Date: Tue, 18 Feb 2025 20:20:27 GMT
+original-request: req_M4NqjhP93XO2kb
+stripe-version: 2020-08-27
+idempotency-key: 84cd8e78-c7d0-4711-a1bd-9d92f68a6af5
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: payment_method=pm_1QtxHKFY0qyl6XeW4hJjam0i
+
+{
+  "object" : "customer",
+  "id" : "cus_RnYO9fAD636dUX",
+  "livemode" : false,
+  "created" : 1739910025,
+  "email" : null,
+  "default_source" : null,
+  "description" : null,
+  "shipping" : null
+}
