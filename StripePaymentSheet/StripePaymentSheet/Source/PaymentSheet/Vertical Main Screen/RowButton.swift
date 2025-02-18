@@ -13,12 +13,12 @@ import UIKit
 
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 class RowButton: UIView {
-    let content: RowButtonContent
     let type: RowButtonType
-    let text: String
     private let shadowRoundedRect: ShadowedRoundedRectangle
+    let content: RowButtonContent
     let shouldAnimateOnPress: Bool
     let appearance: PaymentSheet.Appearance
+    let text: String
     typealias DidTapClosure = (RowButton) -> Void
     let didTap: DidTapClosure
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
@@ -57,11 +57,11 @@ class RowButton: UIView {
     ) {
         self.appearance = appearance
         self.type = type
-        self.text = text
         self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
-        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.isEmbedded = isEmbedded
+        self.text = text
+        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
         self.content = Self.makeRowButtonView(appearance: appearance,
                                               isEmbedded: isEmbedded,
                                               imageView: imageView,
@@ -74,6 +74,8 @@ class RowButton: UIView {
 
         addAndPinSubview(shadowRoundedRect)
         addAndPinSubview(content)
+        makeSameHeightAsOtherRowButtonsIfNecessary()
+
         setupTapGestures()
 
         // Accessibility
@@ -152,14 +154,12 @@ class RowButton: UIView {
     func makeSameHeightAsOtherRowButtonsIfNecessary() {
         // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
         // Don't do this if we are flat_with_checkmark style and have an accessory view - this row button is allowed to be taller than the rest
-        let isDisplayingRightAccessoryView = content.isDisplayingAccessoryView
-        if isFlatWithCheckmarkStyle && isDisplayingRightAccessoryView {
+        if isFlatWithCheckmarkStyle && content.isDisplayingAccessoryView {
             heightConstraint?.isActive = false
             return
         }
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        let isSublabelTextEmpty = !content.hasSubtext
-        guard isSublabelTextEmpty else {
+        guard !content.hasSubtext else {
             heightConstraint?.isActive = false
             return
         }
@@ -188,7 +188,6 @@ extension RowButton: UIGestureRecognizerDelegate {
         return false
     }
 }
-
 // MARK: - Helpers
 extension RowButton {
     private static func makeRowButtonView(appearance: PaymentSheet.Appearance,

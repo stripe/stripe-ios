@@ -98,6 +98,12 @@ final class RowButtonFlatWithCheckmark: UIView, RowButtonContent {
         sublabel.text = text
         sublabel.isHidden = text.isEmpty
     }
+
+    func setKeyContent(alpha: CGFloat) {
+        [imageView, label, sublabel].compactMap { $0 }.forEach {
+            $0.alpha = alpha
+        }
+    }
 }
 
 // MARK: - UI Setup
