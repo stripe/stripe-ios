@@ -406,7 +406,7 @@ extension EmbeddedPaymentElement {
             case .succeeded:
                 // The view is in sync with the intent. Continue on with confirm!
                 break
-            case .failed(let error):
+            case .failed(error: let error):
                 return (.failed(error: error), nil)
             case .canceled:
                 let errorMessage = "confirm was called when the current update task is canceled. This shouldn't be possible; the current update task should only cancel if another task began."
