@@ -1,6 +1,8 @@
 ## X.Y.Z 2025-XX-YY
 * [Fixed] The SDK and example apps now compile in Xcode 16.2
 
+### Financial Connections
+* [Added] The `StripeFinancialConnections` SDK now supports dark mode, and will automatically adapt to the device's theme. [Learn more](https://docs.stripe.com/financial-connections/other-data-powered-products?platform=ios#connections-customize-ios) about configuring appearance settings.
 
 ## 24.5.0 2025-02-10
 ### CardScan
