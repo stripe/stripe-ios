@@ -1518,7 +1518,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                                                 ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
        // Set the default payment method
-        let _ = try await apiClient.setAsDefaultPaymentMethod(defaultPaymentMethod.stripeId, for: customerAndEphemeralKey.customer, using: customerAndEphemeralKey.ephemeralKeySecret)
+        _ = try await apiClient.setAsDefaultPaymentMethod(defaultPaymentMethod.stripeId, for: customerAndEphemeralKey.customer, using: customerAndEphemeralKey.ephemeralKeySecret)
         // 0. Create a PI on our test backend
         STPTestingAPIClient.shared.fetchPaymentIntent(types: types, shouldSavePM: true, customerID: configuration.customer?.id) {
             result in
