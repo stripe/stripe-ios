@@ -10,10 +10,10 @@ import Foundation
 struct EmbeddedUpdateContext {
     /// The ID of the update API call
     let id: UUID = UUID()
-    
+
     /// Tracks where we are in the update lifecycle
     var status: Status = .inProgress
-    
+
     enum Status {
         /// Update in progress
         case inProgress

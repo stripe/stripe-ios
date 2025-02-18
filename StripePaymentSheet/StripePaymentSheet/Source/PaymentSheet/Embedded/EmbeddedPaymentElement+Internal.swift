@@ -406,14 +406,14 @@ extension EmbeddedPaymentElement {
             case .succeeded:
                 // The view is in sync with the intent. Continue on with confirm!
                 break
+            case .failed(let error):
+                return (.failed(error: error), nil)
             case .canceled:
                 let errorMessage = "confirm was called when the current update task is canceled. This shouldn't be possible; the current update task should only cancel if another task began."
                 stpAssertionFailure(errorMessage)
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: errorMessage)
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: error)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                return (.failed(error: error), nil)
-            case .failed(let error):
                 return (.failed(error: error), nil)
             }
         }
