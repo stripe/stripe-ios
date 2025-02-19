@@ -209,10 +209,11 @@ public final class EmbeddedPaymentElement {
         analyticsHelper.log(event: .mcConfirmEmbedded)
         guard let presentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
-            stpAssertionFailure(errorMessage)
+            assertionFailure(errorMessage)
             return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
         guard let paymentOption = _paymentOption else {
+            assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
             return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
         let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
