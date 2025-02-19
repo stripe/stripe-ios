@@ -79,7 +79,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     session: .init(
                         clientSecret: "cs_xxx",
                         emailAddress: exampleBillingEmail,
-                        redactedPhoneNumber: "+1-555-xxx-xxxx",
+                        redactedFormattedPhoneNumber: "(***) *** **55",
                         verificationSessions: [.init(type: .sms, state: .verified)],
                         supportedPaymentDetailsTypes: [.card]
                     ),
@@ -173,7 +173,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                 option: .withPaymentDetails(
                     account: .init(
                         email: "test@example.com",
-                        session: .init(clientSecret: "cs_xxx", emailAddress: "test@example.com", redactedPhoneNumber: "+1-555-xxx-xxxx", verificationSessions: [.init(type: .sms, state: .verified)], supportedPaymentDetailsTypes: [.card]),
+                        session: .init(clientSecret: "cs_xxx", emailAddress: "test@example.com", redactedFormattedPhoneNumber: "(***) *** **55", verificationSessions: [.init(type: .sms, state: .verified)], supportedPaymentDetailsTypes: [.card]),
                         publishableKey: MockParams.publicKey,
                         useMobileEndpoints: false),
                     paymentDetails: .init(

@@ -6,9 +6,9 @@
 //
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeUICore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(STP) import StripeUICore
 import XCTest
 
 @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @testable import StripePaymentSheet
@@ -16,6 +16,8 @@ import XCTest
 @MainActor
 // https://jira.corp.stripe.com/browse/MOBILESDK-2607 Make these STPNetworkStubbingTestCase; blocked on getting them to record image requests
 class EmbeddedPaymentElementTest: XCTestCase {
+    var delegatePaymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData?
+
     lazy var configuration: EmbeddedPaymentElement.Configuration = {
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
@@ -40,7 +42,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
     }
-    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
+    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp", "amazon_pay"]) { _, _, _ in
         // These tests don't confirm, so this is unused
     }
     var delegateDidUpdatePaymentOptionCalled = false
@@ -258,7 +260,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         case .canceled:
             XCTFail("Expected confirm to succeed, but it was canceled")
         }
-        
+
         // Check our confirm analytics
         let analytics = STPAnalyticsClient.sharedClient._testLogHistory
         let confirmEvents = analytics.filter { $0["event"] as? String == "mc_embedded_confirm" }
@@ -295,6 +297,31 @@ class EmbeddedPaymentElementTest: XCTestCase {
         case .canceled:
             XCTFail("Expected confirm to fail, but it was canceled")
         }
+    }
+
+    func testPaymentOptionDisplayData() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: setupIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Select the "Cash App Pay" payment method
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
+        // The delegate should have been notified with proper data
+        XCTAssertEqual(delegatePaymentOption?.label, "Cash App Pay")
+        XCTAssertEqual(delegatePaymentOption?.paymentMethodType, "cashapp")
+        XCTAssertTrue(delegatePaymentOption?.mandateText?.string.contains("Cash App") ?? false)
+
+        // Tap another row, payment option data should be updated
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Amazon Pay"))
+        // The delegate should have been notified with proper data
+        XCTAssertEqual(delegatePaymentOption?.label, "Amazon Pay")
+        XCTAssertEqual(delegatePaymentOption?.paymentMethodType, "amazon_pay")
+        XCTAssertTrue(delegatePaymentOption?.mandateText?.string.contains("Amazon Pay") ?? false)
     }
 
     func testClearPaymentOptionAfterSelection() async throws {
@@ -460,7 +487,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut._test_paymentOption = .saved(paymentMethod: ._testCard(), confirmParams: confirmParams)
         XCTAssertEqual(sut.paymentOption?.label, "••••6789")
     }
-    
+
     func testChangeButtonStateRespectsCardBrandChoice() async throws {
         // Given an EmbeddedPaymentElement w/ CBC enabled...
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in }
@@ -512,6 +539,7 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
     }
 
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
+        delegatePaymentOption = embeddedPaymentElement.paymentOption
         delegateDidUpdatePaymentOptionCalled = true
     }
 

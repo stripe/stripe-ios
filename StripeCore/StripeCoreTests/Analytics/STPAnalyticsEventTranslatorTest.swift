@@ -37,9 +37,14 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
                                 translatedEventName: .selectedSavedPaymentMethod(.init(paymentMethodType: "card")))
         _testTranslationMapping(event: .mcOptionSelectCompleteSavedPM, payload: payloadWithLPM,
                                 translatedEventName: .selectedSavedPaymentMethod(.init(paymentMethodType: "card")))
+        _testTranslationMapping(event: .mcOptionSelectEmbeddedSavedPM, payload: payloadWithLPM,
+                                translatedEventName: .selectedSavedPaymentMethod(.init(paymentMethodType: "card")))
+
         _testTranslationMapping(event: .mcOptionRemoveCustomSavedPM, payload: payloadWithLPM,
                                 translatedEventName: .removedSavedPaymentMethod(.init(paymentMethodType: "card")))
         _testTranslationMapping(event: .mcOptionRemoveCompleteSavedPM, payload: payloadWithLPM,
+                                translatedEventName: .removedSavedPaymentMethod(.init(paymentMethodType: "card")))
+        _testTranslationMapping(event: .mcOptionRemoveEmbeddedSavedPM, payload: payloadWithLPM,
                                 translatedEventName: .removedSavedPaymentMethod(.init(paymentMethodType: "card")))
     }
     func testAnalyticNotTranslated() {

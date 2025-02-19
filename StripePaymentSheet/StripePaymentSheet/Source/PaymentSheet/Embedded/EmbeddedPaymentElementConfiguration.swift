@@ -131,11 +131,6 @@ extension EmbeddedPaymentElement {
         /// Note: Card brand filtering is not currently supported by Link.
         @_spi(CardBrandFilteringBeta) public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
-        /// This is an experimental feature that may be removed at any time.
-        /// If true, users can set a payment method as default and sync their default payment method across web and mobile
-        /// If false (default), users cannot set default payment methods.
-        @_spi(AllowsSetAsDefaultPM) public var allowsSetAsDefaultPM = false
-
         /// The view can display payment methods like “Card” that, when tapped, open a form sheet where customers enter their payment method details. The sheet has a button at the bottom. `FormSheetAction` enumerates the actions the button can perform.
         public enum FormSheetAction {
             /// The button says “Pay” or “Setup”. When tapped, we confirm the payment or setup in the form sheet.

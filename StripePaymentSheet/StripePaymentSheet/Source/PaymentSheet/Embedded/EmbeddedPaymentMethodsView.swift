@@ -25,14 +25,14 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
-    
+
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
     override var intrinsicContentSize: CGSize {
         return super.intrinsicContentSize
     }
-  
+
     private let appearance: PaymentSheet.Appearance
     private let rowButtonAppearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
@@ -56,6 +56,7 @@ class EmbeddedPaymentMethodsView: UIView {
         didSet {
             previousSelectedRowButton = oldValue
             let selectedRowButtonTypeDidChange = oldValue?.type != selectedRowButton?.type
+            updateMandate()
             if selectedRowButtonTypeDidChange {
                 selectedRowChangeButtonState = nil
                 delegate?.embeddedPaymentMethodsViewDidUpdateSelection()
@@ -63,10 +64,9 @@ class EmbeddedPaymentMethodsView: UIView {
             if let selectedRowButton {
                 selectedRowButton.isSelected = true
             }
-            updateMandate()
         }
     }
-    
+
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -168,7 +168,7 @@ class EmbeddedPaymentMethodsView: UIView {
             )
             rowButtons.append(rowButton)
         }
-        
+
         // Add the row buttons to our stack view
         rowButtons.forEach { rowButton in
             stackView.addArrangedSubview(rowButton)
@@ -194,7 +194,7 @@ class EmbeddedPaymentMethodsView: UIView {
             }
             self.selectedRowButton = rowButtonMatchingInitialSelection
         }
-        
+
         // Set up mandate
         stackView.addArrangedSubview(mandateView)
         updateMandate(animated: false)
@@ -232,7 +232,7 @@ class EmbeddedPaymentMethodsView: UIView {
     func resetSelection() {
         selectedRowButton = nil
     }
-    
+
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
         self.selectedRowButton = rowButton
@@ -294,7 +294,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Update text on card row based on the new selected payment method
         // It can vary between "Card" if the customer has no saved cards or "New card" if the customer has saved cards
-        if let oldCardButton = rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card))}),
+        if let oldCardButton = rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card)) }),
            let oldCardButtonIndex = stackView.arrangedSubviews.firstIndex(of: oldCardButton) {
             // Update selectionButtonMapping and add this new one to the stack view and remove old card row
             let cardRowButton = makePaymentMethodRowButton(
@@ -461,19 +461,17 @@ extension Array where Element == STPPaymentMethod {
 
 extension RowButton {
     func addChangeButton(sublabel: String?) {
-        rightAccessoryView?.isHidden = false
+        content.isDisplayingAccessoryView = true
         if let sublabel {
-            self.sublabel.text = sublabel
-            self.sublabel.isHidden = sublabel.isEmpty
+            content.setSublabel(text: sublabel)
         }
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }
-    
+
     func removeChangeButton(shouldClearSublabel: Bool) {
-        rightAccessoryView?.isHidden = true
+        content.isDisplayingAccessoryView = false
         if shouldClearSublabel {
-            sublabel.text = nil
-            sublabel.isHidden = true
+            content.setSublabel(text: nil)
         }
     }
 }

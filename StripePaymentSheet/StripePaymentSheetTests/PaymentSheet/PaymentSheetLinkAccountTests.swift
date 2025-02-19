@@ -80,7 +80,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
 
         sut.paymentSheetLinkAccountDelegate = PaymentSheetLinkAccountDelegateStub(expectation: refreshExp)
         // List the payment details. This will fail, refresh the token, then succeed.
-        sut.listPaymentDetails { result in
+        sut.listPaymentDetails(supportedTypes: [.card, .bankAccount]) { result in
             switch result {
             case .success:
                 listedPaymentDetailsExp.fulfill()
@@ -105,7 +105,7 @@ class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
         let stubSession = ConsumerSession(
             clientSecret: "unexpired_key",
             emailAddress: "user@example.com",
-            redactedPhoneNumber: "+1********55",
+            redactedFormattedPhoneNumber: "(***) *** **55",
             verificationSessions: [],
             supportedPaymentDetailsTypes: [.card, .bankAccount]
         )
