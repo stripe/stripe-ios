@@ -105,7 +105,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
         guard viewModel.canSetAsDefaultPM,
-              !viewModel.isDefault,
               PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
             viewModel.paymentMethod.type == $0
         }) else { return nil }
