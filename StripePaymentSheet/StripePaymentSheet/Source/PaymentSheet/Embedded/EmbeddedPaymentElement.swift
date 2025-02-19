@@ -213,9 +213,7 @@ public final class EmbeddedPaymentElement {
             return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
         guard let paymentOption = _paymentOption else {
-            let errorMessage = "`confirm` should only be called when `paymentOption` is not nil"
-            stpAssertionFailure(errorMessage)
-            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
+            return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
         let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
         return await _confirm(paymentOption: paymentOption, authContext: authContext).result
