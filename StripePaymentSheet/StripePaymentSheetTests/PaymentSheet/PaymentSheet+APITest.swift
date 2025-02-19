@@ -1546,6 +1546,36 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    func testSetAsDefault_CustomerSession_CustomerSheetDataSource() async throws {
+        var configuration = CustomerSheet.Configuration()
+        configuration.apiClient = apiClient
+        // Create a new customer and new key
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
+        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil, paymentMethodSave: true, paymentMethodRemove: true, paymentMethodSetAsDefault: true)
+        // Create a new payment method
+        let defaultPaymentMethod = try await apiClient.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
+
+        // Attach the payment method to the customer
+        try await apiClient.attachPaymentMethod(defaultPaymentMethod.stripeId,
+                                                customerID: customerAndEphemeralKey.customer,
+                                                ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+        let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
+        let customerSheet = CustomerSheet(configuration: configuration,
+                                          intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
+                                          customerSessionClientSecretProvider: { return .init(customerId: cscs.customer, clientSecret: cscs.customerSessionClientSecret) })
+        let csDataSource = customerSheet.createCustomerSheetDataSource()!
+        _ = try await csDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: cscs.customer)
+        csDataSource.loadPaymentMethodInfo { result in
+            guard case .success((_, _, let elementsSession)) = result else {
+                XCTFail()
+                return
+            }
+            XCTAssertNotNil(elementsSession)
+            XCTAssertEqual(elementsSession.customer?.defaultPaymentMethod, defaultPaymentMethod.stripeId)
+            loadPaymentMethodInfo.fulfill()
+        }
+        await fulfillment(of: [loadPaymentMethodInfo], timeout: 5.0)
+    }
 }
 
 extension PaymentSheetAPITest: STPAuthenticationContext {
