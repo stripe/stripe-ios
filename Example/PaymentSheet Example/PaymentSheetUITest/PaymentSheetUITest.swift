@@ -2798,6 +2798,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Done"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
         app.buttons["Back"].waitForExistenceAndTap()
+        let startCoordinate = app.scrollViews.element(boundBy: 1).coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
+        startCoordinate.press(forDuration: 0.1, thenDragTo: app.scrollViews.element(boundBy: 1).coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.1)))
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         app.buttons["Reload"].waitForExistenceAndTap()
