@@ -245,7 +245,7 @@ public final class EmbeddedPaymentElement {
 
     #if DEBUG
     public func testHeightChange() {
-        stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
+        assert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
         self.embeddedPaymentMethodsView.testHeightChange()
     }
     #endif
