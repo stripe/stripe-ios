@@ -2743,6 +2743,74 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
 
         XCTAssertEqual(app.buttons.matching(identifier: "chevron").count, 2)
     }
+
+    func testSetAsDefaultHorizontalNavigation_CustomerSession() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.customerMode = .returning
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodSetAsDefault = .enabled
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertFalse(app.buttons["•••• 4242"].isSelected)
+        app.buttons["Edit"].waitForExistenceAndTap()
+        XCTAssertEqual(app.buttons.matching(identifier: "CircularButton.Edit").count, 2)
+        XCTAssertFalse(app.staticTexts["Default"].waitForExistence(timeout: 3))
+        app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        app.switches["Set as default payment method"].waitForExistenceAndTap()
+        app.buttons["Save"].waitForExistenceAndTap()
+        XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
+        app.buttons["Done"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        app.buttons["Reload"].waitForExistenceAndTap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
+        app.buttons["Edit"].waitForExistenceAndTap()
+        XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
+        app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        // Ensure checkbox is not displayed if it's already the default
+        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+    }
+
+    func testSetAsDefaultVerticalNavigation_CustomerSession() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .vertical
+        settings.customerMode = .returning
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodSetAsDefault = .enabled
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertFalse(app.staticTexts["•••• 4242"].waitForExistence(timeout: 3))
+        app.buttons["View more"].waitForExistenceAndTap()
+        XCTAssertFalse(app.buttons["•••• 4242"].isSelected)
+        app.buttons["Edit"].waitForExistenceAndTap()
+        XCTAssertEqual(app.buttons.matching(identifier: "chevron").count, 2)
+        app.buttons["•••• 4242"].waitForExistenceAndTap()
+        app.switches["Set as default payment method"].waitForExistenceAndTap()
+        app.buttons["Save"].waitForExistenceAndTap()
+        // for some reason I can't see the default badge in app? so I don't know how to check it's there
+        app.buttons["Done"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
+        app.buttons["Back"].waitForExistenceAndTap()
+        let startCoordinate = app.scrollViews.element(boundBy: 1).coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
+        startCoordinate.press(forDuration: 0.1, thenDragTo: app.scrollViews.element(boundBy: 1).coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.1)))
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        app.buttons["Reload"].waitForExistenceAndTap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
+        app.buttons["View more"].waitForExistenceAndTap()
+        app.buttons["Edit"].waitForExistenceAndTap()
+        app.buttons["•••• 4242"].waitForExistenceAndTap()
+        // Ensure checkbox is not displayed if it's already the default
+        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+    }
 }
 
 // MARK: Helpers

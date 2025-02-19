@@ -138,7 +138,8 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                 fatalError("Updating payment method has not been implemented for type \(paymentMethodType)")
             }
         }()
-        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+        let updateViewModel = UpdatePaymentMethodViewModel(customerID: "cus_123",
+                                                           paymentMethod: paymentMethod,
                                                            appearance: appearance,
                                                            hostedSurface: .paymentSheet,
                                                            cardBrandFilter: cardBrandFilter,

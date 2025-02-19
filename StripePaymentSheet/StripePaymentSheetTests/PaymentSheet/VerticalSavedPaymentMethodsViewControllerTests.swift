@@ -31,7 +31,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            analyticsHelper: ._testValue()
+            analyticsHelper: ._testValue(),
+            defaultPaymentMethod: nil
         )
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
@@ -54,7 +55,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                         "enabled": false
                     ],
                 ]),
-            analyticsHelper: ._testValue()
+            analyticsHelper: ._testValue(),
+            defaultPaymentMethod: nil
         )
         XCTAssertFalse(viewController.canRemovePaymentMethods)
     }
@@ -66,7 +68,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            analyticsHelper: ._testValue()
+            analyticsHelper: ._testValue(),
+            defaultPaymentMethod: nil
         )
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
@@ -78,7 +81,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            analyticsHelper: ._testValue()
+            analyticsHelper: ._testValue(),
+            defaultPaymentMethod: nil
         )
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
@@ -91,7 +95,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            analyticsHelper: ._testValue()
+            analyticsHelper: ._testValue(),
+            defaultPaymentMethod: nil
         )
         XCTAssertFalse(viewController.canRemovePaymentMethods)
     }
@@ -102,7 +107,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-                                                                       analyticsHelper: ._testValue())
+                                                                       analyticsHelper: ._testValue(),
+                                                                       defaultPaymentMethod: nil)
         XCTAssertTrue(viewController.canRemoveOrEdit)
     }
 
@@ -114,7 +120,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-                                                                       analyticsHelper: ._testValue())
+                                                                       analyticsHelper: ._testValue(),
+                                                                       defaultPaymentMethod: nil)
         XCTAssertFalse(viewController.canRemoveOrEdit)
     }
 
@@ -124,7 +131,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-                                                                       analyticsHelper: ._testValue())
+                                                                       analyticsHelper: ._testValue(),
+                                                                       defaultPaymentMethod: nil)
         XCTAssertFalse(viewController.canEditPaymentMethods) // Can't edit, merchant is not eligible for CBC
     }
 
@@ -135,7 +143,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-                                                                       analyticsHelper: ._testValue())
+                                                                       analyticsHelper: ._testValue(),
+                                                                       defaultPaymentMethod: nil)
         XCTAssertFalse(viewController.canRemoveOrEdit)
     }
 
@@ -146,7 +155,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-                                                                       analyticsHelper: ._testValue())
+                                                                       analyticsHelper: ._testValue(),
+                                                                       defaultPaymentMethod: nil)
         XCTAssertFalse(viewController.canRemoveOrEdit)
     }
 
@@ -160,7 +170,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          cardBrandChoiceData: [
                                             "eligible": true]),
-            analyticsHelper: ._testValue()
+            analyticsHelper: ._testValue(),
+            defaultPaymentMethod: nil
         )
         XCTAssertTrue(viewController.canRemoveOrEdit)
     }
