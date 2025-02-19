@@ -226,7 +226,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: contentView.trailingAnchor, constant: 0),
                 accessoryButton.topAnchor.constraint(
                     equalTo: contentView.topAnchor, constant: 0),
-                
+
             ])
         }
 
@@ -259,7 +259,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: label.bottomAnchor, constant: 4),
                 defaultBadge.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
-                defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+                defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             ]
         }()
 
