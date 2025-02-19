@@ -522,7 +522,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         let viewModel = viewModels[row]
         let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
                                                     paymentMethodSelection: viewModel,
-                                                                      updateParams: updateParams)
+                                                    updateParams: updateParams)
 
         let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
         viewModels[row] = updatedViewModel

@@ -199,7 +199,6 @@ extension STPAPIClient {
         }
         return parameters
     }
-
 }
 
 private let APIEndpointElementsSessions = "elements/sessions"
