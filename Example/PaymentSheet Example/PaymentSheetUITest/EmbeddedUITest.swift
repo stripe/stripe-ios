@@ -616,7 +616,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Payment method"].waitForExistence(timeout: 1))
         XCTAssertFalse(app.buttons["New card"].isSelected)
         XCTAssertFalse(app.buttons["Checkout"].isEnabled)
-        
+
         // Tapping back into card form should preserve previous form details
         app.buttons["New card"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add new card"].waitForExistence(timeout: 2))
