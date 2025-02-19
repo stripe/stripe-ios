@@ -33,6 +33,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case setupIntentClientSecretProviderNil
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
+    case embeddedPaymentElementUpdateWithFormPresented
 
     // MARK: Loading errors
     case paymentIntentInTerminalState(status: STPPaymentIntentStatus)
@@ -140,6 +141,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "There's a problem with your integration. \(nonPIIDebugDescription)"
             case .confirmingWithInvalidPaymentOption:
                 return "`confirm` should only be called when `paymentOption` is not nil"
+            case .embeddedPaymentElementUpdateWithFormPresented:
+                return "`update` called while a form is already presented, this is not supported. `update` should only be called while a form is not presented."
             }
         }()
 
