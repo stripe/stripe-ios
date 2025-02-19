@@ -533,24 +533,13 @@ class EmbeddedUITests: PaymentSheetUITestCase {
     func testSelection() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
-        settings.uiStyle = .paymentSheet
-        settings.layout = .horizontal
+        settings.uiStyle = .embedded
         settings.customerKeyType = .legacy
         settings.formSheetAction = .continue
-        settings.customerMode = .new
+        settings.customerMode = .returning
+        settings.allowsDelayedPMs = .off
         loadPlayground(app, settings)
 
-        // Start by saving a new card
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        try! fillCardData(app, postalEnabled: true)
-
-        // Complete payment
-        app.buttons["Pay $50.99"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
-
-        // Switch to embedded mode kicks off a reload
-        app.buttons["embedded"].waitForExistenceAndTap(timeout: 5)
-        app.buttons["Payment"].waitForExistenceAndTap(timeout: 5)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
         // Should auto select a saved payment method
@@ -587,7 +576,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
-        // Try to fill a card
+        // Filling out card should set selection to card
         app.buttons["New card"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Add new card"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["New card"].isSelected) // Should show selected, the form should be filled with a valid card from above
@@ -617,48 +606,21 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["New card"].isSelected)
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
 
-        // Select a no-form PM such as Cash App Pay
-        app.buttons["Cash App Pay"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
-        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-
-        // Fill out US Bank Acct.
-        app.buttons["US bank account"].waitForExistenceAndTap()
-        // Fill out name and email fields
-        let continueButton = app.buttons["Continue"]
-        XCTAssertFalse(continueButton.isEnabled)
-        app.textFields["Full name"].tap()
-        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("test-\(UUID().uuidString)@example.com" + XCUIKeyboardKey.return.rawValue)
-        XCTAssertTrue(continueButton.isEnabled)
-        continueButton.tap()
-
-        // Go through connections flow
-        app.buttons["Agree and continue"].waitForExistenceAndTap()
-        app.staticTexts["Test Institution"].forceTapElement()
-        // "Success" institution is automatically selected because its the first
-        app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
-
-        skipLinkSignup(app)
-
-        app.buttons["Continue"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Add US bank account"].waitForExistence(timeout: 10))
-        app.buttons["Continue"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
-        XCTAssertEqual(app.staticTexts["Payment method"].label, "••••6789")
-        XCTAssertTrue(app.buttons["US bank account"].isSelected)
-        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-
-        // Confirm with the saved card
-        app.buttons["•••• 4242"].waitForExistenceAndTap()
-        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
-        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
-        app.swipeUp() // scroll to see the checkout button
-        XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        app.buttons["Checkout"].tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20))
+        // Making the card form invalid and canceling...
+        app.buttons["New card"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Add new card"].waitForExistence(timeout: 10))
+        cardNumberField.tap()
+        app.typeText(XCUIKeyboardKey.delete.rawValue)
+        app.buttons["Close"].waitForExistenceAndTap()
+        // ...should de-select the row and clear the payment option
+        XCTAssertFalse(app.staticTexts["Payment method"].waitForExistence(timeout: 1))
+        XCTAssertFalse(app.buttons["New card"].isSelected)
+        XCTAssertFalse(app.buttons["Checkout"].isEnabled)
+        
+        // Tapping back into card form should preserve previous form details
+        app.buttons["New card"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Add new card"].waitForExistence(timeout: 2))
+        XCTAssertEqual(cardNumberField.value as? String, "555555555555444, Your card number is incomplete.")
     }
 
     func testApplePay() {
