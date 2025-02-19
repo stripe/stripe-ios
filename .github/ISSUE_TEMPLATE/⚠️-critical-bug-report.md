@@ -10,6 +10,9 @@ assignees: ''
 ## Summary
 <!-- A simple summary of the problems you're having. -->
 
+## What is blocked by this issue?
+<!-- Summarize what the user is unable to do. (e.g. checking out, saving a card, etc.) -->
+
 ## Code to reproduce
 <!-- If possible, please include a brief piece of code (or ideally, a link to an example project) demonstrating the problem you're having. -->
 
