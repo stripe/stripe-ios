@@ -160,7 +160,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let addCardButton = app.buttons["Card"].waitForExistenceAndTap()
 
         try! fillCardData(app)
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
 
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
@@ -204,7 +204,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         try! fillCardData(app)
 
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
 
         // Update quantity of an item to force an update
         let saladStepper = app.steppers["salad_stepper"]
@@ -265,7 +265,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertFalse(saveThisCardToggle.isSelected)
 
         // Complete payment
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
 
         // Check analytics
         XCTAssertEqual(
@@ -309,8 +309,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
         // Complete payment
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
@@ -381,7 +381,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
 
         // XCTest is too eager to tap the buy button: Wait until the sheet dismisses first.
         waitToDisappear(app.textFields["Card number"])
@@ -654,8 +654,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         try? fillCardData(app, container: nil)
 
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -681,8 +681,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         try? fillCardData(app, container: nil)
 
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -967,8 +967,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         try? fillCardData(app, container: nil)
 
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -994,7 +994,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         try? fillCardData(app, container: nil)
 
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
         app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
@@ -1021,8 +1021,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
 
         try? fillCardData(app, container: nil)
 
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -1159,8 +1159,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertFalse(saveThisCardToggle.isSelected)
 
         // Complete payment
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         var successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
@@ -1176,8 +1176,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
         // Complete payment
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
@@ -1251,7 +1251,7 @@ class PaymentSheetExternalPMUITests: PaymentSheetUITestCase {
 
         scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "PayPal")?.waitForExistenceAndTap()
 
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
 
         // Verify EPMs vend the correct PaymentOptionDisplayData
         XCTAssertTrue(app.staticTexts["PayPal"].waitForExistence(timeout: 5.0))
@@ -1360,8 +1360,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         try! fillCardData(app)
 
         // Complete payment
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Reload w/ same customer
@@ -1372,8 +1372,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
         try! fillCardData(app)
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Should be able to edit two saved PMs
@@ -1545,8 +1545,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         try! fillCardData(app, tapCheckboxWithText: tapCheckboxWithText)
 
         // Complete payment
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Reload w/ same customer
@@ -1566,8 +1566,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         app.buttons["+ Add"].waitForExistenceAndTap()
         try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: tapCheckboxWithText)
 
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Should be able to edit two saved PMs
@@ -1719,8 +1719,8 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         app.buttons["+ Add"].waitForExistenceAndTap()
         try fillCardData(app, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
 
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
         reload(app, settings: settings)
 
@@ -1762,8 +1762,8 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -1849,8 +1849,8 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -2341,7 +2341,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Disable postal code input, it is pre-filled by `defaultBillingAddress`
         try! fillCardData(app, postalEnabled: false)
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
@@ -2381,7 +2381,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Disable postal code input, it is pre-filled by `defaultBillingAddress`
         try! fillCardData(app, postalEnabled: false)
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
@@ -2406,7 +2406,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
@@ -2441,7 +2441,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Begin by saving a card for this new user who is not signed up for Link
         XCTAssertTrue(app.buttons["Continue"].waitForExistence(timeout: 5))
         try! fillCardData(app)
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
@@ -2478,7 +2478,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
@@ -2657,7 +2657,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         case .paymentSheet:
             app.buttons["Pay $50.99"].tap()
         case .flowController:
-            app.buttons["Continue"].tap()
+            app.buttons["Continue"].waitForExistenceAndTap()
             app.buttons["Confirm"].waitForExistenceAndTap()
         case .embedded:
             // TODO(porter) Fill in embedded UI test steps

@@ -817,7 +817,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         fullNameField.forceTapElement()
         fullNameField.typeText("Jane Doe")
 
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
 
         // Ensure Cash App Pay is selected and start checking out
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
@@ -825,7 +825,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.swipeUp() // scroll to see the checkout button
         XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        app.buttons["Checkout"].tap()
+        app.buttons["Checkout"].waitForExistenceAndTap()
 
         webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
