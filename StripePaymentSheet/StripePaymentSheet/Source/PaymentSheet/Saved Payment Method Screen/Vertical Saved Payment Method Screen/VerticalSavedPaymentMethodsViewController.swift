@@ -20,11 +20,13 @@ protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     ///    - selectedPaymentMethod: The selected method of payment, if any.
     ///    - latestPaymentMethods: The most recent up-to-date list of payment methods, with the selected (if any) payment method at the front of the list.
     ///    - didTapToDismiss: Whether or not the customer tapped outside the sheet to dismiss it.
+    ///    - defaultPaymentMethod: The default payment method at the time the view controller completed its selection
     func didComplete(
         viewController: VerticalSavedPaymentMethodsViewController,
         with selectedPaymentMethod: STPPaymentMethod?,
         latestPaymentMethods: [STPPaymentMethod],
-        didTapToDismiss: Bool
+        didTapToDismiss: Bool,
+        defaultPaymentMethod: STPPaymentMethod?
     )
 }
 
@@ -40,6 +42,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private var updateViewController: UpdatePaymentMethodViewController?
+    private var defaultPaymentMethod: STPPaymentMethod?
 
     private var isEditingPaymentMethods: Bool = false {
         didSet {
@@ -105,6 +108,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return paymentMethodRows.first { $0.isSelected }?.paymentMethod
     }
 
+    private var previousSelectedPaymentMethod: STPPaymentMethod? {
+        return paymentMethodRows.first { $0.previousSelectedState == .selected }?.paymentMethod
+    }
+
     private var paymentMethods: [STPPaymentMethod] {
         return paymentMethodRows.map { $0.paymentMethod }
     }
@@ -166,10 +173,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.configuration = configuration
         self.elementsSession = elementsSession
+        self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
@@ -180,8 +189,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func isDefaultPaymentMethod(paymentMethodId: String) -> Bool {
-        guard paymentMethodSetAsDefault, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
-        return paymentMethodSetAsDefault && paymentMethodId == defaultPaymentMethod.stripeId
+        guard paymentMethodSetAsDefault, let defaultPaymentMethod else { return false }
+        return paymentMethodId == defaultPaymentMethod.stripeId
     }
 
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [SavedPaymentMethodRowButton] {
@@ -271,7 +280,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                 viewController: self,
                 with: self.selectedPaymentMethod,
                 latestPaymentMethods: latestPaymentMethods,
-                didTapToDismiss: didTapToDismiss
+                didTapToDismiss: didTapToDismiss,
+                defaultPaymentMethod: defaultPaymentMethod
             )
         }
     }
@@ -313,11 +323,13 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
 
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         analyticsHelper.logSavedPMScreenOptionSelected(option: .saved(paymentMethod: paymentMethod))
-        // Set payment method as default
-        CustomerPaymentOption.setDefaultPaymentMethod(
-            .stripeId(paymentMethod.stripeId),
-            forCustomer: configuration.customer?.id
-        )
+        if !elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+            // Set local storage default
+            CustomerPaymentOption.setDefaultPaymentMethod(
+                .stripeId(paymentMethod.stripeId),
+                forCustomer: configuration.customer?.id
+            )
+        }
 
         // Deselect previous button
         paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
@@ -330,7 +342,8 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
+        let updateViewModel = UpdatePaymentMethodViewModel(customerID: elementsSession.customer?.customerSession.customer,
+                                                           paymentMethod: paymentMethod,
                                                            appearance: configuration.appearance,
                                                            hostedSurface: .paymentSheet,
                                                            cardBrandFilter: configuration.cardBrandFilter,
@@ -356,19 +369,45 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
        _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
+                   paymentMethod: STPPaymentMethod,
+                   updateParams: STPPaymentMethodUpdateParams?,
+                   customerID: String?) async throws {
+        if let updateParams {
+            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
+        }
+        if let customerID {
+            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID)
+        }
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         // Update the payment method
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
         replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
-        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    private func updateDefault(paymentMethod: STPPaymentMethod,
+                               customerID: String) async throws {
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: paymentMethod.stripeId)
+        defaultPaymentMethod = paymentMethod
+        // if there was a previously selected payment method, replace it to deselect it and remove the badge if it was default
+        if let previousSelectedPaymentMethod {
+            replace(paymentMethod: previousSelectedPaymentMethod, with: previousSelectedPaymentMethod, selectedState: .unselected)
+        }
+        // if we just set a new default, replace it to add the badge and select it
+        if let defaultPaymentMethod {
+            replace(paymentMethod: defaultPaymentMethod, with: defaultPaymentMethod, selectedState: .selected)
+        }
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
         complete(didTapToDismiss: true)
     }
 
-    private func replace(paymentMethod: STPPaymentMethod, with updatedPaymentMethod: STPPaymentMethod) {
+    private func replace(paymentMethod: STPPaymentMethod, with updatedPaymentMethod: STPPaymentMethod, selectedState: SavedPaymentMethodRowButton.State? = nil) {
         guard let oldButton = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
               let oldButtonModelIndex = paymentMethodRows.firstIndex(of: oldButton),
               let oldButtonViewIndex = stackView.arrangedSubviews.firstIndex(of: oldButton) else {
@@ -381,7 +420,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod,
                                                     appearance: configuration.appearance,
                                                     showDefaultPMBadge: isDefaultPaymentMethod,
-                                                    previousSelectedState: oldButton.previousSelectedState,
+                                                    previousSelectedState: selectedState ?? oldButton.previousSelectedState,
                                                     currentState: oldButton.state)
 
         newButton.delegate = self

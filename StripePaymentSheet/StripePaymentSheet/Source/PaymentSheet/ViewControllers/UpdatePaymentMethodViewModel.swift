@@ -13,6 +13,7 @@ import Foundation
 import UIKit
 
 class UpdatePaymentMethodViewModel {
+    let customerID: String?
     let paymentMethod: STPPaymentMethod
     let appearance: PaymentSheet.Appearance
     let hostedSurface: HostedSurface
@@ -27,7 +28,7 @@ class UpdatePaymentMethodViewModel {
     var hasChangedCardBrand: Bool = false
     var hasChangedDefaultPaymentMethodCheckbox: Bool = false
     var canEdit: Bool {
-        return canUpdateCardBrand || canSetAsDefaultPM
+        return canUpdateCardBrand || (canSetAsDefaultPM && !isDefault)
     }
     var hasUpdates: Bool {
         return hasChangedCardBrand || hasChangedDefaultPaymentMethodCheckbox
@@ -67,10 +68,11 @@ class UpdatePaymentMethodViewModel {
         }
     }()
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, canSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+    init(customerID: String?, paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, canSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
         guard PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) else {
             fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
+        self.customerID = customerID
         self.paymentMethod = paymentMethod
         self.appearance = appearance
         self.hostedSurface = hostedSurface
