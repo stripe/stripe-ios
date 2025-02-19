@@ -349,7 +349,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                            cardBrandFilter: configuration.cardBrandFilter,
                                                            canRemove: canRemovePaymentMethods,
                                                            isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
-                                                           canSetAsDefaultPM: paymentMethodSetAsDefault,
+                                                           allowsSetAsDefaultPM: paymentMethodSetAsDefault,
                                                            isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId)
         )
         let updateViewController = UpdatePaymentMethodViewController(
