@@ -400,6 +400,9 @@ extension EmbeddedPaymentElement {
         if let latestUpdateContext {
             switch latestUpdateContext.status {
             case .inProgress:
+                // Fail confirmation immediately if an update is in progress, rather than waiting for it to complete.
+                // This prevents scenarios where the user might confirm an outdated state, such as agreeing to pay X
+                // but actually being charged Y due to an in-flight update changing the amount.
                 let errorMessage = "confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm."
                 let error = PaymentSheetError.flowControllerConfirmFailed(message: errorMessage)
                 return (.failed(error: error), nil)
