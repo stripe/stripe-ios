@@ -12,13 +12,14 @@ import Foundation
 import UIKit
 
 protocol SavedPaymentMethodFormFactoryDelegate: AnyObject {
-    func didUpdate(_: Element, didUpdateCardBrand: Bool)
+    func didUpdate(_: Element)
 }
 
 class SavedPaymentMethodFormFactory {
     let viewModel: UpdatePaymentMethodViewModel
     weak var delegate: SavedPaymentMethodFormFactoryDelegate?
 
+    var lastCardBrandLogSelectedEventSent: String?
     init(viewModel: UpdatePaymentMethodViewModel) {
         self.viewModel = viewModel
     }
@@ -36,7 +37,7 @@ class SavedPaymentMethodFormFactory {
         }
     }
 
-    private lazy var savedCardForm: Element = {
+    private(set) lazy var savedCardForm: PaymentMethodElement = {
        return makeCard()
     }()
 }
@@ -50,7 +51,7 @@ extension SavedPaymentMethodFormFactory: ElementDelegate {
     func didUpdate(element: Element) {
         switch viewModel.paymentMethod.type {
         case .card:
-            delegate?.didUpdate(element, didUpdateCardBrand: viewModel.selectedCardBrand != viewModel.paymentMethod.card?.preferredDisplayBrand)
+            delegate?.didUpdate(element)
         default:
             break
         }

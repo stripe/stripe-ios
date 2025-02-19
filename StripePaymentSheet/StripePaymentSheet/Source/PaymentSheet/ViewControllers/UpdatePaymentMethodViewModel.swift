@@ -21,17 +21,13 @@ class UpdatePaymentMethodViewModel {
     let isCBCEligible: Bool
     let canSetAsDefaultPM: Bool
     let isDefault: Bool
-
-    var selectedCardBrand: STPCardBrand?
     var errorState: Bool = false
-    var hasChangedCardBrand: Bool = false
+
     var hasChangedDefaultPaymentMethodCheckbox: Bool = false
     var canEdit: Bool {
         return canUpdateCardBrand || canSetAsDefaultPM
     }
-    var hasUpdates: Bool {
-        return hasChangedCardBrand || hasChangedDefaultPaymentMethodCheckbox
-    }
+
     var canUpdateCardBrand: Bool {
         guard paymentMethod.type == .card else {
             return false
@@ -81,5 +77,27 @@ class UpdatePaymentMethodViewModel {
         self.isCBCEligible = isCBCEligible
         self.canSetAsDefaultPM = allowsSetAsDefaultPM && !isDefault
         self.isDefault = isDefault
+    }
+
+    func updateParams(paymentMethodElement: PaymentMethodElement) -> UpdatePaymentMethodOptions?{
+        let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
+
+        if let params = paymentMethodElement.updateParams(params: confirmParams),
+           let cardParams = params.paymentMethodParams.card,
+           let originalPaymentMethodCard = paymentMethod.card,
+           hasChangedFields(original: originalPaymentMethodCard, updated: cardParams) {
+            return .card(paymentMethodCardParams: cardParams)
+        }
+        return nil
+    }
+    func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
+        let updatedBrand = original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
+        return updatedBrand
+    }
+}
+
+extension UpdatePaymentMethodViewModel {
+    enum UpdatePaymentMethodOptions {
+        case card(paymentMethodCardParams: STPPaymentMethodCardParams)
     }
 }

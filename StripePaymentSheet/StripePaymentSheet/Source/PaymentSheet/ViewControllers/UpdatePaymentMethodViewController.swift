@@ -77,9 +77,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: viewModel.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
-            if self.viewModel.hasChangedCardBrand {
+            if let updatePaymentMethodOptions = viewModel.updateParams(paymentMethodElement: formFactory.savedCardForm),
+               case .card(let cardUpdateParams) = updatePaymentMethodOptions {
                 Task {
-                    await self.updateCard()
+                    await self.updateCard(paymentMethodCardParams: cardUpdateParams)
                 }
             }
             if self.viewModel.hasChangedDefaultPaymentMethodCheckbox {
@@ -97,10 +98,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
         return button
     }()
 
+    private lazy var formFactory: SavedPaymentMethodFormFactory = {
+        let factory = SavedPaymentMethodFormFactory(viewModel: viewModel)
+        factory.delegate = self
+        return factory
+    }()
+
     private lazy var paymentMethodForm: UIView = {
-        let form = SavedPaymentMethodFormFactory(viewModel: viewModel)
-        form.delegate = self
-        return form.makePaymentMethodForm()
+        return formFactory.makePaymentMethodForm()
     }()
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
@@ -110,7 +115,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }) else { return nil }
         return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [weak self] isSelected in
             self?.viewModel.hasChangedDefaultPaymentMethodCheckbox = self?.viewModel.isDefault != isSelected
-            self?.updateButton.update(state: self?.viewModel.hasUpdates ?? false ? .enabled : .disabled)
+            self?.updateButtonState()
         }
     }()
 
@@ -183,32 +188,39 @@ final class UpdatePaymentMethodViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    private func updateCard() async {
-        guard let selectedBrand = viewModel.selectedCardBrand, let delegate = delegate else { return }
-
+    private func updateCard(paymentMethodCardParams: STPPaymentMethodCardParams) async {
+       guard let delegate = delegate else {
+            return
+        }
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
 
         // Create the update card params
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
-        let updateParams = STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
+        let updateParams = STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)
 
-        // Make the API request to update the payment method
+        var analyticsParams: [String: Any] = [:]
+        if let selectedBrand = paymentMethodCardParams.networks?.preferred {
+            analyticsParams["selected_card_brand"] = selectedBrand
+        }
+
         do {
             try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams)
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCard),
-                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
+                                                                 params: analyticsParams)
         } catch {
             updateButton.update(state: .enabled)
             latestError = error
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardFailed),
                                                                  error: error,
-                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
+                                                                 params: analyticsParams)
         }
         view.isUserInteractionEnabled = true
     }
 
+    private func updateButtonState() {
+        let params = viewModel.updateParams(paymentMethodElement: formFactory.savedCardForm)
+        updateButton.update(state: params != nil || viewModel.hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
+    }
 }
 
 // MARK: BottomSheetContentViewController
@@ -244,12 +256,11 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
 
 // MARK: SavedPaymentMethodFormFactoryDelegate
 extension UpdatePaymentMethodViewController: SavedPaymentMethodFormFactoryDelegate {
-    func didUpdate(_: Element, didUpdateCardBrand: Bool) {
+    func didUpdate(_ element: Element) {
         latestError = nil // clear error on new input
         switch viewModel.paymentMethod.type {
         case .card:
-            viewModel.hasChangedCardBrand = didUpdateCardBrand
-            updateButton.update(state: viewModel.hasUpdates ? .enabled : .disabled)
+            updateButtonState()
         default:
             break
         }

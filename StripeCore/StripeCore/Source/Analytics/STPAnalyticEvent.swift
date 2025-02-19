@@ -228,8 +228,7 @@ import Foundation
 
     // MARK: - PaymentSheet card brand choice
     case paymentSheetDisplayCardBrandDropdownIndicator = "mc_display_cbc_dropdown"
-    case paymentSheetOpenCardBrandDropdown = "mc_open_cbc_dropdown"
-    case paymentSheetCloseCardBrandDropDown = "mc_close_cbc_dropdown"
+    case paymentSheetCardBrandSelected = "mc_cbc_selected"
     case paymentSheetOpenEditScreen = "mc_open_edit_screen"
     case paymentSheetUpdateCard = "mc_update_card"
     case paymentSheetUpdateCardFailed = "mc_update_card_failed"
@@ -238,8 +237,7 @@ import Foundation
 
     // MARK: - CustomerSheet card brand choice
     case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
-    case customerSheetOpenCardBrandDropdown = "cs_open_cbc_dropdown"
-    case customerSheetCloseCardBrandDropDown = "cs_close_cbc_dropdown"
+    case customerSheetCardBrandSelected = "cs_cbc_selected"
     case customerSheetOpenEditScreen = "cs_open_edit_screen"
     case customerSheetUpdateCard = "cs_update_card"
     case customerSheetUpdateCardFailed = "cs_update_card_failed"
