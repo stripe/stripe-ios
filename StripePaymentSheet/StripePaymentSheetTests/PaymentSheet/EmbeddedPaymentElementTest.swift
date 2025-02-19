@@ -188,7 +188,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
 
     func testConfirmHandlesInflightUpdateThatFails() async throws {
-        let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "Cash App Pay"]) { _, _, _ in
+        let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
             XCTFail("Confirm handler should not be called.")
         }
         // Given a EmbeddedPaymentElement instance...
