@@ -91,7 +91,7 @@ class UpdatePaymentMethodViewModel {
         return nil
     }
     func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
-        let updatedBrand = original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
+        let updatedBrand = canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
         return updatedBrand
     }
 }
