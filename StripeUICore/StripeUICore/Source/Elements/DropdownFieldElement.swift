@@ -16,9 +16,7 @@ import UIKit
  For internal SDK use only
  */
 @_spi(STP) public final class DropdownFieldElement {
-    public typealias DidPresent = () -> Void
     public typealias DidUpdateSelectedIndex = (Int) -> Void
-    public typealias DidTapClose = () -> Void
 
     public struct DropdownItem {
         public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false, isDisabled: Bool = false) {
@@ -55,7 +53,7 @@ import UIKit
 
         /// If true, this item will be styled with greyed out secondary text
         public let isPlaceholder: Bool
-        
+
         public let isDisabled: Bool
     }
 
@@ -73,9 +71,7 @@ import UIKit
             updatePickerField()
         }
     }
-    public var didPresent: DidPresent?
     public var didUpdate: DidUpdateSelectedIndex?
-    public var didTapClose: DidTapClose?
     public let theme: ElementsAppearance
     public let hasPadding: Bool
 
@@ -153,20 +149,16 @@ import UIKit
         hasPadding: Bool = true,
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
-        didPresent: DidPresent? = nil,
-        didUpdate: DidUpdateSelectedIndex? = nil,
-        didTapClose: DidTapClose? = nil
+        didUpdate: DidUpdateSelectedIndex? = nil
     ) {
-        stpAssert(!items.filter{!$0.isDisabled}.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
-        
+        stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
+
         self.label = label
         self.theme = theme
         self.items = items
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
         self.isOptional = isOptional
-        self.didPresent = didPresent
         self.didUpdate = didUpdate
-        self.didTapClose = didTapClose
         self.hasPadding = hasPadding
 
         // Default to defaultIndex, if in bounds
@@ -281,7 +273,7 @@ extension DropdownFieldElement {
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: true)
             return
         }
-        
+
         selectedIndex = row
     }
 }
@@ -290,7 +282,6 @@ extension DropdownFieldElement {
 
 extension DropdownFieldElement: PickerFieldViewDelegate {
     func didBeginEditing(_ pickerFieldView: PickerFieldView) {
-        didPresent?()
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
@@ -311,7 +302,6 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     func didCancel(_ pickerFieldView: PickerFieldView) {
         // Reset to previously selected index when canceling
         selectedIndex = previouslySelectedIndex
-        didTapClose?()
     }
 }
 

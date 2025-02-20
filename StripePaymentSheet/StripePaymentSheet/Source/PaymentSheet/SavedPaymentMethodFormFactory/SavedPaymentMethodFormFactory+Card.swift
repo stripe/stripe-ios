@@ -43,7 +43,8 @@ extension SavedPaymentMethodFormFactory {
 
                 if preferredNetworkAPIValue != self.lastCardBrandLogSelectedEventSent {
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.viewModel.hostedSurface.analyticEvent(for: .cardBrandSelected),
-                                                                         params: ["selected_card_brand": preferredNetworkAPIValue])
+                                                                         params: ["selected_card_brand": preferredNetworkAPIValue,
+                                                                                  "cbc_event_source": "edit", ])
                     self.lastCardBrandLogSelectedEventSent = preferredNetworkAPIValue
                 }
                 return params
