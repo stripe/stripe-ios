@@ -444,6 +444,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                                            cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
+        guard let updateViewModel else { return }
         let editVc = UpdatePaymentMethodViewController(
                                               removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
                                               isTestMode: configuration.isTestMode,
