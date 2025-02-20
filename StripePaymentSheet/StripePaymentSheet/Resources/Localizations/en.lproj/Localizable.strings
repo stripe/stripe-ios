@@ -283,6 +283,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for a section listing one or more payment methods. */
 "Payment methods" = "Payment methods";
 
+/* Error message that's displayed when you try to confirm a payment without a valid payment method */
+"Please choose a valid payment method." = "Please choose a valid payment method.";
+
 /* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
 "Please go back and select another payment method" = "Please go back and select another payment method";
 

@@ -16,6 +16,8 @@ import XCTest
 @MainActor
 // https://jira.corp.stripe.com/browse/MOBILESDK-2607 Make these STPNetworkStubbingTestCase; blocked on getting them to record image requests
 class EmbeddedPaymentElementTest: XCTestCase {
+    var delegatePaymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData?
+
     lazy var configuration: EmbeddedPaymentElement.Configuration = {
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
@@ -40,7 +42,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
     }
-    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
+    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp", "amazon_pay"]) { _, _, _ in
         // These tests don't confirm, so this is unused
     }
     var delegateDidUpdatePaymentOptionCalled = false
@@ -135,6 +137,34 @@ class EmbeddedPaymentElementTest: XCTestCase {
             secondUpdateExpectation.fulfill()
         }
         await fulfillment(of: [secondUpdateExpectation])
+    }
+
+    func testUpdateFailsWhenFormPresented() async throws {
+        // Set up a test window so the view controllers "present"
+        let testWindow = UIWindow(frame: .zero)
+        testWindow.isHidden = false
+        testWindow.rootViewController = UIViewController()
+
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = testWindow.rootViewController
+        sut.view.autosizeHeight(width: 320)
+
+        // Tap card to present the form
+        let cardRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardRowButton)
+
+        // Assert the form is shown
+        XCTAssertTrue(delegateWillPresentCalled)
+
+        // Updates should fail while the form is presented
+        async let _updateResult = sut.update(intentConfiguration: setupIntentConfig)
+        let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
+        XCTAssertEqual(updateResult, .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented))
     }
 
     func testUpdateCancelsInFlightUpdate() async throws {
@@ -298,6 +328,31 @@ class EmbeddedPaymentElementTest: XCTestCase {
         case .canceled:
             XCTFail("Expected confirm to fail, but it was canceled")
         }
+    }
+
+    func testPaymentOptionDisplayData() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: setupIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Select the "Cash App Pay" payment method
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
+        // The delegate should have been notified with proper data
+        XCTAssertEqual(delegatePaymentOption?.label, "Cash App Pay")
+        XCTAssertEqual(delegatePaymentOption?.paymentMethodType, "cashapp")
+        XCTAssertTrue(delegatePaymentOption?.mandateText?.string.contains("Cash App") ?? false)
+
+        // Tap another row, payment option data should be updated
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Amazon Pay"))
+        // The delegate should have been notified with proper data
+        XCTAssertEqual(delegatePaymentOption?.label, "Amazon Pay")
+        XCTAssertEqual(delegatePaymentOption?.paymentMethodType, "amazon_pay")
+        XCTAssertTrue(delegatePaymentOption?.mandateText?.string.contains("Amazon Pay") ?? false)
     }
 
     func testClearPaymentOptionAfterSelection() async throws {
@@ -515,6 +570,7 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
     }
 
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
+        delegatePaymentOption = embeddedPaymentElement.paymentOption
         delegateDidUpdatePaymentOptionCalled = true
     }
 
