@@ -215,12 +215,12 @@ extension STPElementsSession {
         return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodSetAsDefault ?? false
     }
 
-    var paymentMethodUpdateForPaymentSheet: Bool {
-        return customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
+    func paymentMethodUpdateForPaymentSheet(_ configuration: PaymentElementConfiguration) -> Bool {
+        return configuration.updatePaymentMethodEnabled && customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
     }
 
-    var paymentMethodUpdateForCustomerSheet: Bool {
-        return customer?.customerSession.customerSheetComponent.enabled ?? false
+    func paymentMethodUpdateForCustomerSheet(_ configuration: CustomerSheet.Configuration) -> Bool {
+        return configuration.updatePaymentMethodEnabled && customer?.customerSession.customerSheetComponent.enabled ?? false
     }
 
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
