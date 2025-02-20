@@ -144,7 +144,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                            cardBrandFilter: cardBrandFilter,
                                                            canRemove: canRemove,
                                                            isCBCEligible: isCBCEligible,
-                                                           canSetAsDefaultPM: canSetAsDefaultPM,
+                                                           allowsSetAsDefaultPM: canSetAsDefaultPM,
                                                            isDefault: isDefault
         )
         let sut = UpdatePaymentMethodViewController(

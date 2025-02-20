@@ -77,14 +77,14 @@ import Foundation
 
     // MARK: - Embedded Payment Element init
     case mcInitEmbedded = "mc_embedded_init"
-    
+
     // MARK: - Embedded Payment Element confirm
     case mcConfirmEmbedded = "mc_embedded_confirm"
-    
+
     // MARK: - Embedded Payment Element update
     case mcUpdateStartedEmbedded = "mc_embedded_update_started"
     case mcUpdateFinishedEmbedded = "mc_embedded_update_finished"
-    
+
     // MARK: - PaymentSheet Show
     case mcShowCustomNewPM = "mc_custom_sheet_newpm_show"
     case mcShowCustomSavedPM = "mc_custom_sheet_savedpm_show"
@@ -230,9 +230,9 @@ import Foundation
     case paymentSheetDisplayCardBrandDropdownIndicator = "mc_display_cbc_dropdown"
     case paymentSheetOpenCardBrandDropdown = "mc_open_cbc_dropdown"
     case paymentSheetCloseCardBrandDropDown = "mc_close_cbc_dropdown"
-    case paymentSheetOpenCardBrandEditScreen = "mc_open_edit_screen"
-    case paymentSheetUpdateCardBrand = "mc_update_card"
-    case paymentSheetUpdateCardBrandFailed = "mc_update_card_failed"
+    case paymentSheetOpenEditScreen = "mc_open_edit_screen"
+    case paymentSheetUpdateCard = "mc_update_card"
+    case paymentSheetUpdateCardFailed = "mc_update_card_failed"
     case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
     case paymentSheetDisallowedCardBrand = "mc_disallowed_card_brand"
 
@@ -240,9 +240,9 @@ import Foundation
     case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
     case customerSheetOpenCardBrandDropdown = "cs_open_cbc_dropdown"
     case customerSheetCloseCardBrandDropDown = "cs_close_cbc_dropdown"
-    case customerSheetOpenCardBrandEditScreen = "cs_open_edit_screen"
-    case customerSheetUpdateCardBrand = "cs_update_card"
-    case customerSheetUpdateCardBrandFailed = "cs_update_card_failed"
+    case customerSheetOpenEditScreen = "cs_open_edit_screen"
+    case customerSheetUpdateCard = "cs_update_card"
+    case customerSheetUpdateCardFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
     // MARK: - Basic Integration

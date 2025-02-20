@@ -41,7 +41,7 @@ class UpdatePaymentMethodViewModel {
         return isCBCEligible && filteredCardBrands.count > 1
     }
 
-    lazy var header: String = {
+    lazy var header: String? = {
         switch paymentMethod.type {
         case .card:
             return .Localized.manage_card
@@ -50,11 +50,12 @@ class UpdatePaymentMethodViewModel {
         case .SEPADebit:
             return .Localized.manage_sepa_debit
         default:
-            fatalError("Updating payment method has not been implemented for \(paymentMethod.type)")
+            assertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
+            return nil
         }
     }()
 
-    lazy var footnote: String = {
+    lazy var footnote: String? = {
         switch paymentMethod.type {
         case .card:
             return canUpdateCardBrand ? .Localized.only_card_brand_can_be_changed : .Localized.card_details_cannot_be_changed
@@ -63,13 +64,14 @@ class UpdatePaymentMethodViewModel {
         case .SEPADebit:
             return .Localized.sepa_debit_details_cannot_be_changed
         default:
-            fatalError("Updating payment method has not been implemented for \(paymentMethod.type)")
+            assertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
+            return nil
         }
     }()
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, canSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
-        guard PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) else {
-            fatalError("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+        if !PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) {
+            assertionFailure("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
         }
         self.paymentMethod = paymentMethod
         self.appearance = appearance
@@ -77,7 +79,7 @@ class UpdatePaymentMethodViewModel {
         self.cardBrandFilter = cardBrandFilter
         self.canRemove = canRemove
         self.isCBCEligible = isCBCEligible
-        self.canSetAsDefaultPM = canSetAsDefaultPM
+        self.canSetAsDefaultPM = allowsSetAsDefaultPM && !isDefault
         self.isDefault = isDefault
     }
 }

@@ -169,7 +169,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
-                                                               canSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                                                               allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
             )
             let updateViewController = UpdatePaymentMethodViewController(

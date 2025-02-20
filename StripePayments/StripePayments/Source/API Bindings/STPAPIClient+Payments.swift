@@ -1400,6 +1400,52 @@ extension STPAPIClient {
             }
         })
     }
+
+    /// Sets a payment method as the default payment method for a customer.
+    /// - Parameters:
+    ///   - paymentMethodID: Identifier of the payment method to be set as default
+    ///   - customerID: Identifier of the customer whose default payment method is being set
+    ///   - ephemeralKey: The Customer Ephemeral Key secret to be used
+    ///   - completion: The callback to run with the returned `STPCustomer` object, or an error.
+    @_spi(STP) public func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        for customerID: String,
+        using ephemeralKey: String,
+        completion: @escaping STPCustomerCompletionBlock
+    ) {
+        APIRequest<STPCustomer>.post(
+            with: self,
+            endpoint: "\(APIEndpointElementsCustomers)/\(customerID)/set_default_payment_method",
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            parameters: [
+                "payment_method": paymentMethodID
+            ]
+        ) { customer, _, error in
+            completion(customer, error)
+        }
+    }
+
+    /// Sets a payment method as the default payment method for a customer.
+    /// - Parameters:
+    ///   - paymentMethodID: Identifier of the payment method to be set as default
+    ///   - customerID: Identifier of the customer whose default payment method is being set
+    ///   - ephemeralKey: The Customer Ephemeral Key secret to be used
+    /// - Returns: Returns the updated `STPPaymentMethod` or throws an error if the operation failed.
+    @_spi(STP) public func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        for customerID: String,
+        using ephemeralKey: String
+    ) async throws -> STPCustomer {
+        try await withCheckedThrowingContinuation({ continuation in
+            self.setAsDefaultPaymentMethod(paymentMethodID, for: customerID, using: ephemeralKey) { customer, error in
+                guard let customer = customer else {
+                    continuation.resume(throwing: error ?? NSError.stp_defaultPaymentMethodNotChangedError())
+                    return
+                }
+                continuation.resume(returning: customer)
+            }
+        })
+    }
 }
 
 private let APIEndpointToken = "tokens"
@@ -1408,6 +1454,7 @@ private let APIEndpointSources = "sources"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 @_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointElementsCustomers = "elements/customers"
 private let APIEndpointElementsPaymentMethods = "elements/payment_methods"
 private let APIEndpoint3DS2 = "3ds2"
 private let PaymentMethodDataHash = "payment_method_data"
