@@ -1,22 +1,21 @@
 //
-//  RowButtonFlatWithRadioView.swift
+//  RowButtonFloating.swift
 //  StripePaymentSheet
 //
-//  Created by Nick Porter on 2/11/25.
+//  Created by Nick Porter on 2/12/25.
 //
 
 import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// A standalone view dedicated to the "flat with radio" RowButton style.
-final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
+final class RowButtonFloating: UIView, RowButtonContent {
     let appearance: PaymentSheet.Appearance
 
     // MARK: - Subviews
 
-    /// The radio control
-    private let radioButton: RadioButton
+    /// The shadow view that manages corner radius and shadows and selection border
+    private let shadowRoundedRect: ShadowedRoundedRectangle
     /// Typically the payment method icon or brand image
     private let imageView: UIImageView
     /// The main label for the payment method name
@@ -29,12 +28,14 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
     private let defaultBadgeLabel: UILabel?
     /// The view indicating any incentives associated with this payment method
     private let promoBadge: PromoBadgeView?
+    /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
+    private let insets: CGFloat
 
     // MARK: - State
 
     var isSelected: Bool = false {
         didSet {
-            radioButton.isOn = isSelected
+            shadowRoundedRect.isSelected = isSelected
             // Default badge font is heavier when the row is selected
             defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         }
@@ -64,7 +65,8 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
         subtext: String? = nil,
         rightAccessoryView: UIView? = nil,
         defaultBadgeText: String?,
-        promoBadge: PromoBadgeView?
+        promoBadge: PromoBadgeView?,
+        insets: CGFloat
     ) {
         self.appearance = appearance
         self.imageView = imageView
@@ -73,8 +75,8 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
         self.rightAccessoryView = rightAccessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
         self.promoBadge = promoBadge
-        self.radioButton = RadioButton(appearance: appearance)
-        self.radioButton.isUserInteractionEnabled = false
+        self.insets = insets
+        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
 
         super.init(frame: .zero)
         setupUI()
@@ -100,13 +102,27 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
             $0.alpha = alpha
         }
     }
+
+    func handleEvent(_ event: STPEvent) {
+        // Don't make the rounded rect look disabled
+        let filteredSubviews = self.subviews.filter { $0 != shadowRoundedRect }
+
+        switch event {
+        case .shouldEnableUserInteraction:
+            filteredSubviews.forEach { $0.alpha = 1 }
+        case .shouldDisableUserInteraction:
+            filteredSubviews.forEach { $0.alpha = 0.5 }
+        default:
+            break
+        }
+    }
 }
 
 // MARK: - UI Setup
 
-private extension RowButtonFlatWithRadioView {
+private extension RowButtonFloating {
     func setupUI() {
-        backgroundColor = appearance.colors.componentBackground
+        addAndPinSubview(shadowRoundedRect)
 
         // Add common subviews
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
@@ -120,7 +136,7 @@ private extension RowButtonFlatWithRadioView {
                                                                  rightAccessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
 
-        [radioButton, imageView, horizontalStackView].compactMap { $0 }
+        [imageView, horizontalStackView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
@@ -135,27 +151,20 @@ private extension RowButtonFlatWithRadioView {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
 
-        let insets = appearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
-            // Radio button constraints
-            radioButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-            radioButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            radioButton.widthAnchor.constraint(equalToConstant: 18),
-            radioButton.heightAnchor.constraint(equalToConstant: 18),
-
             // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: radioButton.trailingAnchor, constant: 12),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageViewTopConstraint,
             imageViewBottomConstraint,
+            imageViewTopConstraint,
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),

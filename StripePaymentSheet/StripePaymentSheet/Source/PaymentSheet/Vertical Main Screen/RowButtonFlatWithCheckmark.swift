@@ -1,8 +1,8 @@
 //
-//  RowButtonFlatWithRadioView.swift
+//  RowButtonFlatWithCheckmark.swift
 //  StripePaymentSheet
 //
-//  Created by Nick Porter on 2/11/25.
+//  Created by Nick Porter on 2/18/25.
 //
 
 import Foundation
@@ -10,21 +10,26 @@ import Foundation
 import UIKit
 
 /// A standalone view dedicated to the "flat with radio" RowButton style.
-final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
+final class RowButtonFlatWithCheckmark: UIView, RowButtonContent {
     let appearance: PaymentSheet.Appearance
 
     // MARK: - Subviews
-
-    /// The radio control
-    private let radioButton: RadioButton
+    private lazy var checkmarkImageView: UIImageView = {
+        let checkmarkImageView = UIImageView(image: Image.embedded_check.makeImage(template: true))
+        checkmarkImageView.tintColor = appearance.embeddedPaymentElement.row.flat.checkmark.color ?? appearance.colors.primary
+        checkmarkImageView.contentMode = .scaleAspectFit
+        checkmarkImageView.isHidden = true
+        checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
+        return checkmarkImageView
+    }()
     /// Typically the payment method icon or brand image
     private let imageView: UIImageView
     /// The main label for the payment method name
     private let label: UILabel
     /// The subtitle label, e.g. “Pay over time with Affirm”
     private let sublabel: UILabel
-    /// An accessory view that is displayed on the trailing end of the content view, e.g. "View More"
-    private let rightAccessoryView: UIView?
+    /// For layout convenience: if we have an accessory view on the bottom (e.g. a brand logo, etc.)
+    private let bottomAccessoryView: UIView?
     /// The label indicating if this is the default saved payment method
     private let defaultBadgeLabel: UILabel?
     /// The view indicating any incentives associated with this payment method
@@ -34,9 +39,10 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
 
     var isSelected: Bool = false {
         didSet {
-            radioButton.isOn = isSelected
+            checkmarkImageView.isHidden = !isSelected
             // Default badge font is heavier when the row is selected
             defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
+            layoutIfNeeded() // Required to prevent checkmarkImageView from animating in strangely
         }
     }
 
@@ -47,13 +53,13 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
 
     var isDisplayingAccessoryView: Bool {
         get {
-            guard let rightAccessoryView else {
+            guard let bottomAccessoryView else {
                 return false
             }
-            return !rightAccessoryView.isHidden
+            return !bottomAccessoryView.isHidden
         }
         set {
-            rightAccessoryView?.isHidden = !newValue
+            bottomAccessoryView?.isHidden = !newValue
         }
     }
 
@@ -62,7 +68,7 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
         imageView: UIImageView,
         text: String,
         subtext: String? = nil,
-        rightAccessoryView: UIView? = nil,
+        bottomAccessoryView: UIView? = nil,
         defaultBadgeText: String?,
         promoBadge: PromoBadgeView?
     ) {
@@ -70,11 +76,9 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
         self.imageView = imageView
         self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance)
         self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance)
-        self.rightAccessoryView = rightAccessoryView
+        self.bottomAccessoryView = bottomAccessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
         self.promoBadge = promoBadge
-        self.radioButton = RadioButton(appearance: appearance)
-        self.radioButton.isUserInteractionEnabled = false
 
         super.init(frame: .zero)
         setupUI()
@@ -104,23 +108,30 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
 
 // MARK: - UI Setup
 
-private extension RowButtonFlatWithRadioView {
+private extension RowButtonFlatWithCheckmark {
     func setupUI() {
         backgroundColor = appearance.colors.componentBackground
 
-        // Add common subviews
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
-        let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView,
+        let stackView = UIStackView(arrangedSubviews: [labelsStackView, bottomAccessoryView].compactMap { $0 })
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.setCustomSpacing(8, after: labelsStackView)
+
+        let horizontalStackView = UIStackView(arrangedSubviews: [stackView,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 rightAccessoryView, ].compactMap { $0 })
+                                                                 checkmarkImageView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
+        if let promoBadge {
+            horizontalStackView.setCustomSpacing(12, after: promoBadge)
+        }
 
-        [radioButton, imageView, horizontalStackView].compactMap { $0 }
+        [imageView, horizontalStackView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
@@ -135,27 +146,29 @@ private extension RowButtonFlatWithRadioView {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
 
+        let imageViewCenterYConstraint: NSLayoutConstraint
+        // If we have an accessory view align the image with the top label
+        if let bottomAccessoryView, !bottomAccessoryView.isHidden {
+            imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor)
+        } else {
+            imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
+        }
+
         let insets = appearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
-            // Radio button constraints
-            radioButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-            radioButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            radioButton.widthAnchor.constraint(equalToConstant: 18),
-            radioButton.heightAnchor.constraint(equalToConstant: 18),
-
             // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: radioButton.trailingAnchor, constant: 12),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageViewCenterYConstraint,
             imageViewTopConstraint,
             imageViewBottomConstraint,
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),

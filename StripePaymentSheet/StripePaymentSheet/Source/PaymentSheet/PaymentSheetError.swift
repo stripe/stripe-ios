@@ -33,6 +33,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case setupIntentClientSecretProviderNil
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
+    case embeddedPaymentElementUpdateWithFormPresented
 
     // MARK: Loading errors
     case paymentIntentInTerminalState(status: STPPaymentIntentStatus)
@@ -57,11 +58,17 @@ public enum PaymentSheetError: Error, LocalizedError {
 
     // MARK: - Confirmation errors
     case unexpectedNewPaymentMethod
+    case confirmingWithInvalidPaymentOption
     case embeddedPaymentElementAlreadyConfirmedIntent
     case embeddedPaymentElementConfirmFailed(message: String)
 
     public var errorDescription: String? {
-        return NSError.stp_unexpectedErrorMessage()
+        switch self {
+        case .confirmingWithInvalidPaymentOption:
+            return String.Localized.please_choose_a_valid_payment_method
+        default:
+            return NSError.stp_unexpectedErrorMessage()
+        }
     }
 }
 
@@ -133,6 +140,10 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "This instance of EmbeddedPaymentElement has already confirmed an intent successfully. Create a new instance of EmbeddedPaymentElement to confirm a new intent."
             case .integrationError(nonPIIDebugDescription: let nonPIIDebugDescription):
                 return "There's a problem with your integration. \(nonPIIDebugDescription)"
+            case .confirmingWithInvalidPaymentOption:
+                return "`confirm` should only be called when `paymentOption` is not nil"
+            case .embeddedPaymentElementUpdateWithFormPresented:
+                return "`update` called while a form is already presented, this is not supported. `update` should only be called while a form is not presented."
             case .embeddedPaymentElementConfirmFailed(message: let message):
                 return message
             }
