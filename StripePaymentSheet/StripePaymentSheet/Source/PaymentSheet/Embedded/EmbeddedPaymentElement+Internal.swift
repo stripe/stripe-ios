@@ -325,7 +325,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         // If the formViewController was populated with a previous payment option don't reset
         if embeddedFormViewController.previousPaymentOption == nil {
             let lastSelection = embeddedPaymentMethodsView.previousSelectedRowButton?.type
-            let currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
+            var currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
             if let lastSelection, lastSelection != currentlySelectedType {
                 // Go back to the previous selection if there was one
                 embeddedPaymentMethodsView.resetSelectionToLastSelection()
@@ -336,6 +336,9 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                     embeddedPaymentMethodsView.resetSelection()
                 }
             }
+
+            // The selected row may have been reset, so get it again
+            currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
 
             // Show change button if the newly selected row needs it
             if let currentlySelectedType {
