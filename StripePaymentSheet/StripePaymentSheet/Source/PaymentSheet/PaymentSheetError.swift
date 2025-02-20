@@ -58,6 +58,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     // MARK: - Confirmation errors
     case unexpectedNewPaymentMethod
     case embeddedPaymentElementAlreadyConfirmedIntent
+    case embeddedPaymentElementConfirmFailed(message: String)
 
     public var errorDescription: String? {
         return NSError.stp_unexpectedErrorMessage()
@@ -132,6 +133,8 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "This instance of EmbeddedPaymentElement has already confirmed an intent successfully. Create a new instance of EmbeddedPaymentElement to confirm a new intent."
             case .integrationError(nonPIIDebugDescription: let nonPIIDebugDescription):
                 return "There's a problem with your integration. \(nonPIIDebugDescription)"
+            case .embeddedPaymentElementConfirmFailed(message: let message):
+                return message
             }
         }()
 
