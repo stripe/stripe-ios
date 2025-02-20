@@ -106,6 +106,8 @@ final class RowButtonFlatWithRadioView: UIView, RowButtonContent {
 
 private extension RowButtonFlatWithRadioView {
     func setupUI() {
+        backgroundColor = appearance.colors.componentBackground
+
         // Add common subviews
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
