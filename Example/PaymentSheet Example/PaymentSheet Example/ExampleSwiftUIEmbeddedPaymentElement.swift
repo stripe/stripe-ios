@@ -6,8 +6,8 @@
 //
 // This is an example integration using Embedded Payment Element in SwiftUI
 
-import SwiftUI
 @_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+import SwiftUI
 
 // MARK: - BackendViewModel
 class BackendViewModel: ObservableObject {
@@ -21,25 +21,25 @@ class BackendViewModel: ObservableObject {
     private lazy var checkoutUrl = URL(string: baseUrl + "/checkout")!
     private lazy var confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
     private lazy var computeTotalsUrl = URL(string: baseUrl + "/compute_totals")!
-    
+
     /// Store the “current total” (in cents) that we last fetched from the backend
     @Published private(set) var currentTotal: Int = 0
     private var response: BackendResponse?
-    
+
     // MARK: Step 1) Load ephemeral key & publishable key from /checkout
     @MainActor
     func loadCheckout() async throws -> BackendResponse {
         var request = URLRequest(url: checkoutUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        
+
         let body: [String: Any] = [
             "hot_dog_count": 5,
             "salad_count": 0,
-            "is_subscribing": false
+            "is_subscribing": false,
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-        
+
         let (data, _) = try await URLSession.shared.data(for: request)
         guard
             let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
@@ -50,26 +50,26 @@ class BackendViewModel: ObservableObject {
         else {
             throw URLError(.badServerResponse)
         }
-        
+
         self.currentTotal = total
-        
+
         // Set the publishable key on the Stripe SDK
         STPAPIClient.shared.publishableKey = pk
-        
+
         let response = BackendResponse(publishableKey: pk,
                                customerID: cid,
                                ephemeralKey: ekey)
         self.response = response
         return response
     }
-    
+
     // MARK: Step 2) Create an IntentConfiguration for the current total and subscription status
     func makeIntentConfiguration(
         isSubscribing: Bool
     ) -> PaymentSheet.IntentConfiguration {
         let amount = currentTotal
         let usage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = isSubscribing ? .offSession : nil
-        
+
         // When embedded payment element calls back, we confirm on the server with /confirm_intent
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(
@@ -94,7 +94,7 @@ class BackendViewModel: ObservableObject {
         }
         return intentConfig
     }
-    
+
     // MARK: Step 3) Confirm on the server side
     private func confirmIntent(
         paymentMethodID: String,
@@ -104,7 +104,7 @@ class BackendViewModel: ObservableObject {
         var request = URLRequest(url: confirmIntentUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        
+
         let body: [String: Any?] = [
             "payment_method_id": paymentMethodID,
             "currency": "USD",
@@ -116,10 +116,10 @@ class BackendViewModel: ObservableObject {
             "customer_id": self.response?.customerID,
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-        
+
         let (data, _) = try await URLSession.shared.data(for: request)
         let json = try JSONDecoder().decode([String: String].self, from: data)
-        
+
         if let clientSecret = json["intentClientSecret"] {
             return clientSecret
         } else if let error = json["error"] {
@@ -128,21 +128,21 @@ class BackendViewModel: ObservableObject {
             throw ExampleError(errorDescription: "Unknown error from server.")
         }
     }
-    
+
     // MARK: Step 4) If the user changes subscription, we fetch updated totals from /compute_totals
     @MainActor
     func fetchUpdatedTotal(isSubscribing: Bool) async throws {
         var request = URLRequest(url: computeTotalsUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        
+
         let body: [String: Any] = [
             "hot_dog_count": 5,
             "salad_count": 0,
-            "is_subscribing": isSubscribing
+            "is_subscribing": isSubscribing,
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-        
+
         let (data, _) = try await URLSession.shared.data(for: request)
         guard
             let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
@@ -150,10 +150,10 @@ class BackendViewModel: ObservableObject {
         else {
             throw URLError(.badServerResponse)
         }
-        
+
         self.currentTotal = total
     }
-    
+
     struct ExampleError: LocalizedError {
         var errorDescription: String?
     }
@@ -167,16 +167,16 @@ struct MyEmbeddedCheckoutView: View {
     @State var confirmationResult: EmbeddedPaymentElementResult?
     @State private var isSubscribing: Bool = false
     @State private var loadFailed = false
-    
+
     @Environment(\.dismiss) private var dismiss
-    
+
     // MARK: Body
     var body: some View {
         ScrollView {
             if embeddedViewModel.isLoaded {
                 // Embedded Payment Element
                 EmbeddedPaymentElementView(viewModel: embeddedViewModel)
-                
+
                 // Display the selected payment option
                 // A real integration probably wouldn't show the selected payment option on the same screen as the embedded payment element. We display it as an example.
                 if let paymentOption = embeddedViewModel.paymentOption {
@@ -192,7 +192,7 @@ struct MyEmbeddedCheckoutView: View {
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(8)
                 }
-                
+
                 // Subscribe switch
                 Toggle("Subscribe for 5% discount", isOn: $isSubscribing)
                     .padding()
@@ -201,14 +201,14 @@ struct MyEmbeddedCheckoutView: View {
                             await handleSubscriptionToggle(newValue)
                         }
                     }
-                
+
                 HStack {
                     // Total label
                     Text("Total \(backendViewModel.currentTotal.formatAsDollars())")
                     Spacer()
                 }
                 .padding()
-                
+
                 // Confirm Payment button
                 Button(action: {
                     Task {
@@ -232,7 +232,7 @@ struct MyEmbeddedCheckoutView: View {
                     : Color.blue
                 )
                 .cornerRadius(6)
-                
+#if DEBUG
                 // Test height change button
                 Button(action: {
                     embeddedViewModel.testHeightChange()
@@ -244,6 +244,7 @@ struct MyEmbeddedCheckoutView: View {
                 .foregroundColor(.white)
                 .background(Color.orange)
                 .cornerRadius(6)
+#endif
             } else if loadFailed {
                 // Show a reload prompt if loading failed
                 VStack(spacing: 16) {
@@ -285,14 +286,14 @@ struct MyEmbeddedCheckoutView: View {
             }
         )
     }
-    
+
     private func prepareEmbeddedPaymentElement() async {
         // 1) Fetch ephemeral keys + initial total from /checkout
         guard let response = try? await backendViewModel.loadCheckout() else { return }
 
         // 2) Make the initial IntentConfiguration
         let intentConfig = backendViewModel.makeIntentConfiguration(isSubscribing: isSubscribing)
-        
+
         // 3) Create the EmbeddedPaymentElement
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -301,14 +302,14 @@ struct MyEmbeddedCheckoutView: View {
             merchantId: "merchant.com.stripe.umbrella.test",
             merchantCountryCode: "US"
         )
-        
+
         // Set the customer ID & ephemeral key from the backendViewModel
         configuration.customer = .init(
             id: response.customerID,
             ephemeralKeySecret: response.ephemeralKey
         )
         configuration.returnURL = "payments-example://stripe-redirect"
-        
+
         do {
             try await embeddedViewModel.load(intentConfiguration: intentConfig, configuration: configuration)
             loadFailed = false
@@ -316,19 +317,19 @@ struct MyEmbeddedCheckoutView: View {
             loadFailed = true
         }
     }
-    
+
     /// Called whenever the user toggles subscription
     @MainActor
     private func handleSubscriptionToggle(_ newValue: Bool) async {
         // 1) Fetch updated totals from /compute_totals
         try? await backendViewModel.fetchUpdatedTotal(isSubscribing: newValue)
- 
+
         // 2) Create a new IntentConfiguration with the updated total & subscription usage
         let updatedConfig = backendViewModel.makeIntentConfiguration(isSubscribing: newValue)
-        
+
         // 3) Update the existing embedded payment element
         let result = await embeddedViewModel.update(intentConfiguration: updatedConfig)
-        
+
         switch result {
         case .succeeded:
             print("Payment element updated with new total = \(backendViewModel.currentTotal)")
@@ -338,7 +339,7 @@ struct MyEmbeddedCheckoutView: View {
             print("Update failed with error: \(error)")
         }
     }
-    
+
     // MARK: - Alert
     var alertTitle: String {
         switch confirmationResult {
@@ -348,7 +349,7 @@ struct MyEmbeddedCheckoutView: View {
         case .none:      return ""
         }
     }
-    
+
     var alertMessage: String {
         switch confirmationResult {
         case .completed:
