@@ -147,7 +147,6 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                            allowsSetAsDefaultPM: canSetAsDefaultPM,
                                                            isDefault: isDefault
         )
-        guard let updateViewModel else { return }
         let sut = UpdatePaymentMethodViewController(
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            isTestMode: false,

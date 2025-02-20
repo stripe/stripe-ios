@@ -582,7 +582,6 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                            isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId)
         )
-        guard let updateViewModel else { return }
         let editVc = UpdatePaymentMethodViewController(
                                               removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                               isTestMode: configuration.isTestMode,

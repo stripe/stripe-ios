@@ -339,7 +339,6 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                            allowsSetAsDefaultPM: paymentMethodSetAsDefault,
                                                            isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId)
         )
-        guard let updateViewModel else { return }
         let updateViewController = UpdatePaymentMethodViewController(
                                                             removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                             isTestMode: configuration.apiClient.isTestmode,
