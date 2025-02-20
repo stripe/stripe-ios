@@ -153,7 +153,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Present the current selection's form VC
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
-        stpAssert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+        assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
         presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
 
@@ -169,7 +169,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
-                                                               canSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                                                               allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
             )
             let updateViewController = UpdatePaymentMethodViewController(
@@ -324,10 +324,25 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
         // If the formViewController was populated with a previous payment option don't reset
         if embeddedFormViewController.previousPaymentOption == nil {
-            embeddedPaymentMethodsView.resetSelectionToLastSelection()
+            let lastSelection = embeddedPaymentMethodsView.previousSelectedRowButton?.type
+            var currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
+            if let lastSelection, lastSelection != currentlySelectedType {
+                // Go back to the previous selection if there was one
+                embeddedPaymentMethodsView.resetSelectionToLastSelection()
+            } else {
+                // If there wasn't a previous selection, deselect if the selection isn't valid.
+                let isCurrentSelectionValid = embeddedFormViewController.selectedPaymentOption != nil
+                if !isCurrentSelectionValid {
+                    embeddedPaymentMethodsView.resetSelection()
+                }
+            }
+
+            // The selected row may have been reset, so get it again
+            currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
+
             // Show change button if the newly selected row needs it
-            if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
-                let changeButtonState = getChangeButtonState(for: newSelectedType)
+            if let currentlySelectedType {
+                let changeButtonState = getChangeButtonState(for: currentlySelectedType)
                 if changeButtonState.shouldShowChangeButton {
                     embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
                     embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)

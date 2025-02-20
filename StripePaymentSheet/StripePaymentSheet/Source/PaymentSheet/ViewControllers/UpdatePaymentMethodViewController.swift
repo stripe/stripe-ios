@@ -104,7 +104,8 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
-        guard viewModel.canSetAsDefaultPM && PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
+        guard viewModel.canSetAsDefaultPM,
+              PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
             viewModel.paymentMethod.type == $0
         }) else { return nil }
         return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [weak self] isSelected in
@@ -152,7 +153,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .openCardBrandEditScreen))
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .openEditScreen))
     }
 
     // MARK: Private helpers
@@ -196,12 +197,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
         // Make the API request to update the payment method
         do {
             try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams)
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrand),
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCard),
                                                                  params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         } catch {
             updateButton.update(state: .enabled)
             latestError = error
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardBrandFailed),
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardFailed),
                                                                  error: error,
                                                                  params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedBrand)])
         }
