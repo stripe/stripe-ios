@@ -13,6 +13,9 @@ import UIKit
 
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 class RowButton: UIView, EventHandler {
+
+    // MARK: Subviews
+
     /// Typically the payment method icon or brand image
     let imageView: UIImageView
     /// The main label for the payment method name
@@ -29,11 +32,13 @@ class RowButton: UIView, EventHandler {
     let type: RowButtonType
     let shouldAnimateOnPress: Bool
     let appearance: PaymentSheet.Appearance
-    let text: String
     typealias DidTapClosure = (RowButton) -> Void
     let didTap: DidTapClosure
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
     let isEmbedded: Bool
+
+    // MARK: State
+
     var isSelected: Bool = false {
         didSet {
             updateSelectedState()
@@ -87,7 +92,6 @@ class RowButton: UIView, EventHandler {
         self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
         self.isEmbedded = isEmbedded
-        self.text = text
         self.imageView = imageView
         self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance)
         self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance)
@@ -127,8 +131,15 @@ class RowButton: UIView, EventHandler {
         }
     }
 
-    func setupUI() {
-        stpAssertionFailure("RowButton init not called from subclass.")
+    private func updateAccessibilityTraits() {
+        var traits: UIAccessibilityTraits = [.button]
+        if isSelected {
+            traits.insert(.selected)
+        }
+        if !isEnabled {
+            traits.insert(.notEnabled)
+        }
+        accessibilityTraits = traits
     }
 
     required init?(coder: NSCoder) {
@@ -144,15 +155,10 @@ class RowButton: UIView, EventHandler {
     }
 #endif
 
-    func updateAccessibilityTraits() {
-        var traits: UIAccessibilityTraits = [.button]
-        if isSelected {
-            traits.insert(.selected)
-        }
-        if !isEnabled {
-            traits.insert(.notEnabled)
-        }
-        accessibilityTraits = traits
+    // MARK: Overridable functions
+
+    func setupUI() {
+        stpAssertionFailure("RowButton init not called from subclass, use RowButton.create() instead of RowButton(...).")
     }
 
     func setSublabel(text: String?) {
