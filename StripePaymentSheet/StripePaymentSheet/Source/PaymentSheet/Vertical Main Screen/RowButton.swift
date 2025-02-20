@@ -230,16 +230,16 @@ class RowButton: UIView, EventHandler {
     }
 
     static func create(appearance: PaymentSheet.Appearance,
-                                          type: RowButtonType,
-                                          imageView: UIImageView,
-                                          text: String,
-                                          subtext: String? = nil,
-                                          badgeText: String? = nil,
-                                          promoBadge: PromoBadgeView? = nil,
-                                          rightAccessoryView: UIView? = nil,
-                                          shouldAnimateOnPress: Bool = false,
-                                          isEmbedded: Bool = false,
-                                          didTap: @escaping DidTapClosure) -> RowButton {
+                       type: RowButtonType,
+                       imageView: UIImageView,
+                       text: String,
+                       subtext: String? = nil,
+                       badgeText: String? = nil,
+                       promoBadge: PromoBadgeView? = nil,
+                       rightAccessoryView: UIView? = nil,
+                       shouldAnimateOnPress: Bool = false,
+                       isEmbedded: Bool = false,
+                       didTap: @escaping DidTapClosure) -> RowButton {
           // When not using embedded, always use floating style with 4.0 insets
           if !isEmbedded {
               return RowButtonFloating(
