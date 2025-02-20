@@ -87,7 +87,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
                 // TODO: update default payment method in the back end
             }
         })
-        button.isHidden = !viewModel.canEdit
+        button.isHidden = !viewModel.shouldShowSaveButton
         return button
     }()
 
@@ -119,8 +119,11 @@ final class UpdatePaymentMethodViewController: UIViewController {
         if viewModel.errorState {
             return nil
         }
+        guard let footnoteText = viewModel.footnote else {
+            return nil
+        }
         let label = ElementsUI.makeSmallFootnote(theme: viewModel.appearance.asElementsTheme)
-        label.text = viewModel.footnote
+        label.text = footnoteText
         return label
     }()
 

@@ -215,6 +215,14 @@ extension STPElementsSession {
         return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodSetAsDefault ?? false
     }
 
+    var paymentMethodUpdateForPaymentSheet: Bool {
+        return customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
+    }
+
+    var paymentMethodUpdateForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.enabled ?? false
+    }
+
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {

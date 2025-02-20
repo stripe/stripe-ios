@@ -46,9 +46,21 @@ extension SavedPaymentMethodFormFactory {
             return TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.calculateCardBrandToDisplay(), cardBrandDropDown: cardBrandDropDown?.element).makeElement(theme: viewModel.appearance.asElementsTheme)
         }()
 
-        let expiryDateElement: TextFieldElement = {
+        let expiryDateElement: Element = {
             let expiryDate = CardExpiryDate(month: viewModel.paymentMethod.card?.expMonth ?? 0, year: viewModel.paymentMethod.card?.expYear ?? 0)
-            return TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)
+            let expirationDateConfig = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString,
+                                                                                isEditable: viewModel.canUpdate)
+            let expirationField = expirationDateConfig.makeElement(theme: viewModel.appearance.asElementsTheme)
+            let wrappedElement = PaymentMethodElementWrapper<TextFieldElement>(expirationField) { field, params in
+                if let month = Int(field.text.prefix(2)) {
+                    cardParams(for: params).expMonth = NSNumber(value: month)
+                }
+                if let year = Int(field.text.suffix(2)) {
+                    cardParams(for: params).expYear = NSNumber(value: year)
+                }
+                return params
+            }
+            return wrappedElement
         }()
 
         let cvcElement: TextFieldElement = {

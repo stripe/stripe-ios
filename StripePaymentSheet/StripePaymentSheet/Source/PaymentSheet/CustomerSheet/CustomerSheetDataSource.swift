@@ -208,7 +208,14 @@ extension CustomerSheetDataSource {
             return elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
         }
     }
-
+    func paymentMethodUpdate(elementsSession: STPElementsSession) -> Bool {
+        switch dataSource {
+        case .customerAdapter:
+            return false
+        case .customerSession:
+            return elementsSession.paymentMethodUpdateForCustomerSheet
+        }
+    }
     func paymentMethodSyncDefault(elementsSession: STPElementsSession) -> Bool {
         switch dataSource {
         case .customerAdapter:

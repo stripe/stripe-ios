@@ -279,7 +279,7 @@ final class CardSectionElement: ContainerElement {
 
 // MARK: - Helpers
 /// A DRY helper to ensure `STPPaymentMethodCardParams` is present on `intentConfirmParams.paymentMethodParams`.
-private func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMethodCardParams {
+internal func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMethodCardParams {
     guard let cardParams = intentParams.paymentMethodParams.card else {
         let cardParams = STPPaymentMethodCardParams()
         intentParams.paymentMethodParams.card = cardParams
