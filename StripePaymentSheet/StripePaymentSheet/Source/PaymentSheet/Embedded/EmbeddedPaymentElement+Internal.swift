@@ -419,7 +419,7 @@ extension EmbeddedPaymentElement {
                 // This prevents scenarios where the user might confirm an outdated state, such as agreeing to pay X
                 // but actually being charged Y due to an in-flight update changing the amount.
                 let errorMessage = "confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm."
-                let error = PaymentSheetError.embeddedPaymentElementConfirmFailed(message: errorMessage)
+                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
                 return (.failed(error: error), nil)
             case .succeeded:
                 // The view is in sync with the intent. Continue on with confirm!
@@ -429,7 +429,7 @@ extension EmbeddedPaymentElement {
             case .canceled:
                 let errorMessage = "confirm was called when the current update task is canceled. This shouldn't be possible; the current update task should only cancel if another task began."
                 stpAssertionFailure(errorMessage)
-                let error = PaymentSheetError.embeddedPaymentElementConfirmFailed(message: errorMessage)
+                let error = PaymentSheetError.unknown(debugDescription: errorMessage)
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: error)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return (.failed(error: error), nil)

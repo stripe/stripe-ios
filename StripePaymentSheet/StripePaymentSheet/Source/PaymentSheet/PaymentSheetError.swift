@@ -60,7 +60,6 @@ public enum PaymentSheetError: Error, LocalizedError {
     case unexpectedNewPaymentMethod
     case confirmingWithInvalidPaymentOption
     case embeddedPaymentElementAlreadyConfirmedIntent
-    case embeddedPaymentElementConfirmFailed(message: String)
 
     public var errorDescription: String? {
         switch self {
@@ -144,8 +143,6 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "`confirm` should only be called when `paymentOption` is not nil"
             case .embeddedPaymentElementUpdateWithFormPresented:
                 return "`update` called while a form is already presented, this is not supported. `update` should only be called while a form is not presented."
-            case .embeddedPaymentElementConfirmFailed(message: let message):
-                return message
             }
         }()
 
