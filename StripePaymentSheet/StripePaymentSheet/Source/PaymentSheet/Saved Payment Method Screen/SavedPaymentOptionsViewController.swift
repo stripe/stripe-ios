@@ -706,7 +706,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod,
-                                   customerID: String) async throws {
+                               customerID: String) async throws {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
