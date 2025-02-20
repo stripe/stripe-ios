@@ -216,13 +216,12 @@ public final class EmbeddedPaymentElement {
         analyticsHelper.log(event: .mcConfirmEmbedded)
         guard let presentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
-            stpAssertionFailure(errorMessage)
+            assertionFailure(errorMessage)
             return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
         guard let paymentOption = _paymentOption else {
-            let errorMessage = "`confirm` should only be called when `paymentOption` is not nil"
-            stpAssertionFailure(errorMessage)
-            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
+            assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
+            return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
         let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
         return await _confirm(paymentOption: paymentOption, authContext: authContext).result
@@ -253,7 +252,7 @@ public final class EmbeddedPaymentElement {
 
     #if DEBUG
     public func testHeightChange() {
-        stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
+        assert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
         self.embeddedPaymentMethodsView.testHeightChange()
     }
     #endif

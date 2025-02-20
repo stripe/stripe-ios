@@ -394,8 +394,7 @@ extension PaymentSheet {
 
             guard let paymentOption = _paymentOption else {
                 assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
-                let error = PaymentSheetError.flowControllerConfirmFailed(message: "confirmPayment was called with a nil paymentOption")
-                completion(.failed(error: error))
+                completion(.failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
                 return
             }
 
