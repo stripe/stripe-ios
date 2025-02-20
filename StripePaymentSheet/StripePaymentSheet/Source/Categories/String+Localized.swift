@@ -468,7 +468,7 @@ extension String.Localized {
        )
     }
 
-    @_spi(STP) public static var set_as_default_payment_method: String {
+    static var set_as_default_payment_method: String {
         STPLocalizedString(
             "Set as default payment method",
             "Label of a checkbox that when checked makes a payment method as the default one."
@@ -479,6 +479,13 @@ extension String.Localized {
         STPLocalizedString(
             "Change",
             "Label for a button that lets you change the details of a payment method"
+       )
+    }
+
+    static var please_choose_a_valid_payment_method: String {
+        STPLocalizedString(
+            "Please choose a valid payment method.",
+            "Error message that's displayed when you try to confirm a payment without a valid payment method"
        )
     }
 }
