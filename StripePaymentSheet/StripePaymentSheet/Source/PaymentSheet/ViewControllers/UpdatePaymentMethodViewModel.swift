@@ -50,7 +50,7 @@ class UpdatePaymentMethodViewModel {
         case .SEPADebit:
             return .Localized.manage_sepa_debit
         default:
-            stpAssertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
+            assertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
             return nil
         }
     }()
@@ -64,12 +64,24 @@ class UpdatePaymentMethodViewModel {
         case .SEPADebit:
             return .Localized.sepa_debit_details_cannot_be_changed
         default:
-            stpAssertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
+            assertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
             return nil
         }
     }()
 
     init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+        guard PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) else {
+            assertionFailure("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
+            self.paymentMethod = STPPaymentMethod(stripeId: "", type: .unknown)
+            self.appearance = PaymentSheet.Appearance()
+            self.hostedSurface = .paymentSheet
+            self.cardBrandFilter = .default
+            self.canRemove = false
+            self.isCBCEligible = false
+            self.canSetAsDefaultPM = false
+            self.isDefault = false
+            return
+        }
         self.paymentMethod = paymentMethod
         self.appearance = appearance
         self.hostedSurface = hostedSurface

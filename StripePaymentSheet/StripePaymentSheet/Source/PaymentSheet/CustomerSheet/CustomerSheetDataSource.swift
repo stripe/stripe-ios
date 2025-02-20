@@ -4,7 +4,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 class CustomerSheetDataSource {
     enum DataSource {
@@ -185,7 +184,7 @@ extension CustomerSheetDataSource {
     func setAsDefaultPaymentMethod(paymentMethodId: String, customerID: String) async throws -> STPCustomer? {
         switch dataSource {
         case .customerAdapter:
-            stpAssertionFailure("CustomerAdapter does not support the set as default payment method feature")
+            assertionFailure("CustomerAdapter does not support the set as default payment method feature")
             return nil
         case .customerSession(let customerSessionAdapter):
             return try await customerSessionAdapter.setAsDefaultPaymentMethod(paymentMethodId: paymentMethodId, customerID: customerID)
