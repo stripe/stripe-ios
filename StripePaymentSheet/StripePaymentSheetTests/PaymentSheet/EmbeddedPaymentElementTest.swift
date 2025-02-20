@@ -23,6 +23,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }()
     let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
+        XCTFail("paymentIntentConfig confirm handler should not be called.")
     }
     let paymentIntentConfigWithConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) {paymentMethod, _, intentCreationCallback in
         STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
@@ -39,9 +40,11 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
     let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
+        XCTFail("paymentIntentConfig2 confirm handler should not be called.")
     }
     let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
+        XCTFail("setupIntentConfig confirm handler should not be called.")
     }
     var delegateDidUpdatePaymentOptionCalled = false
     var delegateDidUpdateHeightCalled = false
@@ -188,9 +191,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
 
     func testConfirmHandlesInflightUpdateThatFails() async throws {
-        let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
-            XCTFail("Confirm handler should not be called.")
-        }
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
         sut.delegate = self
