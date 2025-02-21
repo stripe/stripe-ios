@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CardBrandFilteringBeta) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -239,7 +239,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
-    
+
     func testPaymentSheetLoadFiltersSavedApplePayCards() async throws {
         let apiClient = STPAPIClient(publishableKey: STPTestingJPPublishableKey)
         var configuration = PaymentSheet.Configuration()

@@ -6,7 +6,7 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @_spi(CardBrandFilteringBeta) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
