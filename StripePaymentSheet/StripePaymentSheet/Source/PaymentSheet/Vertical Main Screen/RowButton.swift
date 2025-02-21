@@ -119,6 +119,16 @@ class RowButton: UIView, EventHandler {
         updateAccessibilityTraits()
     }
 
+    override func addSubview(_ view: UIView) {
+        // All other subviews of RowButton should be added to the content view
+        guard view == contentView else {
+            contentView.addSubview(view)
+            return
+        }
+
+        super.addSubview(view)
+    }
+
     private func setupTapGestures() {
         // Add tap gesture
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
