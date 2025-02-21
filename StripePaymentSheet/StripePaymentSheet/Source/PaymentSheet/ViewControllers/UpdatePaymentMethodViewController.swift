@@ -16,7 +16,7 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: UpdatePaymentMethodParams)
+                   updateParams: UpdatePaymentMethodParams) throws
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
 }
 
@@ -213,7 +213,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }()
         let updatePaymentMethodParams = UpdatePaymentMethodParams(updateCardBrandParams: updateCardBrandParams, setAsDefault: setAsDefault)
         do {
-            try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updatePaymentMethodParams)
+            try delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updatePaymentMethodParams)
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCard),
                                                                  params: analyticsParams)
         } catch {

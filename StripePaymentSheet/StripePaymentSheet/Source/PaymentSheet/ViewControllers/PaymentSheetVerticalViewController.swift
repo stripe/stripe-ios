@@ -870,26 +870,12 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
                    updateParams: UpdatePaymentMethodParams) {
         if let updateCardBrandParams = updateParams.updateCardBrandParams {
             Task {
-                do {
-                    try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
-                } catch {
-                    self.error = error
-                    let errorAnalytic = ErrorAnalytic(event: .paymentSheetUpdateCardFailed,
-                                                      error: error)
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                }
+                try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
             }
         }
         if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
             Task {
-                do {
-                    try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
-                } catch {
-                    self.error = error
-                    let errorAnalytic = ErrorAnalytic(event: .paymentSheetUpdateCardFailed,
-                                                      error: error)
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                }
+                try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
             }
         }
         // Update UI
