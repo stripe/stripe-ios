@@ -37,6 +37,7 @@ extension SavedPaymentMethodFormFactory {
                 let cardBrand = cardBrands[field.selectedIndex]
                 let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
                 params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+                viewModel.logCardBrandSelected(selectedCardBrand: cardBrand)
                 return params
             }
             return wrappedElement
