@@ -342,8 +342,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateViewModel = UpdatePaymentMethodViewModel(customerID: elementsSession.customer?.customerSession.customer,
-                                                           paymentMethod: paymentMethod,
+        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
                                                            appearance: configuration.appearance,
                                                            hostedSurface: .paymentSheet,
                                                            cardBrandFilter: configuration.cardBrandFilter,
@@ -371,13 +370,28 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: STPPaymentMethodUpdateParams?,
-                   customerID: String?) async throws {
-        if let updateParams {
-            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
+                   updateParams: UpdatePaymentMethodParams) {
+        if let updateCardBrandParams = updateParams.updateCardBrandParams {
+            Task {
+                do {
+                    try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                } catch {
+                    let errorAnalytic = ErrorAnalytic(event: .paymentSheetUpdateCardFailed,
+                                                      error: error)
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
+            }
         }
-        if let customerID {
-            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID)
+        if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
+            Task {
+                do {
+                    try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                } catch {
+                    let errorAnalytic = ErrorAnalytic(event: .paymentSheetUpdateCardFailed,
+                                                      error: error)
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
+            }
         }
         _ = viewController.bottomSheetController?.popContentViewController()
     }
@@ -390,8 +404,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod,
-                               customerID: String) async throws {
-        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: paymentMethod.stripeId)
+                               customerId: String) async throws {
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
         defaultPaymentMethod = paymentMethod
         // if there was a previously selected payment method, replace it to deselect it and remove the badge if it was default
         if let previousSelectedPaymentMethod {

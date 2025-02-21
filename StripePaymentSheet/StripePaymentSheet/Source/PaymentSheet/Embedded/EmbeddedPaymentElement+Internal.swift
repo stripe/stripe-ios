@@ -163,8 +163,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
-            let updateViewModel = UpdatePaymentMethodViewModel(customerID: elementsSession.customer?.customerSession.customer,
-                                                               paymentMethod: paymentMethod,
+            let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
                                                                appearance: configuration.appearance,
                                                                hostedSurface: .paymentSheet,
                                                                cardBrandFilter: configuration.cardBrandFilter,
@@ -216,13 +215,28 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod,
-                   updateParams: StripePayments.STPPaymentMethodUpdateParams?,
-                   customerID: String?) async throws {
-        if let updateParams {
-            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
+                   updateParams: UpdatePaymentMethodParams) {
+        if let updateCardBrandParams = updateParams.updateCardBrandParams {
+            Task {
+                do {
+                    try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                } catch {
+                    let errorAnalytic = ErrorAnalytic(event: .paymentSheetUpdateCardFailed,
+                                                      error: error)
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
+            }
         }
-        if let customerID {
-            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID)
+        if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
+            Task {
+                do {
+                    try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                } catch {
+                    let errorAnalytic = ErrorAnalytic(event: .paymentSheetUpdateCardFailed,
+                                                      error: error)
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
+            }
         }
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
@@ -243,8 +257,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     }
 
     private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod,
-                               customerID: String) async throws {
-        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: paymentMethod.stripeId)
+                               customerId: String) async throws {
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
         defaultPaymentMethod = paymentMethod
     }
 

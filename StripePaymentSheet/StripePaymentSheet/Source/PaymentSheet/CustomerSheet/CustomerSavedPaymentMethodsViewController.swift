@@ -26,11 +26,10 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         case noPaymentOptionAddingNewWithSetupIntent
         case noPaymentOptionAddingNewWithAttach
         case removeOnNonSavedPaymentMethod
-        case updateCardFailed
+        case updatePaymentMethodFailed
     }
 
     // MARK: - Read-only Properties
-    let customerID: String?
     let selectedPaymentMethodOption: CustomerPaymentOption?
     let isApplePayEnabled: Bool
     let configuration: CustomerSheet.Configuration
@@ -103,7 +102,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     private lazy var savedPaymentOptionsViewController: CustomerSavedPaymentMethodsCollectionViewController = {
         return CustomerSavedPaymentMethodsCollectionViewController(
-            customerID: customerID,
             savedPaymentMethods: savedPaymentMethods,
             selectedPaymentMethodOption: selectedPaymentMethodOption,
             mostRecentlyAddedPaymentMethod: nil,
@@ -148,7 +146,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     required init(
-        customerID: String?,
         savedPaymentMethods: [STPPaymentMethod],
         selectedPaymentMethodOption: CustomerPaymentOption?,
         merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
@@ -162,7 +159,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
     ) {
-        self.customerID = customerID
         self.savedPaymentMethods = savedPaymentMethods
         self.selectedPaymentMethodOption = selectedPaymentMethodOption
         self.merchantSupportedPaymentMethodTypes = merchantSupportedPaymentMethodTypes
@@ -453,15 +449,15 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 defaultPaymentMethod = selectedPaymentOption.savedPaymentMethod
             }
         }
-        if paymentMethodSyncDefault, let customerID, let defaultPaymentMethod {
+        if paymentMethodSyncDefault, let defaultPaymentMethod, let customerId = defaultPaymentMethod.customerId {
             Task {
                 do {
-                    _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: customerID)
+                    _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: customerId)
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
                 } catch {
                     self.error = error
                     let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
-                                                      error: Error.updateCardFailed)
+                                                      error: Error.updatePaymentMethodFailed)
                     STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 }
             }
@@ -679,7 +675,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
     private func reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: CustomerPaymentOption?) {
         self.savedPaymentOptionsViewController = CustomerSavedPaymentMethodsCollectionViewController(
-            customerID: customerID,
             savedPaymentMethods: self.savedPaymentMethods,
             selectedPaymentMethodOption: selectedPaymentMethodOption,
             mostRecentlyAddedPaymentMethod: mostRecentlyAddedPaymentMethod,

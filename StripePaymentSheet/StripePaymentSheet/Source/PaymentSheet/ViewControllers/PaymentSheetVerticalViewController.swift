@@ -609,8 +609,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
-            let updateViewModel = UpdatePaymentMethodViewModel(customerID: configuration.customer?.id,
-                                                               paymentMethod: paymentMethod,
+            let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
                                                                appearance: configuration.appearance,
                                                                hostedSurface: .paymentSheet,
                                                                cardBrandFilter: configuration.cardBrandFilter,
@@ -868,13 +867,30 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: STPPaymentMethodUpdateParams?,
-                   customerID: String?) async throws {
-        if let updateParams {
-            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
+                   updateParams: UpdatePaymentMethodParams) {
+        if let updateCardBrandParams = updateParams.updateCardBrandParams {
+            Task {
+                do {
+                    try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                } catch {
+                    self.error = error
+                    let errorAnalytic = ErrorAnalytic(event: .paymentSheetUpdateCardFailed,
+                                                      error: error)
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
+            }
         }
-        if let customerID {
-            try await updateDefault(paymentMethod: paymentMethod, customerID: customerID)
+        if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
+            Task {
+                do {
+                    try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                } catch {
+                    self.error = error
+                    let errorAnalytic = ErrorAnalytic(event: .paymentSheetUpdateCardFailed,
+                                                      error: error)
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
+            }
         }
         // Update UI
         regenerateUI()
@@ -892,9 +908,9 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod,
-                               customerID: String) async throws {
+                               customerId: String) async throws {
         // Update the payment method
-        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: paymentMethod.stripeId)
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {

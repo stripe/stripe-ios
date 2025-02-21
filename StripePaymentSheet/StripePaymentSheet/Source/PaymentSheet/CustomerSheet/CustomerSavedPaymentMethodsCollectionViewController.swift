@@ -143,7 +143,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     // MARK: - Internal Properties
-    let customerID: String?
     let configuration: Configuration
     let savedPaymentMethodsConfiguration: CustomerSheet.Configuration
     let cbcEligible: Bool
@@ -234,7 +233,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
     // MARK: - Inits
     required init(
-        customerID: String?,
         savedPaymentMethods: [STPPaymentMethod],
         selectedPaymentMethodOption: CustomerPaymentOption?,
         mostRecentlyAddedPaymentMethod: CustomerPaymentOption?,
@@ -244,7 +242,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         cbcEligible: Bool,
         delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
-        self.customerID = customerID
         // when opted into the set as default feature, only show payment methods that can be set as default (card, US bank account)
         if configuration.paymentMethodSyncDefault {
             self.savedPaymentMethods = savedPaymentMethods.filter{ savedPaymentMethod in CustomerSheet.supportedDefaultPaymentMethods.contains{paymentMethodType in
@@ -441,8 +438,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             stpAssertionFailure()
             return
         }
-        let updateViewModel = UpdatePaymentMethodViewModel(customerID: customerID,
-                                                           paymentMethod: paymentMethod,
+        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
                                                            appearance: appearance,
                                                            hostedSurface: .customerSheet,
                                                            cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
@@ -503,12 +499,19 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: StripePayments.STPPaymentMethodUpdateParams?,
-                   customerID: String?) async throws {
-        guard let updateParams else {
-            throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")
+                   updateParams: UpdatePaymentMethodParams) {
+        Task {
+            do {
+                guard let updateCardBrandParams = updateParams.updateCardBrandParams else {
+                    throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")
+                }
+                try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+            } catch {
+                let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
+                                                  error: error)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            }
         }
-        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateParams)
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 

@@ -503,12 +503,12 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,
                                 paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
-                                customerID: String) async throws -> STPCustomer {
+                                customerId: String) async throws -> STPCustomer {
         guard case .saved(let paymentMethod) = paymentMethodSelection else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerID, defaultPaymentMethodId: paymentMethod.stripeId)
+        return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
     }
 
     func didUpdateSelection(

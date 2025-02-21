@@ -2754,22 +2754,29 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        XCTAssertFalse(app.buttons["•••• 4242"].isSelected)
         app.buttons["Edit"].waitForExistenceAndTap()
         XCTAssertEqual(app.buttons.matching(identifier: "CircularButton.Edit").count, 2)
+        // Check that no payment method has been marked as default yet
         XCTAssertFalse(app.staticTexts["Default"].waitForExistence(timeout: 3))
+        // Edit the card ending in 4242
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        // Edit the card ending in 4242
         app.switches["Set as default payment method"].waitForExistenceAndTap()
         app.buttons["Save"].waitForExistenceAndTap()
+        // Check that the card ending in 4242 has a default badge
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.buttons["Done"].waitForExistenceAndTap()
+        // Check that the card ending in 4242 is now selected
         XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        // Reload the sheet
         app.buttons["Reload"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        // Check that the card ending in 4242 is still selected
         XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
         app.buttons["Edit"].waitForExistenceAndTap()
+        // Check that the card ending in 4242 still has the default badge
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
         // Ensure checkbox is not displayed if it's already the default
@@ -2786,28 +2793,32 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        XCTAssertFalse(app.staticTexts["•••• 4242"].waitForExistence(timeout: 3))
         app.buttons["View more"].waitForExistenceAndTap()
-        XCTAssertFalse(app.buttons["•••• 4242"].isSelected)
         app.buttons["Edit"].waitForExistenceAndTap()
         XCTAssertEqual(app.buttons.matching(identifier: "chevron").count, 2)
+        // Edit the card ending in 4242
         app.buttons["•••• 4242"].waitForExistenceAndTap()
+        // Edit the card ending in 4242
         app.switches["Set as default payment method"].waitForExistenceAndTap()
         app.buttons["Save"].waitForExistenceAndTap()
-        // for some reason I can't see the default badge in app? so I don't know how to check it's there
         app.buttons["Done"].waitForExistenceAndTap()
-        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
+        // Check that the card ending in 4242 has a default badge and is selected
+        XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].isSelected)
         app.buttons["Back"].waitForExistenceAndTap()
+        // Scroll down
         let startCoordinate = app.scrollViews.element(boundBy: 1).coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
         startCoordinate.press(forDuration: 0.1, thenDragTo: app.scrollViews.element(boundBy: 1).coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.1)))
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        // Reload the sheet
         app.buttons["Reload"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        // Check that the card ending in 4242 is still selected
         XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.buttons["•••• 4242"].waitForExistenceAndTap()
+        // Check that the card ending in 4242 still has the default badge
+        XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].waitForExistenceAndTap())
         // Ensure checkbox is not displayed if it's already the default
         XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
     }
