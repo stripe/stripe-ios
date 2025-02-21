@@ -314,8 +314,7 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
     func customerSavedPaymentMethods(_ configuration: CustomerSavedPaymentMethodsCollectionViewController.Configuration,
                                      savedPaymentMethods: [STPPaymentMethod],
                                      cbcEligible: Bool) -> CustomerSavedPaymentMethodsCollectionViewController {
-        return CustomerSavedPaymentMethodsCollectionViewController(customerID: nil,
-                                                                   savedPaymentMethods: savedPaymentMethods,
+        return CustomerSavedPaymentMethodsCollectionViewController(savedPaymentMethods: savedPaymentMethods,
                                                                    selectedPaymentMethodOption: nil,
                                                                    mostRecentlyAddedPaymentMethod: nil,
                                                                    savedPaymentMethodsConfiguration: customerSheetConfiguration,
