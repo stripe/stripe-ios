@@ -185,9 +185,16 @@ protocol FinancialConnectionsAPI {
 
     func createAuthSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthSession>
 
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession>
+
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
 
     func retrieveAuthSession(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession>
+
+    func retrieveAuthSessionPolling(
         clientSecret: String,
         authSessionId: String
     ) -> Future<FinancialConnectionsAuthSession>
@@ -250,7 +257,8 @@ protocol FinancialConnectionsAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) -> Future<SaveAccountsToNetworkAndLinkResponse>
 
     func disableNetworking(
@@ -458,6 +466,19 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         )
     }
 
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
+        let body: [String: Any] = [
+            "client_secret": clientSecret,
+            "core_authorization": coreAuthorization,
+            "return_url": "ios",
+        ]
+        return self.post(
+            resource: APIEndpointAuthSessionsRepair,
+            parameters: body,
+            useConsumerPublishableKeyIfNeeded: true
+        )
+    }
+
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
         let body = [
             "client_secret": clientSecret,
@@ -483,6 +504,36 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             parameters: body,
             useConsumerPublishableKeyIfNeeded: true
         )
+    }
+
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) -> Future<FinancialConnectionsAuthSession> {
+        let body: [String: Any] = [
+            "client_secret": clientSecret,
+            "id": authSessionId,
+        ]
+        let pollingHelper = APIPollingHelper(
+            apiCall: { [weak self] in
+                guard let self = self else {
+                    return Promise(
+                        error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated.")
+                    )
+                }
+                return self.post(
+                    resource: APIEndpointAuthSessionsRetrieve,
+                    parameters: body,
+                    useConsumerPublishableKeyIfNeeded: true
+                )
+            },
+            pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthSession>.PollTimingOptions(
+                initialPollDelay: 0,
+                maxNumberOfRetries: 360,  // Stripe.js has 360 retries and 500ms intervals
+                retryInterval: 0.5
+            )
+        )
+        return pollingHelper.startPollingApiCall()
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Future<
@@ -753,7 +804,8 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) -> Future<SaveAccountsToNetworkAndLinkResponse> {
         let saveAccountsToLinkHandler: () -> Future<SaveAccountsToNetworkAndLinkResponse> = {
             return self.saveAccountsToLink(
@@ -765,10 +817,11 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
                 clientSecret: clientSecret
             )
             .chained { manifest in
+                let customSuccessPaneMessage = isRelink ? nil : manifest.displayText?.successPane?.subCaption
                 return Promise(
                     value: (
                         manifest: manifest,
-                        customSuccessPaneMessage: manifest.displayText?.successPane?.subCaption
+                        customSuccessPaneMessage: customSuccessPaneMessage
                     )
                 )
             }
@@ -1275,6 +1328,7 @@ private let APIEndpointAuthSessionsAuthorized = "connections/auth_sessions/autho
 private let APIEndpointAuthSessionsAccounts = "connections/auth_sessions/accounts"
 private let APIEndpointAuthSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
 private let APIEndpointAuthSessionsEvents = "connections/auth_sessions/events"
+private let APIEndpointAuthSessionsRepair = "connections/repair_sessions/generate_url"
 // Networking
 private let APIEndpointDisableNetworking = "link_account_sessions/disable_networking"
 private let APIEndpointLinkStepUpAuthenticationVerified = "link_account_sessions/link_step_up_authentication_verified"

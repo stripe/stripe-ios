@@ -58,6 +58,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return Promise<FinancialConnectionsAuthSession>()
     }
 
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
+        return Promise<FinancialConnectionsRepairSession>()
+    }
+
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
@@ -66,6 +70,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         clientSecret: String,
         authSessionId: String
     ) -> Future<FinancialConnectionsAuthSession> {
+        return Promise<FinancialConnectionsAuthSession>()
+    }
+
+    func retrieveAuthSessionPolling(clientSecret: String, authSessionId: String) -> Future<FinancialConnectionsAuthSession> {
         return Promise<FinancialConnectionsAuthSession>()
     }
 
@@ -139,7 +147,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) -> Future<(
         manifest: FinancialConnectionsSessionManifest,
         customSuccessPaneMessage: String?

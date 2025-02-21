@@ -446,9 +446,16 @@ extension EmbeddedPaymentElement {
         guard !hasConfirmedIntent else {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), nil)
         }
-        // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
-        if let latestUpdateTask {
-            switch await latestUpdateTask.value {
+
+        if let latestUpdateContext {
+            switch latestUpdateContext.status {
+            case .inProgress:
+                // Fail confirmation immediately if an update is in progress, rather than waiting for it to complete.
+                // This prevents scenarios where the user might confirm an outdated state, such as agreeing to pay X
+                // but actually being charged Y due to an in-flight update changing the amount.
+                let errorMessage = "confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm."
+                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
+                return (.failed(error: error), nil)
             case .succeeded:
                 // The view is in sync with the intent. Continue on with confirm!
                 break
@@ -457,7 +464,7 @@ extension EmbeddedPaymentElement {
             case .canceled:
                 let errorMessage = "confirm was called when the current update task is canceled. This shouldn't be possible; the current update task should only cancel if another task began."
                 stpAssertionFailure(errorMessage)
-                let error = PaymentSheetError.flowControllerConfirmFailed(message: errorMessage)
+                let error = PaymentSheetError.unknown(debugDescription: errorMessage)
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: error)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return (.failed(error: error), nil)
