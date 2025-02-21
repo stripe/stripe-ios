@@ -69,6 +69,7 @@ class RowButton: UIView, EventHandler {
     }
 
     // MARK: Internal properties
+
     var heightConstraint: NSLayoutConstraint?
     let type: RowButtonType
     let shouldAnimateOnPress: Bool
@@ -76,6 +77,8 @@ class RowButton: UIView, EventHandler {
     let didTap: DidTapClosure
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
     let isEmbedded: Bool
+
+    // MARK: Initializers
 
     init(
         appearance: PaymentSheet.Appearance,
@@ -120,6 +123,12 @@ class RowButton: UIView, EventHandler {
         updateAccessibilityTraits()
     }
 
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: Overrides
+
     override func addSubview(_ view: UIView) {
         // All other subviews of RowButton should be added to the content view
         guard view === contentView else {
@@ -129,6 +138,17 @@ class RowButton: UIView, EventHandler {
 
         super.addSubview(view)
     }
+
+#if !canImport(CompositorServices)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        // If the font size changes, make this RowButton the same height as the tallest variant if necessary
+        heightConstraint?.isActive = false
+        makeSameHeightAsOtherRowButtonsIfNecessary()
+        super.traitCollectionDidChange(previousTraitCollection)
+    }
+#endif
+
+    // MARK: Private functions
 
     private func setupTapGestures() {
         // Add tap gesture
@@ -155,19 +175,6 @@ class RowButton: UIView, EventHandler {
         }
         contentView.accessibilityTraits = traits
     }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-#if !canImport(CompositorServices)
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        // If the font size changes, make this RowButton the same height as the tallest variant if necessary
-        heightConstraint?.isActive = false
-        makeSameHeightAsOtherRowButtonsIfNecessary()
-        super.traitCollectionDidChange(previousTraitCollection)
-    }
-#endif
 
     // MARK: Overridable functions
 
@@ -199,7 +206,22 @@ class RowButton: UIView, EventHandler {
         updateAccessibilityTraits()
     }
 
+    // MARK: EventHandler
+
+    // Default implementation reduces alpha on all subviews for disabled state
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            contentView.subviews.forEach { $0.alpha = 1 }
+        case .shouldDisableUserInteraction:
+            contentView.subviews.forEach { $0.alpha = 0.5 }
+        default:
+            break
+        }
+    }
+
     // MARK: Tap handling
+
     @objc func handleTap() {
         guard isEnabled else { return }
         if shouldAnimateOnPress {
@@ -222,6 +244,8 @@ class RowButton: UIView, EventHandler {
         }
     }
 
+    // MARK: Helper
+
     func makeSameHeightAsOtherRowButtonsIfNecessary() {
         // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
         // Don't do this if we are flat_with_checkmark style and have an accessory view - this row button is allowed to be taller than the rest
@@ -237,19 +261,31 @@ class RowButton: UIView, EventHandler {
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
         heightConstraint?.isActive = true
     }
+}
 
-    // Default implementation reduces alpha on all subviews for disabled state
-    func handleEvent(_ event: STPEvent) {
-        switch event {
-        case .shouldEnableUserInteraction:
-            contentView.subviews.forEach { $0.alpha = 1 }
-        case .shouldDisableUserInteraction:
-            contentView.subviews.forEach { $0.alpha = 0.5 }
-        default:
-            break
-        }
+// MARK: - UIGestureRecognizerDelegate
+extension RowButton: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        // Without this, the long press prevents you from scrolling or our tap/pan gesture from triggering together.
+        return otherGestureRecognizer is UIPanGestureRecognizer || (gestureRecognizers?.contains(otherGestureRecognizer) ?? false)
     }
 
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        // If the scroll view’s pan gesture begins, we want to fail the button’s tap,
+        // so the user can scroll without accidentally tapping.
+        if otherGestureRecognizer is UIPanGestureRecognizer {
+            return true
+        }
+
+        return false
+    }
+}
+
+// MARK: - Helpers
+extension RowButton {
     static func create(appearance: PaymentSheet.Appearance,
                        type: RowButtonType,
                        imageView: UIImageView,
@@ -324,31 +360,7 @@ class RowButton: UIView, EventHandler {
               )
           }
       }
-}
 
-// MARK: - UIGestureRecognizerDelegate
-extension RowButton: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        // Without this, the long press prevents you from scrolling or our tap/pan gesture from triggering together.
-        return otherGestureRecognizer is UIPanGestureRecognizer || (gestureRecognizers?.contains(otherGestureRecognizer) ?? false)
-    }
-
-    func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
-    ) -> Bool {
-        // If the scroll view’s pan gesture begins, we want to fail the button’s tap,
-        // so the user can scroll without accidentally tapping.
-        if otherGestureRecognizer is UIPanGestureRecognizer {
-            return true
-        }
-
-        return false
-    }
-}
-
-// MARK: - Helpers
-extension RowButton {
     static func calculateTallestHeight(appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> CGFloat {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
