@@ -17,6 +17,9 @@ class RowButton: UIView, EventHandler {
 
     // MARK: Subviews
 
+    /// The content view of the RowButton. All subviews of RowButton should be added to contentView
+    /// Primarily exists for accessibility
+    let contentView = UIView()
     /// Typically the payment method icon or brand image
     let imageView: UIImageView
     /// The main label for the payment method name
@@ -100,6 +103,7 @@ class RowButton: UIView, EventHandler {
         self.promoBadge = promoBadge
 
         super.init(frame: .zero)
+        addAndPinSubview(contentView)
         setupUI()
         makeSameHeightAsOtherRowButtonsIfNecessary()
 
@@ -108,11 +112,10 @@ class RowButton: UIView, EventHandler {
         // Accessibility
         // Subviews of an accessibility element are ignored
         isAccessibilityElement = false
-        accessibilityIdentifier = text // Just for test purposes
-        accessibilityElements = [self, accessoryView].compactMap { $0 }
-        accessibilityIdentifier = text
-        accessibilityLabel = text
-        isAccessibilityElement = true
+        accessibilityElements = [contentView, accessoryView].compactMap { $0 }
+        contentView.accessibilityIdentifier = text
+        contentView.accessibilityLabel = text
+        contentView.isAccessibilityElement = true
         updateAccessibilityTraits()
     }
 
@@ -139,7 +142,7 @@ class RowButton: UIView, EventHandler {
         if !isEnabled {
             traits.insert(.notEnabled)
         }
-        accessibilityTraits = traits
+        contentView.accessibilityTraits = traits
     }
 
     required init?(coder: NSCoder) {
@@ -450,7 +453,7 @@ extension RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
         let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, isEmbedded: isEmbedded, didTap: didTap)
-        button.accessibilityLabel = String.Localized.pay_with_link
+        button.contentView.accessibilityLabel = String.Localized.pay_with_link
         return button
     }
 
@@ -458,7 +461,7 @@ extension RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
         let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
-        button.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+        button.contentView.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }
 }

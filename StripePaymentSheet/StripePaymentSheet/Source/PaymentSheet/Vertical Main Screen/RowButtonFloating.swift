@@ -32,7 +32,7 @@ final class RowButtonFloating: RowButton {
     }
 
     override func setupUI() {
-        addAndPinSubview(shadowRoundedRect)
+        contentView.addAndPinSubview(shadowRoundedRect)
 
         // Add common subviews
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
@@ -50,7 +50,7 @@ final class RowButtonFloating: RowButton {
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
-                addSubview(view)
+                contentView.addSubview(view)
             }
 
         // MARK: - Constraints
