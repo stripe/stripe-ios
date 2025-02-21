@@ -112,6 +112,7 @@ class RowButton: UIView, EventHandler {
         // Accessibility
         // Subviews of an accessibility element are ignored
         isAccessibilityElement = false
+        accessibilityIdentifier = text // Just for test purposes
         accessibilityElements = [contentView, accessoryView].compactMap { $0 }
         contentView.accessibilityIdentifier = text
         contentView.accessibilityLabel = text
