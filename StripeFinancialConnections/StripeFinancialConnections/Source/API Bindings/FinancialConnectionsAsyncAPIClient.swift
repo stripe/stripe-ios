@@ -216,6 +216,11 @@ protocol FinancialConnectionsAsyncAPI {
         authSessionId: String
     ) async throws -> FinancialConnectionsAuthSession
 
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) async throws -> FinancialConnectionsAuthSession
+
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsMixedOAuthParams
 
     func authorizeAuthSession(
@@ -272,7 +277,8 @@ protocol FinancialConnectionsAsyncAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) async throws -> (
         manifest: FinancialConnectionsSessionManifest,
         customSuccessPaneMessage: String?
@@ -457,6 +463,15 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         return try await post(endpoint: .authSessions, parameters: parameters)
     }
 
+    func repairAuthSession(clientSecret: String, coreAuthorization: String) async throws -> FinancialConnectionsRepairSession {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            "core_authorization": coreAuthorization,
+            "return_url": "ios",
+        ]
+        return try await post(endpoint: .authSessions, parameters: parameters)
+    }
+
     func cancelAuthSession(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsAuthSession {
         let parameters = [
             "client_secret": clientSecret,
@@ -474,6 +489,26 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             "id": authSessionId,
         ]
         return try await post(endpoint: .authSessionsRetrieve, parameters: parameters)
+    }
+
+    func retrieveAuthSessionPolling(
+        clientSecret: String,
+        authSessionId: String
+    ) async throws -> FinancialConnectionsAuthSession {
+        let parameters = [
+            "client_secret": clientSecret,
+            "id": authSessionId,
+        ]
+        return try await poll(
+            initialPollDelay: 0,
+            maxNumberOfRetries: 360, // Stripe.js has 360 retries and 500ms intervals
+            retryInterval: 0.5
+        ) { [weak self] in
+            guard let self else {
+                throw FinancialConnectionsSheetError.unknown(debugDescription: "FinancialConnectionsAsyncAPIClient deallocated.")
+            }
+            return try await self.post(endpoint: .authSessionsRetrieve, parameters: parameters)
+        }
     }
 
     func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsMixedOAuthParams {
@@ -704,7 +739,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         phoneNumber: String?,
         country: String?,
         consumerSessionClientSecret: String?,
-        clientSecret: String
+        clientSecret: String,
+        isRelink: Bool
     ) async throws -> (
         manifest: FinancialConnectionsSessionManifest,
         customSuccessPaneMessage: String?
@@ -722,9 +758,11 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
                 clientSecret: clientSecret
             )
 
+            let customSuccessPaneMessage = isRelink ? nil : manifest.displayText?.successPane?.subCaption
+
             return (
                 manifest: manifest,
-                customSuccessPaneMessage: manifest.displayText?.successPane?.subCaption
+                customSuccessPaneMessage: customSuccessPaneMessage
             )
         }
         if
@@ -1107,6 +1145,7 @@ enum APIEndpoint: String {
     case authSessionsAccounts = "connections/auth_sessions/accounts"
     case authSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
     case authSessionsEvents = "connections/auth_sessions/events"
+    case authSessionsRepair = "connections/repair_sessions/generate_url"
 
     // Networking
     case disableNetworking = "link_account_sessions/disable_networking"
@@ -1140,7 +1179,8 @@ enum APIEndpoint: String {
              .featuredInstitutions, .searchInstitutions, .authSessions,
              .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
              .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
-             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails:
+             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
+             .authSessionsRepair:
             return true
         case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,

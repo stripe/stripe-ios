@@ -21,6 +21,7 @@ protocol LinkAccountPickerDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var selectedAccounts: [FinancialConnectionsAccountTuple] { get }
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane? { get set }
+    var partnerToCoreAuths: [String: String]? { get set }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var dataAccessNotice: FinancialConnectionsDataAccessNotice? { get }
     var acquireConsentOnPrimaryCtaClick: Bool { get }
@@ -37,6 +38,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
 
     let manifest: FinancialConnectionsSessionManifest
     var nextPaneOnAddAccount: FinancialConnectionsSessionManifest.NextPane?
+    var partnerToCoreAuths: [String: String]?
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
@@ -105,6 +107,7 @@ final class LinkAccountPickerDataSourceImplementation: LinkAccountPickerDataSour
         .chained { [weak self] response in
             self?.networkedAccountsResponse = response
             self?.nextPaneOnAddAccount = response.nextPaneOnAddAccount
+            self?.partnerToCoreAuths = response.partnerToCoreAuths
             return Promise(value: response)
         }
     }
