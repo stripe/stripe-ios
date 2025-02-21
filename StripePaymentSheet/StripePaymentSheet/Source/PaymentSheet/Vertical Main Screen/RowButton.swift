@@ -473,15 +473,8 @@ extension RowButton {
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
-        button.content.accessibilityLabel = {
-            if let badgeText {
-                return (paymentMethod.paymentSheetAccessibilityLabel ?? "") + ", \(badgeText)"
-            }
-            return paymentMethod.paymentSheetAccessibilityLabel
-        }()
         let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
-        button.content.accessibilityLabel = {
+        button.accessibilityHelperView.accessibilityLabel = {
             if let badgeText {
                 return (paymentMethod.paymentSheetAccessibilityLabel ?? "") + ", \(badgeText)"
             }
