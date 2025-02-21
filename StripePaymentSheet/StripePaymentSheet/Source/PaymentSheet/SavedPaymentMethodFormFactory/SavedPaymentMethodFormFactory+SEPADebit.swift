@@ -6,8 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -26,6 +24,9 @@ extension SavedPaymentMethodFormFactory {
         emailElement.disableAppearance()
         ibanElement.disableAppearance()
 
-        return FormElement(elements: [nameElement, emailElement, ibanElement], theme: viewModel.appearance.asElementsTheme)
+        return FormElement(elements: [nameElement, emailElement, ibanElement],
+                                   theme: viewModel.appearance.asElementsTheme,
+                                   customSpacing: [(nameElement, ElementsUI.formSpacing - 4.0),
+                                                   (emailElement, ElementsUI.formSpacing - 4.0), ])
     }
 }
