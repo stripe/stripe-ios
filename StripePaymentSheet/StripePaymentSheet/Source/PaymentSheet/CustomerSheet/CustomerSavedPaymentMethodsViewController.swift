@@ -449,6 +449,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 defaultPaymentMethod = selectedPaymentOption.savedPaymentMethod
             }
         }
+        // if the sync default feature is enabled, set the selected payment method as default
         if paymentMethodSyncDefault, let defaultPaymentMethod, let customerId = defaultPaymentMethod.customerId {
             Task {
                 do {
