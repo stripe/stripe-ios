@@ -92,7 +92,7 @@ class UpdatePaymentMethodViewModel {
         return nil
     }
     func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
-        let didUpdatedBrand = canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
+        let cardBrandChanged = canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
 
         // Send update metric if needed
         if let updatedBrand = updated.networks?.preferred?.toCardBrand, canUpdateCardBrand {
@@ -104,7 +104,7 @@ class UpdatePaymentMethodViewModel {
                 self.lastCardBrandLogSelectedEventSent = preferredNetworkAPIValue
             }
         }
-        return didUpdatedBrand
+        return cardBrandChanged
     }
 }
 
