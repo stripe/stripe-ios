@@ -121,7 +121,7 @@ class RowButton: UIView, EventHandler {
 
     override func addSubview(_ view: UIView) {
         // All other subviews of RowButton should be added to the content view
-        guard view == contentView else {
+        guard view === contentView else {
             contentView.addSubview(view)
             return
         }
