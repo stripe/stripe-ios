@@ -82,7 +82,7 @@ class RowButton: UIView, EventHandler {
         subtext: String? = nil,
         badgeText: String? = nil,
         promoBadge: PromoBadgeView? = nil,
-        rightAccessoryView: UIView? = nil,
+        accessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
@@ -95,7 +95,7 @@ class RowButton: UIView, EventHandler {
         self.imageView = imageView
         self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance)
         self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance)
-        self.accessoryView = rightAccessoryView
+        self.accessoryView = accessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
         self.promoBadge = promoBadge
 
@@ -109,7 +109,7 @@ class RowButton: UIView, EventHandler {
         // Subviews of an accessibility element are ignored
         isAccessibilityElement = false
         accessibilityIdentifier = text // Just for test purposes
-        accessibilityElements = [self, rightAccessoryView].compactMap { $0 }
+        accessibilityElements = [self, accessoryView].compactMap { $0 }
         accessibilityIdentifier = text
         accessibilityLabel = text
         isAccessibilityElement = true
@@ -243,7 +243,7 @@ class RowButton: UIView, EventHandler {
                        subtext: String? = nil,
                        badgeText: String? = nil,
                        promoBadge: PromoBadgeView? = nil,
-                       rightAccessoryView: UIView? = nil,
+                       accessoryView: UIView? = nil,
                        shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
                        didTap: @escaping DidTapClosure) -> RowButton {
@@ -257,7 +257,7 @@ class RowButton: UIView, EventHandler {
                   subtext: subtext,
                   badgeText: badgeText,
                   promoBadge: promoBadge,
-                  rightAccessoryView: rightAccessoryView,
+                  accessoryView: accessoryView,
                   shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
                   didTap: didTap
@@ -275,7 +275,7 @@ class RowButton: UIView, EventHandler {
                   subtext: subtext,
                   badgeText: badgeText,
                   promoBadge: promoBadge,
-                  rightAccessoryView: rightAccessoryView,
+                  accessoryView: accessoryView,
                   shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
                   didTap: didTap
@@ -289,7 +289,7 @@ class RowButton: UIView, EventHandler {
                   subtext: subtext,
                   badgeText: badgeText,
                   promoBadge: promoBadge,
-                  rightAccessoryView: rightAccessoryView,
+                  accessoryView: accessoryView,
                   shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
                   didTap: didTap
@@ -303,7 +303,7 @@ class RowButton: UIView, EventHandler {
                   subtext: subtext,
                   badgeText: badgeText,
                   promoBadge: promoBadge,
-                  rightAccessoryView: rightAccessoryView,
+                  accessoryView: accessoryView,
                   shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
                   didTap: didTap
@@ -379,7 +379,7 @@ extension RowButton {
     static func makeForPaymentMethodType(
         paymentMethodType: PaymentSheet.PaymentMethodType,
         hasSavedCard: Bool,
-        rightAccessoryView: UIView? = nil,
+        accessoryView: UIView? = nil,
         promoText: String? = nil,
         appearance: PaymentSheet.Appearance,
         originalCornerRadius: CGFloat? = nil,
@@ -431,7 +431,7 @@ extension RowButton {
             text: text,
             subtext: subtext,
             promoBadge: promoBadge,
-            rightAccessoryView: rightAccessoryView,
+            accessoryView: accessoryView,
             shouldAnimateOnPress: shouldAnimateOnPress,
             isEmbedded: isEmbedded,
             didTap: didTap
@@ -454,10 +454,10 @@ extension RowButton {
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, rightAccessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, rightAccessoryView: rightAccessoryView, isEmbedded: isEmbedded, didTap: didTap)
+        let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }

@@ -384,7 +384,7 @@ class EmbeddedPaymentMethodsView: UIView {
         let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
             paymentMethod: savedPaymentMethod,
             appearance: appearance,
-            rightAccessoryView: accessoryButton,
+            accessoryView: accessoryButton,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(
@@ -411,7 +411,7 @@ class EmbeddedPaymentMethodsView: UIView {
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
             hasSavedCard: savedPaymentMethods.hasSavedCard,
-            rightAccessoryView: accessoryButton,
+            accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
