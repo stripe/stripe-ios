@@ -242,9 +242,9 @@ class RowButton: UIView, EventHandler {
     func handleEvent(_ event: STPEvent) {
         switch event {
         case .shouldEnableUserInteraction:
-            subviews.forEach { $0.alpha = 1 }
+            contentView.subviews.forEach { $0.alpha = 1 }
         case .shouldDisableUserInteraction:
-            subviews.forEach { $0.alpha = 0.5 }
+            contentView.subviews.forEach { $0.alpha = 0.5 }
         default:
             break
         }

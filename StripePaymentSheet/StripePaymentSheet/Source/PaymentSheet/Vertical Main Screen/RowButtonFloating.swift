@@ -83,7 +83,7 @@ final class RowButtonFloating: RowButton {
 
     override func handleEvent(_ event: STPEvent) {
         // Don't make the rounded rect look disabled
-        let filteredSubviews = self.subviews.filter { $0 != shadowRoundedRect }
+        let filteredSubviews = contentView.subviews.filter { !($0 === shadowRoundedRect) }
 
         switch event {
         case .shouldEnableUserInteraction:
