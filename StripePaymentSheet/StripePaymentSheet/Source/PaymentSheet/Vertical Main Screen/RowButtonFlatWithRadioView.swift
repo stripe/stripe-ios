@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// A  `RowButton` subclass that presents a flat layout featuring a radio button for the selected state.
+/// A `RowButton` subclass that presents a flat layout featuring a radio button for the selected state.
 final class RowButtonFlatWithRadioView: RowButton {
     // MARK: - Subviews
 
