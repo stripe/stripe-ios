@@ -25,7 +25,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     let appearance: PaymentSheet.Appearance
     private(set) var incentive: PaymentMethodIncentive?
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
-    
+
     // Properties moved from initializer captures
     private var overrideHeaderView: UIView?
     private var savedPaymentMethod: STPPaymentMethod?
@@ -63,19 +63,19 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.shouldShowApplePay = shouldShowApplePay
         self.shouldShowLink = shouldShowLink
         self.paymentMethodTypes = paymentMethodTypes
-        
+
         super.init(nibName: nil, bundle: nil)
         self.renderContent()
     }
-    
+
     private func refreshContent() {
         stackView.arrangedSubviews.forEach { subview in
             subview.removeFromSuperview()
         }
-        
+
         renderContent()
     }
-    
+
     private func renderContent() {
         // Add the header - either the passed in `header` or "Select payment method"
         let header = overrideHeaderView ?? PaymentSheetUI.makeHeaderLabel(title: .Localized.select_payment_method, appearance: appearance)
@@ -95,7 +95,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 }
             }()
 
-            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance, rightAccessoryView: accessoryButton) { [weak self] in
+            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance, accessoryView: accessoryButton) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
             if initialSelection == selection {
@@ -198,12 +198,12 @@ class VerticalPaymentMethodListViewController: UIViewController {
     @objc func didTapAccessoryButton() {
         delegate?.didTapSavedPaymentMethodAccessoryButton()
     }
-    
+
     func setIncentive(_ incentive: PaymentMethodIncentive?) {
         guard self.incentive != incentive else {
             return
         }
-        
+
         self.incentive = incentive
         self.refreshContent()
     }
