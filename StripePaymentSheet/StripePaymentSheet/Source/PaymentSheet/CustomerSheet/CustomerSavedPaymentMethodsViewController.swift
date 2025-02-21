@@ -384,7 +384,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         error = nil
         updateUI()
 
-        var defaultPaymentMethod: STPPaymentMethod?
         switch mode {
         case .addingNewWithSetupIntent:
             if let behavior = addPaymentMethodViewController.overrideActionButtonBehavior {
@@ -398,7 +397,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     return
                 }
                 addPaymentOption(paymentOption: newPaymentOption)
-                defaultPaymentMethod = newPaymentOption.savedPaymentMethod
             }
         case .addingNewPaymentMethodAttachToCustomer:
             guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
@@ -409,7 +407,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 return
             }
             addPaymentOptionToCustomer(paymentOption: newPaymentOption, customerSheetDataSource: customerSheetDataSource)
-            defaultPaymentMethod = newPaymentOption.savedPaymentMethod
         case .selectingSaved:
             if let selectedPaymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
                 switch selectedPaymentOption {
@@ -439,27 +436,26 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                             self.csCompletion?(.selected(paymentOptionSelection))
                         }
                     }
+                    // if the sync default feature is enabled, set the selected payment method as default
+                    if paymentMethodSyncDefault, let defaultPaymentMethod = selectedPaymentOption.savedPaymentMethod, let customerId = defaultPaymentMethod.customerId {
+                        Task {
+                            do {
+                                _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: customerId)
+                                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
+                            } catch {
+                                self.error = error
+                                let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
+                                                                  error: Error.updatePaymentMethodFailed)
+                                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                            }
+                        }
+                    }
                 default:
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                                       error: Error.didSelectSavedUnexpectedPaymentOption,
                                                       additionalNonPIIParams: ["selected_payment_option": selectedPaymentOption.paymentMethodTypeAnalyticsValue])
                     STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                     stpAssertionFailure("Selected payment method was something other than a saved payment method or apple pay")
-                }
-                defaultPaymentMethod = selectedPaymentOption.savedPaymentMethod
-            }
-        }
-        // if the sync default feature is enabled, set the selected payment method as default
-        if paymentMethodSyncDefault, let defaultPaymentMethod, let customerId = defaultPaymentMethod.customerId {
-            Task {
-                do {
-                    _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: customerId)
-                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
-                } catch {
-                    self.error = error
-                    let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
-                                                      error: Error.updatePaymentMethodFailed)
-                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 }
             }
         }
