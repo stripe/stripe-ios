@@ -74,7 +74,7 @@ class RowButton: UIView, EventHandler {
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
     let isEmbedded: Bool
 
-    private init(
+    init(
         appearance: PaymentSheet.Appearance,
         type: RowButtonType,
         imageView: UIImageView,
