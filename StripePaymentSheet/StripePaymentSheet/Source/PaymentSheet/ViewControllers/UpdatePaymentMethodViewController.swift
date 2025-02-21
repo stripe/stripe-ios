@@ -196,10 +196,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
                   let selectedBrand = viewModel.selectedCardBrand else {
                 return nil
             }
-            
+
             let cardParams = STPPaymentMethodCardParams()
             cardParams.networks = .init(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
-            
+
             analyticsParams["selected_card_brand"] = STPCardBrandUtilities.apiValue(from: selectedBrand)
             return STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil)
         }()
