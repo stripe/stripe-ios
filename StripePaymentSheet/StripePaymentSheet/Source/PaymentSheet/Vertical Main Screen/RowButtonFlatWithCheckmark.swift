@@ -52,7 +52,7 @@ final class RowButtonFlatWithCheckmark: RowButton {
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
-                contentView.addSubview(view)
+                addSubview(view)
             }
 
         // MARK: - Constraints

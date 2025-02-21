@@ -44,7 +44,7 @@ final class RowButtonFlatWithRadioView: RowButton {
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
-                contentView.addSubview(view)
+                addSubview(view)
             }
 
         // MARK: - Constraints

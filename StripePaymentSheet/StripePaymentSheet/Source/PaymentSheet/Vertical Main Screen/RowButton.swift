@@ -17,9 +17,8 @@ class RowButton: UIView, EventHandler {
 
     // MARK: Subviews
 
-    /// The content view of the RowButton. All subviews of RowButton should be added to contentView
-    /// Primarily exists for accessibility
-    let contentView = UIView()
+    /// Exists for accessibility reasons to give the RowButton accessible features while keeping the accessory button accessible
+    private let accessibilityHelperView = UIView()
     /// Typically the payment method icon or brand image
     let imageView: UIImageView
     /// The main label for the payment method name
@@ -106,7 +105,7 @@ class RowButton: UIView, EventHandler {
         self.promoBadge = promoBadge
 
         super.init(frame: .zero)
-        addAndPinSubview(contentView)
+        addAndPinSubview(accessibilityHelperView)
         setupUI()
         makeSameHeightAsOtherRowButtonsIfNecessary()
 
@@ -116,10 +115,10 @@ class RowButton: UIView, EventHandler {
         // Subviews of an accessibility element are ignored
         isAccessibilityElement = false
         accessibilityIdentifier = text // Just for test purposes
-        accessibilityElements = [contentView, accessoryView].compactMap { $0 }
-        contentView.accessibilityIdentifier = text
-        contentView.accessibilityLabel = text
-        contentView.isAccessibilityElement = true
+        accessibilityElements = [accessibilityHelperView, accessoryView].compactMap { $0 }
+        accessibilityHelperView.accessibilityIdentifier = text
+        accessibilityHelperView.accessibilityLabel = text
+        accessibilityHelperView.isAccessibilityElement = true
         updateAccessibilityTraits()
     }
 
@@ -128,16 +127,6 @@ class RowButton: UIView, EventHandler {
     }
 
     // MARK: Overrides
-
-    override func addSubview(_ view: UIView) {
-        // All other subviews of RowButton should be added to the content view
-        guard view === contentView else {
-            contentView.addSubview(view)
-            return
-        }
-
-        super.addSubview(view)
-    }
 
 #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -173,7 +162,7 @@ class RowButton: UIView, EventHandler {
         if !isEnabled {
             traits.insert(.notEnabled)
         }
-        contentView.accessibilityTraits = traits
+        accessibilityHelperView.accessibilityTraits = traits
     }
 
     // MARK: Overridable functions
@@ -212,9 +201,9 @@ class RowButton: UIView, EventHandler {
     func handleEvent(_ event: STPEvent) {
         switch event {
         case .shouldEnableUserInteraction:
-            contentView.subviews.forEach { $0.alpha = 1 }
+            accessibilityHelperView.subviews.forEach { $0.alpha = 1 }
         case .shouldDisableUserInteraction:
-            contentView.subviews.forEach { $0.alpha = 0.5 }
+            accessibilityHelperView.subviews.forEach { $0.alpha = 0.5 }
         default:
             break
         }
@@ -476,7 +465,7 @@ extension RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
         let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, isEmbedded: isEmbedded, didTap: didTap)
-        button.contentView.accessibilityLabel = String.Localized.pay_with_link
+        button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link
         return button
     }
 
@@ -484,7 +473,7 @@ extension RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
         let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
-        button.contentView.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+        button.accessibilityHelperView.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
         return button
     }
 }

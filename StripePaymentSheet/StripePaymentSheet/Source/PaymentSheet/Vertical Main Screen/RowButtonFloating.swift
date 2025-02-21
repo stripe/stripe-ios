@@ -32,7 +32,7 @@ final class RowButtonFloating: RowButton {
     }
 
     override func setupUI() {
-        contentView.addAndPinSubview(shadowRoundedRect)
+        addAndPinSubview(shadowRoundedRect)
 
         // Add common subviews
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
@@ -50,7 +50,7 @@ final class RowButtonFloating: RowButton {
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
-                contentView.addSubview(view)
+                addSubview(view)
             }
 
         // MARK: - Constraints
@@ -83,7 +83,7 @@ final class RowButtonFloating: RowButton {
 
     override func handleEvent(_ event: STPEvent) {
         // Don't make the rounded rect look disabled
-        let filteredSubviews = contentView.subviews.filter { !($0 === shadowRoundedRect) }
+        let filteredSubviews = subviews.filter { !($0 === shadowRoundedRect) }
 
         switch event {
         case .shouldEnableUserInteraction:
