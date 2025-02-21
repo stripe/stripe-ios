@@ -236,6 +236,10 @@ extension ConnectWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
         webViewDidFailNavigation(withError: error)
     }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
+        webViewDidFailNavigation(withError: error)
+    }
 
     func webView(
         _ webView: WKWebView,
