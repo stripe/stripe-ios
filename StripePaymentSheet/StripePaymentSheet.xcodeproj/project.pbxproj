@@ -167,7 +167,6 @@
 		6141C5072C0A47A700E81735 /* RightAccessoryButtonTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6141C5062C0A47A700E81735 /* RightAccessoryButtonTest.swift */; };
 		614A8AE72BE53C6900E8688B /* SavedPaymentMethodManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103F2BD2BE53737002D67F8 /* SavedPaymentMethodManagerTest.swift */; };
 		6151DDC02B14FDCF00ED4F7E /* UpdatePaymentMethodViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151DDBF2B14FDCF00ED4F7E /* UpdatePaymentMethodViewControllerSnapshotTests.swift */; };
-		6155F0852D5D2420000DCD3A /* RowButtonContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6155F0842D5D2420000DCD3A /* RowButtonContent.swift */; };
 		6155F0872D5D2F60000DCD3A /* RowButtonFloating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6155F0862D5D2F60000DCD3A /* RowButtonFloating.swift */; };
 		615C2C502CBDBA61003F0173 /* EmbeddedFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615C2C4F2CBDBA61003F0173 /* EmbeddedFormViewController.swift */; };
 		615D740B2D5FF50B006DFFF2 /* EmbeddedUpdateContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615D740A2D5FF50B006DFFF2 /* EmbeddedUpdateContext.swift */; };
@@ -602,7 +601,6 @@
 		614068E12CB0BF10003D2F12 /* EmbeddedPaymentMethodsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentMethodsViewTests.swift; sourceTree = "<group>"; };
 		6141C5062C0A47A700E81735 /* RightAccessoryButtonTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightAccessoryButtonTest.swift; sourceTree = "<group>"; };
 		6151DDBF2B14FDCF00ED4F7E /* UpdatePaymentMethodViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePaymentMethodViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
-		6155F0842D5D2420000DCD3A /* RowButtonContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowButtonContent.swift; sourceTree = "<group>"; };
 		6155F0862D5D2F60000DCD3A /* RowButtonFloating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowButtonFloating.swift; sourceTree = "<group>"; };
 		615C2C4F2CBDBA61003F0173 /* EmbeddedFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedFormViewController.swift; sourceTree = "<group>"; };
 		615D740A2D5FF50B006DFFF2 /* EmbeddedUpdateContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedUpdateContext.swift; sourceTree = "<group>"; };
@@ -1476,7 +1474,6 @@
 				B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */,
 				610EAAEF2C0F5D9400124AB2 /* FormHeaderView.swift */,
 				B667BF0A2BF2B7C60050EFD8 /* RowButton.swift */,
-				6155F0842D5D2420000DCD3A /* RowButtonContent.swift */,
 				6185901A2D5BF1D200D533D6 /* RowButtonFlatWithRadioView.swift */,
 				6155F0862D5D2F60000DCD3A /* RowButtonFloating.swift */,
 				6114AEBF2D6519EC00C0EF40 /* RowButtonFlatWithCheckmark.swift */,
@@ -2210,7 +2207,6 @@
 				6BA8D3342B0C1F79008C51FF /* CVCRecollectionElement.swift in Sources */,
 				6BC19CCC2B16C4B2008E00C4 /* CVCRecollectionView.swift in Sources */,
 				68E3CF21A7E1525CA05BA260 /* ConnectionsElement.swift in Sources */,
-				6155F0852D5D2420000DCD3A /* RowButtonContent.swift in Sources */,
 				46DB5D39B3B76C08AE2C83C8 /* PaymentMethodElement.swift in Sources */,
 				335A19D93A5979557DB4CA4D /* PaymentMethodElementWrapper.swift in Sources */,
 				B615E8732CA4CC04007D684C /* EmbeddedPaymentElementConfiguration.swift in Sources */,

@@ -9,119 +9,29 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-final class RowButtonFloating: UIView, RowButtonContent {
-    let appearance: PaymentSheet.Appearance
-
+/// A `RowButton` subclass that presents floating button style.
+final class RowButtonFloating: RowButton {
     // MARK: - Subviews
 
     /// The shadow view that manages corner radius and shadows and selection border
-    private let shadowRoundedRect: ShadowedRoundedRectangle
-    /// Typically the payment method icon or brand image
-    private let imageView: UIImageView
-    /// The main label for the payment method name
-    private let label: UILabel
-    /// The subtitle label, e.g. “Pay over time with Affirm”
-    private let sublabel: UILabel
-    /// An accessory view that is displayed on the trailing end of the content view, e.g. "View More"
-    private let rightAccessoryView: UIView?
-    /// The label indicating if this is the default saved payment method
-    private let defaultBadgeLabel: UILabel?
-    /// The view indicating any incentives associated with this payment method
-    private let promoBadge: PromoBadgeView?
+    private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
+        ShadowedRoundedRectangle(appearance: appearance)
+    }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
-    private let insets: CGFloat
-
-    // MARK: - State
-
-    var isSelected: Bool = false {
-        didSet {
-            shadowRoundedRect.isSelected = isSelected
-            // Default badge font is heavier when the row is selected
-            defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
-        }
-    }
-
-    var hasSubtext: Bool {
-        guard let subtext = sublabel.text else { return false }
-        return !subtext.isEmpty
-    }
-
-    var isDisplayingAccessoryView: Bool {
-        get {
-            guard let rightAccessoryView else {
-                return false
-            }
-            return !rightAccessoryView.isHidden
-        }
-        set {
-            rightAccessoryView?.isHidden = !newValue
-        }
-    }
-
-    init(
-        appearance: PaymentSheet.Appearance,
-        imageView: UIImageView,
-        text: String,
-        subtext: String? = nil,
-        rightAccessoryView: UIView? = nil,
-        defaultBadgeText: String?,
-        promoBadge: PromoBadgeView?,
-        insets: CGFloat
-    ) {
-        self.appearance = appearance
-        self.imageView = imageView
-        self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance)
-        self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance)
-        self.rightAccessoryView = rightAccessoryView
-        self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
-        self.promoBadge = promoBadge
-        self.insets = insets
-        self.shadowRoundedRect = ShadowedRoundedRectangle(appearance: appearance)
-
-        super.init(frame: .zero)
-        setupUI()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    func setSublabel(text: String?) {
-        guard let text else {
-            sublabel.text = nil
-            sublabel.isHidden = true
-            return
+    private var insets: CGFloat {
+        guard isEmbedded else {
+            return 4.0 // 4.0 insets for vertical mode
         }
 
-        sublabel.text = text
-        sublabel.isHidden = text.isEmpty
+        return appearance.embeddedPaymentElement.row.additionalInsets
     }
 
-    func setKeyContent(alpha: CGFloat) {
-        [imageView, label, sublabel].compactMap { $0 }.forEach {
-            $0.alpha = alpha
-        }
+    override func updateSelectedState() {
+        super.updateSelectedState()
+        shadowRoundedRect.isSelected = isSelected
     }
 
-    func handleEvent(_ event: STPEvent) {
-        // Don't make the rounded rect look disabled
-        let filteredSubviews = self.subviews.filter { $0 != shadowRoundedRect }
-
-        switch event {
-        case .shouldEnableUserInteraction:
-            filteredSubviews.forEach { $0.alpha = 1 }
-        case .shouldDisableUserInteraction:
-            filteredSubviews.forEach { $0.alpha = 0.5 }
-        default:
-            break
-        }
-    }
-}
-
-// MARK: - UI Setup
-
-private extension RowButtonFloating {
-    func setupUI() {
+    override func setupUI() {
         addAndPinSubview(shadowRoundedRect)
 
         // Add common subviews
@@ -133,7 +43,7 @@ private extension RowButtonFloating {
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 rightAccessoryView, ].compactMap { $0 })
+                                                                 accessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
 
         [imageView, horizontalStackView].compactMap { $0 }
@@ -169,5 +79,19 @@ private extension RowButtonFloating {
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
         ])
+    }
+
+    override func handleEvent(_ event: STPEvent) {
+        // Don't make the rounded rect look disabled
+        let filteredSubviews = subviews.filter { !($0 === shadowRoundedRect) }
+
+        switch event {
+        case .shouldEnableUserInteraction:
+            filteredSubviews.forEach { $0.alpha = 1 }
+        case .shouldDisableUserInteraction:
+            filteredSubviews.forEach { $0.alpha = 0.5 }
+        default:
+            break
+        }
     }
 }

@@ -9,10 +9,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// A standalone view dedicated to the "flat with radio" RowButton style.
-final class RowButtonFlatWithCheckmark: UIView, RowButtonContent {
-    let appearance: PaymentSheet.Appearance
-
+/// A `RowButton` subclass that presents a flat layout featuring a checkmark for the selected state.
+final class RowButtonFlatWithCheckmark: RowButton {
     // MARK: - Subviews
     private lazy var checkmarkImageView: UIImageView = {
         let checkmarkImageView = UIImageView(image: Image.embedded_check.makeImage(template: true))
@@ -22,101 +20,20 @@ final class RowButtonFlatWithCheckmark: UIView, RowButtonContent {
         checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
         return checkmarkImageView
     }()
-    /// Typically the payment method icon or brand image
-    private let imageView: UIImageView
-    /// The main label for the payment method name
-    private let label: UILabel
-    /// The subtitle label, e.g. “Pay over time with Affirm”
-    private let sublabel: UILabel
-    /// For layout convenience: if we have an accessory view on the bottom (e.g. a brand logo, etc.)
-    private let bottomAccessoryView: UIView?
-    /// The label indicating if this is the default saved payment method
-    private let defaultBadgeLabel: UILabel?
-    /// The view indicating any incentives associated with this payment method
-    private let promoBadge: PromoBadgeView?
 
-    // MARK: - State
-
-    var isSelected: Bool = false {
-        didSet {
-            checkmarkImageView.isHidden = !isSelected
-            // Default badge font is heavier when the row is selected
-            defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
-            layoutIfNeeded() // Required to prevent checkmarkImageView from animating in strangely
-        }
+    override func updateSelectedState() {
+        super.updateSelectedState()
+        checkmarkImageView.isHidden = !isSelected
     }
 
-    var hasSubtext: Bool {
-        guard let subtext = sublabel.text else { return false }
-        return !subtext.isEmpty
-    }
-
-    var isDisplayingAccessoryView: Bool {
-        get {
-            guard let bottomAccessoryView else {
-                return false
-            }
-            return !bottomAccessoryView.isHidden
-        }
-        set {
-            bottomAccessoryView?.isHidden = !newValue
-        }
-    }
-
-    init(
-        appearance: PaymentSheet.Appearance,
-        imageView: UIImageView,
-        text: String,
-        subtext: String? = nil,
-        bottomAccessoryView: UIView? = nil,
-        defaultBadgeText: String?,
-        promoBadge: PromoBadgeView?
-    ) {
-        self.appearance = appearance
-        self.imageView = imageView
-        self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance)
-        self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance)
-        self.bottomAccessoryView = bottomAccessoryView
-        self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: defaultBadgeText, appearance: appearance)
-        self.promoBadge = promoBadge
-
-        super.init(frame: .zero)
-        setupUI()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    func setSublabel(text: String?) {
-        guard let text else {
-            sublabel.text = nil
-            sublabel.isHidden = true
-            return
-        }
-
-        sublabel.text = text
-        sublabel.isHidden = text.isEmpty
-    }
-
-    func setKeyContent(alpha: CGFloat) {
-        [imageView, label, sublabel].compactMap { $0 }.forEach {
-            $0.alpha = alpha
-        }
-    }
-}
-
-// MARK: - UI Setup
-
-private extension RowButtonFlatWithCheckmark {
-    func setupUI() {
+    override func setupUI() {
         backgroundColor = appearance.colors.componentBackground
 
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
-        let stackView = UIStackView(arrangedSubviews: [labelsStackView, bottomAccessoryView].compactMap { $0 })
+        let stackView = UIStackView(arrangedSubviews: [labelsStackView, accessoryView].compactMap { $0 })
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.setCustomSpacing(8, after: labelsStackView)
@@ -148,7 +65,7 @@ private extension RowButtonFlatWithCheckmark {
 
         let imageViewCenterYConstraint: NSLayoutConstraint
         // If we have an accessory view align the image with the top label
-        if let bottomAccessoryView, !bottomAccessoryView.isHidden {
+        if let accessoryView, !accessoryView.isHidden {
             imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor)
         } else {
             imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)

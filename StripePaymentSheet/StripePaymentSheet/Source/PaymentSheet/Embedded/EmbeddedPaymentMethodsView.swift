@@ -384,7 +384,7 @@ class EmbeddedPaymentMethodsView: UIView {
         let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
             paymentMethod: savedPaymentMethod,
             appearance: appearance,
-            rightAccessoryView: accessoryButton,
+            accessoryView: accessoryButton,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(
@@ -411,7 +411,7 @@ class EmbeddedPaymentMethodsView: UIView {
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
             hasSavedCard: savedPaymentMethods.hasSavedCard,
-            rightAccessoryView: accessoryButton,
+            accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
@@ -444,17 +444,17 @@ extension Array where Element == STPPaymentMethod {
 
 extension RowButton {
     func addChangeButton(sublabel: String?) {
-        content.isDisplayingAccessoryView = true
+        isDisplayingAccessoryView = true
         if let sublabel {
-            content.setSublabel(text: sublabel)
+            setSublabel(text: sublabel)
         }
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }
 
     func removeChangeButton(shouldClearSublabel: Bool) {
-        content.isDisplayingAccessoryView = false
+        isDisplayingAccessoryView = false
         if shouldClearSublabel {
-            content.setSublabel(text: nil)
+            setSublabel(text: nil)
         }
     }
 }
