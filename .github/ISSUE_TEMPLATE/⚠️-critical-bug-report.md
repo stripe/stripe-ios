@@ -1,14 +1,17 @@
 ---
-name: "\U0001F41B SDK Bug report"
-about: Create a report to help us improve
-title: "[BUG] "
-labels: kind:bug
+name: "⚠️ Critical bug report"
+about: Report issues that prevent the user from completing an action
+title: "[BUG] [P1] "
+labels: kind:bug, P1
 assignees: ''
 
 ---
 
 ## Summary
 <!-- A simple summary of the problems you're having. -->
+
+## What is blocked by this issue?
+<!-- Summarize what the user is unable to do. (e.g. checking out, saving a card, etc.) -->
 
 ## Code to reproduce
 <!-- If possible, please include a brief piece of code (or ideally, a link to an example project) demonstrating the problem you're having. -->

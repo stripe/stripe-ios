@@ -170,6 +170,7 @@
 		6155F0852D5D2420000DCD3A /* RowButtonContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6155F0842D5D2420000DCD3A /* RowButtonContent.swift */; };
 		6155F0872D5D2F60000DCD3A /* RowButtonFloating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6155F0862D5D2F60000DCD3A /* RowButtonFloating.swift */; };
 		615C2C502CBDBA61003F0173 /* EmbeddedFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615C2C4F2CBDBA61003F0173 /* EmbeddedFormViewController.swift */; };
+		615D740B2D5FF50B006DFFF2 /* EmbeddedUpdateContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615D740A2D5FF50B006DFFF2 /* EmbeddedUpdateContext.swift */; };
 		6180A5C12C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6180A5C02C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift */; };
 		6180A5C72C824377009D1536 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6180A5C62C824377009D1536 /* RadioButton.swift */; };
 		6180A5CB2C8249D2009D1536 /* UIStackView+Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6180A5CA2C8249D2009D1536 /* UIStackView+Separator.swift */; };
@@ -604,6 +605,7 @@
 		6155F0842D5D2420000DCD3A /* RowButtonContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowButtonContent.swift; sourceTree = "<group>"; };
 		6155F0862D5D2F60000DCD3A /* RowButtonFloating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowButtonFloating.swift; sourceTree = "<group>"; };
 		615C2C4F2CBDBA61003F0173 /* EmbeddedFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedFormViewController.swift; sourceTree = "<group>"; };
+		615D740A2D5FF50B006DFFF2 /* EmbeddedUpdateContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedUpdateContext.swift; sourceTree = "<group>"; };
 		617C44F9338DE2E93E318291 /* PayWithLinkWebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWithLinkWebController.swift; sourceTree = "<group>"; };
 		6180A5C02C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentMethodsView.swift; sourceTree = "<group>"; };
 		6180A5C62C824377009D1536 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
@@ -1150,6 +1152,7 @@
 			isa = PBXGroup;
 			children = (
 				B615E8702CA4CBEE007D684C /* EmbeddedPaymentElement.swift */,
+				615D740A2D5FF50B006DFFF2 /* EmbeddedUpdateContext.swift */,
 				6123E94C2D4A84800088FBE8 /* EmbeddedPaymentElement+SwiftUI.swift */,
 				6107F5452D4C389800905BD8 /* EmbeddedViewRepresentable.swift */,
 				615C2C4F2CBDBA61003F0173 /* EmbeddedFormViewController.swift */,
@@ -2261,6 +2264,7 @@
 				727874C468C0E1CD3653C91A /* PaymentSheetError.swift in Sources */,
 				45F8109B55B9013945ACB2C6 /* PaymentSheetFlowController.swift in Sources */,
 				209FF56603EE6FC381BB58F1 /* FormSpec.swift in Sources */,
+				615D740B2D5FF50B006DFFF2 /* EmbeddedUpdateContext.swift in Sources */,
 				B63B2CF32BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift in Sources */,
 				D592BEF7679F39A4DE26E5AF /* FormSpecProvider.swift in Sources */,
 				A3B2F2B22CEE689C00C0E88C /* TextFieldElement+USBankAccount.swift in Sources */,
