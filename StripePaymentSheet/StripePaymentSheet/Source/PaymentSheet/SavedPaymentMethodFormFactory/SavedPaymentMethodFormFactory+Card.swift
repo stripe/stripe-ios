@@ -43,7 +43,13 @@ extension SavedPaymentMethodFormFactory {
             return wrappedElement
         }()
         let panElement: TextFieldElement = {
-            return TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.calculateCardBrandToDisplay(), cardBrandDropDown: cardBrandDropDown?.element).makeElement(theme: viewModel.appearance.asElementsTheme)
+            let panElementConfig = TextFieldElement.LastFourConfiguration(lastFour: viewModel.paymentMethod.card?.last4 ?? "", cardBrand: viewModel.paymentMethod.calculateCardBrandToDisplay(), cardBrandDropDown: cardBrandDropDown?.element)
+
+            let panElement = panElementConfig.makeElement(theme: viewModel.appearance.asElementsTheme)
+            if cardBrandDropDown == nil {
+                panElement.disableAppearance()
+            }
+            return panElement
         }()
 
         let expiryDateElement: Element = {
@@ -51,6 +57,9 @@ extension SavedPaymentMethodFormFactory {
             let expirationDateConfig = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString,
                                                                                 isEditable: viewModel.canUpdate)
             let expirationField = expirationDateConfig.makeElement(theme: viewModel.appearance.asElementsTheme)
+            if !viewModel.canUpdate {
+                expirationField.disableAppearance()
+            }
             let wrappedElement = PaymentMethodElementWrapper<TextFieldElement>(expirationField) { field, params in
                 if let month = Int(field.text.prefix(2)) {
                     cardParams(for: params).expMonth = NSNumber(value: month)
@@ -66,6 +75,7 @@ extension SavedPaymentMethodFormFactory {
         let cvcElement: TextFieldElement = {
             return TextFieldElement.CensoredCVCConfiguration(brand: viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown).makeElement(theme: viewModel.appearance.asElementsTheme)
         }()
+        cvcElement.disableAppearance()
 
         let cardSection: SectionElement = {
             let allSubElements: [Element?] = [
@@ -74,7 +84,6 @@ extension SavedPaymentMethodFormFactory {
                 SectionElement.MultiElementRow([expiryDateElement, cvcElement]),
             ]
             let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: viewModel.appearance.asElementsTheme)
-            section.disableAppearance()
             viewModel.errorState = !expiryDateElement.validationState.isValid
             return section
         }()

@@ -174,7 +174,9 @@ class SectionContainerView: UIView {
     }
 
     func disableAppearance() {
-        stackView.customBackgroundColor = theme.colors.componentBackground.translucentMaskColor
+        stackView.customBackgroundColor = UIColor(dynamicProvider: { _ in
+            return self.theme.colors.componentBackground.translucentMaskColor
+        })
         updateUI()
     }
 }

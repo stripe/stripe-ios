@@ -119,6 +119,12 @@ import UIKit
         delegate?.didUpdate(element: self)
     }
 
+    public func disableAppearance() {
+        self.view.backgroundColor = UIColor(dynamicProvider: { _ in
+            return self.theme.colors.componentBackground.translucentMaskColor
+        })
+    }
+
     // MARK: - Helpers
 
     func sanitize(text: String) -> String {
