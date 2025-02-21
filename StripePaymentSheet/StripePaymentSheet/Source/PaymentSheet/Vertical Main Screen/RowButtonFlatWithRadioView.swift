@@ -9,9 +9,10 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// A standalone view dedicated to the "flat with radio" RowButton style.
+/// A  `RowButton` subclass that presents a flat layout featuring a radio button for the selected state.
 final class RowButtonFlatWithRadioView: RowButton {
     // MARK: - Subviews
+
     /// The radio control
     private lazy var radioButton: RadioButton = {
         let radioButton = RadioButton(appearance: appearance)

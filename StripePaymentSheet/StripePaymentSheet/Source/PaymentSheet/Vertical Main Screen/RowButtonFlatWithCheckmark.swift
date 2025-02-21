@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// A standalone view dedicated to the "flat with radio" RowButton style.
+/// A  `RowButton` subclass that presents a flat layout featuring a checkmark for the selected state.
 final class RowButtonFlatWithCheckmark: RowButton {
     // MARK: - Subviews
     private lazy var checkmarkImageView: UIImageView = {

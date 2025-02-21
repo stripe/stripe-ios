@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+/// A  `RowButton` subclass that presents floating button style.
 final class RowButtonFloating: RowButton {
     // MARK: - Subviews
 

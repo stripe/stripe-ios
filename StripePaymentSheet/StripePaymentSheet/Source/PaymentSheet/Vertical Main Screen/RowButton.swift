@@ -13,6 +13,7 @@ import UIKit
 
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
 class RowButton: UIView, EventHandler {
+    typealias DidTapClosure = (RowButton) -> Void
 
     // MARK: Subviews
 
@@ -28,14 +29,6 @@ class RowButton: UIView, EventHandler {
     let defaultBadgeLabel: UILabel?
     /// The view indicating any incentives associated with this payment method
     let promoBadge: PromoBadgeView?
-
-    let type: RowButtonType
-    let shouldAnimateOnPress: Bool
-    let appearance: PaymentSheet.Appearance
-    typealias DidTapClosure = (RowButton) -> Void
-    let didTap: DidTapClosure
-    // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
-    let isEmbedded: Bool
 
     // MARK: State
 
@@ -72,9 +65,16 @@ class RowButton: UIView, EventHandler {
         }
     }
 
+    // MARK: Internal properties
     var heightConstraint: NSLayoutConstraint?
+    let type: RowButtonType
+    let shouldAnimateOnPress: Bool
+    let appearance: PaymentSheet.Appearance
+    let didTap: DidTapClosure
+    // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
+    let isEmbedded: Bool
 
-    init(
+    private init(
         appearance: PaymentSheet.Appearance,
         type: RowButtonType,
         imageView: UIImageView,
@@ -157,6 +157,7 @@ class RowButton: UIView, EventHandler {
 
     // MARK: Overridable functions
 
+    /// Override this function to setup the UI for your RowButton subclass
     func setupUI() {
         stpAssertionFailure("RowButton init not called from subclass, use RowButton.create() instead of RowButton(...).")
     }
