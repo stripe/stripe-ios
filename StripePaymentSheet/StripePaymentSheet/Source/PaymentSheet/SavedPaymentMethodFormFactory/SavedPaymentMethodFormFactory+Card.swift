@@ -13,7 +13,7 @@ import Foundation
 import UIKit
 
 extension SavedPaymentMethodFormFactory {
-    func makeCard() -> PaymentMethodElement {
+    static func makeCard(viewModel: UpdatePaymentMethodViewModel) -> PaymentMethodElement {
         let cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>? = {
             guard viewModel.isCBCEligible else {
                 return nil
@@ -33,20 +33,12 @@ extension SavedPaymentMethodFormFactory {
 
             // Handler when user selects different card brand
             let wrappedElement = PaymentMethodElementWrapper<DropdownFieldElement>(cardBrandDropDown){ field, params in
-                let cardBrands = self.viewModel.paymentMethod.card?.networks?.available.map({
+                let cardBrands = viewModel.paymentMethod.card?.networks?.available.map({
                     STPCard.brand(from: $0)
-                }).filter { self.viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
+                }).filter { viewModel.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
                 let cardBrand = cardBrands[field.selectedIndex]
                 let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
-
                 params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
-
-                if preferredNetworkAPIValue != self.lastCardBrandLogSelectedEventSent {
-                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.viewModel.hostedSurface.analyticEvent(for: .cardBrandSelected),
-                                                                         params: ["selected_card_brand": preferredNetworkAPIValue,
-                                                                                  "cbc_event_source": "edit", ])
-                    self.lastCardBrandLogSelectedEventSent = preferredNetworkAPIValue
-                }
                 return params
             }
             return wrappedElement
@@ -61,7 +53,7 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let cvcElement: TextFieldElement = {
-            return TextFieldElement.CensoredCVCConfiguration(brand: self.viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown).makeElement(theme: viewModel.appearance.asElementsTheme)
+            return TextFieldElement.CensoredCVCConfiguration(brand: viewModel.paymentMethod.card?.preferredDisplayBrand ?? .unknown).makeElement(theme: viewModel.appearance.asElementsTheme)
         }()
 
         let cardSection: SectionElement = {
@@ -72,7 +64,6 @@ extension SavedPaymentMethodFormFactory {
             ]
             let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: viewModel.appearance.asElementsTheme)
             section.disableAppearance()
-            section.delegate = self
             viewModel.errorState = !expiryDateElement.validationState.isValid
             return section
         }()

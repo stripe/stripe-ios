@@ -22,6 +22,7 @@ class UpdatePaymentMethodViewModel {
     let canSetAsDefaultPM: Bool
     let isDefault: Bool
     var errorState: Bool = false
+    private var lastCardBrandLogSelectedEventSent: String?
 
     var hasChangedDefaultPaymentMethodCheckbox: Bool = false
     var canEdit: Bool {
@@ -91,8 +92,19 @@ class UpdatePaymentMethodViewModel {
         return nil
     }
     func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
-        let updatedBrand = canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
-        return updatedBrand
+        let didUpdatedBrand = canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
+
+        // Send update metric if needed
+        if let updatedBrand = updated.networks?.preferred?.toCardBrand, canUpdateCardBrand {
+            let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: updatedBrand)
+            if preferredNetworkAPIValue != self.lastCardBrandLogSelectedEventSent {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .cardBrandSelected),
+                                                                     params: ["selected_card_brand": preferredNetworkAPIValue,
+                                                                              "cbc_event_source": "edit", ])
+                self.lastCardBrandLogSelectedEventSent = preferredNetworkAPIValue
+            }
+        }
+        return didUpdatedBrand
     }
 }
 

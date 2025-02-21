@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 extension SavedPaymentMethodFormFactory {
-    func makeSEPADebit() -> UIView {
+    static func makeSEPADebit(viewModel: UpdatePaymentMethodViewModel) -> PaymentMethodElement {
         let nameElement: SectionElement = {
             return SectionElement(elements: [TextFieldElement.NameConfiguration(defaultValue: viewModel.paymentMethod.billingDetails?.name, isEditable: false).makeElement(theme: viewModel.appearance.asElementsTheme)], theme: viewModel.appearance.asElementsTheme)
         }()
@@ -25,11 +25,7 @@ extension SavedPaymentMethodFormFactory {
         nameElement.disableAppearance()
         emailElement.disableAppearance()
         ibanElement.disableAppearance()
-        let stackView = UIStackView(arrangedSubviews: [nameElement.view, emailElement.view, ibanElement.view])
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.axis = .vertical
-        stackView.setCustomSpacing(8, after: nameElement.view) // custom spacing from figma
-        stackView.setCustomSpacing(8, after: emailElement.view) // custom spacing from figma
-        return stackView
+
+        return FormElement(elements: [nameElement, emailElement, ibanElement], theme: viewModel.appearance.asElementsTheme)
     }
 }

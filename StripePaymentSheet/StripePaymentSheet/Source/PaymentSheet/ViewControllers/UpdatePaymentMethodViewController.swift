@@ -47,13 +47,13 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Views
     lazy var formStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodForm])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentMethodForm.view])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.spacing = 16 // custom spacing from figma
         if let footnoteLabel = footnoteLabel {
             stackView.addArrangedSubview(footnoteLabel)
-            stackView.setCustomSpacing(8, after: paymentMethodForm) // custom spacing from figma
+            stackView.setCustomSpacing(8, after: paymentMethodForm.view) // custom spacing from figma
         }
         if let setAsDefaultCheckbox = setAsDefaultCheckbox, let lastSubview = stackView.arrangedSubviews.last {
             stackView.addArrangedSubview(setAsDefaultCheckbox.view)
@@ -77,7 +77,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: viewModel.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
-            if let updatePaymentMethodOptions = viewModel.updateParams(paymentMethodElement: formFactory.savedCardForm),
+            if let updatePaymentMethodOptions = viewModel.updateParams(paymentMethodElement: paymentMethodForm),
                case .card(let cardUpdateParams) = updatePaymentMethodOptions {
                 Task {
                     await self.updateCard(paymentMethodCardParams: cardUpdateParams)
@@ -98,14 +98,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
         return button
     }()
 
-    private lazy var formFactory: SavedPaymentMethodFormFactory = {
-        let factory = SavedPaymentMethodFormFactory(viewModel: viewModel)
-        factory.delegate = self
-        return factory
-    }()
-
-    private lazy var paymentMethodForm: UIView = {
-        return formFactory.makePaymentMethodForm()
+    private lazy var paymentMethodForm: PaymentMethodElement = {
+        let form = SavedPaymentMethodFormFactory.makePaymentMethodForm(viewModel: viewModel)
+        form.delegate = self
+        return form
     }()
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
@@ -218,7 +214,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     private func updateButtonState() {
-        let params = viewModel.updateParams(paymentMethodElement: formFactory.savedCardForm)
+        let params = viewModel.updateParams(paymentMethodElement: paymentMethodForm)
         updateButton.update(state: params != nil || viewModel.hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
     }
 }
@@ -254,9 +250,12 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
 
 }
 
-// MARK: SavedPaymentMethodFormFactoryDelegate
-extension UpdatePaymentMethodViewController: SavedPaymentMethodFormFactoryDelegate {
-    func didUpdate(_: Element) {
+extension UpdatePaymentMethodViewController: ElementDelegate {
+    func continueToNextField(element: Element) {
+        // no-op
+    }
+
+    func didUpdate(element: Element) {
         latestError = nil // clear error on new input
         switch viewModel.paymentMethod.type {
         case .card:
