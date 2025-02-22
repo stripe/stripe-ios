@@ -5,17 +5,22 @@
 //  Created by Joyce Qin on 11/20/24.
 //
 
+// Communicates back to caller if the initial state of the form is in an error state
+typealias ErrorStateCallback = (Bool) -> Void
+
 class SavedPaymentMethodFormFactory {
-    static func makePaymentMethodForm(viewModel: UpdatePaymentMethodViewModel) -> PaymentMethodElement {
-        switch viewModel.paymentMethod.type {
+    var lastCardBrandLogSelectedEventSent: String?
+
+    func makePaymentMethodForm(configuration: UpdatePaymentMethodViewController.Configuration, errorStateCallback: ErrorStateCallback) -> PaymentMethodElement {
+        switch configuration.paymentMethod.type {
         case .card:
-            return makeCard(viewModel: viewModel)
+            return makeCard(configuration: configuration, errorStateCallback: errorStateCallback)
         case .USBankAccount:
-            return makeUSBankAccount(viewModel: viewModel)
+            return makeUSBankAccount(configuration: configuration)
         case .SEPADebit:
-            return makeSEPADebit(viewModel: viewModel)
+            return makeSEPADebit(configuration: configuration)
         default:
-            fatalError("Cannot make payment method form for payment method type \(viewModel.paymentMethod.type).")
+            fatalError("Cannot make payment method form for payment method type \(configuration.paymentMethod.type).")
         }
     }
 }

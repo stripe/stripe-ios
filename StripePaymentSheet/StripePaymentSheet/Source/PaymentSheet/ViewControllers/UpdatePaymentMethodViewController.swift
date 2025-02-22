@@ -25,7 +25,11 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
 final class UpdatePaymentMethodViewController: UIViewController {
     private let removeSavedPaymentMethodMessage: String?
     private let isTestMode: Bool
-    private let viewModel: UpdatePaymentMethodViewModel
+
+    private var hasChangedDefaultPaymentMethodCheckbox: Bool = false
+    private var errorState: Bool = false
+
+    private let configuration: UpdatePaymentMethodViewController.Configuration
 
     private var latestError: Error? {
         didSet {
@@ -39,7 +43,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     // MARK: Navigation bar
     internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
-                                        appearance: viewModel.appearance)
+                                        appearance: configuration.appearance)
         navBar.delegate = self
         navBar.setStyle(navigationBarStyle())
         return navBar
@@ -69,63 +73,71 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var headerLabel: UILabel = {
-        let label = PaymentSheetUI.makeHeaderLabel(appearance: viewModel.appearance)
-        label.text = viewModel.header
+        let label = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
+        label.text = configuration.header
         return label
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: viewModel.appearance, didTap: {  [weak self] in
+        let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: configuration.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
-            if let updatePaymentMethodOptions = viewModel.updateParams(paymentMethodElement: paymentMethodForm),
+            if let updatePaymentMethodOptions = updateParams(paymentMethodElement: paymentMethodForm),
                case .card(let cardUpdateParams) = updatePaymentMethodOptions {
                 Task {
                     await self.updateCard(paymentMethodCardParams: cardUpdateParams)
                 }
             }
-            if self.viewModel.hasChangedDefaultPaymentMethodCheckbox {
+            if hasChangedDefaultPaymentMethodCheckbox {
                 // TODO: update default payment method in the back end
             }
         })
-        button.isHidden = !viewModel.canEdit
+        button.isHidden = !configuration.canEdit
         return button
     }()
 
     private lazy var removeButton: RemoveButton = {
-        let button = RemoveButton(title: .Localized.remove, appearance: viewModel.appearance)
+        let button = RemoveButton(title: .Localized.remove, appearance: configuration.appearance)
         button.addTarget(self, action: #selector(removePaymentMethod), for: .touchUpInside)
-        button.isHidden = !viewModel.canRemove
+        button.isHidden = !configuration.canRemove
         return button
     }()
 
+    private lazy var formFactory: SavedPaymentMethodFormFactory = {
+        return SavedPaymentMethodFormFactory()
+    }()
+
     private lazy var paymentMethodForm: PaymentMethodElement = {
-        let form = SavedPaymentMethodFormFactory.makePaymentMethodForm(viewModel: viewModel)
+        let form = formFactory.makePaymentMethodForm(configuration: configuration, errorStateCallback: errorStateCallback)
         form.delegate = self
         return form
     }()
 
+    private func errorStateCallback(isInErrorState: Bool) {
+        self.errorState = isInErrorState
+    }
+
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
-        guard viewModel.canSetAsDefaultPM,
+        guard configuration.canSetAsDefaultPM,
               PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
-            viewModel.paymentMethod.type == $0
-        }) else { return nil }
-        return CheckboxElement(theme: viewModel.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: viewModel.isDefault) { [weak self] isSelected in
-            self?.viewModel.hasChangedDefaultPaymentMethodCheckbox = self?.viewModel.isDefault != isSelected
+                  configuration.paymentMethod.type == $0
+              }) else { return nil }
+        return CheckboxElement(theme: configuration.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: configuration.isDefault) { [weak self] isSelected in
+            self?.hasChangedDefaultPaymentMethodCheckbox = self?.configuration.isDefault != isSelected
             self?.updateButtonState()
         }
     }()
 
     private lazy var footnoteLabel: UITextView? = {
-        if viewModel.errorState {
+        guard !errorState else {
             return nil
         }
-        let label = ElementsUI.makeSmallFootnote(theme: viewModel.appearance.asElementsTheme)
-        label.text = viewModel.footnote
+        let label = ElementsUI.makeSmallFootnote(theme: configuration.appearance.asElementsTheme)
+        label.text = configuration.footnote
         return label
     }()
 
     private lazy var errorLabel: UILabel = {
-        let label = ElementsUI.makeErrorLabel(theme: viewModel.appearance.asElementsTheme)
+        let label = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
         label.isHidden = true
         return label
     }()
@@ -133,10 +145,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
     // MARK: Overrides
     init(removeSavedPaymentMethodMessage: String?,
          isTestMode: Bool,
-         viewModel: UpdatePaymentMethodViewModel) {
+         configuration: UpdatePaymentMethodViewController.Configuration) {
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
         self.isTestMode = isTestMode
-        self.viewModel = viewModel
+        self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -148,19 +160,19 @@ final class UpdatePaymentMethodViewController: UIViewController {
         super.viewDidLoad()
         // disable swipe to dismiss
         isModalInPresentation = true
-        self.view.backgroundColor = viewModel.appearance.colors.background
+        self.view.backgroundColor = configuration.appearance.colors.background
         view.addAndPinSubview(formStackView, insets: PaymentSheetUI.defaultSheetMargins)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .openEditScreen))
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .openEditScreen))
     }
 
     // MARK: Private helpers
     private func dismiss() {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .closeEditScreen))
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
         delegate?.shouldCloseSheet(_: self)
     }
@@ -175,17 +187,17 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     @objc private func removePaymentMethod() {
-        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: viewModel.paymentMethod,
+        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: configuration.paymentMethod,
                                                                           removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }
-            self.delegate?.didRemove(viewController: self, paymentMethod: self.viewModel.paymentMethod)
+            self.delegate?.didRemove(viewController: self, paymentMethod: self.configuration.paymentMethod)
         }
 
         present(alertController, animated: true, completion: nil)
     }
 
     private func updateCard(paymentMethodCardParams: STPPaymentMethodCardParams) async {
-       guard let delegate = delegate else {
+        guard let delegate = delegate else {
             return
         }
         view.isUserInteractionEnabled = false
@@ -200,13 +212,13 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
 
         do {
-            try await delegate.didUpdate(viewController: self, paymentMethod: viewModel.paymentMethod, updateParams: updateParams)
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCard),
+            try await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod, updateParams: updateParams)
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
                                                                  params: analyticsParams)
         } catch {
             updateButton.update(state: .enabled)
             latestError = error
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .updateCardFailed),
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
                                                                  error: error,
                                                                  params: analyticsParams)
         }
@@ -214,8 +226,30 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     private func updateButtonState() {
-        let params = viewModel.updateParams(paymentMethodElement: paymentMethodForm)
-        updateButton.update(state: params != nil || viewModel.hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
+        let params = updateParams(paymentMethodElement: paymentMethodForm)
+        updateButton.update(state: params != nil || hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
+    }
+
+    func updateParams(paymentMethodElement: PaymentMethodElement) -> UpdatePaymentMethodOptions?{
+        let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
+
+        if let params = paymentMethodElement.updateParams(params: confirmParams),
+           let cardParams = params.paymentMethodParams.card,
+           let originalPaymentMethodCard = configuration.paymentMethod.card,
+           hasChangedFields(original: originalPaymentMethodCard, updated: cardParams) {
+            return .card(paymentMethodCardParams: cardParams)
+        }
+        return nil
+    }
+    func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
+        let cardBrandChanged = configuration.canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
+        return cardBrandChanged
+    }
+}
+
+extension UpdatePaymentMethodViewController {
+    enum UpdatePaymentMethodOptions {
+        case card(paymentMethodCardParams: STPPaymentMethodCardParams)
     }
 }
 
@@ -244,7 +278,7 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
 
     func sheetNavigationBarDidBack(_: SheetNavigationBar) {
         guard let bottomVc = parent as? BottomSheetViewController else { return }
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: viewModel.hostedSurface.analyticEvent(for: .closeEditScreen))
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
     }
 
@@ -257,7 +291,7 @@ extension UpdatePaymentMethodViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
         latestError = nil // clear error on new input
-        switch viewModel.paymentMethod.type {
+        switch configuration.paymentMethod.type {
         case .card:
             updateButtonState()
         default:
