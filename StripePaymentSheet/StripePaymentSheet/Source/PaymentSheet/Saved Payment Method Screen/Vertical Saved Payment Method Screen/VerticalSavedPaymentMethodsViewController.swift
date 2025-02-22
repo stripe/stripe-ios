@@ -371,11 +371,20 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
                    updateParams: UpdatePaymentMethodParams) async throws {
-        if let updateCardBrandParams = updateParams.updateCardBrandParams {
-            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
-        }
-        if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
-            try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            if let updateCardBrandParams = updateParams.updateCardBrandParams {
+                group.addTask {
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                }
+            }
+            if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
+                group.addTask {
+                    try await self.updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                }
+            }
+            // Wait for all tasks to complete
+            for try await _ in group {
+            }
         }
         _ = viewController.bottomSheetController?.popContentViewController()
     }
