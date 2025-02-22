@@ -338,10 +338,9 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
                                                                            allowsSetAsDefaultPM: paymentMethodSetAsDefault,
                                                                            isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
-        let updateViewController = UpdatePaymentMethodViewController(
-            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-            isTestMode: configuration.apiClient.isTestmode,
-            configuration: updateConfig)
+        let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                                     isTestMode: configuration.apiClient.isTestmode,
+                                                                     configuration: updateConfig)
         updateViewController.delegate = self
         self.updateViewController = updateViewController
         self.bottomSheetController?.pushContentViewController(updateViewController)

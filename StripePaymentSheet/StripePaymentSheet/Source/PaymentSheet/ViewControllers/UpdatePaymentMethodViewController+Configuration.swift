@@ -76,38 +76,3 @@ extension UpdatePaymentMethodViewController {
         }
     }
 }
-/*
-    func updateParams(paymentMethodElement: PaymentMethodElement) -> UpdatePaymentMethodOptions?{
-        let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
-
-        if let params = paymentMethodElement.updateParams(params: confirmParams),
-           let cardParams = params.paymentMethodParams.card,
-           let originalPaymentMethodCard = paymentMethod.card,
-           hasChangedFields(original: originalPaymentMethodCard, updated: cardParams) {
-            return .card(paymentMethodCardParams: cardParams)
-        }
-        return nil
-    }
-    func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
-        let cardBrandChanged = canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
-        return cardBrandChanged
-    }
-
-    func logCardBrandSelected(selectedCardBrand: STPCardBrand) {
-        // Send update metric if needed
-        let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: selectedCardBrand)
-        if preferredNetworkAPIValue != self.lastCardBrandLogSelectedEventSent {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: hostedSurface.analyticEvent(for: .cardBrandSelected),
-                                                                 params: ["selected_card_brand": preferredNetworkAPIValue,
-                                                                          "cbc_event_source": "edit", ])
-            self.lastCardBrandLogSelectedEventSent = preferredNetworkAPIValue
-        }
-    }*/
-// }
-        /*
-extension UpdatePaymentMethodViewModel {
-    enum UpdatePaymentMethodOptions {
-        case card(paymentMethodCardParams: STPPaymentMethodCardParams)
-    }
-}
-*/

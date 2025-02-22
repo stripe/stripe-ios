@@ -580,12 +580,10 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
                                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
-                                                                           isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId)
-        )
-        let editVc = UpdatePaymentMethodViewController(
-            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-            isTestMode: configuration.isTestMode,
-            configuration: updateConfig)
+                                                                           isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId))
+        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                       isTestMode: configuration.isTestMode,
+                                                       configuration: updateConfig)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }

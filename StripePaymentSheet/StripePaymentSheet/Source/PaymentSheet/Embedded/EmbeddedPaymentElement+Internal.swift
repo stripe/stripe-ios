@@ -170,12 +170,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                                                                               isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
-            )
-            let updateViewController = UpdatePaymentMethodViewController(
-                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                isTestMode: configuration.apiClient.isTestmode,
-                configuration: updateConfig)
+                                                                               isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod())
+            let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                                         isTestMode: configuration.apiClient.isTestmode,
+                                                                         configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
             presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
