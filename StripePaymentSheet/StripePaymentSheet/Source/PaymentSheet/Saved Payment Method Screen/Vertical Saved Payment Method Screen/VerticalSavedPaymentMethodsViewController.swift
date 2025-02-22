@@ -330,19 +330,17 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
-                                                           appearance: configuration.appearance,
-                                                           hostedSurface: .paymentSheet,
-                                                           cardBrandFilter: configuration.cardBrandFilter,
-                                                           canRemove: canRemovePaymentMethods,
-                                                           isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
-                                                           allowsSetAsDefaultPM: paymentMethodSetAsDefault,
-                                                           isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId)
-        )
-        let updateViewController = UpdatePaymentMethodViewController(
-                                                            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                            isTestMode: configuration.apiClient.isTestmode,
-                                                            viewModel: updateViewModel)
+        let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                           appearance: configuration.appearance,
+                                                                           hostedSurface: .paymentSheet,
+                                                                           cardBrandFilter: configuration.cardBrandFilter,
+                                                                           canRemove: canRemovePaymentMethods,
+                                                                           isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
+                                                                           allowsSetAsDefaultPM: paymentMethodSetAsDefault,
+                                                                           isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
+        let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                                     isTestMode: configuration.apiClient.isTestmode,
+                                                                     configuration: updateConfig)
         updateViewController.delegate = self
         self.updateViewController = updateViewController
         self.bottomSheetController?.pushContentViewController(updateViewController)

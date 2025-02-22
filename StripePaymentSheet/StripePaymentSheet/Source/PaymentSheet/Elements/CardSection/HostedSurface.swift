@@ -26,10 +26,8 @@ import Foundation
         switch (event, self) {
         case (.displayCardBrandDropdownIndicator, .paymentSheet):
             return .paymentSheetDisplayCardBrandDropdownIndicator
-        case (.openCardBrandDropdown, .paymentSheet):
-            return .paymentSheetOpenCardBrandDropdown
-        case (.closeCardBrandDropDown, .paymentSheet):
-            return .paymentSheetCloseCardBrandDropDown
+        case (.cardBrandSelected, .paymentSheet):
+            return .paymentSheetCardBrandSelected
         case (.openEditScreen, .paymentSheet):
             return .paymentSheetOpenEditScreen
         case (.updateCard, .paymentSheet):
@@ -40,10 +38,8 @@ import Foundation
             return .paymentSheetClosesEditScreen
         case (.displayCardBrandDropdownIndicator, .customerSheet):
             return .customerSheetDisplayCardBrandDropdownIndicator
-        case (.openCardBrandDropdown, .customerSheet):
-            return .customerSheetOpenCardBrandDropdown
-        case (.closeCardBrandDropDown, .customerSheet):
-            return .customerSheetCloseCardBrandDropDown
+        case (.cardBrandSelected, .customerSheet):
+            return .customerSheetCardBrandSelected
         case (.openEditScreen, .customerSheet):
             return .customerSheetOpenEditScreen
         case (.updateCard, .customerSheet):
@@ -58,8 +54,7 @@ import Foundation
     // Helper for mapping between PaymentSheet and CustomerSheet CBC events
     enum CardUpdateEvents {
         case displayCardBrandDropdownIndicator
-        case openCardBrandDropdown
-        case closeCardBrandDropDown
+        case cardBrandSelected
         case openEditScreen
         case updateCard
         case updateCardFailed
