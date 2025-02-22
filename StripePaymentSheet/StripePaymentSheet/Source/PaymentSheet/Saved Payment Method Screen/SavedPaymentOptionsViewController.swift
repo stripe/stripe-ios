@@ -671,16 +671,12 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: UpdatePaymentMethodParams) throws {
+                   updateParams: UpdatePaymentMethodParams) async throws {
         if let updateCardBrandParams = updateParams.updateCardBrandParams {
-            Task {
-                try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
-            }
+            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
         }
         if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
-            Task {
-                try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
-            }
+            try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
         }
         _ = viewController.bottomSheetController?.popContentViewController()
     }

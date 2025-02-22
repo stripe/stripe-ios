@@ -867,16 +867,12 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: UpdatePaymentMethodParams) {
+                   updateParams: UpdatePaymentMethodParams) async throws {
         if let updateCardBrandParams = updateParams.updateCardBrandParams {
-            Task {
-                try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
-            }
+            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
         }
         if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
-            Task {
-                try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
-            }
+            try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
         }
         // Update UI
         regenerateUI()

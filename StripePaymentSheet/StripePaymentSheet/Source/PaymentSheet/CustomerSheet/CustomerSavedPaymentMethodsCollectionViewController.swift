@@ -499,13 +499,11 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: UpdatePaymentMethodParams) throws {
+                   updateParams: UpdatePaymentMethodParams) async throws {
         guard let updateCardBrandParams = updateParams.updateCardBrandParams else {
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")
         }
-        Task {
-            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
-        }
+        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
