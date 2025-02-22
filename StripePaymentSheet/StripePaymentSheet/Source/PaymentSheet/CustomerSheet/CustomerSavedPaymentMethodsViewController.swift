@@ -26,6 +26,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         case noPaymentOptionAddingNewWithSetupIntent
         case noPaymentOptionAddingNewWithAttach
         case removeOnNonSavedPaymentMethod
+        case updatePaymentMethodFailed
     }
 
     // MARK: - Read-only Properties
@@ -433,6 +434,20 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: type)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                             self.csCompletion?(.selected(paymentOptionSelection))
+                        }
+                    }
+                    // if the sync default feature is enabled, set the selected payment method as default
+                    if paymentMethodSyncDefault, let defaultPaymentMethod = selectedPaymentOption.savedPaymentMethod, let customerId = defaultPaymentMethod.customerId {
+                        Task {
+                            do {
+                                _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: customerId)
+                                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
+                            } catch {
+                                self.error = error
+                                let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
+                                                                  error: Error.updatePaymentMethodFailed)
+                                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                            }
                         }
                     }
                 default:

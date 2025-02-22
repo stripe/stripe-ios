@@ -53,7 +53,8 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
                                                             elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON]) : ._testCardValue(),
-                                                            analyticsHelper: ._testValue()
+                                                            analyticsHelper: ._testValue(),
+                                                            defaultPaymentMethod: showDefaultPMBadge ? paymentMethods.first : nil
         )
         let bottomSheet: BottomSheetViewController
         if isEmbedded {

@@ -21,10 +21,14 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didSelectRemove(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
-    func didSelectUpdate(
+    func didSelectUpdateCardBrand(
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
+    func didSelectUpdateDefault(
+        viewController: SavedPaymentOptionsViewController,
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        customerId: String) async throws -> STPCustomer
     func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController)
 }
 
@@ -214,6 +218,16 @@ class SavedPaymentOptionsViewController: UIViewController {
             updateUI()
         }
     }
+    private(set) var defaultPaymentMethod: STPPaymentMethod? {
+        didSet {
+            collectionView.needsVerticalPaddingForBadge = hasDefault
+            collectionView.performBatchUpdates({
+                collectionView.reloadSections(IndexSet(integer: 0))
+                animateHeightChange { self.collectionView.updateLayout() }
+            })
+            updateUI()
+        }
+    }
     /// Whether or not there are any payment options we can show
     /// i.e. Are there any cells besides the Add cell?
     var hasPaymentOptions: Bool {
@@ -333,6 +347,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.intent = intent
         self.appearance = appearance
         self.elementsSession = elementsSession
+        if configuration.allowsSetAsDefaultPM {
+            self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
+        }
         self.cbcEligible = cbcEligible
         self.delegate = delegate
         self.analyticsHelper = analyticsHelper
@@ -377,7 +394,8 @@ class SavedPaymentOptionsViewController: UIViewController {
             customerID: configuration.customerID,
             showApplePay: configuration.showApplePay,
             showLink: configuration.showLink,
-            elementsSession: elementsSession
+            elementsSession: elementsSession,
+            defaultPaymentMethod: defaultPaymentMethod
         )
 
         collectionView.reloadData()
@@ -448,7 +466,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     private func isDefaultPaymentMethod(savedPaymentMethodId: String?) -> Bool {
-        guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() else { return false }
+        guard configuration.allowsSetAsDefaultPM, let savedPaymentMethodId, let defaultPaymentMethod else { return false }
         return savedPaymentMethodId == defaultPaymentMethod.stripeId
     }
 
@@ -456,10 +474,13 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
-    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, elementsSession: STPElementsSession?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, elementsSession: STPElementsSession?, defaultPaymentMethod: STPPaymentMethod?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
-        let selectedPaymentMethodOption = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
-
+        var defaultPaymentOption: CustomerPaymentOption?
+        if let defaultPaymentMethod {
+            defaultPaymentOption = .stripeId(defaultPaymentMethod.stripeId)
+        }
+        let selectedPaymentMethodOption = defaultPaymentOption ?? CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
             return Selection.saved(paymentMethod: paymentMethod)
@@ -546,7 +567,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         case .applePay:
             CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: elementsSession.customer?.customerSession.customer)
         case .saved(let paymentMethod):
             CustomerPaymentOption.setDefaultPaymentMethod(
                 .stripeId(paymentMethod.stripeId),
@@ -650,7 +671,24 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: STPPaymentMethodUpdateParams) async throws {
+                   updateParams: UpdatePaymentMethodParams) async throws {
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            if let updateCardBrandParams = updateParams.updateCardBrandParams {
+                group.addTask {
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                }
+            }
+            if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
+                group.addTask {
+                    try await self.updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                }
+            }
+            try await group.waitForAll()
+        }
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -659,7 +697,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         }
 
         let viewModel = viewModels[row]
-        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
+        let updatedPaymentMethod = try await delegate.didSelectUpdateCardBrand(viewController: self,
                                                     paymentMethodSelection: viewModel,
                                                     updateParams: updateParams)
 
@@ -670,7 +708,22 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
         collectionView.reloadData()
-        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    private func updateDefault(paymentMethod: STPPaymentMethod,
+                               customerId: String) async throws {
+        guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
+              let delegate = delegate
+        else {
+            stpAssertionFailure()
+            throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+        }
+
+        let viewModel = viewModels[row]
+        _ = try await delegate.didSelectUpdateDefault(viewController: self,
+                                                      paymentMethodSelection: viewModel,
+                                                      customerId: customerId)
+        defaultPaymentMethod = paymentMethod
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
