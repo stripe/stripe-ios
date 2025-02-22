@@ -879,9 +879,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
                     try await self.updateDefault(paymentMethod: paymentMethod, customerId: customerId)
                 }
             }
-            // Wait for all tasks to complete
-            for try await _ in group {
-            }
+            try await group.waitForAll()
         }
         // Update UI
         regenerateUI()

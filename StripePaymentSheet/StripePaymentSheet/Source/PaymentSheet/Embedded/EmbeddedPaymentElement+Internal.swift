@@ -216,11 +216,18 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod,
                    updateParams: UpdatePaymentMethodParams) async throws {
-        if let updateCardBrandParams = updateParams.updateCardBrandParams {
-            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
-        }
-        if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
-            try await updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            if let updateCardBrandParams = updateParams.updateCardBrandParams {
+                group.addTask {
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                }
+            }
+            if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
+                group.addTask {
+                    try await self.updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                }
+            }
+            try await group.waitForAll()
         }
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
