@@ -1,5 +1,5 @@
 {
-  "originHash" : "2ad13697f5d60ad400147e34535361f52e72d2f7a280df77bb3c3521cc5623bc",
+  "originHash" : "f0cd67c75fa30e4b30018ef0c98fc5bf83741605f1b6ab008517c847962a8c51",
   "pins" : [
     {
       "identity" : "capture-core-sp",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "5d0ae57d265cb5d7dcf255d93dd3421b5c825e46",
         "version" : "1.2.3"
+      }
+    },
+    {
+      "identity" : "financialconnectionslite",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mats-stripe/FinancialConnectionsLite",
+      "state" : {
+        "branch" : "master",
+        "revision" : "722dc11818f2a62b949cf06b51a454c55d617ebe"
       }
     },
     {
@@ -50,10 +59,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "a3f634d1a409c7979cabc0a71b3f26ffa9fc8af1",
-        "version" : "1.4.3"
+        "revision" : "b444594f79844b0d6d76d70fbfb3f7f71728f938",
+        "version" : "1.5.1"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
