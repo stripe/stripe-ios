@@ -121,7 +121,6 @@ class HostController {
         self.elementsSessionContext = elementsSessionContext
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
         analyticsClient.setAdditionalParameters(
-            linkAccountSessionClientSecret: clientSecret,
             publishableKey: publishableKey,
             stripeAccount: stripeAccount
         )
@@ -156,7 +155,7 @@ extension HostController: HostViewControllerDelegate {
         let flow = flowRouter.flow
         analyticsClientV1.log(
             analytic: FinancialConnectionsSheetFlowDetermined(
-                clientSecret: clientSecret,
+                linkAccountSessionId: synchronizePayload.manifest.id,
                 flow: flow,
                 killswitchActive: flowRouter.killswitchActive
             ),
