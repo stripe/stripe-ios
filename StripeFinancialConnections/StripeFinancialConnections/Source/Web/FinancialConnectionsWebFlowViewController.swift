@@ -176,7 +176,8 @@ extension FinancialConnectionsWebFlowViewController {
                         if let paymentMethod = returnUrl.extractLinkBankPaymentMethod() {
                             let instantDebitsLinkedBank = createInstantDebitsLinkedBank(
                                 from: returnUrl,
-                                with: paymentMethod
+                                with: paymentMethod,
+                                linkAccountSessionId: manifest.id
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
                         } else {
@@ -212,7 +213,8 @@ extension FinancialConnectionsWebFlowViewController {
 
     private func createInstantDebitsLinkedBank(
         from url: URL,
-        with paymentMethod: LinkBankPaymentMethod
+        with paymentMethod: LinkBankPaymentMethod,
+        linkAccountSessionId: String
     ) -> InstantDebitsLinkedBank {
         return InstantDebitsLinkedBank(
             paymentMethod: paymentMethod,
@@ -221,7 +223,8 @@ extension FinancialConnectionsWebFlowViewController {
                 .replacingOccurrences(of: "+", with: " "),
             last4: url.extractValue(forKey: "last4"),
             linkMode: elementsSessionContext?.linkMode,
-            incentiveEligible: url.extractValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false
+            incentiveEligible: url.extractValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false,
+            linkAccountSessionId: linkAccountSessionId
         )
     }
 

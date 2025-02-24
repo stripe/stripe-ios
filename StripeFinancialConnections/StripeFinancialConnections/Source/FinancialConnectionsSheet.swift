@@ -230,9 +230,22 @@ final public class FinancialConnectionsSheet {
     ) {
         // Overwrite completion closure to retain self until called
         let completion: (HostControllerResult) -> Void = { result in
+            let linkAccountSessionId: String? = {
+                guard case .completed(let completedResult) = result else {
+                    return nil
+                }
+
+                switch completedResult {
+                case .financialConnections(let session):
+                    return session.id
+                case .instantDebits(let linkedBank):
+                    return linkedBank.linkAccountSessionId
+                }
+            }()
+
             self.analyticsClient.log(
                 analytic: FinancialConnectionsSheetCompletionAnalytic.make(
-                    clientSecret: self.financialConnectionsSessionClientSecret,
+                    linkAccountSessionId: linkAccountSessionId,
                     result: result
                 ),
                 apiClient: self.apiClient
@@ -286,7 +299,8 @@ final public class FinancialConnectionsSheet {
 
         analyticsClient.log(
             analytic: FinancialConnectionsSheetPresentedAnalytic(
-                clientSecret: self.financialConnectionsSessionClientSecret
+                // We don't have the session ID yet.
+                linkAccountSessionId: nil
             ),
             apiClient: apiClient
         )
