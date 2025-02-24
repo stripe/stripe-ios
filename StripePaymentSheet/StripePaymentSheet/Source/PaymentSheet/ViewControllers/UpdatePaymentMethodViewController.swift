@@ -40,6 +40,18 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     weak var delegate: UpdatePaymentMethodViewControllerDelegate?
 
+    var updateParams: UpdatePaymentMethodOptions? {
+        let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
+
+        if let params = paymentMethodForm.updateParams(params: confirmParams),
+           let cardParams = params.paymentMethodParams.card,
+           let originalPaymentMethodCard = configuration.paymentMethod.card,
+           hasChangedFields(original: originalPaymentMethodCard, updated: cardParams) {
+            return .card(paymentMethodCardParams: cardParams)
+        }
+        return nil
+    }
+
     // MARK: Navigation bar
     internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
@@ -81,7 +93,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: configuration.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
-            if let updatePaymentMethodOptions = updateParams(paymentMethodElement: paymentMethodForm),
+            if let updatePaymentMethodOptions = updateParams,
                case .card(let cardUpdateParams) = updatePaymentMethodOptions {
                 Task {
                     await self.updateCard(paymentMethodCardParams: cardUpdateParams)
@@ -107,14 +119,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var paymentMethodForm: PaymentMethodElement = {
-        let form = formFactory.makePaymentMethodForm(configuration: configuration, errorStateCallback: errorStateCallback)
+        let form = formFactory.makePaymentMethodForm(configuration: configuration)
         form.delegate = self
         return form
     }()
-
-    private func errorStateCallback(isInErrorState: Bool) {
-        self.errorState = isInErrorState
-    }
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
         guard configuration.canSetAsDefaultPM,
@@ -128,7 +136,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var footnoteLabel: UITextView? = {
-        guard !errorState else {
+        guard paymentMethodForm.validationState.isValid else {
             return nil
         }
         let label = ElementsUI.makeSmallFootnote(theme: configuration.appearance.asElementsTheme)
@@ -226,21 +234,9 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     private func updateButtonState() {
-        let params = updateParams(paymentMethodElement: paymentMethodForm)
-        updateButton.update(state: params != nil || hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
+        updateButton.update(state: updateParams != nil || hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
     }
 
-    func updateParams(paymentMethodElement: PaymentMethodElement) -> UpdatePaymentMethodOptions?{
-        let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
-
-        if let params = paymentMethodElement.updateParams(params: confirmParams),
-           let cardParams = params.paymentMethodParams.card,
-           let originalPaymentMethodCard = configuration.paymentMethod.card,
-           hasChangedFields(original: originalPaymentMethodCard, updated: cardParams) {
-            return .card(paymentMethodCardParams: cardParams)
-        }
-        return nil
-    }
     func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
         let cardBrandChanged = configuration.canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
         return cardBrandChanged

@@ -5,16 +5,13 @@
 //  Created by Joyce Qin on 11/20/24.
 //
 
-// Communicates back to caller if the initial state of the form is in an error state
-typealias ErrorStateCallback = (Bool) -> Void
-
 class SavedPaymentMethodFormFactory {
     var lastCardBrandLogSelectedEventSent: String?
 
-    func makePaymentMethodForm(configuration: UpdatePaymentMethodViewController.Configuration, errorStateCallback: ErrorStateCallback) -> PaymentMethodElement {
+    func makePaymentMethodForm(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
         switch configuration.paymentMethod.type {
         case .card:
-            return makeCard(configuration: configuration, errorStateCallback: errorStateCallback)
+            return makeCard(configuration: configuration)
         case .USBankAccount:
             return makeUSBankAccount(configuration: configuration)
         case .SEPADebit:

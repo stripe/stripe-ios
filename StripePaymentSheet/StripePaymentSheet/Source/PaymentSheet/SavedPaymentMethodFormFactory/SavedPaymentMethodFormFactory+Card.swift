@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 extension SavedPaymentMethodFormFactory {
-    func makeCard(configuration: UpdatePaymentMethodViewController.Configuration, errorStateCallback: ErrorStateCallback) -> PaymentMethodElement {
+    func makeCard(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
         let cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>? = {
             guard configuration.isCBCEligible else {
                 return nil
@@ -74,9 +74,6 @@ extension SavedPaymentMethodFormFactory {
             let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: configuration.appearance.asElementsTheme)
             section.disableAppearance()
 
-            // This is a bit of hack, but we need some way to determine if the form's initial state
-            // is valid to decide whether or not to hide/show a footnote.
-            errorStateCallback(!expiryDateElement.validationState.isValid)
             return section
         }()
         return cardSection
