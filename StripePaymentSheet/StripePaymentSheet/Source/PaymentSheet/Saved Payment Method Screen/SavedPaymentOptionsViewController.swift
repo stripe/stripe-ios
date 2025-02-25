@@ -678,7 +678,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                     try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
                 }
             }
-            if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
+            if updateParams.setAsDefault {
                 group.addTask {
                     try await self.updateDefault(paymentMethod: paymentMethod)
                 }
