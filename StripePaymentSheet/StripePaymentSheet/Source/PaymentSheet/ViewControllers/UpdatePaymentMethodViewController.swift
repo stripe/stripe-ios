@@ -16,8 +16,13 @@ protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod,
-                   updateParams: STPPaymentMethodUpdateParams) async throws
+                   updateParams: UpdatePaymentMethodParams) async throws
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
+}
+
+struct UpdatePaymentMethodParams {
+    let updateCardBrandParams: STPPaymentMethodUpdateParams?
+    let setAsDefault: Bool
 }
 
 /// For internal SDK use only
@@ -94,14 +99,15 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: configuration.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
-            if let updatePaymentMethodOptions = updateParams,
-               case .card(let cardUpdateParams) = updatePaymentMethodOptions {
-                Task {
-                    await self.updateCard(paymentMethodCardParams: cardUpdateParams)
+            if updateParams != nil || hasChangedDefaultPaymentMethodCheckbox {
+                var paymentMethodCardParams: STPPaymentMethodCardParams?
+                if let updatePaymentMethodOptions = updateParams,
+                   case .card(let cardUpdateParams) = updatePaymentMethodOptions {
+                    paymentMethodCardParams = cardUpdateParams
                 }
-            }
-            if hasChangedDefaultPaymentMethodCheckbox {
-                // TODO: update default payment method in the back end
+                Task {
+                    await self.update(paymentMethodCardParams: paymentMethodCardParams)
+                }
             }
         })
         button.isHidden = !configuration.canEdit
@@ -205,23 +211,36 @@ final class UpdatePaymentMethodViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    private func updateCard(paymentMethodCardParams: STPPaymentMethodCardParams) async {
-        guard let delegate = delegate else {
+    private func update(paymentMethodCardParams: STPPaymentMethodCardParams?) async {
+        guard let delegate else {
             return
         }
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
 
-        // Create the update card params
-        let updateParams = STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)
-
         var analyticsParams: [String: Any] = [:]
-        if let selectedBrand = paymentMethodCardParams.networks?.preferred {
-            analyticsParams["selected_card_brand"] = selectedBrand
-        }
 
+        // Create the update card brand params
+        let updateCardBrandParams: STPPaymentMethodUpdateParams? = {
+            guard let paymentMethodCardParams else {
+                return nil
+            }
+            if let selectedBrand = paymentMethodCardParams.networks?.preferred {
+                analyticsParams["selected_card_brand"] = selectedBrand
+            }
+            return STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)
+        }()
+        let setAsDefault = {
+            guard hasChangedDefaultPaymentMethodCheckbox,
+                  let checkbox = setAsDefaultCheckbox else {
+                return false
+            }
+            analyticsParams["set_as_default"] = checkbox.isSelected
+            return checkbox.isSelected
+        }()
+        let updatePaymentMethodParams = UpdatePaymentMethodParams(updateCardBrandParams: updateCardBrandParams, setAsDefault: setAsDefault)
         do {
-            try await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod, updateParams: updateParams)
+            try await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod, updateParams: updatePaymentMethodParams)
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
                                                                  params: analyticsParams)
         } catch {
@@ -231,6 +250,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
                                                                  error: error,
                                                                  params: analyticsParams)
         }
+        updateButton.update(state: .disabled)
         view.isUserInteractionEnabled = true
     }
 

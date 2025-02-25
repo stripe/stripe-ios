@@ -388,6 +388,7 @@ extension RowButton {
         defaultBadge.textColor = appearance.colors.textSecondary
         defaultBadge.adjustsFontForContentSizeCategory = true
         defaultBadge.text = badgeText
+//        defaultBadge.accessibilityIdentifier = badgeText
         return defaultBadge
     }
 
@@ -473,7 +474,12 @@ extension RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
         let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
-        button.accessibilityHelperView.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+        button.accessibilityHelperView.accessibilityLabel = {
+            if let badgeText {
+                return (paymentMethod.paymentSheetAccessibilityLabel ?? "") + ", \(badgeText)"
+            }
+            return paymentMethod.paymentSheetAccessibilityLabel
+        }()
         return button
     }
 }

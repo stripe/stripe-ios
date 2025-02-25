@@ -185,7 +185,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            defaultPaymentMethod: defaultPaymentMethod
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
@@ -212,20 +213,42 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod,
-                   updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
-        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-
-        // Update savedPaymentMethods
-        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
-            self.savedPaymentMethods[row] = updatedPaymentMethod
+                   updateParams: UpdatePaymentMethodParams) async throws {
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            if let updateCardBrandParams = updateParams.updateCardBrandParams {
+                group.addTask {
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                }
+            }
+            if updateParams.setAsDefault {
+                group.addTask {
+                    try await self.updateDefault(paymentMethod: paymentMethod)
+                }
+            }
+            try await group.waitForAll()
         }
-
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
+    }
+
+    private func updateCardBrand(paymentMethod: StripePayments.STPPaymentMethod,
+                                 updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
+        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+
+        // Update savedPaymentMethods
+        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+            self.savedPaymentMethods[row] = updatedPaymentMethod
+        }
+    }
+
+    private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async throws {
+        guard let customerId = paymentMethod.customerId else { throw PaymentSheetError.unknown(debugDescription: "Could not update default payment method: customerId is nil") }
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
+        defaultPaymentMethod = paymentMethod
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
@@ -249,9 +272,12 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         viewController: VerticalSavedPaymentMethodsViewController,
         with selectedPaymentMethod: STPPaymentMethod?,
         latestPaymentMethods: [STPPaymentMethod],
-        didTapToDismiss: Bool
+        didTapToDismiss: Bool,
+        defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.savedPaymentMethods = latestPaymentMethods
+        // Update our default payment method to be the latest from the manage screen in case of update
+        self.defaultPaymentMethod = defaultPaymentMethod
         let accessoryType = getAccessoryButton(
             savedPaymentMethods: latestPaymentMethods
         )

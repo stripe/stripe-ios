@@ -101,6 +101,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     /// Variable to decide we should collect CVC
     var isCVCRecollectionEnabled: Bool
 
+    var defaultPaymentMethod: STPPaymentMethod?
+
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
@@ -156,6 +158,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
+        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+            self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
+        }
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
@@ -625,7 +630,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            defaultPaymentMethod: defaultPaymentMethod
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
@@ -657,10 +663,13 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
         viewController: VerticalSavedPaymentMethodsViewController,
         with selectedPaymentMethod: STPPaymentMethod?,
         latestPaymentMethods: [STPPaymentMethod],
-        didTapToDismiss: Bool
+        didTapToDismiss: Bool,
+        defaultPaymentMethod: STPPaymentMethod?
     ) {
         // Update our list of saved payment methods to be the latest from the manage screen in case of updates/removals
         self.savedPaymentMethods = latestPaymentMethods
+        // Update our default payment method to be the latest from the manage screen in case of update
+        self.defaultPaymentMethod = defaultPaymentMethod
         var selection: RowButtonType?
         if let selectedPaymentMethod {
             selection = .saved(paymentMethod: selectedPaymentMethod)
@@ -854,7 +863,28 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
-    func didUpdate(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
+                   paymentMethod: STPPaymentMethod,
+                   updateParams: UpdatePaymentMethodParams) async throws {
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            if let updateCardBrandParams = updateParams.updateCardBrandParams {
+                group.addTask {
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                }
+            }
+            if updateParams.setAsDefault {
+                group.addTask {
+                    try await self.updateDefault(paymentMethod: paymentMethod)
+                }
+            }
+            try await group.waitForAll()
+        }
+        // Update UI
+        regenerateUI()
+        _ = viewController.bottomSheetController?.popContentViewController()
+    }
+
+    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
         // Update the payment method
         let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
@@ -862,10 +892,12 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
+    }
 
-        // Update UI
-        regenerateUI()
-        _ = viewController.bottomSheetController?.popContentViewController()
+    private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
+        guard let customerId = paymentMethod.customerId else { throw PaymentSheetError.unknown(debugDescription: "Could not update default payment method: customerId is nil") }
+        // Update the payment method
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
