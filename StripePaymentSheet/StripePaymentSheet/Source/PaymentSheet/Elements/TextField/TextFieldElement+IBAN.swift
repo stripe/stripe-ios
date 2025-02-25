@@ -196,6 +196,11 @@ extension TextFieldElement {
         func makeDisplayText(for text: String) -> NSAttributedString {
             return NSAttributedString(string: lastFourFormatted)
         }
+
+        func validate(text: String, isOptional: Bool) -> ValidationState {
+            stpAssert(!isEditable, "Validation assumes that the field is read-only")
+            return !lastFour.isEmpty ? .valid : .invalid(Error.empty)
+        }
     }
 }
 

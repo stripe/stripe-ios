@@ -24,7 +24,7 @@ final class PaymentSheetAnalyticsHelper {
         case flowController
         case complete
         case embedded
-        
+
         var analyticsValue: String {
             switch self {
             case .flowController:
@@ -126,7 +126,7 @@ final class PaymentSheetAnalyticsHelper {
             "selected_lpm": defaultPaymentMethodAnalyticsValue,
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
-            "integration_shape": integrationShape.analyticsValue
+            "integration_shape": integrationShape.analyticsValue,
         ]
         let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         if linkEnabled {
@@ -244,7 +244,14 @@ final class PaymentSheetAnalyticsHelper {
             )
         }
     }
-
+    var lastCardBrandSelected: STPCardBrand?
+    func logCardBrandSelected(hostedSurface: HostedSurface, cardBrand: STPCardBrand) {
+        if lastCardBrandSelected != cardBrand {
+            lastCardBrandSelected = cardBrand
+            let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: cardBrand), "cbc_event_source": "add"]
+            log(event: hostedSurface.analyticEvent(for: .cardBrandSelected), params: params)
+        }
+    }
     /// Used to ensure we only send one `mc_form_completed` event per `mc_form_shown` to avoid spamming.
     var didSendPaymentSheetFormCompletedEvent: Bool = false
     /// Used because it is possible for logFormCompleted to be called before logFormShown when switching payment methods
@@ -334,7 +341,7 @@ final class PaymentSheetAnalyticsHelper {
             linkUI: paymentOption.linkUIAnalyticsValue
         )
     }
-    
+
     func logEmbeddedUpdateStarted() {
         stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
         log(event: .mcUpdateStartedEmbedded)
@@ -342,7 +349,7 @@ final class PaymentSheetAnalyticsHelper {
 
     func logEmbeddedUpdateFinished(result: EmbeddedPaymentElement.UpdateResult, duration: TimeInterval) {
         stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
-        
+
         let error: Error? = {
             switch result {
             case .failed(let error):
@@ -472,7 +479,7 @@ extension EmbeddedPaymentElement.UpdateResult {
             return "succeeded"
         case .canceled:
             return "canceled"
-        case .failed(_):
+        case .failed:
             return "failed"
         }
     }
