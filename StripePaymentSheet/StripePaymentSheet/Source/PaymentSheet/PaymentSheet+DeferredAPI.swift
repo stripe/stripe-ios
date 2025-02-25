@@ -84,7 +84,7 @@ extension PaymentSheet {
                     } else {
                         // 4b. Server-side confirmation
                         try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
-                        setAsDefaultErrorOnSSC(testMode: configuration.apiClient.isTestmode, confirmType: confirmType)
+                        setAsDefaultErrorOnSSC(testMode: configuration.apiClient.isTestmode, allowsSetAsDefaultPM: allowsSetAsDefaultPM)
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
@@ -113,7 +113,7 @@ extension PaymentSheet {
                     } else {
                         // 4b. Server-side confirmation
                         try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
-                        setAsDefaultErrorOnSSC(testMode: configuration.apiClient.isTestmode, confirmType: confirmType)
+                        setAsDefaultErrorOnSSC(testMode: configuration.apiClient.isTestmode, allowsSetAsDefaultPM: allowsSetAsDefaultPM)
                         paymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,
@@ -170,11 +170,8 @@ extension PaymentSheet {
         return paymentUserAgentValues
     }
 
-    private static func setAsDefaultErrorOnSSC(testMode: Bool, confirmType: ConfirmPaymentMethodType) {
-        guard testMode else { return }
-        if case let .new(_, _, _, _, shouldSetAsDefaultPM) = confirmType,
-           shouldSetAsDefaultPM ?? false {
-            assertionFailure("Setting a payment method as default with server-side confirmation is not supported")
-        }
+    private static func setAsDefaultErrorOnSSC(testMode: Bool, allowsSetAsDefaultPM: Bool) {
+        guard testMode, allowsSetAsDefaultPM else { return }
+        assertionFailure("The set as default feature with server-side confirmation is not supported.")
     }
 }
