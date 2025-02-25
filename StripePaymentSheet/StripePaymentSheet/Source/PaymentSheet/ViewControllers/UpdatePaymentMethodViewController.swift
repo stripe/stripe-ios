@@ -27,7 +27,8 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private let isTestMode: Bool
 
     private var hasChangedDefaultPaymentMethodCheckbox: Bool = false
-    private var errorState: Bool = false
+
+    private var lastCardBrandLogSelectedEventSent: String?
 
     private let configuration: UpdatePaymentMethodViewController.Configuration
 
@@ -241,6 +242,21 @@ final class UpdatePaymentMethodViewController: UIViewController {
         let cardBrandChanged = configuration.canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
         return cardBrandChanged
     }
+
+    func logCardBrandChangedIfNeeded() {
+        let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
+        guard let params = paymentMethodForm.updateParams(params: confirmParams),
+              let cardBrand = params.paymentMethodParams.card?.networks?.preferred?.toCardBrand else {
+            return
+        }
+        let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+        if self.lastCardBrandLogSelectedEventSent != preferredNetworkAPIValue {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .cardBrandSelected),
+                                                                 params: ["selected_card_brand": preferredNetworkAPIValue,
+                                                                          "cbc_event_source": "edit", ])
+            self.lastCardBrandLogSelectedEventSent = preferredNetworkAPIValue
+        }
+    }
 }
 
 extension UpdatePaymentMethodViewController {
@@ -290,6 +306,7 @@ extension UpdatePaymentMethodViewController: ElementDelegate {
         switch configuration.paymentMethod.type {
         case .card:
             updateButtonState()
+            logCardBrandChangedIfNeeded()
         default:
             break
         }

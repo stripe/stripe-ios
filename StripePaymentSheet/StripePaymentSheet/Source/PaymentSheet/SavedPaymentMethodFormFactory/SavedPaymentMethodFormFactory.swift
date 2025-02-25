@@ -6,8 +6,6 @@
 //
 
 class SavedPaymentMethodFormFactory {
-    var lastCardBrandLogSelectedEventSent: String?
-
     func makePaymentMethodForm(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
         switch configuration.paymentMethod.type {
         case .card:

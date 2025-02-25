@@ -38,14 +38,6 @@ extension SavedPaymentMethodFormFactory {
                 let cardBrand = cardBrands[field.selectedIndex]
                 let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
                 params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
-
-                // Send update metric if needed
-                if preferredNetworkAPIValue != self.lastCardBrandLogSelectedEventSent {
-                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .cardBrandSelected),
-                                                                         params: ["selected_card_brand": preferredNetworkAPIValue,
-                                                                                  "cbc_event_source": "edit", ])
-                    self.lastCardBrandLogSelectedEventSent = preferredNetworkAPIValue
-                }
                 return params
             }
             return wrappedElement
