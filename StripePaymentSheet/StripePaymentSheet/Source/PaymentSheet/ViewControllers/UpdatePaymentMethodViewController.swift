@@ -136,11 +136,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
               PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
                   configuration.paymentMethod.type == $0
               }) else { return nil }
-        return CheckboxElement(theme: configuration.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: configuration.isDefault) { [weak self] isSelected in
-            self?.errorLabel.isHidden = true
+        let setAsDefaultCheckbox = CheckboxElement(theme: configuration.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: configuration.isDefault) { [weak self] isSelected in
             self?.hasChangedDefaultPaymentMethodCheckbox = self?.configuration.isDefault != isSelected
             self?.updateButtonState()
         }
+        setAsDefaultCheckbox.delegate = self
+        return setAsDefaultCheckbox
     }()
 
     private lazy var footnoteLabel: UITextView? = {
