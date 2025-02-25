@@ -18,18 +18,14 @@ extension DropdownFieldElement {
                                                         theme: ElementsAppearance = .default,
                                                         includePlaceholder: Bool = true,
                                                         maxWidth: CGFloat? = nil,
-                                                        hasPadding: Bool = true,
-                                                        didPresent: DropdownFieldElement.DidPresent? = nil,
-                                                        didTapClose: DropdownFieldElement.DidTapClose? = nil) -> DropdownFieldElement {
+                                                        hasPadding: Bool = true) -> DropdownFieldElement {
         let dropDown = DropdownFieldElement(
             items: items(from: cardBrands, disallowedCardBrands: disallowedCardBrands, theme: theme, includePlaceholder: includePlaceholder, maxWidth: maxWidth),
             defaultIndex: 0,
             label: nil,
             theme: theme,
             hasPadding: hasPadding,
-            isOptional: true,
-            didPresent: didPresent,
-            didTapClose: didTapClose
+            isOptional: true
         )
         dropDown.view.accessibilityIdentifier = "Card Brand Dropdown"
         return dropDown
@@ -45,7 +41,7 @@ extension DropdownFieldElement {
         )
 
         let cardBrandItems = cardBrands.sorted().map { $0.cardBrandItem(theme: theme, isDisallowed: disallowedCardBrands.contains($0), maxWidth: maxWidth) }
-        
+
         return includePlaceholder ? [placeholderItem] + cardBrandItems : cardBrandItems
     }
 }

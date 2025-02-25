@@ -438,16 +438,15 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             stpAssertionFailure()
             return
         }
-        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
-                                                           appearance: appearance,
-                                                           hostedSurface: .customerSheet,
-                                                           cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
-                                                           canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                                           isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
-        let editVc = UpdatePaymentMethodViewController(
-                                              removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
-                                              isTestMode: configuration.isTestMode,
-                                              viewModel: updateViewModel)
+        let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                           appearance: appearance,
+                                                                           hostedSurface: .customerSheet,
+                                                                           cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
+                                                                           canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+                                                                           isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
+        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+                                                       isTestMode: configuration.isTestMode,
+                                                       configuration: updateConfig)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
