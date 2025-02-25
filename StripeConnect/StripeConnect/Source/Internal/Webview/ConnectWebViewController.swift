@@ -45,7 +45,7 @@ class ConnectWebViewController: UIViewController {
     /// Popups with an allowed host will open in a PopupViewController and all others will open in a SafariVC.
     /// Camera permission requests from allowed hosts use the app's camera permissions while all other requests will explicitly ask for user permission.
     let allowedHosts: [String]
-    
+
     init(configuration: WKWebViewConfiguration,
          analyticsClient: ComponentAnalyticsClient,
          allowedHosts: [String],
@@ -60,7 +60,7 @@ class ConnectWebViewController: UIViewController {
         configuration.applicationNameForUserAgent = "- stripe-ios/\(sdkVersion ?? "")"
         webView = .init(frame: .zero, configuration: configuration)
         webView.allowsLinkPreview = false
-        
+
         self.allowedHosts = allowedHosts
         super.init(nibName: nil, bundle: nil)
 
@@ -234,6 +234,10 @@ extension ConnectWebViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
+        webViewDidFailNavigation(withError: error)
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
         webViewDidFailNavigation(withError: error)
     }
 

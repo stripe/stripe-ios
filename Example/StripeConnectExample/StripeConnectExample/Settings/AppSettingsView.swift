@@ -18,7 +18,6 @@ struct AppSettingsView: View {
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
     @State var onboardingSettings = AppSettings.shared.onboardingSettings
-    @State var presentationSettings = AppSettings.shared.presentationSettings
 
     var isCustomEndpointValid: Bool {
         URL(string: serverURLString)?.isValid == true
@@ -105,14 +104,6 @@ struct AppSettingsView: View {
                     }
                 } header: {
                     Text("Component Settings")
-                }
-
-                NavigationLink {
-                    PresentationSettingsView(presentationSettings: $presentationSettings)
-                } label: {
-                    Text("View Controller Options")
-                        .font(.body)
-                        .foregroundColor(.primary)
                 }
 
                 Section {
