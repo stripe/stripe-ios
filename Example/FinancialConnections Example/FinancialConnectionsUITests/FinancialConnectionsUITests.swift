@@ -297,8 +297,10 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         // (1) bank is NOT under maintenance
         if prepaneContinueButton.waitForExistence(timeout: 60.0) {
-            prepaneContinueButton.tap()
-
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                prepaneContinueButton.tap()
+            }
+            
             // check that the WebView loaded
             var predicateString = "label CONTAINS '\(institutionName)'"
             if institutionName == capitalOneBankName {
