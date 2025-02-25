@@ -502,6 +502,39 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Cash App Pay"].waitForExistence(timeout: 10))
     }
 
+    func testPaymentMethodRemoveLast() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .embedded
+        settings.customerMode = .new
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodRemoveLast = .disabled
+        settings.applePayEnabled = .on
+        settings.integrationType = .deferred_csc
+
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        app.buttons["Card"].waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
+        try! fillCardData(app, postalEnabled: true, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+
+        // Checkout
+        XCTAssertTrue(app.buttons["Continue"].isEnabled)
+        app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistenceAndTap(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+
+        // Reload after confirmation and re-present and ensure 'edit' does not exist
+        XCTAssertTrue(app.buttons["Reload"].waitForExistenceAndTap(timeout: 10))
+        XCTAssertTrue(app.buttons["Present embedded payment element"].waitForExistenceAndTap(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+        XCTAssertFalse(app.buttons["Edit"].waitForExistence(timeout: 3))
+    }
+
     func testConfirmationWithUserButton_savedPaymentMethod() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .embedded

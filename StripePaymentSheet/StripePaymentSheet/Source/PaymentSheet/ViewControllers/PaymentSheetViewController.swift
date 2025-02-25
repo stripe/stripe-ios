@@ -173,7 +173,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
-                allowsRemovalOfLastSavedPaymentMethod: PaymentSheetViewController.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: configuration),
+                allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
                 allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet
             ),
@@ -487,18 +487,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     }
                 }
             }
-        }
-    }
-}
-// MARK: - Helpers
-extension PaymentSheetViewController {
-    static func allowsRemovalOfLastPaymentMethod(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) -> Bool {
-        if !configuration.allowsRemovalOfLastSavedPaymentMethod {
-            // Merchant has set local configuration to false, so honor it.
-            return false
-        } else {
-            // Merchant is using client side default, so defer to CustomerSession's value
-            return elementsSession.paymentMethodRemoveLastForPaymentSheet
         }
     }
 }

@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP)@_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
@@ -142,7 +142,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
-        XCTAssertTrue(elementsSession.paymentMethodRemoveLastForPaymentSheet)
+        XCTAssertTrue(elementsSession.customer!.customerSession.mobilePaymentElementComponent.features!.paymentMethodRemoveLast)
         XCTAssertEqual(.paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, savePaymentMethodConsentBehavior)
     }
     func testSPMConsentAndRemoval_pmsD_pmrE() {
@@ -223,7 +223,17 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
-        XCTAssertTrue(elementsSession.paymentMethodRemoveLastForPaymentSheet)
+        XCTAssertTrue(elementsSession.customer!.customerSession.mobilePaymentElementComponent.features!.paymentMethodRemoveLast)
+
+        // Test that local config can override behavior
+        var configuration1 = PaymentSheet.Configuration()
+        configuration1.allowsRemovalOfLastSavedPaymentMethod = false
+        XCTAssertFalse(elementsSession.paymentMethodRemoveLast(configuration: configuration1))
+
+        // Test that local config works in w/ customerSession
+        var configuration2 = PaymentSheet.Configuration()
+        configuration2.allowsRemovalOfLastSavedPaymentMethod = true
+        XCTAssertTrue(elementsSession.paymentMethodRemoveLast(configuration: configuration2))
     }
     func testPaymentMethodRemoveLast_disabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
@@ -243,7 +253,17 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
-        XCTAssertFalse(elementsSession.paymentMethodRemoveLastForPaymentSheet)
+        XCTAssertFalse(elementsSession.customer!.customerSession.mobilePaymentElementComponent.features!.paymentMethodRemoveLast)
+
+        // Test that local config can override behavior
+        var configuration1 = PaymentSheet.Configuration()
+        configuration1.allowsRemovalOfLastSavedPaymentMethod = false
+        XCTAssertFalse(elementsSession.paymentMethodRemoveLast(configuration: configuration1))
+
+        // Test that local config works in w/ customerSession
+        var configuration2 = PaymentSheet.Configuration()
+        configuration2.allowsRemovalOfLastSavedPaymentMethod = true
+        XCTAssertFalse(elementsSession.paymentMethodRemoveLast(configuration: configuration2))
     }
     func testSPMConsentAndRemoval_invalidComponent() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
