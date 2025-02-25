@@ -323,6 +323,22 @@ private extension ConnectComponentWebViewController {
         webView.backgroundColor = appearance.colors.background
         webView.isOpaque = webView.backgroundColor == nil
         activityIndicator.tintColor = appearance.colors.loadingIndicatorColor
+
+        let navAppearance = UINavigationBarAppearance()
+        navAppearance.configureWithOpaqueBackground()
+        if let backgroundColor = appearance.colors.background {
+            navAppearance.backgroundColor = backgroundColor
+        }
+        var titleAttributes: [NSAttributedString.Key: Any]  = [:]
+        if let textColor = appearance.colors.text {
+            titleAttributes[.foregroundColor] = textColor
+        }
+        if let font = appearance.typography.font {
+            titleAttributes[.font] = font
+        }
+        navAppearance.titleTextAttributes = titleAttributes
+        self.navigationController?.navigationBar.standardAppearance = navAppearance
+        self.navigationController?.navigationBar.scrollEdgeAppearance = navAppearance
     }
 
     func didFailLoad(error: Error) {
