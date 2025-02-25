@@ -38,12 +38,16 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     private var didFailLoadWithError: (Error) -> Void
 
+    private var pageLoaded: Bool = false
+
     let activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator()
         activityIndicator.hidesWhenStopped = true
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
+
+    var errorScreen: WebViewErrorScreen?
 
     init<InitProps: Encodable>(
         componentManager: EmbeddedComponentManager,
@@ -171,6 +175,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     override func webViewDidFailNavigation(withError error: any Error) {
         super.webViewDidFailNavigation(withError: error)
 
+        showErrorScreenIfNeeded()
+
         didFailLoad(error: error)
         analyticsClient.log(event: PageLoadErrorEvent(metadata: .init(
             error: error,
@@ -193,6 +199,27 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         }
 
         return await super.webView(webView, decidePolicyFor: navigationResponse)
+    }
+
+    // If the component fails to load entirely we show a native error screen
+    // if the component has loaded then it's the component's responsibility to display the error.
+    func showErrorScreenIfNeeded() {
+        guard !pageLoaded else { return }
+        let errorScreen = WebViewErrorScreen(title: STPLocalizedString(
+            "Something went wrong.",
+            "Title for error message when component fails to load"
+        ), subtitle: STPLocalizedString(
+            "Please check your connection or try again later.",
+            "Subtitle for error message when component fails to load indicating there may be an issue with the internet connection."
+        ), appearance: componentManager.appearance)
+        self.view.addSubview(errorScreen)
+        errorScreen.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            errorScreen.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            errorScreen.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            errorScreen.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+        ])
+        self.errorScreen = errorScreen
     }
 }
 
@@ -247,6 +274,7 @@ extension ConnectComponentWebViewController {
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: appearance, traitCollection: traitCollection))))
         updateColors(appearance: appearance)
+        errorScreen?.updateAppearance(appearance)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -288,8 +316,12 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler(analyticsClient: analyticsClient) { [analyticsClient] payload in
-            analyticsClient.pageViewId = payload.pageViewId
+        addMessageHandler(PageDidLoadMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
+            guard let self else { return }
+            self.pageLoaded = true
+            errorScreen?.removeFromSuperview()
+            errorScreen = nil
+            self.analyticsClient.pageViewId = payload.pageViewId
         })
         addMessageHandler(AccountSessionClaimedMessageHandler(analyticsClient: analyticsClient) { [analyticsClient] payload in
             analyticsClient.merchantId = payload.merchantId
@@ -320,6 +352,7 @@ private extension ConnectComponentWebViewController {
     }
 
     func updateColors(appearance: Appearance) {
+        self.view.backgroundColor = appearance.colors.background
         webView.backgroundColor = appearance.colors.background
         webView.isOpaque = webView.backgroundColor == nil
         activityIndicator.tintColor = appearance.colors.loadingIndicatorColor

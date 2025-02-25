@@ -192,6 +192,7 @@ modules:
 - podspec: StripeConnect.podspec
   scheme: StripeConnect
   framework_name: StripeConnect
+  localization_dir: StripeConnect/StripeConnect
   supports_catalyst: false
   docs:
     output: docs/stripeconnect
