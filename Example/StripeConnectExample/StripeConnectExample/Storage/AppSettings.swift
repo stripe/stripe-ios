@@ -77,21 +77,6 @@ class AppSettings {
         }
     }
 
-    var presentationSettings: PresentationSettings {
-        get {
-            .init(
-                presentationStyleIsPush: !defaults.bool(forKey: Constants.presentationIsModal),
-                embedInTabBar: defaults.bool(forKey: Constants.embedInTabbar),
-                embedInNavBar: !defaults.bool(forKey: Constants.disableEmbedInNavbar)
-            )
-        }
-        set {
-            defaults.set(!newValue.presentationStyleIsPush, forKey: Constants.presentationIsModal)
-            defaults.set(newValue.embedInTabBar, forKey: Constants.embedInTabbar)
-            defaults.set(!newValue.embedInNavBar, forKey: Constants.disableEmbedInNavbar)
-        }
-    }
-
     func selectedMerchant(appInfo: AppInfo?) -> MerchantInfo? {
         // Default to the first available merchant if this is the first time opening the app
         guard let merchantId = defaults.string(forKey: Constants.selectedMerchantKey) else {
