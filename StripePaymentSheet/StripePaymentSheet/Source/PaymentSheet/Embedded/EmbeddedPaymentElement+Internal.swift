@@ -170,7 +170,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                                                                               isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod())
+                                                                               isDefault: paymentMethod == defaultPaymentMethod)
             let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                                                                          isTestMode: configuration.apiClient.isTestmode,
                                                                          configuration: updateConfig)

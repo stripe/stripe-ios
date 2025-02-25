@@ -388,7 +388,6 @@ extension RowButton {
         defaultBadge.textColor = appearance.colors.textSecondary
         defaultBadge.adjustsFontForContentSizeCategory = true
         defaultBadge.text = badgeText
-//        defaultBadge.accessibilityIdentifier = badgeText
         return defaultBadge
     }
 
