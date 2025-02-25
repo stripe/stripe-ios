@@ -579,7 +579,7 @@ extension NativeFlowController {
                 paymentMethod: paymentMethod
             )
         }
-        .observe { result in
+        .observe { [weak self] result in
             switch result {
             case .success(let paymentMethodWithIncentiveEligibility):
                 let linkedBank = InstantDebitsLinkedBank(
@@ -587,7 +587,8 @@ extension NativeFlowController {
                     bankName: bankAccountDetails?.bankName,
                     last4: bankAccountDetails?.last4,
                     linkMode: linkMode,
-                    incentiveEligible: paymentMethodWithIncentiveEligibility.incentiveEligible
+                    incentiveEligible: paymentMethodWithIncentiveEligibility.incentiveEligible,
+                    linkAccountSessionId: self?.dataManager.manifest.id
                 )
                 completion(.success(linkedBank))
             case .failure(let error):

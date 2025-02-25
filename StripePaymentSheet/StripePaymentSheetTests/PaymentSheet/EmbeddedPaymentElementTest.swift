@@ -511,7 +511,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             bankName: "Stripe Bank",
             last4: "6789",
             linkMode: nil,
-            incentiveEligible: false
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_"
         )
 
         // Inject the test payment option and assert the label

@@ -105,7 +105,9 @@ extension HostViewController {
         loadingView.showLoading(true)
 
         analyticsClientV1.log(
-            analytic: FinancialConnectionsSheetInitialSynchronizeStarted(clientSecret: clientSecret),
+            analytic: FinancialConnectionsSheetInitialSynchronizeStarted(
+                linkAccountSessionId: nil // We don't have the session ID yet.
+            ),
             apiClient: apiClient.backingAPIClient
         )
 
@@ -118,9 +120,15 @@ extension HostViewController {
             .observe { [weak self] result in
                 guard let self = self else { return }
 
+                let linkAccountSessionId: String? = {
+                    guard case .success(let synchronizePayload) = result else {
+                        return nil
+                    }
+                    return synchronizePayload.manifest.id
+                }()
                 analyticsClientV1.log(
                     analytic: FinancialConnectionsSheetInitialSynchronizeCompleted(
-                        clientSecret: clientSecret,
+                        linkAccountSessionId: linkAccountSessionId,
                         success: result.success,
                         possibleError: result.error
                     ),
