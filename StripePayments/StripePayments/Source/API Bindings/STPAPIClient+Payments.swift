@@ -1430,7 +1430,7 @@ extension STPAPIClient {
     ///   - paymentMethodID: Identifier of the payment method to be set as default
     ///   - customerID: Identifier of the customer whose default payment method is being set
     ///   - ephemeralKey: The Customer Ephemeral Key secret to be used
-    /// - Returns: Returns the updated `STPPaymentMethod` or throws an error if the operation failed.
+    /// - Returns: Returns the updated `STPCustomer` or throws an error if the operation failed.
     @_spi(STP) public func setAsDefaultPaymentMethod(
         _ paymentMethodID: String,
         for customerID: String,

@@ -137,6 +137,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
                   configuration.paymentMethod.type == $0
               }) else { return nil }
         return CheckboxElement(theme: configuration.appearance.asElementsTheme, label: String.Localized.set_as_default_payment_method, isSelectedByDefault: configuration.isDefault) { [weak self] isSelected in
+            self?.errorLabel.isHidden = true
             self?.hasChangedDefaultPaymentMethodCheckbox = self?.configuration.isDefault != isSelected
             self?.updateButtonState()
         }
@@ -250,7 +251,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
                                                                  error: error,
                                                                  params: analyticsParams)
         }
-        updateButton.update(state: .disabled)
         view.isUserInteractionEnabled = true
     }
 

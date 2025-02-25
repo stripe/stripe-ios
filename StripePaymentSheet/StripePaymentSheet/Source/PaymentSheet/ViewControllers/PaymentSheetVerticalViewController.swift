@@ -158,9 +158,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
-        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
-            self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
-        }
+        self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
@@ -895,9 +893,8 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
-        guard let customerId = paymentMethod.customerId else { throw PaymentSheetError.unknown(debugDescription: "Could not update default payment method: customerId is nil") }
         // Update the payment method
-        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
