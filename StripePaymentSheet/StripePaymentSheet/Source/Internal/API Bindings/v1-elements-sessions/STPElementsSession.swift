@@ -207,8 +207,15 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
-    var paymentMethodRemoveLastForPaymentSheet: Bool {
-        return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
+
+    func paymentMethodRemoveLast(configuration: PaymentElementConfiguration) -> Bool{
+        if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            // Merchant has set local configuration to false, so honor it.
+            return false
+        } else {
+            // Merchant is using client side default, so defer to CustomerSession's value
+            return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
+        }
     }
 
     var paymentMethodSetAsDefaultForPaymentSheet: Bool {

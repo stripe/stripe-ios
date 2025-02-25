@@ -37,6 +37,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
+    private let paymentMethodRemoveLast: Bool
     private let paymentMethodSetAsDefault: Bool
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -87,7 +88,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     var canRemovePaymentMethods: Bool {
         // Can remove a payment method if we have more than one payment method or if we have one payment method and `allowsRemovalOfLastSavedPaymentMethod` is true AND paymentMethodRemove is true
-        return (paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod) && paymentMethodRemove
+        return (paymentMethodRows.count > 1 ? true : paymentMethodRemoveLast) && paymentMethodRemove
     }
 
     var canEditPaymentMethods: Bool {
@@ -180,6 +181,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
