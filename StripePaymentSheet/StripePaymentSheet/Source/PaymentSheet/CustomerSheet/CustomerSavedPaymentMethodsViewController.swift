@@ -436,20 +436,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                             self.csCompletion?(.selected(paymentOptionSelection))
                         }
                     }
-                    // if the sync default feature is enabled, set the selected payment method as default
-                    if paymentMethodSyncDefault, let defaultPaymentMethod = selectedPaymentOption.savedPaymentMethod, let customerId = defaultPaymentMethod.customerId {
-                        Task {
-                            do {
-                                _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: customerId)
-                                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
-                            } catch {
-                                self.error = error
-                                let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
-                                                                  error: Error.updatePaymentMethodFailed)
-                                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                            }
-                        }
-                    }
                 default:
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                                       error: Error.didSelectSavedUnexpectedPaymentOption,
@@ -721,6 +707,20 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                                                          onSuccess: @escaping () -> Void) {
         self.processingInFlight = true
         updateUI()
+        // if the sync default feature is enabled, set the selected payment method as default
+        if paymentMethodSyncDefault, let defaultPaymentMethod = selectedPaymentOption?.savedPaymentMethod, let customerId = defaultPaymentMethod.customerId {
+            Task {
+                do {
+                    _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: customerId)
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
+                } catch {
+                    self.error = error
+                    let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
+                                                      error: Error.updatePaymentMethodFailed)
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
+            }
+        }
         self.setSelectablePaymentMethod(paymentOptionSelection: paymentOptionSelection) { error in
             self.processingInFlight = false
             self.updateUI()

@@ -680,7 +680,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
             }
             if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
                 group.addTask {
-                    try await self.updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                    try await self.updateDefault(paymentMethod: paymentMethod)
                 }
             }
             try await group.waitForAll()
@@ -710,9 +710,9 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         collectionView.reloadData()
     }
 
-    private func updateDefault(paymentMethod: STPPaymentMethod,
-                               customerId: String) async throws {
-        guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
+    private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
+        guard let customerId = paymentMethod.customerId,
+              let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
             stpAssertionFailure()

@@ -379,7 +379,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
             }
             if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
                 group.addTask {
-                    try await self.updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                    try await self.updateDefault(paymentMethod: paymentMethod)
                 }
             }
             try await group.waitForAll()
@@ -394,8 +394,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
     }
 
-    private func updateDefault(paymentMethod: STPPaymentMethod,
-                               customerId: String) async throws {
+    private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
+        guard let customerId = paymentMethod.customerId else { throw PaymentSheetError.unknown(debugDescription: "Could not update default payment method: customerId is nil") }
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
         defaultPaymentMethod = paymentMethod
         // if there was a previously selected payment method, replace it to deselect it and remove the badge if it was default

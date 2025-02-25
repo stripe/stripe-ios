@@ -222,9 +222,9 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                     try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
                 }
             }
-            if updateParams.setAsDefault, let customerId = paymentMethod.customerId {
+            if updateParams.setAsDefault {
                 group.addTask {
-                    try await self.updateDefault(paymentMethod: paymentMethod, customerId: customerId)
+                    try await self.updateDefault(paymentMethod: paymentMethod)
                 }
             }
             try await group.waitForAll()
@@ -247,8 +247,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         }
     }
 
-    private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod,
-                               customerId: String) async throws {
+    private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async throws {
+        guard let customerId = paymentMethod.customerId else { throw PaymentSheetError.unknown(debugDescription: "Could not update default payment method: customerId is nil") }
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(customerId: customerId, defaultPaymentMethodId: paymentMethod.stripeId)
         defaultPaymentMethod = paymentMethod
     }
