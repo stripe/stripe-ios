@@ -84,6 +84,11 @@ extension PaymentSheet {
                     } else {
                         // 4b. Server-side confirmation
                         try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
+                        if configuration.apiClient.isTestmode,
+                           case let .new(_, _, _, _, shouldSetAsDefaultPM) = confirmType,
+                           shouldSetAsDefaultPM ?? false {
+                            assertionFailure("Setting a payment method as default with server-side confirmation is not supported")
+                        }
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
@@ -112,6 +117,11 @@ extension PaymentSheet {
                     } else {
                         // 4b. Server-side confirmation
                         try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
+                        if configuration.apiClient.isTestmode,
+                           case let .new(_, _, _, _, shouldSetAsDefaultPM) = confirmType,
+                           shouldSetAsDefaultPM ?? false {
+                            assertionFailure("Setting a payment method as default with server-side confirmation is not supported")
+                        }
                         paymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,
