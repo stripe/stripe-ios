@@ -738,6 +738,31 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Close"].waitForExistenceAndTap(timeout: timeout)
     }
 
+    func testAddTwoPaymentMethods_ChangeDefault() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodSyncDefault = .enabled
+        loadPlayground(
+            app,
+            settings
+        )
+        // Add card ending in 4242
+        presentCSAndAddCardFrom(buttonLabel: "None", tapAdd: false)
+        // Card ending in 4242 is now selected; add card ending in 4444
+        presentCSAndAddCardFrom(buttonLabel: "•••• 4242", cardNumber: "5555555555554444")
+        // Card ending in 4444 is now selected
+        XCTAssertTrue(app.staticTexts["•••• 4444"].waitForExistenceAndTap(timeout: timeout))
+        // Select card ending in 4242
+        XCTAssertTrue(app.buttons["•••• 4242"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistenceAndTap(timeout: timeout))
+        // Card ending in 4242 is now selected
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: timeout))
+        app.buttons["Reload"].waitForExistenceAndTap()
+        // It is also the default, and you can tell because when paymentMethodSyncDefault is enabled, it will try to retrieve the default payment method, and if the default payment method is not set, then it will retrieve the most recently added payment method
+        // The card ending in 4242 is not the most recently added payment, so we know that it selected it because it is the default
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: timeout))
+    }
     // MARK: - Helpers
 
     func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {
