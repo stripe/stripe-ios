@@ -26,6 +26,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         case noPaymentOptionAddingNewWithSetupIntent
         case noPaymentOptionAddingNewWithAttach
         case removeOnNonSavedPaymentMethod
+        case updatePaymentMethodFailed
     }
 
     // MARK: - Read-only Properties
@@ -724,10 +725,22 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             let customerPaymentMethodOption = paymentOptionSelection.customerPaymentMethodOption()
             do {
                 try await customerSheetDataSource.setSelectedPaymentOption(paymentOption: customerPaymentMethodOption)
-                onSuccess()
             } catch {
                 onError(error)
+                return
             }
+            do {
+                if paymentMethodSyncDefault, let defaultPaymentMethod = selectedPaymentOption?.savedPaymentMethod {
+                    _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId)
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
+                }
+            } catch {
+                let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
+                                                  error: Error.updatePaymentMethodFailed)
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                onError(error)
+            }
+            onSuccess()
         }
     }
 

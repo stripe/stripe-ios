@@ -1564,7 +1564,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                                           intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
                                           customerSessionClientSecretProvider: { return .init(customerId: cscs.customer, clientSecret: cscs.customerSessionClientSecret) })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
-        _ = try await csDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId, customerID: cscs.customer)
+        _ = try await csDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId)
         csDataSource.loadPaymentMethodInfo { result in
             guard case .success((_, _, let elementsSession)) = result else {
                 XCTFail()
