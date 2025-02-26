@@ -46,7 +46,8 @@ class FinancialConnectionsSheetTests: XCTestCase {
         else {
             return XCTFail("Expected `FinancialConnectionsSheetPresentedAnalytic`")
         }
-        XCTAssertEqual(presentedAnalytic.clientSecret, mockClientSecret)
+        // We don't have a `linkAccountSessionId` at this point.
+        XCTAssertNil(presentedAnalytic.linkAccountSessionId)
 
         // Mock that financialConnections is completed
         let host = HostController(
@@ -67,7 +68,8 @@ class FinancialConnectionsSheetTests: XCTestCase {
         else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")
         }
-        XCTAssertEqual(closedAnalytic.clientSecret, mockClientSecret)
+        // Canceled results do not provide a `linkAccountSessionId`.
+        XCTAssertNil(closedAnalytic.linkAccountSessionId)
         XCTAssertEqual(closedAnalytic.result, "cancelled")
     }
 
