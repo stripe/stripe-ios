@@ -304,7 +304,7 @@ extension STPAnalyticsClient {
             )
         )
     }
-
+    
     func logCardMetadataResponseFailure() {
         log(
             analytic: GenericPaymentAnalytic(
@@ -314,11 +314,21 @@ extension STPAnalyticsClient {
             )
         )
     }
-
+    
     func logCardMetadataMissingRange() {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .cardMetadataMissingRange,
+                paymentConfiguration: nil,
+                additionalParams: [:]
+            )
+        )
+    }
+    
+    @_spi(STP) public func logCardMetadataExpectedExtraDigitsButUserEntered16() {
+        log(
+            analytic: GenericPaymentAnalytic(
+                event: .cardMetadataExpectedExtraDigitsButUserEntered16,
                 paymentConfiguration: nil,
                 additionalParams: [:]
             )

@@ -44,6 +44,7 @@ import Foundation
     case cardMetadataLoadedTooSlow = "stripeios.card_metadata_loaded_too_slow"
     case cardMetadataResponseFailure = "stripeios.card_metadata_load_failure"
     case cardMetadataMissingRange = "stripeios.card_metadata_missing_range"
+    case cardMetadataExpectedExtraDigitsButUserEntered16 = "stripeios.card_metadata.expected_extra_digits_but_user_entered_16"
 
     // MARK: - Card Scanning
     case cardScanSucceeded = "stripeios.cardscan_success"

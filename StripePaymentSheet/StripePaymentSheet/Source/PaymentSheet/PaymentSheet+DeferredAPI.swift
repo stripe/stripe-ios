@@ -84,6 +84,7 @@ extension PaymentSheet {
                     } else {
                         // 4b. Server-side confirmation
                         try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
+                        assert(!allowsSetAsDefaultPM, "(Debug-build-only error) The default payment methods feature is not yet supported with deferred intents. Please contact us if you'd like to use this feature via a Github issue on stripe-ios.")
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
@@ -112,6 +113,7 @@ extension PaymentSheet {
                     } else {
                         // 4b. Server-side confirmation
                         try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
+                        assert(!allowsSetAsDefaultPM, "(Debug-build-only error) The default payment methods feature is not yet supported with deferred intents. Please contact us if you'd like to use this feature via a Github issue on stripe-ios.")
                         paymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,
