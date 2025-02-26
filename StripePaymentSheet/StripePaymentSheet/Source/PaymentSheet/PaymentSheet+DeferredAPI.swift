@@ -84,7 +84,9 @@ extension PaymentSheet {
                     } else {
                         // 4b. Server-side confirmation
                         try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
-                        setAsDefaultErrorOnSSC(testMode: configuration.apiClient.isTestmode, allowsSetAsDefaultPM: allowsSetAsDefaultPM)
+                        if configuration.apiClient.isTestmode, allowsSetAsDefaultPM {
+                            assertionFailure("The set as default feature with server-side confirmation is not supported.")
+                        }
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
@@ -113,7 +115,9 @@ extension PaymentSheet {
                     } else {
                         // 4b. Server-side confirmation
                         try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
-                        setAsDefaultErrorOnSSC(testMode: configuration.apiClient.isTestmode, allowsSetAsDefaultPM: allowsSetAsDefaultPM)
+                        if configuration.apiClient.isTestmode, allowsSetAsDefaultPM {
+                            assertionFailure("The set as default feature with server-side confirmation is not supported.")
+                        }
                         paymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,
@@ -168,10 +172,5 @@ extension PaymentSheet {
             paymentUserAgentValues.append("autopm")
         }
         return paymentUserAgentValues
-    }
-
-    private static func setAsDefaultErrorOnSSC(testMode: Bool, allowsSetAsDefaultPM: Bool) {
-        guard testMode, allowsSetAsDefaultPM else { return }
-        assertionFailure("The set as default feature with server-side confirmation is not supported.")
     }
 }
