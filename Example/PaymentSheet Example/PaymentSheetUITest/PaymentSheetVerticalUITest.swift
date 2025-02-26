@@ -114,7 +114,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Switch to the saved card...
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["•••• 4242"].waitForExistenceAndTap()
-        app.buttons["Continue"].tap() // For some reason, waitForExistenceAndTap() does not tap this!
+        app.buttons["Continue"].waitForExistenceAndTap() // For some reason, waitForExistenceAndTap() does not tap this!
         XCTAssertEqual(
             analyticsLog.map({ $0[string: "event"] }),
             ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]

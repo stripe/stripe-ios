@@ -583,7 +583,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.buttons["+ Add"].waitForExistenceAndTap()
         tapPaymentMethod("SEPA Debit")
         try! fillSepaData(app, iban: "AT611904300234573201", tapCheckboxWithText: "Save this account for future Example, Inc. payments")
-        app.buttons["Continue"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
@@ -599,8 +599,8 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.tap()
         XCTAssertTrue(app.staticTexts["Payment canceled."].waitForExistence(timeout: 10.0))
         // Tapping confirm again and hitting continue should confirm the payment
-        app.buttons["Confirm"].tap()
-        app.buttons["Continue"].tap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
+        app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Reload w/ same customer
@@ -611,8 +611,8 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
         XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
         // ...you shouldn't see the mandate again when you confirm
-        app.buttons["Continue"].tap()
-        app.buttons["Confirm"].tap()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
