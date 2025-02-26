@@ -475,7 +475,11 @@ extension RowButton {
         let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityHelperView.accessibilityLabel = {
             if let badgeText {
-                return (paymentMethod.paymentSheetAccessibilityLabel ?? "") + ", \(badgeText)"
+                if let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel {
+                    return "\(accessibilityLabel), \(badgeText)"
+                } else {
+                    return "\(badgeText)"
+                }
             }
             return paymentMethod.paymentSheetAccessibilityLabel
         }()

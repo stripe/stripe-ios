@@ -364,6 +364,10 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
 // MARK: - UpdatePaymentMethodViewControllerDelegate
 extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
+        // if it's the default pm, unset the default
+        if isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId) {
+            defaultPaymentMethod = nil
+        }
         remove(paymentMethod: paymentMethod)
        _ = viewController.bottomSheetController?.popContentViewController()
     }
@@ -401,10 +405,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         if let previousSelectedPaymentMethod {
             replace(paymentMethod: previousSelectedPaymentMethod, with: previousSelectedPaymentMethod, selectedState: .unselected)
         }
-        // if we just set a new default, replace it to add the badge and select it
-        if let defaultPaymentMethod {
-            replace(paymentMethod: defaultPaymentMethod, with: defaultPaymentMethod, selectedState: .selected)
-        }
+        // we just set a new default, so we replace it to add the badge and select it
+        replace(paymentMethod: paymentMethod, with: paymentMethod, selectedState: .selected)
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {

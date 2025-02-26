@@ -123,10 +123,7 @@ extension SavedPaymentMethodCollectionView {
         }
 
         func updateVerticalConstraintsIfNeeded() {
-            guard needsVerticalPaddingForBadge else {
-                return
-            }
-            if isRemovingPaymentMethods {
+            if needsVerticalPaddingForBadge, isRemovingPaymentMethods {
                 activateDefaultBadgeConstraints()
                 defaultBadge.setHiddenIfNecessary(!showDefaultPMBadge)
             } else {

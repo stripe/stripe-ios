@@ -220,8 +220,11 @@ class SavedPaymentOptionsViewController: UIViewController {
     private(set) var defaultPaymentMethod: STPPaymentMethod? {
         didSet {
             collectionView.needsVerticalPaddingForBadge = hasDefault
-            animateHeightChange { self.collectionView.updateLayout() }
-            updateUI()
+            animateHeightChange {
+                self.updateUI()
+                self.collectionView.updateLayout()
+            }
+            
         }
     }
     /// Whether or not there are any payment options we can show
@@ -471,8 +474,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, elementsSession: STPElementsSession?, defaultPaymentMethod: STPPaymentMethod?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
         // Get the default
         var defaultPaymentOption: CustomerPaymentOption?
-        if let setAsDefault = elementsSession?.paymentMethodSetAsDefaultForPaymentSheet,
-           setAsDefault,
+        if elementsSession?.paymentMethodSetAsDefaultForPaymentSheet ?? false,
            let defaultPaymentMethod {
             defaultPaymentOption = .stripeId(defaultPaymentMethod.stripeId)
         }

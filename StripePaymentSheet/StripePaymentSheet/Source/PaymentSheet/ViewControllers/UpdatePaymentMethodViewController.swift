@@ -101,14 +101,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
     private lazy var updateButton: ConfirmButton = {
         let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: configuration.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
-            if updateParams != nil || hasChangedDefaultPaymentMethodCheckbox {
-                var paymentMethodCardParams: STPPaymentMethodCardParams?
-                if let updatePaymentMethodOptions = updateParams,
-                   case .card(let cardUpdateParams) = updatePaymentMethodOptions {
-                    paymentMethodCardParams = cardUpdateParams
-                }
+            let updatePaymentMethodOptions = updateParams
+            if updatePaymentMethodOptions != nil || hasChangedDefaultPaymentMethodCheckbox {
                 Task {
-                    await self.update(paymentMethodCardParams: paymentMethodCardParams)
+                    await self.update(updatePaymentMethodOptions: updatePaymentMethodOptions)
                 }
             }
         })
@@ -215,7 +211,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    private func update(paymentMethodCardParams: STPPaymentMethodCardParams?) async {
+    private func update(updatePaymentMethodOptions: UpdatePaymentMethodOptions?) async {
         guard let delegate else {
             return
         }
@@ -224,9 +220,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
         var analyticsParams: [String: Any] = [:]
 
-        // Create the update card brand params
-        if let updateParams,
-           case .card(let paymentMethodCardParams) = updateParams {
+        if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions {
             analyticsParams["selected_card_brand"] = paymentMethodCardParams.networks?.preferred
         }
         if let setAsDefaultValue {

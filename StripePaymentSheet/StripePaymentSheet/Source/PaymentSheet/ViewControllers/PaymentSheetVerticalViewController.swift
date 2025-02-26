@@ -853,6 +853,11 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
+        // if it's the default pm, unset the default
+        if paymentMethod == defaultPaymentMethod {
+            defaultPaymentMethod = nil
+        }
+
         // Update savedPaymentMethods
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 
