@@ -473,7 +473,16 @@ extension RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
         let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
-        button.accessibilityHelperView.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+        button.accessibilityHelperView.accessibilityLabel = {
+            if let badgeText {
+                if let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel {
+                    return "\(accessibilityLabel), \(badgeText)"
+                } else {
+                    return "\(badgeText)"
+                }
+            }
+            return paymentMethod.paymentSheetAccessibilityLabel
+        }()
         return button
     }
 }
