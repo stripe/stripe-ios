@@ -60,7 +60,12 @@ class FinancialConnectionsSheetTests: XCTestCase {
             publishableKey: "test",
             stripeAccount: nil
         )
-        sheet.hostController(host, viewController: UIViewController(), didFinish: .canceled)
+        sheet.hostController(
+            host,
+            viewController: UIViewController(),
+            didFinish: .canceled,
+            linkAccountSessionId: "fcsess_123"
+        )
 
         // Verify closed analytic is logged
         XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, 2)
@@ -68,8 +73,8 @@ class FinancialConnectionsSheetTests: XCTestCase {
         else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")
         }
-        // Canceled results do not provide a `linkAccountSessionId`.
-        XCTAssertNil(closedAnalytic.linkAccountSessionId)
+
+        XCTAssertEqual(closedAnalytic.linkAccountSessionId, "fcsess_123")
         XCTAssertEqual(closedAnalytic.result, "cancelled")
     }
 
