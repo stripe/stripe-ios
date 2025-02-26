@@ -900,6 +900,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
         // Update the payment method
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+        defaultPaymentMethod = paymentMethod
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {

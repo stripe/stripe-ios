@@ -187,7 +187,7 @@ extension CustomerSheetDataSource {
             assertionFailure("CustomerAdapter does not support the set as default payment method feature")
             return nil
         case .customerSession(let customerSessionAdapter):
-            return try await customerSessionAdapter.setAsDefaultPaymentMethod(paymentMethodId: paymentMethodId, customerID: customerSessionAdapter.cachedCustomerSessionClientSecret().customerId)
+            return try await customerSessionAdapter.setAsDefaultPaymentMethod(paymentMethodId: paymentMethodId)
         }
     }
 

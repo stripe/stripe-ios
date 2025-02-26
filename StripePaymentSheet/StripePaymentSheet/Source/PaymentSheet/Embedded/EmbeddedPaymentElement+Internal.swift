@@ -201,6 +201,11 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
+        // if it's the default pm, unset it
+        if paymentMethod == defaultPaymentMethod {
+            defaultPaymentMethod = nil
+        }
+
         // Update savedPaymentMethods
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 

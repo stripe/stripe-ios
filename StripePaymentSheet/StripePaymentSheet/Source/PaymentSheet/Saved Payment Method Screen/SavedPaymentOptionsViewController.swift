@@ -134,6 +134,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
         set {
             collectionView.isRemovingPaymentMethods = newValue
+            collectionView.needsVerticalPaddingForBadge = hasDefault
             collectionView.performBatchUpdates({
                 collectionView.reloadSections(IndexSet(integer: 0))
                 animateHeightChange { self.collectionView.updateLayout() }
@@ -220,11 +221,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     private(set) var defaultPaymentMethod: STPPaymentMethod? {
         didSet {
             collectionView.needsVerticalPaddingForBadge = hasDefault
-            animateHeightChange {
-                self.updateUI()
-                self.collectionView.updateLayout()
-            }
-            
         }
     }
     /// Whether or not there are any payment options we can show
@@ -395,6 +391,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             defaultPaymentMethod: defaultPaymentMethod
         )
 
+        collectionView.updateLayout()
         collectionView.reloadData()
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
@@ -628,6 +625,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         // this deletion)
         self.collectionView.performBatchUpdates {
             self.collectionView.deleteItems(at: [indexPath])
+            self.collectionView.updateLayout()
         } completion: { _ in
             self.savedPaymentMethods.removeAll(where: {
                 $0.stripeId == paymentMethod.stripeId
@@ -652,6 +650,10 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
 // MARK: - UpdatePaymentMethodViewControllerDelegate
 extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
+        // if it's the default pm, unset it
+        if isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId) {
+            defaultPaymentMethod = nil
+        }
         // if it's the last saved pm, there's some animation jank from trying to dismiss the update pm screen and expanding the add card screen, so we wait until the update pm screen is dismissed before expanding
         if savedPaymentMethods.count == 1 {
             _ = self.bottomSheetController?.popContentViewController { [self] in
@@ -680,6 +682,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                 }
             }
             try await group.waitForAll()
+            updateUI()
         }
         _ = viewController.bottomSheetController?.popContentViewController()
     }
@@ -703,7 +706,6 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
             self.savedPaymentMethods[row] = updatedPaymentMethod
         }
-        collectionView.reloadData()
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
