@@ -497,12 +497,11 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 /// :nodoc:
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod,
-                   updateParams: UpdatePaymentMethodParams) async throws {
-        guard let updateCardBrandParams = updateParams.updateCardBrandParams else {
+                   paymentMethod: STPPaymentMethod) async throws {
+        guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams) = updateParams else {
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")
         }
-        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 

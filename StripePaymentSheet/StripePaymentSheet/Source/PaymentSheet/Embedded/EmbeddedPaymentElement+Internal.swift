@@ -212,15 +212,15 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: StripePayments.STPPaymentMethod,
-                   updateParams: UpdatePaymentMethodParams) async throws {
+                   paymentMethod: StripePayments.STPPaymentMethod) async throws {
         try await withThrowingTaskGroup(of: Void.self) { group in
-            if let updateCardBrandParams = updateParams.updateCardBrandParams {
+            if let updateParams = viewController.updateParams,
+               case .card(let paymentMethodCardParams) = updateParams {
                 group.addTask {
-                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
                 }
             }
-            if updateParams.setAsDefault {
+            if viewController.setAsDefaultValue ?? false {
                 group.addTask {
                     try await self.updateDefault(paymentMethod: paymentMethod)
                 }

@@ -15,14 +15,8 @@ import UIKit
 protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod,
-                   updateParams: UpdatePaymentMethodParams) async throws
+                   paymentMethod: STPPaymentMethod) async throws
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
-}
-
-struct UpdatePaymentMethodParams {
-    let updateCardBrandParams: STPPaymentMethodUpdateParams?
-    let setAsDefault: Bool
 }
 
 /// For internal SDK use only
@@ -56,6 +50,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
             return .card(paymentMethodCardParams: cardParams)
         }
         return nil
+    }
+
+    var setAsDefaultValue: Bool? {
+        guard hasChangedDefaultPaymentMethodCheckbox,
+              let checkbox = setAsDefaultCheckbox else {
+            return nil
+        }
+        return checkbox.isSelected
     }
 
     // MARK: Navigation bar
@@ -223,26 +225,15 @@ final class UpdatePaymentMethodViewController: UIViewController {
         var analyticsParams: [String: Any] = [:]
 
         // Create the update card brand params
-        let updateCardBrandParams: STPPaymentMethodUpdateParams? = {
-            guard let paymentMethodCardParams else {
-                return nil
-            }
-            if let selectedBrand = paymentMethodCardParams.networks?.preferred {
-                analyticsParams["selected_card_brand"] = selectedBrand
-            }
-            return STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)
-        }()
-        let setAsDefault = {
-            guard hasChangedDefaultPaymentMethodCheckbox,
-                  let checkbox = setAsDefaultCheckbox else {
-                return false
-            }
-            analyticsParams["set_as_default"] = checkbox.isSelected
-            return checkbox.isSelected
-        }()
-        let updatePaymentMethodParams = UpdatePaymentMethodParams(updateCardBrandParams: updateCardBrandParams, setAsDefault: setAsDefault)
+        if let updateParams,
+           case .card(let paymentMethodCardParams) = updateParams {
+            analyticsParams["selected_card_brand"] = paymentMethodCardParams.networks?.preferred
+        }
+        if let setAsDefaultValue {
+            analyticsParams["set_as_default"] = setAsDefaultValue
+        }
         do {
-            try await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod, updateParams: updatePaymentMethodParams)
+            try await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
                                                                  params: analyticsParams)
         } catch {

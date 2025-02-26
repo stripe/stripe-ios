@@ -664,15 +664,15 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod,
-                   updateParams: UpdatePaymentMethodParams) async throws {
+                   paymentMethod: STPPaymentMethod) async throws {
         try await withThrowingTaskGroup(of: Void.self) { group in
-            if let updateCardBrandParams = updateParams.updateCardBrandParams {
+            if let updateParams = viewController.updateParams,
+               case .card(let paymentMethodCardParams) = updateParams {
                 group.addTask {
-                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: updateCardBrandParams)
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
                 }
             }
-            if updateParams.setAsDefault {
+            if viewController.setAsDefaultValue ?? false {
                 group.addTask {
                     try await self.updateDefault(paymentMethod: paymentMethod)
                 }
