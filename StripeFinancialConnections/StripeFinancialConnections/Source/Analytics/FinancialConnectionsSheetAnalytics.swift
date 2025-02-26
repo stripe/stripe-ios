@@ -70,7 +70,7 @@ struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalyti
 struct FinancialConnectionsSheetInitialSynchronizeStarted: FinancialConnectionsSheetAnalytic {
     let event = STPAnalyticEvent.financialConnectionsSheetInitialSynchronizeStarted
     let linkAccountSessionId: String?
-    var additionalParams: [String: Any] = [:]
+    let additionalParams: [String: Any] = [:]
 }
 
 /// Logged when the initial `synchronize` API call completes. Includes whether or not the call was a success, and the error otherwise.
