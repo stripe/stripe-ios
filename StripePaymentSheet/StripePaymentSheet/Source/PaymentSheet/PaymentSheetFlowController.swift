@@ -436,15 +436,14 @@ extension PaymentSheet {
                     var didSelectSetAsDefault: Bool
                     if case let .new(confirmParams) = paymentOption {
                         didSelectSetAsDefault = confirmParams.setAsDefaultPM ?? false
-                    }
-                    else {
+                    } else {
                         didSelectSetAsDefault = self.viewController.didSelectSetAsDefault
                     }
                     analyticsHelper.logPayment(
                         paymentOption: paymentOption,
                         result: result,
                         deferredIntentConfirmationType: deferredIntentConfirmationType,
-                        params: self.elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default" : didSelectSetAsDefault] : [:]
+                        params: self.elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default": didSelectSetAsDefault] : [:]
                     )
                     if case .completed = result, case .link = paymentOption {
                         // Remember Link as default payment method for users who just created an account.

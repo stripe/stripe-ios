@@ -517,7 +517,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     paymentOption: paymentOption,
                     result: result,
                     deferredIntentConfirmationType: deferredIntentConfirmationType,
-                    params: elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default" : self.didSelectSetAsDefault] : [:]
+                    params: elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default": self.didSelectSetAsDefault] : [:]
                 )
 
                 self.isPaymentInFlight = false

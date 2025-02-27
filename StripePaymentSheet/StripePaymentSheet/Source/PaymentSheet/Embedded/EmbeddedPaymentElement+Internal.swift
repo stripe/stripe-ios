@@ -483,7 +483,7 @@ extension EmbeddedPaymentElement {
             paymentOption: paymentOption,
             result: result,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
-            params: elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default" : didSelectSetAsDefault] : [:]
+            params: elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default": didSelectSetAsDefault] : [:]
         )
 
         if case .completed = result {
