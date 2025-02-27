@@ -2822,6 +2822,47 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Ensure checkbox is not displayed if it's already the default
         XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
     }
+
+    func testSetAsDefaultVerticalNoDuplicateBadges_CustomerSession() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .vertical
+        settings.customerMode = .returning
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodSetAsDefault = .enabled
+
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["View more"].waitForExistenceAndTap()
+        app.buttons["Edit"].waitForExistenceAndTap()
+        XCTAssertEqual(app.buttons.matching(identifier: "chevron").count, 2)
+        // Edit the card ending in 4242
+        app.buttons["•••• 4242"].waitForExistenceAndTap()
+        // Edit the card ending in 4242
+        app.switches["Set as default payment method"].waitForExistenceAndTap()
+        app.buttons["Save"].waitForExistenceAndTap()
+        app.buttons["Done"].waitForExistenceAndTap()
+        // Check that the card ending in 4242 has a default badge and is selected
+        XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].isSelected)
+        // Check that the bank account ending in 6789 does not have a default badge
+        XCTAssertFalse(app.buttons["STRIPE TEST BANK account ending in 6789, Default"].waitForExistence(timeout: 3))
+        // Select the bank account ending in 6789
+        app.buttons["••••6789"].waitForExistenceAndTap()
+        // Check that the bank account ending in 6789 is selected
+        XCTAssertTrue(app.buttons["STRIPE TEST BANK account ending in 6789"].isSelected)
+        app.buttons["View more"].waitForExistenceAndTap()
+        app.buttons["Edit"].waitForExistenceAndTap()
+        // Edit the bank account ending in 6789
+        app.buttons["••••6789"].waitForExistenceAndTap()
+        // Edit the bank account ending in 6789
+        app.switches["Set as default payment method"].waitForExistenceAndTap()
+        app.buttons["Save"].waitForExistenceAndTap()
+        app.buttons["Done"].waitForExistenceAndTap()
+        // Check that the bank account ending in 6789 has a default badge and is selected
+        XCTAssertTrue(app.buttons["STRIPE TEST BANK account ending in 6789, Default"].isSelected)
+        // Check that the card ending in 4242 does not have a default badge
+        XCTAssertFalse(app.buttons["Visa ending in 4 2 4 2, Default"].waitForExistence(timeout: 3))
+    }
 }
 
 // MARK: Helpers
