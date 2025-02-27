@@ -17,6 +17,7 @@ extension TextFieldElement {
         let bankName: String
         let lastFour: String
         let isEditable = false
+        let hasDisabledAppearance = true
 
         private var lastFourFormatted: String {
             "\(bankName) ••••\(lastFour)"

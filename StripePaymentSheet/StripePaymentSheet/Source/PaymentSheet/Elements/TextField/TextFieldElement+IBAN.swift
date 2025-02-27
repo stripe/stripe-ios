@@ -184,6 +184,7 @@ extension TextFieldElement {
         let label: String = "IBAN"
         let lastFour: String
         let isEditable = false
+        let hasDisabledAppearance = true
 
         private var lastFourFormatted: String {
             "•••• \(lastFour)"

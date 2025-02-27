@@ -25,6 +25,7 @@ extension AddressSectionElement {
                 validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
                 accessoryView: configuration.accessoryView(for: text, theme: theme),
                 shouldShowClearButton: configuration.shouldShowClearButton,
+                hasDisabledAppearance: configuration.hasDisabledAppearance,
                 isEditable: configuration.isEditable,
                 theme: theme
             )

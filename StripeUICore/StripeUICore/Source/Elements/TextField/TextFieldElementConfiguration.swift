@@ -41,6 +41,11 @@ import UIKit
     var isEditable: Bool { get }
 
     /**
+     * Adds a visible mask over the textFIeldView often used when isEditable == false
+     */
+
+    var hasDisabledAppearance: Bool { get }
+    /**
      Validate the text.
      
      - Parameter isOptional: Whether or not the text field's value is optional.
@@ -109,6 +114,9 @@ public extension TextFieldElementConfiguration {
 
     var isEditable: Bool {
         return true
+    }
+    var hasDisabledAppearance: Bool {
+        return false
     }
 
     func makeDisplayText(for text: String) -> NSAttributedString {

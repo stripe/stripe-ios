@@ -48,7 +48,7 @@ extension SavedPaymentMethodFormFactory {
         let expiryDateElement: TextFieldElement = {
             let expiryDate = CardExpiryDate(month: configuration.paymentMethod.card?.expMonth ?? 0,
                                             year: configuration.paymentMethod.card?.expYear ?? 0)
-            return TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, isEditable: false)
+            return TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, hasDisabledAppearance: true, isEditable: false)
                 .makeElement(theme: configuration.appearance.asElementsTheme)
         }()
 
@@ -62,10 +62,7 @@ extension SavedPaymentMethodFormFactory {
                 SectionElement.HiddenElement(cardBrandDropDown),
                 SectionElement.MultiElementRow([expiryDateElement, cvcElement]),
             ]
-            let section = SectionElement(elements: allSubElements.compactMap { $0 }, theme: configuration.appearance.asElementsTheme)
-            section.disableAppearance()
-
-            return section
+            return SectionElement(elements: allSubElements.compactMap { $0 }, theme: configuration.appearance.asElementsTheme)
         }()
         return cardSection
     }
