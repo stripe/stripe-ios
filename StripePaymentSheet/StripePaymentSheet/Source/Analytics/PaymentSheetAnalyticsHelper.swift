@@ -280,7 +280,8 @@ final class PaymentSheetAnalyticsHelper {
     func logPayment(
         paymentOption: PaymentOption,
         result: PaymentSheetResult,
-        deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
+        deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?,
+        params: [String: Any] = [:]
     ) {
         if NSClassFromString("XCTest") == nil {
             stpAssert(intent != nil)
@@ -338,7 +339,8 @@ final class PaymentSheetAnalyticsHelper {
             deferredIntentConfirmationType: deferredIntentConfirmationType,
             selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
             linkContext: paymentOption.linkContextAnalyticsValue,
-            linkUI: paymentOption.linkUIAnalyticsValue
+            linkUI: paymentOption.linkUIAnalyticsValue,
+            params: params
         )
     }
 

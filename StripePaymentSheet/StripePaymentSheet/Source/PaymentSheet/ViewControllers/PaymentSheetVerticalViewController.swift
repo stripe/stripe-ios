@@ -103,6 +103,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var defaultPaymentMethod: STPPaymentMethod?
 
+    var didSelectSetAsDefault: Bool = false
+
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
@@ -508,10 +510,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) { [self] in
+                if case let .new(confirmParams) = paymentOption {
+                    didSelectSetAsDefault = confirmParams.setAsDefaultPM ?? false
+                }
                 analyticsHelper.logPayment(
                     paymentOption: paymentOption,
                     result: result,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType
+                    deferredIntentConfirmationType: deferredIntentConfirmationType,
+                    params: elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default" : self.didSelectSetAsDefault] : [:]
                 )
 
                 self.isPaymentInFlight = false
@@ -898,6 +904,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
+        didSelectSetAsDefault = true
         // Update the payment method
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
         defaultPaymentMethod = paymentMethod

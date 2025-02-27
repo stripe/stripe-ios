@@ -278,6 +278,7 @@ public final class EmbeddedPaymentElement {
     internal var intent: Intent { loadResult.intent }
     internal var savedPaymentMethods: [STPPaymentMethod]
     internal var defaultPaymentMethod: STPPaymentMethod?
+    internal var didSelectSetAsDefault: Bool = false
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
     internal private(set) var formCache: PaymentMethodFormCache = .init()

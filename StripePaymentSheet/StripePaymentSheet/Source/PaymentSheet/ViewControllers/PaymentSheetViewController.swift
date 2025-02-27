@@ -60,6 +60,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private(set) var error: Error?
     private var isPaymentInFlight: Bool = false
     private(set) var isDismissable: Bool = true
+    private var didSelectSetAsDefault: Bool = false
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
@@ -454,10 +455,14 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) {
+                if case let .new(confirmParams) = paymentOption {
+                    self.didSelectSetAsDefault = confirmParams.setAsDefaultPM ?? false
+                }
                 self.analyticsHelper.logPayment(
                     paymentOption: paymentOption,
                     result: result,
-                    deferredIntentConfirmationType: deferredIntentConfirmationType
+                    deferredIntentConfirmationType: deferredIntentConfirmationType,
+                    params: self.elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default": self.didSelectSetAsDefault] : [:]
                 )
                 self.isPaymentInFlight = false
                 switch result {
@@ -551,6 +556,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
+        didSelectSetAsDefault = true
         return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
     }
 

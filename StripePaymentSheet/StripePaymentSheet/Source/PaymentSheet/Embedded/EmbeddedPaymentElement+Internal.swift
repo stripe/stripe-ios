@@ -251,6 +251,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     }
 
     private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async throws {
+        didSelectSetAsDefault = true
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
         defaultPaymentMethod = paymentMethod
     }
@@ -475,10 +476,14 @@ extension EmbeddedPaymentElement {
             integrationShape: .embedded,
             analyticsHelper: analyticsHelper
         )
+        if case let .new(confirmParams) = paymentOption {
+            didSelectSetAsDefault = confirmParams.setAsDefaultPM ?? false
+        }
         analyticsHelper.logPayment(
             paymentOption: paymentOption,
             result: result,
-            deferredIntentConfirmationType: deferredIntentConfirmationType
+            deferredIntentConfirmationType: deferredIntentConfirmationType,
+            params: elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default" : didSelectSetAsDefault] : [:]
         )
 
         if case .completed = result {
