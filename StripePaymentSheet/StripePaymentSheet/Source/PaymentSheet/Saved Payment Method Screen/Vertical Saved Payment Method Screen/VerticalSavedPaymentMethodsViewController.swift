@@ -399,11 +399,16 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     }
 
     private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
+        let previousDefaultPaymentMethod = defaultPaymentMethod
         _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
         defaultPaymentMethod = paymentMethod
         // if there was a previously selected payment method, replace it to deselect it and remove the badge if it was default
         if let previousSelectedPaymentMethod {
             replace(paymentMethod: previousSelectedPaymentMethod, with: previousSelectedPaymentMethod, selectedState: .unselected)
+        }
+        // if there was a previous default payment method that wasn't previously selected, replace it to remove the badge
+        if let previousDefaultPaymentMethod, previousDefaultPaymentMethod != previousSelectedPaymentMethod {
+            replace(paymentMethod: previousDefaultPaymentMethod, with: previousDefaultPaymentMethod)
         }
         // we just set a new default, so we replace it to add the badge and select it
         replace(paymentMethod: paymentMethod, with: paymentMethod, selectedState: .selected)
