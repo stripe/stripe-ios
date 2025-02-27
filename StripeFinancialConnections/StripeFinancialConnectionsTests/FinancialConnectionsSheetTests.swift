@@ -46,7 +46,8 @@ class FinancialConnectionsSheetTests: XCTestCase {
         else {
             return XCTFail("Expected `FinancialConnectionsSheetPresentedAnalytic`")
         }
-        XCTAssertEqual(presentedAnalytic.clientSecret, mockClientSecret)
+        // We don't have a `linkAccountSessionId` at this point.
+        XCTAssertNil(presentedAnalytic.linkAccountSessionId)
 
         // Mock that financialConnections is completed
         let host = HostController(
@@ -59,7 +60,12 @@ class FinancialConnectionsSheetTests: XCTestCase {
             publishableKey: "test",
             stripeAccount: nil
         )
-        sheet.hostController(host, viewController: UIViewController(), didFinish: .canceled)
+        sheet.hostController(
+            host,
+            viewController: UIViewController(),
+            didFinish: .canceled,
+            linkAccountSessionId: "fcsess_123"
+        )
 
         // Verify closed analytic is logged
         XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, 2)
@@ -67,7 +73,8 @@ class FinancialConnectionsSheetTests: XCTestCase {
         else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")
         }
-        XCTAssertEqual(closedAnalytic.clientSecret, mockClientSecret)
+
+        XCTAssertEqual(closedAnalytic.linkAccountSessionId, "fcsess_123")
         XCTAssertEqual(closedAnalytic.result, "cancelled")
     }
 
