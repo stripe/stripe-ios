@@ -4,6 +4,7 @@
 //
 
 import Foundation
+@_exported @_spi(STP) import StripePayments
 
 /// A representation of a Payment Method option, used for persisting the user's default payment method.
 public enum CustomerPaymentOption: Equatable {
@@ -42,7 +43,7 @@ public enum CustomerPaymentOption: Equatable {
     /// - Parameters:
     ///   - identifier: Payment method identifier.
     ///   - customerID: ID of the customer. Pass `nil` for anonymous users.
-    @_spi(STP) public static func setDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
+    @_spi(STP) public static func setLocalDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
@@ -63,7 +64,7 @@ public enum CustomerPaymentOption: Equatable {
               surface == .paymentSheet ? elementsSession.paymentMethodSetAsDefaultForPaymentSheet : elementsSession.paymentMethodSyncDefaultForCustomerSheet
         // otherwise, get default payment method from local storage
         else { return localDefaultPaymentMethod(for: customerID) }
-        guard let selectedPaymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() else { return nil }
+        guard let selectedPaymentMethod = surface == .paymentSheet ? elementsSession.customer?.getDefaultOrFirstPaymentMethod() : elementsSession.customer?.getDefaultPaymentMethod() else { return nil }
         return CustomerPaymentOption.stripeId(selectedPaymentMethod.stripeId)
     }
 

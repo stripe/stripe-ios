@@ -707,11 +707,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 #endif
         switch selection {
         case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: configuration.customer?.id)
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customer?.id)
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
             if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {

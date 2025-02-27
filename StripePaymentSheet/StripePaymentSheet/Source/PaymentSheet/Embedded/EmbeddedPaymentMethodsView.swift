@@ -144,7 +144,7 @@ class EmbeddedPaymentMethodsView: UIView {
             let applePayRowButton = RowButton.makeForApplePay(appearance: appearance,
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
-                CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
+                CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             })
             rowButtons.append(applePayRowButton)
@@ -152,7 +152,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
         if shouldShowLink {
             let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
-                CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
+                CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
             rowButtons.append(linkRowButton)
@@ -387,7 +387,7 @@ class EmbeddedPaymentMethodsView: UIView {
             accessoryView: accessoryButton,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
-                CustomerPaymentOption.setDefaultPaymentMethod(
+                CustomerPaymentOption.setLocalDefaultPaymentMethod(
                     .stripeId(savedPaymentMethod.stripeId),
                     forCustomer: self?.customer?.id
                 )
