@@ -42,14 +42,31 @@ extension SavedPaymentMethodFormFactory {
             return wrappedElement
         }()
         let panElement: TextFieldElement = {
-            return TextFieldElement.LastFourConfiguration(lastFour: configuration.paymentMethod.card?.last4 ?? "", cardBrand: configuration.paymentMethod.calculateCardBrandToDisplay(), cardBrandDropDown: cardBrandDropDown?.element).makeElement(theme: configuration.appearance.asElementsTheme)
+            let panElementConfig = TextFieldElement.LastFourConfiguration(lastFour: configuration.paymentMethod.card?.last4 ?? "",
+                                                                          editConfiguration: cardBrandDropDown != nil ? .readOnlyWithoutDisabledAppearance : .readOnly,
+                                                                          cardBrand: configuration.paymentMethod.calculateCardBrandToDisplay(),
+                                                                          cardBrandDropDown: cardBrandDropDown?.element)
+
+            let panElement = panElementConfig.makeElement(theme: configuration.appearance.asElementsTheme)
+            return panElement
         }()
 
-        let expiryDateElement: TextFieldElement = {
+        let expiryDateElement: Element = {
             let expiryDate = CardExpiryDate(month: configuration.paymentMethod.card?.expMonth ?? 0,
                                             year: configuration.paymentMethod.card?.expYear ?? 0)
-            return TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, editConfiguration: .readOnly)
-                .makeElement(theme: configuration.appearance.asElementsTheme)
+            let expirationDateConfig = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString,
+                                                                                editConfiguration: configuration.canUpdate ? .editable : .readOnly)
+            let expirationField = expirationDateConfig.makeElement(theme: configuration.appearance.asElementsTheme)
+            let wrappedElement = PaymentMethodElementWrapper<TextFieldElement>(expirationField) { field, params in
+                if let month = Int(field.text.prefix(2)) {
+                    cardParams(for: params).expMonth = NSNumber(value: month)
+                }
+                if let year = Int(field.text.suffix(2)) {
+                    cardParams(for: params).expYear = NSNumber(value: year)
+                }
+                return params
+            }
+            return wrappedElement
         }()
 
         let cvcElement: TextFieldElement = {

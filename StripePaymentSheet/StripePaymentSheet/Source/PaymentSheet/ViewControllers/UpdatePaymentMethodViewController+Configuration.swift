@@ -16,12 +16,13 @@ extension UpdatePaymentMethodViewController {
         let hostedSurface: HostedSurface
         let cardBrandFilter: CardBrandFilter
         let canRemove: Bool
+        let canUpdate: Bool
         let isCBCEligible: Bool
         let canSetAsDefaultPM: Bool
         let isDefault: Bool
 
-        var canEdit: Bool {
-            return canUpdateCardBrand || canSetAsDefaultPM
+        var shouldShowSaveButton: Bool {
+            return canUpdateCardBrand || canSetAsDefaultPM || canUpdate
         }
 
         var canUpdateCardBrand: Bool {
@@ -50,6 +51,9 @@ extension UpdatePaymentMethodViewController {
         var footnote: String? {
             switch paymentMethod.type {
             case .card:
+                if canUpdate {
+                    return nil
+                }
                 return canUpdateCardBrand ? .Localized.only_card_brand_can_be_changed : .Localized.card_details_cannot_be_changed
             case .USBankAccount:
                 return .Localized.bank_account_details_cannot_be_changed
@@ -61,7 +65,7 @@ extension UpdatePaymentMethodViewController {
             }
         }
 
-        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
             if !PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) {
                 assertionFailure("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
             }
@@ -70,6 +74,7 @@ extension UpdatePaymentMethodViewController {
             self.hostedSurface = hostedSurface
             self.cardBrandFilter = cardBrandFilter
             self.canRemove = canRemove
+            self.canUpdate = canUpdate
             self.isCBCEligible = isCBCEligible
             self.canSetAsDefaultPM = allowsSetAsDefaultPM && !isDefault
             self.isDefault = isDefault

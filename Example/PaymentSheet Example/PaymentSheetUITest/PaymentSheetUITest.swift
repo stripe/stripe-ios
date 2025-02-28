@@ -1586,7 +1586,62 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
         XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
     }
+    func test_updatePaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .flowController
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .returning
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.linkEnabledMode = .off
 
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodUpdate = .enabled
+        loadPlayground(app, settings)
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
+
+        // Test incomplete date
+        let numberField = app.textFields["expiration date"]
+        XCTAssertTrue(numberField.waitForExistence(timeout: 3.0))
+        numberField.tap()
+        numberField.typeText(XCUIKeyboardKey.delete.rawValue)
+        numberField.typeText(XCUIKeyboardKey.delete.rawValue)
+        XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
+        XCTAssertTrue(app.staticTexts["Your card's expiration date is incomplete."].waitForExistence(timeout: 3.0))
+
+        // Test expired card
+        numberField.tap()
+        numberField.typeText("99")
+        XCTAssertTrue(app.staticTexts["Your card has expired."].waitForExistence(timeout: 3.0))
+
+        // Enter valid date of 02/32
+        numberField.typeText(XCUIKeyboardKey.delete.rawValue)
+        numberField.typeText(XCUIKeyboardKey.delete.rawValue)
+        numberField.typeText("32")
+        XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
+
+        // Close Sheet
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistenceAndTap(timeout: 15))
+        XCTAssertTrue(app.buttons["Close"].waitForExistenceAndTap(timeout: 3))
+
+        // Reload w/ same settings to verify date was persisted
+        reload(app, settings: settings)
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should still default to apple
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
+        XCTAssertTrue(numberField.waitForExistence(timeout: 3.0))
+        guard let expirationDate = numberField.value as? String else {
+            XCTFail("Unable to get expiraiton field")
+            return
+        }
+        XCTAssertEqual(expirationDate, "02/32")
+    }
 }
 
 class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {

@@ -108,7 +108,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
                 }
             }
         })
-        button.isHidden = !configuration.canEdit
+        button.isHidden = !configuration.shouldShowSaveButton
         return button
     }()
 
@@ -143,11 +143,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var footnoteLabel: UITextView? = {
-        guard paymentMethodForm.validationState.isValid else {
+        guard paymentMethodForm.validationState.isValid,
+              let footnoteText = configuration.footnote else {
             return nil
         }
         let label = ElementsUI.makeSmallFootnote(theme: configuration.appearance.asElementsTheme)
-        label.text = configuration.footnote
+        label.text = footnoteText
         return label
     }()
 
@@ -246,7 +247,9 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
         let cardBrandChanged = configuration.canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
-        return cardBrandChanged
+        let updatedMM = NSNumber(value: original.expMonth) != updated.expMonth
+        let updatedYY = original.twoDigitYear != updated.expYear
+        return cardBrandChanged || updatedMM || updatedYY
     }
 
     func logCardBrandChangedIfNeeded() {
@@ -316,5 +319,14 @@ extension UpdatePaymentMethodViewController: ElementDelegate {
         default:
             break
         }
+    }
+}
+
+extension STPPaymentMethodCard {
+    var twoDigitYear: NSNumber? {
+        if let year = Int(String(expYear).suffix(2)) {
+            return NSNumber(value: year)
+        }
+        return nil
     }
 }
