@@ -41,7 +41,7 @@ import UIKit
     var isEditable: Bool { get }
 
     /**
-     * Adds a visible mask over the textFIeldView often used when isEditable == false
+     * Adds a visible mask over the textFieldView often used when isEditable == false
      */
 
     var hasDisabledAppearance: Bool { get }
