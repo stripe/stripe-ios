@@ -475,7 +475,16 @@ class SavedPaymentOptionsViewController: UIViewController {
            let defaultPaymentMethod {
             defaultPaymentOption = .stripeId(defaultPaymentMethod.stripeId)
         }
-        let selectedPaymentMethodOption = defaultPaymentOption ?? CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
+
+        let customerDefault: CustomerPaymentOption? = {
+            if elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+               let paymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
+                return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
+            }
+            return CustomerPaymentOption.localDefaultPaymentMethod(for: customerID)
+        }()
+        let selectedPaymentMethodOption = defaultPaymentOption ?? customerDefault
+
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
             return Selection.saved(paymentMethod: paymentMethod)

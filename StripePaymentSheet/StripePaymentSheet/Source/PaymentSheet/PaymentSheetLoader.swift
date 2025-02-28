@@ -317,7 +317,14 @@ final class PaymentSheetLoader {
 
         // Move default PM to front
         if let customerID = configuration.customer?.id {
-            let defaultPaymentMethodOption = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
+            let defaultPaymentMethodOption: CustomerPaymentOption? = {
+                if elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                   let paymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
+                    return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
+                }
+                return CustomerPaymentOption.localDefaultPaymentMethod(for: customerID)
+            }()
+
             if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
                 $0.stripeId == defaultPaymentMethodOption?.value
             }) {

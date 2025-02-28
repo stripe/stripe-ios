@@ -108,7 +108,11 @@ extension CustomerSessionAdapter {
     }
 
     func fetchSelectedPaymentOption(for customerId: String, elementsSession: STPElementsSession) -> CustomerPaymentOption? {
-        return CustomerPaymentOption.selectedPaymentMethod(for: customerId, elementsSession: elementsSession, surface: .customerSheet)
+        if elementsSession.paymentMethodSyncDefaultForCustomerSheet,
+              let paymentMethod = elementsSession.customer?.getDefaultPaymentMethod() {
+            return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
+        }
+        return CustomerPaymentOption.localDefaultPaymentMethod(for: customerId)
     }
 
     func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {

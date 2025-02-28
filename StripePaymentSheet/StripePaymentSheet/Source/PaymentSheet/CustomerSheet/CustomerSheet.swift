@@ -331,7 +331,13 @@ extension CustomerSheet {
         case .customerSession(let customerSessionAdapter):
             let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
 
-            let selectedPaymentOption = CustomerPaymentOption.selectedPaymentMethod(for: customerSessionClientSecret.customerId, elementsSession: elementsSession, surface: .customerSheet)
+            let selectedPaymentOption: CustomerPaymentOption? = {
+                if elementsSession.paymentMethodSyncDefaultForCustomerSheet,
+                   let paymentMethod = elementsSession.customer?.getDefaultPaymentMethod() {
+                    return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
+                }
+                return CustomerPaymentOption.localDefaultPaymentMethod(for: customerSessionClientSecret.customerId)
+            }()
 
             switch selectedPaymentOption {
             case .applePay:

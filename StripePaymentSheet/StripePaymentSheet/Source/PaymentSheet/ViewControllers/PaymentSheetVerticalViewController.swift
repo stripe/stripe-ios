@@ -338,7 +338,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: elementsSession, surface: .paymentSheet)
+        let customerDefault: CustomerPaymentOption? = {
+            if loadResult.elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+               let paymentMethod = loadResult.elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
+                return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
+            }
+            return CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id)
+        }()
 
         if let customerDefault, willDisplay(customerDefault: customerDefault) {
             switch customerDefault {

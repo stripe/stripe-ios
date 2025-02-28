@@ -51,26 +51,6 @@ public enum CustomerPaymentOption: Equatable {
         UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
     }
 
-    /// Returns the identifier of the selected by default payment method for a customer.
-    /// - Parameter customerID: ID of the customer. Pass `nil` for anonymous users.
-    /// - Parameter elementsSession: the ElementsSession.
-    /// - Parameter surface: `.paymentSheet` or `.customerSheet`
-    /// - Returns: Selected payment method.
-    @_spi(STP) public static func selectedPaymentMethod(for customerID: String?, elementsSession: STPElementsSession, surface: HostedSurface) -> CustomerPaymentOption? {
-        // if opted in to the "set as default" feature, get default or first payment method from elements session
-        switch surface {
-        case .paymentSheet:
-            if let paymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
-                return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
-            }
-        case .customerSheet:
-            if let paymentMethod = elementsSession.customer?.getDefaultPaymentMethod() {
-                return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
-            }
-        }
-        return nil
-    }
-
     static func localDefaultPaymentMethod(for customerID: String?) -> CustomerPaymentOption? {
         let key = customerID ?? ""
 
