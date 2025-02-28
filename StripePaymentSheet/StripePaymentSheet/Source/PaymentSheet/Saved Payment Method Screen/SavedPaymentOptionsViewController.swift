@@ -560,11 +560,11 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
         case .applePay:
-            CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
         case .link:
-            CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setLocalDefaultPaymentMethod(
+            CustomerPaymentOption.setDefaultPaymentMethod(
                 .stripeId(paymentMethod.stripeId),
                 forCustomer: configuration.customerID
             )

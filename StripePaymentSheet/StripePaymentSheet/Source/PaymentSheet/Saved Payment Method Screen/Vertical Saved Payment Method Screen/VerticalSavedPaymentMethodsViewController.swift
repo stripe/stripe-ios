@@ -327,7 +327,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         analyticsHelper.logSavedPMScreenOptionSelected(option: .saved(paymentMethod: paymentMethod))
         if !elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
             // Set local storage default
-            CustomerPaymentOption.setLocalDefaultPaymentMethod(
+            CustomerPaymentOption.setDefaultPaymentMethod(
                 .stripeId(paymentMethod.stripeId),
                 forCustomer: configuration.customer?.id
             )

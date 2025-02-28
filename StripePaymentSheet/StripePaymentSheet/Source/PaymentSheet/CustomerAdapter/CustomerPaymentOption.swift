@@ -43,7 +43,7 @@ public enum CustomerPaymentOption: Equatable {
     /// - Parameters:
     ///   - identifier: Payment method identifier.
     ///   - customerID: ID of the customer. Pass `nil` for anonymous users.
-    @_spi(STP) public static func setLocalDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
+    @_spi(STP) public static func setDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""

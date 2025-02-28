@@ -219,7 +219,7 @@ open class StripeCustomerAdapter: CustomerAdapter {
     open func setSelectedPaymentOption(paymentOption: CustomerPaymentOption?) async throws {
         let customerEphemeralKey = try await customerEphemeralKey
 
-        CustomerPaymentOption.setLocalDefaultPaymentMethod(paymentOption, forCustomer: customerEphemeralKey.id)
+        CustomerPaymentOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerEphemeralKey.id)
     }
 
     open func fetchSelectedPaymentOption() async throws -> CustomerPaymentOption? {

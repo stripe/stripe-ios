@@ -1473,7 +1473,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let expectation = expectation(description: "Confirm")
 
         // Clear the default PM for this customer
-        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId("old_default_value"), forCustomer: configuration.customer?.id)
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("old_default_value"), forCustomer: configuration.customer?.id)
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,

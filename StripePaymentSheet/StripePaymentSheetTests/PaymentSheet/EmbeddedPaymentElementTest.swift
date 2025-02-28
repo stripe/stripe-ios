@@ -56,7 +56,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
     func testUpdate() async throws {
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
 
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
@@ -149,7 +149,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         testWindow.rootViewController = UIViewController()
 
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
 
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
