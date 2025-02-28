@@ -4,7 +4,6 @@
 //
 
 import Foundation
-@_exported @_spi(STP) import StripePayments
 
 /// A representation of a Payment Method option, used for persisting the user's default payment method.
 public enum CustomerPaymentOption: Equatable {
