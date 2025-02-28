@@ -49,4 +49,5 @@ struct ElementsCustomer: Equatable, Hashable {
         // otherwise, return the first payment method from the customer's list of saved payment methods
         return getDefaultPaymentMethod() ?? paymentMethods.first
     }
+
 }
