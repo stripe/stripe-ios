@@ -67,18 +67,26 @@ public enum CustomerPaymentOption: Equatable {
     /// - Parameter surface: `.paymentSheet` or `.customerSheet`
     /// - Returns: Selected payment method.
     @_spi(STP) public static func selectedPaymentMethod(for customerID: String?, elementsSession: STPElementsSession, surface: HostedSurface) -> CustomerPaymentOption? {
-        // if not opted in to the "set as default" feature, get default payment method from local storage
-        guard surface == .paymentSheet ? elementsSession.paymentMethodSetAsDefaultForPaymentSheet : elementsSession.paymentMethodSyncDefaultForCustomerSheet
-        else { return localDefaultPaymentMethod(for: customerID) }
-        // if opted in to the "set as default" feature, read from elementsSession
         switch surface {
         case .paymentSheet:
-            if let defaultPaymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
-                return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+            // if opted in to the "set as default" feature, read from elementsSession
+            if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+                if let defaultPaymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
+                    return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                }
+            }
+            // otherwise, get default payment method from local storage
+            else {
+                return localDefaultPaymentMethod(for: customerID)
             }
         case .customerSheet:
-            if let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() {
-                return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+            if elementsSession.paymentMethodSyncDefaultForCustomerSheet {
+                if let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() {
+                    return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                }
+            }
+            else {
+                return localDefaultPaymentMethod(for: customerID)
             }
         }
         return nil
