@@ -84,8 +84,7 @@ public enum CustomerPaymentOption: Equatable {
                 if let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() {
                     return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
                 }
-            }
-            else {
+            } else {
                 return localDefaultPaymentMethod(for: customerID)
             }
         }
