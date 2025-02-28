@@ -388,7 +388,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             showApplePay: configuration.showApplePay,
             showLink: configuration.showLink,
             elementsSession: elementsSession,
-            defaultPaymentMethod: defaultPaymentMethod
+            updateDefaultPaymentMethod: defaultPaymentMethod
         )
 
         collectionView.updateLayout()
@@ -468,22 +468,21 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     /// Creates the list of viewmodels to display in the "saved payment methods" carousel e.g. `["+ Add", "Apple Pay", "Link", "Visa 4242"]`
     /// - Returns defaultSelectedIndex: The index of the view model that is the default e.g. in the above list, if "Visa 4242" is the default, the index is 3.
-    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, elementsSession: STPElementsSession, defaultPaymentMethod: STPPaymentMethod?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
-        // Get the default
-        var defaultPaymentOption: CustomerPaymentOption?
-        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-           let defaultPaymentMethod {
-            defaultPaymentOption = .stripeId(defaultPaymentMethod.stripeId)
-        }
+    static func makeViewModels(savedPaymentMethods: [STPPaymentMethod], customerID: String?, showApplePay: Bool, showLink: Bool, elementsSession: STPElementsSession, updateDefaultPaymentMethod: STPPaymentMethod?) -> (defaultSelectedIndex: Int, viewModels: [Selection]) {
 
-        let customerDefault: CustomerPaymentOption? = {
-            if elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-               let paymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
-                return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
-            }
-            return CustomerPaymentOption.localDefaultPaymentMethod(for: customerID)
-        }()
-        let selectedPaymentMethodOption = defaultPaymentOption ?? customerDefault
+        // Resolve default payment method in order of: most recently updated, backend default, locally saved
+        var selectedPaymentMethodOption: CustomerPaymentOption?
+        if elementsSession.paymentMethodSetAsDefaultForPaymentSheet, let updateDefaultPaymentMethod {
+            selectedPaymentMethodOption = .stripeId(updateDefaultPaymentMethod.stripeId)
+        } else {
+            selectedPaymentMethodOption = {
+                if elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                   let paymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
+                    return CustomerPaymentOption.stripeId(paymentMethod.stripeId)
+                }
+                return CustomerPaymentOption.localDefaultPaymentMethod(for: customerID)
+            }()
+        }
 
         // Transform saved PaymentMethods into view models
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
