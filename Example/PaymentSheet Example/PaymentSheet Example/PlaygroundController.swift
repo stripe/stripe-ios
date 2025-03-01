@@ -57,16 +57,15 @@ class PlaygroundController: ObservableObject {
                     request.paymentSummaryItems = [billing]
                     return request
                 },
-                authorizationResultHandler: { result, completion in
-                    //                  Hardcoded order details:
-                    //                  In a real app, you should fetch these details from your service and call the completion() block on
-                    //                  the main queue.
+                authorizationResultHandler: { result in
+                    // Hardcoded order details:
+                    // In a real app, you should fetch these details from your service
                     result.orderDetails = PKPaymentOrderDetails(
                         orderTypeIdentifier: "com.myapp.order",
                         orderIdentifier: "ABC123-AAAA-1111",
                         webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
                         authenticationToken: "abc123")
-                    completion(result)
+                    return result
                 }
             )
             return PaymentSheet.ApplePayConfiguration(
