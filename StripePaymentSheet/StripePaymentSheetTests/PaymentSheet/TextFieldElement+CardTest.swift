@@ -375,12 +375,12 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             allRetrievalsAreComplete.fulfill()
         }
         // Wait for the fetch to complete
-        waitForExpectations(timeout: 10, handler: nil)
+        wait(for: [allRetrievalsAreComplete], timeout: 10)
 
         // Set up a delegate to watch for the more-than-16-digits-expected log
         let logExpectation = expectation(description: "Did log analytics event")
         let analyticsDelegate = STPAnalyticsClientTestDelegate { payload in
-            if payload["event"] as? String == "stripeios.card_metadata.expected_extra_digits_but_user_entered_16" {
+            if payload["event"] as? String == "stripeios.card_metadata.expected_extra_digits_but_user_entered_16_then_switched_fields" {
                 logExpectation.fulfill()
             }
         }
@@ -391,7 +391,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         textFieldElement.textFieldView.textDidChange()
 
         // Wait for the analytics event
-        waitForExpectations(timeout: 10, handler: nil)
+        wait(for: [logExpectation], timeout: 10)
         // Put back the analytics delegate to avoid polluting the other test states
         STPAnalyticsClient.sharedClient.delegate = nil
     }

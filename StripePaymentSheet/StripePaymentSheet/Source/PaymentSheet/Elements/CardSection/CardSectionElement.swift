@@ -191,7 +191,7 @@ final class CardSectionElement: ContainerElement {
            !panElement.isEditing,
            !hasLoggedExpectedExtraDigitsButUserEntered16 {
             if panElement.text.count == 16 {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields)
                 hasLoggedExpectedExtraDigitsButUserEntered16 = true
             }
         }
