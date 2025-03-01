@@ -128,7 +128,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         binController.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _ in
             e.fulfill()
         }
-        wait(for: [e], timeout: 10, enforceOrder: false)
+        waitForExpectations(timeout: 10, handler: nil)
         XCTAssertTrue(binController.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
         XCTAssertTrue(binController.hasBINRanges(forPrefix: unionPay19))
 
