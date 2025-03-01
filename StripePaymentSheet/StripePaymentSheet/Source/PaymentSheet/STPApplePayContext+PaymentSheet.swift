@@ -19,15 +19,12 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     let completion: PaymentSheetResultCompletionBlock
     /// Retain this class until Apple Pay completes
     var selfRetainer: ApplePayContextClosureDelegate?
-    let authorizationResultHandler:
-    ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+    let authorizationResultHandler: PaymentSheet.ApplePayConfiguration.Handlers.AuthorizationResultHandler?
     let intent: Intent
 
     init(
         intent: Intent,
-        authorizationResultHandler: (
-            (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
-        )?,
+        authorizationResultHandler: PaymentSheet.ApplePayConfiguration.Handlers.AuthorizationResultHandler?,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) {
         self.completion = completion
@@ -40,31 +37,31 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     func applePayContext(
         _ context: STPApplePayContext,
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
-        paymentInformation: PKPayment,
-        completion: @escaping STPIntentClientSecretCompletionBlock
-    ) {
+        paymentInformation: PKPayment
+    ) async throws -> String {
         switch intent {
         case .paymentIntent(let paymentIntent):
-            completion(paymentIntent.clientSecret, nil)
+            return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
-            completion(setupIntent.clientSecret, nil)
+            return setupIntent.clientSecret
         case .deferredIntent(let intentConfig):
             guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
                 assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
-                completion(nil, STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod."))
-                return
+                throw STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod.")
             }
             let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
-            intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
-                switch result {
-                case .success(let clientSecret):
-                    guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
-                        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
-                        return
+            return try await withCheckedThrowingContinuation { continuation in
+                intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
+                    switch result {
+                    case .success(let clientSecret):
+                        guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                            continuation.resume(returning: STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT)
+                            return
+                        }
+                        continuation.resume(returning: clientSecret)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
                     }
-                    completion(clientSecret, nil)
-                case .failure(let error):
-                    completion(nil, error)
                 }
             }
         }
@@ -104,15 +101,12 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
     func applePayContext(
         _ context: STPApplePayContext,
-        willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult,
-        handler: @escaping (PKPaymentAuthorizationResult) -> Void
-    ) {
-        if let authorizationResultHandler = authorizationResultHandler {
-            authorizationResultHandler(authorizationResult) { result in
-                handler(result)
-            }
+        willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult
+    ) async -> PKPaymentAuthorizationResult {
+        if let authorizationResultHandler {
+            return await authorizationResultHandler(authorizationResult)
         } else {
-            handler(authorizationResult)
+            return authorizationResult
         }
     }
 }
