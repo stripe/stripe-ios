@@ -46,21 +46,13 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            Task {
-                do {
-                    // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret or an error.
-                    // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2577) Show client-side confirm, not server-side confirm.
-                    guard let self else {
-                        intentCreationCallback(.failure(ExampleError()))
-                        return
-                    }
-                    let clientSecret = try await self.createIntent(paymentMethodID: paymentMethod.stripeId, shouldSavePaymentMethod: shouldSavePaymentMethod)
-                    intentCreationCallback(.success(clientSecret))
-                } catch {
-                    intentCreationCallback(.failure(error))
-                }
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret or an error.
+            // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2577) Show client-side confirm, not server-side confirm.
+            guard let self else {
+                throw ExampleError()
             }
+            return try await self.createIntent(paymentMethodID: paymentMethod.stripeId, shouldSavePaymentMethod: shouldSavePaymentMethod)
         }
     }
 

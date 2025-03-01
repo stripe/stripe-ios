@@ -56,11 +56,14 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                     let intentConfiguration = PaymentSheet
                         .IntentConfiguration(
                             mode: .payment(amount: 100, currency: "usd"),
-                            paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-                                self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
-                                                           paymentMethod: paymentMethod,
-                                                           shouldSavePaymentMethod: shouldSavePaymentMethod,
-                                                           intentCreationCallback: intentCreationCallback)
+                            paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod in
+                                try await withCheckedThrowingContinuation { continuation in
+                                    self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
+                                                               paymentMethod: paymentMethod,
+                                                               shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
+                                        continuation.resume(with: result)
+                                    }
+                                }
                             }
 
                     self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
