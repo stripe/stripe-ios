@@ -316,8 +316,12 @@ class PlaygroundController: ObservableObject {
         if settings.apmsEnabled == .off {
             paymentMethodTypes = self.paymentMethodTypes
         }
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
-            self?.confirmHandler($0, $1, $2)
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] pm, billingDetails in
+            try await withCheckedThrowingContinuation { continuation in
+                self?.confirmHandler(pm, billingDetails) { result in
+                    continuation.resume(with: result)
+                }
+            }
         }
 
         switch settings.mode {

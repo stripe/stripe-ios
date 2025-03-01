@@ -55,15 +55,15 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 return
             }
             let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
-            intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
-                switch result {
-                case .success(let clientSecret):
+            Task { @MainActor in
+                do {
+                    let clientSecret = try await intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod)
                     guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                         completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
                         return
                     }
                     completion(clientSecret, nil)
-                case .failure(let error):
+                } catch {
                     completion(nil, error)
                 }
             }

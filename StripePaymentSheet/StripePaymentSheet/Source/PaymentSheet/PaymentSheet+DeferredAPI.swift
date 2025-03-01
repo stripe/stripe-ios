@@ -42,9 +42,7 @@ extension PaymentSheet {
                 }
 
                 // 2. Get Intent client secret from merchant
-                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
-                                                                                 paymentMethod: paymentMethod,
-                                                                                 shouldSavePaymentMethod: confirmType.shouldSave)
+                let clientSecret = try await intentConfig.confirmHandler(paymentMethod, confirmType.shouldSave)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
                     completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
@@ -143,20 +141,6 @@ extension PaymentSheet {
             return .failed(error: error)
         @unknown default:
             return .failed(error: PaymentSheetError.unrecognizedHandlerStatus)
-        }
-    }
-
-    static func fetchIntentClientSecretFromMerchant(
-        intentConfig: IntentConfiguration,
-        paymentMethod: STPPaymentMethod,
-        shouldSavePaymentMethod: Bool
-    ) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                intentConfig.confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
-                    continuation.resume(with: result)
-                }
-            }
         }
     }
 
