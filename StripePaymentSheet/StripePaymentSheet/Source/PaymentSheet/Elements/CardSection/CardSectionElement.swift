@@ -181,7 +181,7 @@ final class CardSectionElement: ContainerElement {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
             }
         }
-        
+
         // If the user entered 16 digits and exited the field, but our PAN length data
         // indicates that we need more (maybe 19 digits?), then our data might be wrong.
         // Send an alert so we can measure how often this happens.

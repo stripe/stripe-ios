@@ -83,11 +83,11 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             )
         }
     }
-    
+
     func testBINRangeThatRequiresNetworkCallToValidate() {
         // Set a publishable key for the metadata service
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-        
+
         var configuration = TextFieldElement.PANConfiguration()
         let binController = STPBINController()
         configuration.binController = binController
@@ -336,19 +336,19 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             )
         }
     }
-    
+
     class STPAnalyticsClientTestDelegate: NSObject, STPAnalyticsClientDelegate {
         let didLogBlock: (([String: Any]) -> Void)
 
         init(didLogBlock: @escaping ([String: Any]) -> Void) {
             self.didLogBlock = didLogBlock
         }
-        
+
         func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
             didLogBlock(payload)
         }
     }
-    
+
     func testAlertsOnExpected19DigitCard() {
         // Set a publishable key for the metadata service
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
@@ -365,10 +365,10 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             cardBrandFilter: .default
         )
         let textFieldElement = cardSection.panElement
-        
+
         // A 16 digit card number that should be 19 digits:
         let unionPay19_but_16_digits_entered = "6235510000000002"
-        
+
         // Cache the UnionPay BIN range first:
         let allRetrievalsAreComplete = expectation(description: "Fetch BIN Range")
         (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _ in
@@ -389,7 +389,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         // Enter the card number, trigger the textDidChange event, and make sure the field isn't focused:
         textFieldElement.textFieldView.textField.text = unionPay19_but_16_digits_entered
         textFieldElement.textFieldView.textDidChange()
-        
+
         // After hitting the network to fetch the BIN range, we log an event:
         waitForExpectations(timeout: 10, handler: nil)
         // Put back the analytics delegate to avoid polluting the other test states
