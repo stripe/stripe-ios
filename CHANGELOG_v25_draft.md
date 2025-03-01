@@ -1,4 +1,5 @@
 ## 25.0.0 2025-XX-YY
 ### PaymentSheet
-* [Changed] Replaces `ExternalPaymentMethodConfirmHandler` with an async equivalent.
+* [Changed] Replaced `ExternalPaymentMethodConfirmHandler` with an async equivalent.
+* [Added] Added async versions of all completion-block-based PaymentSheet and PaymentSheet.FlowController methods.
 
