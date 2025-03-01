@@ -390,7 +390,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         textFieldElement.textFieldView.textField.text = unionPay19_but_16_digits_entered
         textFieldElement.textFieldView.textDidChange()
 
-        // After hitting the network to fetch the BIN range, we log an event:
+        // Wait for the analytics event
         waitForExpectations(timeout: 10, handler: nil)
         // Put back the analytics delegate to avoid polluting the other test states
         STPAnalyticsClient.sharedClient.delegate = nil
