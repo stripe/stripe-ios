@@ -110,8 +110,10 @@ final public class FinancialConnectionsSheet {
     /// Contains all configurable properties of Financial Connections.
     public let configuration: FinancialConnectionsSheet.Configuration
 
+    /// An internal result type that holds a `HostControllerResult` and an optional Link Account Session ID for logging.
+    private typealias HostControllerOutcome = (result: HostControllerResult, sessionId: String?)
     /// Completion block called when the sheet is closed or fails to open
-    private var completion: ((HostControllerResult) -> Void)?
+    private var completion: ((HostControllerOutcome) -> Void)?
 
     private var hostController: HostController?
 
@@ -229,15 +231,15 @@ final public class FinancialConnectionsSheet {
         completion: @escaping (HostControllerResult) -> Void
     ) {
         // Overwrite completion closure to retain self until called
-        let completion: (HostControllerResult) -> Void = { result in
+        let completion: (HostControllerOutcome) -> Void = { outcome in
             self.analyticsClient.log(
                 analytic: FinancialConnectionsSheetCompletionAnalytic.make(
-                    clientSecret: self.financialConnectionsSessionClientSecret,
-                    result: result
+                    linkAccountSessionId: outcome.sessionId,
+                    result: outcome.result
                 ),
                 apiClient: self.apiClient
             )
-            completion(result)
+            completion(outcome.result)
             self.completion = nil
         }
         self.completion = completion
@@ -248,7 +250,8 @@ final public class FinancialConnectionsSheet {
             let error = FinancialConnectionsSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
-            completion(.failed(error: error))
+            let flowResult = HostControllerOutcome(result: .failed(error: error), sessionId: nil)
+            completion(flowResult)
             return
         }
 
@@ -261,7 +264,8 @@ final public class FinancialConnectionsSheet {
                     debugDescription:
                         "invalid returnURL: \(urlString) parameter passed in when creating FinancialConnectionsSheet"
                 )
-                completion(.failed(error: error))
+                let flowResult = HostControllerOutcome(result: .failed(error: error), sessionId: nil)
+                completion(flowResult)
                 return
             }
         }
@@ -286,7 +290,8 @@ final public class FinancialConnectionsSheet {
 
         analyticsClient.log(
             analytic: FinancialConnectionsSheetPresentedAnalytic(
-                clientSecret: self.financialConnectionsSessionClientSecret
+                // We don't have the session ID yet.
+                linkAccountSessionId: nil
             ),
             apiClient: apiClient
         )
@@ -320,21 +325,23 @@ extension FinancialConnectionsSheet: HostControllerDelegate {
     func hostController(
         _ hostController: HostController,
         viewController: UIViewController,
-        didFinish result: HostControllerResult
+        didFinish result: HostControllerResult,
+        linkAccountSessionId: String?
     ) {
         viewController.dismiss(
             animated: true,
             completion: {
+                let flowResult = HostControllerOutcome(result: result, sessionId: linkAccountSessionId)
                 if let wrapperViewController = self.wrapperViewController {
                     wrapperViewController.dismiss(
                         animated: false,
                         completion: {
-                            self.completion?(result)
+                            self.completion?(flowResult)
                         }
                     )
                     self.wrapperViewController = nil
                 } else {
-                    self.completion?(result)
+                    self.completion?(flowResult)
                 }
             }
         )

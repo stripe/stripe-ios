@@ -19,6 +19,16 @@ import UIKit
         case financialConnections(StripeAPI.FinancialConnectionsSession)
         case instantDebits(InstantDebitsLinkedBank)
     }
+
+    var linkAccountSessionId: String? {
+        guard case .completed(let completed) = self else { return nil }
+        switch completed {
+        case .financialConnections(let session):
+            return session.id
+        case .instantDebits(let linkedBank):
+            return linkedBank.linkAccountSessionId
+        }
+    }
 }
 
 extension HostControllerResult {
@@ -64,7 +74,8 @@ protocol HostControllerDelegate: AnyObject {
     func hostController(
         _ hostController: HostController,
         viewController: UIViewController,
-        didFinish result: HostControllerResult
+        didFinish result: HostControllerResult,
+        linkAccountSessionId: String?
     )
 
     func hostController(
@@ -86,6 +97,7 @@ class HostController {
     private let analyticsClientV1: STPAnalyticsClientProtocol
 
     private var nativeFlowController: NativeFlowController?
+    private var linkAccountSessionId: String?
     lazy var hostViewController = HostViewController(
         analyticsClientV1: analyticsClientV1,
         clientSecret: clientSecret,
@@ -121,7 +133,6 @@ class HostController {
         self.elementsSessionContext = elementsSessionContext
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
         analyticsClient.setAdditionalParameters(
-            linkAccountSessionClientSecret: clientSecret,
             publishableKey: publishableKey,
             stripeAccount: stripeAccount
         )
@@ -135,11 +146,21 @@ extension HostController: HostViewControllerDelegate {
 
     func hostViewControllerDidFinish(_ viewController: HostViewController, lastError: Error?) {
         guard let error = lastError else {
-            delegate?.hostController(self, viewController: viewController, didFinish: .canceled)
+            delegate?.hostController(
+                self,
+                viewController: viewController,
+                didFinish: .canceled,
+                linkAccountSessionId: linkAccountSessionId
+            )
             return
         }
 
-        delegate?.hostController(self, viewController: viewController, didFinish: .failed(error: error))
+        delegate?.hostController(
+            self,
+            viewController: viewController,
+            didFinish: .failed(error: error),
+            linkAccountSessionId: linkAccountSessionId
+        )
     }
 
     func hostViewController(
@@ -147,6 +168,7 @@ extension HostController: HostViewControllerDelegate {
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
         delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .open))
+        self.linkAccountSessionId = synchronizePayload.manifest.id
 
         let flowRouter = FlowRouter(
             synchronizePayload: synchronizePayload,
@@ -156,7 +178,7 @@ extension HostController: HostViewControllerDelegate {
         let flow = flowRouter.flow
         analyticsClientV1.log(
             analytic: FinancialConnectionsSheetFlowDetermined(
-                clientSecret: clientSecret,
+                linkAccountSessionId: synchronizePayload.manifest.id,
                 flow: flow,
                 killswitchActive: flowRouter.killswitchActive
             ),
@@ -242,7 +264,13 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
         _ viewController: FinancialConnectionsWebFlowViewController,
         didFinish result: HostControllerResult
     ) {
-        delegate?.hostController(self, viewController: viewController, didFinish: result)
+        let linkAccountSessionId = result.linkAccountSessionId ?? linkAccountSessionId
+        delegate?.hostController(
+            self,
+            viewController: viewController,
+            didFinish: result,
+            linkAccountSessionId: linkAccountSessionId
+        )
     }
 
     func webFlowViewController(
@@ -264,7 +292,13 @@ extension HostController: NativeFlowControllerDelegate {
             assertionFailure("Navigation stack is empty")
             return
         }
-        delegate?.hostController(self, viewController: viewController, didFinish: result)
+        let linkAccountSessionId = result.linkAccountSessionId ?? linkAccountSessionId
+        delegate?.hostController(
+            self,
+            viewController: viewController,
+            didFinish: result,
+            linkAccountSessionId: linkAccountSessionId
+        )
     }
 
     func nativeFlowController(

@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
   s.homepage                       = 'https://docs.stripe.com/connect/get-started-connect-embedded-components'
   s.readme                         = 'StripeConnect/README.md'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
+  s.ios.resource_bundle            = { 'StripeConnectBundle' => ['StripeConnect/StripeConnect/Resources/**/*.{lproj}'] }
   s.source                         = { git: 'https://github.com/stripe/stripe-ios.git', tag: "#{s.version}" }
   s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
   s.requires_arc                   = true

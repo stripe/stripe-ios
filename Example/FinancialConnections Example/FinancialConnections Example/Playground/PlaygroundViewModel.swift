@@ -369,33 +369,65 @@ final class PlaygroundViewModel: ObservableObject {
                     },
                     completionHandler: { [weak self] result in
                         switch result {
-                        case .completed(let session):
-                            let accounts = session.accounts.data.filter { $0.last4 != nil }
-                            let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+                        case .completed(let flow):
+                            switch flow {
+                            case .financialConnections(let session):
+                                let accounts = session.accounts.data.filter { $0.last4 != nil }
+                                let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
 
-                            let sessionId = session.id
-                            let accountNames = session.accounts.data.map({ $0.displayName ?? "N/A" })
-                            let accountIds = session.accounts.data.map({ $0.id })
+                                let sessionId = session.id
+                                let accountNames = session.accounts.data.map({ $0.displayName ?? "N/A" })
+                                let accountIds = session.accounts.data.map({ $0.id })
 
-                            // WARNING: the "events" output is used for end-to-end tests so be careful modifying it
-                            let sessionInfo =
-"""
-session_id=\(sessionId)
-account_names=\(accountNames)
-account_ids=\(accountIds)
-events=\(onEventEvents.joined(separator: ","))
-"""
+                                // WARNING: the "events" output is used for end-to-end tests so be careful modifying it
+                                let sessionInfo =
+                                """
+                                session_id=\(sessionId)
+                                account_names=\(accountNames)
+                                account_ids=\(accountIds)
+                                events=\(onEventEvents.joined(separator: ","))
+                                """
 
-                            let message = "\(accountInfos)\n\n\(sessionInfo)"
-                            self?.sessionOutput[.message] = message
-                            self?.sessionOutput[.sessionId] = sessionId
-                            self?.sessionOutput[.accountNames] = accountNames.joinedUnlessEmpty
-                            self?.sessionOutput[.accountIds] = accountIds.joinedUnlessEmpty
+                                let message = "\(accountInfos)\n\n\(sessionInfo)"
+                                self?.sessionOutput[.message] = message
+                                self?.sessionOutput[.sessionId] = sessionId
+                                self?.sessionOutput[.accountNames] = accountNames.joinedUnlessEmpty
+                                self?.sessionOutput[.accountIds] = accountIds.joinedUnlessEmpty
 
-                            UIAlertController.showAlert(
-                                title: "Success",
-                                message: message
-                            )
+                                UIAlertController.showAlert(
+                                    title: "Success",
+                                    message: message
+                                )
+                            case .instantDebits(let linkedBank):
+                                let sessionId = linkedBank.linkAccountSessionId ?? "N/a"
+                                let paymentMethodId = linkedBank.paymentMethod.id
+                                let bankAccount: String
+                                if let bankName = linkedBank.bankName, let last4 = linkedBank.last4 {
+                                    bankAccount = "\(bankName) ....\(last4)"
+                                } else {
+                                    bankAccount = "Bank details unavailable"
+                                }
+
+                                let sessionInfo =
+                                """
+                                session_id=\(sessionId)
+                                payment_method_id=\(paymentMethodId)
+                                events=\(onEventEvents.joined(separator: ","))
+                                """
+
+                                let message = "\(bankAccount)\n\n\(sessionInfo)"
+                                self?.sessionOutput[.message] = message
+                                self?.sessionOutput[.sessionId] = sessionId
+
+                                UIAlertController.showAlert(
+                                    title: "Success",
+                                    message: message
+                                )
+                            @unknown default:
+                                UIAlertController.showAlert(
+                                    message: "Unknown payment method flow"
+                                )
+                            }
                         case .canceled:
                             UIAlertController.showAlert(
                                 title: "Cancelled"
@@ -410,6 +442,10 @@ events=\(onEventEvents.joined(separator: ","))
                                         return error.localizedDescription
                                     }
                                 }()
+                            )
+                        @unknown default:
+                            UIAlertController.showAlert(
+                                message: "Unknown result"
                             )
                         }
                     }
@@ -511,7 +547,7 @@ private func PresentFinancialConnectionsSheet(
     useAsyncApiClient: Bool,
     style: PlaygroundConfiguration.Style,
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
-    completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
+    completionHandler: @escaping (HostControllerResult) -> Void
 ) {
     if let error = setupPlaygroundResponseJSON["error"] {
         completionHandler(
@@ -567,7 +603,7 @@ private func PresentFinancialConnectionsSheet(
                 completionHandler({
                     switch result {
                     case .completed(result: let tuple):
-                        return .completed(session: tuple.session)
+                        return .completed(.financialConnections(tuple.session))
                     case .canceled:
                         return .canceled
                     case .failed(error: let error):
@@ -580,7 +616,7 @@ private func PresentFinancialConnectionsSheet(
     } else {
         financialConnectionsSheet.present(
             from: topMostViewController,
-            completion: { result in
+            completion: { (result: HostControllerResult) in
                 completionHandler(result)
                 _ = financialConnectionsSheet  // retain the sheet
             }
