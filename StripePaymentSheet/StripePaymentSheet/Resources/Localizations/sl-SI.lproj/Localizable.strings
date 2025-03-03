@@ -184,6 +184,8 @@
 
 "Payment methods" = "Načini plačila";
 
+"Please choose a valid payment method." = "Izberite veljaven način plačila.";
+
 "Please go back and select another payment method" = "Vrnite se in izberite drug način plačila";
 
 "Point the camera at your card." = "Usmerite kamero v kartico.";

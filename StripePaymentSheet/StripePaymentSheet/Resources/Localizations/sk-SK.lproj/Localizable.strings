@@ -184,6 +184,8 @@
 
 "Payment methods" = "Spôsoby platby";
 
+"Please choose a valid payment method." = "Vyberte platný spôsob platby.";
+
 "Please go back and select another payment method" = "Vráťte sa späť a vyberte iný spôsob platby";
 
 "Point the camera at your card." = "Nasmerujte kameru na svoju kartu.";
