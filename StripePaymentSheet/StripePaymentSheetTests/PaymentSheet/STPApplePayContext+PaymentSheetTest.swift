@@ -6,9 +6,9 @@
 //
 
 @testable import StripeApplePay
-@_spi(CardBrandFilteringBeta) @testable import StripePaymentSheet
-@testable import StripePaymentsTestUtils
 @_spi(STP) import StripeCore
+@testable import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 import XCTest
 
 final class STPApplePayContext_PaymentSheetTest: XCTestCase {
@@ -73,7 +73,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 #endif
         }
     }
-    
+
     func testCreatePaymentRequest_brandAcceptance_all() {
         var configuration = configuration
         configuration.cardBrandAcceptance = .all

@@ -184,6 +184,8 @@
 
 "Payment methods" = "決済手段";
 
+"Please choose a valid payment method." = "有効な支払い方法を選択してください。";
+
 "Please go back and select another payment method" = "前に戻って別の決済手段を選択してください";
 
 "Point the camera at your card." = "カメラをカードに向けてください。";
