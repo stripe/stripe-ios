@@ -415,7 +415,6 @@ class EmbeddedPaymentMethodsView: UIView {
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
-            shouldAnimateOnPress: true,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
                 self?.didTap(rowButton: rowButton)

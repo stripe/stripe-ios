@@ -71,7 +71,6 @@ class RowButton: UIView, EventHandler {
 
     var heightConstraint: NSLayoutConstraint?
     let type: RowButtonType
-    let shouldAnimateOnPress: Bool
     let appearance: PaymentSheet.Appearance
     let didTap: DidTapClosure
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
@@ -88,13 +87,11 @@ class RowButton: UIView, EventHandler {
         badgeText: String? = nil,
         promoBadge: PromoBadgeView? = nil,
         accessoryView: UIView? = nil,
-        shouldAnimateOnPress: Bool = false,
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
     ) {
         self.appearance = appearance
         self.type = type
-        self.shouldAnimateOnPress = shouldAnimateOnPress
         self.didTap = didTap
         self.isEmbedded = isEmbedded
         self.imageView = imageView
@@ -145,13 +142,11 @@ class RowButton: UIView, EventHandler {
         gestureRecognizer.delegate = self
         addGestureRecognizer(gestureRecognizer)
 
-        // Add long press gesture if we should animate on press
-        if shouldAnimateOnPress {
-            let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(gesture:)))
-            longPressGesture.minimumPressDuration = 0.2
-            longPressGesture.delegate = self
-            addGestureRecognizer(longPressGesture)
-        }
+        // Add long press gesture
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(gesture:)))
+        longPressGesture.minimumPressDuration = 0.2
+        longPressGesture.delegate = self
+        addGestureRecognizer(longPressGesture)
     }
 
     private func updateAccessibilityTraits() {
@@ -213,12 +208,10 @@ class RowButton: UIView, EventHandler {
 
     @objc func handleTap() {
         guard isEnabled else { return }
-        if shouldAnimateOnPress {
-            // Fade the text and icon out and back in
-            setKeyContent(alpha: 0.5)
-            UIView.animate(withDuration: 0.2, delay: 0.1) { [self] in
-                setKeyContent(alpha: 1.0)
-            }
+        // Fade the text and icon out and back in
+        setKeyContent(alpha: 0.5)
+        UIView.animate(withDuration: 0.2, delay: 0.1) { [self] in
+            setKeyContent(alpha: 1.0)
         }
         self.didTap(self)
     }
@@ -283,7 +276,6 @@ extension RowButton {
                        badgeText: String? = nil,
                        promoBadge: PromoBadgeView? = nil,
                        accessoryView: UIView? = nil,
-                       shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
                        didTap: @escaping DidTapClosure) -> RowButton {
           // When not using embedded, always use floating style with 4.0 insets
@@ -297,7 +289,6 @@ extension RowButton {
                   badgeText: badgeText,
                   promoBadge: promoBadge,
                   accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
@@ -315,7 +306,6 @@ extension RowButton {
                   badgeText: badgeText,
                   promoBadge: promoBadge,
                   accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
@@ -329,7 +319,6 @@ extension RowButton {
                   badgeText: badgeText,
                   promoBadge: promoBadge,
                   accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
@@ -343,7 +332,6 @@ extension RowButton {
                   badgeText: badgeText,
                   promoBadge: promoBadge,
                   accessoryView: accessoryView,
-                  shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
@@ -398,7 +386,6 @@ extension RowButton {
         promoText: String? = nil,
         appearance: PaymentSheet.Appearance,
         originalCornerRadius: CGFloat? = nil,
-        shouldAnimateOnPress: Bool,
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
     ) -> RowButton {
@@ -447,7 +434,6 @@ extension RowButton {
             subtext: subtext,
             promoBadge: promoBadge,
             accessoryView: accessoryView,
-            shouldAnimateOnPress: shouldAnimateOnPress,
             isEmbedded: isEmbedded,
             didTap: didTap
         )

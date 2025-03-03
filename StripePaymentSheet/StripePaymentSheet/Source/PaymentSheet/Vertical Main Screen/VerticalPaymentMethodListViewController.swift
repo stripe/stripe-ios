@@ -145,9 +145,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 paymentMethodType: paymentMethodType,
                 hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708)
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
-                appearance: appearance,
-                // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
-                shouldAnimateOnPress: delegate?.shouldSelectPaymentMethod(selection) == false
+                appearance: appearance
             ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
