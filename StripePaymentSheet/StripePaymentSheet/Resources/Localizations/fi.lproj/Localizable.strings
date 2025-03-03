@@ -184,6 +184,8 @@
 
 "Payment methods" = "Maksutavat";
 
+"Please choose a valid payment method." = "Valitse kelvollinen maksutapa.";
+
 "Please go back and select another payment method" = "Palaa takaisin ja valitse toinen maksutapa";
 
 "Point the camera at your card." = "Osoita kamera korttia kohti.";

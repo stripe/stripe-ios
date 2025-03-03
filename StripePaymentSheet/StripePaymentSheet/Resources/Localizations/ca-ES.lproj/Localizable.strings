@@ -184,6 +184,8 @@
 
 "Payment methods" = "Mètodes de pagament";
 
+"Please choose a valid payment method." = "Trieu un mètode de pagament vàlid.";
+
 "Please go back and select another payment method" = "Torneu enrere i seleccioneu un altre mètode de pagament";
 
 "Point the camera at your card." = "Apunta a la targeta amb la càmera.";

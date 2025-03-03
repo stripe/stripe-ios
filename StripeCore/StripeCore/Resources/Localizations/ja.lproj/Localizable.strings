@@ -1,5 +1,7 @@
 "Close" = "閉じる";
 
+"Default payment method was not changed. Please try again." = "デフォルトの支払い方法は変更されませんでした。もう一度お試しください。";
+
 "Scan Card" = "クレジットカードをスキャン";
 
 "Scan card" = "カードをスキャン";

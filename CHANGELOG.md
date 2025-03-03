@@ -1,4 +1,4 @@
-## X.Y.Z 2025-XX-YY
+## 24.7.0 2025-03-03
 ### Connect (Private Preview)
 * [Changed] The SDK now manages the onboarding component's presentation.
 * [Changed] The payouts component is no longer available.

@@ -1,5 +1,7 @@
 "Close" = "닫기";
 
+"Default payment method was not changed. Please try again." = "기본 결제 방식이 변경되지 않았습니다. 다시 시도하십시오.";
+
 "Scan Card" = "카드 스캔";
 
 "Scan card" = "카드 스캔";
