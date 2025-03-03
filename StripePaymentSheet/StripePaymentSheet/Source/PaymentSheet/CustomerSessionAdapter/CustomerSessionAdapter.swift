@@ -100,14 +100,14 @@ class CustomerSessionAdapter {
 }
 extension CustomerSessionAdapter {
     func fetchClientDefaultPaymentMethod(for customerId: String) -> String? {
-        guard let defaultPaymentMethod = fetchSelectedPaymentOption(for: customerId),
+        guard let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerId),
            case .stripeId(let stripePaymentMethodId) = defaultPaymentMethod else {
             return nil
         }
         return stripePaymentMethodId
     }
 
-    func fetchSelectedPaymentOption(for customerId: String, elementsSession: STPElementsSession? = nil) -> CustomerPaymentOption? {
+    func fetchSelectedPaymentOption(for customerId: String, elementsSession: STPElementsSession) -> CustomerPaymentOption? {
         return CustomerPaymentOption.selectedPaymentMethod(for: customerId, elementsSession: elementsSession, surface: .customerSheet)
     }
 

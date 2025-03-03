@@ -345,7 +345,7 @@ class CustomerSheetTests: APIStubbedTestCase {
                 return
             }
             XCTAssertFalse(paymentMethods.isEmpty)
-            XCTAssertNotNil(selectedPaymentMethod)
+            XCTAssertNil(selectedPaymentMethod)
             loadPaymentMethodInfo.fulfill()
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)
