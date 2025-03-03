@@ -16,6 +16,8 @@ import XCTest
 @MainActor
 // https://jira.corp.stripe.com/browse/MOBILESDK-2607 Make these STPNetworkStubbingTestCase; blocked on getting them to record image requests
 class EmbeddedPaymentElementTest: XCTestCase {
+    var delegatePaymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData?
+
     lazy var configuration: EmbeddedPaymentElement.Configuration = {
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
@@ -23,6 +25,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }()
     let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
+        XCTFail("paymentIntentConfig confirm handler should not be called.")
     }
     let paymentIntentConfigWithConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) {paymentMethod, _, intentCreationCallback in
         STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
@@ -39,9 +42,11 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
     let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
         // These tests don't confirm, so this is unused
+        XCTFail("paymentIntentConfig2 confirm handler should not be called.")
     }
-    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
+    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp", "amazon_pay"]) { _, _, _ in
         // These tests don't confirm, so this is unused
+        XCTFail("setupIntentConfig confirm handler should not be called.")
     }
     var delegateDidUpdatePaymentOptionCalled = false
     var delegateDidUpdateHeightCalled = false
@@ -137,6 +142,34 @@ class EmbeddedPaymentElementTest: XCTestCase {
         await fulfillment(of: [secondUpdateExpectation])
     }
 
+    func testUpdateFailsWhenFormPresented() async throws {
+        // Set up a test window so the view controllers "present"
+        let testWindow = UIWindow(frame: .zero)
+        testWindow.isHidden = false
+        testWindow.rootViewController = UIViewController()
+
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = testWindow.rootViewController
+        sut.view.autosizeHeight(width: 320)
+
+        // Tap card to present the form
+        let cardRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardRowButton)
+
+        // Assert the form is shown
+        XCTAssertTrue(delegateWillPresentCalled)
+
+        // Updates should fail while the form is presented
+        async let _updateResult = sut.update(intentConfiguration: setupIntentConfig)
+        let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
+        XCTAssertEqual(updateResult, .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented))
+    }
+
     func testUpdateCancelsInFlightUpdate() async throws {
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
@@ -199,10 +232,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         async let _ = sut.update(intentConfiguration: brokenConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
         async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
-        // ...should make the confirm call wait for the update and then fail b/c the update failed
+        // ...should make the confirm call fail b/c the update is in progress
         switch await confirmResult {
         case let .failed(error: error):
-            XCTAssertEqual(error.nonGenericDescription.prefix(101), "An error occurred in PaymentSheet. The amount in `PaymentSheet.IntentConfiguration` must be non-zero!")
+            XCTAssertEqual(error.nonGenericDescription, "An error occurred in PaymentSheet. There's a problem with your integration. confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm.")
         default:
             XCTFail("Expected confirm to fail")
         }
@@ -295,6 +328,31 @@ class EmbeddedPaymentElementTest: XCTestCase {
         case .canceled:
             XCTFail("Expected confirm to fail, but it was canceled")
         }
+    }
+
+    func testPaymentOptionDisplayData() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: setupIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Select the "Cash App Pay" payment method
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
+        // The delegate should have been notified with proper data
+        XCTAssertEqual(delegatePaymentOption?.label, "Cash App Pay")
+        XCTAssertEqual(delegatePaymentOption?.paymentMethodType, "cashapp")
+        XCTAssertTrue(delegatePaymentOption?.mandateText?.string.contains("Cash App") ?? false)
+
+        // Tap another row, payment option data should be updated
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Amazon Pay"))
+        // The delegate should have been notified with proper data
+        XCTAssertEqual(delegatePaymentOption?.label, "Amazon Pay")
+        XCTAssertEqual(delegatePaymentOption?.paymentMethodType, "amazon_pay")
+        XCTAssertTrue(delegatePaymentOption?.mandateText?.string.contains("Amazon Pay") ?? false)
     }
 
     func testClearPaymentOptionAfterSelection() async throws {
@@ -453,7 +511,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             bankName: "Stripe Bank",
             last4: "6789",
             linkMode: nil,
-            incentiveEligible: false
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_"
         )
 
         // Inject the test payment option and assert the label
@@ -512,6 +571,7 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
     }
 
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: StripePaymentSheet.EmbeddedPaymentElement) {
+        delegatePaymentOption = embeddedPaymentElement.paymentOption
         delegateDidUpdatePaymentOptionCalled = true
     }
 

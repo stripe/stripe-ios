@@ -22,47 +22,42 @@ import Foundation
         }
     }
 
-    func analyticEvent(for event: CardBrandChoiceEvents) -> STPAnalyticEvent {
+    func analyticEvent(for event: CardUpdateEvents) -> STPAnalyticEvent {
         switch (event, self) {
         case (.displayCardBrandDropdownIndicator, .paymentSheet):
             return .paymentSheetDisplayCardBrandDropdownIndicator
-        case (.openCardBrandDropdown, .paymentSheet):
-            return .paymentSheetOpenCardBrandDropdown
-        case (.closeCardBrandDropDown, .paymentSheet):
-            return .paymentSheetCloseCardBrandDropDown
-        case (.openCardBrandEditScreen, .paymentSheet):
-            return .paymentSheetOpenCardBrandEditScreen
-        case (.updateCardBrand, .paymentSheet):
-            return .paymentSheetUpdateCardBrand
-        case (.updateCardBrandFailed, .paymentSheet):
-            return .paymentSheetUpdateCardBrandFailed
+        case (.cardBrandSelected, .paymentSheet):
+            return .paymentSheetCardBrandSelected
+        case (.openEditScreen, .paymentSheet):
+            return .paymentSheetOpenEditScreen
+        case (.updateCard, .paymentSheet):
+            return .paymentSheetUpdateCard
+        case (.updateCardFailed, .paymentSheet):
+            return .paymentSheetUpdateCardFailed
         case (.closeEditScreen, .paymentSheet):
             return .paymentSheetClosesEditScreen
         case (.displayCardBrandDropdownIndicator, .customerSheet):
             return .customerSheetDisplayCardBrandDropdownIndicator
-        case (.openCardBrandDropdown, .customerSheet):
-            return .customerSheetOpenCardBrandDropdown
-        case (.closeCardBrandDropDown, .customerSheet):
-            return .customerSheetCloseCardBrandDropDown
-        case (.openCardBrandEditScreen, .customerSheet):
-            return .customerSheetOpenCardBrandEditScreen
-        case (.updateCardBrand, .customerSheet):
-            return .customerSheetUpdateCardBrand
-        case (.updateCardBrandFailed, .customerSheet):
-            return .customerSheetUpdateCardBrandFailed
+        case (.cardBrandSelected, .customerSheet):
+            return .customerSheetCardBrandSelected
+        case (.openEditScreen, .customerSheet):
+            return .customerSheetOpenEditScreen
+        case (.updateCard, .customerSheet):
+            return .customerSheetUpdateCard
+        case (.updateCardFailed, .customerSheet):
+            return .customerSheetUpdateCardFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
         }
     }
 
     // Helper for mapping between PaymentSheet and CustomerSheet CBC events
-    enum CardBrandChoiceEvents {
+    enum CardUpdateEvents {
         case displayCardBrandDropdownIndicator
-        case openCardBrandDropdown
-        case closeCardBrandDropDown
-        case openCardBrandEditScreen
-        case updateCardBrand
-        case updateCardBrandFailed
+        case cardBrandSelected
+        case openEditScreen
+        case updateCard
+        case updateCardFailed
         case closeEditScreen
     }
 }

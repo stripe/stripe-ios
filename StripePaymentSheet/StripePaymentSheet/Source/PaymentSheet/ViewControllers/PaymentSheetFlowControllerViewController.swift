@@ -205,7 +205,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
-                allowsRemovalOfLastSavedPaymentMethod: PaymentSheetViewController.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: configuration),
+                allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
                 allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet
             ),
@@ -490,15 +490,24 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
     func didUpdate(_ viewController: SavedPaymentOptionsViewController) {
         // no-op
     }
-    func didSelectUpdate(viewController: SavedPaymentOptionsViewController,
-                         paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
-                         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
+    func didSelectUpdateCardBrand(viewController: SavedPaymentOptionsViewController,
+                                  paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+                                  updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         guard case .saved(let paymentMethod) = paymentMethodSelection else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
         return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
                                                           with: updateParams)
+    }
+
+    func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,
+                                paymentMethodSelection: SavedPaymentOptionsViewController.Selection) async throws -> STPCustomer {
+        guard case .saved(let paymentMethod) = paymentMethodSelection else {
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
+        }
+
+        return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
     }
 
     func didUpdateSelection(

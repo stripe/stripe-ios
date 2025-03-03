@@ -13,7 +13,7 @@ class FetchInitComponentPropsMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         webView.addMessageReplyHandler(messageHandler: FetchInitComponentPropsMessageHandler {
-            AccountOnboardingViewController.Props(
+            AccountOnboardingController.Props(
                 fullTermsOfServiceUrl: URL(string: "https://fullTermsOfServiceUrl.com")!,
                 recipientTermsOfServiceUrl: URL(string: "https://recipientTermsOfServiceUrl.com")!,
                 privacyPolicyUrl: URL(string: "https://privacyPolicyUrl.com")!,

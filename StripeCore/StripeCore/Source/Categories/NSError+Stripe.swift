@@ -60,6 +60,17 @@ extension NSError {
         )
     }
 
+    @objc @_spi(STP) public class func stp_defaultPaymentMethodNotChangedError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: self.stp_defaultPaymentMethodNotChangedMessage()
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.invalidRequestError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
     // TODO(davide): We'll want to move these into StripePayments, once it exists.
 
     // MARK: Strings
@@ -130,6 +141,13 @@ extension NSError {
         return STPLocalizedString(
             "The IBAN you entered is invalid.",
             "An error message displayed when the customer's iban is invalid."
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_defaultPaymentMethodNotChangedMessage() -> String {
+        return STPLocalizedString(
+            "Default payment method was not changed. Please try again.",
+            "An error message displayed when setting a default payment method fails."
         )
     }
 }

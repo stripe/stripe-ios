@@ -148,4 +148,9 @@ extension CustomerSessionAdapter {
                                                                           paymentMethodUpdateParams: paymentMethodUpdateParams,
                                                                           ephemeralKeySecret: cachedCustomerSessionClientSecret.apiKey)
     }
+
+    func setAsDefaultPaymentMethod(paymentMethodId: String) async throws -> STPCustomer {
+        let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
+        return try await self.configuration.apiClient.setAsDefaultPaymentMethod(paymentMethodId, for: cachedCustomerSessionClientSecret.customerId, using: cachedCustomerSessionClientSecret.apiKey)
+    }
 }

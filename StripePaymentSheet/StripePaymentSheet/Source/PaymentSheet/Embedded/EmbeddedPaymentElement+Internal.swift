@@ -31,7 +31,7 @@ extension EmbeddedPaymentElement {
             savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
-            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+            allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
@@ -153,7 +153,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Present the current selection's form VC
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
-        stpAssert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+        assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
         presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
 
@@ -163,19 +163,17 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
-            let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
-                                                               appearance: configuration.appearance,
-                                                               hostedSurface: .paymentSheet,
-                                                               cardBrandFilter: configuration.cardBrandFilter,
-                                                               canRemove: configuration.allowsRemovalOfLastSavedPaymentMethod && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-                                                               isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
-                                                               canSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                                                               isDefault: paymentMethod == elementsSession.customer?.getDefaultPaymentMethod()
-            )
-            let updateViewController = UpdatePaymentMethodViewController(
-                                                                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                                isTestMode: configuration.apiClient.isTestmode,
-                                                                viewModel: updateViewModel)
+            let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                               appearance: configuration.appearance,
+                                                                               hostedSurface: .paymentSheet,
+                                                                               cardBrandFilter: configuration.cardBrandFilter,
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                                                                               isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
+                                                                               allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                                                                               isDefault: paymentMethod == defaultPaymentMethod)
+            let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                                         isTestMode: configuration.apiClient.isTestmode,
+                                                                         configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
             presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
@@ -187,7 +185,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            defaultPaymentMethod: defaultPaymentMethod
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
@@ -202,6 +201,11 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
+        // if it's the default pm, unset it
+        if paymentMethod == defaultPaymentMethod {
+            defaultPaymentMethod = nil
+        }
+
         // Update savedPaymentMethods
         self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
 
@@ -213,21 +217,42 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: StripePayments.STPPaymentMethod,
-                   updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
-        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-
-        // Update savedPaymentMethods
-        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
-            self.savedPaymentMethods[row] = updatedPaymentMethod
+                   paymentMethod: StripePayments.STPPaymentMethod) async throws {
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            if let updateParams = viewController.updateParams,
+               case .card(let paymentMethodCardParams) = updateParams {
+                group.addTask {
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+                }
+            }
+            if viewController.setAsDefaultValue ?? false {
+                group.addTask {
+                    try await self.updateDefault(paymentMethod: paymentMethod)
+                }
+            }
+            try await group.waitForAll()
         }
-
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
+    }
+
+    private func updateCardBrand(paymentMethod: StripePayments.STPPaymentMethod,
+                                 updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
+        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+
+        // Update savedPaymentMethods
+        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+            self.savedPaymentMethods[row] = updatedPaymentMethod
+        }
+    }
+
+    private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async throws {
+        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+        defaultPaymentMethod = paymentMethod
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
@@ -239,7 +264,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             savedPaymentMethodsCount: savedPaymentMethods.count,
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
-            allowsRemovalOfLastSavedPaymentMethod: configuration.allowsRemovalOfLastSavedPaymentMethod,
+            allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
@@ -251,9 +276,12 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         viewController: VerticalSavedPaymentMethodsViewController,
         with selectedPaymentMethod: STPPaymentMethod?,
         latestPaymentMethods: [STPPaymentMethod],
-        didTapToDismiss: Bool
+        didTapToDismiss: Bool,
+        defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.savedPaymentMethods = latestPaymentMethods
+        // Update our default payment method to be the latest from the manage screen in case of update
+        self.defaultPaymentMethod = defaultPaymentMethod
         let accessoryType = getAccessoryButton(
             savedPaymentMethods: latestPaymentMethods
         )
@@ -324,10 +352,25 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
         // If the formViewController was populated with a previous payment option don't reset
         if embeddedFormViewController.previousPaymentOption == nil {
-            embeddedPaymentMethodsView.resetSelectionToLastSelection()
+            let lastSelection = embeddedPaymentMethodsView.previousSelectedRowButton?.type
+            var currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
+            if let lastSelection, lastSelection != currentlySelectedType {
+                // Go back to the previous selection if there was one
+                embeddedPaymentMethodsView.resetSelectionToLastSelection()
+            } else {
+                // If there wasn't a previous selection, deselect if the selection isn't valid.
+                let isCurrentSelectionValid = embeddedFormViewController.selectedPaymentOption != nil
+                if !isCurrentSelectionValid {
+                    embeddedPaymentMethodsView.resetSelection()
+                }
+            }
+
+            // The selected row may have been reset, so get it again
+            currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
+
             // Show change button if the newly selected row needs it
-            if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
-                let changeButtonState = getChangeButtonState(for: newSelectedType)
+            if let currentlySelectedType {
+                let changeButtonState = getChangeButtonState(for: currentlySelectedType)
                 if changeButtonState.shouldShowChangeButton {
                     embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
                     embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
@@ -396,9 +439,16 @@ extension EmbeddedPaymentElement {
         guard !hasConfirmedIntent else {
             return (.failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent), nil)
         }
-        // Wait for the last update to finish and fail if didn't succeed. A failure means the view is out of sync with the intent and could e.g. not be showing a required mandate.
-        if let latestUpdateTask {
-            switch await latestUpdateTask.value {
+
+        if let latestUpdateContext {
+            switch latestUpdateContext.status {
+            case .inProgress:
+                // Fail confirmation immediately if an update is in progress, rather than waiting for it to complete.
+                // This prevents scenarios where the user might confirm an outdated state, such as agreeing to pay X
+                // but actually being charged Y due to an in-flight update changing the amount.
+                let errorMessage = "confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm."
+                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
+                return (.failed(error: error), nil)
             case .succeeded:
                 // The view is in sync with the intent. Continue on with confirm!
                 break
@@ -407,7 +457,7 @@ extension EmbeddedPaymentElement {
             case .canceled:
                 let errorMessage = "confirm was called when the current update task is canceled. This shouldn't be possible; the current update task should only cancel if another task began."
                 stpAssertionFailure(errorMessage)
-                let error = PaymentSheetError.flowControllerConfirmFailed(message: errorMessage)
+                let error = PaymentSheetError.unknown(debugDescription: errorMessage)
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError, error: error)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 return (.failed(error: error), nil)

@@ -14,7 +14,7 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
 
     func testFinancialConnectionsSheetFailedAnalyticEncoding() {
         let analytic = FinancialConnectionsSheetFailedAnalytic(
-            clientSecret: "test",
+            linkAccountSessionId: "linkAccountSessionId",
             error: FinancialConnectionsSheetError.unknown(debugDescription: "some description")
         )
         XCTAssertNotNil(analytic.error)
@@ -38,37 +38,37 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
             statusDetails: nil
         )
         let analytic = FinancialConnectionsSheetCompletionAnalytic.make(
-            clientSecret: "secret",
+            linkAccountSessionId: "linkAccountSessionId",
             result: .completed(.financialConnections(session))
         )
         guard let closedAnalytic = analytic as? FinancialConnectionsSheetClosedAnalytic else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")
         }
 
-        XCTAssertEqual(closedAnalytic.clientSecret, "secret")
+        XCTAssertEqual(closedAnalytic.linkAccountSessionId, "linkAccountSessionId")
         XCTAssertEqual(closedAnalytic.result, "completed")
     }
 
     func testFinancialConnectionsSheetCompletionAnalyticCanceled() {
-        let analytic = FinancialConnectionsSheetCompletionAnalytic.make(clientSecret: "secret", result: .canceled)
+        let analytic = FinancialConnectionsSheetCompletionAnalytic.make(linkAccountSessionId: "linkAccountSessionId", result: .canceled)
         guard let closedAnalytic = analytic as? FinancialConnectionsSheetClosedAnalytic else {
             return XCTFail("Expected `FinancialConnectionsSheetClosedAnalytic`")
         }
 
-        XCTAssertEqual(closedAnalytic.clientSecret, "secret")
+        XCTAssertEqual(closedAnalytic.linkAccountSessionId, "linkAccountSessionId")
         XCTAssertEqual(closedAnalytic.result, "cancelled")
     }
 
     func testFinancialConnectionsSheetCompletionAnalyticFailed() {
         let analytic = FinancialConnectionsSheetCompletionAnalytic.make(
-            clientSecret: "secret",
+            linkAccountSessionId: "linkAccountSessionId",
             result: .failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "some description"))
         )
         guard let failedAnalytic = analytic as? FinancialConnectionsSheetFailedAnalytic else {
             return XCTFail("Expected `FinancialConnectionsSheetFailedAnalytic`")
         }
 
-        XCTAssertEqual(failedAnalytic.clientSecret, "secret")
+        XCTAssertEqual(failedAnalytic.linkAccountSessionId, "linkAccountSessionId")
         XCTAssert(failedAnalytic.error is FinancialConnectionsSheetError)
     }
 }

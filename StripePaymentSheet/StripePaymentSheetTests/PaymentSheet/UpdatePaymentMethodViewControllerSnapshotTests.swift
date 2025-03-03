@@ -138,19 +138,19 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                 fatalError("Updating payment method has not been implemented for type \(paymentMethodType)")
             }
         }()
-        let updateViewModel = UpdatePaymentMethodViewModel(paymentMethod: paymentMethod,
-                                                           appearance: appearance,
-                                                           hostedSurface: .paymentSheet,
-                                                           cardBrandFilter: cardBrandFilter,
-                                                           canRemove: canRemove,
-                                                           isCBCEligible: isCBCEligible,
-                                                           canSetAsDefaultPM: canSetAsDefaultPM,
-                                                           isDefault: isDefault
+        let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                           appearance: appearance,
+                                                                           hostedSurface: .paymentSheet,
+                                                                           cardBrandFilter: cardBrandFilter,
+                                                                           canRemove: canRemove,
+                                                                           isCBCEligible: isCBCEligible,
+                                                                           allowsSetAsDefaultPM: canSetAsDefaultPM,
+                                                                           isDefault: isDefault
         )
         let sut = UpdatePaymentMethodViewController(
                                            removeSavedPaymentMethodMessage: "Test removal string",
                                            isTestMode: false,
-                                           viewModel: updateViewModel)
+                                           configuration: updateConfig)
         let bottomSheet: BottomSheetViewController
         if isEmbeddedSingle {
             bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})

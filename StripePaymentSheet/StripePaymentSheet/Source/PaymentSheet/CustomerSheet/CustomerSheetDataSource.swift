@@ -181,6 +181,16 @@ extension CustomerSheetDataSource {
         }
     }
 
+    func setAsDefaultPaymentMethod(paymentMethodId: String) async throws -> STPCustomer? {
+        switch dataSource {
+        case .customerAdapter:
+            assertionFailure("CustomerAdapter does not support the set as default payment method feature")
+            return nil
+        case .customerSession(let customerSessionAdapter):
+            return try await customerSessionAdapter.setAsDefaultPaymentMethod(paymentMethodId: paymentMethodId)
+        }
+    }
+
     func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
         switch dataSource {
         case .customerAdapter:

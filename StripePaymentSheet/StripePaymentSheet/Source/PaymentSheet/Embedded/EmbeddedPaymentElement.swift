@@ -104,11 +104,21 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        let newUpdateContext = EmbeddedUpdateContext(status: .inProgress)
+        self.latestUpdateContext = newUpdateContext
+
         let startTime = Date()
         analyticsHelper.logEmbeddedUpdateStarted()
         // Do not process any update calls if we have already successfully confirmed an intent
         guard !hasConfirmedIntent else {
             let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
+            analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
+            return result
+        }
+
+        // If we currently have a sheet presented fail the update
+        guard !(presentingViewController?.presentedViewController is StripePaymentSheet.BottomSheetViewController) else {
+            let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
             analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
             return result
         }
@@ -196,6 +206,16 @@ public final class EmbeddedPaymentElement {
         }
         self.latestUpdateTask = currentUpdateTask
         let updateResult = await currentUpdateTask.value
+        if latestUpdateContext?.id == newUpdateContext.id {
+            switch updateResult {
+            case .succeeded:
+                self.latestUpdateContext?.status = .succeeded
+            case .failed(let error):
+                self.latestUpdateContext?.status = .failed(error: error)
+            case .canceled:
+                self.latestUpdateContext?.status = .canceled
+            }
+        }
         embeddedPaymentMethodsView.isUserInteractionEnabled = true
         analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
@@ -209,13 +229,12 @@ public final class EmbeddedPaymentElement {
         analyticsHelper.log(event: .mcConfirmEmbedded)
         guard let presentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
-            stpAssertionFailure(errorMessage)
+            assertionFailure(errorMessage)
             return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
         guard let paymentOption = _paymentOption else {
-            let errorMessage = "`confirm` should only be called when `paymentOption` is not nil"
-            stpAssertionFailure(errorMessage)
-            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
+            assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
+            return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
         let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
         return await _confirm(paymentOption: paymentOption, authContext: authContext).result
@@ -246,7 +265,7 @@ public final class EmbeddedPaymentElement {
 
     #if DEBUG
     public func testHeightChange() {
-        stpAssert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
+        assert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
         self.embeddedPaymentMethodsView.testHeightChange()
     }
     #endif
@@ -258,6 +277,7 @@ public final class EmbeddedPaymentElement {
     internal var elementsSession: STPElementsSession { loadResult.elementsSession }
     internal var intent: Intent { loadResult.intent }
     internal var savedPaymentMethods: [STPPaymentMethod]
+    internal var defaultPaymentMethod: STPPaymentMethod?
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
     internal private(set) var formCache: PaymentMethodFormCache = .init()
@@ -265,6 +285,8 @@ public final class EmbeddedPaymentElement {
     internal var selectedFormViewController: EmbeddedFormViewController?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
+    /// Tracks info about the currently in-flight or most recent update attempt.
+    internal var latestUpdateContext: EmbeddedUpdateContext?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif
@@ -321,6 +343,7 @@ public final class EmbeddedPaymentElement {
         self.configuration = configuration
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
+        self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,

@@ -34,9 +34,8 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     private let appearance: PaymentSheet.Appearance
-    private let rowButtonAppearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
-    private var previousSelectedRowButton: RowButton? {
+    private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
                 return
@@ -56,6 +55,7 @@ class EmbeddedPaymentMethodsView: UIView {
         didSet {
             previousSelectedRowButton = oldValue
             let selectedRowButtonTypeDidChange = oldValue?.type != selectedRowButton?.type
+            updateMandate()
             if selectedRowButtonTypeDidChange {
                 selectedRowChangeButtonState = nil
                 delegate?.embeddedPaymentMethodsViewDidUpdateSelection()
@@ -63,7 +63,6 @@ class EmbeddedPaymentMethodsView: UIView {
             if let selectedRowButton {
                 selectedRowButton.isSelected = true
             }
-            updateMandate()
         }
     }
 
@@ -116,7 +115,6 @@ class EmbeddedPaymentMethodsView: UIView {
         self.appearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
-        self.rowButtonAppearance = appearance.embeddedPaymentElement.row.style.appearanceForStyle(appearance: appearance)
         self.customer = customer
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
@@ -143,7 +141,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowApplePay {
-            let applePayRowButton = RowButton.makeForApplePay(appearance: rowButtonAppearance,
+            let applePayRowButton = RowButton.makeForApplePay(appearance: appearance,
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
@@ -153,7 +151,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: rowButtonAppearance, isEmbedded: true) { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
@@ -385,8 +383,8 @@ class EmbeddedPaymentMethodsView: UIView {
         }()
         let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
             paymentMethod: savedPaymentMethod,
-            appearance: rowButtonAppearance,
-            rightAccessoryView: accessoryButton,
+            appearance: appearance,
+            accessoryView: accessoryButton,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(
@@ -413,9 +411,9 @@ class EmbeddedPaymentMethodsView: UIView {
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
             hasSavedCard: savedPaymentMethods.hasSavedCard,
-            rightAccessoryView: accessoryButton,
+            accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
-            appearance: rowButtonAppearance,
+            appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
             shouldAnimateOnPress: true,
             isEmbedded: true,
@@ -436,21 +434,6 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
             return .zero
         }
     }
-
-    fileprivate func appearanceForStyle(appearance: PaymentSheet.Appearance) -> PaymentSheet.Appearance {
-        switch self {
-        case .flatWithRadio, .flatWithCheckmark:
-            // TODO(porter) See if there is a better way to do this, less sneaky
-            var appearance = appearance
-            appearance.borderWidth = 0.0
-            appearance.colors.selectedComponentBorder = .clear
-            appearance.cornerRadius = 0.0
-            appearance.shadow = .disabled
-            return appearance
-        case .floatingButton:
-            return appearance
-        }
-    }
 }
 
 extension Array where Element == STPPaymentMethod {
@@ -461,21 +444,17 @@ extension Array where Element == STPPaymentMethod {
 
 extension RowButton {
     func addChangeButton(sublabel: String?) {
-        rightAccessoryView?.isHidden = false
+        isDisplayingAccessoryView = true
         if let sublabel {
-            self.sublabel.text = sublabel
-            self.sublabel.isHidden = sublabel.isEmpty
-            content?.setSublabel(text: sublabel)
+            setSublabel(text: sublabel)
         }
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }
 
     func removeChangeButton(shouldClearSublabel: Bool) {
-        rightAccessoryView?.isHidden = true
+        isDisplayingAccessoryView = false
         if shouldClearSublabel {
-            sublabel.text = nil
-            sublabel.isHidden = true
-            content?.setSublabel(text: nil)
+            setSublabel(text: nil)
         }
     }
 }

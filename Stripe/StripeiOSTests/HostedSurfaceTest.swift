@@ -27,7 +27,7 @@ class HostedSurfaceTest: XCTestCase {
         XCTAssertEqual(hostedSurfaceForCustomerSheet, .customerSheet)
     }
 
-    // Test analyticEvent function for every event in CardBrandChoiceEvents
+    // Test analyticEvent function for every event in CardUpdateEvents
     func testPaymentSheetAnalyticEvents() {
         let hostedSurface = HostedSurface.paymentSheet
         testAnalyticEvents(for: hostedSurface)
@@ -39,33 +39,30 @@ class HostedSurfaceTest: XCTestCase {
     }
 
     private func testAnalyticEvents(for hostedSurface: HostedSurface) {
-        let events: [HostedSurface.CardBrandChoiceEvents] = [
+        let events: [HostedSurface.CardUpdateEvents] = [
             .displayCardBrandDropdownIndicator,
-            .openCardBrandDropdown,
-            .closeCardBrandDropDown,
-            .openCardBrandEditScreen,
-            .updateCardBrand,
-            .updateCardBrandFailed,
+            .cardBrandSelected,
+            .openEditScreen,
+            .updateCard,
+            .updateCardFailed,
             .closeEditScreen,
         ]
 
-        let expectedEventsPaymentSheet: [HostedSurface.CardBrandChoiceEvents: STPAnalyticEvent] = [
+        let expectedEventsPaymentSheet: [HostedSurface.CardUpdateEvents: STPAnalyticEvent] = [
             .displayCardBrandDropdownIndicator: .paymentSheetDisplayCardBrandDropdownIndicator,
-            .openCardBrandDropdown: .paymentSheetOpenCardBrandDropdown,
-            .closeCardBrandDropDown: .paymentSheetCloseCardBrandDropDown,
-            .openCardBrandEditScreen: .paymentSheetOpenCardBrandEditScreen,
-            .updateCardBrand: .paymentSheetUpdateCardBrand,
-            .updateCardBrandFailed: .paymentSheetUpdateCardBrandFailed,
+            .cardBrandSelected: .paymentSheetCardBrandSelected,
+            .openEditScreen: .paymentSheetOpenEditScreen,
+            .updateCard: .paymentSheetUpdateCard,
+            .updateCardFailed: .paymentSheetUpdateCardFailed,
             .closeEditScreen: .paymentSheetClosesEditScreen,
         ]
 
-        let expectedEventsCustomerSheet: [HostedSurface.CardBrandChoiceEvents: STPAnalyticEvent] = [
+        let expectedEventsCustomerSheet: [HostedSurface.CardUpdateEvents: STPAnalyticEvent] = [
             .displayCardBrandDropdownIndicator: .customerSheetDisplayCardBrandDropdownIndicator,
-            .openCardBrandDropdown: .customerSheetOpenCardBrandDropdown,
-            .closeCardBrandDropDown: .customerSheetCloseCardBrandDropDown,
-            .openCardBrandEditScreen: .customerSheetOpenCardBrandEditScreen,
-            .updateCardBrand: .customerSheetUpdateCardBrand,
-            .updateCardBrandFailed: .customerSheetUpdateCardBrandFailed,
+            .cardBrandSelected: .customerSheetCardBrandSelected,
+            .openEditScreen: .customerSheetOpenEditScreen,
+            .updateCard: .customerSheetUpdateCard,
+            .updateCardFailed: .customerSheetUpdateCardFailed,
             .closeEditScreen: .customerSheetClosesEditScreen,
         ]
 

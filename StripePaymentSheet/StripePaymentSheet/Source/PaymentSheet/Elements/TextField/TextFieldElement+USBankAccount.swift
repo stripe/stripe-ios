@@ -22,13 +22,18 @@ extension TextFieldElement {
             "\(bankName) ••••\(lastFour)"
         }
 
-        public init(bankName:String, lastFour: String) {
+        public init(bankName: String, lastFour: String) {
             self.bankName = bankName
             self.lastFour = lastFour
         }
 
         public func makeDisplayText(for text: String) -> NSAttributedString {
             return NSAttributedString(string: lastFourFormatted)
+        }
+
+        func validate(text: String, isOptional: Bool) -> ValidationState {
+            stpAssert(!isEditable, "Validation assumes that the field is read-only")
+            return !lastFour.isEmpty ? .valid : .invalid(Error.empty)
         }
     }
 }

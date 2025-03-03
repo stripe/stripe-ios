@@ -81,4 +81,14 @@ final class SavedPaymentMethodManager {
             }
         }
     }
+
+    func setAsDefaultPaymentMethod(defaultPaymentMethodId: String) async throws -> STPCustomer {
+        guard let ephemeralKey else {
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while setting a payment method as default.")
+        }
+        guard let customerId = configuration.customer?.id else {
+            throw PaymentSheetError.unknown(debugDescription: "Failed to read customerId while setting a payment method as default.")
+        }
+        return try await configuration.apiClient.setAsDefaultPaymentMethod(defaultPaymentMethodId, for: customerId, using: ephemeralKey)
+    }
 }

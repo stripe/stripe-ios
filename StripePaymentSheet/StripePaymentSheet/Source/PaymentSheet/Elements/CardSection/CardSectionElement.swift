@@ -37,7 +37,7 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
-    
+
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
             self.name = name
@@ -93,6 +93,7 @@ final class CardSectionElement: ContainerElement {
             cardBrandDropDown = PaymentMethodElementWrapper(DropdownFieldElement.makeCardBrandDropdown(theme: theme)) { field, params in
                 let cardBrand = STPCard.brand(from: field.selectedItem.rawData)
                 cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
+                analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: cardBrand)
                 return params
             }
         }
@@ -146,22 +147,6 @@ final class CardSectionElement: ContainerElement {
         self.preferredNetworks = preferredNetworks
         self.lastPanElementValidationState = panElement.validationState
         cardSection.delegate = self
-
-        // Hook up CBC analytics after self is initialized
-        self.cardBrandDropDown?.didPresent = { [weak self] in
-            guard let self = self, let cardBrandDropDown = self.cardBrandDropDown else { return }
-            let selectedCardBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
-            let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand), "cbc_event_source": "add"]
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .openCardBrandDropdown),
-                                                                 params: params)
-        }
-
-        self.cardBrandDropDown?.didTapClose = { [weak self] in
-            guard let self = self, let cardBrandDropDown = self.cardBrandDropDown else { return }
-            let selectedCardBrand = cardBrandDropDown.selectedItem.rawData.toCardBrand ?? .unknown
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .closeCardBrandDropDown),
-                                                                 params: ["selected_card_brand": STPCardBrandUtilities.apiValue(from: selectedCardBrand)])
-        }
     }
 
     // MARK: - ElementDelegate
@@ -246,13 +231,13 @@ final class CardSectionElement: ContainerElement {
             if self.cardBrands != fetchedCardBrands {
                 self.cardBrands = fetchedCardBrands
                 let disallowedCardBrands = fetchedCardBrands.filter { !self.cardBrandFilter.isAccepted(cardBrand: $0) }
-                
+
                 cardBrandDropDown.update(items: DropdownFieldElement.items(
                     from: fetchedCardBrands,
                     disallowedCardBrands: disallowedCardBrands,
                     theme: self.theme
                 ))
-                
+
                 // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
                 if !hadBrands, let indexToSelect = hasPreferredBrandIndex(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands, cardBrandDropDown: cardBrandDropDown) {
                     cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
@@ -264,7 +249,7 @@ final class CardSectionElement: ContainerElement {
             }
         }
     }
-    
+
     // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
     func hasPreferredBrandIndex(fetchedCardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>, cardBrandDropDown: DropdownFieldElement) -> Int? {
         guard let preferredNetworks = self.preferredNetworks,
@@ -272,11 +257,11 @@ final class CardSectionElement: ContainerElement {
               let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) else {
             return nil
         }
-        
+
         return indexToSelect
-        
+
     }
-    
+
     // If we only fetched one card brand that is not disallowed, auto select it.
     // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
     func useDefaultSelectionLogic(disallowedCardBrands: Set<STPCardBrand>, cardBrandDropDown: DropdownFieldElement) -> Int? {
@@ -287,7 +272,7 @@ final class CardSectionElement: ContainerElement {
               let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == firstItem.rawData }) else {
             return nil
         }
-        
+
         return indexToSelect
     }
 }

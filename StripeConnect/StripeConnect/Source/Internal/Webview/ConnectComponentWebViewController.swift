@@ -14,6 +14,8 @@ import WebKit
 @available(iOS 15, *)
 class ConnectComponentWebViewController: ConnectWebViewController {
 
+    var onDismiss: (() -> Void)?
+
     /// The embedded component manager that will be used for requests.
     let componentManager: EmbeddedComponentManager
 
@@ -36,12 +38,16 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     private var didFailLoadWithError: (Error) -> Void
 
+    private var pageLoaded: Bool = false
+
     let activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator()
         activityIndicator.hidesWhenStopped = true
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
+
+    var errorScreen: WebViewErrorScreen?
 
     init<InitProps: Encodable>(
         componentManager: EmbeddedComponentManager,
@@ -169,6 +175,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     override func webViewDidFailNavigation(withError error: any Error) {
         super.webViewDidFailNavigation(withError: error)
 
+        showErrorScreenIfNeeded()
+
         didFailLoad(error: error)
         analyticsClient.log(event: PageLoadErrorEvent(metadata: .init(
             error: error,
@@ -192,6 +200,27 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
         return await super.webView(webView, decidePolicyFor: navigationResponse)
     }
+
+    // If the component fails to load entirely we show a native error screen
+    // if the component has loaded then it's the component's responsibility to display the error.
+    func showErrorScreenIfNeeded() {
+        guard !pageLoaded else { return }
+        let errorScreen = WebViewErrorScreen(title: STPLocalizedString(
+            "Something went wrong.",
+            "Title for error message when component fails to load"
+        ), subtitle: STPLocalizedString(
+            "Please check your connection or try again later.",
+            "Subtitle for error message when component fails to load indicating there may be an issue with the internet connection."
+        ), appearance: componentManager.appearance)
+        self.view.addSubview(errorScreen)
+        errorScreen.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            errorScreen.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            errorScreen.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            errorScreen.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+        ])
+        self.errorScreen = errorScreen
+    }
 }
 
 // MARK: - Internal
@@ -214,19 +243,45 @@ extension ConnectComponentWebViewController {
         contentController.addScriptMessageHandler(messageHandler, contentWorld: contentWorld, name: messageHandler.name)
     }
 
+    func sendMessageAsync(_ sender: any MessageSender) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            do {
+                let message = try sender.javascriptMessage()
+                webView.evaluateJavaScript(message, completionHandler: { _, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                })
+            } catch {
+                continuation.resume(throwing: error)
+            }
+        }
+    }
+
     /// Convenience method to send messages to the webview.
     func sendMessage(_ sender: any MessageSender) {
-        do {
-            let message = try sender.javascriptMessage()
-            webView.evaluateJavaScript(message)
-        } catch {
-            analyticsClient.logClientError(error)
+        Task { @MainActor in
+            do {
+                try await sendMessageAsync(sender)
+            } catch {
+                analyticsClient.logClientError(error)
+            }
         }
     }
 
     func updateAppearance(appearance: Appearance) {
         sendMessage(UpdateConnectInstanceSender.init(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: appearance, traitCollection: traitCollection))))
         updateColors(appearance: appearance)
+        errorScreen?.updateAppearance(appearance)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isBeingDismissed {
+            onDismiss?()
+        }
     }
 }
 
@@ -261,8 +316,12 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler(analyticsClient: analyticsClient) { [analyticsClient] payload in
-            analyticsClient.pageViewId = payload.pageViewId
+        addMessageHandler(PageDidLoadMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
+            guard let self else { return }
+            self.pageLoaded = true
+            errorScreen?.removeFromSuperview()
+            errorScreen = nil
+            self.analyticsClient.pageViewId = payload.pageViewId
         })
         addMessageHandler(AccountSessionClaimedMessageHandler(analyticsClient: analyticsClient) { [analyticsClient] payload in
             analyticsClient.merchantId = payload.merchantId
@@ -274,6 +333,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(OpenFinancialConnectionsMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
             self?.openFinancialConnections(payload)
         })
+        addMessageHandler(CloseWebViewMessageHandler(analyticsClient: analyticsClient, didReceiveMessage: { [weak self] _ in
+            self?.dismiss(animated: true)
+        }))
     }
 
     /// Adds NotificationCenter observers
@@ -290,9 +352,26 @@ private extension ConnectComponentWebViewController {
     }
 
     func updateColors(appearance: Appearance) {
+        self.view.backgroundColor = appearance.colors.background
         webView.backgroundColor = appearance.colors.background
         webView.isOpaque = webView.backgroundColor == nil
         activityIndicator.tintColor = appearance.colors.loadingIndicatorColor
+
+        let navAppearance = UINavigationBarAppearance()
+        navAppearance.configureWithOpaqueBackground()
+        if let backgroundColor = appearance.colors.background {
+            navAppearance.backgroundColor = backgroundColor
+        }
+        var titleAttributes: [NSAttributedString.Key: Any]  = [:]
+        if let textColor = appearance.colors.text {
+            titleAttributes[.foregroundColor] = textColor
+        }
+        if let font = appearance.typography.font {
+            titleAttributes[.font] = font
+        }
+        navAppearance.titleTextAttributes = titleAttributes
+        self.navigationController?.navigationBar.standardAppearance = navAppearance
+        self.navigationController?.navigationBar.scrollEdgeAppearance = navAppearance
     }
 
     func didFailLoad(error: Error) {
