@@ -1,5 +1,7 @@
 "Close" = "Cerrar";
 
+"Default payment method was not changed. Please try again." = "El método de pago predeterminado no se ha cambiado. Vuelve a intentarlo.";
+
 "Scan Card" = "Escanear tarjeta";
 
 "Scan card" = "Escanear tarjeta";

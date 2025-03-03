@@ -184,6 +184,8 @@
 
 "Payment methods" = "Mokėjimo būdai";
 
+"Please choose a valid payment method." = "Pasirinkite galiojantį mokėjimo būdą.";
+
 "Please go back and select another payment method" = "Grįžkite atgal ir pasirinkite kitą mokėjimo būdą";
 
 "Point the camera at your card." = "Nukreipkite fotoaparatą į kortelę.";

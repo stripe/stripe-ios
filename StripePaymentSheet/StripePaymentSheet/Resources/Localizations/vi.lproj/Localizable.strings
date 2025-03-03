@@ -184,6 +184,8 @@
 
 "Payment methods" = "Phương thức thanh toán";
 
+"Please choose a valid payment method." = "Vui lòng chọn phương thức thanh toán hợp lệ. Hãy thử lại.";
+
 "Please go back and select another payment method" = "Vui lòng quay lại và chọn phương thức thanh toán khác";
 
 "Point the camera at your card." = "Hướng camera vào thẻ.";

@@ -163,6 +163,7 @@ final class CardSectionElement: ContainerElement {
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
     var lastPanElementValidationState: ElementValidationState
     var lastDisallowedCardBrandLogged: STPCardBrand?
+    var hasLoggedExpectedExtraDigitsButUserEntered16: Bool = false
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
         let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
@@ -178,6 +179,20 @@ final class CardSectionElement: ContainerElement {
             lastPanElementValidationState = panElement.validationState
             if case .valid = panElement.validationState {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
+            }
+        }
+
+        // If the user entered 16 digits and exited the field, but our PAN length data
+        // indicates that we need more (maybe 19 digits?), then our data might be wrong.
+        // Send an alert so we can measure how often this happens.
+        if case .invalid(let error, _) = panElement.validationState,
+               let specificError = error as? TextFieldElement.PANConfiguration.Error,
+           case .incomplete = specificError,
+           !panElement.isEditing,
+           !hasLoggedExpectedExtraDigitsButUserEntered16 {
+            if panElement.text.count == 16 {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields)
+                hasLoggedExpectedExtraDigitsButUserEntered16 = true
             }
         }
 
