@@ -6,6 +6,7 @@
 ### PaymentSheet
 * [Fixed] Fixed an issue in Embedded Payment Element (private preview) where the row could be selected even though there's no valid payment option.
 * [Added] Support for Crypto in PaymentSheet
+* [Added] Added card brand filtering to specify allowed or blocked card brands. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/filter-card-brands?platform=ios).
 
 ### Payments
 * [Fixed] Fixed an issue that caused `STPPaymentMethodUSBankAccount.linkedAccount` to be `nil` for some merchants.
