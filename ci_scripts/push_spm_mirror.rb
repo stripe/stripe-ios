@@ -50,7 +50,7 @@ Dir.mktmpdir do |tmp_dir|
 
   Dir.chdir(tmp_dir + '/stripe-ios-spm') do
     run_command('git add .')
-    run_command("git commit -m \"Stripe SDK #{@version} GIT_VALID_PII_OVERRIDE\"")
+    run_command("git commit -m \"Stripe SDK #{@version}\" --no-verify")
     run_command("git tag #{@version}")
     run_command('git push origin --tags')
   end
