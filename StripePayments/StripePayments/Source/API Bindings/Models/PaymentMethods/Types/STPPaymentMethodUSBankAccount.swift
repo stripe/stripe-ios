@@ -28,8 +28,8 @@ public class STPPaymentMethodUSBankAccount: NSObject {
     /// Last four digits of the bank account number
     @objc public let last4: String
 
-    /// The token of the Linked Account used to create the payment method
-    @objc public let linkedAccount: String?
+    /// The ID of the Financial Connections Account used to create the payment method
+    @objc public let financialConnectionsAccount: String?
 
     /// Contains information about US bank account networks that can be used
     @objc public let networks: STPPaymentMethodUSBankAccountNetworks?
@@ -46,7 +46,7 @@ public class STPPaymentMethodUSBankAccount: NSObject {
         bankName: String,
         fingerprint: String,
         last4: String,
-        linkedAccount: String?,
+        financialConnectionsAccount: String?,
         networks: STPPaymentMethodUSBankAccountNetworks?,
         routingNumber: String,
         allResponseFields: [AnyHashable: Any]
@@ -56,7 +56,7 @@ public class STPPaymentMethodUSBankAccount: NSObject {
         self.bankName = bankName
         self.fingerprint = fingerprint
         self.last4 = last4
-        self.linkedAccount = linkedAccount
+        self.financialConnectionsAccount = financialConnectionsAccount
         self.networks = networks
         self.routingNumber = routingNumber
         self.allResponseFields = allResponseFields
@@ -97,7 +97,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
             bankName: bankName,
             fingerprint: fingerprint,
             last4: last4,
-            linkedAccount: response["financial_connections_account"] as? String,
+            financialConnectionsAccount: response["financial_connections_account"] as? String,
             networks: networks,
             routingNumber: routingNumber,
             allResponseFields: response
