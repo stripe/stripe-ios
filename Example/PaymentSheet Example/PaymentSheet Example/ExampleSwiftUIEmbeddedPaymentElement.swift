@@ -165,6 +165,7 @@ struct MyEmbeddedCheckoutView: View {
     @StateObject var embeddedViewModel = EmbeddedPaymentElementViewModel()
     @StateObject var backendViewModel = BackendViewModel()
     @State var confirmationResult: EmbeddedPaymentElementResult?
+    @State var isConfirming = false
     @State private var isSubscribing: Bool = false
     @State private var loadFailed = false
 
@@ -212,7 +213,9 @@ struct MyEmbeddedCheckoutView: View {
                 // Confirm Payment button
                 Button(action: {
                     Task {
+                        isConfirming = true
                         self.confirmationResult = await embeddedViewModel.confirm()
+                        isConfirming = false
                     }
                 }) {
                     if embeddedViewModel.paymentOption == nil {
@@ -285,6 +288,7 @@ struct MyEmbeddedCheckoutView: View {
                 Text(alertMessage)
             }
         )
+        .allowsHitTesting(!isConfirming) // Disable user interaction during confirmation
     }
 
     private func prepareEmbeddedPaymentElement() async {
