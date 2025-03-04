@@ -1,14 +1,17 @@
+/* An error message displayed when changing a card brand fails. */
+"Card brand was not updated. Please try again." = "Card brand was not updated. Please try again.";
+
 /* Text for close button */
 "Close" = "Close";
 
 /* An error message displayed when setting a default payment method fails. */
-"Default payment method was not changed. Please try again." = "Default payment method was not changed. Please try again.";
-
-/* Button title to open camera to scan credit/debit card */
-"Scan card" = "Scan card";
+"Default payment method was not updated. Please try again." = "Default payment method was not updated. Please try again.";
 
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Scan card";
 
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "The IBAN you entered is invalid.";
