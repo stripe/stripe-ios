@@ -60,7 +60,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         navBar.delegate = self
         return navBar
     }()
-    var didSelectSetAsDefault: Bool = false
     /// Returns true if Apple Pay is not enabled and Link is enabled and there are no saved payment methods
     private var linkOnlyMode: Bool {
         return !isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingAdd
@@ -507,7 +506,6 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         guard case .saved(let paymentMethod) = paymentMethodSelection else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
-        didSelectSetAsDefault = true
         return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
     }
 

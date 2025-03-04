@@ -191,7 +191,7 @@ extension PaymentSheet {
                         params: confirmParams.paymentMethodParams,
                         paymentOptions: confirmParams.confirmPaymentMethodOptions,
                         shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
-                        shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                        shouldSetAsDefaultPM: confirmParams.setDefaultPaymentMethodCheckboxState == .selected
                     ),
                     paymentIntent: paymentIntent,
                     configuration: configuration
@@ -213,7 +213,7 @@ extension PaymentSheet {
                         params: confirmParams.paymentMethodParams,
                         paymentOptions: confirmParams.confirmPaymentMethodOptions,
                         shouldSave: false,
-                        shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                        shouldSetAsDefaultPM: confirmParams.setDefaultPaymentMethodCheckboxState == .selected
                     ),
                     setupIntent: setupIntent,
                     configuration: configuration
@@ -235,7 +235,7 @@ extension PaymentSheet {
                         params: confirmParams.paymentMethodParams,
                         paymentOptions: confirmParams.confirmPaymentMethodOptions,
                         shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
-                        shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                        shouldSetAsDefaultPM: confirmParams.setDefaultPaymentMethodCheckboxState == .selected
                     ),
                     configuration: configuration,
                     intentConfig: intentConfig,

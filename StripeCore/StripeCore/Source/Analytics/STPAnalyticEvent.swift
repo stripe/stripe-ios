@@ -230,8 +230,8 @@ import Foundation
     case paymentSheetDisplayCardBrandDropdownIndicator = "mc_display_cbc_dropdown"
     case paymentSheetCardBrandSelected = "mc_cbc_selected"
     case paymentSheetOpenEditScreen = "mc_open_edit_screen"
-    case paymentSheetUpdateCard = "mc_update_card"
-    case paymentSheetUpdateCardFailed = "mc_update_card_failed"
+    case paymentSheetUpdateCardBrand = "mc_update_card"
+    case paymentSheetUpdateCardBrandFailed = "mc_update_card_failed"
     case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
     case paymentSheetDisallowedCardBrand = "mc_disallowed_card_brand"
 
@@ -239,9 +239,17 @@ import Foundation
     case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
     case customerSheetCardBrandSelected = "cs_cbc_selected"
     case customerSheetOpenEditScreen = "cs_open_edit_screen"
-    case customerSheetUpdateCard = "cs_update_card"
-    case customerSheetUpdateCardFailed = "cs_update_card_failed"
+    case customerSheetUpdateCardBrand = "cs_update_card"
+    case customerSheetUpdateCardBrandFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
+
+    // MARK: - PaymentSheet set default
+    case paymentSheetSetDefaultPaymentMethod = "mc_set_default_payment_method"
+    case paymentSheetSetDefaultPaymentMethodFailed = "mc_set_default_payment_method_failed"
+
+    // MARK: - CustomerSheet sync default
+    case customerSheetSyncDefaultPaymentMethod = "cs_sync_default_payment_method"
+    case customerSheetSyncDefaultPaymentMethodFailed = "cs_sync_default_payment_method_failed"
 
     // MARK: - Basic Integration
     // Loading

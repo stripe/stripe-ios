@@ -433,17 +433,17 @@ extension PaymentSheet {
                     integrationShape: .flowController,
                     analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
-                    var didSelectSetAsDefault: Bool
+                    var params: [String: Any] = [:]
                     if case let .new(confirmParams) = paymentOption {
-                        didSelectSetAsDefault = confirmParams.setAsDefaultPM ?? false
-                    } else {
-                        didSelectSetAsDefault = self.viewController.didSelectSetAsDefault
+                        if confirmParams.setDefaultPaymentMethodCheckboxState != .hidden {
+                            params["set_as_default"] = confirmParams.setDefaultPaymentMethodCheckboxState == .selected ? true : false
+                        }
                     }
                     analyticsHelper.logPayment(
                         paymentOption: paymentOption,
                         result: result,
                         deferredIntentConfirmationType: deferredIntentConfirmationType,
-                        params: self.elementsSession.paymentMethodSetAsDefaultForPaymentSheet ? ["set_as_default": didSelectSetAsDefault] : [:]
+                        params: params
                     )
                     if case .completed = result, case .link = paymentOption {
                         // Remember Link as default payment method for users who just created an account.
@@ -626,5 +626,4 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var didSelectSetAsDefault: Bool { get set }
 }

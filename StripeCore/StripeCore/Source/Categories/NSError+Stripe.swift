@@ -60,9 +60,20 @@ extension NSError {
         )
     }
 
-    @objc @_spi(STP) public class func stp_defaultPaymentMethodNotChangedError() -> NSError {
+    @objc @_spi(STP) public class func stp_cardBrandNotUpdatedError() -> NSError {
         let userInfo = [
-            NSLocalizedDescriptionKey: self.stp_defaultPaymentMethodNotChangedMessage()
+            NSLocalizedDescriptionKey: self.stp_cardBrandNotUpdatedMessage()
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.invalidRequestError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_defaultPaymentMethodNotUpdatedError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: self.stp_defaultPaymentMethodNotUpdatedMessage()
         ]
         return NSError(
             domain: STPError.stripeDomain,
@@ -144,9 +155,16 @@ extension NSError {
         )
     }
 
-    @objc @_spi(STP) public class func stp_defaultPaymentMethodNotChangedMessage() -> String {
+    @objc @_spi(STP) public class func stp_cardBrandNotUpdatedMessage() -> String {
         return STPLocalizedString(
-            "Default payment method was not changed. Please try again.",
+            "Card brand was not updated. Please try again.",
+            "An error message displayed when changing a card brand fails."
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_defaultPaymentMethodNotUpdatedMessage() -> String {
+        return STPLocalizedString(
+            "Default payment method was not updated. Please try again.",
             "An error message displayed when setting a default payment method fails."
         )
     }

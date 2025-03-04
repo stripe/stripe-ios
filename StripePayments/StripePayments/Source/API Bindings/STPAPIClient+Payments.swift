@@ -887,7 +887,12 @@ extension STPAPIClient {
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {
-                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                    if let _ = paymentMethodUpdateParams.card?.networks?.preferred {
+                        continuation.resume(with: .failure(error ?? NSError.stp_cardBrandNotUpdatedError()))
+                    }
+                    else {
+                        continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                    }
                 }
             }
         })
@@ -1439,7 +1444,7 @@ extension STPAPIClient {
         try await withCheckedThrowingContinuation({ continuation in
             self.setAsDefaultPaymentMethod(paymentMethodID, for: customerID, using: ephemeralKey) { customer, error in
                 guard let customer = customer else {
-                    continuation.resume(throwing: error ?? NSError.stp_defaultPaymentMethodNotChangedError())
+                    continuation.resume(throwing: error ?? NSError.stp_defaultPaymentMethodNotUpdatedError())
                     return
                 }
                 continuation.resume(returning: customer)

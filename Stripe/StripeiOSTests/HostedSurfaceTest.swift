@@ -43,8 +43,10 @@ class HostedSurfaceTest: XCTestCase {
             .displayCardBrandDropdownIndicator,
             .cardBrandSelected,
             .openEditScreen,
-            .updateCard,
-            .updateCardFailed,
+            .updateCardBrand,
+            .updateCardBrandFailed,
+            .setDefaultPaymentMethod,
+            .setDefaultPaymentMethodFailed,
             .closeEditScreen,
         ]
 
@@ -52,8 +54,10 @@ class HostedSurfaceTest: XCTestCase {
             .displayCardBrandDropdownIndicator: .paymentSheetDisplayCardBrandDropdownIndicator,
             .cardBrandSelected: .paymentSheetCardBrandSelected,
             .openEditScreen: .paymentSheetOpenEditScreen,
-            .updateCard: .paymentSheetUpdateCard,
-            .updateCardFailed: .paymentSheetUpdateCardFailed,
+            .updateCardBrand: .paymentSheetUpdateCardBrand,
+            .updateCardBrandFailed: .paymentSheetUpdateCardBrandFailed,
+            .setDefaultPaymentMethod: .paymentSheetSetDefaultPaymentMethod,
+            .setDefaultPaymentMethodFailed: .paymentSheetSetDefaultPaymentMethodFailed,
             .closeEditScreen: .paymentSheetClosesEditScreen,
         ]
 
@@ -61,8 +65,10 @@ class HostedSurfaceTest: XCTestCase {
             .displayCardBrandDropdownIndicator: .customerSheetDisplayCardBrandDropdownIndicator,
             .cardBrandSelected: .customerSheetCardBrandSelected,
             .openEditScreen: .customerSheetOpenEditScreen,
-            .updateCard: .customerSheetUpdateCard,
-            .updateCardFailed: .customerSheetUpdateCardFailed,
+            .updateCardBrand: .customerSheetUpdateCardBrand,
+            .updateCardBrandFailed: .customerSheetUpdateCardBrandFailed,
+            .setDefaultPaymentMethod: .customerSheetSyncDefaultPaymentMethod,
+            .setDefaultPaymentMethodFailed: .customerSheetSyncDefaultPaymentMethodFailed,
             .closeEditScreen: .customerSheetClosesEditScreen,
         ]
 

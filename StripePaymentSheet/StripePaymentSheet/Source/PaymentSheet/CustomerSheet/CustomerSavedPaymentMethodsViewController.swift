@@ -732,10 +732,10 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             do {
                 if paymentMethodSyncDefault, let defaultPaymentMethod = selectedPaymentOption?.savedPaymentMethod {
                     _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId)
-                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetUpdateCard)
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetSyncDefaultPaymentMethod)
                 }
             } catch {
-                let errorAnalytic = ErrorAnalytic(event: .customerSheetUpdateCardFailed,
+                let errorAnalytic = ErrorAnalytic(event: .customerSheetSyncDefaultPaymentMethodFailed,
                                                   error: Error.updatePaymentMethodFailed)
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 onError(error)

@@ -133,6 +133,13 @@ final class PaymentSheetAnalyticsHelper {
             let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
             params["link_mode"] = linkMode
         }
+        if let _ = elementsSession.customer?.customerSession {
+            let setAsDefaultEnabled = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
+            params["set_as_default_enabled"] = setAsDefaultEnabled
+            if setAsDefaultEnabled {
+                params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil ? true : false
+            }
+        }
         let duration: TimeInterval = {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)

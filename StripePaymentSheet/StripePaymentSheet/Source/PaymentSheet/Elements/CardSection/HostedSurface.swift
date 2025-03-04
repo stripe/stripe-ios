@@ -30,10 +30,14 @@ import Foundation
             return .paymentSheetCardBrandSelected
         case (.openEditScreen, .paymentSheet):
             return .paymentSheetOpenEditScreen
-        case (.updateCard, .paymentSheet):
-            return .paymentSheetUpdateCard
-        case (.updateCardFailed, .paymentSheet):
-            return .paymentSheetUpdateCardFailed
+        case (.updateCardBrand, .paymentSheet):
+            return .paymentSheetUpdateCardBrand
+        case (.updateCardBrandFailed, .paymentSheet):
+            return .paymentSheetUpdateCardBrandFailed
+        case (.setDefaultPaymentMethod, .paymentSheet):
+            return .paymentSheetSetDefaultPaymentMethod
+        case (.setDefaultPaymentMethodFailed, .paymentSheet):
+            return .paymentSheetSetDefaultPaymentMethodFailed
         case (.closeEditScreen, .paymentSheet):
             return .paymentSheetClosesEditScreen
         case (.displayCardBrandDropdownIndicator, .customerSheet):
@@ -42,10 +46,14 @@ import Foundation
             return .customerSheetCardBrandSelected
         case (.openEditScreen, .customerSheet):
             return .customerSheetOpenEditScreen
-        case (.updateCard, .customerSheet):
-            return .customerSheetUpdateCard
-        case (.updateCardFailed, .customerSheet):
-            return .customerSheetUpdateCardFailed
+        case (.updateCardBrand, .customerSheet):
+            return .customerSheetUpdateCardBrand
+        case (.updateCardBrandFailed, .customerSheet):
+            return .customerSheetUpdateCardBrandFailed
+        case (.setDefaultPaymentMethod, .customerSheet):
+            return .customerSheetSyncDefaultPaymentMethod
+        case (.setDefaultPaymentMethodFailed, .customerSheet):
+            return .customerSheetSyncDefaultPaymentMethodFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
         }
@@ -56,8 +64,10 @@ import Foundation
         case displayCardBrandDropdownIndicator
         case cardBrandSelected
         case openEditScreen
-        case updateCard
-        case updateCardFailed
+        case updateCardBrand
+        case updateCardBrandFailed
+        case setDefaultPaymentMethod
+        case setDefaultPaymentMethodFailed
         case closeEditScreen
     }
 }

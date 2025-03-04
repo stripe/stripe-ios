@@ -46,7 +46,7 @@ final class IntentConfirmParams {
     }
 
     /// True if the customer opts to save their payment method as their default payment method.
-    var setAsDefaultPM: Bool?
+    var setDefaultPaymentMethodCheckboxState: SaveForFutureUseCheckboxState = .hidden
 
     func makeIcon(updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {

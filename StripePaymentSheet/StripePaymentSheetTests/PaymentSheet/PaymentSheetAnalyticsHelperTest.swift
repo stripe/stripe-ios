@@ -171,6 +171,125 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         }
     }
 
+    func testLogLoadSucceededSetAsDefaultEnabled() {
+        let integrationShapes: [(PaymentSheetAnalyticsHelper.IntegrationShape, String)] = [
+            (.complete, "paymentsheet"),
+            (.embedded, "embedded"),
+            (.flowController, "flowcontroller")
+        ]
+        
+        for (shape, shapeString) in integrationShapes {
+            let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+            
+            // Reset the analytics client for each iteration
+            analyticsClient._testLogHistory.removeAll()
+            
+            // Load started -> succeeded
+            sut.logLoadStarted()
+            sut.logLoadSucceeded(
+                intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
+                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: nil),
+                defaultPaymentMethod: nil,
+                orderedPaymentMethodTypes: [.stripe(.card)]
+            )
+            
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
+            
+            let loadSucceededPayload = analyticsClient._testLogHistory[1]
+            XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+            XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
+            XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "none")
+            XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
+            XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card")
+            XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
+            XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
+            XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, false)
+        }
+    }
+
+    func testLogLoadSucceededSetAsDefaultEnabledHasDefaultPaymentMethod() {
+        let integrationShapes: [(PaymentSheetAnalyticsHelper.IntegrationShape, String)] = [
+            (.complete, "paymentsheet"),
+            (.embedded, "embedded"),
+            (.flowController, "flowcontroller")
+        ]
+
+        for (shape, shapeString) in integrationShapes {
+            let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+
+            // Reset the analytics client for each iteration
+            analyticsClient._testLogHistory.removeAll()
+
+            let testCardJSON = [
+                "id": "pm_123card",
+                "type": "card",
+                "card": [
+                    "last4": "4242",
+                    "brand": "visa",
+                    "fingerprint": "B8XXs2y2JsVBtB9f",
+                    "networks": ["available": ["visa"]],
+                    "exp_month": "01",
+                    "exp_year": "2040",
+                ],
+            ] as [AnyHashable: Any]
+            let testUSBankAccountJSON = [
+                "id": "pm_123bank",
+                "type": "us_bank_account",
+                "us_bank_account": [
+                    "account_holder_type": "individual",
+                    "account_type": "checking",
+                    "bank_name": "STRIPE TEST BANK",
+                    "fingerprint": "ickfX9sbxIyAlbuh",
+                    "last4": "6789",
+                    "networks": [
+                      "preferred": "ach",
+                      "supported": [
+                        "ach",
+                      ],
+                    ] as [String: Any],
+                    "routing_number": "110000000",
+                ] as [String: Any],
+                "billing_details": [
+                    "name": "Sam Stripe",
+                    "email": "sam@stripe.com",
+                ] as [String: Any],
+            ] as [AnyHashable: Any]
+            let testSEPAJSON = [
+                "id": "pm_123sepa",
+                "type": "sepa_debit",
+                "sepa_debit": [
+                    "last4": "1234",
+                ],
+                "billing_details": [
+                    "name": "Sam Stripe",
+                    "email": "sam@stripe.com",
+                ] as [String: Any],
+            ] as [AnyHashable: Any]
+            // Load started -> succeeded
+            sut.logLoadStarted()
+            sut.logLoadSucceeded(
+                intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
+                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON, testSEPAJSON]),
+                defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
+                orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.SEPADebit)]
+            )
+
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
+            XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
+
+            let loadSucceededPayload = analyticsClient._testLogHistory[1]
+            XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+            XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
+            XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "card")
+            XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
+            XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,us_bank_account,sepa_debit")
+            XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
+            XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
+            XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
+        }
+    }
+
     func testLogShow() {
         let paymentSheetHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         paymentSheetHelper.logShow(showingSavedPMList: true)
