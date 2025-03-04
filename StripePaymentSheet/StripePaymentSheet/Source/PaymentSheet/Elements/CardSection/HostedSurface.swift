@@ -50,12 +50,12 @@ import Foundation
             return .customerSheetUpdateCardBrand
         case (.updateCardBrandFailed, .customerSheet):
             return .customerSheetUpdateCardBrandFailed
-        case (.setDefaultPaymentMethod, .customerSheet):
-            return .customerSheetSyncDefaultPaymentMethod
-        case (.setDefaultPaymentMethodFailed, .customerSheet):
-            return .customerSheetSyncDefaultPaymentMethodFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
+        case (.setDefaultPaymentMethod, .customerSheet):
+            return STPAnalyticEvent.unexpectedCustomerSheetError
+        case (.setDefaultPaymentMethodFailed, .customerSheet):
+            return STPAnalyticEvent.unexpectedCustomerSheetError
         }
     }
 

@@ -426,12 +426,16 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 case .saved(let paymentMethod, _):
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
                     let type = STPPaymentMethod.string(from: paymentMethod.type)
+                    var syncDefaultEnabled: Bool?
+                    if case .customerSession(let customerSessionAdapter) = self.customerSheetDataSource.dataSource {
+                        syncDefaultEnabled = self.paymentMethodSyncDefault
+                    }
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
-                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: type)
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: type, syncDefaultEnabled: syncDefaultEnabled)
                         self.error = error
                         self.updateUI(animated: true)
                     } onSuccess: {
-                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: type)
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: type, syncDefaultEnabled: syncDefaultEnabled)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                             self.csCompletion?(.selected(paymentOptionSelection))
                         }
@@ -729,16 +733,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 onError(error)
                 return
             }
+            
             do {
                 if paymentMethodSyncDefault, let defaultPaymentMethod = selectedPaymentOption?.savedPaymentMethod {
                     _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId)
-                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetSyncDefaultPaymentMethod)
                 }
             } catch {
-                let errorAnalytic = ErrorAnalytic(event: .customerSheetSyncDefaultPaymentMethodFailed,
-                                                  error: Error.updatePaymentMethodFailed)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 onError(error)
+                return
             }
             onSuccess()
         }

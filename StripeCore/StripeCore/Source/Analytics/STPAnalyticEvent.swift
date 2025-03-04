@@ -247,10 +247,6 @@ import Foundation
     case paymentSheetSetDefaultPaymentMethod = "mc_set_default_payment_method"
     case paymentSheetSetDefaultPaymentMethodFailed = "mc_set_default_payment_method_failed"
 
-    // MARK: - CustomerSheet sync default
-    case customerSheetSyncDefaultPaymentMethod = "cs_sync_default_payment_method"
-    case customerSheetSyncDefaultPaymentMethodFailed = "cs_sync_default_payment_method_failed"
-
     // MARK: - Basic Integration
     // Loading
     case biLoadStarted = "bi_load_started"

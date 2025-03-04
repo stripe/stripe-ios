@@ -178,8 +178,16 @@ public class CustomerSheet {
                              paymentMethodSyncDefault: paymentMethodSyncDefault,
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
+                var params: [String: Any] = [:]
+                if let _ = elementsSession.customer?.customerSession {
+                    params["sync_default_enabled"] = paymentMethodSyncDefault
+                    if paymentMethodSyncDefault {
+                        params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil ? true : false
+                    }
+                }
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
-                                                                     duration: Date().timeIntervalSince(loadingStartDate))
+                                                                     duration: Date().timeIntervalSince(loadingStartDate),
+                                                                     params: params)
             case .failure(let error):
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadFailed,
                                                                      duration: Date().timeIntervalSince(loadingStartDate),
