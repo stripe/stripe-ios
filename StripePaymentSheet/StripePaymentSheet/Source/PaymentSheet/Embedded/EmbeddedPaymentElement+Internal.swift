@@ -475,17 +475,10 @@ extension EmbeddedPaymentElement {
             integrationShape: .embedded,
             analyticsHelper: analyticsHelper
         )
-        var params: [String: Any] = [:]
-        if case let .new(confirmParams) = paymentOption {
-            if let setAsDefault = confirmParams.setAsDefaultPM {
-                params["set_as_default"] = setAsDefault
-            }
-        }
         analyticsHelper.logPayment(
             paymentOption: paymentOption,
             result: result,
-            deferredIntentConfirmationType: deferredIntentConfirmationType,
-            params: params
+            deferredIntentConfirmationType: deferredIntentConfirmationType
         )
 
         if case .completed = result {

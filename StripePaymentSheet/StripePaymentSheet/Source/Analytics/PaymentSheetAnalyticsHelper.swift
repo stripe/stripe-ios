@@ -137,7 +137,7 @@ final class PaymentSheetAnalyticsHelper {
             let setAsDefaultEnabled = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
             params["set_as_default_enabled"] = setAsDefaultEnabled
             if setAsDefaultEnabled {
-                params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil ? true : false
+                params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil
             }
         }
         let duration: TimeInterval = {
@@ -287,8 +287,7 @@ final class PaymentSheetAnalyticsHelper {
     func logPayment(
         paymentOption: PaymentOption,
         result: PaymentSheetResult,
-        deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?,
-        params: [String: Any] = [:]
+        deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
     ) {
         if NSClassFromString("XCTest") == nil {
             stpAssert(intent != nil)
@@ -339,7 +338,12 @@ final class PaymentSheetAnalyticsHelper {
                 return success ? .mcPaymentEmbeddedSuccess : .mcPaymentEmbeddedFailure
             }
         }()
-
+        var params: [String: Any] = [:]
+        if case let .new(confirmParams) = paymentOption {
+            if let setAsDefault = confirmParams.setAsDefaultPM {
+                params["set_as_default"] = setAsDefault
+            }
+        }
         log(event: event,
             duration: getDuration(for: .checkout),
             error: result.error,

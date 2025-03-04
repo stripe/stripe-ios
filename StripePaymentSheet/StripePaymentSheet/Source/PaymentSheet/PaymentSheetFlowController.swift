@@ -433,17 +433,10 @@ extension PaymentSheet {
                     integrationShape: .flowController,
                     analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
-                    var params: [String: Any] = [:]
-                    if case let .new(confirmParams) = paymentOption {
-                        if let setAsDefault = confirmParams.setAsDefaultPM {
-                            params["set_as_default"] = setAsDefault
-                        }
-                    }
                     analyticsHelper.logPayment(
                         paymentOption: paymentOption,
                         result: result,
-                        deferredIntentConfirmationType: deferredIntentConfirmationType,
-                        params: params
+                        deferredIntentConfirmationType: deferredIntentConfirmationType
                     )
                     if case .completed = result, case .link = paymentOption {
                         // Remember Link as default payment method for users who just created an account.

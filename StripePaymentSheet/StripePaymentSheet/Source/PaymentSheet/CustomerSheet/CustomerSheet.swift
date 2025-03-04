@@ -182,7 +182,7 @@ public class CustomerSheet {
                 if elementsSession.customer?.customerSession != nil {
                     params["sync_default_enabled"] = paymentMethodSyncDefault
                     if paymentMethodSyncDefault {
-                        params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil ? true : false
+                        params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil
                     }
                 }
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
