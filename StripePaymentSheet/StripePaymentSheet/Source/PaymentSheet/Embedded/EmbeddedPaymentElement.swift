@@ -271,8 +271,19 @@ public final class EmbeddedPaymentElement {
     #endif
     // MARK: - Internal
 
-    internal private(set) var containerView: EmbeddedPaymentElementContainerView
-    internal private(set) var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView
+    internal private(set) lazy var containerView: EmbeddedPaymentElementContainerView = {
+        return EmbeddedPaymentElementContainerView(
+            embeddedPaymentMethodsView: embeddedPaymentMethodsView
+        )
+    }()
+    internal private(set) lazy var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView = {
+       return Self.makeView(
+        configuration: configuration,
+        loadResult: loadResult,
+        analyticsHelper: analyticsHelper,
+        delegate: self
+       )
+    }()
     internal var loadResult: PaymentSheetLoader.LoadResult
     internal var elementsSession: STPElementsSession { loadResult.elementsSession }
     internal var intent: Intent { loadResult.intent }
@@ -344,22 +355,13 @@ public final class EmbeddedPaymentElement {
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
-        self.embeddedPaymentMethodsView = Self.makeView(
-            configuration: configuration,
-            loadResult: loadResult,
-            analyticsHelper: analyticsHelper
-        )
-        self.containerView = EmbeddedPaymentElementContainerView(
-            embeddedPaymentMethodsView: embeddedPaymentMethodsView
-        )
-
         self.analyticsHelper = analyticsHelper
+
         analyticsHelper.logInitialized()
         self.containerView.needsUpdateSuperviewHeight = { [weak self] in
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
-        self.embeddedPaymentMethodsView.delegate = self
         self.lastUpdatedPaymentOption = paymentOption
     }
 }
