@@ -30,4 +30,4 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 ### Payments
 * [Changed] Renamed STPPaymentHandler's `confirm` and `handleNextAction` methods and added async versions.
 * [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
-
+* [Changed] `linkedAccount` on `STPPaymentMethodUSBankAccount` has been renamed to `financialConnectionsAccount`.
