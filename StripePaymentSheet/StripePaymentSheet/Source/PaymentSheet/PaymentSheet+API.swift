@@ -544,12 +544,10 @@ extension PaymentSheet {
                 completion(.canceled, nil)
                 return
             }
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 // Call confirmHandler so that the merchant completes the payment
-                confirmHandler(paymentMethod.type, billingDetails) { result in
-                    // This closure is invoked by the merchant when payment is finished
-                    completion(result, nil)
-                }
+                let result = await confirmHandler(paymentMethod.type, billingDetails)
+                completion(result, nil)
             }
         }
     }

@@ -309,8 +309,12 @@ class PlaygroundController: ObservableObject {
         if settings.apmsEnabled == .off {
             paymentMethodTypes = self.paymentMethodTypes
         }
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
-            self?.confirmHandler($0, $1, $2)
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] pm, billingDetails in
+            try await withCheckedThrowingContinuation { continuation in
+                self?.confirmHandler(pm, billingDetails) { result in
+                    continuation.resume(with: result)
+                }
+            }
         }
 
         switch settings.mode {
@@ -355,32 +359,35 @@ class PlaygroundController: ObservableObject {
         guard let externalPaymentMethods = settings.externalPaymentMethods.paymentMethods else {
             return nil
         }
-
         return .init(
             externalPaymentMethods: externalPaymentMethods
-        ) { [weak self] externalPaymentMethodType, billingDetails, completion in
-            self?.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails, completion: completion)
+        ) { [weak self] externalPaymentMethodType, billingDetails in
+            guard let self else { return .canceled }
+            return await self.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails)
         }
     }
 
-    func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails, completion: @escaping (PaymentSheetResult) -> Void) {
+    @MainActor
+    func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult {
         print("Customer is attempting to complete payment with \(type). Their billing details: \(billingDetails)")
         print(billingDetails)
-        let alert = UIAlertController(title: "Confirm \(type)?", message: nil, preferredStyle: .alert)
-        alert.addAction(.init(title: "Confirm", style: .default) {_ in
-            completion(.completed)
-        })
-        alert.addAction(.init(title: "Cancel", style: .default) {_ in
-            completion(.canceled)
-        })
-        alert.addAction(.init(title: "Fail", style: .default) {_ in
-            let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
-            completion(.failed(error: exampleError))
-        })
-        if self.settings.uiStyle == .paymentSheet || self.settings.uiStyle == .embedded {
-            self.rootViewController.presentedViewController?.present(alert, animated: true)
-        } else {
-            self.rootViewController.present(alert, animated: true)
+        return await withCheckedContinuation { continuation in
+            let alert = UIAlertController(title: "Confirm \(type)?", message: nil, preferredStyle: .alert)
+            alert.addAction(.init(title: "Confirm", style: .default) { _ in
+                continuation.resume(returning: .completed)
+            })
+            alert.addAction(.init(title: "Cancel", style: .default) {_ in
+                continuation.resume(returning: .canceled)
+            })
+            alert.addAction(.init(title: "Fail", style: .default) {_ in
+                let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
+                continuation.resume(returning: .failed(error: exampleError))
+            })
+            if self.settings.uiStyle == .paymentSheet || self.settings.uiStyle == .embedded {
+                self.rootViewController.presentedViewController?.present(alert, animated: true)
+            } else {
+                self.rootViewController.present(alert, animated: true)
+            }
         }
     }
 
