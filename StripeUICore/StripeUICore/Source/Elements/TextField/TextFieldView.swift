@@ -147,7 +147,7 @@ class TextFieldView: UIView {
     // MARK: - Private methods
 
     fileprivate func installConstraints() {
-        if viewModel.hasDisabledAppearance {
+        if viewModel.editConfiguration == .readOnly {
             addAndPinSubview(transparentMaskView)
         }
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
@@ -221,7 +221,7 @@ class TextFieldView: UIView {
             textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
-            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.isEditable)
+            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.editConfiguration.isEditable)
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }
@@ -252,7 +252,7 @@ class TextFieldView: UIView {
 extension TextFieldView: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        return viewModel.isEditable
+        return viewModel.editConfiguration.isEditable
     }
 
     @objc func textDidChange() {

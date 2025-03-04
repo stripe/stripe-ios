@@ -74,8 +74,7 @@ import UIKit
         let validationState: ValidationState
         let accessoryView: UIView?
         let shouldShowClearButton: Bool
-        let hasDisabledAppearance: Bool
-        let isEditable: Bool
+        let editConfiguration: EditConfiguration
         let theme: ElementsAppearance
     }
 
@@ -96,8 +95,7 @@ import UIKit
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
             accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
-            hasDisabledAppearance: configuration.hasDisabledAppearance,
-            isEditable: configuration.isEditable,
+            editConfiguration: configuration.editConfiguration,
             theme: theme
         )
     }

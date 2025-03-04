@@ -12,11 +12,11 @@ import UIKit
 extension SavedPaymentMethodFormFactory {
     func makeUSBankAccount(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
         let nameElement: SectionElement = {
-            let nameTextFieldElement = TextFieldElement.NameConfiguration(defaultValue: configuration.paymentMethod.billingDetails?.name, hasDisabledAppearance: true, isEditable: false).makeElement(theme: configuration.appearance.asElementsTheme)
+            let nameTextFieldElement = TextFieldElement.NameConfiguration(defaultValue: configuration.paymentMethod.billingDetails?.name, editConfiguration: .readOnly).makeElement(theme: configuration.appearance.asElementsTheme)
             return SectionElement(elements: [nameTextFieldElement], theme: configuration.appearance.asElementsTheme)
         }()
         let emailElement: SectionElement = {
-            let emailTextFieldElement = TextFieldElement.EmailConfiguration(defaultValue: configuration.paymentMethod.billingDetails?.email, hasDisabledAppearance: true, isEditable: false).makeElement(theme: configuration.appearance.asElementsTheme)
+            let emailTextFieldElement = TextFieldElement.EmailConfiguration(defaultValue: configuration.paymentMethod.billingDetails?.email, editConfiguration: .readOnly).makeElement(theme: configuration.appearance.asElementsTheme)
             return SectionElement(elements: [emailTextFieldElement], theme: configuration.appearance.asElementsTheme)
         }()
         let bankAccountElement: SectionElement = {

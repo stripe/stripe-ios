@@ -48,7 +48,7 @@ extension SavedPaymentMethodFormFactory {
         let expiryDateElement: TextFieldElement = {
             let expiryDate = CardExpiryDate(month: configuration.paymentMethod.card?.expMonth ?? 0,
                                             year: configuration.paymentMethod.card?.expYear ?? 0)
-            return TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, hasDisabledAppearance: true, isEditable: false)
+            return TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString, editConfiguration: .readOnly)
                 .makeElement(theme: configuration.appearance.asElementsTheme)
         }()
 

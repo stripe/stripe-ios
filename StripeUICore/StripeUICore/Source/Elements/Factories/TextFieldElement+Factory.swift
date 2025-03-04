@@ -22,8 +22,7 @@ import UIKit
         public let defaultValue: String?
         public let label: String
         public let isOptional: Bool
-        public let isEditable: Bool
-        public let hasDisabledAppearance: Bool
+        public let editConfiguration: EditConfiguration
         private var textContentType: UITextContentType {
             switch type {
             case .given:
@@ -36,7 +35,7 @@ import UIKit
         }
 
         /// - Parameter label: If `nil`, defaults to a string on the `type` e.g. "Name"
-        public init(type: NameType = .full, defaultValue: String?, label: String? = nil, isOptional: Bool = false, hasDisabledAppearance: Bool = false, isEditable: Bool = true) {
+        public init(type: NameType = .full, defaultValue: String?, label: String? = nil, isOptional: Bool = false, editConfiguration: EditConfiguration = .editable) {
             self.type = type
             self.defaultValue = defaultValue
             if let label = label {
@@ -45,8 +44,7 @@ import UIKit
                 self.label = Self.label(for: type)
             }
             self.isOptional = isOptional
-            self.hasDisabledAppearance = hasDisabledAppearance
-            self.isEditable = isEditable
+            self.editConfiguration = editConfiguration
         }
 
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
@@ -77,18 +75,16 @@ import UIKit
         public let label = String.Localized.email
         public let defaultValue: String?
         public let isOptional: Bool
-        public let hasDisabledAppearance: Bool
-        public let isEditable: Bool
+        public let editConfiguration: EditConfiguration
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
         let invalidError = Error.invalid(
             localizedDescription: String.Localized.invalid_email
         )
 
-        public init(defaultValue: String? = nil, isOptional: Bool = false, hasDisabledAppearance: Bool = false, isEditable: Bool = true) {
+        public init(defaultValue: String? = nil, isOptional: Bool = false, editConfiguration: EditConfiguration = .editable) {
             self.defaultValue = defaultValue
             self.isOptional = isOptional
-            self.hasDisabledAppearance = hasDisabledAppearance
-            self.isEditable = isEditable
+            self.editConfiguration = editConfiguration
         }
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
