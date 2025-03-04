@@ -427,7 +427,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
                     let type = STPPaymentMethod.string(from: paymentMethod.type)
                     var syncDefaultEnabled: Bool?
-                    if case .customerSession(let customerSessionAdapter) = self.customerSheetDataSource.dataSource {
+                    if case .customerSession(_) = self.customerSheetDataSource.dataSource {
                         syncDefaultEnabled = self.paymentMethodSyncDefault
                     }
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
