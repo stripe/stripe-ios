@@ -110,9 +110,6 @@ public extension TextFieldElementConfiguration {
     var editConfiguration: EditConfiguration {
         return .editable
     }
-    var hasDisabledAppearance: Bool {
-        return false
-    }
 
     func makeDisplayText(for text: String) -> NSAttributedString {
         return NSAttributedString(string: text)
