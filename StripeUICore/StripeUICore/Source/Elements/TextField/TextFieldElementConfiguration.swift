@@ -36,9 +36,9 @@ import UIKit
     var defaultValue: String? { get }
 
     /**
-      - Note: If false, this textfield is disabled, defaults to true.
+      - Configuration for whether or not the field is editable
      */
-    var isEditable: Bool { get }
+    var editConfiguration: EditConfiguration { get }
 
     /**
      Validate the text.
@@ -107,8 +107,8 @@ public extension TextFieldElementConfiguration {
         return false
     }
 
-    var isEditable: Bool {
-        return true
+    var editConfiguration: EditConfiguration {
+        return .editable
     }
 
     func makeDisplayText(for text: String) -> NSAttributedString {
@@ -140,5 +140,15 @@ public extension TextFieldElementConfiguration {
 
     func makeElement(theme: ElementsAppearance) -> TextFieldElement {
         return TextFieldElement(configuration: self, theme: theme)
+    }
+}
+
+@_spi(STP) public enum EditConfiguration {
+    case editable
+    case readOnly
+    case readOnlyWithoutDisabledAppearance
+
+    @_spi(STP) public var isEditable: Bool {
+        return self == .editable
     }
 }

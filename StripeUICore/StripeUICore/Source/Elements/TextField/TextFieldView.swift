@@ -24,6 +24,13 @@ protocol TextFieldViewDelegate: AnyObject {
 class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
     private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)
+
+    lazy var transparentMaskView: UIView = {
+        let view = UIView()
+        view.backgroundColor = viewModel.theme.colors.componentBackground.translucentMaskColor
+        return view
+    }()
+
     var text: String {
         return textField.text ?? ""
     }
@@ -140,16 +147,19 @@ class TextFieldView: UIView {
     // MARK: - Private methods
 
     fileprivate func installConstraints() {
+        if viewModel.editConfiguration == .readOnly {
+            addAndPinSubview(transparentMaskView)
+        }
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
         clearButton.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-                                                      for: .horizontal)
+                                                            for: .horizontal)
         errorIconView.setContentHuggingPriority(.required, for: .horizontal)
         errorIconView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-                                                      for: .horizontal)
+                                                              for: .horizontal)
         accessoryContainerView.setContentHuggingPriority(.required, for: .horizontal)
         accessoryContainerView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-                                                      for: .horizontal)
+                                                                       for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
         addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
@@ -211,7 +221,7 @@ class TextFieldView: UIView {
             textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
-            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.isEditable)
+            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.editConfiguration.isEditable)
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }
@@ -231,6 +241,7 @@ class TextFieldView: UIView {
 #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        self.transparentMaskView.backgroundColor = viewModel.theme.colors.componentBackground.translucentMaskColor
         updateUI(with: viewModel)
     }
 #endif
@@ -241,7 +252,7 @@ class TextFieldView: UIView {
 extension TextFieldView: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        return viewModel.isEditable
+        return viewModel.editConfiguration.isEditable
     }
 
     @objc func textDidChange() {

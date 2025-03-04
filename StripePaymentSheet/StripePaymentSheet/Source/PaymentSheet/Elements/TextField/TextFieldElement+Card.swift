@@ -245,7 +245,7 @@ extension TextFieldElement {
         let defaultValue: String?
         let brand: STPCardBrand
         var label = String.Localized.cvc
-        let isEditable: Bool = false
+        let editConfiguration: EditConfiguration = .readOnly
         let disallowedCharacters: CharacterSet = CharacterSet(charactersIn: "•").inverted
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             return DynamicImageView(
@@ -259,16 +259,16 @@ extension TextFieldElement {
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
-        init(defaultValue: String? = nil, isEditable: Bool = true) {
+        init(defaultValue: String? = nil, editConfiguration: EditConfiguration = .editable) {
             self.defaultValue = defaultValue
-            self.isEditable = isEditable
+            self.editConfiguration = editConfiguration
         }
 
         let label: String = String.Localized.mm_yy
         let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         let defaultValue: String?
-        let isEditable: Bool
+        let editConfiguration: EditConfiguration
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
@@ -357,7 +357,7 @@ extension TextFieldElement {
     struct LastFourConfiguration: TextFieldElementConfiguration {
         let label = String.Localized.card_number
         let lastFour: String
-        let isEditable = false
+        let editConfiguration: EditConfiguration = .readOnly
         let cardBrand: STPCardBrand?
         let cardBrandDropDown: DropdownFieldElement?
 
@@ -381,7 +381,7 @@ extension TextFieldElement {
         }
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
-            stpAssert(!isEditable, "Validation assumes that the field is read-only")
+            stpAssert(!editConfiguration.isEditable, "Validation assumes that the field is read-only")
             return !lastFour.isEmpty ? .valid : .invalid(Error.empty)
         }
     }
