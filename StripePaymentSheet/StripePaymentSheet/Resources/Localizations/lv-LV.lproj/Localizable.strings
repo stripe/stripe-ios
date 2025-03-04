@@ -184,6 +184,8 @@
 
 "Payment methods" = "Maksājuma veidi";
 
+"Please choose a valid payment method." = "Izvēlieties derīgu maksājumu veidu.";
+
 "Please go back and select another payment method" = "Lūdzu, atgriezieties un atlasiet citu maksājuma veidu.";
 
 "Point the camera at your card." = "Vērsiet kameru uz karti.";

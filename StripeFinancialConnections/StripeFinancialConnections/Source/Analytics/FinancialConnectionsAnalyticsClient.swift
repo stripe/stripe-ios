@@ -158,16 +158,15 @@ extension FinancialConnectionsAnalyticsClient {
     }
 
     func setAdditionalParameters(
-        linkAccountSessionClientSecret: String,
         publishableKey: String?,
         stripeAccount: String?
     ) {
-        additionalParameters["las_client_secret"] = linkAccountSessionClientSecret
         additionalParameters["key"] = publishableKey
         additionalParameters["stripe_account"] = stripeAccount
     }
 
     func setAdditionalParameters(fromManifest manifest: FinancialConnectionsSessionManifest) {
+        additionalParameters["las_id"] = manifest.id
         additionalParameters["livemode"] = manifest.livemode
         additionalParameters["product"] = manifest.product
         additionalParameters["is_stripe_direct"] = manifest.isStripeDirect

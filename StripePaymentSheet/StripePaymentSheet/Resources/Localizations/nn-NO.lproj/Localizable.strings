@@ -184,6 +184,8 @@
 
 "Payment methods" = "Betalingsmetodar";
 
+"Please choose a valid payment method." = "Vel ein gyldig betalingsmåte.";
+
 "Please go back and select another payment method" = "Gå tilbake og vel ei anna betalingsmåte";
 
 "Point the camera at your card." = "Rett kameraet mot kortet.";

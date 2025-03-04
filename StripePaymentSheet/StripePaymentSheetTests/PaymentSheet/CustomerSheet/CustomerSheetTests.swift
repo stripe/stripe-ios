@@ -7,7 +7,7 @@ import Foundation
 
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(CardBrandFilteringBeta) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -345,7 +345,7 @@ class CustomerSheetTests: APIStubbedTestCase {
                 return
             }
             XCTAssertFalse(paymentMethods.isEmpty)
-            XCTAssertNotNil(selectedPaymentMethod)
+            XCTAssertNil(selectedPaymentMethod)
             loadPaymentMethodInfo.fulfill()
         }
         wait(for: [loadPaymentMethodInfo], timeout: 5.0)

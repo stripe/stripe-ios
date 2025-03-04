@@ -184,6 +184,8 @@
 
 "Payment methods" = "支付方式";
 
+"Please choose a valid payment method." = "請選擇一個有效的支付方式。";
+
 "Please go back and select another payment method" = "請返回並選擇另一個支付方式。";
 
 "Point the camera at your card." = "將相機正對銀行卡。";

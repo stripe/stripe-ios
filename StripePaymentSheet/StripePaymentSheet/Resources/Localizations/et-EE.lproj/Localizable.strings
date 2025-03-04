@@ -184,6 +184,8 @@
 
 "Payment methods" = "Makseviisid";
 
+"Please choose a valid payment method." = "Palun valige kehtiv makseviis.";
+
 "Please go back and select another payment method" = "Minge tagasi ja valige mõni muu makseviis";
 
 "Point the camera at your card." = "Suunake kaamera oma kaardile.";

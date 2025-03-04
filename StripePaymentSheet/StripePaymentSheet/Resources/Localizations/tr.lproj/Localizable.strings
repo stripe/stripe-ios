@@ -184,6 +184,8 @@
 
 "Payment methods" = "Ödeme yöntemleri";
 
+"Please choose a valid payment method." = "Lütfen geçerli bir ödeme yöntemi seçin.";
+
 "Please go back and select another payment method" = "Lütfen geri gidip başka bir ödeme yöntemi seçin";
 
 "Point the camera at your card." = "Kamerayı kartınıza doğrultun.";
