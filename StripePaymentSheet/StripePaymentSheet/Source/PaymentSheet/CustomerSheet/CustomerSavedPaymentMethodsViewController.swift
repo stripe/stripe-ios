@@ -26,7 +26,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         case noPaymentOptionAddingNewWithSetupIntent
         case noPaymentOptionAddingNewWithAttach
         case removeOnNonSavedPaymentMethod
-        case updatePaymentMethodFailed
     }
 
     // MARK: - Read-only Properties
