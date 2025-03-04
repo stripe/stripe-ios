@@ -206,8 +206,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             delegate: self
         )
 
-        // Payment method types that don't collect user input should animate when tapped
-        return !formViewController.collectsUserInput
+        // Show an animation on the label if the payment method shows a form
+        return formViewController.collectsUserInput
     }
 }
 
