@@ -477,8 +477,8 @@ extension EmbeddedPaymentElement {
         )
         var params: [String: Any] = [:]
         if case let .new(confirmParams) = paymentOption {
-            if confirmParams.setDefaultPaymentMethodCheckboxState != .hidden {
-                params["set_as_default"] = confirmParams.setDefaultPaymentMethodCheckboxState == .selected ? true : false
+            if let setAsDefault = confirmParams.setAsDefaultPM {
+                params["set_as_default"] = setAsDefault
             }
         }
         analyticsHelper.logPayment(

@@ -64,7 +64,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             type: .stripe(.card)
         )
         if setAsDefaultPM {
-            confirmParams.setDefaultPaymentMethodCheckboxState = .selected
+            confirmParams.setAsDefaultPM = true
             confirmParams.saveForFutureUseCheckboxState = .selected
         }
         let newCardPaymentOption: PaymentSheet.PaymentOption = .new(
@@ -669,7 +669,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     var valid_card_set_as_default: IntentConfirmParams {
         let intentConfirmParams = IntentConfirmParams(params: ._testValidCardValue(), type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
-        intentConfirmParams.setDefaultPaymentMethodCheckboxState = .selected
+        intentConfirmParams.setAsDefaultPM = true
         return intentConfirmParams
     }
     func createValidSavedPaymentMethod() -> STPPaymentMethod {
