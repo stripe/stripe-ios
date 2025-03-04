@@ -452,20 +452,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
-
-        // Root view controllers are top level view controllers for each surface
-        // When these are dismissed by a tap or swipe we send a dismiss event
-        let rootViewControllerTypes: [UIViewController.Type] = [
-            PaymentSheetViewController.self,
-            EmbeddedFormViewController.self,
-            PaymentSheetFlowControllerViewController.self,
-            PaymentSheetVerticalViewController.self,
-            CustomerSavedPaymentMethodsViewController.self,
-        ]
-
-        if rootViewControllerTypes.contains(where: { contentViewController.isKind(of: $0) }) {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
-        }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
     }
 }
 
