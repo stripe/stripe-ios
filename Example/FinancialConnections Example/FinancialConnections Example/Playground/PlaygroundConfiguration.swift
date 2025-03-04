@@ -636,7 +636,7 @@ final class PlaygroundConfiguration {
         if let useAsyncAPIClient = dictionary[Self.useAsyncAPIClientKey] as? Bool {
             self.useAsyncAPIClient = useAsyncAPIClient
         } else {
-            self.useAsyncAPIClient = false
+            self.useAsyncAPIClient = true
         }
 
         if let styleString = dictionary[Self.styleKey] as? String,

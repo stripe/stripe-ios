@@ -10,7 +10,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP)@_spi(CardBrandFilteringBeta) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
@@ -87,6 +87,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     func testBINRangeThatRequiresNetworkCallToValidate() {
         // Set a publishable key for the metadata service
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+
         var configuration = TextFieldElement.PANConfiguration()
         let binController = STPBINController()
         configuration.binController = binController
@@ -334,6 +335,65 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
                 "Input \"\(text)\": expected \(expected) but got \(actual!)"
             )
         }
+    }
+
+    class STPAnalyticsClientTestDelegate: NSObject, STPAnalyticsClientDelegate {
+        let didLogBlock: (([String: Any]) -> Void)
+
+        init(didLogBlock: @escaping ([String: Any]) -> Void) {
+            self.didLogBlock = didLogBlock
+        }
+
+        func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
+            didLogBlock(payload)
+        }
+    }
+
+    func testAlertsOnExpected19DigitCard() {
+        // Set a publishable key for the metadata service
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+
+        // Set up a CardSectionElement:
+        let cardSection = CardSectionElement(
+            collectName: false,
+            defaultValues: .init(),
+            preferredNetworks: nil,
+            cardBrandChoiceEligible: false,
+            hostedSurface: .paymentSheet,
+            theme: .default,
+            analyticsHelper: ._testValue(),
+            cardBrandFilter: .default
+        )
+        let textFieldElement = cardSection.panElement
+
+        // A 16 digit card number that should be 19 digits:
+        let unionPay19_but_16_digits_entered = "6235510000000002"
+
+        // Cache the UnionPay BIN range first:
+        let allRetrievalsAreComplete = expectation(description: "Fetch BIN Range")
+        (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _ in
+            allRetrievalsAreComplete.fulfill()
+        }
+        // Wait for the fetch to complete
+        wait(for: [allRetrievalsAreComplete], timeout: 10)
+
+        // Set up a delegate to watch for the more-than-16-digits-expected log
+        let logExpectation = expectation(description: "Did log analytics event")
+        let analyticsDelegate = STPAnalyticsClientTestDelegate { payload in
+            if payload["event"] as? String == "stripeios.card_metadata.expected_extra_digits_but_user_entered_16_then_switched_fields" {
+                logExpectation.fulfill()
+            }
+        }
+        STPAnalyticsClient.sharedClient.delegate = analyticsDelegate
+
+        // Enter the card number, trigger the textDidChange event, and make sure the field isn't focused:
+        textFieldElement.textFieldView.textField.text = unionPay19_but_16_digits_entered
+        textFieldElement.textFieldView.textDidChange()
+
+        // Wait for the analytics event
+        wait(for: [logExpectation], timeout: 10)
+        // Put back the analytics delegate to avoid polluting the other test states
+        STPAnalyticsClient.sharedClient.delegate = nil
     }
 
     func testPANValidation_cardBrandFiltering() throws {

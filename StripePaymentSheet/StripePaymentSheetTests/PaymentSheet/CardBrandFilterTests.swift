@@ -5,9 +5,9 @@
 //  Created by Nick Porter on 10/10/24.
 //
 
-import XCTest
-@testable @_spi(CardBrandFilteringBeta) import StripePaymentSheet
 @_spi(STP) import StripeCore
+@testable import StripePaymentSheet
+import XCTest
 
 class CardBrandFilterTests: XCTestCase {
 

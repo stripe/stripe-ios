@@ -184,6 +184,8 @@
 
 "Payment methods" = "Zahlungsmethoden";
 
+"Please choose a valid payment method." = "Bitte wählen Sie eine gültige Zahlungsmethode.";
+
 "Please go back and select another payment method" = "Bitte gehen Sie zurück und wählen Sie eine andere Zahlungsmethode.";
 
 "Point the camera at your card." = "Richten Sie die Kamera auf die Karte.";

@@ -184,6 +184,8 @@
 
 "Payment methods" = "Fizetési módok";
 
+"Please choose a valid payment method." = "Válasszon érvényes fizetési módot.";
+
 "Please go back and select another payment method" = "Lépjen vissza, és válasszon másik fizetési módot";
 
 "Point the camera at your card." = "Tegye a kártyát a kamera elé.";

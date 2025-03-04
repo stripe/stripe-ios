@@ -299,7 +299,7 @@ final class PaymentSheetLoader {
     }
 
     static func defaultStripePaymentMethodId(forCustomerID customerID: String?) -> String? {
-        guard let defaultPaymentMethod = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: nil, surface: .paymentSheet),
+        guard let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerID),
               case .stripeId(let paymentMethodId) = defaultPaymentMethod else {
             return nil
         }

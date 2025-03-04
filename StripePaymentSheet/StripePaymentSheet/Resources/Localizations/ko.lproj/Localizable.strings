@@ -184,6 +184,8 @@
 
 "Payment methods" = "결제 방식";
 
+"Please choose a valid payment method." = "유효한 결제 방식을 선택해 주십시오.";
+
 "Please go back and select another payment method" = "뒤로 돌아가서 다른 결제 방식을 선택해 주십시오.";
 
 "Point the camera at your card." = "카메라가 카드를 향하도록 하세요.";

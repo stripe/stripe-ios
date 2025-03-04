@@ -1,5 +1,7 @@
 "Close" = "关闭";
 
+"Default payment method was not changed. Please try again." = "未更改默认支付方式，请重试。";
+
 "Scan Card" = "扫描银行卡";
 
 "Scan card" = "扫描卡";

@@ -97,7 +97,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
             bankName: bankName,
             fingerprint: fingerprint,
             last4: last4,
-            linkedAccount: response["linked_account"] as? String,
+            linkedAccount: response["financial_connections_account"] as? String,
             networks: networks,
             routingNumber: routingNumber,
             allResponseFields: response

@@ -1,7 +1,15 @@
-## X.Y.Z 2025-XX-YY
+## 24.7.0 2025-03-03
+### Connect (Private Preview)
+* [Changed] The SDK now manages the onboarding component's presentation.
+* [Changed] The payouts component is no longer available.
+
 ### PaymentSheet
-* [Fixed] Fixed an issue in Embedded Payment Element (private beta) where the row could be selected even though there's no valid payment option.
+* [Fixed] Fixed an issue in Embedded Payment Element (private preview) where the row could be selected even though there's no valid payment option.
 * [Added] Support for Crypto in PaymentSheet
+* [Added] Added card brand filtering to specify allowed or blocked card brands. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/filter-card-brands?platform=ios).
+
+### Payments
+* [Fixed] Fixed an issue that caused `STPPaymentMethodUSBankAccount.linkedAccount` to be `nil` for some merchants.
 
 ## 24.6.0 2025-02-18
 * [Fixed] The SDK and example apps now compile in Xcode 16.2
