@@ -133,7 +133,7 @@ final class PaymentSheetAnalyticsHelper {
             let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
             params["link_mode"] = linkMode
         }
-        if let _ = elementsSession.customer?.customerSession {
+        if elementsSession.customer?.customerSession != nil {
             let setAsDefaultEnabled = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
             params["set_as_default_enabled"] = setAsDefaultEnabled
             if setAsDefaultEnabled {

@@ -179,7 +179,7 @@ public class CustomerSheet {
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
                 var params: [String: Any] = [:]
-                if let _ = elementsSession.customer?.customerSession {
+                if elementsSession.customer?.customerSession != nil {
                     params["sync_default_enabled"] = paymentMethodSyncDefault
                     if paymentMethodSyncDefault {
                         params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil ? true : false
