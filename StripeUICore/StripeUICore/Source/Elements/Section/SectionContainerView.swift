@@ -76,6 +76,7 @@ class SectionContainerView: UIView {
                 view.layer.maskedCorners = []
                 view.layer.shadowOpacity = 0.0
                 view.layer.borderWidth = 0
+                view.layer.masksToBounds = true
             }
         }
         // 2. Round the top-most view's top corners
@@ -171,11 +172,6 @@ class SectionContainerView: UIView {
         }
         let shouldAnimate = Int(newStack.frame.size.height) != Int(oldStackHeight)
         viewController.animateHeightChange(duration: shouldAnimate ? 0.5 : 0.0, transition)
-    }
-
-    func disableAppearance() {
-        stackView.customBackgroundColor = theme.colors.componentBackground.translucentMaskColor
-        updateUI()
     }
 }
 
