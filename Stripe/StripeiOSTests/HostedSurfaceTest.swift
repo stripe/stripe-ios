@@ -67,8 +67,8 @@ class HostedSurfaceTest: XCTestCase {
             .openEditScreen: .customerSheetOpenEditScreen,
             .updateCardBrand: .customerSheetUpdateCardBrand,
             .updateCardBrandFailed: .customerSheetUpdateCardBrandFailed,
-            .setDefaultPaymentMethod: .customerSheetSyncDefaultPaymentMethod,
-            .setDefaultPaymentMethodFailed: .customerSheetSyncDefaultPaymentMethodFailed,
+            .setDefaultPaymentMethod: .unexpectedCustomerSheetError,
+            .setDefaultPaymentMethodFailed: .unexpectedCustomerSheetError,
             .closeEditScreen: .customerSheetClosesEditScreen,
         ]
 
