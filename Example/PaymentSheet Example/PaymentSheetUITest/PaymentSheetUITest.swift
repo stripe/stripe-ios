@@ -1640,7 +1640,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
             XCTFail("Unable to get expiraiton field")
             return
         }
-        XCTAssertEqual(expirationDate, "02/32")
+        XCTAssertEqual(expirationDate, "03/32")
     }
 }
 
