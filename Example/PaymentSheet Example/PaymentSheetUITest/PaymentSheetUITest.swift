@@ -2771,9 +2771,9 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Check analytics
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_complete_payment_newpm_success" }.last?["set_as_default"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_complete_payment_newpm_success" }.last?["set_as_default"] as? Bool, true)
 
         // Reload the sheet
         app.buttons["Reload"].waitForExistenceAndTap()
@@ -2807,9 +2807,9 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Check analytics
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_complete_payment_newpm_success" }.last?["set_as_default"] as? Bool, false)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_complete_payment_newpm_success" }.last?["set_as_default"] as? Bool, false)
 
         // Reload the sheet
         app.buttons["Reload"].waitForExistenceAndTap()
@@ -2823,8 +2823,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Ensure checkbox is not displayed if it's already the default
         XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
         // Check analytics
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
     }
 
     func testSetAsDefaultHorizontalNavigation_CustomerSession() {
@@ -2856,8 +2856,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         // Check analytics
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
         // Reload the sheet
         app.buttons["Reload"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2870,8 +2870,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Ensure checkbox is not displayed if it's already the default
         XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
         // Check analytics
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
     }
 
     func testSetAsDefaultVerticalNavigation_CustomerSession() {
@@ -2904,8 +2904,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         // Check analytics
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
         // Reload the sheet
         app.buttons["Reload"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -2918,8 +2918,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Ensure checkbox is not displayed if it's already the default
         XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
         // Check analytics
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
-        XCTAssertEqual(analyticsLog.filter{ $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
+        XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
     }
 }
 
