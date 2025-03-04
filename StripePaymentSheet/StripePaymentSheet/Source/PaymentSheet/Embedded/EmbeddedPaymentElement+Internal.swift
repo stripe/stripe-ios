@@ -192,6 +192,23 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
         presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
+
+    func shouldAnimateOnPress(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
+        let formViewController = EmbeddedFormViewController(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
+            paymentMethodType: paymentMethodType,
+            previousPaymentOption: nil,
+            analyticsHelper: analyticsHelper,
+            formCache: formCache,
+            delegate: self
+        )
+
+        // Show an animation on the label if the payment method shows a form
+        return formViewController.collectsUserInput
+    }
 }
 
 // MARK: UpdatePaymentMethodViewControllerDelegate
