@@ -522,15 +522,15 @@ extension PaymentSheet {
 
             /// The unique identifier for this custom payment method type in the format of "cmpt_..."
             /// Obtained from the Stripe Dashboard at https://dashboard.stripe.com/settings/custom_payment_methods
-            let id: String
+            public let id: String
 
             /// Optional subcopy text to be displayed below the custom payment method's display name.
-            let subcopy: String?
+            public let subcopy: String?
 
             /// When true, PaymentSheet will collect billing details for this custom payment method type
             /// in accordance with the `billingDetailsCollectionConfiguration` settings.
             /// This has no effect if `billingDetailsCollectionConfiguration` is not configured.
-            var shouldCollectBillingDetails = false
+            public var shouldCollectBillingDetails = false
 
             /// Initializes an `CustomPaymentMethodType`
             /// - Parameters:
