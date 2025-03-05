@@ -1031,8 +1031,12 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
 extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate {
 
     func networkingLinkLoginWarmupViewControllerDidSelectContinue(
-        _ viewController: NetworkingLinkLoginWarmupViewController
+        _ viewController: NetworkingLinkLoginWarmupViewController,
+        withSession consumerSession: ConsumerSessionData,
+        consumerPublishableKey: String
     ) {
+        dataManager.consumerSession = consumerSession
+        dataManager.consumerPublishableKey = consumerPublishableKey
         pushPane(.networkingLinkVerification, animated: true)
     }
 
@@ -1062,6 +1066,17 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+
+    func networkingLinkLoginWarmupViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkLoginWarmupViewController,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            shouldLaunchWebFlow: dataManager.manifest,
+            prefillDetails: prefillDetails
+        )
     }
 }
 
@@ -1119,10 +1134,6 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
 // MARK: - NetworkingLinkVerificationViewControllerDelegate
 
 extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate {
-    func networkingLinkVerificationViewController(_ viewController: NetworkingLinkVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
-        dataManager.consumerPublishableKey = consumerPublishableKey
-    }
-
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
@@ -1138,17 +1149,6 @@ extension NativeFlowController: NetworkingLinkVerificationViewControllerDelegate
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
-    }
-
-    func networkingLinkVerificationViewControllerDidFailAttestationVerdict(
-        _ viewController: NetworkingLinkVerificationViewController,
-        prefillDetails: WebPrefillDetails
-    ) {
-        delegate?.nativeFlowController(
-            self,
-            shouldLaunchWebFlow: dataManager.manifest,
-            prefillDetails: prefillDetails
-        )
     }
 }
 
@@ -1219,10 +1219,6 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
 extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDelegate {
 
-    func networkingSaveToLinkVerificationViewController(_ viewController: NetworkingSaveToLinkVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
-        dataManager.consumerPublishableKey = consumerPublishableKey
-    }
-
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         saveToLinkWithStripeSucceeded: Bool?,
@@ -1241,26 +1237,11 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
     ) {
         showTerminalError(error)
     }
-
-    func networkingSaveToLinkVerificationViewControllerDidFailAttestationVerdict(
-        _ viewController: NetworkingSaveToLinkVerificationViewController,
-        prefillDetails: WebPrefillDetails
-    ) {
-        delegate?.nativeFlowController(
-            self,
-            shouldLaunchWebFlow: dataManager.manifest,
-            prefillDetails: prefillDetails
-        )
-    }
 }
 
 // MARK: - NetworkingLinkStepUpVerificationViewControllerDelegate
 
 extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDelegate {
-
-    func networkingLinkStepUpVerificationViewController(_ viewController: NetworkingLinkStepUpVerificationViewController, didReceiveConsumerPublishableKey consumerPublishableKey: String) {
-        dataManager.consumerPublishableKey = consumerPublishableKey
-    }
 
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
@@ -1280,23 +1261,6 @@ extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDe
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
-    }
-
-    func networkingLinkStepUpVerificationViewControllerEncounteredSoftError(
-        _ viewController: NetworkingLinkStepUpVerificationViewController
-    ) {
-        pushPane(.institutionPicker, animated: true)
-    }
-
-    func networkingLinkStepUpVerificationViewControllerDidFailAttestationVerdict(
-        _ viewController: NetworkingLinkStepUpVerificationViewController,
-        prefillDetails: WebPrefillDetails
-    ) {
-        delegate?.nativeFlowController(
-            self,
-            shouldLaunchWebFlow: dataManager.manifest,
-            prefillDetails: prefillDetails
-        )
     }
 }
 
@@ -1538,15 +1502,13 @@ private func CreatePaneViewController(
         networkingLinkSignupViewController.delegate = nativeFlowController
         viewController = networkingLinkSignupViewController
     case .networkingLinkVerification:
-        let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress
-        let consumerSessionEmailAddress = dataManager.consumerSession?.emailAddress
-        if let accountholderCustomerEmailAddress = consumerSessionEmailAddress ?? accountholderCustomerEmailAddress {
+        if let consumerSession = dataManager.consumerSession {
             let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
-                accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 returnURL: dataManager.returnURL,
+                consumerSession: consumerSession,
                 analyticsClient: dataManager.analyticsClient
             )
             let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
@@ -1557,9 +1519,7 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingSaveToLinkVerification:
-        if
-            let consumerSession = dataManager.consumerSession
-        {
+        if let consumerSession = dataManager.consumerSession {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
                 manifest: dataManager.manifest,
                 consumerSession: consumerSession,
@@ -1667,7 +1627,8 @@ private func CreatePaneViewController(
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient,
-            nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta
+            nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta,
+            elementsSessionContext: dataManager.elementsSessionContext
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
             dataSource: networkingLinkWarmupDataSource,

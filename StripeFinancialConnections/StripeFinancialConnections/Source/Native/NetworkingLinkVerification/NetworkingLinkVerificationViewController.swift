@@ -13,10 +13,6 @@ import UIKit
 protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
-        didReceiveConsumerPublishableKey consumerPublishableKey: String
-    )
-    func networkingLinkVerificationViewController(
-        _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
         consumerSession: ConsumerSessionData?,
         preventBackNavigation: Bool
@@ -24,10 +20,6 @@ protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didReceiveTerminalError error: Error
-    )
-    func networkingLinkVerificationViewControllerDidFailAttestationVerdict(
-        _ viewController: NetworkingLinkVerificationViewController,
-        prefillDetails: WebPrefillDetails
     )
 }
 
@@ -57,7 +49,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
-        otpView.lookupConsumerAndStartVerification()
+        otpView.startVerification()
     }
 
     private func showContent(redactedPhoneNumber: String) {
@@ -90,17 +82,12 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     }
 
     private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane, preventBackNavigation: Bool) {
-        if let consumerSession = dataSource.consumerSession {
-            delegate?.networkingLinkVerificationViewController(
-                self,
-                didRequestNextPane: pane,
-                consumerSession: consumerSession,
-                preventBackNavigation: preventBackNavigation
-            )
-        } else {
-            assertionFailure("logic error: did not have consumerSession")
-            delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: FinancialConnectionsSheetError.unknown(debugDescription: "logic error: did not have consumerSession"))
-        }
+        delegate?.networkingLinkVerificationViewController(
+            self,
+            didRequestNextPane: pane,
+            consumerSession: dataSource.consumerSession,
+            preventBackNavigation: preventBackNavigation
+        )
     }
 
     private func attachConsumerToLinkAccountAndSynchronize(from view: NetworkingOTPView) {
@@ -133,47 +120,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 // MARK: - NetworkingOTPViewDelegate
 
 extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
-    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
-        delegate?.networkingLinkVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
-    }
-
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
-        showLoadingView(true)
-    }
-
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
-        dataSource.analyticsClient.log(
-            eventName: "networking.verification.error",
-            parameters: [
-                "error": "ConsumerNotFoundError"
-            ],
-            pane: .networkingLinkVerification
-        )
-        delegate?.networkingLinkVerificationViewController(
-            self,
-            didRequestNextPane: .institutionPicker,
-            consumerSession: nil,
-            preventBackNavigation: false
-        )
-        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-    }
-
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
-        dataSource.analyticsClient.logUnexpectedError(
-            error,
-            errorName: "LookupConsumerSessionError",
-            pane: .networkingLinkVerification
-        )
-        dataSource.analyticsClient.log(
-            eventName: "networking.verification.error",
-            parameters: [
-                "error": "LookupConsumerSession"
-            ],
-            pane: .networkingLinkVerification
-        )
-        delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
-        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-    }
 
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {
         // no-op
@@ -269,15 +215,5 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                 didReceiveTerminalError: error
             )
         }
-    }
-
-    func networkingOTPViewDidFailAttestationVerdict(
-        _ view: NetworkingOTPView,
-        prefillDetails: WebPrefillDetails
-    ) {
-        delegate?.networkingLinkVerificationViewControllerDidFailAttestationVerdict(
-            self,
-            prefillDetails: prefillDetails
-        )
     }
 }
