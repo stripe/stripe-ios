@@ -229,6 +229,10 @@ struct PaymentSheetTestPlayground: View {
             if playgroundController.settings.merchantCountryCode.rawValue != newCountry.rawValue {
                 playgroundController.settings.customerMode = .guest
             }
+            // Disable CPMs if we switch to non-US merchant
+            if newCountry != .US {
+                playgroundController.settings.customPaymentMethods = .off
+            }
             playgroundController.settings.merchantCountryCode = newCountry
         }
     }
