@@ -39,7 +39,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     private let dataSource: NetworkingLinkLoginWarmupDataSource
     weak var delegate: NetworkingLinkLoginWarmupViewControllerDelegate?
-    
+
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
         let secondaryButtonTitle: String
         if dataSource.manifest.isProductInstantDebits {
@@ -88,7 +88,6 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setup(
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
@@ -118,14 +117,14 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
             eventName: "click.continue",
             pane: .networkingLinkLoginWarmup
         )
-        
+
         warmupFooterView.primaryButton?.isLoading = true
 
         dataSource
             .lookupConsumerSession()
             .observe { [weak self] result in
                 guard let self else { return }
-                
+
                 warmupFooterView.primaryButton?.isLoading = false
 
                 let attestationError = self.dataSource.completeAssertionIfNeeded(

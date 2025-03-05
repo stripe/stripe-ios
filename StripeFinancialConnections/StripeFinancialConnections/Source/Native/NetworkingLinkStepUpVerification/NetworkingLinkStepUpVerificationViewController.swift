@@ -13,10 +13,6 @@ import UIKit
 protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didReceiveConsumerPublishableKey consumerPublishableKey: String
-    )
-    func networkingLinkStepUpVerificationViewController(
-        _ viewController: NetworkingLinkStepUpVerificationViewController,
         didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?,
         nextPane: FinancialConnectionsSessionManifest.NextPane,
         customSuccessPaneCaption: String?,
@@ -25,13 +21,6 @@ protocol NetworkingLinkStepUpVerificationViewControllerDelegate: AnyObject {
     func networkingLinkStepUpVerificationViewController(
         _ viewController: NetworkingLinkStepUpVerificationViewController,
         didReceiveTerminalError error: Error
-    )
-    func networkingLinkStepUpVerificationViewControllerEncounteredSoftError(
-        _ viewController: NetworkingLinkStepUpVerificationViewController
-    )
-    func networkingLinkStepUpVerificationViewControllerDidFailAttestationVerdict(
-        _ viewController: NetworkingLinkStepUpVerificationViewController,
-        prefillDetails: WebPrefillDetails
     )
 }
 

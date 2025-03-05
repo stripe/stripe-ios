@@ -13,10 +13,6 @@ import UIKit
 protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
-        didReceiveConsumerPublishableKey consumerPublishableKey: String
-    )
-    func networkingLinkVerificationViewController(
-        _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
         consumerSession: ConsumerSessionData?,
         preventBackNavigation: Bool
@@ -24,10 +20,6 @@ protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didReceiveTerminalError error: Error
-    )
-    func networkingLinkVerificationViewControllerDidFailAttestationVerdict(
-        _ viewController: NetworkingLinkVerificationViewController,
-        prefillDetails: WebPrefillDetails
     )
 }
 

@@ -29,7 +29,6 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let nextPaneOrDrawerOnSecondaryCta: String?
     private let elementsSessionContext: ElementsSessionContext?
-    private let consumerSession: ConsumerSessionData?
 
     var email: String? {
         manifest.accountholderCustomerEmailAddress ?? elementsSessionContext?.prefillDetails?.email
@@ -41,8 +40,7 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         nextPaneOrDrawerOnSecondaryCta: String?,
-        elementsSessionContext: ElementsSessionContext?,
-        consumerSession: ConsumerSessionData?
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
         self.apiClient = apiClient
@@ -50,7 +48,6 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
         self.analyticsClient = analyticsClient
         self.nextPaneOrDrawerOnSecondaryCta = nextPaneOrDrawerOnSecondaryCta
         self.elementsSessionContext = elementsSessionContext
-        self.consumerSession = consumerSession
     }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
@@ -80,7 +77,7 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
             clientSecret: clientSecret
         )
     }
-    
+
     // Marks the assertion as completed and logs possible errors during verified flows.
     func completeAssertionIfNeeded(
         possibleError: Error?,

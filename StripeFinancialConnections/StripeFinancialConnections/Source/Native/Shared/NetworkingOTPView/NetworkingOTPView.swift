@@ -150,8 +150,6 @@ final class NetworkingOTPView: UIView {
         }
     }
 
-    // TODO: Where should we move the attestation error handling?
-
     func startVerification() {
         delegate?.networkingOTPViewWillStartVerification(self)
         dataSource.startVerificationSession()
@@ -259,7 +257,6 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
                 verificationSessions: []
             ),
             apiClient: FinancialConnectionsAPIClient(apiClient: .shared),
-            clientSecret: "",
             analyticsClient: FinancialConnectionsAnalyticsClient()
         ))
     }

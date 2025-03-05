@@ -18,14 +18,9 @@ protocol NetworkingOTPDataSource: AnyObject {
     var isTestMode: Bool { get }
     var appearance: FinancialConnectionsAppearance { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
-    var emailAddress: String { get }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
-    func completeAssertionIfNeeded(
-        possibleError: Error?,
-        api: FinancialConnectionsAPIClientLogger.API
-    ) -> Error?
 }
 
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
@@ -37,7 +32,6 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     private let connectionsMerchantName: String?
     private let apiClient: any FinancialConnectionsAPI
     private let manifest: FinancialConnectionsSessionManifest
-    private let clientSecret: String
     weak var delegate: NetworkingOTPDataSourceDelegate?
 
     private var consumerSession: ConsumerSessionData {
@@ -53,10 +47,6 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     var appearance: FinancialConnectionsAppearance {
         manifest.appearance
     }
-    
-    var emailAddress: String {
-        consumerSession.emailAddress
-    }
 
     init(
         otpType: String,
@@ -66,7 +56,6 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         pane: FinancialConnectionsSessionManifest.NextPane,
         consumerSession: ConsumerSessionData,
         apiClient: any FinancialConnectionsAPI,
-        clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.otpType = otpType
@@ -76,7 +65,6 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.pane = pane
         self.consumerSession = consumerSession
         self.apiClient = apiClient
-        self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
     }
 
@@ -102,18 +90,4 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             return Promise(value: consumerSessionResponse)
         }
     }
-
-    // Marks the assertion as completed and logs possible errors during verified flows.
-    func completeAssertionIfNeeded(
-        possibleError: Error?,
-        api: FinancialConnectionsAPIClientLogger.API
-    ) -> Error? {
-        guard manifest.verified else { return nil }
-        return apiClient.completeAssertion(
-            possibleError: possibleError,
-            api: api,
-            pane: pane
-        )
-    }
-
 }

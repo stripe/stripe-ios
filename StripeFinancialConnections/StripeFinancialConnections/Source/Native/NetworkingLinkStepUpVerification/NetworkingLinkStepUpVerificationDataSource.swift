@@ -50,7 +50,6 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
             pane: .networkingLinkStepUpVerification,
             consumerSession: consumerSession,
             apiClient: apiClient,
-            clientSecret: clientSecret,
             analyticsClient: analyticsClient
         )
         self.networkingOTPDataSource = networkingOTPDataSource

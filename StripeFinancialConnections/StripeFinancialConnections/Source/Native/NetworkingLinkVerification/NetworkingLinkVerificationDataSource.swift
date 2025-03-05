@@ -56,7 +56,6 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
             pane: .networkingLinkVerification,
             consumerSession: consumerSession,
             apiClient: apiClient,
-            clientSecret: clientSecret,
             analyticsClient: analyticsClient
         )
         self.networkingOTPDataSource = networkingOTPDataSource

@@ -11,10 +11,6 @@ import Foundation
 import UIKit
 
 protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
-    func networkingSaveToLinkVerificationViewController(
-        _ viewController: NetworkingSaveToLinkVerificationViewController,
-        didReceiveConsumerPublishableKey consumerPublishableKey: String
-    )
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         saveToLinkWithStripeSucceeded: Bool?,
@@ -23,11 +19,6 @@ protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
     func networkingSaveToLinkVerificationViewController(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         didReceiveTerminalError error: Error
-    )
-
-    func networkingSaveToLinkVerificationViewControllerDidFailAttestationVerdict(
-        _ viewController: NetworkingSaveToLinkVerificationViewController,
-        prefillDetails: WebPrefillDetails
     )
 }
 
