@@ -16,7 +16,7 @@
       "location" : "https://github.com/mats-stripe/FinancialConnectionsLite",
       "state" : {
         "branch" : "master",
-        "revision" : "722dc11818f2a62b949cf06b51a454c55d617ebe"
+        "revision" : "87e14ca77a3dda867fd74f3ec8a9449a0c9060d3"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "b444594f79844b0d6d76d70fbfb3f7f71728f938",
-        "version" : "1.5.1"
+        "revision" : "39de59b2d47f7ef3ca88a039dff3084688fe27f4",
+        "version" : "1.5.2"
       }
     }
   ],
