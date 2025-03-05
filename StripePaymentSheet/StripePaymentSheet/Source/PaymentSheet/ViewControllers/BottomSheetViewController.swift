@@ -452,6 +452,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
     }
 }
 

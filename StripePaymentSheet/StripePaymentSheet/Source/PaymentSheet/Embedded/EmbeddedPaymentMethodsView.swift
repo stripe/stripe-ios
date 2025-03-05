@@ -21,6 +21,11 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func embeddedPaymentMethodsViewDidUpdateSelection()
 
     func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
+
+    /// Determines if the button for a given `PaymentSheet.PaymentMethodType` should animate when tapped
+    /// - Parameter paymentMethodType: A `PaymentSheet.PaymentMethodType`
+    /// - Returns: True if the button for this payment method type should animate when tapped
+    func shouldAnimateOnPress(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool
 }
 
 /// The view for an embedded payment element
@@ -415,7 +420,7 @@ class EmbeddedPaymentMethodsView: UIView {
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
-            shouldAnimateOnPress: true,
+            shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
                 self?.didTap(rowButton: rowButton)

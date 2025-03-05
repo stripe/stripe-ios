@@ -183,7 +183,7 @@ extension TextFieldElement {
     struct LastFourIBANConfiguration: TextFieldElementConfiguration {
         let label: String = "IBAN"
         let lastFour: String
-        let isEditable = false
+        let editConfiguration: EditConfiguration = .readOnly
 
         private var lastFourFormatted: String {
             "•••• \(lastFour)"
@@ -198,7 +198,7 @@ extension TextFieldElement {
         }
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
-            stpAssert(!isEditable, "Validation assumes that the field is read-only")
+            stpAssert(!editConfiguration.isEditable, "Validation assumes that the field is read-only")
             return !lastFour.isEmpty ? .valid : .invalid(Error.empty)
         }
     }

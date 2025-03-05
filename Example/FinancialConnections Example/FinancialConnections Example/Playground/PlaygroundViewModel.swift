@@ -9,7 +9,7 @@
 import Combine
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeFinancialConnections
+@_spi(STP) @_spi(v25) import StripeFinancialConnections
 import StripePaymentSheet
 import SwiftUI
 import UIKit
@@ -597,22 +597,21 @@ private func PresentFinancialConnectionsSheet(
     financialConnectionsSheet.onEvent = onEvent
     let topMostViewController = UIViewController.topMostViewController()!
     if useCase == .token {
-        financialConnectionsSheet.presentForToken(
-            from: topMostViewController,
-            completion: { result in
-                completionHandler({
-                    switch result {
-                    case .completed(result: let tuple):
-                        return .completed(.financialConnections(tuple.session))
-                    case .canceled:
-                        return .canceled
-                    case .failed(error: let error):
-                        return .failed(error: error)
-                    }
-                }())
-                _ = financialConnectionsSheet  // retain the sheet
-            }
-        )
+        // For testing: Use async API for token presentation
+        Task { @MainActor in
+            let result = await financialConnectionsSheet.presentForToken(from: topMostViewController)
+            completionHandler({
+                switch result {
+                case .completed(result: let tuple):
+                    return .completed(.financialConnections(tuple.session))
+                case .canceled:
+                    return .canceled
+                case .failed(error: let error):
+                    return .failed(error: error)
+                }
+            }())
+            _ = financialConnectionsSheet  // retain the sheet
+        }
     } else {
         financialConnectionsSheet.present(
             from: topMostViewController,

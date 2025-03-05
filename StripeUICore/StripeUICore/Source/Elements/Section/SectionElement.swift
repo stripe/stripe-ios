@@ -57,10 +57,6 @@ import UIKit
 
     let theme: ElementsAppearance
 
-    public func disableAppearance() {
-        sectionView.containerView.disableAppearance()
-    }
-
     // MARK: - ViewModel
 
     struct ViewModel {
