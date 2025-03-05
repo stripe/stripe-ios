@@ -670,15 +670,18 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod) async throws {
+        var errors: [NSError] = []
+        let errorQueue = DispatchQueue(label: "com.stripe.update-payment-method-error")
         try await withThrowingTaskGroup(of: Void.self) { group in
-            var errors: [NSError] = []
             if let updateParams = viewController.updateParams,
                case .card(let paymentMethodCardParams) = updateParams {
                 group.addTask {
                     do {
                         try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
                     } catch {
-                        errors.append(NSError.stp_cardBrandNotUpdatedError())
+                        errorQueue.sync {
+                            errors.append(NSError.stp_cardBrandNotUpdatedError())
+                        }
                     }
                 }
             }
@@ -687,18 +690,20 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                     do {
                         try await self.updateDefault(paymentMethod: paymentMethod)
                     } catch {
-                        errors.append(NSError.stp_defaultPaymentMethodNotUpdatedError())
+                        errorQueue.sync {
+                            errors.append(NSError.stp_defaultPaymentMethodNotUpdatedError())
+                        }
                     }
                 }
             }
             try await group.waitForAll()
-            // if more than one error occurs, throw a generic error
-            if errors.count > 1 {
-                throw NSError.stp_genericErrorOccurredError()
-            } else {
-                if let error = errors.first {
-                    throw error
-                }
+        }
+        // if more than one error occurs, throw a generic error
+        if errors.count > 1 {
+            throw NSError.stp_genericErrorOccurredError()
+        } else {
+            if let error = errors.first {
+                throw error
             }
         }
         updateUI()
