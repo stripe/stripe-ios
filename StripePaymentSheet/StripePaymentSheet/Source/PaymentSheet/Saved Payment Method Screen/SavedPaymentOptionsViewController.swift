@@ -670,8 +670,8 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod) async throws {
-        var errors: [NSError] = []
-        await withTaskGroup(of: Void.self) { group in
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            var errors: [NSError] = []
             if let updateParams = viewController.updateParams,
                case .card(let paymentMethodCardParams) = updateParams {
                 group.addTask {
@@ -691,14 +691,14 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                     }
                 }
             }
-            await group.waitForAll()
-        }
-        // if more than one error occurs, throw a generic error
-        if errors.count > 1 {
-            throw NSError.stp_genericErrorOccurredError()
-        } else {
-            if let error = errors.first {
-                throw error
+            try await group.waitForAll()
+            // if more than one error occurs, throw a generic error
+            if errors.count > 1 {
+                throw NSError.stp_genericErrorOccurredError()
+            } else {
+                if let error = errors.first {
+                    throw error
+                }
             }
         }
         updateUI()
