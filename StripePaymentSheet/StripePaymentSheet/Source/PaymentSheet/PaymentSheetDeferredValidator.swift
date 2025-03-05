@@ -120,19 +120,3 @@ private func == (lhs: STPSetupIntentUsage, rhs: PaymentSheet.IntentConfiguration
         return false
     }
 }
-
-private func == (lhs: STPPaymentIntentCaptureMethod, rhs: PaymentSheet.IntentConfiguration.CaptureMethod) -> Bool {
-    // Explicitly switch over each case so that the compiler can complain when new cases are added
-    switch lhs {
-    case .automatic:
-        return rhs == .automatic
-    case .manual:
-        return rhs == .manual
-    case .unknown:
-        return false
-    case .automaticAsync:
-        return rhs == .automaticAsync
-    @unknown default:
-        return false
-    }
-}
