@@ -30,9 +30,9 @@ import Foundation
             return .paymentSheetCardBrandSelected
         case (.openEditScreen, .paymentSheet):
             return .paymentSheetOpenEditScreen
-        case (.updateCardBrand, .paymentSheet):
+        case (.updateCard, .paymentSheet):
             return .paymentSheetUpdateCard
-        case (.updateCardBrandFailed, .paymentSheet):
+        case (.updateCardFailed, .paymentSheet):
             return .paymentSheetUpdateCardFailed
         case (.setDefaultPaymentMethod, .paymentSheet):
             return .paymentSheetSetDefaultPaymentMethod
@@ -46,9 +46,9 @@ import Foundation
             return .customerSheetCardBrandSelected
         case (.openEditScreen, .customerSheet):
             return .customerSheetOpenEditScreen
-        case (.updateCardBrand, .customerSheet):
+        case (.updateCard, .customerSheet):
             return .customerSheetUpdateCard
-        case (.updateCardBrandFailed, .customerSheet):
+        case (.updateCardFailed, .customerSheet):
             return .customerSheetUpdateCardFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
@@ -64,8 +64,8 @@ import Foundation
         case displayCardBrandDropdownIndicator
         case cardBrandSelected
         case openEditScreen
-        case updateCardBrand
-        case updateCardBrandFailed
+        case updateCard
+        case updateCardFailed
         case setDefaultPaymentMethod
         case setDefaultPaymentMethodFailed
         case closeEditScreen
