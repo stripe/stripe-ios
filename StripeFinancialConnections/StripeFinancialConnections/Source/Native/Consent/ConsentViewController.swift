@@ -19,7 +19,11 @@ protocol ConsentViewControllerDelegate: AnyObject {
     )
     func consentViewController(
         _ viewController: ConsentViewController,
-        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+        didConsentWithResult result: ConsentAcquiredResult
+    )
+    func consentViewControllerDidFailAttestationVerdict(
+        _ viewController: ConsentViewController,
+        prefillDetails: WebPrefillDetails
     )
 }
 
@@ -146,9 +150,19 @@ class ConsentViewController: UIViewController {
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let manifest):
-                    self.delegate?.consentViewController(self, didConsentWithManifest: manifest)
+                case .success(let result):
+                    self.delegate?.consentViewController(self, didConsentWithResult: result)
                 case .failure(let error):
+                    let attestationError = self.dataSource.completeAssertionIfNeeded(
+                        possibleError: error,
+                        api: .consumerSessionLookup
+                    )
+                    
+                    if attestationError != nil {
+                        let prefillDetails = WebPrefillDetails(email: dataSource.email)
+                        self.delegate?.consentViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                    }
+                    
                     // we display no errors on failure
                     self.dataSource
                         .analyticsClient
