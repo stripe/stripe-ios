@@ -86,37 +86,3 @@ struct PaymentSheetDeferredValidator {
     }
 
 }
-
-// MARK: - Validation helpers
-
-private func == (lhs: STPPaymentIntentSetupFutureUsage, rhs: PaymentSheet.IntentConfiguration.SetupFutureUsage?) -> Bool {
-    // Explicitly switch over each case so that the compiler can complain when new cases are added
-    switch lhs {
-    case .none:
-        return rhs == nil
-    case .offSession:
-        return rhs == .offSession
-    case .onSession:
-        return rhs == .onSession
-    case .unknown:
-        return false
-    @unknown default:
-        return false
-    }
-}
-
-private func == (lhs: STPSetupIntentUsage, rhs: PaymentSheet.IntentConfiguration.SetupFutureUsage?) -> Bool {
-    // Explicitly switch over each case so that the compiler can complain when new cases are added
-    switch lhs {
-    case .none:
-        return rhs == nil
-    case .offSession:
-        return rhs == .offSession
-    case .onSession:
-        return rhs == .onSession
-    case .unknown:
-        return false
-    @unknown default:
-        return false
-    }
-}
