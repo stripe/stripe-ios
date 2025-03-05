@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(UpdatePaymentMethodBeta) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(UpdatePaymentMethodBeta) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -106,6 +106,7 @@ class PlaygroundController: ObservableObject {
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
+        configuration.customPaymentMethodConfiguration = customPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
         case .paypal:
             configuration.paymentMethodOrder = ["card", "external_paypal"]
@@ -214,6 +215,7 @@ class PlaygroundController: ObservableObject {
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
+        configuration.customPaymentMethodConfiguration = customPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
         case .paypal:
             configuration.paymentMethodOrder = ["card", "external_paypal"]
@@ -365,6 +367,29 @@ class PlaygroundController: ObservableObject {
             externalPaymentMethods: externalPaymentMethods
         ) { [weak self] externalPaymentMethodType, billingDetails, completion in
             self?.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails, completion: completion)
+        }
+    }
+
+    var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration? {
+        switch settings.customPaymentMethods {
+        case .on:
+            // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
+            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_1QpId5Lu5o3P18ZpLwSqMXws",
+                                                                                                                subcopy: "Pay with BufoPay")
+            return .init(customPaymentMethodTypes: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
+        case .off:
+            return nil
+        }
+    }
+
+    func handleCustomPaymentMethod(
+        _ customPaymentMethodType: PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType,
+        _ billingDetails: STPPaymentMethodBillingDetails
+    ) async -> PaymentSheetResult {
+        return await withCheckedContinuation { continuation in
+            handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails) { result in
+                continuation.resume(returning: result)
+            }
         }
     }
 

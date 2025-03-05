@@ -44,6 +44,10 @@ struct PaymentSheetTestPlayground: View {
         }
         SettingView(setting: $playgroundController.settings.userOverrideCountry)
         SettingView(setting: $playgroundController.settings.externalPaymentMethods)
+        // The hardcoded CPM id is only available on our US merchant
+        if playgroundController.settings.merchantCountryCode == .US {
+            SettingView(setting: $playgroundController.settings.customPaymentMethods)
+        }
         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
