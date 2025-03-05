@@ -183,6 +183,9 @@ extension PaymentSheet {
         /// Configuration for external payment methods.
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
 
+        /// Configuration for custom payment methods.
+        @_spi(CustomPaymentMethodsBeta) public var customPaymentMethodConfiguration: CustomPaymentMethodConfiguration?
+
         /// By default, PaymentSheet will use a dynamic ordering that optimizes payment method display for the customer.
         /// You can override the default order in which payment methods are displayed in PaymentSheet with a list of payment method types.
         /// See https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for the list of valid types.  You may also pass external payment methods.
@@ -509,6 +512,59 @@ extension PaymentSheet {
         /// Your implementation should complete the payment and call the `completion` parameter with the result.
         /// - Note: This is always called on the main thread.
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
+    }
+
+    /// Configuration for custom payment methods
+    @_spi(CustomPaymentMethodsBeta) public struct CustomPaymentMethodConfiguration {
+
+        /// Defines a custom payment method type that can be displayed in PaymentSheet
+        public struct CustomPaymentMethodType {
+
+            /// The unique identifier for this custom payment method type in the format of "cmpt_..."
+            /// Obtained from the Stripe Dashboard at https://dashboard.stripe.com/settings/custom_payment_methods
+            let id: String
+
+            /// Optional subcopy text to be displayed below the custom payment method's display name.
+            let subcopy: String?
+
+            /// When true, PaymentSheet will collect billing details for this custom payment method type
+            /// in accordance with the `billingDetailsCollectionConfiguration` settings.
+            /// This has no effect if `billingDetailsCollectionConfiguration` is not configured.
+            var shouldCollectBillingDetails = false
+
+            /// Initializes an `CustomPaymentMethodType`
+            /// - Parameters:
+            ///   - id: The unique identifier for this custom payment method type in the format of "cmpt_..."
+            ///   - subcopy: Optional subcopy text to be displayed below the custom payment method's display name.
+            public init(id: String, subcopy: String? = nil) {
+                self.id = id
+                self.subcopy = subcopy
+            }
+        }
+
+        /// Initializes an `CustomPaymentMethodConfiguration`
+        /// - Parameter customPaymentMethodTypes: A list of custom payment methods to display in PaymentSheet.
+        /// - Parameter customPaymentMethodConfirmHandler: A handler called when the customer confirms the payment using a custom payment method.
+        public init(customPaymentMethodTypes: [CustomPaymentMethodType], customPaymentMethodConfirmHandler: @escaping PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodConfirmHandler) {
+            self.customPaymentMethodTypes = customPaymentMethodTypes
+            self.customPaymentMethodConfirmHandler = customPaymentMethodConfirmHandler
+        }
+
+        /// A list of custom payment methods types to display in PaymentSheet.
+        public var customPaymentMethodTypes: [CustomPaymentMethodType] = []
+
+        /// - Parameter customPaymentMethodType: The custom payment method to confirm payment with
+        /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
+        /// - Returns: The result of the attempt to confirm payment using the given custom payment method.
+        public typealias CustomPaymentMethodConfirmHandler = (
+            _ customPaymentMethodType: CustomPaymentMethodType,
+            _ billingDetails: STPPaymentMethodBillingDetails
+        ) async -> PaymentSheetResult
+
+        /// This handler is called when the customer confirms the payment using an custom payment method.
+        /// Your implementation should complete the payment and return the result.
+        /// - Note: This is always called on the main thread.
+        public var customPaymentMethodConfirmHandler: CustomPaymentMethodConfirmHandler
     }
 }
 
