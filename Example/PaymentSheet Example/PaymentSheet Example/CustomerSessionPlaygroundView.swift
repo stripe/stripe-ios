@@ -54,6 +54,7 @@ struct CustomerSessionPlaygroundView: View {
                     }
                     SettingPickerView(setting: $viewModel.paymentMethodRemove)
                     SettingPickerView(setting: $viewModel.paymentMethodRemoveLast)
+                    SettingPickerView(setting: $viewModel.paymentMethodUpdate)
                     SettingPickerView(setting: paymentMethodRedisplayBinding)
                     if viewModel.paymentMethodRedisplay == .enabled {
                         SettingPickerView(setting: $viewModel.paymentMethodAllowRedisplayFilters)

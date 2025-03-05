@@ -16,50 +16,80 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isCBCEligible: true)
     }
 
-    // Due to limitations of snapshot tests being inaccurate, the snapshot recorded for this test applies a border radius to all corners in SectionContainerView
-    // More info here:https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerLightMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerCanUpdateLightMode() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdate: true, isCBCEligible: true)
     }
 
     func test_UpdatePaymentMethodViewControllerAppearance() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, isCBCEligible: true)
     }
 
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerCanUpdateAppearance() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, canUpdate: true, isCBCEligible: true)
+    }
+
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerDarkMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isEmbeddedSingle: true, isCBCEligible: true)
     }
 
-    // Due to limitations of snapshot tests being inaccurate, the snapshot recorded for this test applies a border radius to all corners in SectionContainerView
-    // More info here:https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerLightMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, isCBCEligible: true)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerCanUpdateLightMode() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, canUpdate: true, isCBCEligible: true)
     }
 
     func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerAppearance() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme, isCBCEligible: true)
     }
 
-    // Due to limitations of snapshot tests being inaccurate, the snapshot recorded for this test applies a border radius to all corners in SectionContainerView
-    // More info here:https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerExpiredCard() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, expired: true)
     }
 
-    // Due to limitations of snapshot tests being inaccurate, the snapshot recorded for this test applies a border radius to all corners in SectionContainerView
-    // More info here:https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerCanUpdateExpiredCard() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdate: true, isCBCEligible: true, expired: true)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerSetAsDefaultCard() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, canSetAsDefaultPM: true)
     }
 
-    // Due to limitations of snapshot tests being inaccurate, the snapshot recorded for this test applies a border radius to all corners in SectionContainerView
-    // More info here:https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerCanUpdateSetAsDefaultCard() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdate: true, isCBCEligible: true, canSetAsDefaultPM: true)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerDefaultCard() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, canSetAsDefaultPM: true, isDefault: true)
     }
 
-    // Due to limitations of snapshot tests being inaccurate, the snapshot recorded for this test applies a border radius to all corners in SectionContainerView
-    // More info here:https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerRemoveOnlyCard() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false)
     }
@@ -124,14 +154,14 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
 
-    // Due to limitations of snapshot tests being inaccurate, the snapshot recorded for this test applies a border radius to all corners in SectionContainerView
-    // More info here:https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerLightMode_blockedBrands() {
         let cardBrandFilter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.amex]))
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, cardBrandFilter: cardBrandFilter)
     }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, isCBCEligible: Bool = false, expired: Bool = false, canSetAsDefaultPM: Bool = false, isDefault: Bool = false, cardBrandFilter: CardBrandFilter = .default) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdate: Bool = false, isCBCEligible: Bool = false, expired: Bool = false, canSetAsDefaultPM: Bool = false, isDefault: Bool = false, cardBrandFilter: CardBrandFilter = .default) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
@@ -157,6 +187,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                                            hostedSurface: .paymentSheet,
                                                                            cardBrandFilter: cardBrandFilter,
                                                                            canRemove: canRemove,
+                                                                           canUpdate: canUpdate,
                                                                            isCBCEligible: isCBCEligible,
                                                                            allowsSetAsDefaultPM: canSetAsDefaultPM,
                                                                            isDefault: isDefault

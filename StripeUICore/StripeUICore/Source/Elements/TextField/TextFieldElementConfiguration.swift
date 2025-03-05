@@ -144,8 +144,13 @@ public extension TextFieldElementConfiguration {
 }
 
 @_spi(STP) public enum EditConfiguration {
+    // Text can be modified
     case editable
+
+    // Text can not be modified, with disabled appearance
     case readOnly
+
+    // Text can not be modified, without disabled appearance
     case readOnlyWithoutDisabledAppearance
 
     @_spi(STP) public var isEditable: Bool {
