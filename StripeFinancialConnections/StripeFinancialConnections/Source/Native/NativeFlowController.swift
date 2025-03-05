@@ -696,16 +696,18 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 
     func consentViewController(
         _ viewController: ConsentViewController,
-        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+        didConsentWithResult result: ConsentAcquiredResult
     ) {
         delegate?.nativeFlowController(
             self,
             didReceiveEvent: FinancialConnectionsEvent(name: .consentAcquired)
         )
 
-        dataManager.manifest = manifest
+        dataManager.manifest = result.manifest
+        dataManager.consumerSession = result.consumerSession
+        dataManager.consumerPublishableKey = result.publishableKey
 
-        let nextPane = manifest.nextPane
+        let nextPane = result.nextPane
         if nextPane == .networkingLinkLoginWarmup {
             presentPaneAsSheet(nextPane)
         } else {
@@ -726,6 +728,17 @@ extension NativeFlowController: ConsentViewControllerDelegate {
         } else {
             pushPane(nextPane, parameters: parameters, animated: true)
         }
+    }
+    
+    func consentViewControllerDidFailAttestationVerdict(
+        _ viewController: ConsentViewController,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            shouldLaunchWebFlow: dataManager.manifest,
+            prefillDetails: prefillDetails
+        )
     }
 }
 
@@ -1030,13 +1043,18 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
 
 extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate {
 
-    func networkingLinkLoginWarmupViewControllerDidSelectContinue(
+    func networkingLinkLoginWarmupViewControllerDidFindConsumerSession(
         _ viewController: NetworkingLinkLoginWarmupViewController,
-        withSession consumerSession: ConsumerSessionData,
+        consumerSession: ConsumerSessionData,
         consumerPublishableKey: String
     ) {
         dataManager.consumerSession = consumerSession
         dataManager.consumerPublishableKey = consumerPublishableKey
+    }
+
+    func networkingLinkLoginWarmupViewControllerDidSelectContinue(
+        _ viewController: NetworkingLinkLoginWarmupViewController
+    ) {
         pushPane(.networkingLinkVerification, animated: true)
     }
 
@@ -1417,7 +1435,8 @@ private func CreatePaneViewController(
                 merchantLogo: dataManager.merchantLogo,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient
+                analyticsClient: dataManager.analyticsClient,
+                elementsSessionContext: dataManager.elementsSessionContext
             )
             let consentViewController = ConsentViewController(dataSource: consentDataSource)
             consentViewController.delegate = nativeFlowController

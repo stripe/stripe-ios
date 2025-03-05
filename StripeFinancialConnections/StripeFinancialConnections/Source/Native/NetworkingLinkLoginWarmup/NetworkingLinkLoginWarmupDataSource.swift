@@ -12,6 +12,7 @@ protocol NetworkingLinkLoginWarmupDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var email: String? { get }
+    var hasConsumerSession: Bool { get }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func disableNetworking() -> Future<FinancialConnectionsSessionManifest>
@@ -32,6 +33,10 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
 
     var email: String? {
         manifest.accountholderCustomerEmailAddress ?? elementsSessionContext?.prefillDetails?.email
+    }
+    
+    var hasConsumerSession: Bool {
+        apiClient.consumerSession != nil && apiClient.consumerPublishableKey != nil
     }
 
     init(
