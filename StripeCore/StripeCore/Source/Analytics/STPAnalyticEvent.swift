@@ -231,8 +231,8 @@ import Foundation
     case paymentSheetDisplayCardBrandDropdownIndicator = "mc_display_cbc_dropdown"
     case paymentSheetCardBrandSelected = "mc_cbc_selected"
     case paymentSheetOpenEditScreen = "mc_open_edit_screen"
-    case paymentSheetUpdateCardBrand = "mc_update_card"
-    case paymentSheetUpdateCardBrandFailed = "mc_update_card_failed"
+    case paymentSheetUpdateCard = "mc_update_card"
+    case paymentSheetUpdateCardFailed = "mc_update_card_failed"
     case paymentSheetClosesEditScreen = "mc_cancel_edit_screen"
     case paymentSheetDisallowedCardBrand = "mc_disallowed_card_brand"
 

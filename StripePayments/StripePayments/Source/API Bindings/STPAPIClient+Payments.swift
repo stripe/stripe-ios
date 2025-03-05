@@ -887,11 +887,7 @@ extension STPAPIClient {
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {
-                    if paymentMethodUpdateParams.card?.networks?.preferred != nil {
-                        continuation.resume(with: .failure(error ?? NSError.stp_cardBrandNotUpdatedError()))
-                    } else {
-                        continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
-                    }
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                 }
             }
         })

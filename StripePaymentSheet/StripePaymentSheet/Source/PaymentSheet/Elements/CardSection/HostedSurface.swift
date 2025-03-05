@@ -31,9 +31,9 @@ import Foundation
         case (.openEditScreen, .paymentSheet):
             return .paymentSheetOpenEditScreen
         case (.updateCardBrand, .paymentSheet):
-            return .paymentSheetUpdateCardBrand
+            return .paymentSheetUpdateCard
         case (.updateCardBrandFailed, .paymentSheet):
-            return .paymentSheetUpdateCardBrandFailed
+            return .paymentSheetUpdateCardFailed
         case (.setDefaultPaymentMethod, .paymentSheet):
             return .paymentSheetSetDefaultPaymentMethod
         case (.setDefaultPaymentMethodFailed, .paymentSheet):

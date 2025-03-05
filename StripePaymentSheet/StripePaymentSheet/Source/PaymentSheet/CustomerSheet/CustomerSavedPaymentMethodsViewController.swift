@@ -743,7 +743,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId)
                 }
             } catch {
-                onError(error)
+                onError(NSError.stp_defaultPaymentMethodNotUpdatedError())
                 return
             }
             onSuccess()

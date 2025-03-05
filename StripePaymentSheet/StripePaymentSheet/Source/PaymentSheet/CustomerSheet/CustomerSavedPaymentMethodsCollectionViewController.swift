@@ -503,7 +503,12 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams) = updateParams else {
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")
         }
-        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+        do {
+            try await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+        }
+        catch {
+            throw NSError.stp_cardBrandNotUpdatedError()
+        }
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 

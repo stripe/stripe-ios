@@ -1,3 +1,6 @@
+/* An error message displayed when an error occurred. */
+"An error occurred. Please try again." = "An error occurred. Please try again.";
+
 /* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "Card brand was not updated. Please try again.";
 

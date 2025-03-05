@@ -236,19 +236,39 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod) async throws {
-        try await withThrowingTaskGroup(of: Void.self) { group in
+        var errors: [NSError] = []
+        await withTaskGroup(of: Void.self) { group in
             if let updateParams = viewController.updateParams,
                case .card(let paymentMethodCardParams) = updateParams {
                 group.addTask {
-                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+                    do {
+                        try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+                    }
+                    catch {
+                        errors.append(NSError.stp_cardBrandNotUpdatedError())
+                    }
                 }
             }
             if viewController.setAsDefaultValue ?? false {
                 group.addTask {
-                    try await self.updateDefault(paymentMethod: paymentMethod)
+                    do {
+                        try await self.updateDefault(paymentMethod: paymentMethod)
+                    }
+                    catch {
+                        errors.append(NSError.stp_defaultPaymentMethodNotUpdatedError())
+                    }
                 }
             }
-            try await group.waitForAll()
+            await group.waitForAll()
+        }
+        // if more than one error occurs, throw a generic error
+        if errors.count > 1 {
+            throw NSError.stp_genericErrorOccurredError()
+        }
+        else {
+            if let error = errors.first {
+                throw error
+            }
         }
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false

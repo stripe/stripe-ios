@@ -66,7 +66,7 @@ extension NSError {
         ]
         return NSError(
             domain: STPError.stripeDomain,
-            code: STPErrorCode.invalidRequestError.rawValue,
+            code: STPErrorCode.apiError.rawValue,
             userInfo: userInfo
         )
     }
@@ -77,7 +77,18 @@ extension NSError {
         ]
         return NSError(
             domain: STPError.stripeDomain,
-            code: STPErrorCode.invalidRequestError.rawValue,
+            code: STPErrorCode.apiError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_genericErrorOccurredError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: self.stp_genericErrorOccurredMessage()
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.apiError.rawValue,
             userInfo: userInfo
         )
     }
@@ -166,6 +177,13 @@ extension NSError {
         return STPLocalizedString(
             "Default payment method was not updated. Please try again.",
             "An error message displayed when setting a default payment method fails."
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_genericErrorOccurredMessage() -> String {
+        return STPLocalizedString(
+            "An error occurred. Please try again.",
+            "An error message displayed when an error occurred."
         )
     }
 }
