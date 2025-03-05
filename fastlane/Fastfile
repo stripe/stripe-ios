@@ -129,7 +129,13 @@ platform :ios do
 
   lane :size_report do
     Dir.chdir('..') do
-      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} master")
+      # Get the merge base between the current branch and master
+      merge_base = sh("git merge-base #{ENV['BITRISE_GIT_BRANCH']} origin/master").strip
+  
+      # Run size_report.rb
+      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} #{merge_base}")
+  
+      # Run `emerge` too if we can for PRs
       unless ENV['EMERGE_API_TOKEN'].nil?
         archive_path = Dir.pwd + '/build/size_tests/'
         arguments = { repo_name: "#{ENV['BITRISEIO_GIT_REPOSITORY_OWNER']}/#{ENV['BITRISEIO_GIT_REPOSITORY_SLUG']}",
@@ -137,11 +143,11 @@ platform :ios do
                       tag: 'release' }
         unless ENV['BITRISE_PULL_REQUEST'].nil?
           arguments[:pr_number] = ENV['BITRISE_PULL_REQUEST']
-          arguments[:base_sha] = `git rev-parse master`.to_s
+          arguments[:base_sha] = merge_base
         end
-
+  
         modules = YAML.load_file('modules.yaml')['modules'].select { |m| m.key?('size_report') }
-
+  
         modules.each do |m|
           sdk = m['framework_name']
           emerge(file_path: archive_path + sdk + '.xcarchive', **arguments)
@@ -149,6 +155,7 @@ platform :ios do
       end
     end
   end
+
 
   lane :installation_cocoapods_without_frameworks_objc do
     Dir.chdir('..') do

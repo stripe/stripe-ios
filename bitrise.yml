@@ -608,6 +608,7 @@ workflows:
         inputs:
         - merge_pr: "no"
         - fetch_tags: "yes"
+        - clone_depth: -1
     - restore-cache@2.4:
         inputs:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
