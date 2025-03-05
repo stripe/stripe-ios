@@ -34,6 +34,10 @@ import Foundation
             return .paymentSheetUpdateCard
         case (.updateCardFailed, .paymentSheet):
             return .paymentSheetUpdateCardFailed
+        case (.setDefaultPaymentMethod, .paymentSheet):
+            return .paymentSheetSetDefaultPaymentMethod
+        case (.setDefaultPaymentMethodFailed, .paymentSheet):
+            return .paymentSheetSetDefaultPaymentMethodFailed
         case (.closeEditScreen, .paymentSheet):
             return .paymentSheetClosesEditScreen
         case (.displayCardBrandDropdownIndicator, .customerSheet):
@@ -48,6 +52,10 @@ import Foundation
             return .customerSheetUpdateCardFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
+        case (.setDefaultPaymentMethod, .customerSheet):
+            return STPAnalyticEvent.unexpectedCustomerSheetError
+        case (.setDefaultPaymentMethodFailed, .customerSheet):
+            return STPAnalyticEvent.unexpectedCustomerSheetError
         }
     }
 
@@ -58,6 +66,8 @@ import Foundation
         case openEditScreen
         case updateCard
         case updateCardFailed
+        case setDefaultPaymentMethod
+        case setDefaultPaymentMethodFailed
         case closeEditScreen
     }
 }

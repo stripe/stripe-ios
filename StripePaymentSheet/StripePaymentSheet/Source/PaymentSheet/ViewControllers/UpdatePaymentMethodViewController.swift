@@ -182,7 +182,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .openEditScreen))
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .openEditScreen), params: ["payment_method_type": configuration.paymentMethod.type.identifier])
     }
 
     // MARK: Private helpers
@@ -218,25 +218,41 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
-
-        var analyticsParams: [String: Any] = [:]
-
-        if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions {
-            analyticsParams["selected_card_brand"] = paymentMethodCardParams.networks?.preferred
-        }
-        if let setAsDefaultValue {
-            analyticsParams["set_as_default"] = setAsDefaultValue
-        }
         do {
             try await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
-                                                                 params: analyticsParams)
-        } catch {
+            if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions,
+               let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
+                                                                     params: ["selected_card_brand": selectedCardBrand])
+            }
+            if setAsDefaultValue ?? false {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethod),
+                                                                     params: ["payment_method_type": configuration.paymentMethod.type.identifier])
+            }
+        } catch let error as NSError {
             updateButton.update(state: .enabled)
             latestError = error
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
-                                                                 error: error,
-                                                                 params: analyticsParams)
+            switch error {
+            case NSError.stp_cardBrandNotUpdatedError():
+                if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions,
+                   let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
+                                                                         params: ["selected_card_brand": selectedCardBrand])
+                }
+            case NSError.stp_defaultPaymentMethodNotUpdatedError():
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethodFailed),
+                                                                     params: ["payment_method_type": configuration.paymentMethod.type.identifier])
+            case NSError.stp_genericErrorOccurredError():
+                if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions,
+                   let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
+                                                                         params: ["selected_card_brand": selectedCardBrand])
+                }
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethodFailed),
+                                                                     params: ["payment_method_type": configuration.paymentMethod.type.identifier])
+            default:
+                break
+            }
         }
         view.isUserInteractionEnabled = true
     }

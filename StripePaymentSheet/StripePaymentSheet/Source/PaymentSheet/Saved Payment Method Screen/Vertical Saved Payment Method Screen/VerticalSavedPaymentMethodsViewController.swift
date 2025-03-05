@@ -375,19 +375,46 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod) async throws {
-        try await withThrowingTaskGroup(of: Void.self) { group in
+        actor ErrorCollector {
+            private var errors: [NSError] = []
+            func append(error: NSError) {
+                errors.append(error)
+            }
+            func getErrors() -> [NSError] {
+                return errors
+            }
+        }
+        let errorCollector = ErrorCollector()
+        await withTaskGroup(of: Void.self) { group in
             if let updateParams = viewController.updateParams,
                case .card(let paymentMethodCardParams) = updateParams {
                 group.addTask {
-                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+                    do {
+                        try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+                    } catch {
+                        await errorCollector.append(error: NSError.stp_cardBrandNotUpdatedError())
+                    }
                 }
             }
             if viewController.setAsDefaultValue ?? false {
                 group.addTask {
-                    try await self.updateDefault(paymentMethod: paymentMethod)
+                    do {
+                        try await self.updateDefault(paymentMethod: paymentMethod)
+                    } catch {
+                        await errorCollector.append(error: NSError.stp_defaultPaymentMethodNotUpdatedError())
+                    }
                 }
             }
-            try await group.waitForAll()
+            await group.waitForAll()
+        }
+        let errors = await errorCollector.getErrors()
+        // if more than one error occurs, throw a generic error
+        if errors.count > 1 {
+            throw NSError.stp_genericErrorOccurredError()
+        } else {
+            if let error = errors.first {
+                throw error
+            }
         }
         _ = viewController.bottomSheetController?.popContentViewController()
     }

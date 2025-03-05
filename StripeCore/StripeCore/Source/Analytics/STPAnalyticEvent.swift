@@ -244,6 +244,10 @@ import Foundation
     case customerSheetUpdateCardFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
+    // MARK: - PaymentSheet set default
+    case paymentSheetSetDefaultPaymentMethod = "mc_set_default_payment_method"
+    case paymentSheetSetDefaultPaymentMethodFailed = "mc_set_default_payment_method_failed"
+
     // MARK: - Basic Integration
     // Loading
     case biLoadStarted = "bi_load_started"
