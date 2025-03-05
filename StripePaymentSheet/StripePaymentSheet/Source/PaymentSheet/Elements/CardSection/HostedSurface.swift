@@ -47,9 +47,9 @@ import Foundation
         case (.openEditScreen, .customerSheet):
             return .customerSheetOpenEditScreen
         case (.updateCardBrand, .customerSheet):
-            return .customerSheetUpdateCardBrand
+            return .customerSheetUpdateCard
         case (.updateCardBrandFailed, .customerSheet):
-            return .customerSheetUpdateCardBrandFailed
+            return .customerSheetUpdateCardFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
         case (.setDefaultPaymentMethod, .customerSheet):

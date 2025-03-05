@@ -240,8 +240,8 @@ import Foundation
     case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
     case customerSheetCardBrandSelected = "cs_cbc_selected"
     case customerSheetOpenEditScreen = "cs_open_edit_screen"
-    case customerSheetUpdateCardBrand = "cs_update_card"
-    case customerSheetUpdateCardBrandFailed = "cs_update_card_failed"
+    case customerSheetUpdateCard = "cs_update_card"
+    case customerSheetUpdateCardFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
     // MARK: - PaymentSheet set default
