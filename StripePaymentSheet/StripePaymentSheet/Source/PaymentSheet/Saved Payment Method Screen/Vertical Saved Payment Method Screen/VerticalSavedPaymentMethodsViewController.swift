@@ -382,8 +382,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
                 group.addTask {
                     do {
                         try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-                    }
-                    catch {
+                    } catch {
                         errors.append(NSError.stp_cardBrandNotUpdatedError())
                     }
                 }
@@ -392,8 +391,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
                 group.addTask {
                     do {
                         try await self.updateDefault(paymentMethod: paymentMethod)
-                    }
-                    catch {
+                    } catch {
                         errors.append(NSError.stp_defaultPaymentMethodNotUpdatedError())
                     }
                 }
@@ -403,8 +401,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         // if more than one error occurs, throw a generic error
         if errors.count > 1 {
             throw NSError.stp_genericErrorOccurredError()
-        }
-        else {
+        } else {
             if let error = errors.first {
                 throw error
             }

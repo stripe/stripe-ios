@@ -505,8 +505,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         }
         do {
             try await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-        }
-        catch {
+        } catch {
             throw NSError.stp_cardBrandNotUpdatedError()
         }
         _ = viewController.bottomSheetController?.popContentViewController()
