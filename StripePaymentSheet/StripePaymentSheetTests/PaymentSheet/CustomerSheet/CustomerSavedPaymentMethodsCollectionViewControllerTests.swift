@@ -303,11 +303,13 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
 
     func configuration(allowsRemovalOfLastSavedPaymentMethod: Bool,
                        paymentMethodRemove: Bool,
+                       paymentMethodUpdate: Bool = false,
                        paymentMethodSyncDefault: Bool = false,
                        showApplePay: Bool = false) -> CustomerSavedPaymentMethodsCollectionViewController.Configuration {
         return CustomerSavedPaymentMethodsCollectionViewController.Configuration(showApplePay: showApplePay,
                                                                                  allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                  paymentMethodRemove: paymentMethodRemove,
+                                                                                 paymentMethodUpdate: paymentMethodUpdate,
                                                                                  paymentMethodSyncDefault: paymentMethodSyncDefault,
                                                                                  isTestMode: true)
     }

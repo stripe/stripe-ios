@@ -168,6 +168,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)

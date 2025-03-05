@@ -357,7 +357,7 @@ extension TextFieldElement {
     struct LastFourConfiguration: TextFieldElementConfiguration {
         let label = String.Localized.card_number
         let lastFour: String
-        let editConfiguration: EditConfiguration = .readOnly
+        let editConfiguration: EditConfiguration
         let cardBrand: STPCardBrand?
         let cardBrandDropDown: DropdownFieldElement?
 
@@ -365,10 +365,11 @@ extension TextFieldElement {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, cardBrand: STPCardBrand?, cardBrandDropDown: DropdownFieldElement?) {
+        init(lastFour: String, editConfiguration: EditConfiguration, cardBrand: STPCardBrand?, cardBrandDropDown: DropdownFieldElement?) {
             self.lastFour = lastFour
-            self.cardBrand = cardBrand
             self.cardBrandDropDown = cardBrandDropDown
+            self.cardBrand = cardBrand
+            self.editConfiguration = editConfiguration
         }
 
         func makeDisplayText(for text: String) -> NSAttributedString {

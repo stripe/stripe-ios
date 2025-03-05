@@ -35,6 +35,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let configuration: CustomerSheet.Configuration
     let customerSheetDataSource: CustomerSheetDataSource
     let paymentMethodRemove: Bool
+    let paymentMethodUpdate: Bool
     let paymentMethodSyncDefault: Bool
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
@@ -110,6 +111,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
+                paymentMethodUpdate: paymentMethodUpdate,
                 paymentMethodSyncDefault: paymentMethodSyncDefault,
                 isTestMode: configuration.apiClient.isTestmode
             ),
@@ -153,6 +155,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         customerSheetDataSource: CustomerSheetDataSource,
         isApplePayEnabled: Bool,
         paymentMethodRemove: Bool,
+        paymentMethodUpdate: Bool,
         paymentMethodSyncDefault: Bool,
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
@@ -166,6 +169,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.customerSheetDataSource = customerSheetDataSource
         self.isApplePayEnabled = isApplePayEnabled
         self.paymentMethodRemove = paymentMethodRemove
+        self.paymentMethodUpdate = paymentMethodUpdate
         self.paymentMethodSyncDefault = paymentMethodSyncDefault
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
@@ -666,6 +670,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
+                paymentMethodUpdate: paymentMethodUpdate,
                 paymentMethodSyncDefault: paymentMethodSyncDefault,
                 isTestMode: configuration.apiClient.isTestmode
             ),

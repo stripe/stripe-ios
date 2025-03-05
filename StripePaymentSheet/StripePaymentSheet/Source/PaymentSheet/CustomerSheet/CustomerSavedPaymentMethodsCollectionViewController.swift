@@ -81,6 +81,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
+        let paymentMethodUpdate: Bool
         let paymentMethodSyncDefault: Bool
         let isTestMode: Bool
     }
@@ -443,6 +444,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                                                            hostedSurface: .customerSheet,
                                                                            cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+                                                                           canUpdate: configuration.paymentMethodUpdate,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
         let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
                                                        isTestMode: configuration.isTestMode,
