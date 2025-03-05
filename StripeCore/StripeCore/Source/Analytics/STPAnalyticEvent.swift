@@ -244,27 +244,6 @@ import Foundation
     case customerSheetUpdateCardFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
-    // MARK: - Basic Integration
-    // Loading
-    case biLoadStarted = "bi_load_started"
-    case biLoadSucceeded = "bi_load_succeeded"
-    case biLoadFailed = "bi_load_failed"
-
-    // Confirmation
-    case biPaymentCompleteNewPMSuccess = "bi_complete_payment_newpm_success"
-    case biPaymentCompleteSavedPMSuccess = "bi_complete_payment_savedpm_success"
-    case biPaymentCompleteApplePaySuccess = "bi_complete_payment_applepay_success"
-    case biPaymentCompleteNewPMFailure = "bi_complete_payment_newpm_failure"
-    case biPaymentCompleteSavedPMFailure = "bi_complete_payment_savedpm_failure"
-    case biPaymentCompleteApplePayFailure = "bi_complete_payment_applepay_failure"
-
-    // UI events
-    case biOptionsShown = "bi_options_shown"
-    case biFormShown = "bi_form_shown"
-    case biFormInteracted = "bi_form_interacted"
-    case biCardNumberCompleted = "bi_card_number_completed"
-    case biDoneButtonTapped = "bi_done_button_tapped"
-
     // MARK: - STPBankAccountCollector
     case bankAccountCollectorStarted = "stripeios.bankaccountcollector.started"
     case bankAccountCollectorFinished = "stripeios.bankaccountcollector.finished"
