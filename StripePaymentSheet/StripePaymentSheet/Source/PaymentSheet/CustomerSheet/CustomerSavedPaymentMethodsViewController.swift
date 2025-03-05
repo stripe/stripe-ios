@@ -737,7 +737,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 onError(error)
                 return
             }
-
             do {
                 if paymentMethodSyncDefault, let defaultPaymentMethod = selectedPaymentOption?.savedPaymentMethod {
                     _ = try await self.customerSheetDataSource.setAsDefaultPaymentMethod(paymentMethodId: defaultPaymentMethod.stripeId)

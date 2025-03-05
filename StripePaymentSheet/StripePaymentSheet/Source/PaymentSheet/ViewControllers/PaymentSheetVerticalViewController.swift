@@ -879,7 +879,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
             }
         }
         let errorCollector = ErrorCollector()
-        try await withThrowingTaskGroup(of: Void.self) { group in
+        await withTaskGroup(of: Void.self) { group in
             if let updateParams = viewController.updateParams,
                case .card(let paymentMethodCardParams) = updateParams {
                 group.addTask {
@@ -899,7 +899,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
                     }
                 }
             }
-            try await group.waitForAll()
+            await group.waitForAll()
         }
         let errors = await errorCollector.getErrors()
         // if more than one error occurs, throw a generic error

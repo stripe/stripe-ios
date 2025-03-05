@@ -680,7 +680,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
             }
         }
         let errorCollector = ErrorCollector()
-        try await withThrowingTaskGroup(of: Void.self) { group in
+        await withTaskGroup(of: Void.self) { group in
             if let updateParams = viewController.updateParams,
                case .card(let paymentMethodCardParams) = updateParams {
                 group.addTask {
@@ -700,7 +700,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                     }
                 }
             }
-            try await group.waitForAll()
+            await group.waitForAll()
         }
         let errors = await errorCollector.getErrors()
         // if more than one error occurs, throw a generic error
