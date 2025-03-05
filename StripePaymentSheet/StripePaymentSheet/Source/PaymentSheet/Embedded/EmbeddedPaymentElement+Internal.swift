@@ -236,8 +236,16 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: StripePayments.STPPaymentMethod) async throws {
-        var errors: [NSError] = []
-        let errorQueue = DispatchQueue(label: "com.stripe.update-payment-method-error")
+        actor ErrorCollector {
+            private var errors: [NSError] = []
+            func append(error: NSError) {
+                errors.append(error)
+            }
+            func getErrors() -> [NSError] {
+                return errors
+            }
+        }
+        let errorCollector = ErrorCollector()
         try await withThrowingTaskGroup(of: Void.self) { group in
             if let updateParams = viewController.updateParams,
                case .card(let paymentMethodCardParams) = updateParams {
@@ -245,9 +253,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                     do {
                         try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
                     } catch {
-                        errorQueue.sync {
-                            errors.append(NSError.stp_cardBrandNotUpdatedError())
-                        }
+                        await errorCollector.append(error: NSError.stp_cardBrandNotUpdatedError())
                     }
                 }
             }
@@ -256,14 +262,13 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                     do {
                         try await self.updateDefault(paymentMethod: paymentMethod)
                     } catch {
-                        errorQueue.sync {
-                            errors.append(NSError.stp_defaultPaymentMethodNotUpdatedError())
-                        }
+                        await errorCollector.append(error: NSError.stp_defaultPaymentMethodNotUpdatedError())
                     }
                 }
             }
             try await group.waitForAll()
         }
+        let errors = await errorCollector.getErrors()
         // if more than one error occurs, throw a generic error
         if errors.count > 1 {
             throw NSError.stp_genericErrorOccurredError()
