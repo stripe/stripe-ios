@@ -45,7 +45,6 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "SMS",
             manifest: manifest,
-            emailAddress: consumerSession.emailAddress,
             customEmailType: nil,
             connectionsMerchantName: nil,
             pane: .networkingSaveToLinkVerification,

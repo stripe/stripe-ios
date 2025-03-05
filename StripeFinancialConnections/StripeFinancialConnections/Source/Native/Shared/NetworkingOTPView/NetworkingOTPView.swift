@@ -11,13 +11,8 @@ import Foundation
 import UIKit
 
 protocol NetworkingOTPViewDelegate: AnyObject {
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView)
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView)
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error)
-
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView)
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData)
-    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String)
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error)
 
     func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView)
@@ -27,8 +22,6 @@ protocol NetworkingOTPViewDelegate: AnyObject {
         didFailToConfirmVerification error: Error,
         isTerminal: Bool
     )
-
-    func networkingOTPViewDidFailAttestationVerdict(_ view: NetworkingOTPView, prefillDetails: WebPrefillDetails)
 }
 
 final class NetworkingOTPView: UIView {
@@ -157,36 +150,7 @@ final class NetworkingOTPView: UIView {
         }
     }
 
-    func lookupConsumerAndStartVerification() {
-        delegate?.networkingOTPViewWillStartConsumerLookup(self)
-        dataSource.lookupConsumerSession()
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                let attestationError = self.dataSource.completeAssertionIfNeeded(
-                    possibleError: result.error,
-                    api: .consumerSessionLookup
-                )
-                if attestationError != nil {
-                    let prefillDetails = WebPrefillDetails(email: self.dataSource.emailAddress)
-                    self.delegate?.networkingOTPViewDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
-                    return
-                }
-
-                switch result {
-                case .success(let lookupConsumerSessionResponse):
-                    if lookupConsumerSessionResponse.exists {
-                        if let consumerPublishableKey = lookupConsumerSessionResponse.publishableKey {
-                            self.delegate?.networkingOTPView(self, didGetConsumerPublishableKey: consumerPublishableKey)
-                        }
-                        self.startVerification()
-                    } else {
-                        self.delegate?.networkingOTPViewConsumerNotFound(self)
-                    }
-                case .failure(let error):
-                    self.delegate?.networkingOTPView(self, didFailConsumerLookup: error)
-                }
-            }
-    }
+    // TODO: Where should we move the attestation error handling?
 
     func startVerification() {
         delegate?.networkingOTPViewWillStartVerification(self)
@@ -285,11 +249,15 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
                 singleAccount: true,
                 _theme: theme
             ),
-            emailAddress: "",
             customEmailType: nil,
             connectionsMerchantName: nil,
             pane: .networkingLinkVerification,
-            consumerSession: nil,
+            consumerSession: .init(
+                clientSecret: "cs_123",
+                emailAddress: "email@email.com",
+                redactedFormattedPhoneNumber: "(•••) ••• ••55",
+                verificationSessions: []
+            ),
             apiClient: FinancialConnectionsAPIClient(apiClient: .shared),
             clientSecret: "",
             analyticsClient: FinancialConnectionsAnalyticsClient()

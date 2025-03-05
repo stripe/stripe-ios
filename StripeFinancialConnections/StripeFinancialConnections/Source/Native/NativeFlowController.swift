@@ -1031,8 +1031,12 @@ extension NativeFlowController: NetworkingLinkSignupViewControllerDelegate {
 extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate {
 
     func networkingLinkLoginWarmupViewControllerDidSelectContinue(
-        _ viewController: NetworkingLinkLoginWarmupViewController
+        _ viewController: NetworkingLinkLoginWarmupViewController,
+        withSession consumerSession: ConsumerSessionData,
+        consumerPublishableKey: String
     ) {
+        dataManager.consumerSession = consumerSession
+        dataManager.consumerPublishableKey = consumerPublishableKey
         pushPane(.networkingLinkVerification, animated: true)
     }
 
@@ -1062,6 +1066,17 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
         didReceiveTerminalError error: Error
     ) {
         showTerminalError(error)
+    }
+    
+    func networkingLinkLoginWarmupViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkLoginWarmupViewController,
+        prefillDetails: WebPrefillDetails
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            shouldLaunchWebFlow: dataManager.manifest,
+            prefillDetails: prefillDetails
+        )
     }
 }
 
@@ -1538,15 +1553,13 @@ private func CreatePaneViewController(
         networkingLinkSignupViewController.delegate = nativeFlowController
         viewController = networkingLinkSignupViewController
     case .networkingLinkVerification:
-        let accountholderCustomerEmailAddress = dataManager.manifest.accountholderCustomerEmailAddress
-        let consumerSessionEmailAddress = dataManager.consumerSession?.emailAddress
-        if let accountholderCustomerEmailAddress = consumerSessionEmailAddress ?? accountholderCustomerEmailAddress {
+        if let consumerSession = dataManager.consumerSession {
             let networkingLinkVerificationDataSource = NetworkingLinkVerificationDataSourceImplementation(
-                accountholderCustomerEmailAddress: accountholderCustomerEmailAddress,
                 manifest: dataManager.manifest,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
                 returnURL: dataManager.returnURL,
+                consumerSession: consumerSession,
                 analyticsClient: dataManager.analyticsClient
             )
             let networkingLinkVerificationViewController = NetworkingLinkVerificationViewController(dataSource: networkingLinkVerificationDataSource)
@@ -1557,9 +1570,7 @@ private func CreatePaneViewController(
             viewController = nil
         }
     case .networkingSaveToLinkVerification:
-        if
-            let consumerSession = dataManager.consumerSession
-        {
+        if let consumerSession = dataManager.consumerSession {
             let networkingSaveToLinkVerificationDataSource = NetworkingSaveToLinkVerificationDataSourceImplementation(
                 manifest: dataManager.manifest,
                 consumerSession: consumerSession,
@@ -1667,7 +1678,9 @@ private func CreatePaneViewController(
             apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient,
-            nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta
+            nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta,
+            elementsSessionContext: dataManager.elementsSessionContext,
+            consumerSession: dataManager.consumerSession
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
             dataSource: networkingLinkWarmupDataSource,

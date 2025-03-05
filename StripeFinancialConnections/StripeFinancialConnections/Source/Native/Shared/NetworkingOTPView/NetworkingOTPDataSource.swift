@@ -20,7 +20,6 @@ protocol NetworkingOTPDataSource: AnyObject {
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
     var emailAddress: String { get }
 
-    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
     func completeAssertionIfNeeded(
@@ -34,7 +33,6 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     let otpType: String
     let pane: FinancialConnectionsSessionManifest.NextPane
     let analyticsClient: FinancialConnectionsAnalyticsClient
-    let emailAddress: String
     private let customEmailType: String?
     private let connectionsMerchantName: String?
     private let apiClient: any FinancialConnectionsAPI
@@ -42,11 +40,9 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     private let clientSecret: String
     weak var delegate: NetworkingOTPDataSourceDelegate?
 
-    private var consumerSession: ConsumerSessionData? {
+    private var consumerSession: ConsumerSessionData {
         didSet {
-            if let consumerSession = consumerSession {
-                delegate?.networkingOTPDataSource(self, didUpdateConsumerSession: consumerSession)
-            }
+            delegate?.networkingOTPDataSource(self, didUpdateConsumerSession: consumerSession)
         }
     }
 
@@ -57,22 +53,24 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     var appearance: FinancialConnectionsAppearance {
         manifest.appearance
     }
+    
+    var emailAddress: String {
+        consumerSession.emailAddress
+    }
 
     init(
         otpType: String,
         manifest: FinancialConnectionsSessionManifest,
-        emailAddress: String,
         customEmailType: String?,
         connectionsMerchantName: String?,
         pane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData?,
+        consumerSession: ConsumerSessionData,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.otpType = otpType
         self.manifest = manifest
-        self.emailAddress = emailAddress
         self.customEmailType = customEmailType
         self.connectionsMerchantName = connectionsMerchantName
         self.pane = pane
@@ -82,31 +80,12 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.analyticsClient = analyticsClient
     }
 
-    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
-        apiClient
-            .consumerSessionLookup(
-                emailAddress: emailAddress,
-                clientSecret: clientSecret,
-                sessionId: manifest.id,
-                emailSource: .customerObject,
-                useMobileEndpoints: manifest.verified,
-                pane: pane
-            )
-            .chained { [weak self] lookupConsumerSessionResponse in
-                self?.consumerSession = lookupConsumerSessionResponse.consumerSession
-                return Promise(value: lookupConsumerSessionResponse)
-            }
-    }
-
     func startVerificationSession() -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid startVerificationSession call: no consumerSession.clientSecret"))
-        }
         return apiClient.consumerSessionStartVerification(
             otpType: otpType,
             customEmailType: customEmailType,
             connectionsMerchantName: connectionsMerchantName,
-            consumerSessionClientSecret: consumerSessionClientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret
         ).chained { [weak self] consumerSessionResponse in
             self?.consumerSession = consumerSessionResponse.consumerSession
             return Promise(value: consumerSessionResponse)
@@ -114,13 +93,10 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     }
 
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
-        }
         return apiClient.consumerSessionConfirmVerification(
             otpCode: otpCode,
             otpType: otpType,
-            consumerSessionClientSecret: consumerSessionClientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret
         ).chained { [weak self] consumerSessionResponse in
             self?.consumerSession = consumerSessionResponse.consumerSession
             return Promise(value: consumerSessionResponse)

@@ -155,10 +155,6 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
         showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
     }
 
-    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
-        delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
-    }
-
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
         showLoadingView(false)
         dataSource.analyticsClient.log(
@@ -233,27 +229,5 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                 didReceiveTerminalError: error
             )
         }
-    }
-
-    func networkingOTPViewDidFailAttestationVerdict(
-        _ view: NetworkingOTPView,
-        prefillDetails: WebPrefillDetails
-    ) {
-        delegate?.networkingSaveToLinkVerificationViewControllerDidFailAttestationVerdict(
-            self,
-            prefillDetails: prefillDetails
-        )
-    }
-
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
-    }
-
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
-    }
-
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
     }
 }

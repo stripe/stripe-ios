@@ -143,43 +143,6 @@ final class NetworkingLinkStepUpVerificationViewController: UIViewController {
 
 extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDelegate {
 
-    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
-        delegate?.networkingLinkStepUpVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
-    }
-
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
-        if !didShowContent {
-            showFullScreenLoadingView(true)
-        } else {
-            showSmallLoadingView(true)
-        }
-    }
-
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
-        // side-note: it is redundant to call `showLoadingView` & `showSmallLoadingView` because
-        // usually only one needs to be hidden, but this keeps the code simple
-        showFullScreenLoadingView(false)
-        showSmallLoadingView(false)
-
-        dataSource.analyticsClient.log(
-            eventName: "networking.verification.step_up.error",
-            parameters: [
-                "error": "ConsumerNotFoundError",
-            ],
-            pane: .networkingLinkStepUpVerification
-        )
-        delegate?.networkingLinkStepUpVerificationViewControllerEncounteredSoftError(self)
-    }
-
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
-        // side-note: it is redundant to call both (`showLoadingView` & `isResendingCode`) because
-        // only one needs to be hidden (depends on the state), but this keeps the code simple
-        showFullScreenLoadingView(false)
-        showSmallLoadingView(false)
-
-        handleFailure(error: error, errorName: "LookupConsumerSessionError")
-    }
-
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {
         // no-op
     }
@@ -294,15 +257,5 @@ extension NetworkingLinkStepUpVerificationViewController: NetworkingOTPViewDeleg
                 didReceiveTerminalError: error
             )
         }
-    }
-
-    func networkingOTPViewDidFailAttestationVerdict(
-        _ view: NetworkingOTPView,
-        prefillDetails: WebPrefillDetails
-    ) {
-        delegate?.networkingLinkStepUpVerificationViewControllerDidFailAttestationVerdict(
-            self,
-            prefillDetails: prefillDetails
-        )
     }
 }

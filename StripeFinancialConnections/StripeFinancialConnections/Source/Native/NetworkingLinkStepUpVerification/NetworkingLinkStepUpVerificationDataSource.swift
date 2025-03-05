@@ -45,7 +45,6 @@ final class NetworkingLinkStepUpVerificationDataSourceImplementation: Networking
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "EMAIL",
             manifest: manifest,
-            emailAddress: consumerSession.emailAddress,
             customEmailType: "NETWORKED_CONNECTIONS_OTP_EMAIL",
             connectionsMerchantName: manifest.businessName,
             pane: .networkingLinkStepUpVerification,
