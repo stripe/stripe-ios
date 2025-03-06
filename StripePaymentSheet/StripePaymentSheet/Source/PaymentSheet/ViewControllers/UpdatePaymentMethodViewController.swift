@@ -15,8 +15,13 @@ import UIKit
 protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod) async throws
+                   paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
+}
+
+enum UpdatePaymentMethodResult {
+    case success
+    case failure([Error])
 }
 
 /// For internal SDK use only
@@ -227,15 +232,16 @@ final class UpdatePaymentMethodViewController: UIViewController {
         if let setAsDefaultValue {
             analyticsParams["set_as_default"] = setAsDefaultValue
         }
-        do {
-            try await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
+        let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
+        switch updatePaymentMethodResult {
+        case .success:
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
                                                                  params: analyticsParams)
-        } catch {
+        case .failure(let errors):
             updateButton.update(state: .enabled)
-            latestError = error
+            latestError = errors.count == 1 ? errors[0] : NSError.stp_genericErrorOccurredError()
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
-                                                                 error: error,
+                                                                 error: latestError,
                                                                  params: analyticsParams)
         }
         view.isUserInteractionEnabled = true
