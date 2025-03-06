@@ -505,7 +505,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         }
 
         let cardBrandResult = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-        
+
         if case .failure(let error) = cardBrandResult {
             return .failure([error])
         }

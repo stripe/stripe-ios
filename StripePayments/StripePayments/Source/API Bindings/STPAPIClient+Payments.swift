@@ -861,7 +861,7 @@ extension STPAPIClient {
             with: _stored_configuration
         )
 
-        let parameters = STPFormEncoder.dictionary(forObject: paymentMethodUpdateParams)"
+        let parameters = STPFormEncoder.dictionary(forObject: paymentMethodUpdateParams)
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: "\(APIEndpointPaymentMethods)/\(paymentMethodId)",
