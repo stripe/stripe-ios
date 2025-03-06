@@ -45,6 +45,9 @@ import Foundation
 
     /// An ordered list of external payment methods to display
     let externalPaymentMethods: [ExternalPaymentMethod]
+    
+    /// An ordered list of custom payment methods to display
+    let customPaymentMethods: [CustomPaymentMethod]
 
     let customer: ElementsCustomer?
 
@@ -66,6 +69,7 @@ import Foundation
         cardBrandChoice: STPCardBrandChoice?,
         isApplePayEnabled: Bool,
         externalPaymentMethods: [ExternalPaymentMethod],
+        customPaymentMethods: [CustomPaymentMethod],
         customer: ElementsCustomer?,
         isBackupInstance: Bool = false
     ) {
@@ -81,6 +85,7 @@ import Foundation
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
+        self.customPaymentMethods = customPaymentMethods
         self.customer = customer
         self.isBackupInstance = isBackupInstance
         super.init()
@@ -116,6 +121,7 @@ import Foundation
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
             isApplePayEnabled: true,
             externalPaymentMethods: [],
+            customPaymentMethods: [],
             customer: nil,
             isBackupInstance: true
         )
@@ -168,6 +174,23 @@ extension STPElementsSession: STPAPIResponseDecodable {
             }
             return epms
         }()
+        
+        let customPaymentMethods: [CustomPaymentMethod] = {
+            let customPaymentMethodDataKey = "custom_payment_method_data"
+            guard response[customPaymentMethodDataKey] != nil, !(response[customPaymentMethodDataKey] is NSNull) else {
+                return []
+            }
+            guard
+                let cpmsJSON = response[customPaymentMethodDataKey] as? [[AnyHashable: Any]],
+                let cpms = CustomPaymentMethod.decoded(fromAPIResponse: cpmsJSON)
+            else {
+                // We don't want to fail the entire v1/elements/sessions request if we fail to parse external_payment_methods_data
+                // Instead, fall back to an empty array and log an error.
+//                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionEPMLoadFailed)
+                return []
+            }
+            return cpms
+        }()
 
         return self.init(
             allResponseFields: response,
@@ -184,6 +207,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
+            customPaymentMethods: customPaymentMethods,
             customer: customer
         )
     }
