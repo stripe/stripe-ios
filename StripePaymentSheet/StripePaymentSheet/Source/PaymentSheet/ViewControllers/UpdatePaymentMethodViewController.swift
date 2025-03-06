@@ -238,16 +238,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
                                                                  params: analyticsParams)
         case .failure(let errors):
-            var error: Error
-            if errors.count > 1 {
-                error = NSError.stp_genericErrorOccurredError()
-            } else {
-                error = errors[0]
-            }
             updateButton.update(state: .enabled)
-            latestError = error
+            latestError = errors.count == 1 ? errors[0] : NSError.stp_genericErrorOccurredError()
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
-                                                                 error: error,
+                                                                 error: latestError,
                                                                  params: analyticsParams)
         }
         view.isUserInteractionEnabled = true

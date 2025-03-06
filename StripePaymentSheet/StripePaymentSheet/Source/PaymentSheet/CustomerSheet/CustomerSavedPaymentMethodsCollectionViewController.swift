@@ -504,19 +504,14 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
             return .failure([CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")])
         }
 
-        var errors: [Swift.Error] = []
         let cardBrandResult = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-
+        
         if case .failure(let error) = cardBrandResult {
-            errors.append(error)
+            return .failure([error])
         }
 
-        if errors.isEmpty {
-            _ = viewController.bottomSheetController?.popContentViewController()
-            return .success
-        } else {
-            return .failure(errors)
-        }
+        _ = viewController.bottomSheetController?.popContentViewController()
+        return .success
     }
 
     private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: StripePayments.STPPaymentMethodUpdateParams) async -> Result<Void, Swift.Error> {

@@ -672,31 +672,28 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                    paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult {
         var errors: [Swift.Error] = []
 
-        var cardBrandResult: Result<Void, Swift.Error>?
+        // Perform card brand update if needed
         if let updateParams = viewController.updateParams,
            case .card(let paymentMethodCardParams) = updateParams {
-            cardBrandResult = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-        }
-        var defaultResult: Result<Void, Swift.Error>?
-        if viewController.setAsDefaultValue ?? false {
-            defaultResult = await updateDefault(paymentMethod: paymentMethod)
+            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)) {
+                errors.append(error)
+            }
         }
 
-        if case .failure(let error) = cardBrandResult {
-            errors.append(error)
+        // Update default payment method if needed
+        if viewController.setAsDefaultValue == true {
+            if case .failure(let error) = await updateDefault(paymentMethod: paymentMethod) {
+                errors.append(error)
+            }
         }
 
-        if case .failure(let error) = defaultResult {
-            errors.append(error)
-        }
-
-        if errors.isEmpty {
-            updateUI()
-            _ = viewController.bottomSheetController?.popContentViewController()
-            return .success
-        } else {
+        guard errors.isEmpty else {
             return .failure(errors)
         }
+
+        updateUI()
+        _ = viewController.bottomSheetController?.popContentViewController()
+        return .success
     }
 
     private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async -> Result<Void, Swift.Error> {
