@@ -34,7 +34,7 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
     var email: String? {
         manifest.accountholderCustomerEmailAddress ?? elementsSessionContext?.prefillDetails?.email
     }
-    
+
     var hasConsumerSession: Bool {
         apiClient.consumerSession != nil && apiClient.consumerPublishableKey != nil
     }

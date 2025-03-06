@@ -24,9 +24,9 @@ protocol ConsentDataSource: AnyObject {
 
 struct ConsentAcquiredResult {
     var manifest: FinancialConnectionsSessionManifest
-    var consumerSession: ConsumerSessionData? = nil
-    var consumerPublishableKey: String? = nil
-    
+    var consumerSession: ConsumerSessionData?
+    var consumerPublishableKey: String?
+
     var nextPane: FinancialConnectionsSessionManifest.NextPane {
         // If we have a consumer session, then provide the returning-user experience
         consumerSession != nil ? .networkingLinkLoginWarmup : manifest.nextPane
@@ -42,7 +42,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let elementsSessionContext: ElementsSessionContext?
-    
+
     var email: String? {
         elementsSessionContext?.prefillDetails?.email
     }
@@ -99,7 +99,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
             return promise
         }
     }
-    
+
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API

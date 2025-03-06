@@ -729,7 +729,7 @@ extension NativeFlowController: ConsentViewControllerDelegate {
             pushPane(nextPane, parameters: parameters, animated: true)
         }
     }
-    
+
     func consentViewControllerDidFailAttestationVerdict(
         _ viewController: ConsentViewController,
         prefillDetails: WebPrefillDetails

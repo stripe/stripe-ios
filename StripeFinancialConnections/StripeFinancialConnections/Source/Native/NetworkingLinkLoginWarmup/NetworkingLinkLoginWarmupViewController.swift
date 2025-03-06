@@ -120,7 +120,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
             eventName: "click.continue",
             pane: .networkingLinkLoginWarmup
         )
-        
+
         if dataSource.hasConsumerSession {
             // We already have a consumer session, so let's us this one directly
             delegate?.networkingLinkLoginWarmupViewControllerDidSelectContinue(self)

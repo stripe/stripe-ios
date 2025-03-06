@@ -157,12 +157,12 @@ class ConsentViewController: UIViewController {
                         possibleError: error,
                         api: .consumerSessionLookup
                     )
-                    
+
                     if attestationError != nil {
                         let prefillDetails = WebPrefillDetails(email: dataSource.email)
                         self.delegate?.consentViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
                     }
-                    
+
                     // we display no errors on failure
                     self.dataSource
                         .analyticsClient
