@@ -374,71 +374,63 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod) async throws {
-        actor ErrorCollector {
-            private var errors: [NSError] = []
-            func append(error: NSError) {
+                   paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult
+    {
+        var errors: [Error] = []
+
+        // Perform card brand update if needed
+        if let updateParams = viewController.updateParams,
+           case .card(let paymentMethodCardParams) = updateParams {
+            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)) {
                 errors.append(error)
             }
-            func getErrors() -> [NSError] {
-                return errors
+        }
+
+        // Update default payment method if needed
+        if viewController.setAsDefaultValue == true {
+            if case .failure(let error) = await updateDefault(paymentMethod: paymentMethod) {
+                errors.append(error)
             }
         }
-        let errorCollector = ErrorCollector()
-        await withTaskGroup(of: Void.self) { group in
-            if let updateParams = viewController.updateParams,
-               case .card(let paymentMethodCardParams) = updateParams {
-                group.addTask {
-                    do {
-                        try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-                    } catch {
-                        await errorCollector.append(error: NSError.stp_cardBrandNotUpdatedError())
-                    }
-                }
-            }
-            if viewController.setAsDefaultValue ?? false {
-                group.addTask {
-                    do {
-                        try await self.updateDefault(paymentMethod: paymentMethod)
-                    } catch {
-                        await errorCollector.append(error: NSError.stp_defaultPaymentMethodNotUpdatedError())
-                    }
-                }
-            }
-            await group.waitForAll()
+
+        guard errors.isEmpty else {
+            return .failure(errors)
         }
-        let errors = await errorCollector.getErrors()
-        // if more than one error occurs, throw a generic error
-        if errors.count > 1 {
-            throw NSError.stp_genericErrorOccurredError()
-        } else {
-            if let error = errors.first {
-                throw error
-            }
-        }
+
         _ = viewController.bottomSheetController?.popContentViewController()
+        return .success
     }
 
-    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
-        // Update the payment method
-        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async -> Result<Void, Error> {
+        do {
+            // Update the payment method
+            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
-        replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
-    }
-
-    private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
-        let previousDefaultPaymentMethod = defaultPaymentMethod
-        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
-        defaultPaymentMethod = paymentMethod
-        // we just set a new default, so we replace it to add the badge and select it
-        replace(paymentMethod: paymentMethod, with: paymentMethod, selectedState: .selected)
-        // if there was a previously selected payment method, replace it to deselect it and remove the badge if it was default
-        if let previousSelectedPaymentMethod, previousSelectedPaymentMethod != defaultPaymentMethod {
-            replace(paymentMethod: previousSelectedPaymentMethod, with: previousSelectedPaymentMethod, selectedState: .unselected)
+            replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
+            return .success(())
+        } catch {
+            return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
-        // if there was a previous default payment method that wasn't previously selected, replace it to remove the badge
-        if let previousDefaultPaymentMethod, previousDefaultPaymentMethod != previousSelectedPaymentMethod {
-            replace(paymentMethod: previousDefaultPaymentMethod, with: previousDefaultPaymentMethod)
+    }
+
+    private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Error> {
+        do {
+            let previousDefaultPaymentMethod = defaultPaymentMethod
+            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            defaultPaymentMethod = paymentMethod
+            // we just set a new default, so we replace it to add the badge and select it
+            replace(paymentMethod: paymentMethod, with: paymentMethod, selectedState: .selected)
+            // if there was a previously selected payment method, replace it to deselect it and remove the badge if it was default
+            if let previousSelectedPaymentMethod, previousSelectedPaymentMethod != defaultPaymentMethod {
+                replace(paymentMethod: previousSelectedPaymentMethod, with: previousSelectedPaymentMethod, selectedState: .unselected)
+            }
+            // if there was a previous default payment method that wasn't previously selected, replace it to remove the badge
+            if let previousDefaultPaymentMethod, previousDefaultPaymentMethod != previousSelectedPaymentMethod {
+                replace(paymentMethod: previousDefaultPaymentMethod, with: previousDefaultPaymentMethod)
+            }
+            return .success(())
+        } catch {
+            return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
         }
     }
 

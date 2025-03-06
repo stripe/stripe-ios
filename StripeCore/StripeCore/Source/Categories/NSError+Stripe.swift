@@ -169,7 +169,7 @@ extension NSError {
     @objc @_spi(STP) public class func stp_cardBrandNotUpdatedMessage() -> String {
         return STPLocalizedString(
             "Card brand was not updated. Please try again.",
-            "An error message displayed when changing a card brand fails."
+            "An error message displayed when updating a card brand fails."
         )
     }
 
@@ -183,7 +183,7 @@ extension NSError {
     @objc @_spi(STP) public class func stp_genericErrorOccurredMessage() -> String {
         return STPLocalizedString(
             "An error occurred. Please try again.",
-            "An error message displayed when an error occurred."
+            "A generic error message displayed when an error occurs."
         )
     }
 }

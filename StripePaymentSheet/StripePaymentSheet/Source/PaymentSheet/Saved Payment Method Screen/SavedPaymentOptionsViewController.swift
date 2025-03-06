@@ -669,85 +669,76 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod) async throws {
-        actor ErrorCollector {
-            private var errors: [NSError] = []
-            func append(error: NSError) {
+                   paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult {
+        var errors: [Swift.Error] = []
+
+        // Perform card brand update if needed
+        if let updateParams = viewController.updateParams,
+           case .card(let paymentMethodCardParams) = updateParams {
+            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)) {
                 errors.append(error)
             }
-            func getErrors() -> [NSError] {
-                return errors
+        }
+
+        // Update default payment method if needed
+        if viewController.setAsDefaultValue == true {
+            if case .failure(let error) = await updateDefault(paymentMethod: paymentMethod) {
+                errors.append(error)
             }
         }
-        let errorCollector = ErrorCollector()
-        await withTaskGroup(of: Void.self) { group in
-            if let updateParams = viewController.updateParams,
-               case .card(let paymentMethodCardParams) = updateParams {
-                group.addTask {
-                    do {
-                        try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-                    } catch {
-                        await errorCollector.append(error: NSError.stp_cardBrandNotUpdatedError())
-                    }
-                }
-            }
-            if viewController.setAsDefaultValue ?? false {
-                group.addTask {
-                    do {
-                        try await self.updateDefault(paymentMethod: paymentMethod)
-                    } catch {
-                        await errorCollector.append(error: NSError.stp_defaultPaymentMethodNotUpdatedError())
-                    }
-                }
-            }
-            await group.waitForAll()
+
+        guard errors.isEmpty else {
+            return .failure(errors)
         }
-        let errors = await errorCollector.getErrors()
-        // if more than one error occurs, throw a generic error
-        if errors.count > 1 {
-            throw NSError.stp_genericErrorOccurredError()
-        } else {
-            if let error = errors.first {
-                throw error
-            }
-        }
+
         updateUI()
         _ = viewController.bottomSheetController?.popContentViewController()
+        return .success
     }
 
-    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
+    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async -> Result<Void, Swift.Error> {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
             stpAssertionFailure()
-            throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+            return .failure(PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage()))
         }
 
-        let viewModel = viewModels[row]
-        let updatedPaymentMethod = try await delegate.didSelectUpdateCardBrand(viewController: self,
-                                                    paymentMethodSelection: viewModel,
-                                                    updateParams: updateParams)
+        do {
+            let viewModel = viewModels[row]
+            let updatedPaymentMethod = try await delegate.didSelectUpdateCardBrand(viewController: self,
+                                                                                   paymentMethodSelection: viewModel,
+                                                                                   updateParams: updateParams)
 
-        let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
-        viewModels[row] = updatedViewModel
-        // Update savedPaymentMethods
-        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
-            self.savedPaymentMethods[row] = updatedPaymentMethod
+            let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
+            viewModels[row] = updatedViewModel
+            // Update savedPaymentMethods
+            if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+                self.savedPaymentMethods[row] = updatedPaymentMethod
+            }
+            return .success(())
+        } catch {
+            return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }
 
-    private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
+    private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Swift.Error> {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
             stpAssertionFailure()
-            throw PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+            return .failure(PaymentSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage()))
         }
 
-        let viewModel = viewModels[row]
-        _ = try await delegate.didSelectUpdateDefault(viewController: self,
-                                                      paymentMethodSelection: viewModel)
-        defaultPaymentMethod = paymentMethod
+        do {
+            let viewModel = viewModels[row]
+            _ = try await delegate.didSelectUpdateDefault(viewController: self,
+                                                          paymentMethodSelection: viewModel)
+            defaultPaymentMethod = paymentMethod
+            return .success(())
+        } catch {
+            return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
+        }
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {

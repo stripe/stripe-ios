@@ -235,69 +235,60 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: StripePayments.STPPaymentMethod) async throws {
-        actor ErrorCollector {
-            private var errors: [NSError] = []
-            func append(error: NSError) {
+                   paymentMethod: StripePayments.STPPaymentMethod) async -> UpdatePaymentMethodResult {
+        var errors: [Error] = []
+
+        // Perform card brand update if needed
+        if let updateParams = viewController.updateParams,
+           case .card(let paymentMethodCardParams) = updateParams {
+            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)) {
                 errors.append(error)
             }
-            func getErrors() -> [NSError] {
-                return errors
+        }
+
+        // Update default payment method if needed
+        if viewController.setAsDefaultValue == true {
+            if case .failure(let error) = await updateDefault(paymentMethod: paymentMethod) {
+                errors.append(error)
             }
         }
-        let errorCollector = ErrorCollector()
-        await withTaskGroup(of: Void.self) { group in
-            if let updateParams = viewController.updateParams,
-               case .card(let paymentMethodCardParams) = updateParams {
-                group.addTask {
-                    do {
-                        try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-                    } catch {
-                        await errorCollector.append(error: NSError.stp_cardBrandNotUpdatedError())
-                    }
-                }
-            }
-            if viewController.setAsDefaultValue ?? false {
-                group.addTask {
-                    do {
-                        try await self.updateDefault(paymentMethod: paymentMethod)
-                    } catch {
-                        await errorCollector.append(error: NSError.stp_defaultPaymentMethodNotUpdatedError())
-                    }
-                }
-            }
-            await group.waitForAll()
+
+        guard errors.isEmpty else {
+            return .failure(errors)
         }
-        let errors = await errorCollector.getErrors()
-        // if more than one error occurs, throw a generic error
-        if errors.count > 1 {
-            throw NSError.stp_genericErrorOccurredError()
-        } else {
-            if let error = errors.first {
-                throw error
-            }
-        }
+
         let accessoryType = getAccessoryButton(savedPaymentMethods: savedPaymentMethods)
         let isSelected = embeddedPaymentMethodsView.selectedRowButton?.type.isSaved ?? false
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
         presentingViewController?.dismiss(animated: true)
+        return .success
     }
 
     private func updateCardBrand(paymentMethod: StripePayments.STPPaymentMethod,
-                                 updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
-        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+                                 updateParams: StripePayments.STPPaymentMethodUpdateParams) async -> Result<Void, Error> {
+        do {
+            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
-        // Update savedPaymentMethods
-        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
-            self.savedPaymentMethods[row] = updatedPaymentMethod
+            // Update savedPaymentMethods
+            if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+                self.savedPaymentMethods[row] = updatedPaymentMethod
+            }
+            return .success(())
+        } catch {
+            return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }
 
-    private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async throws {
-        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
-        defaultPaymentMethod = paymentMethod
+    private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async -> Result<Void, Error> {
+        do {
+            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            defaultPaymentMethod = paymentMethod
+            return .success(())
+        } catch {
+            return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
+        }
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
