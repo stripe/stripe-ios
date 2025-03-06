@@ -87,7 +87,7 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
         return apiClient.completeAssertion(
             possibleError: possibleError,
             api: api,
-            pane: .linkLogin
+            pane: .networkingLinkLoginWarmup
         )
     }
 }
