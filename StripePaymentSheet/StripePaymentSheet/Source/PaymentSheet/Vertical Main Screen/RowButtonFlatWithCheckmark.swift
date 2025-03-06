@@ -27,8 +27,6 @@ final class RowButtonFlatWithCheckmark: RowButton {
     }
 
     override func setupUI() {
-        backgroundColor = appearance.colors.componentBackground
-
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading

@@ -280,24 +280,6 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_bacsDebit_darkBackground() {
-        var appearance: PaymentSheet.Appearance = .default
-        appearance.colors.componentBackground = .black
-        appearance.colors.componentText = .lightText
-        appearance.colors.componentPlaceholderText = .lightText
-
-        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
-                                                      paymentMethodTypes: [.stripe(.card), .stripe(.bacsDebit)],
-                                                      savedPaymentMethod: nil,
-                                                      appearance: appearance,
-                                                      shouldShowApplePay: true,
-                                                      shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none,
-                                                      mandateProvider: MockMandateProvider())
-
-        verify(embeddedView)
-    }
-
     // MARK: Floating snapshot tests
 
     func testEmbeddedPaymentMethodsView_floating() {
