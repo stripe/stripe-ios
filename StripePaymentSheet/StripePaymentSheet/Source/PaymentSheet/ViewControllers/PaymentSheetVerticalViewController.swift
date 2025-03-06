@@ -609,6 +609,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
            let paymentMethod = savedPaymentMethods.first {
             let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
                                                                                appearance: configuration.appearance,
+                                                                               billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
@@ -871,9 +872,9 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
                    paymentMethod: STPPaymentMethod) async throws {
         try await withThrowingTaskGroup(of: Void.self) { group in
             if let updateParams = viewController.updateParams,
-               case .card(let paymentMethodCardParams) = updateParams {
+               case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
                 group.addTask {
-                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails))
                 }
             }
             if viewController.setAsDefaultValue ?? false {

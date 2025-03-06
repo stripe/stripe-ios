@@ -591,6 +591,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         }
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
                                                                            appearance: appearance,
+                                                                           billingDetailsCollectionConfiguration: paymentSheetConfiguration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,
                                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
@@ -672,9 +673,9 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                    paymentMethod: STPPaymentMethod) async throws {
         try await withThrowingTaskGroup(of: Void.self) { group in
             if let updateParams = viewController.updateParams,
-               case .card(let paymentMethodCardParams) = updateParams {
+               case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
                 group.addTask {
-                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails))
                 }
             }
             if viewController.setAsDefaultValue ?? false {

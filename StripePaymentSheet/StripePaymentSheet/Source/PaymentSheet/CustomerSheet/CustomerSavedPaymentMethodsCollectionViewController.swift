@@ -78,6 +78,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     struct Configuration {
+        let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
         let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
@@ -441,6 +442,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         }
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
                                                                            appearance: appearance,
+                                                                           billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .customerSheet,
                                                                            cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
@@ -500,10 +502,10 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod) async throws {
-        guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams) = updateParams else {
+        guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams, let billingDetails) = updateParams else {
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")
         }
-        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails))
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 

@@ -44,10 +44,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
         let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
 
         if let params = paymentMethodForm.updateParams(params: confirmParams),
+           params.paymentMethodParams.type == .card,
            let cardParams = params.paymentMethodParams.card,
-           let originalPaymentMethodCard = configuration.paymentMethod.card,
-           hasChangedFields(original: originalPaymentMethodCard, updated: cardParams) {
-            return .card(paymentMethodCardParams: cardParams)
+           hasChangedCardFields(originalPaymentMethod: configuration.paymentMethod, updatedPaymentMethodParams: params.paymentMethodParams) {
+            return .card(paymentMethodCardParams: cardParams, billingDetails: params.paymentMethodParams.billingDetails)
         }
         return nil
     }
@@ -221,7 +221,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
         var analyticsParams: [String: Any] = [:]
 
-        if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions {
+        if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions {
             analyticsParams["selected_card_brand"] = paymentMethodCardParams.networks?.preferred
         }
         if let setAsDefaultValue {
@@ -245,11 +245,34 @@ final class UpdatePaymentMethodViewController: UIViewController {
         updateButton.update(state: updateParams != nil || hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
     }
 
-    func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
-        let cardBrandChanged = configuration.canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
-        let updatedMM = NSNumber(value: original.expMonth) != updated.expMonth
-        let updatedYY = original.twoDigitYear != updated.expYear
-        return cardBrandChanged || updatedMM || updatedYY
+    func hasChangedCardFields(originalPaymentMethod: STPPaymentMethod, updatedPaymentMethodParams: STPPaymentMethodParams) -> Bool {
+        guard originalPaymentMethod.type == .card,
+              let originalCardPaymentMethod = originalPaymentMethod.card else {
+            return false
+        }
+
+        let cardBrandChanged = configuration.canUpdateCardBrand && originalCardPaymentMethod.preferredDisplayBrand != updatedPaymentMethodParams.card?.networks?.preferred?.toCardBrand
+        let updatedMM = NSNumber(value: originalCardPaymentMethod.expMonth) != updatedPaymentMethodParams.card?.expMonth
+        let updatedYY = originalCardPaymentMethod.twoDigitYear != updatedPaymentMethodParams.card?.expYear
+
+        let updatedLine1 = originalPaymentMethod.billingDetails?.address?.line1 != updatedPaymentMethodParams.billingDetails?.address?.line1
+        let updatedLine2 = originalPaymentMethod.billingDetails?.address?.line2 != updatedPaymentMethodParams.billingDetails?.address?.line2
+        let updatedCity = originalPaymentMethod.billingDetails?.address?.city != updatedPaymentMethodParams.billingDetails?.address?.city
+        let updatedState = originalPaymentMethod.billingDetails?.address?.state != updatedPaymentMethodParams.billingDetails?.address?.state
+
+        let updatedCountry = originalPaymentMethod.billingDetails?.address?.country != updatedPaymentMethodParams.billingDetails?.address?.country
+        let updatedPostalCode = originalPaymentMethod.billingDetails?.address?.postalCode != updatedPaymentMethodParams.billingDetails?.address?.postalCode
+
+        return cardBrandChanged ||
+        updatedMM ||
+        updatedYY ||
+        updatedLine1 ||
+        updatedLine2 ||
+        updatedCity ||
+        updatedState ||
+        updatedCountry ||
+        updatedPostalCode
+
     }
 
     func logCardBrandChangedIfNeeded() {
@@ -270,7 +293,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
 extension UpdatePaymentMethodViewController {
     enum UpdatePaymentMethodOptions {
-        case card(paymentMethodCardParams: STPPaymentMethodCardParams)
+        case card(paymentMethodCardParams: STPPaymentMethodCardParams, billingDetails: STPPaymentMethodBillingDetails?)
     }
 }
 
