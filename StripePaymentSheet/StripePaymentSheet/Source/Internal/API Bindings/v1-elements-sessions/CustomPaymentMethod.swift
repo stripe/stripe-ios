@@ -12,11 +12,13 @@ import Foundation
 struct CustomPaymentMethod: Decodable {
     /// The type of the external payment method. e.g. `"external_foopay"`
     /// These match the strings specified by the merchant in `ExternalPaymentMethodConfiguration`.
-    let displayName: String
+    let displayName: String?
     /// A localized label for the payment method e.g. "FooPay"
     let type: String
 
-    let logoUrl: URL
+    let logoUrl: URL?
+    
+    let error: String?
 
     /// Helper method to decode the `v1/elements/sessions` response's `external_payment_methods_data` hash.
     /// - Parameter response: The value of the `external_payment_methods_data` key in the `v1/elements/sessions` response.
