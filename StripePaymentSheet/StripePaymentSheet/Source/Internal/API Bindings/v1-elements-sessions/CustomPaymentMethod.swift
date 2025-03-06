@@ -13,15 +13,19 @@ struct CustomPaymentMethod: Decodable {
     /// The type of the external payment method. e.g. `"external_foopay"`
     /// These match the strings specified by the merchant in `ExternalPaymentMethodConfiguration`.
     let displayName: String?
-    /// A localized label for the payment method e.g. "FooPay"
+    
+    /// The type (id) of the external payment method. e.g. `"cpmt_..."`
+    /// These match the ids specified by the merchant in `CustomPaymentMethodConfiguration`.
     let type: String
-
+    
+    /// URL of a 48x pixel tall, variable width PNG representing the payment method.
     let logoUrl: URL?
     
+    /// If there was an error fetching this custom payment method this will be populated with the error
     let error: String?
 
-    /// Helper method to decode the `v1/elements/sessions` response's `external_payment_methods_data` hash.
-    /// - Parameter response: The value of the `external_payment_methods_data` key in the `v1/elements/sessions` response.
+    /// Helper method to decode the `v1/elements/sessions` response's `custom_payment_methods_data` hash.
+    /// - Parameter response: The value of the `custom_payment_methods_data` key in the `v1/elements/sessions` response.
     public static func decoded(fromAPIResponse response: [[AnyHashable: Any]]?) -> [CustomPaymentMethod]? {
         guard let response else {
             return nil
