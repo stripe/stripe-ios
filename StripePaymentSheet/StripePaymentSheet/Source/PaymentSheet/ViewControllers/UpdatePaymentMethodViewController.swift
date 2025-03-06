@@ -15,8 +15,13 @@ import UIKit
 protocol UpdatePaymentMethodViewControllerDelegate: AnyObject {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod)
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod) async throws
+                   paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult
     func shouldCloseSheet(_: UpdatePaymentMethodViewController)
+}
+
+enum UpdatePaymentMethodResult {
+    case success
+    case failure([Error])
 }
 
 /// For internal SDK use only
@@ -227,11 +232,19 @@ final class UpdatePaymentMethodViewController: UIViewController {
         if let setAsDefaultValue {
             analyticsParams["set_as_default"] = setAsDefaultValue
         }
-        do {
-            try await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
+        let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
+        switch updatePaymentMethodResult {
+        case .success:
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
                                                                  params: analyticsParams)
-        } catch {
+        case .failure(let errors):
+            var error: Error
+            if errors.count > 1 {
+                error = NSError.stp_genericErrorOccurredError()
+            }
+            else {
+                error = errors[0]
+            }
             updateButton.update(state: .enabled)
             latestError = error
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),

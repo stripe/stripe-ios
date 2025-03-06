@@ -868,40 +868,64 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod) async throws {
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            if let updateParams = viewController.updateParams,
-               case .card(let paymentMethodCardParams) = updateParams {
-                group.addTask {
-                    try await self.updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-                }
-            }
-            if viewController.setAsDefaultValue ?? false {
-                group.addTask {
-                    try await self.updateDefault(paymentMethod: paymentMethod)
-                }
-            }
-            try await group.waitForAll()
+                   paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult {
+        var errors: [Swift.Error] = []
+
+        var cardBrandResult: Result<Void, Swift.Error>?
+        if let updateParams = viewController.updateParams,
+           case .card(let paymentMethodCardParams) = updateParams {
+            cardBrandResult = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
         }
-        // Update UI
-        regenerateUI()
-        _ = viewController.bottomSheetController?.popContentViewController()
+        var defaultResult: Result<Void, Swift.Error>?
+        if viewController.setAsDefaultValue ?? false {
+            defaultResult = await updateDefault(paymentMethod: paymentMethod)
+        }
+
+        if case .failure(let error) = cardBrandResult {
+            errors.append(error)
+        }
+
+        if case .failure(let error) = defaultResult {
+            errors.append(error)
+        }
+
+        if errors.isEmpty {
+            // Update UI
+            regenerateUI()
+            _ = viewController.bottomSheetController?.popContentViewController()
+            return .success
+        }
+        else {
+            return .failure(errors)
+        }
     }
 
-    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
-        // Update the payment method
-        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-
-        // Update savedPaymentMethods
-        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
-            self.savedPaymentMethods[row] = updatedPaymentMethod
+    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async -> Result<Void, Swift.Error> {
+        do {
+            // Update the payment method
+            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+            
+            // Update savedPaymentMethods
+            if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+                self.savedPaymentMethods[row] = updatedPaymentMethod
+            }
+            return .success(())
+        }
+        catch {
+            return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }
 
-    private func updateDefault(paymentMethod: STPPaymentMethod) async throws {
-        // Update the payment method
-        _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
-        defaultPaymentMethod = paymentMethod
+    private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Swift.Error> {
+        do {
+            // Update the payment method
+            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            defaultPaymentMethod = paymentMethod
+            return .success(())
+        }
+        catch {
+            return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
+        }
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {

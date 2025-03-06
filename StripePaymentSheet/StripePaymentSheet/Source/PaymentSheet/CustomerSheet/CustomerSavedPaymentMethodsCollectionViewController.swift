@@ -499,34 +499,52 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 /// :nodoc:
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
-                   paymentMethod: STPPaymentMethod) async throws {
+                   paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult {
         guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams) = updateParams else {
-            throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")
+            return .failure([CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")])
         }
-        try await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
-        _ = viewController.bottomSheetController?.popContentViewController()
+
+        var errors: [Swift.Error] = []
+        let cardBrandResult = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+
+        if case .failure(let error) = cardBrandResult {
+            errors.append(error)
+        }
+
+        if errors.isEmpty {
+            _ = viewController.bottomSheetController?.popContentViewController()
+            return .success
+        } else {
+            return .failure(errors)
+        }
     }
 
-    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
+    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: StripePayments.STPPaymentMethodUpdateParams) async -> Result<Void, Swift.Error> {
         guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
             stpAssertionFailure()
-            throw CustomerSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+            return .failure(CustomerSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage()))
         }
 
-        let viewModel = viewModels[row]
-        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
-                                                    paymentMethodSelection: viewModel,
-                                                    updateParams: updateParams)
-
-        let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
-        viewModels[row] = updatedViewModel
-        // Update savedPaymentMethods
-        if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
-            self.savedPaymentMethods[row] = updatedPaymentMethod
+        do {
+            let viewModel = viewModels[row]
+            let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
+                                                                          paymentMethodSelection: viewModel,
+                                                                          updateParams: updateParams)
+            
+            let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
+            viewModels[row] = updatedViewModel
+            // Update savedPaymentMethods
+            if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+                self.savedPaymentMethods[row] = updatedPaymentMethod
+            }
+            collectionView.reloadData()
+            return .success(())
         }
-        collectionView.reloadData()
+        catch {
+            return .failure(NSError.stp_cardBrandNotUpdatedError())
+        }
     }
 
     func didRemove(viewController: UpdatePaymentMethodViewController,
