@@ -379,13 +379,13 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       loadContent: false,
                                                       analyticsClientFactory: MockComponentAnalyticsClient.init,
                                                       didFailLoadWithError: { _ in })
-        
+
         let analyticsClient = try XCTUnwrap(webVC.analyticsClient as? MockComponentAnalyticsClient)
         analyticsClient.pageViewId = "123"
-        
+
         try await webVC.webView.evaluateAccountSessionClaimed(merchantId: "acct_123")
         XCTAssertEqual(webVC.analyticsClient.merchantId, "acct_123")
-        
+
         let sessionClaimed = try analyticsClient.lastEvent(ofType: ComponentAccountSessionClaimed.self)
         XCTAssertEqual(sessionClaimed.metadata.pageViewId, "123")
     }
@@ -462,6 +462,27 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
         let event = try analyticsClient.lastEvent(ofType: UnexpectedNavigationEvent.self)
         XCTAssertEqual(event.metadata.url, "https://stripe.com")
+    }
+
+   // MARK: - Process Termination
+
+    @MainActor
+    func testProcessTermination() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewControllerMock(componentManager: componentManager,
+                                                          componentType: .onboarding,
+                                                          loadContent: false,
+                                                          analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                          didFailLoadWithError: { _ in })
+        let expectationDidFail = XCTestExpectation(description: "reload called")
+        webVC.reloadCallback = {
+            expectationDidFail.fulfill()
+        }
+        webVC.webViewWebContentProcessDidTerminate(webVC.webView)
+        let mockAnalytics = try XCTUnwrap(webVC.analyticsClient as? MockComponentAnalyticsClient)
+        let loggedError = try XCTUnwrap(mockAnalytics.loggedClientErrors.last)
+        XCTAssertEqual(loggedError.domain, "StripeConnect.ConnectComponentWebViewController.ComponentProcessDidTerminateError")
+        XCTAssertEqual(loggedError.code, 1)
     }
 
    // MARK: - openFinancialConnections
@@ -563,6 +584,13 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         )
 
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+}
+
+class ConnectComponentWebViewControllerMock: ConnectComponentWebViewController {
+    var reloadCallback: (() -> Void)?
+    override func reload() {
+        reloadCallback?()
     }
 }
 
