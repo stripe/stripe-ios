@@ -887,7 +887,7 @@ extension STPAPIClient {
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {
-                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 }
             }
         })
