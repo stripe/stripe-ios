@@ -705,7 +705,7 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 
         dataManager.manifest = result.manifest
         dataManager.consumerSession = result.consumerSession
-        dataManager.consumerPublishableKey = result.publishableKey
+        dataManager.consumerPublishableKey = result.consumerPublishableKey
 
         let nextPane = result.nextPane
         if nextPane == .networkingLinkLoginWarmup {

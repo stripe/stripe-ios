@@ -25,7 +25,7 @@ protocol ConsentDataSource: AnyObject {
 struct ConsentAcquiredResult {
     var manifest: FinancialConnectionsSessionManifest
     var consumerSession: ConsumerSessionData? = nil
-    var publishableKey: String? = nil
+    var consumerPublishableKey: String? = nil
     
     var nextPane: FinancialConnectionsSessionManifest.NextPane {
         // If we have a consumer session, then provide the returning-user experience
@@ -87,7 +87,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
                     let result = ConsentAcquiredResult(
                         manifest: manifest,
                         consumerSession: response.consumerSession,
-                        publishableKey: response.publishableKey
+                        consumerPublishableKey: response.publishableKey
                     )
                     promise.resolve(with: result)
                 case .failure:
