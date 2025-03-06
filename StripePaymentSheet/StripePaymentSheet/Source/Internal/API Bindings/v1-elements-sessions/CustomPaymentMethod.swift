@@ -13,7 +13,7 @@ struct CustomPaymentMethod: Decodable {
     /// The display name of this custom payment method as defined in the Stripe dashboard
     let displayName: String?
 
-    /// The type (id) of the external payment method. e.g. `"cpmt_..."`
+    /// The type (id) of the custom payment method. e.g. `"cpmt_..."`
     /// These match the ids specified by the merchant in `CustomPaymentMethodConfiguration`.
     let type: String
 
