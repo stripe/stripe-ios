@@ -259,7 +259,47 @@ extension STPPaymentMethod {
             ],
         ])!
     }
-
+    static func _testCard(line1: String? = nil,
+                          line2: String? = nil,
+                          city: String? = nil,
+                          state: String? = nil,
+                          postalCode: String? = nil,
+                          countryCode: String? = nil) -> STPPaymentMethod {
+        var address: [String: String] = [:]
+        if let line1 {
+            address["line1"] = line1
+        }
+        if let line2 {
+            address["line2"] = line2
+        }
+        if let city {
+            address["city"] = city
+        }
+        if let state {
+            address["state"] = state
+        }
+        if let postalCode {
+            address["postal_code"] = postalCode
+        }
+        if let countryCode {
+            address["country"] = countryCode
+        }
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+                "fingerprint": "B8XXs2y2JsVBtB9f",
+                "networks": ["available": ["visa"]],
+                "exp_month": "01",
+                "exp_year": "2040",
+            ],
+            "billing_details": [
+                "address": address,
+            ],
+        ])!
+    }
     static func _testCardAmex() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",

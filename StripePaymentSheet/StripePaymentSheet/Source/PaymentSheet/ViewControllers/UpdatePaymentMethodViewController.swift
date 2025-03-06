@@ -63,10 +63,10 @@ final class UpdatePaymentMethodViewController: UIViewController {
         let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
 
         if let params = paymentMethodForm.updateParams(params: confirmParams),
+           params.paymentMethodParams.type == .card,
            let cardParams = params.paymentMethodParams.card,
-           let originalPaymentMethodCard = configuration.paymentMethod.card,
-           hasChangedFields(original: originalPaymentMethodCard, updated: cardParams) {
-            return .card(paymentMethodCardParams: cardParams)
+           hasChangedCardOrBillingAddressFields(originalPaymentMethod: configuration.paymentMethod, updatedPaymentMethodParams: params.paymentMethodParams) {
+            return .card(paymentMethodCardParams: cardParams, billingDetails: params.paymentMethodParams.billingDetails)
         }
         return nil
     }
@@ -236,7 +236,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
         var analyticsParams: [String: Any] = [:]
 
-        if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions {
+        if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions {
             analyticsParams["selected_card_brand"] = paymentMethodCardParams.networks?.preferred
         }
         if setAsDefaultCheckboxState != .hidden {
@@ -245,7 +245,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
         switch updatePaymentMethodResult {
         case .success:
-            if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions,
+            if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions,
                let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
                                                                      params: ["selected_card_brand": selectedCardBrand])
@@ -258,7 +258,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
             updateButton.update(state: .enabled)
             latestError = errors.count == 1 ? errors[0] : NSError.stp_genericErrorOccurredError()
             if errors.contains(where: { ($0 as NSError) == NSError.stp_cardBrandNotUpdatedError() }) {
-                if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions,
+                if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions,
                    let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
                                                                          error: latestError,
@@ -278,11 +278,29 @@ final class UpdatePaymentMethodViewController: UIViewController {
         updateButton.update(state: updateParams != nil || hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
     }
 
-    func hasChangedFields(original: STPPaymentMethodCard, updated: STPPaymentMethodCardParams) -> Bool {
-        let cardBrandChanged = configuration.canUpdateCardBrand && original.preferredDisplayBrand != updated.networks?.preferred?.toCardBrand
-        let updatedMM = NSNumber(value: original.expMonth) != updated.expMonth
-        let updatedYY = original.twoDigitYear != updated.expYear
-        return cardBrandChanged || updatedMM || updatedYY
+    func hasChangedCardOrBillingAddressFields(originalPaymentMethod: STPPaymentMethod, updatedPaymentMethodParams: STPPaymentMethodParams) -> Bool {
+
+        guard originalPaymentMethod.type == .card,
+              let originalCardPaymentMethod = originalPaymentMethod.card else {
+            return false
+        }
+
+        let cardBrandChanged = configuration.canUpdateCardBrand && originalCardPaymentMethod.preferredDisplayBrand != updatedPaymentMethodParams.card?.networks?.preferred?.toCardBrand
+
+        let cardParamsChanged = originalPaymentMethod.hasUpdatedCardParams(updatedPaymentMethodParams.card)
+
+        var billingParamsChanged: Bool
+        switch self.configuration.billingDetailsCollectionConfiguration.address {
+        case .automatic:
+            stpAssert(updatedPaymentMethodParams.billingDetails != nil, "Config is set to automatic but no billing details available")
+            billingParamsChanged = originalPaymentMethod.hasUpdatedAutomaticBillingDetailsParams(updatedPaymentMethodParams.billingDetails)
+        case .full:
+            stpAssert(updatedPaymentMethodParams.billingDetails != nil, "Config is set to full but no billing details available")
+            billingParamsChanged = originalPaymentMethod.hasUpdatedFullBillingDetailsParams(updatedPaymentMethodParams.billingDetails)
+        case .never:
+            billingParamsChanged = false
+        }
+        return cardBrandChanged || cardParamsChanged || billingParamsChanged
     }
 
     func logCardBrandChangedIfNeeded() {
@@ -303,7 +321,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
 extension UpdatePaymentMethodViewController {
     enum UpdatePaymentMethodOptions {
-        case card(paymentMethodCardParams: STPPaymentMethodCardParams)
+        case card(paymentMethodCardParams: STPPaymentMethodCardParams, billingDetails: STPPaymentMethodBillingDetails?)
     }
 }
 
