@@ -412,6 +412,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    enum CustomPaymentMethods: String, PickerEnum {
+        static let enumName: String = "Custom Payment Methods"
+        case on
+        case off
+    }
+
     enum PreferredNetworksEnabled: String, PickerEnum {
         static let enumName: String = "Preferred Networks (CBC)"
 
@@ -502,6 +508,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var shakeAmbiguousViews: ShakeAmbiguousViews
     var instantDebitsIncentives: InstantDebitsIncentives
     var externalPaymentMethods: ExternalPaymentMethods
+    var customPaymentMethods: CustomPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
@@ -552,6 +559,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             shakeAmbiguousViews: .off,
             instantDebitsIncentives: .off,
             externalPaymentMethods: .off,
+            customPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
