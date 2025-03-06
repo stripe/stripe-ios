@@ -20,6 +20,9 @@ struct CustomPaymentMethod: Decodable {
     /// URL of a 48x pixel tall, variable width PNG representing the payment method.
     let logoUrl: URL?
 
+    /// If true, this custom payment method was created using a preset in the Stripe dashboard
+    let isPreset: Bool?
+
     /// If there was an error fetching this custom payment method this will be populated with the error
     let error: String?
 
