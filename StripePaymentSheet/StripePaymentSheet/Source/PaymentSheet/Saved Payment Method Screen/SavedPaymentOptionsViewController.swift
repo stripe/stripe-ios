@@ -694,8 +694,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
             updateUI()
             _ = viewController.bottomSheetController?.popContentViewController()
             return .success
-        }
-        else {
+        } else {
             return .failure(errors)
         }
     }
@@ -713,7 +712,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
             let updatedPaymentMethod = try await delegate.didSelectUpdateCardBrand(viewController: self,
                                                                                    paymentMethodSelection: viewModel,
                                                                                    updateParams: updateParams)
-            
+
             let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
             viewModels[row] = updatedViewModel
             // Update savedPaymentMethods
@@ -721,13 +720,12 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                 self.savedPaymentMethods[row] = updatedPaymentMethod
             }
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }
 
-    private func updateDefault(paymentMethod: STPPaymentMethod) async  -> Result<Void, Swift.Error> {
+    private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Swift.Error> {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -741,8 +739,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
                                                           paymentMethodSelection: viewModel)
             defaultPaymentMethod = paymentMethod
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
         }
     }

@@ -241,8 +241,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
             var error: Error
             if errors.count > 1 {
                 error = NSError.stp_genericErrorOccurredError()
-            }
-            else {
+            } else {
                 error = errors[0]
             }
             updateButton.update(state: .enabled)

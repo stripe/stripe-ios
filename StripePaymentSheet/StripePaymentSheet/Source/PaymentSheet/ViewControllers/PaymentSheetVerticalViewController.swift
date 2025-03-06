@@ -894,8 +894,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
             regenerateUI()
             _ = viewController.bottomSheetController?.popContentViewController()
             return .success
-        }
-        else {
+        } else {
             return .failure(errors)
         }
     }
@@ -904,14 +903,13 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         do {
             // Update the payment method
             let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-            
+
             // Update savedPaymentMethods
             if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
                 self.savedPaymentMethods[row] = updatedPaymentMethod
             }
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }
@@ -922,8 +920,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
             _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
             defaultPaymentMethod = paymentMethod
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
         }
     }

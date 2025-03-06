@@ -264,8 +264,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                                                                    accessoryType: accessoryType)
             presentingViewController?.dismiss(animated: true)
             return .success
-        }
-        else {
+        } else {
             return .failure(errors)
         }
     }
@@ -274,14 +273,13 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                                  updateParams: StripePayments.STPPaymentMethodUpdateParams) async -> Result<Void, Error> {
         do {
             let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-            
+
             // Update savedPaymentMethods
             if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
                 self.savedPaymentMethods[row] = updatedPaymentMethod
             }
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }
@@ -291,8 +289,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
             defaultPaymentMethod = paymentMethod
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
         }
     }

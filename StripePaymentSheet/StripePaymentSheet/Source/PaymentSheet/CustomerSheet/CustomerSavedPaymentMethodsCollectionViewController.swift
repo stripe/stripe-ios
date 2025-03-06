@@ -532,7 +532,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
             let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
                                                                           paymentMethodSelection: viewModel,
                                                                           updateParams: updateParams)
-            
+
             let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
             viewModels[row] = updatedViewModel
             // Update savedPaymentMethods
@@ -541,8 +541,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
             }
             collectionView.reloadData()
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }

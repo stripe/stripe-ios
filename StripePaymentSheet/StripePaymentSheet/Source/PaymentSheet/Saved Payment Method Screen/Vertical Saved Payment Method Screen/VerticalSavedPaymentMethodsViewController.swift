@@ -399,8 +399,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         if errors.isEmpty {
             _ = viewController.bottomSheetController?.popContentViewController()
             return .success
-        }
-        else {
+        } else {
             return .failure(errors)
         }
     }
@@ -409,11 +408,10 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         do {
             // Update the payment method
             let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-            
+
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }
@@ -434,8 +432,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
                 replace(paymentMethod: previousDefaultPaymentMethod, with: previousDefaultPaymentMethod)
             }
             return .success(())
-        }
-        catch {
+        } catch {
             return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
         }
     }
