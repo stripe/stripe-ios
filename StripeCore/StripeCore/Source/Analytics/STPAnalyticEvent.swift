@@ -226,6 +226,7 @@ import Foundation
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
     case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
     case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"
+    case paymentSheetElementsSessionCPMLoadFailed = "mc_elements_session_cpms_load_failed"
 
     // MARK: - PaymentSheet card brand choice
     case paymentSheetDisplayCardBrandDropdownIndicator = "mc_display_cbc_dropdown"

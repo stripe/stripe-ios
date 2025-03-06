@@ -10,17 +10,16 @@ import Foundation
 @_spi(STP) import StripePayments
 
 struct CustomPaymentMethod: Decodable {
-    /// The type of the external payment method. e.g. `"external_foopay"`
-    /// These match the strings specified by the merchant in `ExternalPaymentMethodConfiguration`.
+    /// The display name of this custom payment method as defined in the Stripe dashboard
     let displayName: String?
-    
+
     /// The type (id) of the external payment method. e.g. `"cpmt_..."`
     /// These match the ids specified by the merchant in `CustomPaymentMethodConfiguration`.
     let type: String
-    
+
     /// URL of a 48x pixel tall, variable width PNG representing the payment method.
     let logoUrl: URL?
-    
+
     /// If there was an error fetching this custom payment method this will be populated with the error
     let error: String?
 

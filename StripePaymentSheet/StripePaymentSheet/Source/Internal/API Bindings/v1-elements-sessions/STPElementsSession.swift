@@ -45,7 +45,7 @@ import Foundation
 
     /// An ordered list of external payment methods to display
     let externalPaymentMethods: [ExternalPaymentMethod]
-    
+
     /// An ordered list of custom payment methods to display
     let customPaymentMethods: [CustomPaymentMethod]
 
@@ -174,7 +174,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             }
             return epms
         }()
-        
+
         let customPaymentMethods: [CustomPaymentMethod] = {
             let customPaymentMethodDataKey = "custom_payment_method_data"
             guard response[customPaymentMethodDataKey] != nil, !(response[customPaymentMethodDataKey] is NSNull) else {
@@ -184,9 +184,9 @@ extension STPElementsSession: STPAPIResponseDecodable {
                 let cpmsJSON = response[customPaymentMethodDataKey] as? [[AnyHashable: Any]],
                 let cpms = CustomPaymentMethod.decoded(fromAPIResponse: cpmsJSON)
             else {
-                // We don't want to fail the entire v1/elements/sessions request if we fail to parse external_payment_methods_data
+                // We don't want to fail the entire v1/elements/sessions request if we fail to parse custom_payment_methods_data
                 // Instead, fall back to an empty array and log an error.
-//                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionEPMLoadFailed)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCPMLoadFailed)
                 return []
             }
             return cpms
