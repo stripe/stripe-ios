@@ -145,7 +145,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var setAsDefaultCheckbox: CheckboxElement? = {
-        guard configuration.canSetAsDefaultPM,
+        guard configuration.isSetDefaultEnabled,
               PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
                   configuration.paymentMethod.type == $0
               }) else { return nil }
@@ -153,6 +153,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
             self?.hasChangedDefaultPaymentMethodCheckbox = self?.configuration.isDefault != isSelected
             self?.updateButtonState()
         }
+        setAsDefaultCheckbox.checkboxButton.isEnabled = !configuration.isDefault
         setAsDefaultCheckbox.delegate = self
         return setAsDefaultCheckbox
     }()
@@ -234,14 +235,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
 
-        var analyticsParams: [String: Any] = [:]
-
-        if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions {
-            analyticsParams["selected_card_brand"] = paymentMethodCardParams.networks?.preferred
-        }
-        if setAsDefaultCheckboxState != .hidden {
-            analyticsParams["set_as_default"] = shouldSetAsDefault
-        }
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
         switch updatePaymentMethodResult {
         case .success:
