@@ -415,7 +415,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         var configuration = self.configuration
         // ...with invalid custom payment methods configured...
         configuration.customPaymentMethodConfiguration = .init(
-            customPaymentMethodTypes: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "invalid")],
+            customPaymentMethodTypes: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_invalid")],
             customPaymentMethodConfirmHandler: { _, _ in return .canceled }
         )
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
@@ -432,8 +432,17 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
 
-                // ...with an empty `customPaymentMethods` property
-                XCTAssertTrue(loadResult.elementsSession.customPaymentMethods.isEmpty)
+                // ...with a non-empty `customPaymentMethods` property
+                XCTAssertEqual(1, loadResult.elementsSession.customPaymentMethods.count)
+                // ...and elements sessions response should contain the errored custom payment method
+                XCTAssertEqual(
+                    loadResult.elementsSession.customPaymentMethods.map { $0.type },
+                    ["cpmt_invalid"]
+                )
+                XCTAssertEqual(
+                    loadResult.elementsSession.customPaymentMethods.first?.error,
+                    "not_found"
+                )
                 // ...and shouldn't send a load failure analytic
                 let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
                 XCTAssertFalse(analyticEvents.contains(where: { dict in
