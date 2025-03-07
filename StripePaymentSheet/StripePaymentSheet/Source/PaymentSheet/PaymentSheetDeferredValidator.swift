@@ -14,11 +14,17 @@ struct PaymentSheetDeferredValidator {
                          intentConfiguration: PaymentSheet.IntentConfiguration,
                          paymentMethod: STPPaymentMethod,
                          isFlowController: Bool) throws {
-        guard case let .payment(_, currency, _, _) = intentConfiguration.mode else {
+        guard case let .payment(_, currency, setupFutureUsage, _) = intentConfiguration.mode else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "You returned a PaymentIntent client secret but used a PaymentSheet.IntentConfiguration in setup mode.")
         }
         guard paymentIntent.currency.uppercased() == currency.uppercased() else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent currency (\(paymentIntent.currency.uppercased())) does not match the PaymentSheet.IntentConfiguration currency (\(currency.uppercased())).")
+        }
+        // Validate that the PaymentIntent and IntentConfiguration SFU values are both nil or both non-nil. Don't validate the particular non-nil values are the same (off_session vs on_session).
+        let isPaymentIntentSFUSet = paymentIntent.setupFutureUsage != .none
+        let isIntentConfigurationSFUSet = setupFutureUsage != nil
+        guard isPaymentIntentSFUSet == isIntentConfigurationSFUSet else {
+           throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent setupFutureUsage (\(paymentIntent.setupFutureUsage)) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (\(String(describing: setupFutureUsage))).")
         }
         try validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
         /*
