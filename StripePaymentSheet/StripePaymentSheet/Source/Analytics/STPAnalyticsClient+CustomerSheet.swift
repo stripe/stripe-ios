@@ -17,8 +17,7 @@ extension STPAnalyticsClient {
     // PM selection & Confirmation
     func logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: String?, syncDefaultEnabled: Bool? = nil) {
         let paymentMethodType = type ?? "unknown"
-        var params: [String: Any] = [:]
-        params["payment_method_type"] = paymentMethodType
+        var params: [String: Any] = ["payment_method_type": paymentMethodType]
         if let syncDefaultEnabled {
             params["sync_default_enabled"] = syncDefaultEnabled
         }
@@ -27,8 +26,7 @@ extension STPAnalyticsClient {
     }
     func logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: String?, syncDefaultEnabled: Bool? = nil) {
         let paymentMethodType = type ?? "unknown"
-        var params: [String: Any] = [:]
-        params["payment_method_type"] = paymentMethodType
+        var params: [String: Any] = ["payment_method_type": paymentMethodType]
         if let syncDefaultEnabled {
             params["sync_default_enabled"] = syncDefaultEnabled
         }

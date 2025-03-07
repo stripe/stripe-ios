@@ -24,6 +24,12 @@ enum UpdatePaymentMethodResult {
     case failure([Error])
 }
 
+enum SetAsDefaultCheckboxState {
+    case selected
+    case deselected
+    case hidden
+}
+
 /// For internal SDK use only
 @objc(STP_Internal_UpdatePaymentMethodViewController)
 final class UpdatePaymentMethodViewController: UIViewController {
@@ -43,6 +49,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
     }
 
+    private var setAsDefaultCheckboxState: SetAsDefaultCheckboxState {
+        guard hasChangedDefaultPaymentMethodCheckbox,
+              let checkbox = setAsDefaultCheckbox else {
+            return .hidden
+        }
+        return checkbox.isSelected ? .selected : .deselected
+    }
+
     weak var delegate: UpdatePaymentMethodViewControllerDelegate?
 
     var updateParams: UpdatePaymentMethodOptions? {
@@ -57,12 +71,8 @@ final class UpdatePaymentMethodViewController: UIViewController {
         return nil
     }
 
-    var setAsDefaultValue: Bool? {
-        guard hasChangedDefaultPaymentMethodCheckbox,
-              let checkbox = setAsDefaultCheckbox else {
-            return nil
-        }
-        return checkbox.isSelected
+    var shouldSetAsDefault: Bool {
+        return setAsDefaultCheckboxState == .selected
     }
 
     // MARK: Navigation bar
@@ -229,8 +239,8 @@ final class UpdatePaymentMethodViewController: UIViewController {
         if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions {
             analyticsParams["selected_card_brand"] = paymentMethodCardParams.networks?.preferred
         }
-        if let setAsDefaultValue {
-            analyticsParams["set_as_default"] = setAsDefaultValue
+        if setAsDefaultCheckboxState != .hidden {
+            analyticsParams["set_as_default"] = shouldSetAsDefault
         }
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
         switch updatePaymentMethodResult {
@@ -240,14 +250,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
                                                                      params: ["selected_card_brand": selectedCardBrand])
             }
-            if setAsDefaultValue == true {
+            if shouldSetAsDefault {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethod),
                                                                      params: ["payment_method_type": configuration.paymentMethod.type.identifier])
             }
         case .failure(let errors):
             updateButton.update(state: .enabled)
             latestError = errors.count == 1 ? errors[0] : NSError.stp_genericErrorOccurredError()
-            if errors.contains(where: { error in error as NSError == NSError.stp_cardBrandNotUpdatedError() }) {
+            if errors.contains(where: { ($0 as NSError) == NSError.stp_cardBrandNotUpdatedError() }) {
                 if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions,
                    let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
@@ -255,7 +265,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
                                                                          params: ["selected_card_brand": selectedCardBrand])
                 }
             }
-            if errors.contains(where: { error in error as NSError == NSError.stp_defaultPaymentMethodNotUpdatedError() }) {
+            if errors.contains(where: { ($0 as NSError) == NSError.stp_defaultPaymentMethodNotUpdatedError() }) {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethodFailed),
                                                                      error: latestError,
                                                                      params: ["payment_method_type": configuration.paymentMethod.type.identifier])

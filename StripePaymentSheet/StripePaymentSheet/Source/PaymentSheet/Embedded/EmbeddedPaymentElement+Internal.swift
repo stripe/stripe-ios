@@ -247,7 +247,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         }
 
         // Update default payment method if needed
-        if viewController.setAsDefaultValue == true {
+        if viewController.shouldSetAsDefault {
             if case .failure(let error) = await updateDefault(paymentMethod: paymentMethod) {
                 errors.append(error)
             }

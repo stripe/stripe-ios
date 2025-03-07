@@ -52,6 +52,7 @@ import Foundation
             return .customerSheetUpdateCardFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
+        // These events never actually happen— this data is sent in CustomerSheet on its confirm call
         case (.setDefaultPaymentMethod, .customerSheet):
             return STPAnalyticEvent.unexpectedCustomerSheetError
         case (.setDefaultPaymentMethodFailed, .customerSheet):
