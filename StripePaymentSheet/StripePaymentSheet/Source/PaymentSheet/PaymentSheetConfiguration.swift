@@ -520,7 +520,7 @@ extension PaymentSheet {
         /// Defines a custom payment method type that can be displayed in PaymentSheet
         public struct CustomPaymentMethodType {
 
-            /// The unique identifier for this custom payment method type in the format of "cmpt_..."
+            /// The unique identifier for this custom payment method type in the format of "cpmt_..."
             /// Obtained from the Stripe Dashboard at https://dashboard.stripe.com/settings/custom_payment_methods
             public let id: String
 
@@ -534,7 +534,7 @@ extension PaymentSheet {
 
             /// Initializes an `CustomPaymentMethodType`
             /// - Parameters:
-            ///   - id: The unique identifier for this custom payment method type in the format of "cmpt_..."
+            ///   - id: The unique identifier for this custom payment method type in the format of "cpmt_..."
             ///   - subcopy: Optional subcopy text to be displayed below the custom payment method's display name.
             public init(id: String, subcopy: String? = nil) {
                 self.id = id

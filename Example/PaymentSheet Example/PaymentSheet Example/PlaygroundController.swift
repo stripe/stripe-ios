@@ -374,7 +374,7 @@ class PlaygroundController: ObservableObject {
         switch settings.customPaymentMethods {
         case .on:
             // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
-            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_1QpId5Lu5o3P18ZpLwSqMXws",
+            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
                                                                                                                 subcopy: "Pay with BufoPay")
             return .init(customPaymentMethodTypes: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
         case .off:

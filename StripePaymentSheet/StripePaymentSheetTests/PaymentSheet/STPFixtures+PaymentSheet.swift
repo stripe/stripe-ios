@@ -52,6 +52,7 @@ extension STPElementsSession {
         cardBrandChoice: STPCardBrandChoice? = nil,
         isApplePayEnabled: Bool = true,
         externalPaymentMethods: [ExternalPaymentMethod] = [],
+        customPaymentMethods: [CustomPaymentMethod] = [],
         customer: ElementsCustomer? = nil,
         isBackupInstance: Bool = false
     ) -> STPElementsSession {
@@ -68,6 +69,7 @@ extension STPElementsSession {
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
+            customPaymentMethods: customPaymentMethods,
             customer: customer
         )
     }
