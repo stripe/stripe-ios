@@ -31,12 +31,12 @@ final class FormHeaderView: UIView {
             // Don't show an image on the form header for card and US bank account
             return nil
         default:
-            return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, backgroundColor: appearance.colors.background)
+            return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, componentText: appearance.colors.componentText)
         }
     }()
-    
+
     private var promoBadgeView: PromoBadgeView?
-    
+
     private lazy var spacerView: UIView = {
         // This spacer makes sure that the promo badge is aligned correctly
         let spacerView = UIView()
@@ -49,7 +49,7 @@ final class FormHeaderView: UIView {
         if let promoBadgeView {
             views.append(contentsOf: [promoBadgeView, spacerView])
         }
-        
+
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.spacing = 12
         if imageView == nil {
@@ -79,7 +79,7 @@ final class FormHeaderView: UIView {
         self.promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
         super.init(frame: .zero)
         addAndPinSubview(stackView)
-        
+
         if let imageView {
             NSLayoutConstraint.activate([
                 imageView.widthAnchor.constraint(equalToConstant: 20),
@@ -91,22 +91,22 @@ final class FormHeaderView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setIncentive(_ incentive: PaymentMethodIncentive?) {
         guard incentive != self.incentive else {
             return
         }
-        
+
         if let promoBadgeView {
             stackView.removeArrangedSubview(promoBadgeView)
             promoBadgeView.removeFromSuperview()
-            
+
             stackView.removeArrangedSubview(spacerView)
             spacerView.removeFromSuperview()
         }
-        
+
         self.incentive = incentive
-        
+
         if let incentive {
             promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
             if let promoBadgeView {
@@ -115,7 +115,7 @@ final class FormHeaderView: UIView {
             }
         }
     }
-    
+
     private static func makePromoBadge(
         for incentive: PaymentMethodIncentive?,
         with appearance: PaymentSheet.Appearance
@@ -123,7 +123,7 @@ final class FormHeaderView: UIView {
         guard let incentive else {
             return nil
         }
-        
+
         return PromoBadgeView(
             appearance: appearance,
             tinyMode: false,

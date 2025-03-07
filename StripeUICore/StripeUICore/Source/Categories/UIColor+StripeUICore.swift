@@ -103,6 +103,13 @@ import UIKit
         return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
     }
 
+    /// Returns either black or white based on which color this color is closest to
+    var roundToBlackOrWhite: UIColor {
+        // contrastingColor returns the opposite color (white if this is dark, black if this is light)
+        // so we need to invert that logic to get the closest color
+        return contrastingColor == .white ? .black : .white
+    }
+
     /// Adjust color for minimum contrast with a given background color
     ///
     /// # Reference
