@@ -81,6 +81,9 @@ public extension STPAPIClient {
         parameters["currency"] = currency
         parameters["on_behalf_of"] = onBehalfOf
 
+        // TODO: Remove testing code
+        parameters["initial_institution"] = "bcinst_Jg18xEfPHevfHP"
+
         let hostedSurface = parameters["hosted_surface"]
         if hostedSurface != nil {
             parameters["link_mode"] = linkMode?.rawValue ?? "LINK_DISABLED"
@@ -108,6 +111,10 @@ public extension STPAPIClient {
     ) {
         var parameters = additionalParameters
         parameters["client_secret"] = clientSecret
+
+        // TODO: Remove testing code
+        parameters["hosted_surface"] = "payment_element"
+        parameters["initial_institution"] = "bcinst_Jg18xEfPHevfHP"
 
         if let paymentMethodType = STPPaymentMethod.string(from: paymentMethodType) {
             parameters["payment_method_data[type]"] = paymentMethodType
