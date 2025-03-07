@@ -14,8 +14,11 @@ typealias NetworkingLinkLoginWarmupFooterView = (footerView: UIView?, primaryBut
 
 protocol NetworkingLinkLoginWarmupViewControllerDelegate: AnyObject {
     func networkingLinkLoginWarmupViewControllerDidSelectContinue(
+        _ viewController: NetworkingLinkLoginWarmupViewController
+    )
+    func networkingLinkLoginWarmupViewControllerDidFindConsumerSession(
         _ viewController: NetworkingLinkLoginWarmupViewController,
-        withSession consumerSession: ConsumerSessionData,
+        consumerSession: ConsumerSessionData,
         consumerPublishableKey: String
     )
     func networkingLinkLoginWarmupViewControllerDidSelectCancel(
@@ -118,6 +121,16 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
             pane: .networkingLinkLoginWarmup
         )
 
+        if dataSource.hasConsumerSession {
+            // We already have a consumer session, so let's us this one directly
+            delegate?.networkingLinkLoginWarmupViewControllerDidSelectContinue(self)
+        } else {
+            // Otherwise, look it up so that we have it for the next pane
+            lookupConsumerSessionAndContinue()
+        }
+    }
+
+    private func lookupConsumerSessionAndContinue() {
         warmupFooterView.primaryButton?.isLoading = true
 
         dataSource
@@ -141,11 +154,12 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                 switch result {
                 case .success(let response):
                     if let consumerSession = response.consumerSession, let publishableKey = response.publishableKey {
-                        self.delegate?.networkingLinkLoginWarmupViewControllerDidSelectContinue(
+                        self.delegate?.networkingLinkLoginWarmupViewControllerDidFindConsumerSession(
                             self,
-                            withSession: consumerSession,
+                            consumerSession: consumerSession,
                             consumerPublishableKey: publishableKey
                         )
+                        self.delegate?.networkingLinkLoginWarmupViewControllerDidSelectContinue(self)
                     } else {
                         let error = FinancialConnectionsSheetError.unknown(
                             debugDescription: "Unexpected consumer lookup response without consumer session or publishable key"
