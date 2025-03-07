@@ -130,7 +130,7 @@ platform :ios do
   lane :size_report do
     Dir.chdir('..') do
       # Get the merge base between the current branch and master
-      merge_base = sh("git merge-base #{ENV['BITRISE_GIT_BRANCH']} origin/master").strip
+      merge_base = sh("git merge-base origin/master HEAD").strip
   
       # Run size_report.rb
       sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} #{merge_base}")
