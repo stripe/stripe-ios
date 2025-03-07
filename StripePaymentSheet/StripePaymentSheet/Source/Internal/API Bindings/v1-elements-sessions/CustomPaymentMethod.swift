@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+/// ViewModel-like information for displaying custom payment methods (CPMs), delivered in the `v1/elements/sessions` response.
 struct CustomPaymentMethod: Decodable {
     /// The display name of this custom payment method as defined in the Stripe dashboard
     let displayName: String?
