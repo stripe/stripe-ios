@@ -999,35 +999,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    func testDeferredConfirm_setupintent_usage_doesnt_match_intent_config() {
-        // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we perform validation in the setupintent confirm flow
-        let e = expectation(description: "confirm completes")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD")) { _, _, intentCreationCallback in
-            STPTestingAPIClient.shared.createSetupIntent(withParams: [
-                "usage": "on_session",
-            ]) { si, _ in
-                intentCreationCallback(.success(si ?? ""))
-            }
-        }
-        PaymentSheet.confirm(
-            configuration: configuration,
-            authenticationContext: self,
-            intent: .deferredIntent(intentConfig: intentConfig),
-            elementsSession: ._testCardValue(),
-            paymentOption: .new(confirmParams: self.valid_card_checkbox_selected),
-            paymentHandler: paymentHandler,
-            analyticsHelper: ._testValue()
-        ) { result, _ in
-            e.fulfill()
-            guard case let .failed(error) = result else {
-                XCTFail()
-                return
-            }
-            XCTAssertEqual((error as CustomDebugStringConvertible).debugDescription, "An error occurred in PaymentSheet. Your SetupIntent usage (onSession) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (offSession).")
-        }
-        waitForExpectations(timeout: 10)
-    }
-
     func testDeferredConfirm_setupintent_server_side_confirm_doesnt_validate() {
         // More validation tests are in PaymentSheetDeferredValidatorTests; this tests we **don't** perform validation in the SetupIntent server-side confirm flow
         let e = expectation(description: "confirm completes")
