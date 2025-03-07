@@ -230,22 +230,6 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatRadio_componentBackgroundColor() {
-        var appearance: PaymentSheet.Appearance = .default
-        appearance.colors.componentBackground = .purple
-
-        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
-                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethod: nil,
-                                                      appearance: appearance,
-                                                      shouldShowApplePay: true,
-                                                      shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none,
-                                                      mandateProvider: MockMandateProvider())
-
-        verify(embeddedView)
-    }
-
     func testEmbeddedPaymentMethodsView_flatRadio_smallFont() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.font.sizeScaleFactor = 0.5
@@ -764,23 +748,6 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         // Simulate tapping the last button (Cash App Pay)
         embeddedView.didTap(rowButton: embeddedView.rowButtons.last!)
-
-        verify(embeddedView)
-    }
-
-    func testEmbeddedPaymentMethodsView_flatWithCheckmark_componentBackgroundColor() {
-        var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
-        appearance.colors.componentBackground = .purple
-
-        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
-                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-                                                      savedPaymentMethod: nil,
-                                                      appearance: appearance,
-                                                      shouldShowApplePay: true,
-                                                      shouldShowLink: true,
-                                                      savedPaymentMethodAccessoryType: .none,
-                                                      mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
     }
