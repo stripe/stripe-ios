@@ -20,6 +20,11 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
         didFinishSelecting institution: FinancialConnectionsInstitution,
         authSession: FinancialConnectionsAuthSession
     )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didFinishSelecting institution: FinancialConnectionsInstitution,
+        manifest: FinancialConnectionsSessionManifest
+    )
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
     )
@@ -180,24 +185,16 @@ class InstitutionPickerViewController: UIViewController {
             exceptForInstitution: institution
         )
 
-        dataSource.createAuthSession(institutionId: institution.id)
+        dataSource.selectInstitution(institutionId: institution.id)
             .observe { [weak self] result in
                 guard let self else { return }
                 switch result {
-                case .success(let authSession):
+                case .success(let synchronizePayload):
                     self.delegate?.institutionPickerViewController(
                         self,
                         didFinishSelecting: institution,
-                        authSession: authSession
+                        manifest: synchronizePayload.manifest
                     )
-
-                    if authSession.isOauthNonOptional {
-                        // oauth presents a sheet where we do not hide
-                        // the overlay until the sheet is dismissed
-                        self.observePartnerAuthDismissToHideOverlay()
-                    } else {
-                        self.hideOverlayView()
-                    }
                 case .failure(let error):
                     self.delegate?.institutionPickerViewController(
                         self,

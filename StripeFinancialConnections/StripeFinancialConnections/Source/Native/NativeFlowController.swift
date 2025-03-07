@@ -784,7 +784,6 @@ extension NativeFlowController: StreamlinedConsentViewControllerDelegate {
 // MARK: - InstitutionPickerViewControllerDelegate
 
 extension NativeFlowController: InstitutionPickerViewControllerDelegate {
-
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
         didSelect institution: FinancialConnectionsInstitution
@@ -815,6 +814,26 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
         } else {
             pushPane(.partnerAuth, animated: true)
         }
+    }
+
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didFinishSelecting institution: FinancialConnectionsInstitution,
+        manifest: FinancialConnectionsSessionManifest
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(
+                name: .institutionSelected,
+                metadata: FinancialConnectionsEvent.Metadata(
+                    institutionName: institution.name
+                )
+            )
+        )
+        dataManager.institution = institution
+        dataManager.manifest = manifest
+
+        pushPane(manifest.nextPane, animated: true)
     }
 
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
