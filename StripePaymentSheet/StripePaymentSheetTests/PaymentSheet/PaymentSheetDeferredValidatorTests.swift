@@ -40,6 +40,28 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         }
     }
 
+    func testPaymentIntentMismatchedSetupFutureUsage() throws {
+        let pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", setupFutureUsage: .offSession)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
+                                                                        intentConfiguration: intentConfig,
+                                                                        paymentMethod: STPPaymentMethod._testCard(),
+                                                                        isFlowController: false)) { error in
+            XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentIntent setupFutureUsage (offSession) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (nil).")
+        }
+    }
+
+    func testPaymentIntentAllowsSetupFutureUsageOffSessionAndOnSession() throws {
+        let pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", setupFutureUsage: .offSession)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .onSession), confirmHandler: confirmHandler)
+        try PaymentSheetDeferredValidator.validate(
+            paymentIntent: pi,
+            intentConfiguration: intentConfig,
+            paymentMethod: STPPaymentMethod._testCard(),
+            isFlowController: false
+        )
+    }
+
     func testPaymentIntentNotFlowControllerManualConfirmationMethod() throws {
         let pi = STPFixtures.makePaymentIntent(amount: 1000, currency: "USD", confirmationMethod: "manual")
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: confirmHandler)
