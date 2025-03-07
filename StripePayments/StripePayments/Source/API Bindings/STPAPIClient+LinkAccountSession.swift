@@ -80,15 +80,12 @@ public extension STPAPIClient {
         parameters["amount"] = amount
         parameters["currency"] = currency
         parameters["on_behalf_of"] = onBehalfOf
-        
-        // TODO: Remove testing code
-        parameters["initial_institution"] = "bcinst_Jg18xEfPHevfHP"
-        
+
         let hostedSurface = parameters["hosted_surface"]
         if hostedSurface != nil {
             parameters["link_mode"] = linkMode?.rawValue ?? "LINK_DISABLED"
         }
-        
+
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,
@@ -121,7 +118,7 @@ public extension STPAPIClient {
         if let customerEmailAddress = customerEmailAddress {
             parameters["payment_method_data[billing_details][email]"] = customerEmailAddress
         }
-        
+
         let hostedSurface = parameters["hosted_surface"]
         if hostedSurface != nil {
             parameters["link_mode"] = linkMode?.rawValue ?? "LINK_DISABLED"

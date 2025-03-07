@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 func GenericInfoFooterView(
     footer: FinancialConnectionsGenericInfoScreen.Footer?,
@@ -51,7 +51,7 @@ func GenericInfoFooterView(
 
 func GenericInfoFooterViewAndPrimaryButton(
     footer: FinancialConnectionsGenericInfoScreen.Footer?,
-    theme: FinancialConnectionsTheme,
+    appearance: FinancialConnectionsAppearance,
     didSelectPrimaryButton: (() -> Void)?,
     didSelectSecondaryButton: (() -> Void)?,
     didSelectURL: @escaping (URL) -> Void
@@ -83,7 +83,7 @@ func GenericInfoFooterViewAndPrimaryButton(
         primaryButtonConfiguration: primaryButtonConfiguration,
         secondaryButtonConfiguration: secondaryButtonConfiguration,
         topText: footer.disclaimer,
-        theme: theme,
+        appearance: appearance,
         bottomText: footer.belowCta,
         didSelectURL: didSelectURL
     )

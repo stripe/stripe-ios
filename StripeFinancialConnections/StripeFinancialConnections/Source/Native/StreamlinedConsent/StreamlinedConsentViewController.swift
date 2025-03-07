@@ -27,11 +27,11 @@ class StreamlinedConsentViewController: UIViewController {
 
     private let dataSource: StreamlinedConsentDataSource
     weak var delegate: StreamlinedConsentViewControllerDelegate?
-    
+
     private lazy var footerView: (UIView?, StripeUICore.Button?) = {
         return GenericInfoFooterViewAndPrimaryButton(
             footer: dataSource.consent.screen.footer,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectPrimaryButton: didSelectAgree,
             didSelectSecondaryButton: {
                 // This can't occur
@@ -51,11 +51,11 @@ class StreamlinedConsentViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
-        
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+
         let genericInfoScreen = dataSource.consent.screen
-        let theme = dataSource.manifest.theme
-        
+        let appearance = dataSource.manifest.appearance
+
         let contentView = PaneLayoutView.createContentView(
             iconView: genericInfoScreen.header?.icon?.default.flatMap { imageUrl in
                 if imageUrl.contains("BrandIcon") {
@@ -64,7 +64,7 @@ class StreamlinedConsentViewController: UIViewController {
                     return RoundedIconView(
                         image: .imageUrl(imageUrl),
                         style: .circle,
-                        theme: theme
+                        appearance: appearance
                     )
                 }
             },
@@ -88,19 +88,19 @@ class StreamlinedConsentViewController: UIViewController {
                 didSelectURL: didSelectURLInTextFromBackend
             )
         )
-        
+
         let paneLayoutView = PaneLayoutView(contentView: contentView, footerView: footerView.0)
         paneLayoutView.addTo(view: view)
 
         dataSource.analyticsClient.logPaneLoaded(pane: .streamlinedConsent)
     }
-    
+
     private func didSelectAgree() {
         dataSource.analyticsClient.log(
             eventName: "click.agree",
             pane: .consent
         )
-        
+
         footerView.1?.isLoading = true
 
 //        footerView.setIsLoading(true)
@@ -155,7 +155,7 @@ class StreamlinedConsentViewController: UIViewController {
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNotice,
-                            theme: dataSource.manifest.theme,
+                            appearance: dataSource.manifest.appearance,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
@@ -166,7 +166,7 @@ class StreamlinedConsentViewController: UIViewController {
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNoticeModel,
-                        theme: dataSource.manifest.theme,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }
