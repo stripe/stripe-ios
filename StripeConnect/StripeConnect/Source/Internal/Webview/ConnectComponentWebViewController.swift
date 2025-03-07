@@ -49,6 +49,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     var errorScreen: WebViewErrorScreen?
 
+    let componentType: ComponentType
+
     init<InitProps: Encodable>(
         componentManager: EmbeddedComponentManager,
         componentType: ComponentType,
@@ -68,6 +70,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         self.authenticatedWebViewManager = authenticatedWebViewManager
         self.didFailLoadWithError = didFailLoadWithError
         self.financialConnectionsPresenter = financialConnectionsPresenter
+        self.componentType = componentType
 
         let config = WKWebViewConfiguration()
 
@@ -199,6 +202,19 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         }
 
         return await super.webView(webView, decidePolicyFor: navigationResponse)
+    }
+
+    struct ComponentProcessDidTerminateError: Error, AnalyticLoggableErrorV2 {
+        let component: ComponentType
+
+        func analyticLoggableSerializeForLogging() -> [String: Any] {
+            ["component": component.rawValue]
+        }
+    }
+
+    override func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        super.webViewWebContentProcessDidTerminate(webView)
+        analyticsClient.logClientError(ComponentProcessDidTerminateError(component: componentType))
     }
 
     // If the component fails to load entirely we show a native error screen
