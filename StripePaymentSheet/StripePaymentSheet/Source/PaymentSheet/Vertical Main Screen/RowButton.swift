@@ -402,7 +402,7 @@ extension RowButton {
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
     ) -> RowButton {
-        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, componentText: appearance.colors.componentText)
+        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, contrastMatchingColor: appearance.colors.componentText)
         imageView.contentMode = .scaleAspectFit
 
         // Special case "New card" vs "Card" title
