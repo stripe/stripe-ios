@@ -244,6 +244,10 @@ import Foundation
     case customerSheetUpdateCardFailed = "cs_update_card_failed"
     case customerSheetClosesEditScreen = "cs_cancel_edit_screen"
 
+    // MARK: - PaymentSheet set default
+    case paymentSheetSetDefaultPaymentMethod = "mc_set_default_payment_method"
+    case paymentSheetSetDefaultPaymentMethodFailed = "mc_set_default_payment_method_failed"
+
     // MARK: - STPBankAccountCollector
     case bankAccountCollectorStarted = "stripeios.bankaccountcollector.started"
     case bankAccountCollectorFinished = "stripeios.bankaccountcollector.finished"

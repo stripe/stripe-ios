@@ -45,6 +45,8 @@ class HostedSurfaceTest: XCTestCase {
             .openEditScreen,
             .updateCard,
             .updateCardFailed,
+            .setDefaultPaymentMethod,
+            .setDefaultPaymentMethodFailed,
             .closeEditScreen,
         ]
 
@@ -54,6 +56,8 @@ class HostedSurfaceTest: XCTestCase {
             .openEditScreen: .paymentSheetOpenEditScreen,
             .updateCard: .paymentSheetUpdateCard,
             .updateCardFailed: .paymentSheetUpdateCardFailed,
+            .setDefaultPaymentMethod: .paymentSheetSetDefaultPaymentMethod,
+            .setDefaultPaymentMethodFailed: .paymentSheetSetDefaultPaymentMethodFailed,
             .closeEditScreen: .paymentSheetClosesEditScreen,
         ]
 
@@ -63,6 +67,8 @@ class HostedSurfaceTest: XCTestCase {
             .openEditScreen: .customerSheetOpenEditScreen,
             .updateCard: .customerSheetUpdateCard,
             .updateCardFailed: .customerSheetUpdateCardFailed,
+            .setDefaultPaymentMethod: .unexpectedCustomerSheetError,
+            .setDefaultPaymentMethodFailed: .unexpectedCustomerSheetError,
             .closeEditScreen: .customerSheetClosesEditScreen,
         ]
 

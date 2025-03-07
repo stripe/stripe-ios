@@ -149,13 +149,47 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             // Reset the analytics client for each iteration
             analyticsClient._testLogHistory.removeAll()
 
+            let testCardJSON = [
+                "id": "pm_123card",
+                "type": "card",
+                "card": [
+                    "last4": "4242",
+                    "brand": "visa",
+                    "fingerprint": "B8XXs2y2JsVBtB9f",
+                    "networks": ["available": ["visa"]],
+                    "exp_month": "01",
+                    "exp_year": "2040",
+                ],
+            ] as [AnyHashable: Any]
+            let testUSBankAccountJSON = [
+                "id": "pm_123bank",
+                "type": "us_bank_account",
+                "us_bank_account": [
+                    "account_holder_type": "individual",
+                    "account_type": "checking",
+                    "bank_name": "STRIPE TEST BANK",
+                    "fingerprint": "ickfX9sbxIyAlbuh",
+                    "last4": "6789",
+                    "networks": [
+                      "preferred": "ach",
+                      "supported": [
+                        "ach",
+                      ],
+                    ] as [String: Any],
+                    "routing_number": "110000000",
+                ] as [String: Any],
+                "billing_details": [
+                    "name": "Sam Stripe",
+                    "email": "sam@stripe.com",
+                ] as [String: Any],
+            ] as [AnyHashable: Any]
             // Load started -> succeeded
             sut.logLoadStarted()
             sut.logLoadSucceeded(
                 intent: ._testValue(),
-                elementsSession: ._testCardValue(),
-                defaultPaymentMethod: .applePay,
-                orderedPaymentMethodTypes: [.stripe(.card), .external(._testPayPalValue())]
+                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+                defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
+                orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
             )
 
             XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
@@ -164,10 +198,12 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             let loadSucceededPayload = analyticsClient._testLogHistory[1]
             XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
             XCTAssertLessThan(loadSucceededPayload["duration"] as! Double, 1.0)
-            XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "apple_pay")
+            XCTAssertEqual(loadSucceededPayload["selected_lpm"] as? String, "card")
             XCTAssertEqual(loadSucceededPayload["intent_type"] as? String, "payment_intent")
-            XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,external_paypal")
+            XCTAssertEqual(loadSucceededPayload["ordered_lpms"] as? String, "card,us_bank_account")
             XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
+            XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
+            XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
         }
     }
 

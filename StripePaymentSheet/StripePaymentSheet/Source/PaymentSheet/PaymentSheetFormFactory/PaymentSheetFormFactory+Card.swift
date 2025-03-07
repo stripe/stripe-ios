@@ -24,9 +24,9 @@ extension PaymentSheetFormFactory {
                 merchantDisplayName: configuration.merchantDisplayName
             )
         ) { selected in
-            defaultCheckbox?.view.isHidden = !selected
+            defaultCheckbox?.element.checkboxButton.isHidden = !selected
         }
-        defaultCheckbox?.view.isHidden = !saveCheckbox.element.isSelected
+        defaultCheckbox?.element.checkboxButton.isHidden = !saveCheckbox.element.isSelected
 
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {

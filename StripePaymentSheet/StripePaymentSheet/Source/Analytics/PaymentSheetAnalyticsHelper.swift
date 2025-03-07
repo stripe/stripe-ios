@@ -133,6 +133,13 @@ final class PaymentSheetAnalyticsHelper {
             let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
             params["link_mode"] = linkMode
         }
+        if elementsSession.customer?.customerSession != nil {
+            let setAsDefaultEnabled = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
+            params["set_as_default_enabled"] = setAsDefaultEnabled
+            if setAsDefaultEnabled {
+                params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil
+            }
+        }
         let duration: TimeInterval = {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
@@ -331,14 +338,20 @@ final class PaymentSheetAnalyticsHelper {
                 return success ? .mcPaymentEmbeddedSuccess : .mcPaymentEmbeddedFailure
             }
         }()
-
+        var params: [String: Any] = [:]
+        if case let .new(confirmParams) = paymentOption {
+            if let setAsDefault = confirmParams.setAsDefaultPM {
+                params["set_as_default"] = setAsDefault
+            }
+        }
         log(event: event,
             duration: getDuration(for: .checkout),
             error: result.error,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
             selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
             linkContext: paymentOption.linkContextAnalyticsValue,
-            linkUI: paymentOption.linkUIAnalyticsValue
+            linkUI: paymentOption.linkUIAnalyticsValue,
+            params: params
         )
     }
 
