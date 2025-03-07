@@ -179,7 +179,6 @@ class EmbeddedPaymentMethodsView: UIView {
 
         if appearance.embeddedPaymentElement.row.style != .floatingButton {
             stackView.addSeparators(color: appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder,
-                                    backgroundColor: appearance.colors.componentBackground,
                                     thickness: appearance.embeddedPaymentElement.row.flat.separatorThickness,
                                     inset: appearance.embeddedPaymentElement.row.flat.separatorInsets ?? appearance.embeddedPaymentElement.row.style.defaultInsets,
                                     addTopSeparator: appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled,
