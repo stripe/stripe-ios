@@ -346,6 +346,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
                                                                            appearance: configuration.appearance,
+                                                                           billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,
                                                                            cardBrandFilter: configuration.cardBrandFilter,
                                                                            canRemove: canRemovePaymentMethods,
@@ -380,8 +381,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
 
         // Perform card brand update if needed
         if let updateParams = viewController.updateParams,
-           case .card(let paymentMethodCardParams) = updateParams {
-            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)) {
+           case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
+            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)) {
                 errors.append(error)
             }
         }
@@ -409,6 +410,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
         } catch {
+            // TODO: Implement logic to decide if we should present cardBrandError or generic error
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }

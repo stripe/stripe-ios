@@ -591,6 +591,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         }
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
                                                                            appearance: appearance,
+                                                                           billingDetailsCollectionConfiguration: paymentSheetConfiguration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,
                                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
@@ -674,8 +675,8 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
 
         // Perform card brand update if needed
         if let updateParams = viewController.updateParams,
-           case .card(let paymentMethodCardParams) = updateParams {
-            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)) {
+           case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
+            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)) {
                 errors.append(error)
             }
         }
@@ -718,6 +719,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
             }
             return .success(())
         } catch {
+            // TODO: Implement logic to decide if we should present cardBrandError or generic error
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }

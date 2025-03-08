@@ -78,6 +78,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     struct Configuration {
+        let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
         let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
@@ -441,6 +442,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
         }
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
                                                                            appearance: appearance,
+                                                                           billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .customerSheet,
                                                                            cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
@@ -500,11 +502,11 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
 extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
     func didUpdate(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult {
-        guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams) = updateParams else {
+        guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams, let billingDetails) = updateParams else {
             return .failure([CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")])
         }
 
-        let cardBrandResult = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil))
+        let cardBrandResult = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails))
 
         if case .failure(let error) = cardBrandResult {
             return .failure([error])
@@ -537,6 +539,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
             collectionView.reloadData()
             return .success(())
         } catch {
+            // TODO: Implement logic to decide if we should present cardBrandError or generic error
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }

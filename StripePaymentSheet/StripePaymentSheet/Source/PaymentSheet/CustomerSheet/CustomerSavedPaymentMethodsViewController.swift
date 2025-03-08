@@ -107,6 +107,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             mostRecentlyAddedPaymentMethod: nil,
             savedPaymentMethodsConfiguration: self.configuration,
             configuration: .init(
+                billingDetailsCollectionConfiguration: self.configuration.billingDetailsCollectionConfiguration,
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
@@ -670,6 +671,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             mostRecentlyAddedPaymentMethod: mostRecentlyAddedPaymentMethod,
             savedPaymentMethodsConfiguration: self.configuration,
             configuration: .init(
+                billingDetailsCollectionConfiguration: self.configuration.billingDetailsCollectionConfiguration,
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
