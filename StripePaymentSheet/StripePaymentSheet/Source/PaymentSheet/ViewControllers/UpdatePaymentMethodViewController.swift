@@ -289,16 +289,18 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
         let cardParamsChanged = originalPaymentMethod.hasUpdatedCardParams(updatedPaymentMethodParams.card)
 
-        var billingParamsChanged: Bool
-        switch self.configuration.billingDetailsCollectionConfiguration.address {
-        case .automatic:
-            stpAssert(updatedPaymentMethodParams.billingDetails != nil, "Config is set to automatic but no billing details available")
-            billingParamsChanged = originalPaymentMethod.hasUpdatedAutomaticBillingDetailsParams(updatedPaymentMethodParams.billingDetails)
-        case .full:
-            stpAssert(updatedPaymentMethodParams.billingDetails != nil, "Config is set to full but no billing details available")
-            billingParamsChanged = originalPaymentMethod.hasUpdatedFullBillingDetailsParams(updatedPaymentMethodParams.billingDetails)
-        case .never:
-            billingParamsChanged = false
+        var billingParamsChanged: Bool = false
+        if configuration.canUpdate {
+            switch self.configuration.billingDetailsCollectionConfiguration.address {
+            case .automatic:
+                stpAssert(updatedPaymentMethodParams.billingDetails != nil, "Config is set to automatic but no billing details available")
+                billingParamsChanged = originalPaymentMethod.hasUpdatedAutomaticBillingDetailsParams(updatedPaymentMethodParams.billingDetails)
+            case .full:
+                stpAssert(updatedPaymentMethodParams.billingDetails != nil, "Config is set to full but no billing details available")
+                billingParamsChanged = originalPaymentMethod.hasUpdatedFullBillingDetailsParams(updatedPaymentMethodParams.billingDetails)
+            case .never:
+                billingParamsChanged = false
+            }
         }
         return cardBrandChanged || cardParamsChanged || billingParamsChanged
     }
