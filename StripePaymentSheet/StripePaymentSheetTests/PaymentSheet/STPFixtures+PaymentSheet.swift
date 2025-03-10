@@ -267,7 +267,6 @@ extension STPPaymentMethod {
     static func _testCard() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: _testCardJSON)!
     }
-
     static func _testCard(line1: String? = nil,
                           line2: String? = nil,
                           city: String? = nil,
