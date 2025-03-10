@@ -78,8 +78,8 @@
 		49C9113B2C59932300589E0D /* LinkSignupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C9113A2C59932300589E0D /* LinkSignupFormView.swift */; };
 		49E489AC2D7F23FE00D09C1F /* IDConsentContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E489AB2D7F23FE00D09C1F /* IDConsentContentViewController.swift */; };
 		49E489AE2D7F240900D09C1F /* IDConsentContentDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E489AD2D7F240900D09C1F /* IDConsentContentDataSource.swift */; };
-		49E489B12D7F24C200D09C1F /* FinancialConnectionsIDContentConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E489B02D7F24C200D09C1F /* FinancialConnectionsIDContentConsent.swift */; };
 		49E489B32D7F2B2F00D09C1F /* RoundedLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E489B22D7F2B2F00D09C1F /* RoundedLogoView.swift */; };
+		49E489B52D7F6D4D00D09C1F /* FinancialConnectionsIDConsentContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E489B42D7F6D4D00D09C1F /* FinancialConnectionsIDConsentContent.swift */; };
 		49F047532C63B430006BAD3E /* StripeSchemeAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F047522C63B430006BAD3E /* StripeSchemeAddress.swift */; };
 		49F047552C63C2E5006BAD3E /* FinancialConnectionsPaymentDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F047542C63C2E5006BAD3E /* FinancialConnectionsPaymentDetails.swift */; };
 		49F1B83A2D2DAE7100136303 /* FinancialConnectionsAsyncAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F1B8392D2DAE7100136303 /* FinancialConnectionsAsyncAPIClient.swift */; };
@@ -353,8 +353,8 @@
 		49C9113A2C59932300589E0D /* LinkSignupFormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LinkSignupFormView.swift; path = StripeFinancialConnections/Source/Native/NetworkingLinkSignupPane/LinkSignupFormView.swift; sourceTree = SOURCE_ROOT; };
 		49E489AB2D7F23FE00D09C1F /* IDConsentContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDConsentContentViewController.swift; sourceTree = "<group>"; };
 		49E489AD2D7F240900D09C1F /* IDConsentContentDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDConsentContentDataSource.swift; sourceTree = "<group>"; };
-		49E489B02D7F24C200D09C1F /* FinancialConnectionsIDContentConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsIDContentConsent.swift; sourceTree = "<group>"; };
 		49E489B22D7F2B2F00D09C1F /* RoundedLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLogoView.swift; sourceTree = "<group>"; };
+		49E489B42D7F6D4D00D09C1F /* FinancialConnectionsIDConsentContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsIDConsentContent.swift; sourceTree = "<group>"; };
 		49F047522C63B430006BAD3E /* StripeSchemeAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeSchemeAddress.swift; sourceTree = "<group>"; };
 		49F047542C63C2E5006BAD3E /* FinancialConnectionsPaymentDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsPaymentDetails.swift; sourceTree = "<group>"; };
 		49F1B8392D2DAE7100136303 /* FinancialConnectionsAsyncAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAsyncAPIClient.swift; sourceTree = "<group>"; };
@@ -809,7 +809,7 @@
 				6A384A832C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift */,
 				49F047542C63C2E5006BAD3E /* FinancialConnectionsPaymentDetails.swift */,
 				49AC00C12D7B5C90005BFD57 /* FinancialConnectionsSelectInstitution.swift */,
-				49E489B02D7F24C200D09C1F /* FinancialConnectionsIDContentConsent.swift */,
+				49E489B42D7F6D4D00D09C1F /* FinancialConnectionsIDConsentContent.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1439,6 +1439,7 @@
 				6D29E55F6A3864ED52799169 /* InstitutionPickerViewController.swift in Sources */,
 				C6B99A1C34886D3B5E1AF1A2 /* InstitutionSearchBar.swift in Sources */,
 				44203505ED2F64D07632566B /* LinkAccountPickerBodyView.swift in Sources */,
+				49E489B52D7F6D4D00D09C1F /* FinancialConnectionsIDConsentContent.swift in Sources */,
 				6A13B9822B48BD6C00FFA327 /* AccountPickerRowView.swift in Sources */,
 				C55F79F4B85E1EB8730B02C6 /* LinkAccountPickerDataSource.swift in Sources */,
 				49F1B83A2D2DAE7100136303 /* FinancialConnectionsAsyncAPIClient.swift in Sources */,
@@ -1465,7 +1466,6 @@
 				3AC5CA5F5529B55026342A54 /* NetworkingLinkSignupDataSource.swift in Sources */,
 				6A13B9862B4CD04100FFA327 /* RetrieveAccountsLoadingView.swift in Sources */,
 				6A3739162C4060BD00D1F765 /* AutoResizableUIView.swift in Sources */,
-				49E489B12D7F24C200D09C1F /* FinancialConnectionsIDContentConsent.swift in Sources */,
 				8DC6C2A239456994091BF3EE /* NetworkingLinkSignupFooterView.swift in Sources */,
 				49E489AC2D7F23FE00D09C1F /* IDConsentContentViewController.swift in Sources */,
 				6A3DA1F72C34B254005C3F6E /* GenericInfoFooterView.swift in Sources */,

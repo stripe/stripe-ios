@@ -10,7 +10,7 @@ import Foundation
 
 protocol IDConsentContentDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
-    var idConsentContent: FinancialConnectionsIDContentConsent { get }
+    var idConsentContent: FinancialConnectionsIDConsentContent { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest>
@@ -18,7 +18,7 @@ protocol IDConsentContentDataSource: AnyObject {
 
 final class IDConsentContentDataSourceImplementation: IDConsentContentDataSource {
     let manifest: FinancialConnectionsSessionManifest
-    let idConsentContent: FinancialConnectionsIDContentConsent
+    let idConsentContent: FinancialConnectionsIDConsentContent
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
     private let apiClient: any FinancialConnectionsAPI
@@ -26,7 +26,7 @@ final class IDConsentContentDataSourceImplementation: IDConsentContentDataSource
 
     init(
         manifest: FinancialConnectionsSessionManifest,
-        idConsentContent: FinancialConnectionsIDContentConsent,
+        idConsentContent: FinancialConnectionsIDConsentContent,
         apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
