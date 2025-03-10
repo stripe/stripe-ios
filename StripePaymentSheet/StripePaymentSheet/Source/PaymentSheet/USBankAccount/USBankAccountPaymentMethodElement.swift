@@ -132,7 +132,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             addressElement,
             bankInfoSectionElement,
             saveCheckboxElement,
-            defaultCheckboxElement
+            defaultCheckboxElement,
         ]
         let autoSectioningElements = allElements.compactMap { $0 }
         self.formElement = FormElement(autoSectioningElements: autoSectioningElements, theme: theme)
