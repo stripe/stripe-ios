@@ -113,7 +113,7 @@ class PaymentSheetFormFactory {
                   isSettingUp: intent.isSettingUp,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
-                  setAsDefaultPMEnabled: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                  allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive)
@@ -132,7 +132,7 @@ class PaymentSheetFormFactory {
         isSettingUp: Bool,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        setAsDefaultPMEnabled: Bool = false,
+        allowsSetAsDefaultPM: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?
@@ -154,7 +154,7 @@ class PaymentSheetFormFactory {
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
-        self.allowsSetAsDefaultPM = setAsDefaultPMEnabled
+        self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
