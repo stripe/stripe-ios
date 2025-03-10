@@ -241,7 +241,6 @@ final class UpdatePaymentMethodViewController: UIViewController {
         if setAsDefaultCheckboxState != .hidden {
             analyticsParams["set_as_default"] = shouldSetAsDefault
         }
-
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
         switch updatePaymentMethodResult {
         case .success:
