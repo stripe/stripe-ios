@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
@@ -73,14 +74,57 @@ extension SavedPaymentMethodFormFactory {
             return TextFieldElement.CensoredCVCConfiguration(brand: configuration.paymentMethod.card?.preferredDisplayBrand ?? .unknown).makeElement(theme: configuration.appearance.asElementsTheme)
         }()
 
+        let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
+            guard configuration.canUpdate else {
+                return nil
+            }
+            switch configuration.billingDetailsCollectionConfiguration.address {
+            case .automatic:
+                return makeBillingAddressSection(configuration, collectionMode: .countryAndPostal(), countries: nil)
+            case .full:
+                return makeBillingAddressSection(configuration, collectionMode: .all(), countries: nil)
+            case .never:
+                return nil
+            }
+        }()
+
         let cardSection: SectionElement = {
             let allSubElements: [Element?] = [
                 panElement,
                 SectionElement.HiddenElement(cardBrandDropDown),
                 SectionElement.MultiElementRow([expiryDateElement, cvcElement]),
             ]
-            return SectionElement(elements: allSubElements.compactMap { $0 }, theme: configuration.appearance.asElementsTheme)
+            return SectionElement(title: billingAddressSection != nil ? String.Localized.card_information : nil,
+                                  elements: allSubElements.compactMap { $0 },
+                                  theme: configuration.appearance.asElementsTheme)
         }()
-        return cardSection
+        return FormElement(elements: [cardSection, billingAddressSection], theme: configuration.appearance.asElementsTheme)
+    }
+
+    func makeBillingAddressSection(
+        _ configuration: UpdatePaymentMethodViewController.Configuration,
+        collectionMode: AddressSectionElement.CollectionMode = .all(),
+        countries: [String]? = nil) -> PaymentMethodElementWrapper<AddressSectionElement> {
+            let section = AddressSectionElement(
+                title: String.Localized.billing_address_lowercase,
+                countries: countries,
+                defaults: currentBillingDetails(paymentMethod: configuration.paymentMethod),
+                collectionMode: collectionMode,
+                additionalFields: .init(
+                    billingSameAsShippingCheckbox: .disabled
+                ),
+                theme: configuration.appearance.asElementsTheme
+            )
+            return PaymentSheetFormFactory.makeBillingAddressPaymentMethodWrapper(section: section, countryAPIPath: nil)
+    }
+
+    func currentBillingDetails(paymentMethod: STPPaymentMethod) -> AddressSectionElement.AddressDetails {
+        let address = AddressSectionElement.AddressDetails.Address(city: paymentMethod.billingDetails?.address?.city,
+                                                                   country: paymentMethod.billingDetails?.address?.country,
+                                                                   line1: paymentMethod.billingDetails?.address?.line1,
+                                                                   line2: paymentMethod.billingDetails?.address?.line2,
+                                                                   postalCode: paymentMethod.billingDetails?.address?.postalCode,
+                                                                   state: paymentMethod.billingDetails?.address?.state)
+        return AddressSectionElement.AddressDetails(name: nil, phone: nil, address: address)
     }
 }

@@ -416,6 +416,10 @@ extension PaymentSheetFormFactory {
             ),
             theme: theme
         )
+        return PaymentSheetFormFactory.makeBillingAddressPaymentMethodWrapper(section: section, countryAPIPath: countryAPIPath)
+    }
+
+    static func makeBillingAddressPaymentMethodWrapper(section: AddressSectionElement, countryAPIPath: String?) -> PaymentMethodElementWrapper<AddressSectionElement> {
         return PaymentMethodElementWrapper(section) { section, params in
             guard case .valid = section.validationState else {
                 return nil
@@ -439,7 +443,6 @@ extension PaymentSheetFormFactory {
             if let countryAPIPath {
                 params.paymentMethodParams.additionalAPIParameters[countryAPIPath] = section.selectedCountryCode
             }
-
             return params
         }
     }
