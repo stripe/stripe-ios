@@ -2816,10 +2816,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
-        // toggle set this card as default
-        var setDefaultToggle = app.switches["Set as default payment method"]
-        setDefaultToggle.tap()
-        XCTAssertTrue(setDefaultToggle.isSelected)
+        // this card should be automatically set as the default, as there are no other saved pms
+        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
 
         // Complete payment
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
@@ -2854,8 +2852,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
         // do not set this card as default
-        setDefaultToggle = app.switches["Set as default payment method"]
-        XCTAssertFalse(setDefaultToggle.isSelected)
+        XCTAssertFalse(app.switches["Set as default payment method"].isSelected)
 
         // Complete payment
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
