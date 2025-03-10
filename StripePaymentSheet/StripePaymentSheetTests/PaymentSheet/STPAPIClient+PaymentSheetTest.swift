@@ -11,7 +11,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP)@_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable@_spi(STP)@_spi(CustomerSessionBetaAccess)@_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPAPIClient_PaymentSheetTest: XCTestCase {
@@ -27,10 +27,17 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         var config = PaymentSheet.Configuration()
         config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
 
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration, clientDefaultPaymentMethod: "pm_12345", customerAccessProvider: .customerSession("cs_12345"))
+        let cpm = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_123")
+        let cpm2 = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_789")
+        config.customPaymentMethodConfiguration = .init(customPaymentMethodTypes: [cpm, cpm2], customPaymentMethodConfirmHandler: { _, _ in
+            return .completed
+        })
+
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration, cpmConfiguration: config.customPaymentMethodConfiguration, clientDefaultPaymentMethod: "pm_12345", customerAccessProvider: .customerSession("cs_12345"))
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], ["external_foo", "external_bar"])
+        XCTAssertEqual(parameters["custom_payment_methods"] as? [String], ["cpmt_123", "cpmt_789"])
         XCTAssertEqual(parameters["customer_session_client_secret"] as? String, "cs_12345")
         XCTAssertEqual(parameters["client_default_payment_method"] as? String, "pm_12345")
 
@@ -52,7 +59,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                             onBehalfOf: "acct_connect",
                                                             confirmHandler: { _, _, _ in })
 
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil, clientDefaultPaymentMethod: nil, customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"))
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil, cpmConfiguration: nil, clientDefaultPaymentMethod: nil, customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"))
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], [])
