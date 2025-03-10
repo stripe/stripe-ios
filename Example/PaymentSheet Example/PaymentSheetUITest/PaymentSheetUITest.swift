@@ -2915,8 +2915,12 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Check that the card ending in 4242 has the default badge
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
-        // Ensure checkbox is not displayed if it's already the default
-        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+        // Ensure checkbox is not enabled if it's already the default
+        setDefaultToggle = app.switches["Default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
         app.buttons["Back"].waitForExistenceAndTap()
         app.buttons["Done"].waitForExistenceAndTap()
 
@@ -2950,8 +2954,21 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Check that the card ending in 4242 still has the default badge
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
-        // Ensure checkbox is not displayed if it's already the default
-        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+        // Ensure checkbox is not enabled if it's already the default
+        setDefaultToggle = app.switches["Default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        app.buttons["Back"].waitForExistenceAndTap()
+        app.cells["•••• 4444"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        // Ensure checkbox is enabled if it's not the default
+        setDefaultToggle = app.switches["Set as default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertFalse(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
+
         // Check analytics
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
@@ -2997,8 +3014,12 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Check that the card ending in 4242 still has the default badge
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
-        // Ensure checkbox is not displayed if it's already the default
-        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+        // Ensure checkbox is not enabled if it's already the default
+        let setDefaultToggle = app.switches["Default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
         // Check analytics
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
@@ -3045,8 +3066,12 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Edit"].waitForExistenceAndTap()
         // Check that the card ending in 4242 still has the default badge
         XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].waitForExistenceAndTap())
-        // Ensure checkbox is not displayed if it's already the default
-        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+        // Ensure checkbox is not enabled if it's already the default
+        let setDefaultToggle = app.switches["Default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
         // Check analytics
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)

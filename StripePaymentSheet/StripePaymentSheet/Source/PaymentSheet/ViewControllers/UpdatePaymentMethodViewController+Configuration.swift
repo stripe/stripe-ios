@@ -19,11 +19,25 @@ extension UpdatePaymentMethodViewController {
         let canRemove: Bool
         let canUpdate: Bool
         let isCBCEligible: Bool
-        let canSetAsDefaultPM: Bool
+        let isSetAsDefaultPMEnabled: Bool
         let isDefault: Bool
 
         var shouldShowSaveButton: Bool {
             return canUpdateCardBrand || canSetAsDefaultPM || canUpdate
+        }
+
+        var shouldShowDefaultCheckbox: Bool {
+            return isSetAsDefaultPMEnabled && isSupportedDefaultPaymentMethodType
+        }
+
+        private var canSetAsDefaultPM: Bool {
+            return shouldShowDefaultCheckbox && !isDefault
+        }
+
+        private var isSupportedDefaultPaymentMethodType: Bool {
+            return PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
+                paymentMethod.type == $0
+            })
         }
 
         var canUpdateCardBrand: Bool {
@@ -78,7 +92,7 @@ extension UpdatePaymentMethodViewController {
             self.canRemove = canRemove
             self.canUpdate = canUpdate
             self.isCBCEligible = isCBCEligible
-            self.canSetAsDefaultPM = allowsSetAsDefaultPM && !isDefault
+            self.isSetAsDefaultPMEnabled = allowsSetAsDefaultPM
             self.isDefault = isDefault
         }
     }
