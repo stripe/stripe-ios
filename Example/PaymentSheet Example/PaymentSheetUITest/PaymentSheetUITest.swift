@@ -2914,7 +2914,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
         // Ensure checkbox is not enabled if it's already the default
-        setDefaultToggle = app.switches["Default payment method"]
+        var setDefaultToggle = app.switches["Default payment method"]
         XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
         XCTAssertTrue(setDefaultToggle.isSelected)
         setDefaultToggle.tap()
