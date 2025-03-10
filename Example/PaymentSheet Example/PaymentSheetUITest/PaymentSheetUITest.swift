@@ -2881,7 +2881,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.cells["•••• 4444"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
         // Ensure checkbox is enabled if it's not the default
         XCTAssertTrue(app.switches["Set as default payment method"].isEnabled)
-        
+
         // Check analytics
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
