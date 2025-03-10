@@ -138,7 +138,7 @@ class STPElementsSessionTest: XCTestCase {
 
         let customPaymentMethodsArray: [[String: Any]] = [
             [
-                "logo_url": "stripe.com",
+                "logo_url": "https://stripe.com",
                 "display_name": "BufoPay (test)",
                 "type": "cpmt_123",
                 "error": NSNull(),
@@ -165,7 +165,7 @@ class STPElementsSessionTest: XCTestCase {
         let firstCPM = elementsSession.customPaymentMethods[0]
         XCTAssertEqual(firstCPM.displayName, "BufoPay (test)")
         XCTAssertEqual(firstCPM.type, "cpmt_123")
-        XCTAssertEqual(firstCPM.logoUrl?.absoluteString, "stripe.com")
+        XCTAssertEqual(firstCPM.logoUrl?.absoluteString, "https://stripe.com")
         XCTAssertFalse(firstCPM.isPreset ?? true)
         XCTAssertNil(firstCPM.error)
 
