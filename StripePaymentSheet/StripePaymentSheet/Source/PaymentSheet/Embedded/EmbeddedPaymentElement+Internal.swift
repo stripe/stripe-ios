@@ -242,7 +242,13 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         // Perform card brand update if needed
         if let updateParams = viewController.updateParams,
            case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
-            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)) {
+            let updateParams = STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)
+            let hasOnlyChangedCardBrand = viewController.hasOnlyChangedCardBrand(originalPaymentMethod: paymentMethod,
+                                                                                 updatedPaymentMethodCardParams: paymentMethodCardParams,
+                                                                                 updatedBillingDetailsParams: billingDetails)
+            if case .failure(let error) = await updateCard(paymentMethod: paymentMethod,
+                                                           updateParams: updateParams,
+                                                           hasOnlyChangedCardBrand: hasOnlyChangedCardBrand) {
                 errors.append(error)
             }
         }
@@ -267,8 +273,9 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         return .success
     }
 
-    private func updateCardBrand(paymentMethod: StripePayments.STPPaymentMethod,
-                                 updateParams: StripePayments.STPPaymentMethodUpdateParams) async -> Result<Void, Error> {
+    private func updateCard(paymentMethod: StripePayments.STPPaymentMethod,
+                            updateParams: StripePayments.STPPaymentMethodUpdateParams,
+                            hasOnlyChangedCardBrand: Bool) async -> Result<Void, Error> {
         do {
             let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
 
@@ -278,8 +285,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             }
             return .success(())
         } catch {
-            // TODO: Implement logic to decide if we should present cardBrandError or generic error
-            return .failure(NSError.stp_cardBrandNotUpdatedError())
+            return hasOnlyChangedCardBrand ? .failure(NSError.stp_cardBrandNotUpdatedError()) : .failure(NSError.stp_genericErrorOccurredError())
         }
     }
 

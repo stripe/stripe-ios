@@ -65,7 +65,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         if let params = paymentMethodForm.updateParams(params: confirmParams),
            params.paymentMethodParams.type == .card,
            let cardParams = params.paymentMethodParams.card,
-           hasChangedCardOrBillingAddressFields(originalPaymentMethod: configuration.paymentMethod, updatedPaymentMethodParams: params.paymentMethodParams) {
+           hasChangedCard(originalPaymentMethod: configuration.paymentMethod, updatedPaymentMethodParams: params.paymentMethodParams) {
             return .card(paymentMethodCardParams: cardParams, billingDetails: params.paymentMethodParams.billingDetails)
         }
         return nil
@@ -118,6 +118,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
             guard let self = self else { return }
             let updatePaymentMethodOptions = updateParams
             if updatePaymentMethodOptions != nil || hasChangedDefaultPaymentMethodCheckbox {
+                self.view.endEditing(true)
                 Task {
                     await self.update(updatePaymentMethodOptions: updatePaymentMethodOptions)
                 }
@@ -277,32 +278,57 @@ final class UpdatePaymentMethodViewController: UIViewController {
         updateButton.update(state: updateParams != nil || hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
     }
 
-    func hasChangedCardOrBillingAddressFields(originalPaymentMethod: STPPaymentMethod, updatedPaymentMethodParams: STPPaymentMethodParams) -> Bool {
-
+    func hasChangedCard(originalPaymentMethod: STPPaymentMethod, updatedPaymentMethodParams: STPPaymentMethodParams) -> Bool {
         guard originalPaymentMethod.type == .card,
-              let originalCardPaymentMethod = originalPaymentMethod.card else {
+              let updatedPaymentMethodCardParams = updatedPaymentMethodParams.card else {
             stpAssertionFailure("Only payment method type 'card' is supported")
             return false
         }
+        return hasChangedCardBrand(originalPaymentMethod: originalPaymentMethod, updatedPaymentMethodCardParams: updatedPaymentMethodCardParams)
+        || hasChangedCardFields(originalPaymentMethod: originalPaymentMethod, updatedPaymentMethodCardParams: updatedPaymentMethodCardParams)
+        || hasChangedBillingFields(originalPaymentMethod: originalPaymentMethod, updatedBillingDetailsParams: updatedPaymentMethodParams.billingDetails)
+    }
 
-        let cardBrandChanged = configuration.canUpdateCardBrand && originalCardPaymentMethod.preferredDisplayBrand != updatedPaymentMethodParams.card?.networks?.preferred?.toCardBrand
+    func hasOnlyChangedCardBrand(originalPaymentMethod: STPPaymentMethod, updatedPaymentMethodCardParams: STPPaymentMethodCardParams?, updatedBillingDetailsParams: STPPaymentMethodBillingDetails?) -> Bool {
+        guard let updatedPaymentMethodCardParams = updatedPaymentMethodCardParams else {
+            return false
+        }
+        return hasChangedCardBrand(originalPaymentMethod: originalPaymentMethod, updatedPaymentMethodCardParams: updatedPaymentMethodCardParams)
+        && !hasChangedCardFields(originalPaymentMethod: originalPaymentMethod, updatedPaymentMethodCardParams: updatedPaymentMethodCardParams)
+        && !hasChangedBillingFields(originalPaymentMethod: originalPaymentMethod, updatedBillingDetailsParams: updatedBillingDetailsParams)
+    }
 
-        let cardParamsChanged = originalPaymentMethod.hasUpdatedCardParams(updatedPaymentMethodParams.card)
+    private func hasChangedCardBrand(originalPaymentMethod: STPPaymentMethod, updatedPaymentMethodCardParams: STPPaymentMethodCardParams) -> Bool {
+        guard originalPaymentMethod.type == .card,
+              let originalCardPaymentMethod = originalPaymentMethod.card else {
+            return false
+        }
+        return configuration.canUpdateCardBrand && originalCardPaymentMethod.preferredDisplayBrand != updatedPaymentMethodCardParams.networks?.preferred?.toCardBrand
+    }
 
+    private func hasChangedCardFields(originalPaymentMethod: STPPaymentMethod, updatedPaymentMethodCardParams: STPPaymentMethodCardParams) -> Bool {
+        guard originalPaymentMethod.type == .card else {
+            return false
+        }
+        return originalPaymentMethod.hasUpdatedCardParams(updatedPaymentMethodCardParams)
+    }
+
+    private func hasChangedBillingFields(originalPaymentMethod: STPPaymentMethod, updatedBillingDetailsParams: STPPaymentMethodBillingDetails?) -> Bool {
+        guard originalPaymentMethod.type == .card else {
+            return false
+        }
         var billingParamsChanged: Bool = false
         if configuration.canUpdate {
             switch self.configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                stpAssert(updatedPaymentMethodParams.billingDetails != nil, "Config is set to automatic but no billing details available")
-                billingParamsChanged = originalPaymentMethod.hasUpdatedAutomaticBillingDetailsParams(updatedPaymentMethodParams.billingDetails)
+                billingParamsChanged = originalPaymentMethod.hasUpdatedAutomaticBillingDetailsParams(updatedBillingDetailsParams)
             case .full:
-                stpAssert(updatedPaymentMethodParams.billingDetails != nil, "Config is set to full but no billing details available")
-                billingParamsChanged = originalPaymentMethod.hasUpdatedFullBillingDetailsParams(updatedPaymentMethodParams.billingDetails)
+                billingParamsChanged = originalPaymentMethod.hasUpdatedFullBillingDetailsParams(updatedBillingDetailsParams)
             case .never:
                 billingParamsChanged = false
             }
         }
-        return cardBrandChanged || cardParamsChanged || billingParamsChanged
+        return billingParamsChanged
     }
 
     func logCardBrandChangedIfNeeded() {

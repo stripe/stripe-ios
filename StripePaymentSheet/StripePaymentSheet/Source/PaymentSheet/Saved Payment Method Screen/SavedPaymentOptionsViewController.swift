@@ -676,7 +676,13 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         // Perform card brand update if needed
         if let updateParams = viewController.updateParams,
            case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
-            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)) {
+            let updateParams = STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)
+            let hasOnlyChangedCardBrand = viewController.hasOnlyChangedCardBrand(originalPaymentMethod: paymentMethod,
+                                                                                 updatedPaymentMethodCardParams: paymentMethodCardParams,
+                                                                                 updatedBillingDetailsParams: billingDetails)
+            if case .failure(let error) = await updateCard(paymentMethod: paymentMethod,
+                                                           updateParams: updateParams,
+                                                           hasOnlyChangedCardBrand: hasOnlyChangedCardBrand) {
                 errors.append(error)
             }
         }
@@ -697,7 +703,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         return .success
     }
 
-    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async -> Result<Void, Swift.Error> {
+    private func updateCard(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Swift.Error> {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -719,8 +725,7 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
             }
             return .success(())
         } catch {
-            // TODO: Implement logic to decide if we should present cardBrandError or generic error
-            return .failure(NSError.stp_cardBrandNotUpdatedError())
+            return hasOnlyChangedCardBrand ? .failure(NSError.stp_cardBrandNotUpdatedError()) : .failure(NSError.stp_genericErrorOccurredError())
         }
     }
 
