@@ -133,7 +133,7 @@ class PaymentSheetFormFactory {
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         setAsDefaultPMEnabled: Bool = false,
-        isFirstSavedPaymentMethod: Bool = false,
+        isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?
     ) {
