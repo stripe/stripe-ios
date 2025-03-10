@@ -153,7 +153,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             sut.logLoadStarted()
             sut.logLoadSucceeded(
                 intent: ._testValue(),
-                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [STPPaymentMethod._testCardJSON!, STPPaymentMethod._testUSBankAccountJSON!]),
+                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [STPPaymentMethod._testCardJSON, STPPaymentMethod._testUSBankAccountJSON]),
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
                 orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
             )

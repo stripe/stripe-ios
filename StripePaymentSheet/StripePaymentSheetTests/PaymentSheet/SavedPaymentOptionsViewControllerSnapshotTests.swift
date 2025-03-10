@@ -43,7 +43,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
                                                     paymentSheetConfiguration: PaymentSheet.Configuration(),
                                                     intent: intent,
                                                     appearance: appearance,
-                                                    elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId, paymentMethods: [STPPaymentMethod._testCardJSON!, STPPaymentMethod._testUSBankAccountJSON!, STPPaymentMethod._testSEPAJSON!]) : .emptyElementsSession,
+                                                    elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId, paymentMethods: [STPPaymentMethod._testCardJSON, STPPaymentMethod._testUSBankAccountJSON, STPPaymentMethod._testSEPAJSON]) : .emptyElementsSession,
                                                     analyticsHelper: ._testValue())
         let testWindow = UIWindow()
         testWindow.isHidden = false

@@ -262,7 +262,7 @@ extension STPPaymentMethod {
             "exp_month": "01",
             "exp_year": "2040",
         ],
-    ] as? [AnyHashable: Any]
+    ] as [AnyHashable: Any]
 
     static func _testCard() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: _testCardJSON)!
@@ -317,7 +317,7 @@ extension STPPaymentMethod {
             "last4": "0005",
             "brand": "amex",
         ],
-    ] as? [AnyHashable: Any]
+    ] as [AnyHashable: Any]
 
     static func _testCardAmex() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: _testCardAmexJSON)!
@@ -362,7 +362,7 @@ extension STPPaymentMethod {
             "name": "Sam Stripe",
             "email": "sam@stripe.com",
         ] as [String: Any],
-    ] as? [AnyHashable: Any]
+    ] as [AnyHashable: Any]
 
     static func _testUSBankAccount() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: _testUSBankAccountJSON)!
@@ -378,7 +378,7 @@ extension STPPaymentMethod {
             "name": "Sam Stripe",
             "email": "sam@stripe.com",
         ] as [String: Any],
-    ] as? [AnyHashable: Any]
+    ] as [AnyHashable: Any]
 
     static func _testSEPA() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: _testSEPAJSON)!

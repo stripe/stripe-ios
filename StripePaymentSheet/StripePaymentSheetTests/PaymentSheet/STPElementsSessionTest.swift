@@ -505,7 +505,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertFalse(allowsSetAsDefault)
     }
     func testElementsCustomerDefaultPaymentMethod() {
-        let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: "pm_123card", paymentMethods: [STPPaymentMethod._testCardAmexJSON!, STPPaymentMethod._testCardJSON!])
+        let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: "pm_123card", paymentMethods: [STPPaymentMethod._testCardAmexJSON, STPPaymentMethod._testCardJSON])
         let customer = elementsSession.customer
         XCTAssertNotNil(customer)
         let defaultPaymentMethodId = customer?.defaultPaymentMethod
@@ -516,7 +516,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(defaultPaymentMethod?.stripeId, "pm_123card")
     }
     func testElementsCustomerNoDefaultPaymentMethodHasSavedPaymentMethods() {
-        let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: nil, paymentMethods: [STPPaymentMethod._testCardAmexJSON!, STPPaymentMethod._testCardJSON!])
+        let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: nil, paymentMethods: [STPPaymentMethod._testCardAmexJSON, STPPaymentMethod._testCardJSON])
         let customer = elementsSession.customer
         XCTAssertNotNil(customer)
         let defaultPaymentMethodId = customer?.defaultPaymentMethod
