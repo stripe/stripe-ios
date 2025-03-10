@@ -36,7 +36,7 @@ class PaymentSheetFormFactory {
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
-    let setAsDefaultPMEnabled: Bool
+    let allowsSetAsDefaultPM: Bool
     let isFirstSavedPaymentMethod: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
@@ -57,7 +57,7 @@ class PaymentSheetFormFactory {
     }
 
     var shouldDisplayDefaultCheckbox: Bool {
-        return setAsDefaultPMEnabled && !isFirstSavedPaymentMethod
+        return allowsSetAsDefaultPM && !isFirstSavedPaymentMethod
     }
 
     var theme: ElementsAppearance {
@@ -154,7 +154,7 @@ class PaymentSheetFormFactory {
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
-        self.setAsDefaultPMEnabled = setAsDefaultPMEnabled
+        self.allowsSetAsDefaultPM = setAsDefaultPMEnabled
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
@@ -567,7 +567,7 @@ extension PaymentSheetFormFactory {
     func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         let isSaving = BoolReference()
         let defaultCheckbox: Element? = {
-            guard setAsDefaultPMEnabled else {
+            guard allowsSetAsDefaultPM else {
                 return nil
             }
             let defaultCheckbox = makeDefaultCheckbox()

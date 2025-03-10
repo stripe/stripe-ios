@@ -16,7 +16,7 @@ extension PaymentSheetFormFactory {
     func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
-            guard setAsDefaultPMEnabled else {
+            guard allowsSetAsDefaultPM else {
                 return nil
             }
             let defaultCheckbox = makeDefaultCheckbox()
