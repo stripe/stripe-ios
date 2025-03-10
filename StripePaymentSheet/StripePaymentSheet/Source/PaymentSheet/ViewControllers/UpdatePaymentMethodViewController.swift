@@ -233,6 +233,15 @@ final class UpdatePaymentMethodViewController: UIViewController {
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
 
+        var analyticsParams: [String: Any] = [:]
+
+        if case .card(let paymentMethodCardParams) = updatePaymentMethodOptions {
+            analyticsParams["selected_card_brand"] = paymentMethodCardParams.networks?.preferred
+        }
+        if setAsDefaultCheckboxState != .hidden {
+            analyticsParams["set_as_default"] = shouldSetAsDefault
+        }
+
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
         switch updatePaymentMethodResult {
         case .success:
