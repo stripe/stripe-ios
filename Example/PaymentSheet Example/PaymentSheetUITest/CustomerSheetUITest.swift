@@ -763,6 +763,139 @@ class CustomerSheetUITest: XCTestCase {
         // The card ending in 4242 is not the most recently added payment, so we know that it selected it because it is the default
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: timeout))
     }
+
+    func testUpdatePaymentMethod_auto() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodUpdate = .enabled
+        settings.merchantCountryCode = .FR
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+        editButton.tap()
+
+        let editPMButton = app.buttons["Edit"].firstMatch
+        editPMButton.tap()
+
+        let expField = app.textFields["expiration date"]
+        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        expField.tap()
+        expField.typeText(XCUIKeyboardKey.delete.rawValue)
+        expField.typeText(XCUIKeyboardKey.delete.rawValue)
+        XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
+        XCTAssertTrue(app.staticTexts["Your card's expiration date is incomplete."].waitForExistence(timeout: 3.0))
+
+        // Test expired card
+        expField.tap()
+        expField.typeText("99")
+        XCTAssertTrue(app.staticTexts["Your card has expired."].waitForExistence(timeout: 3.0))
+
+        // Enter valid date of 02/32
+        expField.typeText(XCUIKeyboardKey.delete.rawValue)
+        expField.typeText(XCUIKeyboardKey.delete.rawValue)
+        expField.typeText("32")
+
+        let zipField = app.textFields["ZIP"]
+        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        zipField.tap()
+        zipField.typeText("55555")
+        XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
+
+        // Close Sheet
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistenceAndTap(timeout: 15))
+        XCTAssertTrue(app.buttons["Close"].waitForExistenceAndTap(timeout: 3))
+
+        app.buttons["Reload"].tap()
+        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
+        editButton.waitForExistenceAndTap(timeout: timeout)
+        editPMButton.waitForExistenceAndTap(timeout: timeout)
+
+        let countryField = app.textFields["Country or region"]
+        XCTAssertTrue(countryField.waitForExistence(timeout: timeout))
+        guard let expirationDate = expField.value as? String,
+              let zipCode = zipField.value as? String,
+              let country = countryField.value as? String else {
+            XCTFail("Unable to get values from fields")
+            return
+        }
+        XCTAssertEqual(expirationDate, "03/32")
+        XCTAssertEqual(zipCode, "55555")
+        XCTAssertEqual(country, "United States")
+    }
+
+    func testUpdatePaymentMethod_fullBilling() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodUpdate = .enabled
+        settings.merchantCountryCode = .FR
+        settings.collectAddress = .full
+        loadPlayground(
+            app,
+            settings
+        )
+
+        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
+
+        let editButton = app.staticTexts["Edit"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
+        editButton.tap()
+
+        let editPMButton = app.buttons["Edit"].firstMatch
+        editPMButton.tap()
+
+        let line1Field = app.textFields["Address line 1"]
+        XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
+        line1Field.tap()
+        line1Field.typeText("123 main")
+
+        let cityField = app.textFields["City"]
+        XCTAssertTrue(cityField.waitForExistence(timeout: 3.0))
+        cityField.tap()
+        cityField.typeText("San Francisco")
+
+        let zipField = app.textFields["ZIP"]
+        XCTAssertTrue(zipField.waitForExistence(timeout: 3.0))
+        zipField.tap()
+        zipField.typeText("12345" + XCUIKeyboardKey.return.rawValue)
+
+        XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
+
+        // Close Sheet
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistenceAndTap(timeout: 15))
+        XCTAssertTrue(app.buttons["Close"].waitForExistenceAndTap(timeout: 3))
+
+        app.buttons["Reload"].tap()
+        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
+        editButton.waitForExistenceAndTap(timeout: timeout)
+        editPMButton.waitForExistenceAndTap(timeout: timeout)
+
+        let stateField = app.textFields["State"]
+        let countryField = app.textFields["Country or region"]
+        XCTAssertTrue(stateField.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(countryField.waitForExistence(timeout: 3.0))
+
+        guard let line1 = line1Field.value as? String,
+              let city = cityField.value as? String,
+              let state = stateField.value as? String,
+              let zipCode = zipField.value as? String,
+              let country = countryField.value as? String else {
+            XCTFail("Unable to get values from fields")
+            return
+        }
+        XCTAssertEqual(line1, "123 main")
+        XCTAssertEqual(city, "San Francisco")
+        XCTAssertEqual(state, "Alabama")
+        XCTAssertEqual(zipCode, "12345")
+        XCTAssertEqual(country, "United States")
+    }
     // MARK: - Helpers
 
     func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {

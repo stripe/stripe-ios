@@ -36,7 +36,8 @@ class PaymentSheetFormFactory {
     let countryCode: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
-    let showSetAsDefaultCheckbox: Bool
+    let allowsSetAsDefaultPM: Bool
+    let isFirstSavedPaymentMethod: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
 
@@ -53,6 +54,10 @@ class PaymentSheetFormFactory {
         case .customerSheetWithCustomerSession:
             return false
         }
+    }
+
+    var shouldDisplayDefaultCheckbox: Bool {
+        return allowsSetAsDefaultPM && !isFirstSavedPaymentMethod
     }
 
     var theme: ElementsAppearance {
@@ -108,7 +113,8 @@ class PaymentSheetFormFactory {
                   isSettingUp: intent.isSettingUp,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
-                  showSetAsDefaultCheckbox: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                  allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                  isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive)
     }
@@ -126,7 +132,8 @@ class PaymentSheetFormFactory {
         isSettingUp: Bool,
         countryCode: String?,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
-        showSetAsDefaultCheckbox: Bool = false,
+        allowsSetAsDefaultPM: Bool = false,
+        isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?
     ) {
@@ -147,7 +154,8 @@ class PaymentSheetFormFactory {
         self.countryCode = countryCode
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
-        self.showSetAsDefaultCheckbox = showSetAsDefaultCheckbox
+        self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
+        self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
     }
@@ -164,9 +172,9 @@ class PaymentSheetFormFactory {
             // We have two ways to create the form for a payment method
             // 1. Custom, one-off forms
             if paymentMethod == .card {
-                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible, showSetAsDefaultCheckbox: showSetAsDefaultCheckbox)
+                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
             } else if paymentMethod == .USBankAccount {
-                return makeUSBankAccount(merchantName: configuration.merchantDisplayName, showSetAsDefaultCheckbox: showSetAsDefaultCheckbox)
+                return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
             } else if paymentMethod == .UPI {
                 return makeUPI()
             } else if paymentMethod == .cashApp && isSettingUp {
@@ -374,7 +382,7 @@ extension PaymentSheetFormFactory {
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: String.Localized.set_as_default_payment_method,
-            isSelectedByDefault: false,
+            isSelectedByDefault: isFirstSavedPaymentMethod,
             didToggle: didToggle
         )
         return PaymentMethodElementWrapper(element) { checkbox, params in
@@ -416,6 +424,10 @@ extension PaymentSheetFormFactory {
             ),
             theme: theme
         )
+        return PaymentSheetFormFactory.makeBillingAddressPaymentMethodWrapper(section: section, countryAPIPath: countryAPIPath)
+    }
+
+    static func makeBillingAddressPaymentMethodWrapper(section: AddressSectionElement, countryAPIPath: String?) -> PaymentMethodElementWrapper<AddressSectionElement> {
         return PaymentMethodElementWrapper(section) { section, params in
             guard case .valid = section.validationState else {
                 return nil
@@ -439,7 +451,6 @@ extension PaymentSheetFormFactory {
             if let countryAPIPath {
                 params.paymentMethodParams.additionalAPIParameters[countryAPIPath] = section.selectedCountryCode
             }
-
             return params
         }
     }
@@ -556,12 +567,15 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    func makeUSBankAccount(merchantName: String, showSetAsDefaultCheckbox: Bool) -> PaymentMethodElement {
+    func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         let isSaving = BoolReference()
-        var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
-        if showSetAsDefaultCheckbox {
-            defaultCheckbox = makeDefaultCheckbox()
-        }
+        let defaultCheckbox: Element? = {
+            guard allowsSetAsDefaultPM else {
+                return nil
+            }
+            let defaultCheckbox = makeDefaultCheckbox()
+            return shouldDisplayDefaultCheckbox ? defaultCheckbox : SectionElement.HiddenElement(defaultCheckbox)
+        }()
         let saveCheckbox = makeSaveCheckbox(
             label: String(
                 format: .Localized.save_this_account_for_future_payments,

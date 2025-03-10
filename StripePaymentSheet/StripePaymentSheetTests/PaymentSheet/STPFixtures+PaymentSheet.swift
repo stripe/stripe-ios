@@ -182,6 +182,8 @@ extension STPElementsSession {
         intent: Intent,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
+        defaultPaymentMethod: String? = nil,
+        paymentMethods: [[AnyHashable: Any]]? = nil,
         allowsSetAsDefaultPM: Bool = false
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
@@ -213,7 +215,9 @@ extension STPElementsSession {
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
             linkMode: linkMode,
-            linkFundingSources: linkFundingSources
+            linkFundingSources: linkFundingSources,
+            defaultPaymentMethod: defaultPaymentMethod,
+            paymentMethods: paymentMethods
         )
     }
 }
@@ -247,7 +251,7 @@ extension Intent {
 }
 
 extension STPPaymentMethod {
-    static var _testCardJSON = [
+    static let _testCardJSON = [
         "id": "pm_123card",
         "type": "card",
         "card": [
@@ -264,7 +268,49 @@ extension STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: _testCardJSON)!
     }
 
-    static var _testCardAmexJSON = [
+    static func _testCard(line1: String? = nil,
+                          line2: String? = nil,
+                          city: String? = nil,
+                          state: String? = nil,
+                          postalCode: String? = nil,
+                          countryCode: String? = nil) -> STPPaymentMethod {
+        var address: [String: String] = [:]
+        if let line1 {
+            address["line1"] = line1
+        }
+        if let line2 {
+            address["line2"] = line2
+        }
+        if let city {
+            address["city"] = city
+        }
+        if let state {
+            address["state"] = state
+        }
+        if let postalCode {
+            address["postal_code"] = postalCode
+        }
+        if let countryCode {
+            address["country"] = countryCode
+        }
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+                "fingerprint": "B8XXs2y2JsVBtB9f",
+                "networks": ["available": ["visa"]],
+                "exp_month": "01",
+                "exp_year": "2040",
+            ],
+            "billing_details": [
+                "address": address,
+            ],
+        ])!
+    }
+
+    static let _testCardAmexJSON = [
         "id": "pm_123card",
         "type": "card",
         "card": [
@@ -295,7 +341,7 @@ extension STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: apiResponse)!
     }
 
-    static var _testUSBankAccountJSON = [
+    static let _testUSBankAccountJSON = [
         "id": "pm_123",
         "type": "us_bank_account",
         "us_bank_account": [
@@ -322,7 +368,7 @@ extension STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: _testUSBankAccountJSON)!
     }
 
-    static var _testSEPAJSON = [
+    static let _testSEPAJSON = [
         "id": "pm_123",
         "type": "sepa_debit",
         "sepa_debit": [

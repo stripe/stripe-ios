@@ -8,9 +8,18 @@
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
+@testable@_spi(STP) import StripeUICore
 import XCTest
 
 final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
+    override func setUp() {
+        super.setUp()
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+    }
 
     func test_UpdatePaymentMethodViewControllerDarkMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isCBCEligible: true)
@@ -20,6 +29,36 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerLightMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerLightMode_supressAddress_wCBC() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, addressCollectionMode: .automatic, canUpdate: false, isCBCEligible: true)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerLightMode_BillingAuto_wCBC() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, addressCollectionMode: .automatic, canUpdate: true, isCBCEligible: true)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerLightMode_BillingFull_wCBC() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, addressCollectionMode: .full, canUpdate: true, isCBCEligible: true)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerLightMode_BillingAuto_woCBC() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, addressCollectionMode: .automatic, canUpdate: true, isCBCEligible: false)
+    }
+
+    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
+    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
+    func test_UpdatePaymentMethodViewControllerLightMode_BillingFull_woCBC() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, addressCollectionMode: .full, canUpdate: true, isCBCEligible: false)
     }
 
     // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
@@ -161,7 +200,18 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, cardBrandFilter: cardBrandFilter)
     }
 
-    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType, darkMode: Bool, isEmbeddedSingle: Bool = false, appearance: PaymentSheet.Appearance = .default, canRemove: Bool = true, canUpdate: Bool = false, isCBCEligible: Bool = false, expired: Bool = false, canSetAsDefaultPM: Bool = false, isDefault: Bool = false, cardBrandFilter: CardBrandFilter = .default) {
+    func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType,
+                                                 darkMode: Bool,
+                                                 isEmbeddedSingle: Bool = false,
+                                                 appearance: PaymentSheet.Appearance = .default,
+                                                 addressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode = .never,
+                                                 canRemove: Bool = true,
+                                                 canUpdate: Bool = false,
+                                                 isCBCEligible: Bool = false,
+                                                 expired: Bool = false,
+                                                 canSetAsDefaultPM: Bool = false,
+                                                 isDefault: Bool = false,
+                                                 cardBrandFilter: CardBrandFilter = .default) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
@@ -182,8 +232,13 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                 fatalError("Updating payment method has not been implemented for type \(paymentMethodType)")
             }
         }()
+        let billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration(name: .never,
+                                                                                                       phone: .never,
+                                                                                                       email: .never,
+                                                                                                       address: addressCollectionMode)
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
                                                                            appearance: appearance,
+                                                                           billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,
                                                                            cardBrandFilter: cardBrandFilter,
                                                                            canRemove: canRemove,

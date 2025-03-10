@@ -1607,23 +1607,28 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
 
         // Test incomplete date
-        let numberField = app.textFields["expiration date"]
-        XCTAssertTrue(numberField.waitForExistence(timeout: 3.0))
-        numberField.tap()
-        numberField.typeText(XCUIKeyboardKey.delete.rawValue)
-        numberField.typeText(XCUIKeyboardKey.delete.rawValue)
+        let expField = app.textFields["expiration date"]
+        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        expField.tap()
+        expField.typeText(XCUIKeyboardKey.delete.rawValue)
+        expField.typeText(XCUIKeyboardKey.delete.rawValue)
         XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
         XCTAssertTrue(app.staticTexts["Your card's expiration date is incomplete."].waitForExistence(timeout: 3.0))
 
         // Test expired card
-        numberField.tap()
-        numberField.typeText("99")
+        expField.tap()
+        expField.typeText("99")
         XCTAssertTrue(app.staticTexts["Your card has expired."].waitForExistence(timeout: 3.0))
 
         // Enter valid date of 02/32
-        numberField.typeText(XCUIKeyboardKey.delete.rawValue)
-        numberField.typeText(XCUIKeyboardKey.delete.rawValue)
-        numberField.typeText("32")
+        expField.typeText(XCUIKeyboardKey.delete.rawValue)
+        expField.typeText(XCUIKeyboardKey.delete.rawValue)
+        expField.typeText("32")
+
+        let zipField = app.textFields["ZIP"]
+        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        zipField.tap()
+        zipField.typeText("55555")
         XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
 
         // Close Sheet
@@ -1635,12 +1640,82 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should still default to apple
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))
         XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
-        XCTAssertTrue(numberField.waitForExistence(timeout: 3.0))
-        guard let expirationDate = numberField.value as? String else {
-            XCTFail("Unable to get expiraiton field")
+        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        guard let expirationDate = expField.value as? String,
+              let zipCode = zipField.value as? String else {
+            XCTFail("Unable to get values from fields")
             return
         }
+
         XCTAssertEqual(expirationDate, "03/32")
+        XCTAssertEqual(zipCode, "55555")
+    }
+    func test_updatePaymentMethod_fullBilling() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.mode = .paymentWithSetup
+        settings.uiStyle = .flowController
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .returning
+        settings.applePayEnabled = .on
+        settings.apmsEnabled = .off
+        settings.merchantCountryCode = .FR
+        settings.currency = .eur
+        settings.linkEnabledMode = .off
+        settings.collectAddress = .full
+
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodUpdate = .enabled
+        loadPlayground(app, settings)
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
+
+        let line1Field = app.textFields["Address line 1"]
+        XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
+        line1Field.tap()
+        line1Field.typeText("123 main")
+
+        let cityField = app.textFields["City"]
+        XCTAssertTrue(cityField.waitForExistence(timeout: 3.0))
+        cityField.tap()
+        cityField.typeText("San Francisco")
+
+        let zipField = app.textFields["ZIP"]
+        XCTAssertTrue(zipField.waitForExistence(timeout: 3.0))
+        zipField.tap()
+        zipField.typeText("12345" + XCUIKeyboardKey.return.rawValue)
+
+        XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
+
+        // Close Sheet
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistenceAndTap(timeout: 15))
+        XCTAssertTrue(app.buttons["Close"].waitForExistenceAndTap(timeout: 3))
+
+        // Reload w/ same settings to verify date was persisted
+        reload(app, settings: settings)
+        app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should still default to apple
+        XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))
+        XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
+
+        let stateField = app.textFields["State"]
+        let countryField = app.textFields["Country or region"]
+        XCTAssertTrue(stateField.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(countryField.waitForExistence(timeout: 3.0))
+
+        guard let line1 = line1Field.value as? String,
+              let city = cityField.value as? String,
+              let state = stateField.value as? String,
+              let zipCode = zipField.value as? String,
+              let country = countryField.value as? String else {
+            XCTFail("Unable to get values from fields")
+            return
+        }
+        XCTAssertEqual(line1, "123 main")
+        XCTAssertEqual(city, "San Francisco")
+        XCTAssertEqual(state, "Alabama")
+        XCTAssertEqual(zipCode, "12345")
+        XCTAssertEqual(country, "United States")
     }
 }
 
@@ -2816,10 +2891,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         var saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
-        // toggle set this card as default
-        var setDefaultToggle = app.switches["Set as default payment method"]
-        setDefaultToggle.tap()
-        XCTAssertTrue(setDefaultToggle.isSelected)
+        // this card should be automatically set as the default, as there are no other saved pms
+        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
 
         // Complete payment
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
@@ -2840,8 +2913,12 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Check that the card ending in 4242 has the default badge
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
-        // Ensure checkbox is not displayed if it's already the default
-        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+        // Ensure checkbox is not enabled if it's already the default
+        setDefaultToggle = app.switches["Default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
         app.buttons["Back"].waitForExistenceAndTap()
         app.buttons["Done"].waitForExistenceAndTap()
 
@@ -2854,8 +2931,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
         // do not set this card as default
-        setDefaultToggle = app.switches["Set as default payment method"]
-        XCTAssertFalse(setDefaultToggle.isSelected)
+        XCTAssertFalse(app.switches["Set as default payment method"].isSelected)
 
         // Complete payment
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
@@ -2875,8 +2951,21 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Check that the card ending in 4242 still has the default badge
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
-        // Ensure checkbox is not displayed if it's already the default
-        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+        // Ensure checkbox is not enabled if it's already the default
+        setDefaultToggle = app.switches["Default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        app.buttons["Back"].waitForExistenceAndTap()
+        app.cells["•••• 4444"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
+        // Ensure checkbox is enabled if it's not the default
+        setDefaultToggle = app.switches["Set as default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertFalse(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
+
         // Check analytics
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
@@ -2922,8 +3011,12 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         // Check that the card ending in 4242 still has the default badge
         XCTAssertTrue(app.cells["•••• 4242"].staticTexts["Default"].waitForExistence(timeout: 3))
         app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
-        // Ensure checkbox is not displayed if it's already the default
-        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+        // Ensure checkbox is not enabled if it's already the default
+        let setDefaultToggle = app.switches["Default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
         // Check analytics
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
@@ -2970,8 +3063,12 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Edit"].waitForExistenceAndTap()
         // Check that the card ending in 4242 still has the default badge
         XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].waitForExistenceAndTap())
-        // Ensure checkbox is not displayed if it's already the default
-        XCTAssertFalse(app.switches["Set as default payment method"].waitForExistence(timeout: 3))
+        // Ensure checkbox is not enabled if it's already the default
+        let setDefaultToggle = app.switches["Default payment method"]
+        XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
+        XCTAssertTrue(setDefaultToggle.isSelected)
+        setDefaultToggle.tap()
+        XCTAssertTrue(setDefaultToggle.isSelected)
         // Check analytics
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
