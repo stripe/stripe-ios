@@ -1,5 +1,5 @@
 //
-//  PaymentSheetIntentConfiguration.swift
+//  PaymentElementIntentConfiguration.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 2/16/23.
@@ -7,7 +7,10 @@
 
 import Foundation
 
-public extension PaymentSheet {
+/// Placeholder enum for shared Payment Element types.
+public enum PaymentElement {}
+
+public extension PaymentElement {
     /// Contains information needed to render PaymentSheet
     /// The values are used to calculate the payment methods displayed and influence the UI.
     /// - Note: The PaymentIntent or SetupIntent you create on your server must have the same values or the payment/setup will fail.
@@ -175,4 +178,8 @@ public extension PaymentSheet {
             return nil
         }
     }
+}
+
+public extension PaymentSheet {
+    typealias IntentConfiguration = PaymentElement.IntentConfiguration
 }
