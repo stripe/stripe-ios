@@ -239,7 +239,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                    paymentMethod: StripePayments.STPPaymentMethod) async -> UpdatePaymentMethodResult {
         var errors: [Error] = []
 
-        // Perform card brand update if needed
+        // Perform update if needed
         if let updateParams = viewController.updateParams,
            case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
             let updateParams = STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)

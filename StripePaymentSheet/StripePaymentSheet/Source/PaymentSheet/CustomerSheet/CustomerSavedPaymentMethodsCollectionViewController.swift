@@ -509,11 +509,9 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         let hasOnlyChangedCardBrand = viewController.hasOnlyChangedCardBrand(originalPaymentMethod: paymentMethod,
                                                                              updatedPaymentMethodCardParams: paymentMethodCardParams,
                                                                              updatedBillingDetailsParams: billingDetails)
-        let cardBrandResult = await updateCard(paymentMethod: paymentMethod,
-                                               updateParams: updateParamsAndBilling,
-                                               hasOnlyChangedCardBrand: hasOnlyChangedCardBrand)
-
-        if case .failure(let error) = cardBrandResult {
+        if case .failure(let error) = await updateCard(paymentMethod: paymentMethod,
+                                                       updateParams: updateParamsAndBilling,
+                                                       hasOnlyChangedCardBrand: hasOnlyChangedCardBrand) {
             return .failure([error])
         }
 
