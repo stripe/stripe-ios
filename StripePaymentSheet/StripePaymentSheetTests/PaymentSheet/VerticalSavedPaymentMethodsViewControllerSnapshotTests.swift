@@ -52,7 +52,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
-                                                            elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON]) : ._testCardValue(),
+                                                            elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId, paymentMethods: [STPPaymentMethod._testCardJSON!]) : ._testCardValue(),
                                                             analyticsHelper: ._testValue(),
                                                             defaultPaymentMethod: showDefaultPMBadge ? paymentMethods.first : nil
         )
@@ -90,18 +90,6 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
                 STPFixtures.sepaDebitPaymentMethod(), ]
     }
 
-    private let testCardJSON = [
-        "id": "pm_123card",
-        "type": "card",
-        "card": [
-            "last4": "4242",
-            "brand": "visa",
-            "fingerprint": "B8XXs2y2JsVBtB9f",
-            "networks": ["available": ["visa"]],
-            "exp_month": "01",
-            "exp_year": "2040",
-        ],
-    ] as [AnyHashable: Any]
 }
 
 final class StubBottomSheetContentViewController: UIViewController, BottomSheetContentViewController {

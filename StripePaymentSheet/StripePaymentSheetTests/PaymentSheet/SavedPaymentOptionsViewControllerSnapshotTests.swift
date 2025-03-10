@@ -43,7 +43,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
                                                     paymentSheetConfiguration: PaymentSheet.Configuration(),
                                                     intent: intent,
                                                     appearance: appearance,
-                                                    elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON, testSEPAJSON]) : .emptyElementsSession,
+                                                    elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId, paymentMethods: [STPPaymentMethod._testCardJSON!, STPPaymentMethod._testUSBankAccountJSON!, STPPaymentMethod._testSEPAJSON!]) : .emptyElementsSession,
                                                     analyticsHelper: ._testValue())
         let testWindow = UIWindow()
         testWindow.isHidden = false
@@ -64,49 +64,4 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         STPSnapshotVerifyView(sut.view)
     }
 
-    private let testCardJSON = [
-        "id": "pm_123card",
-        "type": "card",
-        "card": [
-            "last4": "4242",
-            "brand": "visa",
-            "fingerprint": "B8XXs2y2JsVBtB9f",
-            "networks": ["available": ["visa"]],
-            "exp_month": "01",
-            "exp_year": "2040",
-        ],
-    ] as [AnyHashable: Any]
-    private let testUSBankAccountJSON = [
-        "id": "pm_123bank",
-        "type": "us_bank_account",
-        "us_bank_account": [
-            "account_holder_type": "individual",
-            "account_type": "checking",
-            "bank_name": "STRIPE TEST BANK",
-            "fingerprint": "ickfX9sbxIyAlbuh",
-            "last4": "6789",
-            "networks": [
-              "preferred": "ach",
-              "supported": [
-                "ach",
-              ],
-            ] as [String: Any],
-            "routing_number": "110000000",
-        ] as [String: Any],
-        "billing_details": [
-            "name": "Sam Stripe",
-            "email": "sam@stripe.com",
-        ] as [String: Any],
-    ] as [AnyHashable: Any]
-    private let testSEPAJSON = [
-        "id": "pm_123sepa",
-        "type": "sepa_debit",
-        "sepa_debit": [
-            "last4": "1234",
-        ],
-        "billing_details": [
-            "name": "Sam Stripe",
-            "email": "sam@stripe.com",
-        ] as [String: Any],
-    ] as [AnyHashable: Any]
 }
