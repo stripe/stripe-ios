@@ -25,11 +25,15 @@ extension UpdatePaymentMethodViewController {
             return canUpdateCardBrand || canSetAsDefaultPM || canUpdate
         }
 
-        var canSetAsDefaultPM: Bool {
-            return isSetAsDefaultPMEnabled && !isDefault && isSupportedDefaultPaymentMethodType
+        var shouldShowDefaultCheckbox: Bool {
+            return isSetAsDefaultPMEnabled && isSupportedDefaultPaymentMethodType
         }
 
-        var isSupportedDefaultPaymentMethodType: Bool {
+        private var canSetAsDefaultPM: Bool {
+            return shouldShowDefaultCheckbox && !isDefault
+        }
+
+        private var isSupportedDefaultPaymentMethodType: Bool {
             return PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
                 paymentMethod.type == $0
             })
