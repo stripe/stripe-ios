@@ -282,6 +282,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
         guard originalPaymentMethod.type == .card,
               let originalCardPaymentMethod = originalPaymentMethod.card else {
+            stpAssertionFailure("Only payment method type 'card' is supported")
             return false
         }
 
