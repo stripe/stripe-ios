@@ -24,6 +24,7 @@ protocol NativeFlowDataManager: AnyObject {
 
     var institution: FinancialConnectionsInstitution? { get set }
     var authSession: FinancialConnectionsAuthSession? { get set }
+    var idConsentContent: FinancialConnectionsIDContentConsent? { get set }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get set }
     var terminalError: Error? { get set }
     var errorPaneError: Error? { get set }
@@ -81,6 +82,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     let configuration: FinancialConnectionsSheet.Configuration
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent?
+    var idConsentContent: FinancialConnectionsIDContentConsent?
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
     var apiClient: any FinancialConnectionsAPI
     let clientSecret: String
