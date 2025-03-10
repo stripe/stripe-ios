@@ -13,20 +13,23 @@ import StripePayments
 import UIKit
 
 extension PaymentSheetFormFactory {
-    func makeCard(cardBrandChoiceEligible: Bool = false, showSetAsDefaultCheckbox: Bool) -> PaymentMethodElement {
+    func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
-        var defaultCheckbox: PaymentMethodElementWrapper<CheckboxElement>?
-        if showSetAsDefaultCheckbox {
-            defaultCheckbox = makeDefaultCheckbox()
-        }
+        let defaultCheckbox: Element? = {
+            guard setAsDefaultPMEnabled else {
+                return nil
+            }
+            let defaultCheckbox = makeDefaultCheckbox()
+            return shouldDisplayDefaultCheckbox ? defaultCheckbox : SectionElement.HiddenElement(defaultCheckbox)
+        }()
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_payment_details_for_future_$merchant_payments(
                 merchantDisplayName: configuration.merchantDisplayName
             )
         ) { selected in
-            defaultCheckbox?.element.checkboxButton.isHidden = !selected
+            defaultCheckbox?.view.isHidden = !selected
         }
-        defaultCheckbox?.element.checkboxButton.isHidden = !saveCheckbox.element.isSelected
+        defaultCheckbox?.view.isHidden = !saveCheckbox.element.isSelected
 
         // Make section titled "Contact Information" w/ phone and email if merchant requires it.
         let optionalPhoneAndEmailInformationSection: SectionElement? = {

@@ -38,7 +38,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     private let bankInfoSectionElement: SectionElement
     private let bankInfoView: BankAccountInfoView
     private let saveCheckboxElement: PaymentMethodElementWrapper<CheckboxElement>?
-    private let defaultCheckboxElement: PaymentMethodElement?
+    private let defaultCheckboxElement: Element?
     private var savingAccount: BoolReference
     private let theme: ElementsAppearance
 
@@ -89,7 +89,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
         saveCheckboxElement: PaymentMethodElementWrapper<CheckboxElement>?,
-        defaultCheckboxElement: PaymentMethodElement?,
+        defaultCheckboxElement: Element?,
         savingAccount: BoolReference,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
