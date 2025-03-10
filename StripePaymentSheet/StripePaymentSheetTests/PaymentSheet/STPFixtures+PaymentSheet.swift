@@ -182,6 +182,8 @@ extension STPElementsSession {
         intent: Intent,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
+        defaultPaymentMethod: String? = nil,
+        paymentMethods: [[AnyHashable: Any]]? = nil,
         allowsSetAsDefaultPM: Bool = false
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
@@ -213,7 +215,9 @@ extension STPElementsSession {
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
             linkMode: linkMode,
-            linkFundingSources: linkFundingSources
+            linkFundingSources: linkFundingSources,
+            defaultPaymentMethod: defaultPaymentMethod,
+            paymentMethods: paymentMethods
         )
     }
 }
@@ -247,19 +251,21 @@ extension Intent {
 }
 
 extension STPPaymentMethod {
+    static let _testCardJSON = [
+        "id": "pm_123card",
+        "type": "card",
+        "card": [
+            "last4": "4242",
+            "brand": "visa",
+            "fingerprint": "B8XXs2y2JsVBtB9f",
+            "networks": ["available": ["visa"]],
+            "exp_month": "01",
+            "exp_year": "2040",
+        ],
+    ] as [AnyHashable: Any]
+
     static func _testCard() -> STPPaymentMethod {
-        return STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_123card",
-            "type": "card",
-            "card": [
-                "last4": "4242",
-                "brand": "visa",
-                "fingerprint": "B8XXs2y2JsVBtB9f",
-                "networks": ["available": ["visa"]],
-                "exp_month": "01",
-                "exp_year": "2040",
-            ],
-        ])!
+        return STPPaymentMethod.decodedObject(fromAPIResponse: _testCardJSON)!
     }
     static func _testCard(line1: String? = nil,
                           line2: String? = nil,

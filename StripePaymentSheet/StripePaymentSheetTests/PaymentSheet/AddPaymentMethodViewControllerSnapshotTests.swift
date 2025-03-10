@@ -66,7 +66,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         let sut = AddPaymentMethodViewController(
             intent: intent,
             // ...and a "Set as default" checkbox...
-            elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: true),
+            elementsSession: ._testValue(intent: intent, paymentMethods: [STPPaymentMethod._testCardJSON], allowsSetAsDefaultPM: true),
             configuration: config,
             previousCustomerInput: previousCustomerInput,
             paymentMethodTypes: [.stripe(.payPal), .stripe(.card), .stripe(.cashApp)],
