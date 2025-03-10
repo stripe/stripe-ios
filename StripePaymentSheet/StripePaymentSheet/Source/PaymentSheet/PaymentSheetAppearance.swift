@@ -9,7 +9,6 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-
 /// Describes the appearance of PaymentSheet
 public struct Appearance: Equatable {
     /// The default appearance for PaymentSheet

@@ -17,8 +17,7 @@ import UIKit
 extension PaymentSheet {
     public typealias UserInterfaceStyle = StripePaymentSheet.UserInterfaceStyle
     public typealias SavePaymentMethodOptInBehavior = PaymentElement.SavePaymentMethodOptInBehavior
-    
-    
+
     /// Configuration for PaymentSheet
     public struct Configuration {
         // The text that shows in the header of the payment sheet when adding a card.
@@ -184,7 +183,7 @@ extension PaymentSheet {
     public typealias CardBrandAcceptance = PaymentElement.CardBrandAcceptance
     public typealias BillingDetailsCollectionConfiguration = PaymentElement.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentElement.ExternalPaymentMethodConfiguration
-    
+
     public typealias Address = StripePaymentSheet.Address
     public typealias BillingDetails = StripePaymentSheet.BillingDetails
 

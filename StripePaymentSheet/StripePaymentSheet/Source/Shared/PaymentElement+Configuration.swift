@@ -5,8 +5,8 @@
 //  Created by David Estes on 3/10/25.
 //
 
-@_spi(STP) import StripeCore
 import PassKit
+@_spi(STP) import StripeCore
 
 extension PaymentElement {
     /// Options for the default state of save payment method controls
@@ -36,7 +36,7 @@ extension PaymentElement {
             }
         }
     }
-    
+
     internal enum CustomerAccessProvider {
         case legacyCustomerEphemeralKey(String)
         case customerSession(String)
@@ -163,7 +163,7 @@ extension PaymentElement {
             self.customHandlers = customHandlers
         }
     }
-    
+
     /// Configuration for how billing details are collected during checkout.
     public struct BillingDetailsCollectionConfiguration: Equatable {
         /// Billing details fields collection options.
@@ -244,7 +244,7 @@ extension PaymentElement {
         /// - Note: This is always called on the main thread.
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
     }
-    
+
     /// Options to block certain card brands on the client
     public enum CardBrandAcceptance: Equatable {
 
