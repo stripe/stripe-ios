@@ -113,6 +113,77 @@ class STPElementsSessionTest: XCTestCase {
         }))
     }
 
+    func testFailedCPMParsing() {
+        // If STPElementsSession decodes a dict...
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        // ...that contains unparseable custom_payment_method_data
+        elementsSessionJson["custom_payment_method_data"] = [
+            "this dict doesn't match the expected shape": "and will fail to parse",
+        ]
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        // ...it should successfully decode...
+        XCTAssertNotNil(elementsSession)
+        // ...with an empty `customPaymentMethods` property
+        XCTAssertTrue(elementsSession.customPaymentMethods.isEmpty)
+        // ...and send a failure analytic
+        let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
+        XCTAssertTrue(analyticEvents.contains(where: { dict in
+            (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionCPMLoadFailed.rawValue
+        }))
+    }
+
+    func testSuccessCPMParsing() {
+        // If STPElementsSession decodes a dict...
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+
+        let customPaymentMethodsArray: [[String: Any]] = [
+            [
+                "logo_url": "https://stripe.com",
+                "display_name": "BufoPay (test)",
+                "type": "cpmt_123",
+                "error": NSNull(),
+                "is_preset": false,
+            ],
+            [
+                "logo_url": NSNull(),
+                "display_name": NSNull(),
+                "type": "cpmt_invalid",
+                "error": "not_found",
+                "is_preset": NSNull(),
+            ],
+        ]
+
+        // ...that contains parseable custom_payment_method_data
+        elementsSessionJson["custom_payment_method_data"] = customPaymentMethodsArray
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        // ...it should successfully decode...
+        XCTAssertNotNil(elementsSession)
+        // ...with a populated `customPaymentMethods` property
+        XCTAssertEqual(2, elementsSession.customPaymentMethods.count)
+
+        // ...validate first CPM
+        let firstCPM = elementsSession.customPaymentMethods[0]
+        XCTAssertEqual(firstCPM.displayName, "BufoPay (test)")
+        XCTAssertEqual(firstCPM.type, "cpmt_123")
+        XCTAssertEqual(firstCPM.logoUrl?.absoluteString, "https://stripe.com")
+        XCTAssertFalse(firstCPM.isPreset ?? true)
+        XCTAssertNil(firstCPM.error)
+
+        // ...validate second CPM (error case)
+        let errorCPM = elementsSession.customPaymentMethods[1]
+        XCTAssertNil(errorCPM.displayName)
+        XCTAssertEqual(errorCPM.type, "cpmt_invalid")
+        XCTAssertNil(errorCPM.logoUrl)
+        XCTAssertEqual(errorCPM.error, "not_found")
+        XCTAssertNil(errorCPM.isPreset)
+
+        // ...and not send a failure analytic
+        let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
+        XCTAssertFalse(analyticEvents.contains(where: { dict in
+            (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionCPMLoadFailed.rawValue
+        }))
+    }
+
     func testSPMConsentAndRemoval_legacy() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: nil)
