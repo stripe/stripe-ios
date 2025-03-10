@@ -13,16 +13,31 @@ extension UpdatePaymentMethodViewController {
     struct Configuration {
         let paymentMethod: STPPaymentMethod
         let appearance: PaymentSheet.Appearance
+        let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
         let hostedSurface: HostedSurface
         let cardBrandFilter: CardBrandFilter
         let canRemove: Bool
         let canUpdate: Bool
         let isCBCEligible: Bool
-        let canSetAsDefaultPM: Bool
+        let isSetAsDefaultPMEnabled: Bool
         let isDefault: Bool
 
         var shouldShowSaveButton: Bool {
             return canUpdateCardBrand || canSetAsDefaultPM || canUpdate
+        }
+
+        var shouldShowDefaultCheckbox: Bool {
+            return isSetAsDefaultPMEnabled && isSupportedDefaultPaymentMethodType
+        }
+
+        private var canSetAsDefaultPM: Bool {
+            return shouldShowDefaultCheckbox && !isDefault
+        }
+
+        private var isSupportedDefaultPaymentMethodType: Bool {
+            return PaymentSheet.supportedDefaultPaymentMethods.contains(where: {
+                paymentMethod.type == $0
+            })
         }
 
         var canUpdateCardBrand: Bool {
@@ -65,18 +80,19 @@ extension UpdatePaymentMethodViewController {
             }
         }
 
-        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
             if !PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) {
                 assertionFailure("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
             }
             self.paymentMethod = paymentMethod
             self.appearance = appearance
+            self.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
             self.hostedSurface = hostedSurface
             self.cardBrandFilter = cardBrandFilter
             self.canRemove = canRemove
             self.canUpdate = canUpdate
             self.isCBCEligible = isCBCEligible
-            self.canSetAsDefaultPM = allowsSetAsDefaultPM && !isDefault
+            self.isSetAsDefaultPMEnabled = allowsSetAsDefaultPM
             self.isDefault = isDefault
         }
     }

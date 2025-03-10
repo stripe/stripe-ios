@@ -165,6 +165,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
            let paymentMethod = savedPaymentMethods.first {
             let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
                                                                                appearance: configuration.appearance,
+                                                                               billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
@@ -240,8 +241,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
         // Perform card brand update if needed
         if let updateParams = viewController.updateParams,
-           case .card(let paymentMethodCardParams) = updateParams {
-            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: nil)) {
+           case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
+            if case .failure(let error) = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)) {
                 errors.append(error)
             }
         }
@@ -277,6 +278,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             }
             return .success(())
         } catch {
+            // TODO: Implement logic to decide if we should present cardBrandError or generic error
             return .failure(NSError.stp_cardBrandNotUpdatedError())
         }
     }

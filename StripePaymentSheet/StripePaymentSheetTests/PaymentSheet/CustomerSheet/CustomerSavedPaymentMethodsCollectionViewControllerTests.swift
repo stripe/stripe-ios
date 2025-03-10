@@ -305,8 +305,15 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
                        paymentMethodRemove: Bool,
                        paymentMethodUpdate: Bool = false,
                        paymentMethodSyncDefault: Bool = false,
-                       showApplePay: Bool = false) -> CustomerSavedPaymentMethodsCollectionViewController.Configuration {
-        return CustomerSavedPaymentMethodsCollectionViewController.Configuration(showApplePay: showApplePay,
+                       showApplePay: Bool = false
+    ) -> CustomerSavedPaymentMethodsCollectionViewController.Configuration {
+
+        let billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration(name: .never,
+                                                                                                       phone: .never,
+                                                                                                       email: .never,
+                                                                                                       address: .never)
+        return CustomerSavedPaymentMethodsCollectionViewController.Configuration(billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
+                                                                                 showApplePay: showApplePay,
                                                                                  allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                  paymentMethodRemove: paymentMethodRemove,
                                                                                  paymentMethodUpdate: paymentMethodUpdate,
