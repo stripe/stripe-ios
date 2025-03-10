@@ -468,6 +468,13 @@ extension String.Localized {
        )
     }
 
+    static var default_payment_method: String {
+        STPLocalizedString(
+            "Default payment method",
+            "Label for a disabled checked checkbox identifying the default payment method."
+       )
+    }
+
     static var set_as_default_payment_method: String {
         STPLocalizedString(
             "Set as default payment method",

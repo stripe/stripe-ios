@@ -18,7 +18,7 @@ extension UpdatePaymentMethodViewController {
         let canRemove: Bool
         let canUpdate: Bool
         let isCBCEligible: Bool
-        let isSetDefaultEnabled: Bool
+        let allowsSetAsDefaultPM: Bool
         let isDefault: Bool
 
         var shouldShowSaveButton: Bool {
@@ -26,7 +26,7 @@ extension UpdatePaymentMethodViewController {
         }
 
         var canSetAsDefaultPM: Bool {
-            return isSetDefaultEnabled && !isDefault
+            return allowsSetAsDefaultPM && !isDefault
         }
 
         var canUpdateCardBrand: Bool {
@@ -80,7 +80,7 @@ extension UpdatePaymentMethodViewController {
             self.canRemove = canRemove
             self.canUpdate = canUpdate
             self.isCBCEligible = isCBCEligible
-            self.isSetDefaultEnabled = allowsSetAsDefaultPM
+            self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             self.isDefault = isDefault
         }
     }
