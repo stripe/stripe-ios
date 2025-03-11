@@ -324,16 +324,16 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (integrationShape: .embedded, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
 
         ]
-        
+
         let cpms: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType] = [.init(id: "cpmt_123"), .init(id: "cpmt_789")]
         let cpmConfig = PaymentSheet.CustomPaymentMethodConfiguration(customPaymentMethodTypes: cpms) { _, _ in
             return .canceled
         }
-        
+
         for (integrationShape, paymentOption, result, expected) in testcases {
             var config = PaymentSheet.Configuration()
             config.customPaymentMethodConfiguration = cpmConfig
-            
+
             let sut = PaymentSheetAnalyticsHelper(
                 integrationShape: integrationShape,
                 configuration: config,

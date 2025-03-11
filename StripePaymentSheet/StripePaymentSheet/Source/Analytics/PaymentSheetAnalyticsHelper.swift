@@ -484,7 +484,7 @@ extension PaymentElementConfiguration {
         if let cpms = customPaymentMethodConfiguration?.customPaymentMethodTypes {
             payload["custom_payment_methods"] = cpms.map { $0.id }
         }
-        
+
         return payload
     }
 }
