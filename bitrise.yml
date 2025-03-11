@@ -569,7 +569,7 @@ workflows:
     - xcode-start-simulator@0:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-    - script@2.1:
+    - script@1:
         inputs:
         - content: xcrun simctl spawn $DEFAULT_TEST_DEVICE defaults write com.apple.Preferences DidShowContinuousPathIntroduction 1 
         title: Disable keyboard tips in booted sim
