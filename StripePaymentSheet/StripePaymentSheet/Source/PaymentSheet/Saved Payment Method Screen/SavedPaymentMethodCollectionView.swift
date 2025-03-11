@@ -253,7 +253,7 @@ extension SavedPaymentMethodCollectionView {
         private lazy var defaultBadgeConstraints: [NSLayoutConstraint] = {
             return [
                 defaultBadge.topAnchor.constraint(
-                    equalTo: label.bottomAnchor, constant: 4),
+                    equalTo: label.bottomAnchor, constant: 2),
                 defaultBadge.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 defaultBadge.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
                 defaultBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
