@@ -113,6 +113,23 @@ class ConnectWebViewController: UIViewController {
     func webViewDidFailNavigation(withError error: any Error) {
         // Override from subclass
     }
+
+    func reload() {
+        self.webView.reload()
+    }
+
+    /*
+     Note: The default behavior if this is not implemented is reloading the webview.
+     If you do implement webViewWebContentProcessDidTerminate like below then you have to
+     manually call reload. This is implemented explicitly to prevent this pitfall in the future
+     and also to allow for overrides.
+
+     To test this functionality you can follow this guide:
+     https://gist.github.com/jasonbekolay/dad7c446ae1b02f174dc3eb3a5ea70ee
+     */
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        self.reload()
+    }
 }
 
 // MARK: - Private
