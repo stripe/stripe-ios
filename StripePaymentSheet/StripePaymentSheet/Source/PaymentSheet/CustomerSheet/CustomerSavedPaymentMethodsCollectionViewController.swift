@@ -505,10 +505,13 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams, let billingDetails) = updateParams else {
             return .failure([CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")])
         }
-
-        let cardBrandResult = await updateCardBrand(paymentMethod: paymentMethod, updateParams: STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails))
-
-        if case .failure(let error) = cardBrandResult {
+        let updateParamsAndBilling = STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)
+        let hasOnlyChangedCardBrand = viewController.hasOnlyChangedCardBrand(originalPaymentMethod: paymentMethod,
+                                                                             updatedPaymentMethodCardParams: paymentMethodCardParams,
+                                                                             updatedBillingDetailsParams: billingDetails)
+        if case .failure(let error) = await updateCard(paymentMethod: paymentMethod,
+                                                       updateParams: updateParamsAndBilling,
+                                                       hasOnlyChangedCardBrand: hasOnlyChangedCardBrand) {
             return .failure([error])
         }
 
@@ -516,7 +519,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
         return .success
     }
 
-    private func updateCardBrand(paymentMethod: STPPaymentMethod, updateParams: StripePayments.STPPaymentMethodUpdateParams) async -> Result<Void, Swift.Error> {
+    private func updateCard(paymentMethod: STPPaymentMethod, updateParams: StripePayments.STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Swift.Error> {
         guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
@@ -539,8 +542,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
             collectionView.reloadData()
             return .success(())
         } catch {
-            // TODO: Implement logic to decide if we should present cardBrandError or generic error
-            return .failure(NSError.stp_cardBrandNotUpdatedError())
+            return hasOnlyChangedCardBrand ? .failure(NSError.stp_cardBrandNotUpdatedError()) : .failure(NSError.stp_genericErrorOccurredError())
         }
     }
 
