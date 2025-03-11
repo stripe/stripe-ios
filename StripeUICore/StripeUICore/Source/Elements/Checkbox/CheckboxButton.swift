@@ -238,6 +238,31 @@ import UIKit
             accessibilityHint = hints.compactMap { $0 }.joined(separator: ", ")
         }
     }
+
+    func setUserInteraction(isUserInteractionEnabled: Bool) {
+        isEnabled = isUserInteractionEnabled
+        if isUserInteractionEnabled {
+            alpha = 1.0
+        } else {
+            alpha = 0.6
+        }
+
+    }
+}
+
+extension CheckboxButton: EventHandler {
+    public func handleEvent(_ event: STPEvent) {
+        UIView.animate(withDuration: 0.2) {
+            switch event {
+            case .shouldDisableUserInteraction:
+                self.setUserInteraction(isUserInteractionEnabled: false)
+            case .shouldEnableUserInteraction:
+                self.setUserInteraction(isUserInteractionEnabled: true)
+            default:
+                break
+            }
+        }
+    }
 }
 
 // MARK: - UITextViewDelegate
