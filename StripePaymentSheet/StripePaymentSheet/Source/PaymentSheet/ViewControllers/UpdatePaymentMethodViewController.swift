@@ -230,7 +230,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         guard let delegate else {
             return
         }
-        // Ensure endEditing is called prior to isUserInteractionEnabled
+        // Ensure endEditing(true) is called prior to setting isUserInteractionEnabled
         view.endEditing(true)
         view.isUserInteractionEnabled = false
         updateButton.update(state: .spinnerWithInteractionDisabled)
