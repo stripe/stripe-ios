@@ -60,7 +60,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     weak var delegate: UpdatePaymentMethodViewControllerDelegate?
 
     var updateParams: UpdatePaymentMethodOptions? {
-        let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(.card))
+        let confirmParams = IntentConfirmParams(type: PaymentSheet.PaymentMethodType.stripe(configuration.paymentMethod.type))
 
         if let params = paymentMethodForm.updateParams(params: confirmParams),
            params.paymentMethodParams.type == .card,
