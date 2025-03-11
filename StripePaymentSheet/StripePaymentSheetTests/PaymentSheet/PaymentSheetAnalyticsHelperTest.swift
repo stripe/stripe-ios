@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @_spi(STP)@testable import StripeCoreTestUtils
 @_spi(STP)@testable import StripePayments
-@testable@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+@testable@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta)@_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 
@@ -324,10 +324,19 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (integrationShape: .embedded, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
 
         ]
+
+        let cpms: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType] = [.init(id: "cpmt_123"), .init(id: "cpmt_789")]
+        let cpmConfig = PaymentSheet.CustomPaymentMethodConfiguration(customPaymentMethodTypes: cpms) { _, _ in
+            return .canceled
+        }
+
         for (integrationShape, paymentOption, result, expected) in testcases {
+            var config = PaymentSheet.Configuration()
+            config.customPaymentMethodConfiguration = cpmConfig
+
             let sut = PaymentSheetAnalyticsHelper(
                 integrationShape: integrationShape,
-                configuration: PaymentSheet.Configuration(),
+                configuration: config,
                 analyticsClient: analyticsClient
             )
             sut.intent = ._testValue()
@@ -348,6 +357,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_ui"] as? String, paymentOption.linkUIAnalyticsValue)
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_use_attestation"] as? Bool, false)
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_mobile_suppress_2fa_modal"] as? Bool, true)
+            let mpeConfig = analyticsClient._testLogHistory.last!["mpe_config"] as! [String: Any]
+            XCTAssertEqual(mpeConfig["custom_payment_methods"] as? [String], ["cpmt_123", "cpmt_789"])
         }
     }
 
