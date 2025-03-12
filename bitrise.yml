@@ -571,7 +571,7 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
     - script@1:
         inputs:
-        - content: xcrun simctl spawn $DEFAULT_TEST_DEVICE defaults write com.apple.Preferences DidShowContinuousPathIntroduction 1 
+        - content: xcrun simctl spawn "$DEFAULT_TEST_DEVICE" defaults write com.apple.Preferences DidShowContinuousPathIntroduction 1 
         title: Disable keyboard tips in booted sim
     - set-env-var@0:
         inputs:
