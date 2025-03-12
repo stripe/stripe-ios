@@ -92,11 +92,11 @@ final class UpdatePaymentMethodViewController: UIViewController {
         stackView.spacing = 16 // custom spacing from figma
         if let footnoteLabel = footnoteLabel {
             stackView.addArrangedSubview(footnoteLabel)
-            stackView.setCustomSpacing(8, after: paymentMethodForm.view) // custom spacing from figma
+            stackView.setCustomSpacing(4, after: paymentMethodForm.view) // custom spacing from figma
         }
         if let setAsDefaultCheckbox = setAsDefaultCheckbox, let lastSubview = stackView.arrangedSubviews.last {
             stackView.addArrangedSubview(setAsDefaultCheckbox.view)
-            stackView.setCustomSpacing(20, after: lastSubview) // custom spacing from figma
+            stackView.setCustomSpacing(12, after: lastSubview) // custom spacing from figma
         }
         if let lastSubview = stackView.arrangedSubviews.last {
             stackView.setCustomSpacing(32, after: lastSubview) // custom spacing from figma
