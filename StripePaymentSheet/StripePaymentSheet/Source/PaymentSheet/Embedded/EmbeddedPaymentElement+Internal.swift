@@ -402,11 +402,8 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 // Go back to the previous selection if there was one
                 embeddedPaymentMethodsView.resetSelectionToLastSelection()
             } else {
-                // If there wasn't a previous selection, deselect if the selection isn't valid.
-                let isCurrentSelectionValid = embeddedFormViewController.selectedPaymentOption != nil
-                if !isCurrentSelectionValid {
-                    embeddedPaymentMethodsView.resetSelection()
-                }
+                // If there wasn't a previous selection, deselect the selection
+                embeddedPaymentMethodsView.resetSelection()
             }
 
             // The selected row may have been reset, so get it again
