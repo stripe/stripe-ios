@@ -122,7 +122,7 @@ extension FCLiteAPIClient {
         }
 
         // Create a new AccountList with all the accounts we've fetched
-        let completeAccountList = AccountList(
+        let completeAccountList = FinancialConnectionsSession.AccountList(
             data: allAccounts,
             hasMore: hasMore // Will be true if we hit the 100 account limit but there are more
         )
@@ -132,7 +132,8 @@ extension FCLiteAPIClient {
             id: initialSession.id,
             clientSecret: initialSession.clientSecret,
             livemode: initialSession.livemode,
-            accounts: completeAccountList
+            accounts: completeAccountList,
+            paymentAccount: initialSession.paymentAccount
         )
     }
 
@@ -148,7 +149,7 @@ extension FCLiteAPIClient {
     private func listAccounts(
         clientSecret: String,
         startingAfterAccountId: String?
-    ) async throws -> AccountList {
+    ) async throws -> FinancialConnectionsSession.AccountList {
         var parameters: [String: Any] = [
             "client_secret": clientSecret
         ]
