@@ -12,27 +12,26 @@ enum ExternalPaymentOptionConfirmHandler {
     case external(PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler)
 }
 
-
 /// A type that can represent either a custom or external payment method and handle confirmation
 class ExternalPaymentOption {
     /// A unique identifier for the ExternalPaymentOption, like external_paypal or cpmt_...
     let type: String
-    
+
     /// The display text for this external payment option, typically the name like "PayPal"
     let displayText: String
-    
+
     /// Optional subtext to be shown below the display text
     let displaySubtext: String?
-    
+
     /// URL of a 48x pixel tall, variable width PNG representing the payment method suitable for display against a light background color.
     let lightImageUrl: URL
-    
+
     /// URL of a 48x pixel, variable width tall PNG representing the payment method suitable for display against a dark background color. If `nil`, use `lightImageUrl` instead.
     let darkImageUrl: URL?
-    
+
     /// A function to be called when confirming a ExternalPaymentOption
     private let confirmHandler: ExternalPaymentOptionConfirmHandler
-    
+
     private init(type: String, displayText: String, displaySubtext: String?, lightImageUrl: URL, darkImageUrl: URL?, confirmHandler: ExternalPaymentOptionConfirmHandler) {
         self.type = type
         self.displayText = displayText
@@ -41,7 +40,7 @@ class ExternalPaymentOption {
         self.darkImageUrl = darkImageUrl
         self.confirmHandler = confirmHandler
     }
-    
+
     /// Confirms the payment using this payment option.
     /// - Parameters:
     ///   - billingDetails: The billing details to use for confirmation
@@ -59,7 +58,7 @@ class ExternalPaymentOption {
             }
         }
     }
-    
+
     /// Creates an ExternalPaymentOption from an ExternalPaymentMethod.
     /// - Parameters:
     ///   - externalPaymentMethod: The external payment method to use
@@ -70,7 +69,7 @@ class ExternalPaymentOption {
             assertionFailure("Attempting to create an external payment method, but externalPaymentMethodConfirmHandler isn't set!")
             return nil
         }
-        
+
         return ExternalPaymentOption(
             type: externalPaymentMethod.type,
             displayText: externalPaymentMethod.label,
@@ -80,7 +79,7 @@ class ExternalPaymentOption {
             confirmHandler: .external(confirmHandler)
         )
     }
-    
+
     /// Creates an ExternalPaymentOption from a CustomPaymentMethod.
     /// - Parameters:
     ///   - customPaymentMethod: The custom payment method to use
@@ -91,14 +90,14 @@ class ExternalPaymentOption {
             assertionFailure("Attempting to create an custom payment method, but customPaymentMethodConfirmHandler isn't set!")
             return nil
         }
-        
+
         guard let customPaymentMethodType = configuration?.customPaymentMethodTypes.first(where: { $0.id == customPaymentMethod.type }),
               let label = customPaymentMethod.displayName,
               let logoUrl = customPaymentMethod.logoUrl else {
             assertionFailure("Failed to render payment method type: \(customPaymentMethod.type) with error \(customPaymentMethod.error ?? "unknown")")
             return nil
         }
-        
+
         return ExternalPaymentOption(
             type: customPaymentMethod.type,
             displayText: label,
