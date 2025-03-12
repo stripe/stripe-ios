@@ -49,7 +49,7 @@ class SimpleMandateTextView: UIView {
     }
 
     fileprivate func installConstraints() {
-        addAndPinSubview(textView)
+        addAndPinSubview(textView, directionalLayoutMargins: .zero)
     }
 
     fileprivate func applyTextViewStyle() {
