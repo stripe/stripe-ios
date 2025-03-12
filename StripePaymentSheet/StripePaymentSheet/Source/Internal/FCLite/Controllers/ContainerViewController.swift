@@ -6,22 +6,28 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 class ContainerViewController: UIViewController {
     private let clientSecret: String
     private let returnUrl: URL
     private let apiClient: FCLiteAPIClient
-    private let completion: ((FinancialConnectionsLite.FlowResult) -> Void)
+    private let completion: ((FinancialConnectionsSDKResult) -> Void)
 
     private let spinner = UIActivityIndicatorView(style: .large)
 
+    private var manifest: LinkAccountSessionManifest?
     private var authFlowViewController: AuthFlowViewController?
+
+    private var isInstantDebits: Bool {
+        manifest?.isInstantDebits == true
+    }
 
     init(
         clientSecret: String,
         returnUrl: URL,
         apiClient: FCLiteAPIClient,
-        completion: @escaping ((FinancialConnectionsLite.FlowResult) -> Void)
+        completion: @escaping ((FinancialConnectionsSDKResult) -> Void)
     ) {
         self.clientSecret = clientSecret
         self.returnUrl = returnUrl
@@ -65,6 +71,7 @@ class ContainerViewController: UIViewController {
                 clientSecret: clientSecret,
                 returnUrl: returnUrl
             )
+            self.manifest = synchronize.manifest
             showWebView(for: synchronize.manifest)
 
             DispatchQueue.main.async {
@@ -80,11 +87,25 @@ class ContainerViewController: UIViewController {
     }
 
     private func completeFlow(result: AuthFlowViewController.WebFlowResult) async {
-        if case .failure(let error) = result {
-            completion(.failure(error))
-            return
+        switch result {
+        case .success(let returnUrl):
+            if isInstantDebits {
+                createInstantDebitsLinkedBankAndComplete(from: returnUrl)
+            } else {
+                await fetchSessionAndComplete()
+            }
+        case .cancelled:
+            if isInstantDebits {
+                completion(.cancelled)
+            } else {
+                await fetchSessionAndComplete(userCancelled: true)
+            }
+        case .failure(let error):
+            completion(.failed(error: error))
         }
+    }
 
+    private func fetchSessionAndComplete(userCancelled: Bool = false) async {
         DispatchQueue.main.async {
             self.navigationController?.popToRootViewController(animated: false)
             self.spinner.startAnimating()
@@ -92,17 +113,26 @@ class ContainerViewController: UIViewController {
 
         do {
             let session = try await apiClient.fetchSession(clientSecret: clientSecret)
-            if session.accounts.data.isEmpty {
-                completion(.canceled)
+            guard !session.accounts.data.isEmpty else {
+                if userCancelled {
+                    completion(.cancelled)
+                } else {
+                    completion(.failed(error: FinancialConnectionsLite.FCLiteError.linkedBankUnavailable))
+                }
+                return
+            }
+
+            if let linkedBank = linkedBankFor(session: session) {
+                completion(.completed(.financialConnections(linkedBank)))
             } else {
-                completion(.success(session))
+                completion(.failed(error: FinancialConnectionsLite.FCLiteError.linkedBankUnavailable))
             }
 
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
             }
         } catch {
-            completion(.failure(error))
+            completion(.failed(error: error))
 
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
@@ -131,6 +161,53 @@ class ContainerViewController: UIViewController {
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
+    }
+
+    private func linkedBankFor(session: FinancialConnectionsSession) -> FinancialConnectionsLinkedBank? {
+        switch session.paymentAccount {
+        case .linkedAccount(let linkedAccount):
+            return FinancialConnectionsLinkedBank(
+                sessionId: session.id,
+                accountId: linkedAccount.id,
+                displayName: linkedAccount.displayName,
+                bankName: linkedAccount.institutionName,
+                last4: linkedAccount.last4,
+                instantlyVerified: true
+            )
+        case .bankAccount(let bankAccount):
+            return FinancialConnectionsLinkedBank(
+                sessionId: session.id,
+                accountId: bankAccount.id,
+                displayName: bankAccount.bankName,
+                bankName: bankAccount.bankName,
+                last4: bankAccount.last4,
+                instantlyVerified: false
+            )
+        case .unparsable:
+            fallthrough
+        case .none:
+            return nil
+        }
+    }
+
+    private func createInstantDebitsLinkedBankAndComplete(
+        from url: URL
+    ) {
+        guard let paymentMethod = url.extractLinkBankPaymentMethod() else {
+            completion(.failed(error: FinancialConnectionsLite.FCLiteError.linkedBankUnavailable))
+            return
+        }
+        let linkedBank = InstantDebitsLinkedBank(
+            paymentMethod: paymentMethod,
+            bankName: url.extractValue(forKey: "bank_name")?
+                // backend can return "+" instead of a more-common encoding of "%20" for spaces
+                .replacingOccurrences(of: "+", with: " "),
+            last4: url.extractValue(forKey: "last4"),
+            linkMode: nil,
+            incentiveEligible: url.extractValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false,
+            linkAccountSessionId: manifest?.id
+        )
+        completion(.completed(.instantDebits(linkedBank)))
     }
 }
 
@@ -166,11 +243,45 @@ extension ContainerViewController: UIAdaptivePresentationControllerDelegate {
             handler: { [weak self] _ in
                 guard let self = self else { return }
                 Task {
-                    await self.completeFlow(result: .canceled)
+                    await self.completeFlow(result: .cancelled)
                 }
             }
         ))
 
         viewController.present(alertController, animated: true)
+    }
+}
+
+private extension URL {
+    /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
+    /// we can parse it back in `StripeCore`.
+    func extractLinkBankPaymentMethod() -> LinkBankPaymentMethod? {
+        guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
+            return nil
+        }
+
+        guard let data = Data(base64Encoded: encodedPaymentMethod) else {
+            return nil
+        }
+
+        let result: Result<LinkBankPaymentMethod, Error> = STPAPIClient.decodeResponse(
+            data: data,
+            error: nil,
+            response: nil
+        )
+
+        return try? result.get()
+    }
+
+    func extractValue(forKey key: String) -> String? {
+        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
+            assertionFailure("Invalid URL")
+            return nil
+        }
+        return components
+            .queryItems?
+            .first(where: { $0.name == key })?
+            .value?
+            .removingPercentEncoding
     }
 }

@@ -6,12 +6,11 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 final class FinancialConnectionsLite {
-    enum FlowResult {
-        case success(FinancialConnectionsSession)
-        case canceled
-        case failure(Error)
+    enum FCLiteError: Error {
+        case linkedBankUnavailable
     }
 
     /// The client secret of a Stripe `FinancialConnectionsSession` object.
@@ -27,7 +26,7 @@ final class FinancialConnectionsLite {
     // Strong references to prevent deallocation
     private var navigationController: UINavigationController?
     private var wrapperViewController: ModalPresentationWrapperViewController?
-    private var completionHandler: ((FlowResult) -> Void)?
+    private var completionHandler: ((FinancialConnectionsSDKResult) -> Void)?
 
     // Static reference to hold the active instance.
     private static var activeInstance: FinancialConnectionsLite?
@@ -46,7 +45,7 @@ final class FinancialConnectionsLite {
 
     func present(
         from viewController: UIViewController,
-        completion: @escaping (FlowResult) -> Void
+        completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
         // Store self as the active instance
         Self.activeInstance = self
@@ -88,7 +87,7 @@ final class FinancialConnectionsLite {
         viewController.present(toPresent, animated: animated)
     }
 
-    private func handleFlowCompletion(result: FlowResult) {
+    private func handleFlowCompletion(result: FinancialConnectionsSDKResult) {
         // First dismiss the navigation controller
         self.navigationController?.dismiss(animated: true) { [weak self] in
             guard let self else { return }

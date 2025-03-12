@@ -11,8 +11,8 @@ import UIKit
 
 class AuthFlowViewController: UIViewController {
     enum WebFlowResult {
-        case success
-        case canceled
+        case success(returnUrl: URL)
+        case cancelled
         case failure(Error)
     }
 
@@ -84,13 +84,14 @@ extension AuthFlowViewController: WKNavigationDelegate {
             return
         }
 
-        let urlString = url.absoluteString
-        if urlString.hasPrefix(manifest.successURL.absoluteString) {
+        // `matchesSchemeHostAndPath` is necessary for instant debits which
+        // contains additional query parameters at the end of the `successUrl`.
+        if url.matchesSchemeHostAndPath(of: manifest.successURL) {
             decisionHandler(.cancel)
-            completion(.success)
-        } else if urlString.hasPrefix(manifest.cancelURL.absoluteString) {
+            completion(.success(returnUrl: url))
+        } else if url.matchesSchemeHostAndPath(of: manifest.cancelURL) {
             decisionHandler(.cancel)
-            completion(.canceled)
+            completion(.cancelled)
         } else {
             decisionHandler(.allow)
         }
@@ -179,5 +180,15 @@ extension AuthFlowViewController: WKUIDelegate {
 extension AuthFlowViewController: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return self.view.window ?? ASPresentationAnchor()
+    }
+}
+
+private extension URL {
+    func matchesSchemeHostAndPath(of otherURL: URL) -> Bool {
+        return (
+            self.scheme == otherURL.scheme &&
+            self.host == otherURL.host &&
+            self.path == otherURL.path
+        )
     }
 }
