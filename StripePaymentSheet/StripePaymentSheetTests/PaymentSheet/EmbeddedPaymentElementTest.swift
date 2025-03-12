@@ -409,6 +409,56 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertFalse(delegateDidUpdateHeightCalled)
     }
 
+    func testClearPaymentOptionNoPreviousSelection() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Select the "Card" payment method
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+        // ...and filling out the form
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+
+        // Card should be populated as the payment option
+        XCTAssertNotNil(sut.paymentOption)
+
+        // Reset flags
+        delegateDidUpdatePaymentOptionCalled = false
+        delegateDidUpdateHeightCalled = false
+
+        // Reset the selection
+        sut.clearPaymentOption()
+
+        // The paymentOption should now be nil after reset
+        XCTAssertNil(sut.paymentOption)
+        XCTAssertNil(sut.selectedFormViewController)
+
+        // The delegate should have been notified again after reset
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+
+        // Open the card form
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+        // Form details should be preserved
+        XCTAssertEqual(cardForm.getTextFieldElement("Card number").text, "4242424242424242")
+        XCTAssertEqual(cardForm.getTextFieldElement("MM / YY").text, "1232")
+        XCTAssertEqual(cardForm.getTextFieldElement("CVC").text, "123")
+        XCTAssertEqual(cardForm.getTextFieldElement("ZIP").text, "65432")
+        sut.selectedFormViewController?.didTapOrSwipeToDismiss()
+
+        // Payment option should remain nil after closing the card form
+        XCTAssertNil(sut.paymentOption)
+    }
+
     func testConfirmThenUpdateFails() async throws {
         // Given an EmbeddedPaymentElement that can confirm
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
