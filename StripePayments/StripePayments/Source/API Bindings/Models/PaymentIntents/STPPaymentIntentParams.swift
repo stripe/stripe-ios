@@ -128,6 +128,7 @@ public class STPPaymentIntentParams: NSObject {
     }
 
     internal var _mandateData: STPMandateDataParams?
+    public var testNewParam: String = ""
     /// Details about the Mandate to create.
     /// @note If this value is null, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context if it's required for `self.paymentMethodType`
     @objc public var mandateData: STPMandateDataParams? {
