@@ -86,6 +86,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             appearance: configuration.appearance
         )
         navBar.delegate = self
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
         return navBar
     }()
     private lazy var walletHeader: WalletHeaderView = {

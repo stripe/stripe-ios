@@ -58,6 +58,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
         navBar.delegate = self
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
+        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
         return navBar
     }()
     /// Returns true if Apple Pay is not enabled and Link is enabled and there are no saved payment methods
