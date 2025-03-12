@@ -538,15 +538,10 @@ extension PaymentSheet {
                     confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, shouldSave)
                 }
             }
-        case let .external(paymentMethod, billingDetails):
-            guard let confirmHandler = configuration.externalPaymentMethodConfiguration?.externalPaymentMethodConfirmHandler else {
-                assertionFailure("Attempting to confirm an external payment method, but externalPaymentMethodConfirmhandler isn't set!")
-                completion(.canceled, nil)
-                return
-            }
+        case let .external(externalPaymentOption, billingDetails):
             DispatchQueue.main.async {
                 // Call confirmHandler so that the merchant completes the payment
-                confirmHandler(paymentMethod.type, billingDetails) { result in
+                externalPaymentOption.confirm(billingDetails: billingDetails) { result in
                     // This closure is invoked by the merchant when payment is finished
                     completion(result, nil)
                 }

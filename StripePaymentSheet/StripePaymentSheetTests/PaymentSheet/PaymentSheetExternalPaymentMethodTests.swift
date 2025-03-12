@@ -173,13 +173,17 @@ extension PaymentSheetExternalPaymentMethodTests: STPAuthenticationContext {
     }
 }
 
-extension ExternalPaymentMethod {
-    static func _testPayPalValue() -> ExternalPaymentMethod {
-        return .init(
+extension ExternalPaymentOption {
+    static func _testPayPalValue() -> ExternalPaymentOption {
+        let epm: ExternalPaymentMethod = .init(
             type: "external_paypal",
             label: "PayPal",
             lightImageUrl: URL(string: "https://todo.com")!,
             darkImageUrl: URL(string: "https://todo.com")!
         )
+        let config = PaymentSheet.ExternalPaymentMethodConfiguration(externalPaymentMethods: ["external_paypal"]) { _, _, _ in
+            // no-op
+        }
+        return .from(epm, configuration: config)!
     }
 }

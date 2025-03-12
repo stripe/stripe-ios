@@ -366,7 +366,7 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             paymentMethodType = STPPaymentMethodType.link.identifier
             billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
         case .external(let paymentMethod, let stpBillingDetails):
-            label = paymentMethod.label
+            label = paymentMethod.displayText
             paymentMethodType = paymentMethod.type
             billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
         }
