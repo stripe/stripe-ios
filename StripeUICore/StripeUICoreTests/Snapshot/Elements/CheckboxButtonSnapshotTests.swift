@@ -41,6 +41,12 @@ class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
         verify(checkbox)
     }
 
+    func testUserInteractionDisabled() {
+        let checkbox = CheckboxButton(text: "Save this card for future [Merchant] payments")
+        checkbox.setUserInteraction(isUserInteractionEnabled: false)
+        verify(checkbox)
+    }
+
     func testCustomFont() throws {
         var theme = ElementsAppearance.default
         theme.fonts.footnote = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))

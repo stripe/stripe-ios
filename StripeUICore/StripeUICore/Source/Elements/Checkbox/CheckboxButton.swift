@@ -241,11 +241,7 @@ import UIKit
 
     func setUserInteraction(isUserInteractionEnabled: Bool) {
         isEnabled = isUserInteractionEnabled
-        if isUserInteractionEnabled {
-            alpha = 1.0
-        } else {
-            alpha = 0.6
-        }
+        alpha = isUserInteractionEnabled ? 1.0 : 0.6
 
     }
 }
