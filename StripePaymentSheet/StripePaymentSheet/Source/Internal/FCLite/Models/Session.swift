@@ -16,7 +16,7 @@ struct FinancialConnectionsSession: Decodable {
     /// Has the value true if the object exists in live mode or the value false if the object exists in test mode.
     let livemode: Bool
     /// The accounts that were collected as part of this Session.
-    let accounts: AccountList
+    let accounts: AccountList?
     /// Details on the account used for payment.
     let paymentAccount: PaymentAccount?
 
