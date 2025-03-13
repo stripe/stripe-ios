@@ -113,6 +113,8 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         sut.selectedFormViewController?.didTapPrimaryButton()
 
         // ...should show the card row w/ the 'Change >' + "Visa 4242"
+        sut.view.setNeedsLayout()
+        sut.view.layoutIfNeeded()
         STPSnapshotVerifyView(sut.view, identifier: "card")
         
         // 2️⃣
@@ -132,6 +134,8 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         bankForm.linkedBank = FinancialConnectionsLinkedBank(sessionId: "123", accountId: "123", displayName: "Success", bankName: "StripeBank", last4: "6789", instantlyVerified: true)
         sut.selectedFormViewController?.didTapPrimaryButton()
         // ...should show the row w/ 'Change >' + "6789" (the last bank 4)
+        sut.view.setNeedsLayout()
+        sut.view.layoutIfNeeded()
         STPSnapshotVerifyView(sut.view, identifier: "us_bank_account_continue")
 
         // 3️⃣
@@ -146,6 +150,8 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         sut.selectedFormViewController?.didTapPrimaryButton()
 
         // ...should show the row w/ 'Change >'
+        sut.view.setNeedsLayout()
+        sut.view.layoutIfNeeded()
         STPSnapshotVerifyView(sut.view, identifier: "afterpay")
     }
     
