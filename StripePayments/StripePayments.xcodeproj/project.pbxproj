@@ -217,6 +217,8 @@
 		C20F8A272C0D8869FDF376BB /* STPPaymentMethodUPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBD496FE1C28C32185C60BF /* STPPaymentMethodUPI.swift */; };
 		C215996F527D6893BA13AE70 /* STPTestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 89A4036FDAE33311ED2D499E /* STPTestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C27F356B376711748348CF7A /* STPPaymentMethodEPS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABCA7D3C2103189243C48DB /* STPPaymentMethodEPS.swift */; };
+		C2EDD2972D90DB8000C9F925 /* STPPaymentMethodVipps.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EDD2962D90DB8000C9F925 /* STPPaymentMethodVipps.swift */; };
+		C2EDD2992D90DBB400C9F925 /* STPPaymentMethodVippsParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EDD2982D90DBB400C9F925 /* STPPaymentMethodVippsParams.swift */; };
 		C80A979CB3B453DF248C6339 /* STPPaymentIntentActionRedirectToURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9850E5BC24407862EAEEE2BA /* STPPaymentIntentActionRedirectToURL.swift */; };
 		C8F612F8FACA11D956B50840 /* recorded_network_traffic in Resources */ = {isa = PBXBuildFile; fileRef = DAB375BFAB7E61A7B46799A1 /* recorded_network_traffic */; };
 		CA18F1CF38F4D2B25C8D93C1 /* STPSourceEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3299145C8B3D2382AE58911 /* STPSourceEnums.swift */; };
@@ -630,6 +632,8 @@
 		C07667F9D802EB8DD391A3C5 /* STPIntentAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentAction.swift; sourceTree = "<group>"; };
 		C0E6839FB4FC9CA2A9EAAC4F /* STPPaymentMethodAfterpayClearpay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAfterpayClearpay.swift; sourceTree = "<group>"; };
 		C2247375DFA4A40C6C7C3BC0 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C2EDD2962D90DB8000C9F925 /* STPPaymentMethodVipps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodVipps.swift; sourceTree = "<group>"; };
+		C2EDD2982D90DBB400C9F925 /* STPPaymentMethodVippsParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodVippsParams.swift; sourceTree = "<group>"; };
 		C3693DA7672949B5DCFC5A97 /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C608FCBD2D31DAC997AD6933 /* ConnectionsSDKAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsSDKAvailability.swift; sourceTree = "<group>"; };
 		C704E5A29A16D70811B3A32D /* STPIssuingCardPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIssuingCardPin.swift; sourceTree = "<group>"; };
@@ -1307,6 +1311,8 @@
 				CAC80EC42C33368E001E3D0D /* STPPaymentMethodSatispayParams.swift */,
 				F60858ED2CEF046500D62278 /* STPPaymentMethodCrypto.swift */,
 				F60858E92CEF040400D62278 /* STPPaymentMethodCryptoParams.swift */,
+				C2EDD2962D90DB8000C9F925 /* STPPaymentMethodVipps.swift */,
+				C2EDD2982D90DBB400C9F925 /* STPPaymentMethodVippsParams.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -1478,7 +1484,9 @@
 		210BD3F4F563E5F03D66CD21 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1530;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					311E57F82BFBF662005B16DE = {
 						CreatedOnToolsVersion = 15.3;
@@ -1712,6 +1720,7 @@
 				01328A80E436C968E4545922 /* STPPaymentMethodBoletoParams.swift in Sources */,
 				0F425B8D48AF9AFAD1F2215C /* STPPaymentMethodCard.swift in Sources */,
 				93149624FE8596E1A3EFB2CF /* STPPaymentMethodCardChecks.swift in Sources */,
+				C2EDD2972D90DB8000C9F925 /* STPPaymentMethodVipps.swift in Sources */,
 				8DC22AD0DCB12D4320685EEB /* STPPaymentMethodCardNetworks.swift in Sources */,
 				A6C0955AD8E96027B675DE73 /* STPPaymentMethodCardNetworksParams.swift in Sources */,
 				9B0CB20827FD677EB3A21105 /* STPPaymentMethodCardParams.swift in Sources */,
@@ -1798,6 +1807,7 @@
 				444AE95CBDC08E7B1C89B0AB /* LinkSettings.swift in Sources */,
 				3C9D065CBF635F3F5B9FBEA7 /* STPIntentAction.swift in Sources */,
 				318FA6D5C77D81BB953FE3E2 /* STPIntentActionAlipayHandleRedirect.swift in Sources */,
+				C2EDD2992D90DBB400C9F925 /* STPPaymentMethodVippsParams.swift in Sources */,
 				5D0D293AA8E98B21A4E519B2 /* STPIntentActionBoletoDisplayDetails.swift in Sources */,
 				31B7F55C2BD1D4E500BF1015 /* HCaptchaURLOpener.swift in Sources */,
 				79C31AF3B129472DE50A73F7 /* STPIntentActionCashAppRedirectToApp.swift in Sources */,
@@ -1997,11 +2007,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C1765710FB6104D69982D20 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				ENABLE_MODULE_VERIFIER = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				INFOPLIST_FILE = StripePaymentsTestUtils/Info.plist;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTestUtils;
 				PRODUCT_NAME = StripePaymentsTestUtils;
 				SDKROOT = iphoneos;
@@ -2176,11 +2189,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D241D01F717B2991D4946283 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				ENABLE_MODULE_VERIFIER = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				INFOPLIST_FILE = StripePaymentsTestUtils/Info.plist;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTestUtils;
 				PRODUCT_NAME = StripePaymentsTestUtils;
 				SDKROOT = iphoneos;
@@ -2201,11 +2217,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C1765710FB6104D69982D20 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				ENABLE_MODULE_VERIFIER = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				INFOPLIST_FILE = StripePaymentsTests/Info.plist;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTests;
 				PRODUCT_NAME = StripePaymentsTests;
 				SDKROOT = iphoneos;
@@ -2220,11 +2238,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D241D01F717B2991D4946283 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				ENABLE_MODULE_VERIFIER = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				INFOPLIST_FILE = StripePaymentsTests/Info.plist;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsTests;
 				PRODUCT_NAME = StripePaymentsTests;
 				SDKROOT = iphoneos;
@@ -2239,7 +2259,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A3BA665404FD4B327A775906 /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				ENABLE_MODULE_VERIFIER = YES;
 				INFOPLIST_FILE = StripePayments/Info.plist;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments";
 				PRODUCT_NAME = StripePayments;
 				SDKROOT = iphoneos;
@@ -2253,11 +2276,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D241D01F717B2991D4946283 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				ENABLE_MODULE_VERIFIER = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				INFOPLIST_FILE = StripePaymentsObjcTestUtils/Info.plist;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsObjcTestUtils;
 				PRODUCT_NAME = StripePaymentsObjcTestUtils;
 				SDKROOT = iphoneos;
@@ -2278,7 +2304,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A7CE39E853BD92ABE59F8EA /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				ENABLE_MODULE_VERIFIER = YES;
 				INFOPLIST_FILE = StripePayments/Info.plist;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-payments";
 				PRODUCT_NAME = StripePayments;
 				SDKROOT = iphoneos;
@@ -2292,11 +2321,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C1765710FB6104D69982D20 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				ENABLE_MODULE_VERIFIER = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				INFOPLIST_FILE = StripePaymentsObjcTestUtils/Info.plist;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripePaymentsObjcTestUtils;
 				PRODUCT_NAME = StripePaymentsObjcTestUtils;
 				SDKROOT = iphoneos;
