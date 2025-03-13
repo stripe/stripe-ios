@@ -141,8 +141,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             delegate: self
         )
 
-        // 2. Inform the delegate of the updated payment option
-        informDelegateIfPaymentOptionUpdated()
+        // 2. Inform the delegate of the updated payment option if there is no input to be collected
+        if self.selectedFormViewController == nil {
+            informDelegateIfPaymentOptionUpdated()
+        }
     }
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
@@ -156,7 +158,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
         presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
-
     }
 
     func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
@@ -401,8 +402,8 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             if let lastSelection, lastSelection != currentlySelectedType {
                 // Go back to the previous selection if there was one
                 embeddedPaymentMethodsView.resetSelectionToLastSelection()
-            } else {
-                // If there wasn't a previous selection, deselect the selection
+            } else if paymentOption != lastUpdatedPaymentOption {
+                // Reset selection if no previous selection exists and the closing form's payment option differs from last updated
                 embeddedPaymentMethodsView.resetSelection()
             }
 
