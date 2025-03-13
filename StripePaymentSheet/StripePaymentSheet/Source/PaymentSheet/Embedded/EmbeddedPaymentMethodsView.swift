@@ -92,7 +92,7 @@ class EmbeddedPaymentMethodsView: UIView {
         theme.fonts.caption = appearance.scaledFont(for: appearance.font.base.regular, style: .caption2, maximumPointSize: 20)
         let mandateView = SimpleMandateTextView(theme: theme)
         // Add some padding so that we can hide/remove it from the stackview without fiddling with padding in there.
-        mandateView.directionalLayoutMargins.top = 10
+        mandateView.directionalLayoutMargins.top = 12
         return mandateView
     }()
     private var savedPaymentMethodButton: RowButton?
@@ -337,11 +337,11 @@ class EmbeddedPaymentMethodsView: UIView {
         }
         switch (mandateView.isHidden, shouldDisplayMandate) {
         case (true, true): // Hidden -> Showing mandate
-            self.mandateView.attributedText = mandateText
-            // Un-hide mandate
-            self.mandateView.setHiddenIfNecessary(!shouldDisplayMandate)
-            self.setNeedsLayout()
             UIView.animate(withDuration: 0.25) {
+                self.mandateView.attributedText = mandateText
+                // Un-hide mandate
+                self.mandateView.setHiddenIfNecessary(!shouldDisplayMandate)
+                self.setNeedsLayout()
                 self.layoutIfNeeded()
             }
 
@@ -351,11 +351,11 @@ class EmbeddedPaymentMethodsView: UIView {
                 self.mandateView.alpha = 1
             }
         case (false, false): // Showing mandate -> Hidden
-            self.mandateView.attributedText = mandateText
-            // Hide the mandate
-            self.mandateView.setHiddenIfNecessary(true)
-            self.setNeedsLayout()
             UIView.animate(withDuration: 0.25) {
+                self.mandateView.attributedText = mandateText
+                // Hide the mandate
+                self.mandateView.setHiddenIfNecessary(true)
+                self.setNeedsLayout()
                 self.layoutIfNeeded()
             }
         case (false, true): // Showing mandate -> Showing mandate
