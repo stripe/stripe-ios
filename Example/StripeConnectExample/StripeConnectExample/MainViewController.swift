@@ -105,7 +105,6 @@ class MainViewController: UITableViewController {
 
     /// Called when table row is selected
     func performAction(_ row: Row, cell: UITableViewCell) {
-
         // Create a view controller for the selected component
         switch row {
         case .onboarding:
@@ -135,6 +134,7 @@ class MainViewController: UITableViewController {
         cell.detailTextLabel?.text = row.detailText
         cell.detailTextLabel?.numberOfLines = 0
         cell.accessoryType = .disclosureIndicator
+        cell.accessibilityIdentifier = StripeConnectExampleAppKeys.onboardingCellAccessibilityID
         return cell
     }
 

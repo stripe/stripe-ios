@@ -47,6 +47,7 @@ stages:
     - ui-tests-2: {}
     - ui-tests-3: {}
     - ui-tests-4: {}
+    - ui-tests-5: {}
     - integration-all: {}
     - lokalise-upload: {}
   stage-releases-run-all:
@@ -65,6 +66,7 @@ stages:
     - ui-tests-2: {}
     - ui-tests-3: {}
     - ui-tests-4: {}
+    - ui-tests-5: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
