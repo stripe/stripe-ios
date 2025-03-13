@@ -113,12 +113,8 @@ class ContainerViewController: UIViewController {
 
         do {
             let session = try await apiClient.fetchSession(clientSecret: clientSecret)
-            guard !session.accounts.data.isEmpty else {
-                if userCancelled {
-                    completion(.cancelled)
-                } else {
-                    completion(.failed(error: FCLiteError.linkedBankUnavailable))
-                }
+            if session.accounts?.data.isEmpty != false, userCancelled {
+                completion(.cancelled)
                 return
             }
 

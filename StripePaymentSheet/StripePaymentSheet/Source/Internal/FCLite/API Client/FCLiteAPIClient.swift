@@ -95,13 +95,13 @@ extension FCLiteAPIClient {
         let initialSession = try await sessionReceipt(clientSecret: clientSecret)
 
         // If there are no more accounts to fetch, return the session as is
-        if !initialSession.accounts.hasMore {
+        guard let accounts = initialSession.accounts, accounts.hasMore else {
             return initialSession
         }
 
         // Start with the accounts already in the session
-        var allAccounts = initialSession.accounts.data
-        var hasMore = initialSession.accounts.hasMore
+        var allAccounts = accounts.data
+        var hasMore = accounts.hasMore
         var lastAccountId = allAccounts.last?.id
         let maxNumberOfAccountsToFetch: Int = 100
 
