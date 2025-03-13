@@ -5,8 +5,8 @@
 //  Created by Mat Schmid on 2025-03-12.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 class ContainerViewController: UIViewController {
     private let clientSecret: String
@@ -117,7 +117,7 @@ class ContainerViewController: UIViewController {
                 if userCancelled {
                     completion(.cancelled)
                 } else {
-                    completion(.failed(error: FinancialConnectionsLite.FCLiteError.linkedBankUnavailable))
+                    completion(.failed(error: FCLiteError.linkedBankUnavailable))
                 }
                 return
             }
@@ -125,7 +125,7 @@ class ContainerViewController: UIViewController {
             if let linkedBank = linkedBankFor(session: session) {
                 completion(.completed(.financialConnections(linkedBank)))
             } else {
-                completion(.failed(error: FinancialConnectionsLite.FCLiteError.linkedBankUnavailable))
+                completion(.failed(error: FCLiteError.linkedBankUnavailable))
             }
 
             DispatchQueue.main.async {
@@ -194,7 +194,7 @@ class ContainerViewController: UIViewController {
         from url: URL
     ) {
         guard let paymentMethod = url.extractLinkBankPaymentMethod() else {
-            completion(.failed(error: FinancialConnectionsLite.FCLiteError.linkedBankUnavailable))
+            completion(.failed(error: FCLiteError.linkedBankUnavailable))
             return
         }
         let linkedBank = InstantDebitsLinkedBank(
