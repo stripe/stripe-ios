@@ -56,15 +56,10 @@ class RowButton: UIView, EventHandler {
     }
 
     var isDisplayingAccessoryView: Bool {
-        get {
-            guard let accessoryView else {
-                return false
-            }
-            return !accessoryView.isHidden
+        guard let accessoryView else {
+            return false
         }
-        set {
-            accessoryView?.isHidden = !newValue
-        }
+        return !accessoryView.isHidden
     }
 
     // MARK: Internal properties
@@ -174,13 +169,22 @@ class RowButton: UIView, EventHandler {
 
     func setSublabel(text: String?) {
         guard let text else {
-            sublabel.text = nil
-            sublabel.isHidden = true
+            UIView.animate(withDuration: 0.2) { [self] in
+                self.sublabel.text = nil
+                self.sublabel.isHidden = true
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            }
             return
         }
-
-        sublabel.text = text
-        sublabel.isHidden = text.isEmpty
+        self.sublabel.text = text
+        self.sublabel.alpha = 0
+        UIView.animate(withDuration: 0.2) { [self] in
+            self.sublabel.isHidden = text.isEmpty
+        }
+        UIView.animate(withDuration: 0.1, delay: 0.1) { [self] in
+            self.sublabel.alpha = 1
+        }
     }
 
     func setKeyContent(alpha: CGFloat) {
