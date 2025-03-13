@@ -86,6 +86,8 @@ import Foundation
     case crypto
     /// A MobilePay payment method
     case mobilePay
+    /// A Vipps payment method
+    case vipps
     /// A Konbini payment method
     case konbini
     /// A PromptPay payment method
@@ -180,6 +182,8 @@ import Foundation
             return "Crypto"
         case .mobilePay:
             return "MobilePay"
+        case .vipps:
+            return "Vipps"
         case .konbini:
             return STPLocalizedString("Konbini", "Payment Method type brand name")
         case .promptPay:
@@ -277,6 +281,8 @@ import Foundation
             return "crypto"
         case .mobilePay:
             return "mobilepay"
+        case .vipps:
+            return "vipps"
         case .konbini:
             return "konbini"
         case .promptPay:
