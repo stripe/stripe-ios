@@ -44,7 +44,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
-            paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: .init()),
+            paymentOption: .external(paymentMethod: ._testPayPalValue(configuration.externalPaymentMethodConfiguration!), billingDetails: .init()),
             paymentHandler: .shared(),
             analyticsHelper: ._testValue()
         ) { result, analyticsConfirmType in
@@ -97,7 +97,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         paymentMethodForm.getTextFieldElement("ZIP")?.setText("12345") ?? XCTFail()
 
         // Simulate customer tapping "Buy" - generate params from the form and confirm payment
-        guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .external(._testPayPalValue()))) else {
+        guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .external(._testPayPalValue(configuration.externalPaymentMethodConfiguration!)))) else {
             XCTFail("Form failed to create params. Validation state: \(paymentMethodForm.validationState)")
             return
         }
@@ -106,7 +106,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
-            paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: intentConfirmParams.paymentMethodParams.nonnil_billingDetails),
+            paymentOption: .external(paymentMethod: ._testPayPalValue(configuration.externalPaymentMethodConfiguration!), billingDetails: intentConfirmParams.paymentMethodParams.nonnil_billingDetails),
             paymentHandler: .shared(),
             analyticsHelper: ._testValue()
         ) { _, _ in }
@@ -130,7 +130,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
                 authenticationContext: self,
                 intent: intent,
                 elementsSession: ._testCardValue(),
-                paymentOption: .external(paymentMethod: ._testPayPalValue(), billingDetails: .init()),
+                paymentOption: .external(paymentMethod: ._testPayPalValue(configuration.externalPaymentMethodConfiguration!), billingDetails: .init()),
                 paymentHandler: .shared(),
                 analyticsHelper: ._testValue()
             ) { result, analyticsConfirmType in
@@ -158,7 +158,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
     }
 
     func makeForm(intent: Intent, configuration: PaymentSheet.Configuration) -> PaymentMethodElement {
-        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testCardValue(), configuration: .paymentSheet(configuration), paymentMethod: .external(._testPayPalValue()))
+        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testCardValue(), configuration: .paymentSheet(configuration), paymentMethod: .external(._testPayPalValue(configuration.externalPaymentMethodConfiguration!)))
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view) // This gets rid of distracting autolayout warnings in the logs
@@ -173,13 +173,14 @@ extension PaymentSheetExternalPaymentMethodTests: STPAuthenticationContext {
     }
 }
 
-extension ExternalPaymentMethod {
-    static func _testPayPalValue() -> ExternalPaymentMethod {
-        return .init(
+extension ExternalPaymentOption {
+    static func _testPayPalValue(_ config: PaymentSheet.ExternalPaymentMethodConfiguration) -> ExternalPaymentOption {
+        let epm: ExternalPaymentMethod = .init(
             type: "external_paypal",
             label: "PayPal",
             lightImageUrl: URL(string: "https://todo.com")!,
             darkImageUrl: URL(string: "https://todo.com")!
         )
+        return .from(epm, configuration: config)!
     }
 }

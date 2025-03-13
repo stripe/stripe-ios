@@ -15,7 +15,7 @@ import UIKit
 extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
-        case external(ExternalPaymentMethod)
+        case external(ExternalPaymentOption)
 
         // Synthetic payment methods. These are payment methods which don't have an `STPPaymentMethodType` defined for the same name.
         // That is, the payment method manifest for a synthetic PMT will show a PMT that doesn't match the form name.
@@ -30,7 +30,7 @@ extension PaymentSheet {
             case .stripe(let paymentMethodType):
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
-                return externalPaymentMethod.label
+                return externalPaymentMethod.displayText
             case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
             }
@@ -179,7 +179,10 @@ extension PaymentSheet {
                 // Stripe PaymentMethod types
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
-                + elementsSession.externalPaymentMethods.map { PaymentMethodType.external($0) }
+            + elementsSession.externalPaymentMethods.compactMap {
+                guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.externalPaymentMethodConfiguration) else { return nil }
+                return PaymentMethodType.external(externalPaymentOption)
+            }
 
             // We support Instant Bank Payments as a payment method when:
             // - (Primary condition) Link is an available payment method.

@@ -191,6 +191,8 @@
 		61D946062D7901B400BFCD0C /* CustomPaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D946052D7901B400BFCD0C /* CustomPaymentMethod.swift */; };
 		61ED657C2D41AE1A00DD5E92 /* PaymentSheet+PaymentMethodAvailabilityTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61ED657B2D41AE1A00DD5E92 /* PaymentSheet+PaymentMethodAvailabilityTest.swift */; };
 		61FB6BCD2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */; };
+		61FDF8EC2D81E12C004B3B0D /* ExternalPaymentOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FDF8EB2D81E12C004B3B0D /* ExternalPaymentOption.swift */; };
+		61FDF8EE2D81FA7F004B3B0D /* ExternalPaymentOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FDF8ED2D81FA7F004B3B0D /* ExternalPaymentOptionTests.swift */; };
 		623C2D9F87929D6DA9C09E23 /* STPCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39B31D0B890A4F8E4819B15 /* STPCameraView.swift */; };
 		630A3B22BC5C176928538511 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B7188D37BDE69B56D8223046 /* Main.storyboard */; };
 		648FDD85FD6ECDA1BBC71D45 /* CustomerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FA9C54257694EC0F205A5C /* CustomerSheet.swift */; };
@@ -628,6 +630,8 @@
 		61D946052D7901B400BFCD0C /* CustomPaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPaymentMethod.swift; sourceTree = "<group>"; };
 		61ED657B2D41AE1A00DD5E92 /* PaymentSheet+PaymentMethodAvailabilityTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheet+PaymentMethodAvailabilityTest.swift"; sourceTree = "<group>"; };
 		61FB6BCC2C8901B200F8E074 /* EmbeddedPaymentMethodsViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentMethodsViewSnapshotTests.swift; sourceTree = "<group>"; };
+		61FDF8EB2D81E12C004B3B0D /* ExternalPaymentOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalPaymentOption.swift; sourceTree = "<group>"; };
+		61FDF8ED2D81FA7F004B3B0D /* ExternalPaymentOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalPaymentOptionTests.swift; sourceTree = "<group>"; };
 		62CE362B80042827F47ABC3F /* AffirmCopyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmCopyLabel.swift; sourceTree = "<group>"; };
 		64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowControllerStateTests.swift; sourceTree = "<group>"; };
 		64D658AC15478BF1E0A76B9D /* TestModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeView.swift; sourceTree = "<group>"; };
@@ -1090,6 +1094,7 @@
 				2C59FD8C17CA1D740BCAFA4D /* STPPaymentIntentShippingDetailsParams+PaymentSheet.swift */,
 				61D842882CADE4B9009D2D51 /* PaymentElementConfiguration.swift */,
 				61C87E1A2CB818ED001B7DA9 /* CardBrandFilter.swift */,
+				61FDF8EB2D81E12C004B3B0D /* ExternalPaymentOption.swift */,
 			);
 			path = PaymentSheet;
 			sourceTree = "<group>";
@@ -1728,6 +1733,7 @@
 				C90A2636C2A577AF36FB793B /* PaymentSheetLoaderTest.swift */,
 				61ED657B2D41AE1A00DD5E92 /* PaymentSheet+PaymentMethodAvailabilityTest.swift */,
 				61C87E1C2CB81F9B001B7DA9 /* CardBrandFilterTests.swift */,
+				61FDF8ED2D81FA7F004B3B0D /* ExternalPaymentOptionTests.swift */,
 				C47D00B9DE812D0801B4E33F /* PaymentSheetLPMConfirmFlowTests.swift */,
 				D926018024823367971A8907 /* PaymentSheetPaymentMethodTypeTest.swift */,
 				7E2803AA0D975AF78D787757 /* PaymentSheetSnapshotTests.swift */,
@@ -2043,6 +2049,7 @@
 				3D3607748436E625FF6CF921 /* PaymentSheet+APITest.swift in Sources */,
 				68F13446778AF2CAA631ACDE /* PaymentSheet+DeferredAPITest.swift in Sources */,
 				830DB7F3A2D341445BDB600F /* PaymentSheetAddressTests.swift in Sources */,
+				61FDF8EE2D81FA7F004B3B0D /* ExternalPaymentOptionTests.swift in Sources */,
 				731DA57DAF9979D11AA5A0F6 /* PaymentSheetDeferredValidatorTests.swift in Sources */,
 				96575C19CD0FE05ADA0B0094 /* PaymentSheetErrorTest.swift in Sources */,
 				6BC1594C2C4EDA4E00BDDF4B /* CustomerSheet_ConfirmFlowTests.swift in Sources */,
@@ -2168,6 +2175,7 @@
 				A3B2F2B62CF1149200C0E88C /* SavedPaymentMethodFormFactory+Card.swift in Sources */,
 				61CBE6662BED9749005F7FEB /* VerticalSavedPaymentMethodsViewController.swift in Sources */,
 				29C91CE046099B86D8DCF310 /* STPAnalyticsClient+Link.swift in Sources */,
+				61FDF8EC2D81E12C004B3B0D /* ExternalPaymentOption.swift in Sources */,
 				93FB7933528A45350593D3EC /* UIColor+Link.swift in Sources */,
 				11C23605F97D2DB6F171843E /* LinkUI.swift in Sources */,
 				AB40D7549CDA2E01793CC5D1 /* LinkAccountService.swift in Sources */,
