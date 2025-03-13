@@ -5,14 +5,15 @@
 //  Created by Mat Schmid on 2025-03-12.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
+
+enum FCLiteError: Error {
+    case missingReturnUrl
+    case linkedBankUnavailable
+}
 
 final class FinancialConnectionsLite {
-    enum FCLiteError: Error {
-        case linkedBankUnavailable
-    }
-
     /// The client secret of a Stripe `FinancialConnectionsSession` object.
     let clientSecret: String
 
