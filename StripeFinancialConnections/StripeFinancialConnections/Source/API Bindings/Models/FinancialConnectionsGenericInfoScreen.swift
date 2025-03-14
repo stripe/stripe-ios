@@ -40,18 +40,23 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
             case unparasable
 
             public init(from decoder: Decoder) throws {
-                let type = try? decoder
-                    .container(keyedBy: TypeDecodingContainer.CodingKeys.self)
-                    .decode(TypeDecodingContainer.self, forKey: .type)
-                    .type
-                let container = try decoder.singleValueContainer()
-                if type == .text, let value = try? container.decode(TextBodyEntry.self) {
-                    self = .text(value)
-                } else if type == .image, let value = try? container.decode(ImageBodyEntry.self) {
-                    self = .image(value)
-                } else if type == .bullets, let value = try? container.decode(BulletsBodyEntry.self) {
-                    self = .bullets(value)
-                } else {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+
+                // Decode the type first
+                let typeString = try container.decode(String.self, forKey: .type)
+
+                // Now decode the appropriate model based on the type
+                switch typeString {
+                case "text":
+                    let textEntry = try TextBodyEntry(from: decoder)
+                    self = .text(textEntry)
+                case "image":
+                    let imageEntry = try ImageBodyEntry(from: decoder)
+                    self = .image(imageEntry)
+                case "bullets":
+                    let bulletsEntry = try BulletsBodyEntry(from: decoder)
+                    self = .bullets(bulletsEntry)
+                default:
                     self = .unparasable
                 }
             }
@@ -70,6 +75,11 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
                     case type
                 }
             }
+
+            private enum CodingKeys: String, CodingKey {
+                case type
+            }
+
         }
 
         struct TextBodyEntry: Decodable {
