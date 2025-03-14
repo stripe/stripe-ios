@@ -174,7 +174,7 @@ extension SavedPaymentMethodCollectionView {
             shadowRoundedRectangle.accessibilityTraits = [.button]
 
             paymentMethodLogo.contentMode = .scaleAspectFit
-            accessoryButton.addTarget(self, action: #selector(didSelectAccessory), for: .touchUpInside)
+            addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didSelectAccessory)))
             let views = [
                 label, shadowRoundedRectangle, paymentMethodLogo, plus, selectedIcon, accessoryButton, defaultBadge
             ]
