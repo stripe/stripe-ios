@@ -52,32 +52,45 @@ class IDConsentContentViewController: UIViewController {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let genericInfoScreen = dataSource.idConsentContent.screen
-        let iconView: UIView? = {
+        let logoView: UIView? = {
             guard let imageUrl = genericInfoScreen.header?.icon?.default else { return nil }
             return CreateRoundedLogoView(urlString: imageUrl)
         }()
 
-        let headerAlignment: UIStackView.Alignment = {
-            switch genericInfoScreen.header?.alignment {
-            case .center: return .center
-            case .right: return .trailing
-            case .left: fallthrough
-            case .unparsable: fallthrough
-            case .none: return .leading
+        let bodyView: ConsentBodyView? = {
+            guard let entries = genericInfoScreen.body?.entries else { return nil }
+
+            var bullets: [FinancialConnectionsBulletPoint] = []
+            for entry in entries {
+                guard case .bullets(let bulletsBodyEntry) = entry else { continue }
+                for bullet in bulletsBodyEntry.bullets {
+                    guard let icon = bullet.icon else { continue }
+                    bullets.append(FinancialConnectionsBulletPoint(
+                        icon: icon,
+                        title: bullet.title,
+                        content: bullet.content
+                    ))
+                }
             }
+
+            return ConsentBodyView(
+                bulletItems: bullets,
+                didSelectURL: { [weak self] url in
+                    // there are no known cases where we add a link to the title
+                    // but we add this handling regardless in case this changes
+                    // in the future
+                    self?.didSelectURLInTextFromBackend(url)
+                }
+            )
         }()
 
         let contentView = PaneLayoutView.createContentView(
-            iconView: iconView,
+            iconView: logoView,
             title: genericInfoScreen.header?.title,
             subtitle: genericInfoScreen.header?.subtitle,
-            headerAlignment: headerAlignment,
-            contentView: GenericInfoBodyView(
-                body: genericInfoScreen.body,
-                didSelectURL: didSelectURLInTextFromBackend
-            )
+            headerAlignment: .center,
+            contentView: bodyView
         )
-
         let paneLayoutView = PaneLayoutView(contentView: contentView, footerView: footer.footerView)
         paneLayoutView.addTo(view: view)
 
