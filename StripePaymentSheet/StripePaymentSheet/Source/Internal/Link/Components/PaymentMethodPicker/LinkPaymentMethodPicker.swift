@@ -67,6 +67,18 @@ final class LinkPaymentMethodPicker: UIView {
         return dataSource?.paymentPicker(self, paymentMethodAt: selectedIndex)
     }
 
+    var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration? {
+        didSet {
+            reloadData()
+        }
+    }
+
+    var billingDetails: PaymentSheet.BillingDetails? {
+        didSet {
+            reloadData()
+        }
+    }
+
     private var needsDataReload: Bool = true
 
     private lazy var stackView: UIStackView = {
@@ -269,6 +281,114 @@ extension LinkPaymentMethodPicker {
         headerView.selectedPaymentMethod = selectedPaymentMethod
     }
 
+}
+
+extension ConsumerPaymentDetails {
+
+    /// Returns whether the `ConsumerPaymentDetails` contains all the billing details fields requested by the provided `config`.
+    /// We use the `consumerSession` to determine if we can populate some fields from it.
+    func supports(
+        _ config: PaymentSheet.BillingDetailsCollectionConfiguration,
+        in consumerSession: ConsumerSession?
+    ) -> Bool {
+        if config.name == .always && billingAddress?.name == nil {
+            // No name provided, so that needs to be collected
+            return false
+        }
+
+        if config.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
+            // No or incomplete address provided, so that needs to be collected
+            return false
+        }
+
+        if config.phone == .always && consumerSession?.unredactedPhoneNumber == nil {
+            // No phone number from the account, so that needs to be collected
+            return false
+        }
+
+        // We don't need to check email, because we're guaranteed to have the account email
+
+        return true
+    }
+
+    func update(
+        with billingDetails: PaymentSheet.BillingDetails,
+        basedOn config: PaymentSheet.BillingDetailsCollectionConfiguration
+    ) -> ConsumerPaymentDetails {
+        var billingEmailAddress = self.billingEmailAddress
+        var billingAddress = self.billingAddress
+
+        if config.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
+            // No address provided, so that needs to be collected
+            // Update any existing address or create a new one
+            // TODO: Should we tho?
+            // billingAddress = billingAddress?.update(with: billingDetails) ?? BillingAddress(from: billingDetails)
+            billingAddress = BillingAddress(from: billingDetails)
+        }
+
+        if config.name == .always && billingAddress?.name == nil {
+            // No name provided, so that needs to be collected
+            billingAddress = billingAddress?.withName(billingDetails.name) ?? BillingAddress(name: billingDetails.name)
+        }
+
+        if config.email == .always && billingEmailAddress == nil {
+            billingEmailAddress = billingDetails.email
+        }
+
+        return .init(
+            stripeID: stripeID,
+            details: details,
+            billingAddress: billingAddress,
+            billingEmailAddress: billingEmailAddress,
+            isDefault: isDefault
+        )
+    }
+}
+
+private extension BillingAddress {
+    var isIncomplete: Bool {
+        return line1 == nil || city == nil || postalCode == nil || countryCode == nil
+    }
+
+    init(from billingDetails: PaymentSheet.BillingDetails) {
+        self.init(
+            line1: billingDetails.address.line1,
+            line2: billingDetails.address.line2,
+            city: billingDetails.address.city,
+            state: billingDetails.address.state,
+            postalCode: billingDetails.address.postalCode,
+            countryCode: billingDetails.address.country
+        )
+    }
+
+    func update(with billingDetails: PaymentSheet.BillingDetails) -> BillingAddress {
+        return .init(
+            line1: line1 ?? billingDetails.address.line1,
+            line2: line2 ?? billingDetails.address.line2,
+            city: city ?? billingDetails.address.city,
+            state: state ?? billingDetails.address.state,
+            postalCode: postalCode ?? billingDetails.address.postalCode,
+            countryCode: countryCode ?? billingDetails.address.country
+        )
+    }
+
+    func withName(_ name: String?) -> BillingAddress {
+        return .init(
+            name: name,
+            line1: line1,
+            line2: line2,
+            city: city,
+            state: state,
+            postalCode: postalCode,
+            countryCode: countryCode
+        )
+    }
+}
+
+private extension PaymentSheet.Address {
+    var isIncomplete: Bool {
+        return line1 == nil || city == nil || postalCode == nil || country == nil
+    }
 }
 
 extension LinkPaymentMethodPicker {

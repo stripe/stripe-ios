@@ -66,9 +66,8 @@ extension PaymentSheet {
            return false
         }
 
-        // Disable Link if the merchant is using billing address collection API
-        guard !configuration.requiresBillingDetailCollection() else {
-          return false
+        guard elementsSession.isCompatible(with: configuration) else {
+            return false
         }
 
         return true
@@ -79,6 +78,14 @@ extension PaymentSheet {
     ///
     /// :nodoc:
     internal static var supportedLinkPaymentMethods: [STPPaymentMethodType] = []
+}
+
+private extension STPElementsSession {
+    func isCompatible(with configuration: PaymentElementConfiguration) -> Bool {
+        // We can't collect billing details if we're in the web flow
+        let nativeLink = deviceCanUseNativeLink(elementsSession: self, configuration: configuration)
+        return nativeLink || !configuration.requiresBillingDetailCollection()
+    }
 }
 
 // MARK: - PaymentMethodRequirementProvider

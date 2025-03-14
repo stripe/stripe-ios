@@ -86,7 +86,7 @@ extension PaymentSheet {
         var linkUIAnalyticsValue: String? {
             if case .link(let option) = self {
                 switch option {
-                case .withPaymentDetails(account: let account, _):
+                case .withPaymentDetails(let account, _, _):
                     if account.hasCompletedSMSVerification {
                         // This was a returning user who logged in
                         return "native-returning"

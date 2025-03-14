@@ -13,7 +13,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol UpdatePaymentViewControllerDelegate: AnyObject {
-    func didUpdate(paymentMethod: ConsumerPaymentDetails)
+    func didUpdate(paymentMethod: ConsumerPaymentDetails, confirmationExtras: LinkConfirmationExtras?)
 }
 
 extension PayWithLinkViewController {
@@ -27,18 +27,26 @@ extension PayWithLinkViewController {
         var configuration: PaymentElementConfiguration
         let paymentMethod: ConsumerPaymentDetails
 
-        private let titleLabel: UILabel = {
+        /// Denotes whether we're launching this screen in the payment flow with the purpose
+        /// of collecting any missing billing details.
+        let isBillingDetailsUpdateFlow: Bool
+
+        private lazy var titleLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .title)
             label.textColor = .linkPrimaryText
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
-            label.text = String.Localized.update_card
+            label.text = if isBillingDetailsUpdateFlow {
+                "Update before continuing"
+            } else {
+                String.Localized.update_card
+            }
             return label
         }()
 
-        private let thisIsYourDefaultLabel: UILabel = {
+        private lazy var thisIsYourDefaultLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
             label.textColor = .linkSecondaryText
@@ -53,7 +61,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
-            callToAction: .custom(title: String.Localized.update_card)
+            callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card)
         ) { [weak self] in
             self?.updateCard()
         }
@@ -71,14 +79,30 @@ extension PayWithLinkViewController {
 
         private lazy var cardEditElement = LinkCardEditElement(
             paymentMethod: paymentMethod,
-            configuration: configuration)
+            configuration: makeConfiguration(),
+            useCVCPlaceholder: isBillingDetailsUpdateFlow
+        )
 
-        init(linkAccount: PaymentSheetLinkAccount, context: Context, paymentMethod: ConsumerPaymentDetails) {
+        private func makeConfiguration() -> PaymentElementConfiguration {
+            guard isBillingDetailsUpdateFlow else {
+                return context.configuration
+            }
+
+            return configuration.withEffectiveBillingDetails(for: linkAccount)
+        }
+
+        init(
+            linkAccount: PaymentSheetLinkAccount,
+            context: Context,
+            paymentMethod: ConsumerPaymentDetails,
+            isBillingDetailsUpdateFlow: Bool
+        ) {
             self.linkAccount = linkAccount
             self.intent = context.intent
             self.configuration = context.configuration
             self.configuration.linkPaymentMethodsOnly = true
             self.paymentMethod = paymentMethod
+            self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
             super.init(context: context)
         }
 
@@ -115,14 +139,14 @@ extension PayWithLinkViewController {
 
             contentView.addAndPinSubview(scrollView)
 
-            if !paymentMethod.isDefault {
+            if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
                 thisIsYourDefaultLabel.isHidden = true
                 stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: cardEditElement.view)
             } else {
                 stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: thisIsYourDefaultLabel)
             }
 
-            updateButton.update(state: .disabled)
+            updateButton.update(state: cardEditElement.validationState.isValid ? .enabled : .disabled)
         }
 
         func updateCard() {
@@ -145,6 +169,10 @@ extension PayWithLinkViewController {
             )
 
             linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
+                guard let self else {
+                    return
+                }
+
                 switch result {
                 case .success(let updatedPaymentDetails):
                     // Updates to CVC only get applied when the intent is confirmed so we manually add them here
@@ -153,15 +181,22 @@ extension PayWithLinkViewController {
                         card.cvc = params.cvc
                     }
 
-                    self?.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
-                        self?.delegate?.didUpdate(paymentMethod: updatedPaymentDetails)
-                        self?.navigationController?.popViewController(animated: true)
+                    var confirmationExtras: LinkConfirmationExtras?
+                    if self.isBillingDetailsUpdateFlow {
+                        confirmationExtras = .init(billingPhoneNumber: self.isBillingDetailsUpdateFlow ? params.billingDetails.phone : nil)
                     }
 
+                    self.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
+                        self.delegate?.didUpdate(
+                            paymentMethod: updatedPaymentDetails,
+                            confirmationExtras: confirmationExtras
+                        )
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 case .failure(let error):
-                    self?.updateErrorLabel(for: error)
-                    self?.cardEditElement.view.isUserInteractionEnabled = true
-                    self?.updateButton.update(state: .enabled)
+                    self.updateErrorLabel(for: error)
+                    self.cardEditElement.view.isUserInteractionEnabled = true
+                    self.updateButton.update(state: .enabled)
                 }
             }
         }

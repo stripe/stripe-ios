@@ -231,6 +231,35 @@ extension PayWithLinkViewController {
             }
         }
 
+        func updateBillingDetails(
+            for paymentMethod: ConsumerPaymentDetails,
+            completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+        ) {
+            guard let index = paymentMethods.firstIndex(where: { $0.stripeID == paymentMethod.stripeID }) else {
+                return
+            }
+
+            let billingDetails = STPPaymentMethodBillingDetails(
+                billingAddress: paymentMethod.billingAddress,
+                email: paymentMethod.billingEmailAddress
+            )
+
+            let updateParams = UpdatePaymentDetailsParams(
+                details: .card(billingDetails: billingDetails)
+            )
+
+            linkAccount.updatePaymentDetails(
+                id: paymentMethod.stripeID,
+                updateParams: updateParams
+            ) { [self] result in
+                if case let .success(updatedPaymentDetails) = result {
+                    paymentMethods[index] = updatedPaymentDetails
+                }
+
+                completion(result)
+            }
+        }
+
         func updatePaymentMethod(_ paymentMethod: ConsumerPaymentDetails) -> Int? {
             guard let index = paymentMethods.firstIndex(where: { $0.stripeID == paymentMethod.stripeID }) else {
                 return nil

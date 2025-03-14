@@ -36,6 +36,7 @@ protocol PayWithLinkCoordinating: AnyObject {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
         paymentDetails: ConsumerPaymentDetails,
+        confirmationExtras: LinkConfirmationExtras?,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
     func confirmWithApplePay()
@@ -330,6 +331,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
         paymentDetails: ConsumerPaymentDetails,
+        confirmationExtras: LinkConfirmationExtras?,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         view.isUserInteractionEnabled = false
@@ -339,7 +341,11 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             intent: context.intent,
             elementsSession: context.elementsSession,
             with: PaymentOption.link(
-                option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
+                option: .withPaymentDetails(
+                    account: linkAccount,
+                    paymentDetails: paymentDetails,
+                    confirmationExtras: confirmationExtras
+                )
             )
         ) { [weak self] result, confirmationType in
             self?.view.isUserInteractionEnabled = true
