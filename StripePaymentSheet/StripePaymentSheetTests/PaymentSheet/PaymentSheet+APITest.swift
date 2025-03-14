@@ -471,6 +471,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 ) { result, _ in
                     switch result {
                     case .completed:
+                        self.waitForDefaultPaymentMethodToBePersisted()
                         // 3. Fetch the SI
                         self.apiClient.retrieveSetupIntent(withClientSecret: clientSecret)
                         { setupIntent, _ in
