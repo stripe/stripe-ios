@@ -13,7 +13,7 @@ enum FCLiteError: Error {
     case linkedBankUnavailable
 }
 
-final class FinancialConnectionsLite {
+@_spi(STP) public final class FinancialConnectionsLite {
     /// The client secret of a Stripe `FinancialConnectionsSession` object.
     let clientSecret: String
 
@@ -36,7 +36,7 @@ final class FinancialConnectionsLite {
     /// - Parameters:
     ///   - clientSecret: The client secret of a Stripe `FinancialConnectionsSession` object.
     ///   - returnUrl: A URL that that `FinancialConnectionsLite` can use to redirect back to your app after completing authentication in another app (such as a bank's app or Safari).
-    init(
+    @_spi(STP) public init(
         clientSecret: String,
         returnUrl: URL
     ) {
@@ -44,7 +44,7 @@ final class FinancialConnectionsLite {
         self.returnUrl = returnUrl
     }
 
-    func present(
+    @_spi(STP) public func present(
         from viewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
