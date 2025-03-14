@@ -58,6 +58,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return Promise<FinancialConnectionsAuthSession>()
     }
 
+    func selectInstitution(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsSelectInstitution> {
+        return Promise<FinancialConnectionsSelectInstitution>()
+    }
+
     func repairAuthSession(clientSecret: String, coreAuthorization: String) -> Promise<FinancialConnectionsRepairSession> {
         return Promise<FinancialConnectionsRepairSession>()
     }
