@@ -86,7 +86,10 @@ struct AppLoadingView: View {
             }
 
             STPAPIClient.shared.publishableKey = appInfo.publishableKey
-            let selectedMerchant = AppSettings.shared.selectedMerchant(appInfo: appInfo) ?? firstMerchant
+            let uiTestMerchant = ProcessInfo.processInfo.environment[StripeConnectExampleAppKeys.initialAccountEnvironmentKey].map {
+                MerchantInfo(displayName: "Test Account", merchantId: $0)
+            }
+            let selectedMerchant = uiTestMerchant ?? AppSettings.shared.selectedMerchant(appInfo: appInfo) ?? firstMerchant
             viewControllerPresenter?.setRootViewController(MainViewController(appInfo: appInfo, merchant: selectedMerchant).embedInNavigationController())
 
         }

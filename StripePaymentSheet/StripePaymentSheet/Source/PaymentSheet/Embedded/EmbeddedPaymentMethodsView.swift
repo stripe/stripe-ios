@@ -90,8 +90,10 @@ class EmbeddedPaymentMethodsView: UIView {
         // Special font size for mandates in embedded
         var theme = appearance.asElementsTheme
         theme.fonts.caption = appearance.scaledFont(for: appearance.font.base.regular, style: .caption2, maximumPointSize: 20)
-
-        return SimpleMandateTextView(theme: theme)
+        let mandateView = SimpleMandateTextView(theme: theme)
+        // Add some padding so that we can hide/remove it from the stackview without fiddling with padding in there.
+        mandateView.directionalLayoutMargins.top = 12
+        return mandateView
     }()
     private var savedPaymentMethodButton: RowButton?
     private(set) var rowButtons: [RowButton]
@@ -323,34 +325,47 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     private func _updateMandate(mandateText: NSAttributedString?, animated: Bool = true) {
-        let shouldDisplayMandate: Bool = {
-            guard let mandateText else {
-                return false
-            }
-            return shouldShowMandate && !mandateText.string.isEmpty
-        }()
-        mandateView.attributedText = mandateText
-        let updateMandateUI = {
-            let spacing = shouldDisplayMandate ? 12.0 : 0
-            guard
-                let mandateViewIndex = self.stackView.arrangedSubviews.firstIndex(of: self.mandateView),
-                let subviewBeforeMandateView = self.stackView.arrangedSubviews.stp_boundSafeObject(at: mandateViewIndex - 1)
-            else {
-                stpAssertionFailure()
-                return
-            }
-            self.stackView.setCustomSpacing(spacing, after: subviewBeforeMandateView)
-            self.mandateView.setHiddenIfNecessary(!shouldDisplayMandate)
+        let shouldDisplayMandate: Bool = if let mandateText {
+            shouldShowMandate && !mandateText.string.isEmpty
+        } else {
+            false
         }
         guard animated else {
-            updateMandateUI()
+            self.mandateView.attributedText = mandateText
+            self.mandateView.setHiddenIfNecessary(!shouldDisplayMandate)
             return
         }
-        UIView.animate(withDuration: 0.25, animations: {
-            updateMandateUI()
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        })
+        switch (mandateView.isHidden, shouldDisplayMandate) {
+        case (true, true): // Hidden -> Showing mandate
+            UIView.animate(withDuration: 0.25) {
+                self.mandateView.attributedText = mandateText
+                // Un-hide mandate
+                self.mandateView.setHiddenIfNecessary(!shouldDisplayMandate)
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            }
+
+            // Fade it in slightly after
+            self.mandateView.alpha = 0
+            UIView.animate(withDuration: 0.2, delay: 0.15) {
+                self.mandateView.alpha = 1
+            }
+        case (false, false): // Showing mandate -> Hidden
+            UIView.animate(withDuration: 0.25) {
+                self.mandateView.attributedText = mandateText
+                // Hide the mandate
+                self.mandateView.setHiddenIfNecessary(true)
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            }
+        case (false, true): // Showing mandate -> Showing mandate
+            UIView.transition(with: self.mandateView, duration: 0.25, options: .transitionCrossDissolve) {
+                self.mandateView.attributedText = mandateText
+                self.layoutIfNeeded()
+            }
+        case (true, false): // Hidden -> Hidden
+            break
+        }
     }
 
 #if DEBUG
