@@ -293,8 +293,18 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         XCTAssertTrue(controller.canEditPaymentMethods)
     }
 
+    func testCanEditPaymentMethods_OnePM_remove0_default1_notCBCEligible() {
+        let configuration = savedPaymentOptionsConfig(allowsRemovalOfLastSavedPaymentMethod: false,
+                                                      allowsRemovalOfPaymentMethods: false,
+                                                      allowsSetAsDefaultPaymentMethod: true)
+        let controller = savedPaymentOptionsController(configuration,
+                                                       savedPaymentMethods: [STPPaymentMethod._testCard()],
+                                                       cbcEligible: false)
+        XCTAssertTrue(controller.canEditPaymentMethods)
+    }
+
     // MARK: Helpers
-    func savedPaymentOptionsConfig(allowsRemovalOfLastSavedPaymentMethod: Bool, allowsRemovalOfPaymentMethods: Bool) -> SavedPaymentOptionsViewController.Configuration {
+    func savedPaymentOptionsConfig(allowsRemovalOfLastSavedPaymentMethod: Bool, allowsRemovalOfPaymentMethods: Bool, allowsSetAsDefaultPaymentMethod: Bool = false) -> SavedPaymentOptionsViewController.Configuration {
         return SavedPaymentOptionsViewController.Configuration(customerID: "cus_123",
                                                                showApplePay: true,
                                                                showLink: true,
@@ -304,7 +314,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                isTestMode: true,
                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                allowsRemovalOfPaymentMethods: allowsRemovalOfPaymentMethods,
-                                                               allowsSetAsDefaultPM: false)
+                                                               allowsSetAsDefaultPM: allowsSetAsDefaultPaymentMethod)
     }
 
     func savedPaymentOptionsController(_ configuration: SavedPaymentOptionsViewController.Configuration,
@@ -320,13 +330,13 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                  analyticsHelper: ._testValue(),
                                                  delegate: nil)
     }
-    
+
     // Test case for when the preferred brand of a card is nil that we look at the display brand
     func testRemovalMessagePreferredBrand_nilPreferredBrand() {
         let coBrandedCard = STPPaymentMethod._testCardCoBranded(displayBrand: "cartes_bancaires")
         XCTAssertNil(coBrandedCard.card?.networks?.preferred)
         let removalMessage = coBrandedCard.removalMessage
-        
+
         XCTAssertEqual(removalMessage.message, "Cartes Bancaires •••• 4242")
     }
 }

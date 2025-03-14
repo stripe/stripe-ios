@@ -117,12 +117,12 @@ class SavedPaymentOptionsViewController: UIViewController {
         case 0:
             return false
         case 1:
-            // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM allows for the card brand choice to be updated.
-            return (configuration.allowsRemovalOfPaymentMethods && configuration.allowsRemovalOfLastSavedPaymentMethod) || viewModels.contains(where: {
+            // If there's exactly one PM, customer can only edit if configuration allows removal or allows setting as default or if that single PM allows for the card brand choice or other card details to be updated.
+            return (configuration.allowsRemovalOfPaymentMethods && configuration.allowsRemovalOfLastSavedPaymentMethod) || configuration.allowsSetAsDefaultPM || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         default:
-            return configuration.allowsRemovalOfPaymentMethods || viewModels.contains(where: {
+            return configuration.allowsRemovalOfPaymentMethods || configuration.allowsSetAsDefaultPM || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         }
