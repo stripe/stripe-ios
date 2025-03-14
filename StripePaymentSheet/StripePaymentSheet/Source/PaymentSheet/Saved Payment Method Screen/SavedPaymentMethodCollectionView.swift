@@ -96,9 +96,8 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .edit)
-            button.backgroundColor = UIColor.dynamic(
-                light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
-            button.iconColor = appearance.colors.icon
+            button.backgroundColor = appearance.colors.primary
+            button.iconColor = appearance.colors.primary.contrastingColor
             button.isAccessibilityElement = true
             button.accessibilityLabel = String.Localized.edit
             return button
