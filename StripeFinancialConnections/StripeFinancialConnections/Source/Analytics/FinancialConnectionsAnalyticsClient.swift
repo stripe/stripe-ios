@@ -182,6 +182,8 @@ extension FinancialConnectionsAnalyticsClient {
         switch viewController {
         case is ConsentViewController:
             return .consent
+        case is IDConsentContentViewController:
+            return .idConsentContent
         case is InstitutionPickerViewController:
             return .institutionPicker
         case let partnerAuthViewController as PartnerAuthViewController:

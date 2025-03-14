@@ -9,4 +9,9 @@ import Foundation
 
 struct FinancialConnectionsSelectInstitution: Decodable {
     let manifest: FinancialConnectionsSessionManifest
+    let text: Text?
+}
+
+struct Text: Decodable {
+    let idConsentContentPane: FinancialConnectionsIDConsentContent
 }
