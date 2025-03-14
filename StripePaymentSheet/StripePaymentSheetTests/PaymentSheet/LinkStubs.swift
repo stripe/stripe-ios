@@ -83,6 +83,8 @@ extension LinkStubs {
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: "(555) 555-5555",
+            phoneNumberCountry: "US",
             verificationSessions: [],
             supportedPaymentDetailsTypes: [.card, .bankAccount]
         )

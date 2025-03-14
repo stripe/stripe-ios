@@ -289,6 +289,7 @@ extension STPAPIClient {
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         cvc: String?,
         expectedPaymentMethodType: String?,
+        billingPhoneNumber: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
@@ -308,6 +309,9 @@ extension STPAPIClient {
         }
         if let expectedPaymentMethodType {
             parameters["expected_payment_method_type"] = expectedPaymentMethodType
+        }
+        if let billingPhoneNumber {
+            parameters["billing_phone"] = billingPhoneNumber
         }
 
         APIRequest<PaymentDetailsShareResponse>.post(

@@ -30,6 +30,8 @@ extension PayWithLinkViewController {
             paymentPicker.dataSource = self
             paymentPicker.supportedPaymentMethodTypes = viewModel.supportedPaymentMethodTypes
             paymentPicker.selectedIndex = viewModel.selectedPaymentMethodIndex
+            paymentPicker.billingDetails = context.configuration.defaultBillingDetails
+            paymentPicker.billingDetailsCollectionConfiguration = context.configuration.billingDetailsCollectionConfiguration
             return paymentPicker
         }()
 
@@ -129,6 +131,10 @@ extension PayWithLinkViewController {
             return stackView
         }()
 
+        private var effectiveBillingDetails: PaymentSheet.BillingDetails {
+            context.configuration.withEffectiveBillingDetails(for: linkAccount).defaultBillingDetails
+        }
+
         #if !os(visionOS)
         private let feedbackGenerator = UINotificationFeedbackGenerator()
         #endif
@@ -217,9 +223,15 @@ extension PayWithLinkViewController {
             containerView.toggleArrangedSubview(errorLabel, shouldShow: error != nil, animated: true)
         }
 
-        func confirm() {
+        func confirm(billingPhoneNumber: String? = nil) {
+            // TODO: Remove didCollectBillingDetails?
             guard let paymentDetails = viewModel.selectedPaymentMethod else {
                 stpAssertionFailure("`confirm()` called without a selected payment method")
+                return
+            }
+
+            guard hasRequiredBillingDetails(paymentDetails) else {
+                collectRemainingBillingDetailsAndConfirm(for: paymentDetails)
                 return
             }
 
@@ -230,7 +242,7 @@ extension PayWithLinkViewController {
                     }
                 }
 
-                confirm(for: context.intent, with: paymentDetails)
+                confirm(for: context.intent, with: paymentDetails, billingPhoneNumber: billingPhoneNumber)
             }
 
             if viewModel.shouldRecollectCardExpiryDate {
@@ -256,7 +268,16 @@ extension PayWithLinkViewController {
             }
         }
 
-        func confirm(for intent: Intent, with paymentDetails: ConsumerPaymentDetails) {
+        private func hasRequiredBillingDetails(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+            let collectionConfig = context.configuration.billingDetailsCollectionConfiguration
+            return paymentDetails.supports(collectionConfig, with: effectiveBillingDetails)
+        }
+
+        func confirm(
+            for intent: Intent,
+            with paymentDetails: ConsumerPaymentDetails,
+            billingPhoneNumber: String? = nil
+        ) {
             view.endEditing(true)
 
             #if !os(visionOS)
@@ -265,7 +286,19 @@ extension PayWithLinkViewController {
             updateErrorLabel(for: nil)
             confirmButton.update(state: .processing)
 
-            coordinator?.confirm(with: linkAccount, paymentDetails: paymentDetails) { [weak self] result, deferredIntentConfirmationType in
+            // If we need to collect the phone number, pass along any default value. If there is no default value,
+            // the user wouldn't be able to proceed anyway, so we don't need to worry about that case.
+            let billingPhoneNumber: String? = if context.configuration.billingDetailsCollectionConfiguration.phone == .always {
+                billingPhoneNumber ?? effectiveBillingDetails.phone
+            } else {
+                nil
+            }
+
+            coordinator?.confirm(
+                with: linkAccount,
+                paymentDetails: paymentDetails,
+                billingPhoneNumber: billingPhoneNumber
+            ) { [weak self] result, deferredIntentConfirmationType in
                 switch result {
                 case .completed:
                     #if !os(visionOS)
@@ -360,13 +393,25 @@ private extension PayWithLinkViewController.WalletViewController {
         let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
             linkAccount: linkAccount,
             context: context,
-            paymentMethod: paymentMethod
+            paymentMethod: paymentMethod,
+            isBillingDetailsUpdateFlow: false
         )
         updatePaymentMethodVC.delegate = self
 
         navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
     }
 
+    func collectRemainingBillingDetailsAndConfirm(for paymentMethod: ConsumerPaymentDetails) {
+        let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
+            linkAccount: linkAccount,
+            context: context,
+            paymentMethod: paymentMethod,
+            isBillingDetailsUpdateFlow: true
+        )
+        updatePaymentMethodVC.delegate = self
+
+        navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
+    }
 }
 
 // MARK: - ElementDelegate
@@ -505,7 +550,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
                 guard let self = self else { return }
                 switch result {
                 case .success(let paymentDetails):
-                    self.didUpdate(paymentMethod: paymentDetails)
+                    self.didUpdate(paymentMethod: paymentDetails, shouldConfirm: false, billingPhoneNumber: nil)
                 case .failure(let error):
                     switch error {
                     case InstantDebitsOnlyAuthenticationSessionManager.Error.canceled:
@@ -549,11 +594,18 @@ extension PayWithLinkViewController.WalletViewController: LinkInstantDebitMandat
 
 extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewControllerDelegate {
 
-    func didUpdate(paymentMethod: ConsumerPaymentDetails) {
+    func didUpdate(
+        paymentMethod: ConsumerPaymentDetails,
+        shouldConfirm: Bool,
+        billingPhoneNumber: String?
+    ) {
         if let index = viewModel.updatePaymentMethod(paymentMethod) {
             self.paymentPicker.selectedIndex = index
             self.paymentPicker.reloadData()
         }
-    }
 
+        if shouldConfirm {
+            confirm(billingPhoneNumber: billingPhoneNumber)
+        }
+    }
 }
