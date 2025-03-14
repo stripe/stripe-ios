@@ -291,7 +291,7 @@ extension SavedPaymentMethodCollectionView {
         // MARK: - Private Methods
         @objc
         private func didSelectAccessory() {
-            if showEditIcon {
+            if isRemovingPaymentMethods && showEditIcon {
                 delegate?.paymentOptionCellDidSelectEdit(self)
             }
         }
