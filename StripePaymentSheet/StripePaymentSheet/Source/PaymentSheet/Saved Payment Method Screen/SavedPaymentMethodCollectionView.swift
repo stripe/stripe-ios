@@ -96,9 +96,8 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .edit)
-            button.backgroundColor = UIColor.dynamic(
-                light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
-            button.iconColor = appearance.colors.icon
+            button.backgroundColor = appearance.colors.primary
+            button.iconColor = appearance.colors.primary.contrastingColor
             button.isAccessibilityElement = true
             button.accessibilityLabel = String.Localized.edit
             return button
@@ -380,11 +379,12 @@ extension SavedPaymentMethodCollectionView {
                 }
 
                 if isRemovingPaymentMethods {
+                    let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didSelectAccessory))
                     if case .saved = viewModel, showEditIcon {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
-
+                        addGestureRecognizer(tapGestureRecognizer)
                     } else {
                         accessoryButton.isHidden = true
 
@@ -393,6 +393,7 @@ extension SavedPaymentMethodCollectionView {
                         paymentMethodLogo.alpha = 0.6
                         plus.alpha = 0.6
                         label.textColor = appearance.colors.text.disabledColor
+                        removeGestureRecognizer(tapGestureRecognizer)
                     }
 
                 } else if isSelected {
