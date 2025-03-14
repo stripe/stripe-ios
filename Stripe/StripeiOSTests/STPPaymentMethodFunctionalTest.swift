@@ -174,7 +174,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         try await client.detachPaymentMethodRemoveDuplicates(paymentMethod2.stripeId,
                                                              customerId: customerId,
                                                              fromCustomerUsing: claimedCustomerSessionAPIKey,
-                                                             withCustomerSessionClientSecret: claimedCustomerSessionAPIKey)
+                                                             withCustomerSessionClientSecret: cscs.customerSessionClientSecret)
 
         let reFetchedPaymentMethods = try await fetchPaymentMethods(client: client,
                                                                     types: [.card],
