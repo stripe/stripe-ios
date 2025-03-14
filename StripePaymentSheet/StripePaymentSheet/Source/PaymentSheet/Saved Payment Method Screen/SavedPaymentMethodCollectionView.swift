@@ -174,7 +174,7 @@ extension SavedPaymentMethodCollectionView {
             shadowRoundedRectangle.accessibilityTraits = [.button]
 
             paymentMethodLogo.contentMode = .scaleAspectFit
-            addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didSelectAccessory)))
+            accessoryButton.addTarget(self, action: #selector(didSelectAccessory), for: .touchUpInside)
             let views = [
                 label, shadowRoundedRectangle, paymentMethodLogo, plus, selectedIcon, accessoryButton, defaultBadge
             ]
@@ -291,7 +291,7 @@ extension SavedPaymentMethodCollectionView {
         // MARK: - Private Methods
         @objc
         private func didSelectAccessory() {
-            if isRemovingPaymentMethods && showEditIcon {
+            if showEditIcon {
                 delegate?.paymentOptionCellDidSelectEdit(self)
             }
         }
@@ -379,11 +379,12 @@ extension SavedPaymentMethodCollectionView {
                 }
 
                 if isRemovingPaymentMethods {
+                    let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didSelectAccessory))
                     if case .saved = viewModel, showEditIcon {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
-
+                        addGestureRecognizer(tapGestureRecognizer)
                     } else {
                         accessoryButton.isHidden = true
 
@@ -392,6 +393,7 @@ extension SavedPaymentMethodCollectionView {
                         paymentMethodLogo.alpha = 0.6
                         plus.alpha = 0.6
                         label.textColor = appearance.colors.text.disabledColor
+                        removeGestureRecognizer(tapGestureRecognizer)
                     }
 
                 } else if isSelected {
