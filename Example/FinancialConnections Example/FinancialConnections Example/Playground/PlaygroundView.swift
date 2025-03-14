@@ -44,20 +44,22 @@ struct PlaygroundView: View {
                     }
                     .pickerStyle(.inline)
 
-                    Section(header: Text("Select SDK Type")) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Picker("Select SDK Type", selection: viewModel.sdkType) {
-                                ForEach(PlaygroundConfiguration.SDKType.allCases) {
-                                    Text($0.rawValue.capitalized)
-                                        .tag($0)
+                    if viewModel.integrationType.wrappedValue != .fcLite {
+                        Section(header: Text("Select SDK Type")) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Picker("Select SDK Type", selection: viewModel.sdkType) {
+                                    ForEach(PlaygroundConfiguration.SDKType.allCases) {
+                                        Text($0.rawValue.capitalized)
+                                            .tag($0)
+                                    }
                                 }
-                            }
-                            .pickerStyle(.segmented)
+                                .pickerStyle(.segmented)
 
-                            if viewModel.sdkType.wrappedValue == .automatic {
-                                Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
-                                    .font(.caption)
-                                    .italic()
+                                if viewModel.sdkType.wrappedValue == .automatic {
+                                    Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
+                                        .font(.caption)
+                                        .italic()
+                                }
                             }
                         }
                     }
