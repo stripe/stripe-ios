@@ -371,6 +371,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         cvc: String?,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         expectedPaymentMethodType: String?,
+        billingPhoneNumber: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>
     ) -> Void) {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
@@ -389,6 +390,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 cvc: cvc,
                 allowRedisplay: allowRedisplay,
                 expectedPaymentMethodType: expectedPaymentMethodType,
+                billingPhoneNumber: billingPhoneNumber,
                 consumerAccountPublishableKey: publishableKey,
                 completion: completionRetryingOnAuthErrors
             )
@@ -493,7 +495,11 @@ extension PaymentSheetLinkAccount {
     ///
     /// - Parameter paymentDetails: Payment details
     /// - Returns: Payment method params for paying with Link.
-    func makePaymentMethodParams(from paymentDetails: ConsumerPaymentDetails, cvc: String?) -> STPPaymentMethodParams? {
+    func makePaymentMethodParams(
+        from paymentDetails: ConsumerPaymentDetails,
+        cvc: String?,
+        billingPhoneNumber: String?
+    ) -> STPPaymentMethodParams? {
         guard let currentSession = currentSession else {
             stpAssertionFailure("Cannot make payment method params without an active session.")
             return nil
@@ -501,6 +507,7 @@ extension PaymentSheetLinkAccount {
 
         let params = STPPaymentMethodParams(type: .link)
         params.billingDetails = STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
+        params.billingDetails?.phone = billingPhoneNumber
         params.link?.paymentDetailsID = paymentDetails.stripeID
         params.link?.credentials = ["consumer_session_client_secret": currentSession.clientSecret]
 
@@ -594,7 +601,7 @@ private extension LinkSettings.FundingSource {
 
 struct UpdatePaymentDetailsParams {
     enum DetailsType {
-        case card(expiryDate: CardExpiryDate, billingDetails: STPPaymentMethodBillingDetails? = nil)
+        case card(expiryDate: CardExpiryDate? = nil, billingDetails: STPPaymentMethodBillingDetails? = nil)
         // updating bank not supported
     }
 

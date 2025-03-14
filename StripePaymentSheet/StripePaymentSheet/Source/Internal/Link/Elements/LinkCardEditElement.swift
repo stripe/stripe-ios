@@ -46,6 +46,7 @@ final class LinkCardEditElement: Element {
     }
 
     let paymentMethod: ConsumerPaymentDetails
+    let useCVCPlaceholder: Bool
 
     let configuration: PaymentElementConfiguration
 
@@ -63,6 +64,7 @@ final class LinkCardEditElement: Element {
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = nameElement?.text
         billingDetails.email = emailElement?.text
+        billingDetails.phone = phoneElement?.phoneNumber?.string(as: .e164)
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
         billingDetails.nonnil_address.line1 = billingAddressSection?.line1?.text
         billingDetails.nonnil_address.line2 = billingAddressSection?.line2?.text
@@ -79,26 +81,49 @@ final class LinkCardEditElement: Element {
     }
 
     private lazy var emailElement: TextFieldElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.email == .always else { return nil }
+        // TODO: Account for attachToDefaults
+        let collectsEmail = configuration.billingDetailsCollectionConfiguration.email == .always
+        let providesEmail = configuration.defaultBillingDetails.email != nil && configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
 
-        return TextFieldElement.makeEmail(defaultValue: nil, theme: theme)
+        guard collectsEmail || providesEmail else { return nil }
+
+        return TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email, theme: theme)
+    }()
+
+    private lazy var phoneElement: PhoneNumberElement? = {
+        // TODO: Account for attachToDefaults
+        let collectsPhone = configuration.billingDetailsCollectionConfiguration.phone == .always
+        let providesPhone = configuration.defaultBillingDetails.phone != nil && configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+        guard collectsPhone || providesPhone else { return nil }
+        return PhoneNumberElement(
+            defaultCountryCode: configuration.defaultBillingDetails.address.country,
+            defaultPhoneNumber: configuration.defaultBillingDetails.phone,
+            theme: theme
+        )
     }()
 
     private lazy var contactInformationSection: SectionElement? = {
-        guard let emailElement = emailElement else { return nil }
+        let elements = ([emailElement, phoneElement] as [Element?]).compactMap { $0 }
+
+        guard elements.isEmpty == false else { return nil }
 
         return SectionElement(
-            title: STPLocalizedString("Contact information", "Title for the contact information section"),
-            elements: [emailElement],
-            theme: theme)
+            title: elements.count > 1 ? .Localized.contact_information : nil,
+            elements: elements,
+            theme: theme
+        )
     }()
 
     private lazy var nameElement: TextFieldElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.name == .always else { return nil }
+        // TODO: Account for attachToDefaults
+        let collectsName = configuration.billingDetailsCollectionConfiguration.name == .always
+        let providesName = configuration.defaultBillingDetails.name != nil && configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+
+        guard collectsName || providesName else { return nil }
 
         return TextFieldElement.makeName(
             label: STPLocalizedString("Name on card", "Label for name on card field"),
-            defaultValue: nil,
+            defaultValue: paymentMethod.billingAddress?.name,
             theme: theme)
     }()
 
@@ -111,14 +136,20 @@ final class LinkCardEditElement: Element {
         return panElement
     }()
 
-    private lazy var cvcElement = TextFieldElement(
-        configuration: TextFieldElement.CVCConfiguration(
-            cardBrandProvider: { [weak self] in
-                self?.paymentMethod.cardDetails?.stpBrand ?? .unknown
-            }
-        ),
-        theme: theme
-    )
+    private lazy var cvcElement: TextFieldElement = {
+        let cvcElement = TextFieldElement(
+            configuration: TextFieldElement.CVCConfiguration(
+                defaultValue: useCVCPlaceholder ? "000" : nil,
+                readOnly: useCVCPlaceholder,
+                cardBrandProvider: { [weak self] in
+                    self?.paymentMethod.cardDetails?.stpBrand ?? .unknown
+                }
+            ),
+            theme: theme
+        )
+        cvcElement.view.isUserInteractionEnabled = !useCVCPlaceholder
+        return cvcElement
+    }()
 
     private lazy var expiryDateElement = TextFieldElement(
         configuration: TextFieldElement.ExpiryDateConfiguration(),
@@ -162,22 +193,30 @@ final class LinkCardEditElement: Element {
     }()
 
     private lazy var billingAddressSection: AddressSectionElement? = {
+        // TODO: Account for attachToDefaults
+        let collectsAddress = configuration.billingDetailsCollectionConfiguration.address != .never
+        let providesAddress = configuration.defaultBillingDetails.address != PaymentSheet.Address() && configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+
         guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
+
+        let address = configuration.defaultBillingDetails.address
+        let moreThanCountryAndPostal = address.line1 != nil || address.line2 != nil || address.state != nil || address.city != nil
+
+        let showAllFields = configuration.billingDetailsCollectionConfiguration.address == .full || (providesAddress && moreThanCountryAndPostal)
 
         let defaultBillingAddress = AddressSectionElement.AddressDetails(billingAddress: paymentMethod.billingAddress ?? .init(), phone: nil)
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
             defaults: defaultBillingAddress,
-            collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
-                ? .all()
-                : .countryAndPostal(),
+            collectionMode: showAllFields ? .all() : .countryAndPostal(),
             theme: theme
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, useCVCPlaceholder: Bool) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
+        self.useCVCPlaceholder = useCVCPlaceholder
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
             self.expiryDateElement.setText(expiryDate.displayString)
