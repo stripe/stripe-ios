@@ -1191,7 +1191,7 @@ enum APIEndpoint: String {
              .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
              .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
              .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
-             .authSessionsRepair, .selectInstitution:
+             .authSessionsRepair:
             return true
         case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
