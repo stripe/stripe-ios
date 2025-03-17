@@ -168,8 +168,8 @@ class AddPaymentMethodViewController: UIViewController {
 
     private func logLPMRenderEvents() {
         let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
-        let visibleLPMs: [String] = visibleLPMCells.compactMap(\.paymentMethodType.identifier)
-        let hiddenLPMs: [String] = paymentMethodTypesView.paymentMethodTypes.compactMap(\.identifier).filter { !visibleLPMs.contains($0) }
+        let visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
+        let hiddenLPMs: [String] = paymentMethodTypesView.paymentMethodTypes.compactMap { $0.identifier }.filter { !visibleLPMs.contains($0) }
         analyticsHelper.logLPMsRender(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
     }
 
