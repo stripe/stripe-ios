@@ -138,7 +138,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        logLPMsRenderEvents()
+        logRenderLPMs()
         delegate?.didUpdate(self)
     }
 
@@ -166,11 +166,11 @@ class AddPaymentMethodViewController: UIViewController {
         updateUI()
     }
 
-    private func logLPMsRenderEvents() {
+    private func logRenderLPMs() {
         let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
         let visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
         let hiddenLPMs: [String] = paymentMethodTypesView.paymentMethodTypes.compactMap { $0.identifier }.filter { !visibleLPMs.contains($0) }
-        analyticsHelper.logLPMsRender(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
     }
 
     // MARK: - Internal

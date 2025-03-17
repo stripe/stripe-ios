@@ -172,7 +172,7 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-    func logLPMsRender(visibleLPMs: [String], hiddenLPMs: [String]) {
+    func logRenderLPMs(visibleLPMs: [String], hiddenLPMs: [String]) {
         log(event: .mcRenderLPMs, params: ["visible_lpms": visibleLPMs, "hidden_lpms": hiddenLPMs])
     }
 
