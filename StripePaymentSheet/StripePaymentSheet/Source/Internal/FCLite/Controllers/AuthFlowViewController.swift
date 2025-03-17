@@ -48,7 +48,11 @@ class AuthFlowViewController: UIViewController {
             frame: .zero,
             configuration: WKWebViewConfiguration()
         )
-        let request = URLRequest(url: manifest.hostedAuthURL)
+
+        guard let url = updateHostedAuthUrlWithAdditionalQueryParameters(manifest: manifest) else {
+            return
+        }
+        let request = URLRequest(url: url)
         webView.load(request)
 
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -83,6 +87,8 @@ extension AuthFlowViewController: WKNavigationDelegate {
         guard let url = navigationAction.request.url else {
             return
         }
+
+        print("**** redirect: \(url)")
 
         // `matchesSchemeHostAndPath` is necessary for instant debits which
         // contains additional query parameters at the end of the `successUrl`.
@@ -191,4 +197,21 @@ private extension URL {
             self.path == otherURL.path
         )
     }
+}
+
+private extension AuthFlowViewController {
+    func updateHostedAuthUrlWithAdditionalQueryParameters(manifest: LinkAccountSessionManifest) -> URL? {
+        guard manifest.isInstantDebits else {
+            return manifest.hostedAuthURL
+        }
+        
+        let additionalParameters: [String] = [
+            "return_payment_method=true",
+            "expand_payment_method=true"
+        ]
+        let urlString = manifest.hostedAuthURL.absoluteString
+        let updatedUrlString = urlString + "&" + additionalParameters.joined(separator: "&")
+        return URL(string: updatedUrlString)
+    }
+
 }
