@@ -830,7 +830,6 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
             )
         )
         dataManager.institution = institution
-        dataManager.manifest = payload.manifest
         dataManager.idConsentContent = payload.text?.idConsentContentPane
 
         pushPane(payload.manifest.nextPane, animated: true)

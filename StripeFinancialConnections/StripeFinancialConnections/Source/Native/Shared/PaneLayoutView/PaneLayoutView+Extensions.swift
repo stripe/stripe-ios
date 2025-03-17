@@ -18,6 +18,7 @@ extension PaneLayoutView {
         title: String?,
         subtitle: String?,
         headerAlignment: UIStackView.Alignment = .leading,
+        horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
         isSheet: Bool = false
     ) -> UIView {
@@ -29,6 +30,7 @@ extension PaneLayoutView {
                 iconView: iconView,
                 title: title,
                 alignment: headerAlignment,
+                horizontalPadding: horizontalPadding,
                 isSheet: isSheet
             )
             verticalStackView.addArrangedSubview(headerView)
@@ -48,6 +50,7 @@ extension PaneLayoutView {
         iconView: UIView?,
         title: String?,
         alignment: UIStackView.Alignment = .leading,
+        horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         isSheet: Bool = false
     ) -> UIView {
         let headerStackView = HitTestStackView()
@@ -59,12 +62,21 @@ extension PaneLayoutView {
         }
 
         if let title = title {
+            let textAlignment: NSTextAlignment? = {
+                switch alignment {
+                case .leading: return .left
+                case .center: return .center
+                case .trailing: return .right
+                default: return nil
+                }
+            }()
             let titleFont: FinancialConnectionsFont = isSheet ? .heading(.large) : .heading(.extraLarge)
             let titleLabel = AttributedTextView(
                 font: titleFont,
                 boldFont: titleFont,
                 linkFont: titleFont,
-                textColor: FinancialConnectionsAppearance.Colors.textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
+                alignment: textAlignment
             )
             titleLabel.setText(title)
             headerStackView.addArrangedSubview(titleLabel)
@@ -78,11 +90,11 @@ extension PaneLayoutView {
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: isSheet ? 0 : 16, // the sheet handle adds some padding
-            leading: Constants.Layout.defaultHorizontalMargin,
+            leading: horizontalPadding,
             // if there is a subtitle in the "body/content view,"
             // we will add extra "8" padding
             bottom: 16,
-            trailing: Constants.Layout.defaultHorizontalMargin
+            trailing: horizontalPadding
         )
         return paddingStackView
     }

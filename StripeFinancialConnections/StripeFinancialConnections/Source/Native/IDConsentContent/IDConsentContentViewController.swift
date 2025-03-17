@@ -76,9 +76,6 @@ class IDConsentContentViewController: UIViewController {
             return ConsentBodyView(
                 bulletItems: bullets,
                 didSelectURL: { [weak self] url in
-                    // there are no known cases where we add a link to the title
-                    // but we add this handling regardless in case this changes
-                    // in the future
                     self?.didSelectURLInTextFromBackend(url)
                 }
             )
@@ -89,6 +86,7 @@ class IDConsentContentViewController: UIViewController {
             title: genericInfoScreen.header?.title,
             subtitle: genericInfoScreen.header?.subtitle,
             headerAlignment: .center,
+            horizontalPadding: 0,
             contentView: bodyView
         )
         let paneLayoutView = PaneLayoutView(contentView: contentView, footerView: footer.footerView)
