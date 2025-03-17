@@ -451,8 +451,13 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["Back"].waitForExistenceAndTap()
         app.buttons["Alipay"].waitForExistenceAndTap()
+        let paymentMethodButton = app.buttons["Payment method"]
+        let alipayPredicate = NSPredicate(format: "label == %@", "Alipay, alipay")
+        expectation(for: alipayPredicate, evaluatedWith: paymentMethodButton, handler: nil)
         app.buttons["Continue"].waitForExistenceAndTap()
-        XCTAssertEqual(app.buttons["Payment method"].label, "Alipay, alipay")
+        waitForExpectations(timeout: 5)
+        XCTAssertEqual(paymentMethodButton.label, "Alipay, alipay")
+
         // ...and *updating* to a SetupIntent...
         app.buttons["Setup"].waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
