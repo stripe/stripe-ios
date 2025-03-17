@@ -202,7 +202,7 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 extension AddPaymentMethodViewController: PaymentMethodFormViewControllerDelegate {
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         delegate?.didUpdate(self)
-        
+
         if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
             let incentive = instantDebitsFormElement.displayableIncentive
             paymentMethodTypesView.setIncentive(incentive)
