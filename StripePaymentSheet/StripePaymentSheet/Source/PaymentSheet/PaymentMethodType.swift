@@ -332,7 +332,7 @@ extension PaymentSheet {
                     case .bacsDebit, .sofort:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .afterpayClearpay:
-                        return [.returnURL, .shippingAddress]
+                        return [.returnURL]
                     case .link, .unknown:
                         return [.unsupported]
                     @unknown default:

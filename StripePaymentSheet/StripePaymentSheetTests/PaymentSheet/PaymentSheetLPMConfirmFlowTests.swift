@@ -320,6 +320,18 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testAfterpayConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "USD",
+            paymentMethodType: .afterpayClearpay,
+            merchantCountry: .US
+        ) { form in
+            // Afterpay has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
     func testMobilePayConfirmFlows() async throws {
         try await _testConfirm(
             intentKinds: [.paymentIntent],

@@ -15,7 +15,7 @@ extension EmbeddedPaymentElement {
         /// - Seealso: https://stripe.com/docs/payments/payment-methods#payment-notification
         public var allowsDelayedPaymentMethods: Bool = false
 
-        /// If `true`, allows payment methods that require a shipping address, like Afterpay and Affirm. Defaults to `false`.
+        /// If `true`, allows payment methods that require a shipping address, like  Affirm. Defaults to `false`.
         /// Set this to `true` if you collect shipping addresses and set `Configuration.shippingDetails` or set `shipping` details directly on the PaymentIntent.
         /// - Note: PaymentSheet considers this property `true` and allows payment methods that require a shipping address if `shipping` details are present on the PaymentIntent when PaymentSheet loads.
         public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
