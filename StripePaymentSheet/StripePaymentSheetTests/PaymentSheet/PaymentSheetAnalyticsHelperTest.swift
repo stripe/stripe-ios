@@ -221,6 +221,14 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_sheet_newpm_show")
     }
 
+    func testLogLPMsRender() {
+        let paymentSheetHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        paymentSheetHelper.logLPMsRender(visibleLPMs: ["card", "paypal", "alma", "p24"], hiddenLPMs: ["eps"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_lpms_render")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["visible_lpms"] as? [String], ["card", "paypal", "alma", "p24"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["hidden_lpms"] as? [String], ["eps"])
+    }
+
     func testLogSavedPMScreenOptionSelected() {
         func _createHelper(integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape) -> PaymentSheetAnalyticsHelper {
             let sut = PaymentSheetAnalyticsHelper(integrationShape: integrationShape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
