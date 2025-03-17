@@ -1,6 +1,10 @@
+"An error occurred. Please try again." = "Įvyko klaida. Bandykite dar kartą.";
+
+"Card brand was not updated. Please try again." = "Kortelės prekės ženklas neatnaujintas. Bandykite dar kartą.";
+
 "Close" = "Užverti";
 
-"Default payment method was not changed. Please try again." = "Numatytasis mokėjimo būdas nepakeistas. Bandykite dar kartą.";
+"Default payment method was not updated. Please try again." = "Numatytasis mokėjimo būdas neatnaujintas. Bandykite dar kartą.";
 
 "Scan Card" = "Skenuoti kortelę";
 
