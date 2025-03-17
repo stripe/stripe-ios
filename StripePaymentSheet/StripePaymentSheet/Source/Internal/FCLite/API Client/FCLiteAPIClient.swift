@@ -12,13 +12,11 @@ struct FCLiteAPIClient {
     private enum Endpoint {
         case synchronize
         case sessionReceipt
-        case listAccounts
 
         var path: String {
             switch self {
             case .synchronize: "financial_connections/sessions/synchronize"
             case .sessionReceipt: "link_account_sessions/session_receipt"
-            case .listAccounts: "link_account_sessions/list_accounts"
             }
         }
     }
@@ -88,74 +86,12 @@ extension FCLiteAPIClient {
         return try await post(endpoint: .synchronize, parameters: parameters)
     }
 
-    func fetchSession(
-        clientSecret: String
-    ) async throws -> FinancialConnectionsSession {
-        // First, get the initial session
-        let initialSession = try await sessionReceipt(clientSecret: clientSecret)
-
-        // If there are no more accounts to fetch, return the session as is
-        guard let accounts = initialSession.accounts, accounts.hasMore else {
-            return initialSession
-        }
-
-        // Start with the accounts already in the session
-        var allAccounts = accounts.data
-        var hasMore = accounts.hasMore
-        var lastAccountId = allAccounts.last?.id
-        let maxNumberOfAccountsToFetch: Int = 100
-
-        // Continue fetching accounts until there are no more or we've reached 100
-        while hasMore && allAccounts.count < maxNumberOfAccountsToFetch {
-            // Fetch next page of accounts
-            let accountList = try await listAccounts(
-                clientSecret: clientSecret,
-                startingAfterAccountId: lastAccountId
-            )
-
-            // Add accounts to our collection
-            allAccounts.append(contentsOf: accountList.data)
-
-            // Update for next iteration
-            hasMore = accountList.hasMore
-            lastAccountId = accountList.data.last?.id
-        }
-
-        // Create a new AccountList with all the accounts we've fetched
-        let completeAccountList = FinancialConnectionsSession.AccountList(
-            data: allAccounts,
-            hasMore: hasMore // Will be true if we hit the 100 account limit but there are more
-        )
-
-        // Create a new Session with the complete account list
-        return FinancialConnectionsSession(
-            id: initialSession.id,
-            clientSecret: initialSession.clientSecret,
-            livemode: initialSession.livemode,
-            accounts: completeAccountList,
-            paymentAccount: initialSession.paymentAccount
-        )
-    }
-
-    private func sessionReceipt(
+    func sessionReceipt(
         clientSecret: String
     ) async throws -> FinancialConnectionsSession {
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
         ]
         return try await get(endpoint: .sessionReceipt, parameters: parameters)
-    }
-
-    private func listAccounts(
-        clientSecret: String,
-        startingAfterAccountId: String?
-    ) async throws -> FinancialConnectionsSession.AccountList {
-        var parameters: [String: Any] = [
-            "client_secret": clientSecret
-        ]
-        if let startingAfterAccountId = startingAfterAccountId {
-            parameters["starting_after"] = startingAfterAccountId
-        }
-        return try await get(endpoint: .listAccounts, parameters: parameters)
     }
 }

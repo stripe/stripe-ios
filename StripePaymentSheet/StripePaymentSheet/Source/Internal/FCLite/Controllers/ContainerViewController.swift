@@ -48,7 +48,7 @@ class ContainerViewController: UIViewController {
         setupSpinner()
 
         Task {
-            await fetchHostedUrl()
+            await fetchManifest()
         }
     }
 
@@ -61,7 +61,7 @@ class ContainerViewController: UIViewController {
         ])
     }
 
-    private func fetchHostedUrl() async {
+    private func fetchManifest() async {
         DispatchQueue.main.async {
             self.spinner.startAnimating()
         }
@@ -112,8 +112,8 @@ class ContainerViewController: UIViewController {
         }
 
         do {
-            let session = try await apiClient.fetchSession(clientSecret: clientSecret)
-            if session.accounts?.data.isEmpty != false, userCancelled {
+            let session = try await apiClient.sessionReceipt(clientSecret: clientSecret)
+            if session.paymentAccount == nil, userCancelled {
                 completion(.cancelled)
                 return
             }
