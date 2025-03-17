@@ -327,8 +327,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             paymentMethodType: .afterpayClearpay,
             merchantCountry: .US
         ) { form in
-            // Afterpay has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+            // Afterpay shows name, email, and full billing
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 15)
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+            form.getTextFieldElement("Address line 1").setText("123 Street")
+            form.getTextFieldElement("City").setText("Your City")
+            form.getTextFieldElement("ZIP").setText("12345")
         }
     }
 
