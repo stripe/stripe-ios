@@ -95,11 +95,11 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             return false
         case 1:
             // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM is editable
-            return (configuration.paymentMethodRemove && configuration.allowsRemovalOfLastSavedPaymentMethod) || viewModels.contains(where: {
+            return (configuration.paymentMethodRemove && configuration.allowsRemovalOfLastSavedPaymentMethod) || configuration.paymentMethodUpdate || configuration.paymentMethodSyncDefault || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         default:
-            return configuration.paymentMethodRemove || viewModels.contains(where: {
+            return configuration.paymentMethodRemove || configuration.paymentMethodUpdate || configuration.paymentMethodSyncDefault || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         }
@@ -396,7 +396,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
 
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
                           cbcEligible: cbcEligible,
-                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove)
+                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove,
+                          allowsPaymentMethodUpdate: configuration.paymentMethodUpdate)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

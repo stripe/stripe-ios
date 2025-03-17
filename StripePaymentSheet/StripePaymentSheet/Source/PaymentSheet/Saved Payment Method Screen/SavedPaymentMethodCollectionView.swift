@@ -142,6 +142,7 @@ extension SavedPaymentMethodCollectionView {
 
         var cbcEligible: Bool = false
         var allowsPaymentMethodRemoval: Bool = true
+        var allowsPaymentMethodUpdate: Bool = false
         var allowsSetAsDefaultPM: Bool = false
         var needsVerticalPaddingForBadge: Bool = false
         var showDefaultPMBadge: Bool = false
@@ -152,7 +153,7 @@ extension SavedPaymentMethodCollectionView {
             guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
                 fatalError("Payment method does not match supported saved payment methods.")
             }
-            return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
+            return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
         }
 
         // MARK: - UICollectionViewCell
@@ -261,13 +262,14 @@ extension SavedPaymentMethodCollectionView {
         }()
 
         // MARK: - Internal Methods
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
             self.cbcEligible = cbcEligible
             self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
+            self.allowsPaymentMethodUpdate = allowsPaymentMethodUpdate
             self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
             self.showDefaultPMBadge = showDefaultPMBadge
