@@ -476,7 +476,7 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return self.post(
             resource: APIEndpointInstitutionSelected,
             parameters: body,
-            useConsumerPublishableKeyIfNeeded: true
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 

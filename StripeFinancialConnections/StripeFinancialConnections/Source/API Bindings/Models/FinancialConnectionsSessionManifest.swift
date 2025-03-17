@@ -134,7 +134,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     }
 
     var consentAcquired: Bool {
-        !consentRequired || (consentRequired && consentAcquiredAt != nil)
+        !consentRequired || consentAcquiredAt != nil
     }
 
     init(
