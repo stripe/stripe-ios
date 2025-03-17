@@ -1,4 +1,4 @@
-## XX.X.X XXXX-XX-XX
+## 24.8.0 2025-03-17
 ### PaymentSheet, CustomerSheet
 * [Added] Support for default payment methods in private beta.
 
