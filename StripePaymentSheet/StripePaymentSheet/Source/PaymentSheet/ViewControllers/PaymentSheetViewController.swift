@@ -176,7 +176,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
                 allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: configuration.updatePaymentMethodEnabled
+                allowsUpdatePaymentMethod: elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
