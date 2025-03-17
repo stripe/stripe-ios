@@ -1,6 +1,10 @@
+"An error occurred. Please try again." = "Ada ralat berlaku. Sila cuba lagi.";
+
+"Card brand was not updated. Please try again." = "Jenama kad tidak dikemaskinikan. Sila cuba lagi.";
+
 "Close" = "Tutup";
 
-"Default payment method was not changed. Please try again." = "Kaedah pembayaran tetapan asal tidak diubah. Sila cuba lagi.";
+"Default payment method was not updated. Please try again." = "Kaedah pembayaran tetapan asal tidak dikemaskinikan. Sila cuba lagi.";
 
 "Scan Card" = "Imbas Kad";
 
