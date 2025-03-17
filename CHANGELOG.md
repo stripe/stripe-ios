@@ -1,3 +1,7 @@
+## XX.X.X XXXX-XX-XX
+### PaymentSheet, CustomerSheet
+* [Added] Support for default payment methods in private beta.
+
 ## 24.7.0 2025-03-03
 ### Connect (Private Preview)
 * [Changed] The SDK now manages the onboarding component's presentation.
