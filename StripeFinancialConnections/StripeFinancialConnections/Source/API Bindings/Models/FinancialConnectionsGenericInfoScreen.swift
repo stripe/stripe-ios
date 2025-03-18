@@ -41,11 +41,8 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
 
             public init(from decoder: Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
-
-                // Decode the type first
                 let typeString = try container.decode(String.self, forKey: .type)
 
-                // Now decode the appropriate model based on the type
                 switch typeString {
                 case "text":
                     let textEntry = try TextBodyEntry(from: decoder)
@@ -95,7 +92,7 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
             let alt: String
         }
 
-        struct BulletsBodyEntry: Decodable { // TODO(kgaidis): implement the bullets body entry as a type
+        struct BulletsBodyEntry: Decodable {
             let id: String
             let bullets: [GenericBulletPoint]
 

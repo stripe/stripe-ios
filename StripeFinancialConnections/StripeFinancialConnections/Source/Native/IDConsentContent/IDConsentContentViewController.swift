@@ -127,7 +127,7 @@ class IDConsentContentViewController: UIViewController {
             url: url,
             pane: .idConsentContent,
             analyticsClient: dataSource.analyticsClient,
-            handleURL: { urlHost, nextPaneOrDrawerOnSecondaryCta in
+            handleURL: { urlHost, _ in
                 guard let urlHost, let address = StripeSchemeAddress(rawValue: urlHost) else {
                     self.dataSource
                         .analyticsClient
@@ -142,10 +142,6 @@ class IDConsentContentViewController: UIViewController {
                 }
 
                 switch address {
-                case .manualEntry:
-                    assertionFailure("ID Consent Content pane does not support manual entry")
-                case .dataAccessNotice:
-                    assertionFailure("ID Consent Content pane does not support Data Access Notice addresses")
                 case .legalDatailsNotice:
                     let legalDetailsNoticeModel = dataSource.idConsentContent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
@@ -156,14 +152,8 @@ class IDConsentContentViewController: UIViewController {
                         }
                     )
                     legalDetailsNoticeViewController.present(on: self)
-                case .linkAccountPicker:
-                    assertionFailure("ID Consent Content pane does not support link account picker")
-                case .linkLogin:
-                    delegate?.idConsentContentViewController(
-                        self,
-                        didRequestNextPane: .networkingLinkLoginWarmup,
-                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
-                    )
+                case .manualEntry, .dataAccessNotice, .linkAccountPicker, .linkLogin:
+                    assertionFailure("ID Consent Content pane text in URL does not support \(address.rawValue)")
                 }
             }
         )

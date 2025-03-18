@@ -105,6 +105,7 @@ class NativeFlowController {
             || navigationController.topViewController is SuccessViewController
             || navigationController.topViewController is TerminalErrorViewController
             || ((navigationController.topViewController as? ErrorViewController)?.isTerminal == true)
+            || (navigationController.topViewController is InstitutionPickerViewController && !dataManager.manifest.consentAcquired)
         )
 
         let finishClosingAuthFlow = { [weak self] in
@@ -830,9 +831,10 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
             )
         )
         dataManager.institution = institution
+        dataManager.manifest = payload.manifest
         dataManager.idConsentContent = payload.text?.idConsentContentPane
 
-        pushPane(payload.manifest.nextPane, animated: true)
+        pushPane(payload.manifest.nextPane, animated: true, clearNavigationStack: true)
     }
 
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
