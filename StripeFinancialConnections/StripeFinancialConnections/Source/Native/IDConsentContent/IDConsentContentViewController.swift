@@ -143,11 +143,7 @@ class IDConsentContentViewController: UIViewController {
 
                 switch address {
                 case .manualEntry:
-                    delegate?.idConsentContentViewController(
-                        self,
-                        didRequestNextPane: .manualEntry,
-                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
-                    )
+                    assertionFailure("ID Consent Content pane does not support manual entry")
                 case .dataAccessNotice:
                     assertionFailure("ID Consent Content pane does not support Data Access Notice addresses")
                 case .legalDatailsNotice:
@@ -161,11 +157,7 @@ class IDConsentContentViewController: UIViewController {
                     )
                     legalDetailsNoticeViewController.present(on: self)
                 case .linkAccountPicker:
-                    delegate?.idConsentContentViewController(
-                        self,
-                        didRequestNextPane: .linkAccountPicker,
-                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
-                    )
+                    assertionFailure("ID Consent Content pane does not support link account picker")
                 case .linkLogin:
                     delegate?.idConsentContentViewController(
                         self,
