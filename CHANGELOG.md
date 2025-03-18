@@ -1,4 +1,4 @@
-## X.Y.Z 2023-XX-YY
+## X.Y.Z 2025-XX-YY
 
 ### Payments
 * [Added] `mandate_data` is now automatically attached to PayPal PaymentIntent's with setup for future usage.
