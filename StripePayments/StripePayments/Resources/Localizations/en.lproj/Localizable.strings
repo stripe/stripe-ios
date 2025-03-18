@@ -2,9 +2,6 @@
 "Affirm" = "Affirm";
 
 /* Payment Method type brand name */
-"Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
 "Alipay" = "Alipay";
 
 /* Payment Method type brand name. */
@@ -24,6 +21,9 @@
 
 /* Payment Method for credit card */
 "Card" = "Card";
+
+/* Payment Method type brand name */
+"Cash App Afterpay" = "Cash App Afterpay";
 
 /* Payment Method type brand name */
 "Cash App Pay" = "Cash App Pay";
