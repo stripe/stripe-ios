@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3QcrwWArGMi59tL41bY39J0F\/confirm$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3R41KwArGMi59tL41TPYKVcD\/confirm$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=1msrHjH7nVl42tTYgOLVN1zwWcuqeNFQXqLyMTRbq1hOsY6VHo6aegtWjAHHqwTJfHjCBMPGww%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Ab-XH3EUgLNryCkQyxN-UmPzCbyfaLLSbRdtG9pzausKb6SQAFx1uTZwDsbWcr3OsvkQ24CrufjhpNHa
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -14,20 +14,19 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_ECBD125dBxqtv7
+request-id: req_gAGU8o3gUFUT42
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1074
 Vary: Origin
-Date: Thu, 02 Jan 2025 17:12:21 GMT
-original-request: req_ECBD125dBxqtv7
+Date: Tue, 18 Mar 2025 14:41:47 GMT
+original-request: req_gAGU8o3gUFUT42
 stripe-version: 2020-08-27
-idempotency-key: 84157801-cc92-4b9e-bdcd-dc5630e9d53c
+idempotency-key: 87642f3e-1f88-4118-977c-acbde4bba86a
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
-X-Stripe-Mock-Request: client_secret=pi_3QcrwWArGMi59tL41bY39J0F_secret_kYihsaq0dxWe4hmypLDG7ldAb&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=paypal&return_url=example-app-scheme%3A\/\/authorized
+X-Stripe-Mock-Request: client_secret=pi_3R41KwArGMi59tL41TPYKVcD_secret_Xkm32QuImZCKirPTEaRaB248r&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=paypal&return_url=example-app-scheme%3A\/\/authorized
 
 {
   "payment_method_configuration_details" : null,
@@ -47,12 +46,12 @@ X-Stripe-Mock-Request: client_secret=pi_3QcrwWArGMi59tL41bY39J0F_secret_kYihsaq0
     "type" : "redirect_to_url",
     "redirect_to_url" : {
       "return_url" : "example-app-scheme:\/\/authorized",
-      "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1QcrwWArGMi59tL4tMkQwCZg?client_secret=src_client_secret_iw3HeXLQOmDbpVVBqg6pbQQn"
+      "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1R41KxArGMi59tL48i5CHzvc?client_secret=src_client_secret_FARxqwobeXNWBXtpbFn5BoRA"
     }
   },
-  "payment_method" : "pm_1QcrwWArGMi59tL4QzlEltqW",
-  "client_secret" : "pi_3QcrwWArGMi59tL41bY39J0F_secret_kYihsaq0dxWe4hmypLDG7ldAb",
-  "id" : "pi_3QcrwWArGMi59tL41bY39J0F",
+  "payment_method" : "pm_1R41KxArGMi59tL4BydLZVBe",
+  "client_secret" : "pi_3R41KwArGMi59tL41TPYKVcD_secret_Xkm32QuImZCKirPTEaRaB248r",
+  "id" : "pi_3R41KwArGMi59tL41TPYKVcD",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -65,6 +64,6 @@ X-Stripe-Mock-Request: client_secret=pi_3QcrwWArGMi59tL41bY39J0F_secret_kYihsaq0
     "paypal"
   ],
   "setup_future_usage" : null,
-  "created" : 1735837940,
+  "created" : 1742308906,
   "description" : null
 }
