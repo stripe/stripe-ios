@@ -21,8 +21,10 @@ class AuthFlowViewController: UIViewController {
     private let completion: ((WebFlowResult) -> Void)
 
     private var webAuthenticationSession: ASWebAuthenticationSession?
+    private var webView: WKWebView!
 
-    private let spinner = UIActivityIndicatorView(style: .large)
+    private var progressObservation: NSKeyValueObservation?
+    private let progressBar = UIProgressView(progressViewStyle: .bar)
 
     init(
         manifest: LinkAccountSessionManifest,
@@ -42,16 +44,58 @@ class AuthFlowViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupSpinner()
+        setupProgressBar()
+        setupWebView()
+    }
 
-        let webView = WKWebView(
+    private func setupProgressBar() {
+        progressBar.translatesAutoresizingMaskIntoConstraints = false
+        progressBar.trackTintColor = .lightGray
+        progressBar.progressTintColor = .systemBlue
+        progressBar.progress = 0.0
+    }
+
+    private func showProgressBar() {
+        guard progressBar.superview == nil else { return }
+        view.addSubview(progressBar)
+        NSLayoutConstraint.activate([
+            progressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            progressBar.heightAnchor.constraint(equalToConstant: 2.0),
+        ])
+    }
+
+    private func hideProgressBar() {
+        UIView.animate(withDuration: 0.3, delay: 0.3, options: .curveEaseOut, animations: {
+            self.progressBar.alpha = 0.0
+        }, completion: { _ in
+            self.progressBar.removeFromSuperview()
+        })
+    }
+
+    private func setupWebView() {
+        webView = WKWebView(
             frame: .zero,
             configuration: WKWebViewConfiguration()
         )
 
-        guard let url = updateHostedAuthUrlWithAdditionalQueryParameters(manifest: manifest) else {
-            return
+        webView.uiDelegate = self
+        webView.navigationDelegate = self
+
+        progressObservation = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, _ in
+            guard let self else { return }
+
+            DispatchQueue.main.async {
+                self.showProgressBar()
+                self.progressBar.progress = Float(self.webView.estimatedProgress)
+                if self.webView.estimatedProgress >= 1.0 {
+                    self.hideProgressBar()
+                }
+            }
         }
+
+        let url = hostedAuthUrl(from: manifest)
         let request = URLRequest(url: url)
         webView.load(request)
 
@@ -62,18 +106,6 @@ class AuthFlowViewController: UIViewController {
             webView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
             webView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-        ])
-
-        webView.uiDelegate = self
-        webView.navigationDelegate = self
-    }
-
-    private func setupSpinner() {
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(spinner)
-        NSLayoutConstraint.activate([
-            spinner.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
         ])
     }
 }
@@ -104,15 +136,11 @@ extension AuthFlowViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        spinner.startAnimating()
-    }
-
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        spinner.stopAnimating()
+        showProgressBar()
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        spinner.stopAnimating()
+        progressBar.removeFromSuperview()
         completion(.failure(error))
     }
 }
@@ -200,7 +228,7 @@ private extension URL {
 }
 
 private extension AuthFlowViewController {
-    func updateHostedAuthUrlWithAdditionalQueryParameters(manifest: LinkAccountSessionManifest) -> URL? {
+    func hostedAuthUrl(from manifest: LinkAccountSessionManifest) -> URL {
         guard manifest.isInstantDebits else {
             return manifest.hostedAuthURL
         }
@@ -210,8 +238,8 @@ private extension AuthFlowViewController {
             "expand_payment_method=true",
         ]
         let urlString = manifest.hostedAuthURL.absoluteString
-        let updatedUrlString = urlString + "&" + additionalParameters.joined(separator: "&")
-        return URL(string: updatedUrlString)
+        let joinedParameters = additionalParameters.joined(separator: "&")
+        let updatedUrlString = urlString + (urlString.hasSuffix("&") ? "" : "&") + joinedParameters
+        return URL(string: updatedUrlString) ?? manifest.hostedAuthURL
     }
-
 }

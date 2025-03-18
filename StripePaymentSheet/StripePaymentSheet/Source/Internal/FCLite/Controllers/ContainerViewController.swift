@@ -15,6 +15,7 @@ class ContainerViewController: UIViewController {
     private let completion: ((FinancialConnectionsSDKResult) -> Void)
 
     private let spinner = UIActivityIndicatorView(style: .large)
+    private var errorView: ErrorView?
 
     private var manifest: LinkAccountSessionManifest?
     private var authFlowViewController: AuthFlowViewController?
@@ -78,7 +79,8 @@ class ContainerViewController: UIViewController {
                 self.spinner.stopAnimating()
             }
         } catch {
-            showError(error)
+            print("[FCLite] Error when fetching manifest: \(error)")
+            showError()
 
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
@@ -141,22 +143,39 @@ class ContainerViewController: UIViewController {
             manifest: manifest,
             returnUrl: returnUrl,
             completion: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 Task {
                     await self.completeFlow(result: result)
                 }
             }
         )
         self.authFlowViewController = authFlowVC
-
         navigationController?.pushViewController(authFlowVC, animated: false)
     }
 
-    private func showError(_ error: Error) {
-        // TODO: Handle errors. For now, we show an alert with the error message.
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        self.present(alert, animated: true)
+    private func showError() {
+        let errorView = ErrorView()
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+
+        errorView.onRetryTapped = { [weak self] in
+            guard let self else { return }
+            self.errorView?.removeFromSuperview()
+            self.errorView = nil
+
+            Task {
+                await self.fetchManifest()
+            }
+        }
+
+        view.addSubview(errorView)
+        self.errorView = errorView
+
+        NSLayoutConstraint.activate([
+            errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            errorView.topAnchor.constraint(equalTo: view.topAnchor),
+            errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
     }
 
     private func linkedBankFor(session: FinancialConnectionsSession) -> FinancialConnectionsLinkedBank? {
@@ -215,7 +234,6 @@ extension ContainerViewController: UIAdaptivePresentationControllerDelegate {
     }
 
     public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        // Return false to prevent automatic dismissal
         return false
     }
 
