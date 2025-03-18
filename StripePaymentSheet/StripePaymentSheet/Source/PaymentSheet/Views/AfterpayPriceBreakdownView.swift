@@ -18,14 +18,7 @@ import UIKit
 class AfterpayPriceBreakdownView: UIView {
     private let afterPayClearPayLabel = UILabel()
     private let theme: ElementsAppearance
-    private lazy var afterpayMarkImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = PaymentSheetImageLibrary.afterpayLogo(locale: locale)
-        imageView.tintColor = theme.colors.parentBackground.contrastingColor
 
-        return imageView
-    }()
     private lazy var afterpayMarkImage: UIImage = {
         return PaymentSheetImageLibrary.afterpayLogo(locale: locale)
     }()
@@ -97,6 +90,7 @@ class AfterpayPriceBreakdownView: UIView {
                 let titleFont = stringAttributes[NSAttributedString.Key.font] as! UIFont
                 let clearPay = attributedStringOfImageWithoutLink(uiImage: afterpayMarkImage, font: titleFont)
                 let infoButton = attributedStringOfImageWithoutLink(uiImage: infoImage, font: titleFont)
+                resultingString.append(NSAttributedString(string: " "))
                 resultingString.append(clearPay)
                 resultingString.append(NSAttributedString(string: "\u{00A0}\u{00A0}", attributes: stringAttributes))
                 resultingString.append(infoButton)
@@ -133,10 +127,6 @@ class AfterpayPriceBreakdownView: UIView {
     }
 
 #if !canImport(CompositorServices)
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        afterpayMarkImageView.tintColor = theme.colors.parentBackground.contrastingColor
-    }
 #endif
 
     static func shouldUseClearpayBrand(for locale: Locale) -> Bool {

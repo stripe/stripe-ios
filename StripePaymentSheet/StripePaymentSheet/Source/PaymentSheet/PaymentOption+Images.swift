@@ -170,7 +170,7 @@ extension STPPaymentMethodType {
             case .przelewy24:
                 return .pm_type_p24
             case .afterpayClearpay:
-                return .pm_type_afterpay
+                return .pm_type_cashapp // Afterpay now users Cash App's logo
             case .sofort, .klarna:
                 return .pm_type_klarna
             case .affirm:

@@ -20,7 +20,7 @@ class PaymentSheetImageLibrary {
         if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: locale) {
             return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
         } else {
-            return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
+            return self.safeImageNamed("cash_app_afterpay_mark", templateIfAvailable: true)
         }
     }
 

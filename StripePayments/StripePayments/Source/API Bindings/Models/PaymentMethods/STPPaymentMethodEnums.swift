@@ -138,7 +138,7 @@ import Foundation
             return Locale.current.stp_regionCode == "GB" || Locale.current.stp_regionCode == "FR"
                 || Locale.current.stp_regionCode == "ES" || Locale.current.stp_regionCode == "IT"
                 ? STPLocalizedString("Clearpay", "Payment Method type brand name")
-                : STPLocalizedString("Afterpay", "Payment Method type brand name")
+                : STPLocalizedString("Cash App Afterpay", "Payment Method type brand name")
         case .blik:
             return STPLocalizedString("BLIK", "Payment Method type brand name")
         case .weChatPay:
