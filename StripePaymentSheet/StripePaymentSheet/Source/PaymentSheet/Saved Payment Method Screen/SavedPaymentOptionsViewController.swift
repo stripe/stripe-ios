@@ -107,6 +107,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
         let allowsSetAsDefaultPM: Bool
+        let allowsUpdatePaymentMethod: Bool
     }
 
     // MARK: - Internal Properties
@@ -117,12 +118,12 @@ class SavedPaymentOptionsViewController: UIViewController {
         case 0:
             return false
         case 1:
-            // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM allows for the card brand choice to be updated.
-            return (configuration.allowsRemovalOfPaymentMethods && configuration.allowsRemovalOfLastSavedPaymentMethod) || viewModels.contains(where: {
+            // If there's exactly one PM, customer can only edit if configuration allows removal or allows setting as default or if that single PM allows for the card brand choice or other card details to be updated.
+            return (configuration.allowsRemovalOfPaymentMethods && configuration.allowsRemovalOfLastSavedPaymentMethod) || configuration.allowsSetAsDefaultPM || configuration.allowsUpdatePaymentMethod || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         default:
-            return configuration.allowsRemovalOfPaymentMethods || viewModels.contains(where: {
+            return configuration.allowsRemovalOfPaymentMethods || configuration.allowsUpdatePaymentMethod || configuration.allowsSetAsDefaultPM || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         }
@@ -527,7 +528,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, needsVerticalPaddingForBadge: hasDefault, showDefaultPMBadge: isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId))
+        cell.setViewModel(viewModel, cbcEligible: cbcEligible, allowsPaymentMethodRemoval: self.configuration.allowsRemovalOfPaymentMethods, allowsPaymentMethodUpdate: self.configuration.allowsUpdatePaymentMethod, allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM, needsVerticalPaddingForBadge: hasDefault, showDefaultPMBadge: isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId))
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

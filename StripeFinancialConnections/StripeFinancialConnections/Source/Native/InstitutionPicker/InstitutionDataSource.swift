@@ -17,6 +17,7 @@ protocol InstitutionDataSource: AnyObject {
     func fetchInstitutions(searchQuery: String) -> Future<FinancialConnectionsInstitutionSearchResultResource>
     func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]>
     func createAuthSession(institutionId: String) -> Future<FinancialConnectionsAuthSession>
+    func selectInstitution(institutionId: String) -> Future<FinancialConnectionsSelectInstitution>
 }
 
 class InstitutionAPIDataSource: InstitutionDataSource {
@@ -63,6 +64,13 @@ class InstitutionAPIDataSource: InstitutionDataSource {
 
     func createAuthSession(institutionId: String) -> Future<FinancialConnectionsAuthSession> {
         return apiClient.createAuthSession(
+            clientSecret: clientSecret,
+            institutionId: institutionId
+        )
+    }
+
+    func selectInstitution(institutionId: String) -> Future<FinancialConnectionsSelectInstitution> {
+        return apiClient.selectInstitution(
             clientSecret: clientSecret,
             institutionId: institutionId
         )

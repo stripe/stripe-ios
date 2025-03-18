@@ -173,6 +173,7 @@ extension RowButton.RightAccessoryButton {
                                        isCBCEligible: Bool,
                                        allowsRemovalOfLastSavedPaymentMethod: Bool,
                                        allowsPaymentMethodRemoval: Bool,
+                                       allowsPaymentMethodUpdate: Bool,
                                        isFlatCheckmarkStyle: Bool = false) -> AccessoryType? {
         guard savedPaymentMethodsCount > 0 else { return nil }
 
@@ -182,6 +183,6 @@ extension RowButton.RightAccessoryButton {
         }
 
         // We only have 1 payment method... show the edit icon if the card brand can be updated or if it can be removed
-        return (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && allowsPaymentMethodRemoval) ? .edit : nil
+        return (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && allowsPaymentMethodRemoval) || allowsPaymentMethodUpdate ? .edit : nil
     }
 }

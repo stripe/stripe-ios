@@ -463,7 +463,14 @@ extension Array where Element == STPPaymentMethod {
 
 extension RowButton {
     func addChangeButton(sublabel: String?) {
-        isDisplayingAccessoryView = true
+        // Hack: We assume the accessory view is "Change >"
+        self.accessoryView?.isHidden = false
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+        self.accessoryView?.alpha = 0
+        UIView.animate(withDuration: 0.2) {
+            self.accessoryView?.alpha = 1
+        }
         if let sublabel {
             setSublabel(text: sublabel)
         }
@@ -471,7 +478,10 @@ extension RowButton {
     }
 
     func removeChangeButton(shouldClearSublabel: Bool) {
-        isDisplayingAccessoryView = false
+        // Hack: We assume the accessory view is "Change >"
+        self.accessoryView?.isHidden = true
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
         if shouldClearSublabel {
             setSublabel(text: nil)
         }

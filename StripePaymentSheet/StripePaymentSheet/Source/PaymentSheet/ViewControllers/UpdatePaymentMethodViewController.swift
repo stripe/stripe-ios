@@ -239,10 +239,13 @@ final class UpdatePaymentMethodViewController: UIViewController {
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
         switch updatePaymentMethodResult {
         case .success:
-            if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions,
-               let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+            if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions {
+                var params: [String: Any] = [:]
+                if let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                    params["selected_card_brand"] = selectedCardBrand
+                }
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
-                                                                     params: ["selected_card_brand": selectedCardBrand])
+                                                                     params: params)
             }
             if shouldSetAsDefault {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethod),
@@ -252,11 +255,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
             updateButton.update(state: .enabled)
             latestError = errors.count == 1 ? errors[0] : NSError.stp_genericErrorOccurredError()
             if errors.contains(where: { ($0 as NSError) == NSError.stp_cardBrandNotUpdatedError() }) {
-                if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions,
-                   let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions {
+                    var params: [String: Any] = [:]
+                    if let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                        params["selected_card_brand"] = selectedCardBrand
+                    }
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
                                                                          error: latestError,
-                                                                         params: ["selected_card_brand": selectedCardBrand])
+                                                                         params: params)
                 }
             }
             if errors.contains(where: { ($0 as NSError) == NSError.stp_defaultPaymentMethodNotUpdatedError() }) {

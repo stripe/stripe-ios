@@ -320,6 +320,23 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testAfterpayConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "USD",
+            paymentMethodType: .afterpayClearpay,
+            merchantCountry: .US
+        ) { form in
+            // Afterpay shows name, email, and full billing
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 15)
+            form.getTextFieldElement("Full name").setText("Foo")
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+            form.getTextFieldElement("Address line 1").setText("123 Street")
+            form.getTextFieldElement("City").setText("Your City")
+            form.getTextFieldElement("ZIP").setText("12345")
+        }
+    }
+
     func testMobilePayConfirmFlows() async throws {
         try await _testConfirm(
             intentKinds: [.paymentIntent],

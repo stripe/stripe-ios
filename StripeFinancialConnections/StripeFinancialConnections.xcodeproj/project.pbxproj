@@ -69,6 +69,7 @@
 		497142BC2C514B08000DFA64 /* FlowRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497142BB2C514B08000DFA64 /* FlowRouterTests.swift */; };
 		499EEAFD2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EEAFC2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift */; };
 		49A0B5862C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */; };
+		49AC00C22D7B5C90005BFD57 /* FinancialConnectionsSelectInstitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AC00C12D7B5C90005BFD57 /* FinancialConnectionsSelectInstitution.swift */; };
 		49AC518C2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */; };
 		49AED8FF2D4D244B00FD7C23 /* bank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AED8FE2D4D244B00FD7C23 /* bank@3x.png */; };
 		49B5BF762D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B5BF752D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift */; };
@@ -339,6 +340,7 @@
 		497142BB2C514B08000DFA64 /* FlowRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowRouterTests.swift; sourceTree = "<group>"; };
 		499EEAFC2D3E948B00E1BE85 /* FinancialConnectionsAPIClientLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClientLogger.swift; sourceTree = "<group>"; };
 		49A0B5852C5D2F3C00D697D9 /* FinancialConnectionsAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAPIClientTests.swift; sourceTree = "<group>"; };
+		49AC00C12D7B5C90005BFD57 /* FinancialConnectionsSelectInstitution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSelectInstitution.swift; sourceTree = "<group>"; };
 		49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLinkLoginPane.swift; sourceTree = "<group>"; };
 		49AED8FE2D4D244B00FD7C23 /* bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank@3x.png"; sourceTree = "<group>"; };
 		49B5BF752D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsAppearance.swift; sourceTree = "<group>"; };
@@ -789,6 +791,7 @@
 				49AC518B2C52DE2C00B712CC /* FinancialConnectionsLinkLoginPane.swift */,
 				6A384A832C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift */,
 				49F047542C63C2E5006BAD3E /* FinancialConnectionsPaymentDetails.swift */,
+				49AC00C12D7B5C90005BFD57 /* FinancialConnectionsSelectInstitution.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1409,6 +1412,7 @@
 				97C528CE821C6A55D58F68A4 /* ConsentFooterView.swift in Sources */,
 				8927328EE28A0C94B5AB69DB /* ConsentLogoView.swift in Sources */,
 				E9866D5CA186A242BBEA69E1 /* ConsentViewController.swift in Sources */,
+				49AC00C22D7B5C90005BFD57 /* FinancialConnectionsSelectInstitution.swift in Sources */,
 				D9D84D6FF624CF4363D87CEB /* InstitutionDataSource.swift in Sources */,
 				6D29E55F6A3864ED52799169 /* InstitutionPickerViewController.swift in Sources */,
 				C6B99A1C34886D3B5E1AF1A2 /* InstitutionSearchBar.swift in Sources */,
