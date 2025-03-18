@@ -1,6 +1,7 @@
 ## 24.8.0 2025-03-17
 ### PaymentSheet, CustomerSheet
 * [Added] Support for default payment methods in private beta.
+* [Changed] Rebranded Afterpay to Cash App Afterpay
 
 ## 24.7.0 2025-03-03
 ### Connect (Private Preview)
