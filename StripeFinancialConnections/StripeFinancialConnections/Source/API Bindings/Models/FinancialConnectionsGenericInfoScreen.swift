@@ -61,21 +61,6 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
                 }
             }
 
-            // this struct is here
-            private struct TypeDecodingContainer: Codable {
-                let type: BodyEntryType
-
-                enum BodyEntryType: String, Codable {
-                    case text = "text"
-                    case image = "image"
-                    case bullets = "bullets"
-                }
-
-                enum CodingKeys: String, CodingKey {
-                    case type
-                }
-            }
-
             private enum CodingKeys: String, CodingKey {
                 case type
             }
