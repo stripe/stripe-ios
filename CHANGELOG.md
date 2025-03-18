@@ -1,7 +1,7 @@
-## X.Y.Z 2023-XX-YY
+## X.Y.Z 2025-XX-YY
 
 ### Payments
-* [Added] `mandate_data` is now automatically attached to PaymentIntent's with setup for future usage.
+* [Added] `mandate_data` is now automatically attached to PayPal PaymentIntent's with setup for future usage.
 
 ## 24.8.0 2025-03-17
 ### PaymentSheet, CustomerSheet
