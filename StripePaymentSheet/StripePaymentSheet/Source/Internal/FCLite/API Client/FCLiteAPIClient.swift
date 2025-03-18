@@ -76,8 +76,7 @@ extension FCLiteAPIClient {
         let mobileParameters: [String: Any] = [
             "fullscreen": true,
             "app_return_url": returnUrl,
-            // Uncomment when the `mobile_sdk_type` param is accepted:
-            // "mobile_sdk_type": "FC_LITE",
+            "mobile_sdk_type": "FC_LITE",
         ]
         let parameters: [String: Any] = [
             "client_secret": clientSecret,

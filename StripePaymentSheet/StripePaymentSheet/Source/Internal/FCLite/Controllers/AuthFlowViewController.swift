@@ -204,10 +204,10 @@ private extension AuthFlowViewController {
         guard manifest.isInstantDebits else {
             return manifest.hostedAuthURL
         }
-        
+
         let additionalParameters: [String] = [
             "return_payment_method=true",
-            "expand_payment_method=true"
+            "expand_payment_method=true",
         ]
         let urlString = manifest.hostedAuthURL.absoluteString
         let updatedUrlString = urlString + "&" + additionalParameters.joined(separator: "&")
