@@ -2,31 +2,30 @@ POST
 https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
-access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
-content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_methods; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=znzN9sUy7hXXYhzy4LNHwHF2qCI7K17d0W_PV3CM-lbLg1aRy0GMYY068eRfnzdHHvmfCenE9flhVZfp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
-x-wc: A
+reporting-endpoints: coop="https://q.stripe.com/coop-report"
+x-wc: AB
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_H1hYvjpew7J1Rj
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+request-id: req_XKsR9S1PwSSxWQ
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 518
 Vary: Origin
-Date: Wed, 02 Oct 2024 02:41:09 GMT
-original-request: req_H1hYvjpew7J1Rj
+Date: Tue, 18 Mar 2025 15:10:25 GMT
+original-request: req_XKsR9S1PwSSxWQ
 stripe-version: 2020-08-27
-idempotency-key: 9c35f9d0-3b13-47e3-a69a-b28ebabe867c
+idempotency-key: 459d7eba-edec-4e90-b771-ad95034f8216
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
 X-Stripe-Mock-Request: allow_redisplay=unspecified&payment_user_agent=.*&type=paypal
 
 {
@@ -36,7 +35,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&payment_user_agent=.*&type=pa
     "payer_id" : null,
     "payer_email" : null
   },
-  "id" : "pm_1Q5IUzKG6vc7r7YCd6Vrk1MM",
+  "id" : "pm_1R41mfKG6vc7r7YC2dp3LEet",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -51,7 +50,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&payment_user_agent=.*&type=pa
     }
   },
   "livemode" : false,
-  "created" : 1727836869,
+  "created" : 1742310625,
   "allow_redisplay" : "unspecified",
   "type" : "paypal",
   "customer" : null

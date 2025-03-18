@@ -1335,8 +1335,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 paymentIntent: STPFixtures.makePaymentIntent(),
                 configuration: configuration
             )
-            // ...shouldn't have mandate data
-            XCTAssertNil(params_for_pi_without_sfu.mandateData)
+            // ...should have mandate data
+            XCTAssertNotNil(params_for_pi_without_sfu.mandateData)
             // Params for pi with SFU supplied...
             let params_for_pi_with_sfu = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
