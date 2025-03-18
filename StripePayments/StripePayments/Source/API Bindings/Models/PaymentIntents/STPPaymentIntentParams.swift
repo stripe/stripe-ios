@@ -136,7 +136,7 @@ public class STPPaymentIntentParams: NSObject {
                 return _mandateData
             }
             switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
+            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount, .payPal:
                 return .makeWithInferredValues()
             default: break
             }
