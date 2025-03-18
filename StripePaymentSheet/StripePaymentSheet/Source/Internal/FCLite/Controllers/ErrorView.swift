@@ -32,7 +32,7 @@ class ErrorView: UIView {
 
         retryButton.setTitle("Try again", for: .normal)
         retryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        retryButton.backgroundColor = .systemBlue
+        retryButton.backgroundColor = FCLiteColor.stripe
         retryButton.setTitleColor(.white, for: .normal)
         retryButton.layer.cornerRadius = 8
         retryButton.addTarget(self, action: #selector(retryButtonTapped), for: .touchUpInside)

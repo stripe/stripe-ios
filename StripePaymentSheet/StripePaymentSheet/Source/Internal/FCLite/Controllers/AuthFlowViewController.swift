@@ -49,9 +49,10 @@ class AuthFlowViewController: UIViewController {
     }
 
     private func setupProgressBar() {
+        let color = manifest.isInstantDebits ? FCLiteColor.link : FCLiteColor.stripe
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         progressBar.trackTintColor = .lightGray
-        progressBar.progressTintColor = .systemBlue
+        progressBar.progressTintColor = color
         progressBar.progress = 0.0
     }
 
@@ -120,8 +121,6 @@ extension AuthFlowViewController: WKNavigationDelegate {
             return
         }
 
-        print("**** redirect: \(url)")
-
         // `matchesSchemeHostAndPath` is necessary for instant debits which
         // contains additional query parameters at the end of the `successUrl`.
         if url.matchesSchemeHostAndPath(of: manifest.successURL) {
@@ -179,9 +178,10 @@ extension AuthFlowViewController: WKUIDelegate {
     }
 
     private func launchInSecureBrowser(url: URL) {
+        let redirectUrl = URL(string: "stripe://financial-connections-lite/auth_redirect")!
         let webAuthenticationSession = ASWebAuthenticationSession(
             url: url,
-            callbackURLScheme: returnUrl.scheme,
+            callbackURLScheme: redirectUrl.scheme,
             completionHandler: { redirectURL, error in
                 if let error {
                     if

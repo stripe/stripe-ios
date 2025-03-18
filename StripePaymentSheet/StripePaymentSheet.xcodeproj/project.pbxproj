@@ -137,6 +137,7 @@
 		47B19F96CCEA290541E3B988 /* CardSectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03000A6807B09BFD8E6CB1 /* CardSectionElement.swift */; };
 		48DA2EFE0944E737B0F197B0 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = B2AFFAD776D5F21DF837F1BD /* OHHTTPStubs */; };
 		4926A0872D89B8DA00C6221C /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4926A0862D89B8DA00C6221C /* ErrorView.swift */; };
+		494C515C2D89EF8D00570605 /* FCLiteColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494C515B2D89EF8D00570605 /* FCLiteColor.swift */; };
 		4954CB3F2D81DB7500D25746 /* FinancialConnectionsLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4954CB3E2D81DB7500D25746 /* FinancialConnectionsLite.swift */; };
 		4954CB412D81DB8600D25746 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4954CB402D81DB8600D25746 /* README.md */; };
 		4954CB472D81DC0400D25746 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4954CB462D81DC0400D25746 /* Session.swift */; };
@@ -579,6 +580,7 @@
 		47C5DB8C01BA7137369C8B4D /* TextFieldElement+Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Card.swift"; sourceTree = "<group>"; };
 		4926A0862D89B8DA00C6221C /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		492B254E43F3BB9F9CEAEA06 /* PaymentSheetLoaderStubbedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetLoaderStubbedTest.swift; sourceTree = "<group>"; };
+		494C515B2D89EF8D00570605 /* FCLiteColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteColor.swift; sourceTree = "<group>"; };
 		4954CB3E2D81DB7500D25746 /* FinancialConnectionsLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLite.swift; sourceTree = "<group>"; };
 		4954CB402D81DB8600D25746 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4954CB462D81DC0400D25746 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -1139,6 +1141,7 @@
 				4954CB3E2D81DB7500D25746 /* FinancialConnectionsLite.swift */,
 				4954CB552D8312DE00D25746 /* FinancialConnectionsLiteImplementation.swift */,
 				4954CB402D81DB8600D25746 /* README.md */,
+				494C515B2D89EF8D00570605 /* FCLiteColor.swift */,
 			);
 			path = FCLite;
 			sourceTree = "<group>";
@@ -2323,6 +2326,7 @@
 				3147CEF32CC1D3700067B5E4 /* PayWithLinkViewController-LoaderViewController.swift in Sources */,
 				3147CEF42CC1D3700067B5E4 /* PayWithLinkViewController-BaseViewController.swift in Sources */,
 				4926A0872D89B8DA00C6221C /* ErrorView.swift in Sources */,
+				494C515C2D89EF8D00570605 /* FCLiteColor.swift in Sources */,
 				3147CEF52CC1D3700067B5E4 /* PayWithLinkViewController-SignUpViewController.swift in Sources */,
 				3147CEF62CC1D3700067B5E4 /* PayWithLinkViewController-UpdatePaymentViewController.swift in Sources */,
 				3147CEF72CC1D3700067B5E4 /* PayWithLinkViewController-VerifyAccountViewController.swift in Sources */,
