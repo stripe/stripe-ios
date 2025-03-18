@@ -47,8 +47,8 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
 
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
 
@@ -58,8 +58,8 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
 
@@ -79,7 +79,7 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
 
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
@@ -90,7 +90,7 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
@@ -111,8 +111,8 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
 
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
 
@@ -143,7 +143,7 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
 
-        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
         XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
