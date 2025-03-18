@@ -183,7 +183,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
-        self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
+        self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
