@@ -469,7 +469,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        logRenderLPMs()
         isLinkWalletButtonSelected = false
+        
+    }
+
+    private func logRenderLPMs() {
+        analyticsHelper.logRenderLPMs(visibleLPMs: paymentMethodListViewController?.rowButtons.compactMap { $0.type.paymentMethodType?.identifier } ?? [], hiddenLPMs: [])
     }
 
     // MARK: - PaymentSheetViewControllerProtocol

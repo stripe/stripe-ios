@@ -205,10 +205,16 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Our content should respect `directionalLayoutMargins`. The default margins is `.zero`.
         addAndPinSubview(stackView, directionalLayoutMargins: .zero)
+
+        logRenderLPMs()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func logRenderLPMs() {
+        analyticsHelper.logRenderLPMs(visibleLPMs: rowButtons.compactMap { $0.type.paymentMethodType?.identifier }, hiddenLPMs: [])
     }
 
     private var previousHeight: CGFloat?
