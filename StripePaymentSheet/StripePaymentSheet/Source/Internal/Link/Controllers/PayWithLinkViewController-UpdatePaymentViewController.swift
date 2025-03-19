@@ -167,7 +167,11 @@ extension PayWithLinkViewController {
             // "Can't unset payment details when it's not the default", so send nil instead of false
             let updateParams = UpdatePaymentDetailsParams(
                 isDefault: params.setAsDefault ? true : nil,
-                details: .card(expiryDate: params.expiryDate, billingDetails: params.billingDetails)
+                details: .card(
+                    expiryDate: params.expiryDate,
+                    billingDetails: params.billingDetails,
+                    preferredNetwork: params.preferredNetwork
+                )
             )
 
             linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
