@@ -605,7 +605,11 @@ private extension LinkSettings.FundingSource {
 
 struct UpdatePaymentDetailsParams {
     enum DetailsType {
-        case card(expiryDate: CardExpiryDate? = nil, billingDetails: STPPaymentMethodBillingDetails? = nil)
+        case card(
+            expiryDate: CardExpiryDate? = nil,
+            billingDetails: STPPaymentMethodBillingDetails? = nil,
+            preferredNetwork: String? = nil
+        )
         // updating bank not supported
     }
 

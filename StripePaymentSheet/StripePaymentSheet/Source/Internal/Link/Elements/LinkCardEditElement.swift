@@ -33,6 +33,7 @@ final class LinkCardEditElement: Element {
         let cvc: String?
         let billingDetails: STPPaymentMethodBillingDetails
         let setAsDefault: Bool
+        let preferredNetwork: String?
     }
 
     var view: UIView {
@@ -72,11 +73,14 @@ final class LinkCardEditElement: Element {
         billingDetails.nonnil_address.state = billingAddressSection?.state?.rawData
         billingDetails.nonnil_address.postalCode = billingAddressSection?.postalCode?.text
 
+        let preferredNetwork = cardBrandDropdownElement?.element.selectedItem.rawData
+
         return Params(
             expiryDate: expiryDate,
             cvc: useCVCPlaceholder ? nil : cvcElement.text,
             billingDetails: billingDetails,
-            setAsDefault: checkboxElement.checkboxButton.isSelected
+            setAsDefault: checkboxElement.checkboxButton.isSelected,
+            preferredNetwork: preferredNetwork
         )
     }
 
@@ -116,13 +120,42 @@ final class LinkCardEditElement: Element {
             theme: theme)
     }()
 
-    private lazy var panElement: TextFieldElement = {
-        let panElement = TextFieldElement(
-            configuration: PANConfiguration(paymentMethod: paymentMethod),
-            theme: theme
+    private lazy var cardBrandDropdownElement: PaymentMethodElementWrapper? = {
+        let cardBrands = paymentMethod.cardDetails?.availableNetworks ?? []
+
+        let cardBrandDropdown = DropdownFieldElement.makeCardBrandDropdown(
+            cardBrands: Set(cardBrands),
+            disallowedCardBrands: [
+                // We will add brands from card brand filtering here
+            ],
+            theme: theme,
+            includePlaceholder: false
         )
-        panElement.view.isUserInteractionEnabled = false
-        return panElement
+
+        if let selectedBrand = paymentMethod.cardDetails?.cardBrand, let index = cardBrands.firstIndex(of: selectedBrand) {
+            // TODO: why does this not work yet?
+            cardBrandDropdown.selectedIndex = Int(index)
+        }
+
+        return PaymentMethodElementWrapper<DropdownFieldElement>(cardBrandDropdown) { field, params in
+            let cardBrand = cardBrands[field.selectedIndex]
+            let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+            params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+            return params
+        }
+    }()
+
+    private lazy var panElement: TextFieldElement = {
+        let isCoBranded = cardBrandDropdownElement != nil
+
+        let panElementConfig = TextFieldElement.LastFourConfiguration(
+            lastFour: paymentMethod.cardDetails?.last4 ?? "",
+            editConfiguration: isCoBranded ? .readOnlyWithoutDisabledAppearance : .readOnly,
+            cardBrand: paymentMethod.cardDetails?.cardBrand,
+            cardBrandDropDown: cardBrandDropdownElement?.element
+        )
+
+        return panElementConfig.makeElement(theme: configuration.appearance.asElementsTheme)
     }()
 
     private lazy var cvcElement: TextFieldElement = {
@@ -170,7 +203,7 @@ final class LinkCardEditElement: Element {
     private lazy var cardSection: SectionElement = {
         let allElements: [Element?] = [
             nameElement,
-            panElement,
+            panElement, SectionElement.HiddenElement(cardBrandDropdownElement),
             SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
         ]
         let elements = allElements.compactMap { $0 }
@@ -224,25 +257,13 @@ extension LinkCardEditElement: ElementDelegate {
 
 }
 
-private extension LinkCardEditElement {
+private extension ConsumerPaymentDetails.Details.Card {
 
-    struct PANConfiguration: TextFieldElementConfiguration {
-        let paymentMethod: ConsumerPaymentDetails
-
-        var label: String {
-            String.Localized.card_number
-        }
-
-        var defaultValue: String? {
-            paymentMethod.cardDetails.map { "•••• \($0.last4)" }
-        }
-
-        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
-            paymentMethod.cardDetails.map { cardDetails in
-                let image = STPImageLibrary.cardBrandImage(for: cardDetails.stpBrand)
-                return UIImageView(image: image)
-            }
-        }
+    var cardBrand: STPCardBrand {
+        STPCard.brand(from: brand)
     }
 
+    var availableNetworks: [STPCardBrand] {
+        networks.map { STPCard.brand(from: $0) }.filter { $0 != .unknown }
+    }
 }
