@@ -402,7 +402,7 @@ extension String.Localized {
 
     static var buy_now_or_pay_later_with_afterpay: String {
         STPLocalizedString(
-            "Buy now or pay later with Afterpay",
+            "Buy now or pay later with Cash App Afterpay",
             "Subtitle shown on a button allowing a user to select to pay with Afterpay."
         )
     }
