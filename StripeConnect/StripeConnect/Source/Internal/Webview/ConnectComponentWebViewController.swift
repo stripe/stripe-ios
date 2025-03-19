@@ -299,6 +299,11 @@ extension ConnectComponentWebViewController {
             onDismiss?()
         }
     }
+
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        self.updateColors(appearance: componentManager.appearance)
+    }
 }
 
 // MARK: - Private
@@ -368,26 +373,32 @@ private extension ConnectComponentWebViewController {
     }
 
     func updateColors(appearance: Appearance) {
-        self.view.backgroundColor = appearance.colors.background
-        webView.backgroundColor = appearance.colors.background
-        webView.isOpaque = webView.backgroundColor == nil
+        let backgroundColor = appearance.colors.background ?? .white
+        let font = appearance.typography.font?.withSize(17) ?? UIFont.systemFont(ofSize: 17, weight: .semibold)
+        let textColor = appearance.colors.text ?? .black
+
+        self.view.backgroundColor = backgroundColor
+        webView.backgroundColor = backgroundColor
+        webView.isOpaque = false
         activityIndicator.tintColor = appearance.colors.loadingIndicatorColor
 
         let navAppearance = UINavigationBarAppearance()
         navAppearance.configureWithOpaqueBackground()
-        if let backgroundColor = appearance.colors.background {
-            navAppearance.backgroundColor = backgroundColor
-        }
-        var titleAttributes: [NSAttributedString.Key: Any]  = [:]
-        if let textColor = appearance.colors.text {
-            titleAttributes[.foregroundColor] = textColor
-        }
-        if let font = appearance.typography.font {
-            titleAttributes[.font] = font
-        }
-        navAppearance.titleTextAttributes = titleAttributes
-        self.navigationController?.navigationBar.standardAppearance = navAppearance
-        self.navigationController?.navigationBar.scrollEdgeAppearance = navAppearance
+        navAppearance.backgroundColor = backgroundColor
+        navAppearance.titleTextAttributes = [
+            .foregroundColor: textColor,
+            .font: UIFontMetrics(forTextStyle: .largeTitle).scaledFont(for: font),
+        ]
+        navigationItem.standardAppearance = navAppearance
+        navigationItem.scrollEdgeAppearance = navAppearance
+
+        // If the background color is unspecified then we force the appearance to light mode.
+        // If a color is specified then we assume that the presenting app has set up dynamic colors
+        // in the app or they have overridden the userInterfaceStyle at a higher level in the app.
+        navigationController?.navigationBar.overrideUserInterfaceStyle = appearance.colors.background == nil ? .light : .unspecified
+
+        // The buttons should be the same color as the text color
+        navigationController?.navigationBar.tintColor = textColor
     }
 
     func didFailLoad(error: Error) {
