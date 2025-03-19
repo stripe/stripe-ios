@@ -2073,6 +2073,7 @@
 			files = (
 				DE6A86725BC219EF19EF29AC /* form_specs.json in Resources */,
 				83031AF789D0C08E7B2BABB1 /* Localizable.strings in Resources */,
+				49909A242D8AFF4E0031EC33 /* README.md in Resources */,
 				31CDFC362BA8E66200B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
 				07F6593974558290598467E5 /* StripePaymentSheet.xcassets in Resources */,
 			);
