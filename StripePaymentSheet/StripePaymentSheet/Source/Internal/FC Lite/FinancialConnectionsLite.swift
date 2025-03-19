@@ -12,7 +12,7 @@ import UIKit
     /// The client secret of a Stripe `FinancialConnectionsSession` object.
     let clientSecret: String
 
-    /// A URL that that `FinancialConnectionsLite` can use to redirect back to your
+    /// A URL that `FinancialConnectionsLite` can use to redirect back to your
     /// app after completing authentication in another app (such as a bank's app or Safari).
     /// If not provided, all bank authentication sessions will happen in a secure browser within this app.
     let returnUrl: URL?
@@ -32,10 +32,10 @@ import UIKit
         self.returnUrl = returnUrl
     }
 
-    /// Launches the financial connections flow on the provided view controller.
+    /// Launches the Financial Connections flow on the provided view controller.
     /// - Parameters:
     ///   - viewController: The view controller from which the pay by bank flow will be presented.
-    ///   - completion: A closure that gets called with the result of the financial connections flow.
+    ///   - completion: A closure that gets called with the result of the Financial Connections flow.
     @_spi(STP) public func present(
         from viewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
