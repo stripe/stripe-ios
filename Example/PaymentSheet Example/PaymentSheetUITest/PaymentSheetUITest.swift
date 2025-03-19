@@ -1600,7 +1600,6 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.linkEnabledMode = .off
 
         settings.customerKeyType = .customerSession
-        settings.paymentMethodUpdate = .enabled
         loadPlayground(app, settings)
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))
@@ -1665,7 +1664,6 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.collectAddress = .full
 
         settings.customerKeyType = .customerSession
-        settings.paymentMethodUpdate = .enabled
         loadPlayground(app, settings)
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))

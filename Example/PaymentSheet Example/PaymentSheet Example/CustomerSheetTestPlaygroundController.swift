@@ -141,7 +141,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
         return configuration
     }
 

@@ -33,7 +33,7 @@ extension EmbeddedPaymentElement {
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet,
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
         let initialSelection: RowButtonType? = {
@@ -170,7 +170,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -311,7 +311,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-            allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+            allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
     }

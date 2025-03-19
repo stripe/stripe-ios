@@ -213,7 +213,7 @@ extension CustomerSheetDataSource {
         case .customerAdapter:
             return false
         case .customerSession:
-            return elementsSession.paymentMethodUpdateForCustomerSheet(configuration)
+            return elementsSession.paymentMethodUpdateForCustomerSheet
         }
     }
     func paymentMethodSyncDefault(elementsSession: STPElementsSession) -> Bool {
