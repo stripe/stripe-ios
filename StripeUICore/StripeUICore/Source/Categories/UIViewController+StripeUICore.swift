@@ -53,7 +53,39 @@ import UIKit
             // Recurse for any presented controllers
             return presented.findTopMostPresentedViewController()
         }
-        
+
         return self
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    func findViewControllerPresenter() -> UIViewController {
+        // Note: creating a UIViewController inside here results in a nil window
+
+        // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
+        // A VC hosted within a SwiftUI cell, for example, doesn't have a parent, so we need to find the UIWindow.
+        var presentingViewController: UIViewController =
+        self.view.window?.rootViewController ?? self
+
+        // Find the most-presented UIViewController
+        while let presented = presentingViewController.presentedViewController {
+            presentingViewController = presented
+        }
+
+        return presentingViewController
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    class func topMostViewController() -> UIViewController? {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return nil }
+
+        var topController: UIViewController? = window.rootViewController
+
+        // Traverse presented view controllers to find the top most view controller
+        while let presentedViewController = topController?.presentedViewController {
+            topController = presentedViewController
+        }
+
+        return topController
     }
 }
