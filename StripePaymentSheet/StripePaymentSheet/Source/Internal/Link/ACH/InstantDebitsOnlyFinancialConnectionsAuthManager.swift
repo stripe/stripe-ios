@@ -166,14 +166,3 @@ extension InstantDebitsOnlyAuthenticationSessionManager {
             .value?.removingPercentEncoding
     }
 }
-
-private extension URL {
-
-    func matchesSchemeHostAndPath(of otherURL: URL) -> Bool {
-        return (
-            self.scheme == otherURL.scheme &&
-            self.host == otherURL.host &&
-            self.path == otherURL.path
-        )
-    }
-}
