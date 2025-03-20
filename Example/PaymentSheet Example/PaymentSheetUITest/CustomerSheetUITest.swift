@@ -802,6 +802,10 @@ class CustomerSheetUITest: XCTestCase {
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText("32")
 
+        app.textFields["Country or region"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
+        app.toolbars.buttons["Done"].tap()
+
         let zipField = app.textFields["ZIP"]
         XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
         zipField.tap()
@@ -850,6 +854,10 @@ class CustomerSheetUITest: XCTestCase {
 
         let editPMButton = app.buttons["Edit"].firstMatch
         editPMButton.tap()
+
+        app.textFields["Country or region"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
+        app.toolbars.buttons["Done"].tap()
 
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))

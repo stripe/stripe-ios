@@ -228,7 +228,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Sleep to allow animation to finish
         sleep(1)
         // The next card should be selected now
-        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card")
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card, FR")
 
         // Switch to PaymentSheet
         app.buttons["paymentSheet"].waitForExistenceAndTap()
