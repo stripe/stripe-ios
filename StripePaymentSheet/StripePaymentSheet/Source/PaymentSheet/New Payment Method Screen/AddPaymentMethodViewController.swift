@@ -37,10 +37,7 @@ class AddPaymentMethodViewController: UIViewController {
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         paymentMethodTypesView.selected
     }
-    var visibleLPMs: [String] {
-        let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
-        return visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
-    }
+
     var paymentOption: PaymentOption? {
         paymentMethodFormViewController.paymentOption
     }
