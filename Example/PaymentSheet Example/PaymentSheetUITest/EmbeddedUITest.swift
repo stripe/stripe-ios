@@ -75,7 +75,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped"]
+            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_lpms_render", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
@@ -257,7 +257,11 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             presentEmbeddedLog,
             ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_lpms_render", "mc_carousel_payment_method_tapped", "mc_form_shown"]
         )
-
+        XCTAssertEqual(
+            analyticsLog.filter({ ["mc_lpms_render"]
+                .contains($0[string: "event"]!) }).map({ $0[string: "hidden_lpms"] }),
+            []
+        )
         // Complete payment
         app.buttons["Pay €50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))

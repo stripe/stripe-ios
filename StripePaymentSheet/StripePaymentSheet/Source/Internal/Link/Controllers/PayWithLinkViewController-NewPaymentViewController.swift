@@ -97,6 +97,7 @@ extension PayWithLinkViewController {
                 elementsSession: context.elementsSession,
                 configuration: configuration,
                 paymentMethodTypes: [.stripe(.card)],
+                walletHeaders: [],
                 formCache: .init(), // We don't want to share a form cache with the containing PaymentSheet
                 analyticsHelper: context.analyticsHelper,
                 delegate: self

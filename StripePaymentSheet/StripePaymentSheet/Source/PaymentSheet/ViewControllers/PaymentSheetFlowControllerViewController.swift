@@ -216,12 +216,14 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             cbcEligible: elementsSession.isCardBrandChoiceEligible,
             analyticsHelper: analyticsHelper
         )
+        let walletHeaders: [String] = (!isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingAdd) ? ["link"] : []
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             paymentMethodTypes: loadResult.paymentMethodTypes,
+            walletHeaders: walletHeaders,
             formCache: formCache,
             analyticsHelper: analyticsHelper
         )

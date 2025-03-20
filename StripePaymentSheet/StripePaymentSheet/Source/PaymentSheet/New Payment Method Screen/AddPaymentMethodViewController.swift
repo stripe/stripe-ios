@@ -53,6 +53,7 @@ class AddPaymentMethodViewController: UIViewController {
     private let intent: Intent
     private let elementsSession: STPElementsSession
     private let configuration: PaymentElementConfiguration
+    private let walletHeaders: [String]
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     var previousCustomerInput: IntentConfirmParams?
@@ -95,6 +96,7 @@ class AddPaymentMethodViewController: UIViewController {
         configuration: PaymentElementConfiguration,
         previousCustomerInput: IntentConfirmParams? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        walletHeaders: [String],
         formCache: PaymentMethodFormCache,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: AddPaymentMethodViewControllerDelegate? = nil
@@ -110,6 +112,7 @@ class AddPaymentMethodViewController: UIViewController {
         self.elementsSession = elementsSession
         self.previousCustomerInput = previousCustomerInput
         self.paymentMethodTypes = paymentMethodTypes
+        self.walletHeaders = walletHeaders
         self.delegate = delegate
         self.formCache = formCache
         self.analyticsHelper = analyticsHelper
@@ -143,6 +146,19 @@ class AddPaymentMethodViewController: UIViewController {
         delegate?.didUpdate(self)
     }
 
+    private func logRenderLPMs() {
+        // These are the cells that are visible without scrolling in the horizontal carousel
+        let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
+        var visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
+        // Add wallet LPMs
+        if !walletHeaders.isEmpty {
+            visibleLPMs.append(contentsOf: walletHeaders)
+        }
+        // These LPMs are not visible without without scrolling in the horizontal carousel
+        let hiddenLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visibleLPMs.contains($0) }
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
+    }
+
     // MARK: - Private
 
     private func updateUI() {
@@ -165,19 +181,6 @@ class AddPaymentMethodViewController: UIViewController {
             )
         }
         updateUI()
-    }
-
-    private func logRenderLPMs() {
-        let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
-        var visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
-            visibleLPMs.append("apple_pay")
-        }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
-            visibleLPMs.append("link")
-        }
-        let hiddenLPMs: [String] = paymentMethodTypesView.paymentMethodTypes.compactMap { $0.identifier }.filter { !visibleLPMs.contains($0) }
-        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
     }
 
     // MARK: - Internal

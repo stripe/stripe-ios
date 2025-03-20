@@ -68,11 +68,19 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     // MARK: - Views
 
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
+        var walletHeaders: [String] = []
+        if isApplePayEnabled {
+            walletHeaders.append("apple_pay")
+        }
+        if isLinkEnabled {
+            walletHeaders.append("link")
+        }
         return AddPaymentMethodViewController(
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
             paymentMethodTypes: loadResult.paymentMethodTypes,
+            walletHeaders: walletHeaders,
             formCache: formCache,
             analyticsHelper: analyticsHelper,
             delegate: self

@@ -214,7 +214,10 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     private func logRenderLPMs() {
-        analyticsHelper.logRenderLPMs(visibleLPMs: rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }, hiddenLPMs: [])
+        // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
+        let visibleLPMs: [String] = rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }
+        let hiddenLPMs: [String] = []
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
     }
 
     private var previousHeight: CGFloat?
