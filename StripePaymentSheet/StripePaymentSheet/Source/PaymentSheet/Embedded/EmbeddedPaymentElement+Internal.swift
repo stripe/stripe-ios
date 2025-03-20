@@ -141,7 +141,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             delegate: self
         )
 
-        // 2. Inform the delegate of the updated payment option if there is no input to be collected
+        // 2. Inform the delegate of the updated payment option if there is no form. If there is a form, we don't want to inform the delegate b/c the paymentOption is in an indeterminate state until the customer completes or cancels out of the form.
         if self.selectedFormViewController == nil {
             informDelegateIfPaymentOptionUpdated()
         }
