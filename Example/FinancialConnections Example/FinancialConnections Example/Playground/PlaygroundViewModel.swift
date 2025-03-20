@@ -297,6 +297,8 @@ final class PlaygroundViewModel: ObservableObject {
             }
         case .paymentElement:
             setupPaymentElement()
+        case .fcLite:
+            setupFcLite()
         }
     }
 
