@@ -37,11 +37,13 @@ final class PlaygroundConfiguration {
     enum IntegrationType: String, CaseIterable, Identifiable, Hashable {
         case standalone = "standalone"
         case paymentElement = "payment_element"
+        case fcLite = "fc_lite"
 
         var displayName: String {
             switch self {
             case .standalone: "Standalone"
-            case .paymentElement: "Payment Element"
+            case .paymentElement: "MPE"
+            case .fcLite: "FC Lite"
             }
         }
 
@@ -689,11 +691,8 @@ final class PlaygroundConfigurationStore {
         set {
             do {
                 let configurationData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                if let configurationString = String(data: configurationData, encoding: .utf8) {
-                    Self.configurationString = configurationString
-                } else {
-                    assertionFailure("unable to convert `configurationData` to a `configurationString`")
-                }
+                let configurationString = String(decoding: configurationData, as: UTF8.self)
+                Self.configurationString = configurationString
             } catch {
                 assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
             }
