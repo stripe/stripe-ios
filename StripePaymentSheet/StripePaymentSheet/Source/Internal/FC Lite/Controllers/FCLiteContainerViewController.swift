@@ -18,7 +18,6 @@ class FCLiteContainerViewController: UIViewController {
     private var errorView: ErrorView?
 
     private var manifest: LinkAccountSessionManifest?
-    private var authFlowViewController: FCLiteAuthFlowViewController?
 
     private var isInstantDebits: Bool {
         manifest?.isInstantDebits == true
@@ -146,14 +145,11 @@ class FCLiteContainerViewController: UIViewController {
             returnUrl: returnUrl,
             completion: { [weak self] result in
                 guard let self else { return }
-                self.authFlowViewController = nil
-
                 Task {
                     await self.completeFlow(result: result)
                 }
             }
         )
-        self.authFlowViewController = authFlowVC
         navigationController?.pushViewController(authFlowVC, animated: false)
     }
 

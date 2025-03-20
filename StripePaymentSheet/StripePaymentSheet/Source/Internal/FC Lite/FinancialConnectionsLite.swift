@@ -20,12 +20,11 @@ import UIKit
     /// The API Client instance used to make requests to Stripe.
     let apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
 
-    // Strong references to prevent deallocation
     private var navigationController: UINavigationController?
     private var wrapperViewController: FCLiteModalPresentationWrapper?
     private var completionHandler: ((FinancialConnectionsSDKResult) -> Void)?
 
-    // Static reference to hold the active instance.
+    // Strong reference to prevent deallocation.
     private static var activeInstance: FinancialConnectionsLite?
 
     /// Initializes `FinancialConnectionsLite`.
@@ -69,6 +68,7 @@ import UIKit
         let animated: Bool
 
         if UIDevice.current.userInterfaceIdiom == .pad {
+            navController.preferredContentSize = CGSize(width: 360, height: 580)
             navController.modalPresentationStyle = .formSheet
             toPresent = navController
             animated = true
