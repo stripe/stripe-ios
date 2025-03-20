@@ -1625,6 +1625,10 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText("32")
 
+        app.textFields["Country or region"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
+        app.toolbars.buttons["Done"].tap()
+
         let zipField = app.textFields["ZIP"]
         XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
         zipField.tap()
@@ -1670,6 +1674,9 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))
         XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
+
+        app.textFields["Country or region"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
 
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
