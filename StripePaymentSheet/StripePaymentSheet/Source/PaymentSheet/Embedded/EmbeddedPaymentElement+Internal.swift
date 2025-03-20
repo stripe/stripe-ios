@@ -403,7 +403,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 // Go back to the previous selection if there was one
                 embeddedPaymentMethodsView.resetSelectionToLastSelection()
             } else if paymentOption != lastUpdatedPaymentOption {
-                // Reset selection if no previous selection exists and the closing form's payment option differs from last updated
+                // Clear selection, user closed form without selecting, and the form payment option no longer matches merchant's latest.
                 embeddedPaymentMethodsView.resetSelection()
             }
 
