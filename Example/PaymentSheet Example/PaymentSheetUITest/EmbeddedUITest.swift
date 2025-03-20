@@ -24,7 +24,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             .filter({ !$0.starts(with: "luxe") })
         XCTAssertEqual(
             startupLog,
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_init"]
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_init", "mc_lpms_render"]
         )
 
         // Entering a card w/ deferred PaymentIntent...
@@ -252,10 +252,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         let presentEmbeddedLog = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ $0.starts(with: "mc_") })
-            .prefix(5)
+            .prefix(6)
         XCTAssertEqual(
             presentEmbeddedLog,
-            ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_carousel_payment_method_tapped", "mc_form_shown"]
+            ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_lpms_render", "mc_carousel_payment_method_tapped", "mc_form_shown"]
         )
 
         // Complete payment
@@ -382,11 +382,11 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 3.0))
         let events = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ !$0.starts(with: "luxe") })
-            .suffix(5)
+            .suffix(6)
 
         XCTAssertEqual(
             events,
-            ["mc_embedded_paymentoption_savedpm_select",
+            ["mc_embedded_paymentoption_savedpm_select", "mc_lpms_render",
              "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
              "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
             ]
