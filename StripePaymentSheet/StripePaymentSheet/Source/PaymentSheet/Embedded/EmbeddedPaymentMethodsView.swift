@@ -214,10 +214,11 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     private func logRenderLPMs() {
-        analyticsHelper.logRenderLPMs(visibleLPMs: rowButtons.compactMap { $0.type.paymentMethodType?.identifier }, hiddenLPMs: [])
+        analyticsHelper.logRenderLPMs(visibleLPMs: rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }, hiddenLPMs: [])
     }
 
     private var previousHeight: CGFloat?
+    private var didLogRenderLPMs: Bool = false
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -229,6 +230,11 @@ class EmbeddedPaymentMethodsView: UIView {
         if frame.height != previousHeight {
             self.previousHeight = frame.height
             delegate?.embeddedPaymentMethodsViewDidUpdateHeight()
+        }
+
+        if !didLogRenderLPMs {
+            logRenderLPMs()
+            didLogRenderLPMs = true
         }
     }
 

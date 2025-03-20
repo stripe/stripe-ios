@@ -475,7 +475,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private func logRenderLPMs() {
-        analyticsHelper.logRenderLPMs(visibleLPMs: paymentMethodListViewController?.rowButtons.compactMap { $0.type.paymentMethodType?.identifier } ?? [], hiddenLPMs: [])
+        var visibleLPMS: [String] = paymentMethodListViewController?.rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier } ?? []
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList {
+            visibleLPMS.append("apple_pay")
+        }
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList {
+            visibleLPMS.append("link")
+        }
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMS, hiddenLPMs: [])
     }
 
     // MARK: - PaymentSheetViewControllerProtocol

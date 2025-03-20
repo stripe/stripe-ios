@@ -37,6 +37,10 @@ class AddPaymentMethodViewController: UIViewController {
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         paymentMethodTypesView.selected
     }
+    var visibleLPMs: [String] {
+        let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
+        return visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
+    }
     var paymentOption: PaymentOption? {
         paymentMethodFormViewController.paymentOption
     }
@@ -168,7 +172,13 @@ class AddPaymentMethodViewController: UIViewController {
 
     private func logRenderLPMs() {
         let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
-        let visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
+        var visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
+            visibleLPMs.append("apple_pay")
+        }
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+            visibleLPMs.append("link")
+        }
         let hiddenLPMs: [String] = paymentMethodTypesView.paymentMethodTypes.compactMap { $0.identifier }.filter { !visibleLPMs.contains($0) }
         analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
     }
