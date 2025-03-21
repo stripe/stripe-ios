@@ -149,12 +149,16 @@ extension SavedPaymentMethodCollectionView {
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
         var showEditIcon: Bool {
-            guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
+            guard let savedPaymentMethod = viewModel?.savedPaymentMethod else {
+                return false
+            }
+            guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { savedPaymentMethod.type == $0 }) else {
                 fatalError("Payment method does not match supported saved payment methods.")
             }
-            return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
+            return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (savedPaymentMethod.isCoBrandedCard && cbcEligible)
         }
 
+        private var tapGestureRecognizer: UITapGestureRecognizer?
         // MARK: - UICollectionViewCell
 
         override init(frame: CGRect) {
@@ -298,6 +302,21 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
+        private func setupGestureIfNecessary() {
+            // Check if the gesture has already been set
+            if tapGestureRecognizer == nil {
+                tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didSelectAccessory))
+                self.addGestureRecognizer(tapGestureRecognizer!)
+            }
+        }
+
+        private func removeGestureIfNecessary() {
+            if let gesture = tapGestureRecognizer {
+                self.removeGestureRecognizer(gesture)
+                tapGestureRecognizer = nil
+            }
+        }
+
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
             if case .USBankAccount = paymentMethod.type {
                 let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(.secondaryLabel)
@@ -381,12 +400,11 @@ extension SavedPaymentMethodCollectionView {
                 }
 
                 if isRemovingPaymentMethods {
-                    let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didSelectAccessory))
                     if case .saved = viewModel, showEditIcon {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
-                        addGestureRecognizer(tapGestureRecognizer)
+                        setupGestureIfNecessary()
                     } else {
                         accessoryButton.isHidden = true
 
@@ -395,23 +413,24 @@ extension SavedPaymentMethodCollectionView {
                         paymentMethodLogo.alpha = 0.6
                         plus.alpha = 0.6
                         label.textColor = appearance.colors.text.disabledColor
-                        removeGestureRecognizer(tapGestureRecognizer)
                     }
-
-                } else if isSelected {
-                    accessoryButton.isHidden = true
-                    shadowRoundedRectangle.isEnabled = true
-                    label.textColor = appearance.colors.text
-                    paymentMethodLogo.alpha = 1
-                    plus.alpha = 1
-                    selectedIcon.isHidden = false
-                    selectedIcon.backgroundColor = appearance.colors.primary
-
-                    // Draw a border with primary color
-                    shadowRoundedRectangle.isSelected = true
                 } else {
-                    accessoryButton.isHidden = true
-                    applyDefaultStyle()
+                    if isSelected {
+                        accessoryButton.isHidden = true
+                        shadowRoundedRectangle.isEnabled = true
+                        label.textColor = appearance.colors.text
+                        paymentMethodLogo.alpha = 1
+                        plus.alpha = 1
+                        selectedIcon.isHidden = false
+                        selectedIcon.backgroundColor = appearance.colors.primary
+                        
+                        // Draw a border with primary color
+                        shadowRoundedRectangle.isSelected = true
+                    } else {
+                        accessoryButton.isHidden = true
+                        applyDefaultStyle()
+                    }
+                    removeGestureIfNecessary()
                 }
                 accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
                 label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
