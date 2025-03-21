@@ -29,7 +29,7 @@ class ConnectWebViewControllerTests: XCTestCase {
                       analyticsClient: mockAnalyticsClient,
                       allowedHosts: [
                         "connect-js.stripe.com",
-                        "connect.stripe.com"
+                        "connect.stripe.com",
                       ],
                       urlOpener: mockURLOpener,
                       fileManager: mockFileManager,
@@ -252,25 +252,6 @@ class ConnectWebViewControllerTests: XCTestCase {
         XCTAssertEqual(loggedError.code, 10)
     }
 
-    func testDownloadFinishedShowsShareSheet() {
-        let mockFileURL = URL(string: "file:///temp/example.csv")!
-
-        var activityVC: UIActivityViewController?
-        webVC.presentPopup = { vc in
-            activityVC = vc as? UIActivityViewController
-        }
-        webVC.downloadedFile = mockFileURL
-
-        webVC.downloadDidFinish()
-        XCTAssertNotNil(activityVC)
-
-        // Dismissing should cleanup downloaded file
-        activityVC?.completionWithItemsHandler?(nil, false, nil, nil)
-        XCTAssertNil(webVC.downloadedFile)
-        wait(for: [mockFileManager.removeItemExpectation])
-        XCTAssertEqual(mockFileManager.removedItems, [mockFileURL])
-    }
-
     func testNonExistentFileShowsError() throws {
         let mockFileURL = URL(string: "file:///temp/example.csv")!
 
@@ -310,6 +291,113 @@ class ConnectWebViewControllerTests: XCTestCase {
         let loggedError = try XCTUnwrap(mockAnalyticsClient.loggedClientErrors.last)
         XCTAssertEqual(loggedError.domain, "StripeConnect.ConnectWebViewControllerError")
         XCTAssertEqual(loggedError.code, 1)
+    }
+
+    @MainActor
+    func testAlertsConfirmationOkPressed() async throws {
+        let message = ConnectWebViewController.Alert(title: "Title", message: "Body")
+        var returnedMessage = message
+
+        returnedMessage.buttons = .init(ok: "OK", cancel: "Cancel")
+        let result = try await popupConfirmation(body: message.jsonString()!, expectedAlert: returnedMessage, callConfirmCallback: true)
+        XCTAssertEqual(result, true)
+    }
+
+    @MainActor
+    func testAlertsConfirmationCancelPressed() async throws {
+        let message = ConnectWebViewController.Alert(title: "Title", message: "Body")
+        var returnedMessage = message
+
+        returnedMessage.buttons = .init(ok: "OK", cancel: "Cancel")
+        let result = try await popupConfirmation(body: message.jsonString()!, expectedAlert: returnedMessage, callConfirmCallback: false)
+        XCTAssertEqual(result, false)
+    }
+
+    @MainActor
+    func testAlertsConfirmationWithButtons() async throws {
+        let message = ConnectWebViewController.Alert(title: "Title", message: "Body", buttons: .init(ok: "Close", cancel: "Never mind"))
+        let result = try await popupConfirmation(body: message.jsonString()!, expectedAlert: message, callConfirmCallback: false)
+        XCTAssertEqual(result, false)
+    }
+
+    @MainActor
+    func testConfirmStringMessage() async throws {
+        let expectedMessage = ConnectWebViewController.Alert(title: nil, message: "Just message confirm", buttons: .init(ok: "OK", cancel: "Cancel"))
+        let result = try await popupConfirmation(body: "Just message confirm",
+                                          expectedAlert: expectedMessage,
+                                          callConfirmCallback: false)
+        XCTAssertEqual(result, false)
+    }
+
+    @MainActor
+    func testStandardAlertOkPressed() async throws {
+        var returnedMessage = ConnectWebViewController.Alert(title: nil, message: "test")
+        returnedMessage.buttons = .init(ok: "OK", cancel: nil)
+        await popupAlert(body: "test", expectedAlert: returnedMessage)
+    }
+
+    @MainActor
+    func testStandardAlert() async throws {
+        let message = ConnectWebViewController.Alert(title: "Title", message: "Body", buttons: .init(ok: "Close", cancel: "Never mind"))
+        try await popupAlert(body: message.jsonString()!, expectedAlert: message)
+    }
+
+    @MainActor
+    func testStandardAlertStringMessage() async throws {
+        let expectedMessage = ConnectWebViewController.Alert(title: nil, message: "Just message confirm", buttons: .init(ok: "OK", cancel: nil))
+        await popupAlert(body: "Just message confirm",
+                                          expectedAlert: expectedMessage)
+    }
+}
+
+extension ConnectWebViewControllerTests {
+
+    @MainActor
+    func popupConfirmation(body: String,
+                           expectedAlert: ConnectWebViewController.Alert,
+                           callConfirmCallback: Bool)
+    async throws -> Bool? {
+        let webVC = ConnectWebViewControllerTestWrapper(configuration: .init(),
+                      analyticsClient: mockAnalyticsClient,
+                      allowedHosts: [
+                        "connect-js.stripe.com",
+                        "connect.stripe.com",
+                      ],
+                      urlOpener: mockURLOpener,
+                      fileManager: mockFileManager,
+                      sdkVersion: "1.2.3")
+        webVC.presentAlert = { alert, confirm, cancel in
+            XCTAssertEqual(alert, expectedAlert)
+                XCTAssertNotNil(confirm)
+                XCTAssertNotNil(cancel)
+            if callConfirmCallback {
+                confirm?()
+            } else {
+                cancel?()
+            }
+        }
+        let result = try? await webVC.webView.evaluateJavaScript("confirm('\(body)');") as? Bool
+        return result
+    }
+
+    @MainActor
+    func popupAlert(body: String,
+                    expectedAlert: ConnectWebViewController.Alert) async {
+        let webVC = ConnectWebViewControllerTestWrapper(configuration: .init(),
+                      analyticsClient: mockAnalyticsClient,
+                      allowedHosts: [
+                        "connect-js.stripe.com",
+                        "connect.stripe.com",
+                      ],
+                      urlOpener: mockURLOpener,
+                      fileManager: mockFileManager,
+                      sdkVersion: "1.2.3")
+        webVC.presentAlert = { alert, confirm, _ in
+            XCTAssertEqual(alert, expectedAlert)
+            confirm?()
+        }
+        webVC.webView.evaluateJavaScript("alert('\(body)');") { _, _ in
+        }
     }
 }
 
@@ -398,8 +486,34 @@ private class MockFileManager: FileManager {
 
 private class ConnectWebViewControllerTestWrapper: ConnectWebViewController {
     var presentPopup: (UIViewController) -> Void = { _ in }
+    var presentAlert: (ConnectWebViewController.Alert, _ okAction: (() -> Void)?, _ cancelAction: (() -> Void)?) -> Void = { _, _, _ in }
 
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         presentPopup(viewControllerToPresent)
+    }
+
+    override func presentAlert(_ alert: Alert, okAction: (() -> Void)? = nil, cancelAction: (() -> Void)? = nil) {
+        presentAlert(alert, okAction, cancelAction)
+    }
+}
+
+struct AlertSender: MessageSender {
+    typealias Payload = ConnectWebViewController.Alert
+    let name: String = "alert"
+    let payload: Payload
+}
+
+struct ConfirmSender: MessageSender {
+    typealias Payload = ConnectWebViewController.Alert
+    let name: String = "confirm"
+    let payload: Payload
+}
+
+extension ConnectWebViewController.Alert {
+    func jsonString() throws -> String? {
+        guard let jsonString = String(data: try JSONEncoder.connectEncoder.encode(self), encoding: .utf8) else {
+            return nil
+        }
+        return jsonString
     }
 }

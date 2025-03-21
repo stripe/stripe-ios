@@ -8,6 +8,7 @@
 import Foundation
 import SafariServices
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import WebKit
 
 enum ConnectWebViewControllerError: Int, Error {
@@ -129,6 +130,38 @@ class ConnectWebViewController: UIViewController {
      */
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         self.reload()
+    }
+
+    struct Alert: Codable, Equatable {
+        struct Buttons: Codable, Equatable {
+            let ok: String?
+            let cancel: String?
+        }
+        let title: String?
+        let message: String?
+        var buttons: Buttons?
+    }
+
+    func presentAlert(_ alert: Alert, okAction: (() -> Void)? = nil, cancelAction: (() -> Void)? = nil) {
+        let alertController = UIAlertController(
+            title: alert.title,
+            message: alert.message,
+            preferredStyle: .alert
+        )
+
+        if let okButtonTitle = alert.buttons?.ok {
+            alertController.addAction(UIAlertAction(title: okButtonTitle, style: .default) { _ in
+                okAction?()
+            })
+        }
+
+        if let cancelButtonTitle = alert.buttons?.cancel {
+            alertController.addAction(UIAlertAction(title: cancelButtonTitle, style: .cancel) { _ in
+                cancelAction?()
+            })
+        }
+
+        self.present(alertController, animated: true)
     }
 }
 
@@ -296,6 +329,18 @@ extension ConnectWebViewController: WKNavigationDelegate {
         return .allow
     }
 
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo) async {
+        presentAlert(.from(message: message, isConfirmationAlert: false))
+    }
+
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping @MainActor (Bool) -> Void) {
+        presentAlert(.from(message: message, isConfirmationAlert: true), okAction: {
+            completionHandler(true)
+        }, cancelAction: {
+            completionHandler(false)
+        })
+    }
+
     func webView(_ webView: WKWebView,
                  navigationAction: WKNavigationAction,
                  didBecome download: WKDownload) {
@@ -386,5 +431,23 @@ extension ConnectWebViewController: WKDownloadDelegate {
 
     func downloadDidFinish(_ download: WKDownload) {
         self.downloadDidFinish()
+    }
+}
+
+@available(iOS 15, *)
+extension ConnectWebViewController.Alert {
+    static func from(message: String, isConfirmationAlert: Bool) -> ConnectWebViewController.Alert {
+        var alert = decodeAlert(from: message) ?? .init(title: nil, message: message, buttons: nil)
+        let okText = alert.buttons?.ok ?? String.Localized.ok
+        let cancelText = alert.buttons?.cancel ?? String.Localized.cancel
+        alert.buttons = .init(ok: okText, cancel: isConfirmationAlert ? cancelText : alert.buttons?.cancel)
+        return alert
+    }
+
+    private static func decodeAlert(from jsonString: String) -> ConnectWebViewController.Alert? {
+        guard let jsonData = jsonString.data(using: .utf8) else {
+            return nil
+        }
+        return try? JSONDecoder().decode(ConnectWebViewController.Alert.self, from: jsonData)
     }
 }
