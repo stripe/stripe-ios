@@ -8,9 +8,6 @@
 import UIKit
 
 class ErrorView: UIView {
-    private let errorLabel = UILabel()
-    private let retryButton = UIButton(type: .system)
-
     var onRetryTapped: (() -> Void)?
 
     override init(frame: CGRect) {
@@ -25,12 +22,22 @@ class ErrorView: UIView {
     private func setup() {
         backgroundColor = .white
 
-        errorLabel.text = "Failed to connect"
+        let errorLabel = UILabel()
+        let errorLabelText = STPLocalizedString(
+            "Failed to connect",
+            "Label shown when a network-related error has occured."
+        )
+        errorLabel.text = errorLabelText
         errorLabel.textAlignment = .center
         errorLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        retryButton.setTitle("Try again", for: .normal)
+        let retryButton = UIButton(type: .system)
+        let retryButtonText = STPLocalizedString(
+            "Try again",
+            "Button label to retry the failed request."
+        )
+        retryButton.setTitle(retryButtonText, for: .normal)
         retryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         retryButton.backgroundColor = FCLiteColor.stripe
         retryButton.setTitleColor(.white, for: .normal)

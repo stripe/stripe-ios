@@ -47,9 +47,7 @@ class FCLiteContainerViewController: UIViewController {
 
         setupSpinner()
 
-        Task {
-            await fetchManifest()
-        }
+        showError()
     }
 
     private func setupSpinner() {
@@ -73,17 +71,12 @@ class FCLiteContainerViewController: UIViewController {
             )
             self.manifest = synchronize.manifest
             showWebView(for: synchronize.manifest)
-
-            DispatchQueue.main.async {
-                self.spinner.stopAnimating()
-            }
         } catch {
-            print("[FCLite] Error when fetching manifest: \(error)")
             showError()
+        }
 
-            DispatchQueue.main.async {
-                self.spinner.stopAnimating()
-            }
+        DispatchQueue.main.async {
+            self.spinner.stopAnimating()
         }
     }
 
@@ -126,16 +119,12 @@ class FCLiteContainerViewController: UIViewController {
             } else {
                 completion(.failed(error: FCLiteError.linkedBankUnavailable))
             }
-
-            DispatchQueue.main.async {
-                self.spinner.stopAnimating()
-            }
         } catch {
             completion(.failed(error: error))
+        }
 
-            DispatchQueue.main.async {
-                self.spinner.stopAnimating()
-            }
+        DispatchQueue.main.async {
+            self.spinner.stopAnimating()
         }
     }
 
@@ -154,11 +143,14 @@ class FCLiteContainerViewController: UIViewController {
     }
 
     private func showError() {
+        setNavigationBar(isHidden: false)
+
         let errorView = ErrorView()
         errorView.translatesAutoresizingMaskIntoConstraints = false
 
         errorView.onRetryTapped = { [weak self] in
             guard let self else { return }
+            self.setNavigationBar(isHidden: true)
             self.errorView?.removeFromSuperview()
             self.errorView = nil
 
@@ -190,13 +182,14 @@ class FCLiteContainerViewController: UIViewController {
                 instantlyVerified: true
             )
         case .bankAccount(let bankAccount):
+            let instantlyVerified = manifest?.bankAccountIsInstantlyVerified ?? false
             return FinancialConnectionsLinkedBank(
                 sessionId: session.id,
                 accountId: bankAccount.id,
                 displayName: bankAccount.bankName,
                 bankName: bankAccount.bankName,
                 last4: bankAccount.last4,
-                instantlyVerified: false
+                instantlyVerified: instantlyVerified
             )
         case .unparsable, .none:
             return nil
@@ -218,6 +211,21 @@ class FCLiteContainerViewController: UIViewController {
             linkAccountSessionId: manifest?.id
         )
         completion(.completed(.instantDebits(linkedBank)))
+    }
+
+    private func setNavigationBar(isHidden: Bool) {
+        navigationController?.navigationBar.isHidden = isHidden
+        navigationItem.rightBarButtonItem = isHidden ? nil : UIBarButtonItem(
+            barButtonSystemItem: .close,
+            target: self,
+            action: #selector(closeButtonTapped)
+        )
+    }
+
+    @objc private func closeButtonTapped() {
+        Task {
+            await self.completeFlow(result: .cancelled)
+        }
     }
 }
 

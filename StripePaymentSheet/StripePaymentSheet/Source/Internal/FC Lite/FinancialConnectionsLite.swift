@@ -62,6 +62,7 @@ import UIKit
 
         let navController = UINavigationController(rootViewController: containerVC)
         navController.navigationBar.isHidden = true
+        navController.overrideUserInterfaceStyle = .light
         self.navigationController = navController
 
         let toPresent: UIViewController
