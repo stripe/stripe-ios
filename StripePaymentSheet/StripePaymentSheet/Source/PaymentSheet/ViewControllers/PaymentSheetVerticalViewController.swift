@@ -471,7 +471,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         super.viewDidAppear(animated)
         logRenderLPMs()
         isLinkWalletButtonSelected = false
-
     }
 
     private func logRenderLPMs() {
