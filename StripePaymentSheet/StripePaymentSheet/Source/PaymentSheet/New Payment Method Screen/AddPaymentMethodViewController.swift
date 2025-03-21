@@ -150,9 +150,7 @@ class AddPaymentMethodViewController: UIViewController {
         let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
         var visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
         // Add wallet LPMs
-        if !walletHeaders.isEmpty {
-            visibleLPMs.append(contentsOf: walletHeaders)
-        }
+        visibleLPMs.append(contentsOf: walletHeaders)
         // These LPMs are not visible without without scrolling in the horizontal carousel
         let hiddenLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visibleLPMs.contains($0) }
         analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)

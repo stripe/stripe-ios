@@ -216,7 +216,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             cbcEligible: elementsSession.isCardBrandChoiceEligible,
             analyticsHelper: analyticsHelper
         )
-        let walletHeaders: [String] = (!isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingAdd) ? ["link"] : []
+
+        // if Link is the only payment option in FlowController, we add it as a wallet header
+        // otherwise, ApplePay and Link don't show up in the LPM options when adding a new payment method
+        let isLinkOnlyMode: Bool = !isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingAdd
+        let walletHeaders: [String] = isLinkOnlyMode ? ["link"] : []
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
             elementsSession: elementsSession,
