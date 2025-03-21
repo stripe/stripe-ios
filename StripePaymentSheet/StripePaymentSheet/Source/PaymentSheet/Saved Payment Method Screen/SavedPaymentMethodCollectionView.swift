@@ -423,7 +423,7 @@ extension SavedPaymentMethodCollectionView {
                         plus.alpha = 1
                         selectedIcon.isHidden = false
                         selectedIcon.backgroundColor = appearance.colors.primary
-                        
+
                         // Draw a border with primary color
                         shadowRoundedRectangle.isSelected = true
                     } else {
