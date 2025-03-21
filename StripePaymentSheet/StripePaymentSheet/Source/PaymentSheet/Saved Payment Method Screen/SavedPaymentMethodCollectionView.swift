@@ -149,13 +149,10 @@ extension SavedPaymentMethodCollectionView {
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
         var showEditIcon: Bool {
-            guard let savedPaymentMethod = viewModel?.savedPaymentMethod else {
-                return false
-            }
-            guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { savedPaymentMethod.type == $0 }) else {
+            guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
                 fatalError("Payment method does not match supported saved payment methods.")
             }
-            return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (savedPaymentMethod.isCoBrandedCard && cbcEligible)
+            return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
         }
 
         private var tapGestureRecognizer: UITapGestureRecognizer?
@@ -302,7 +299,7 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
-        private func setupGestureIfNecessary() {
+        private func setupTapGestureIfNecessary() {
             // Check if the gesture has already been set
             if tapGestureRecognizer == nil {
                 tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didSelectAccessory))
@@ -310,7 +307,7 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
-        private func removeGestureIfNecessary() {
+        private func removeTapGestureIfNecessary() {
             if let gesture = tapGestureRecognizer {
                 self.removeGestureRecognizer(gesture)
                 tapGestureRecognizer = nil
@@ -404,7 +401,7 @@ extension SavedPaymentMethodCollectionView {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
-                        setupGestureIfNecessary()
+                        setupTapGestureIfNecessary()
                     } else {
                         accessoryButton.isHidden = true
 
@@ -430,7 +427,7 @@ extension SavedPaymentMethodCollectionView {
                         accessoryButton.isHidden = true
                         applyDefaultStyle()
                     }
-                    removeGestureIfNecessary()
+                    removeTapGestureIfNecessary()
                 }
                 accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
                 label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
