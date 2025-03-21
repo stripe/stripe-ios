@@ -547,6 +547,25 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(availability, .notSupported)
     }
 
+    func testSupportsInstantBankPayments_linkDisplayNever() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let elementsSession = STPElementsSession._testValue(
+            intent: intent,
+            linkMode: .linkPaymentMethod,
+            linkFundingSources: [.card]
+        )
+
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        XCTAssertEqual(availability, .notSupported)
+    }
+
     func testSupportsInstantBankPayments_primaryRequirementPresent_debugDescription() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
         let configuration = PaymentSheet.Configuration()
@@ -743,6 +762,25 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        XCTAssertEqual(availability, .notSupported)
+    }
+
+    func testSupportsLinkCardIntegration_linkDisplayNever() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let elementsSession = STPElementsSession._testValue(
+            intent: intent,
+            linkMode: .linkCardBrand,
+            linkFundingSources: [.card, .bankAccount]
+        )
+
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession
