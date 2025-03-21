@@ -189,6 +189,8 @@ protocol FinancialConnectionsAPI {
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthSession>
 
+    func selectInstitution(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsSelectInstitution>
+
     func retrieveAuthSession(
         clientSecret: String,
         authSessionId: String
@@ -463,6 +465,18 @@ extension FinancialConnectionsAPIClient: FinancialConnectionsAPI {
             resource: APIEndpointAuthSessions,
             parameters: body,
             useConsumerPublishableKeyIfNeeded: true
+        )
+    }
+
+    func selectInstitution(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsSelectInstitution> {
+        let body: [String: Any] = [
+            "client_secret": clientSecret,
+            "currently_selected_institution": institutionId,
+        ]
+        return self.post(
+            resource: APIEndpointInstitutionSelected,
+            parameters: body,
+            useConsumerPublishableKeyIfNeeded: false
         )
     }
 
@@ -1317,6 +1331,7 @@ private let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
 private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
 private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired"
 private let APIEndpointLinkMoreAccounts = "link_account_sessions/link_more_accounts"
+private let APIEndpointInstitutionSelected = "link_account_sessions/institution_selected"
 private let APIEndpointComplete = "link_account_sessions/complete"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"

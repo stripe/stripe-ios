@@ -227,7 +227,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Sleep to allow animation to finish
         sleep(1)
         // The next card should be selected now
-        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card")
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card, FR")
 
         // Switch to PaymentSheet
         app.buttons["paymentSheet"].waitForExistenceAndTap()
@@ -450,6 +450,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["Back"].waitForExistenceAndTap()
         app.buttons["Alipay"].waitForExistenceAndTap()
+        app.swipeUp() // scroll to see the Continue button
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertEqual(app.buttons["Payment method"].label, "Alipay, alipay")
         // ...and *updating* to a SetupIntent...

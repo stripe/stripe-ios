@@ -245,7 +245,7 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
                 permissions: [],
                 product: "product",
                 singleAccount: true,
-                _theme: theme
+                theme: theme
             ),
             customEmailType: nil,
             connectionsMerchantName: nil,

@@ -56,15 +56,10 @@ class RowButton: UIView, EventHandler {
     }
 
     var isDisplayingAccessoryView: Bool {
-        get {
-            guard let accessoryView else {
-                return false
-            }
-            return !accessoryView.isHidden
+        guard let accessoryView else {
+            return false
         }
-        set {
-            accessoryView?.isHidden = !newValue
-        }
+        return !accessoryView.isHidden
     }
 
     // MARK: Internal properties
@@ -98,8 +93,8 @@ class RowButton: UIView, EventHandler {
         self.didTap = didTap
         self.isEmbedded = isEmbedded
         self.imageView = imageView
-        self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance)
-        self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance)
+        self.label = RowButton.makeRowButtonLabel(text: text, appearance: appearance, isEmbedded: isEmbedded)
+        self.sublabel = RowButton.makeRowButtonSublabel(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
         self.accessoryView = accessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
         self.promoBadge = promoBadge
@@ -174,13 +169,22 @@ class RowButton: UIView, EventHandler {
 
     func setSublabel(text: String?) {
         guard let text else {
-            sublabel.text = nil
-            sublabel.isHidden = true
+            UIView.animate(withDuration: 0.2) { [self] in
+                self.sublabel.text = nil
+                self.sublabel.isHidden = true
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            }
             return
         }
-
-        sublabel.text = text
-        sublabel.isHidden = text.isEmpty
+        self.sublabel.text = text
+        self.sublabel.alpha = 0
+        UIView.animate(withDuration: 0.2) { [self] in
+            self.sublabel.isHidden = text.isEmpty
+        }
+        UIView.animate(withDuration: 0.1, delay: 0.1) { [self] in
+            self.sublabel.alpha = 1
+        }
     }
 
     func setKeyContent(alpha: CGFloat) {
@@ -358,25 +362,52 @@ extension RowButton {
         return size.height
     }
 
-    static func makeRowButtonLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
+    static func makeRowButtonLabel(text: String, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {
         let label = UILabel()
         label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
         label.adjustsFontSizeToFitWidth = true
         label.adjustsFontForContentSizeCategory = true
         label.text = text
         label.numberOfLines = 1
-        label.textColor = appearance.colors.componentText
+        let textColor: UIColor = {
+            guard isEmbedded else {
+                return appearance.colors.componentText
+            }
+
+            switch appearance.embeddedPaymentElement.row.style {
+            case .flatWithRadio, .flatWithCheckmark:
+                return appearance.colors.text
+            case .floatingButton:
+                return appearance.colors.componentText
+            }
+        }()
+
+        label.textColor = textColor
         return label
     }
 
-    static func makeRowButtonSublabel(text: String?, appearance: PaymentSheet.Appearance) -> UILabel {
+    static func makeRowButtonSublabel(text: String?, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {
         let sublabel = UILabel()
         sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
         sublabel.numberOfLines = 1
         sublabel.adjustsFontSizeToFitWidth = true
         sublabel.adjustsFontForContentSizeCategory = true
         sublabel.text = text
-        sublabel.textColor = appearance.colors.componentPlaceholderText
+
+        let textColor: UIColor = {
+            guard isEmbedded else {
+                return appearance.colors.componentPlaceholderText
+            }
+
+            switch appearance.embeddedPaymentElement.row.style {
+            case .flatWithRadio, .flatWithCheckmark:
+                return appearance.colors.textSecondary
+            case .floatingButton:
+                return appearance.colors.componentPlaceholderText
+            }
+        }()
+
+        sublabel.textColor = textColor
         sublabel.isHidden = text?.isEmpty ?? true
         return sublabel
     }

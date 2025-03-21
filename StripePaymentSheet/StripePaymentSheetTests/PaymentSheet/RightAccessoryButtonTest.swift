@@ -21,12 +21,15 @@ final class RightAccessoryButtonTest: XCTestCase {
             for isCBCEligible in booleans {
                 for allowsRemovalOfLastSavedPaymentMethod in booleans {
                     for allowsPaymentMethodRemoval in booleans {
-                        let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 0,
-                                                                                           isFirstCardCoBranded: isFirstCardCoBranded,
-                                                                                           isCBCEligible: isCBCEligible,
-                                                                                           allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                                                           allowsPaymentMethodRemoval: allowsPaymentMethodRemoval)
-                        XCTAssertNil(result)
+                        for allowsPaymentMethodUpdate in booleans {
+                            let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 0,
+                                                                                               isFirstCardCoBranded: isFirstCardCoBranded,
+                                                                                               isCBCEligible: isCBCEligible,
+                                                                                               allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
+                                                                                               allowsPaymentMethodRemoval: allowsPaymentMethodRemoval,
+                                                                                               allowsPaymentMethodUpdate: allowsPaymentMethodUpdate)
+                            XCTAssertNil(result)
+                        }
                     }
                 }
             }
@@ -42,16 +45,20 @@ final class RightAccessoryButtonTest: XCTestCase {
             for isCBCEligible in booleans {
                 for allowsRemovalOfLastSavedPaymentMethod in booleans {
                     for allowsPaymentMethodRemoval in booleans {
+                        for allowsPaymentMethodUpdate in booleans {
 
-                        // We should only show the edit button if it is update-able or removable
-                        let canEdit = (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && allowsPaymentMethodRemoval)
-                        let expected: RowButton.RightAccessoryButton.AccessoryType? = canEdit ? .edit : nil
-                        let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 1,
-                                                                                           isFirstCardCoBranded: isFirstCardCoBranded,
-                                                                                           isCBCEligible: isCBCEligible,
-                                                                                           allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                                                           allowsPaymentMethodRemoval: allowsPaymentMethodRemoval)
-                        XCTAssertEqual(result, expected)
+                            // We should only show the edit button if it is update-able or removable
+                            let canEdit = (isFirstCardCoBranded && isCBCEligible) || (allowsRemovalOfLastSavedPaymentMethod && allowsPaymentMethodRemoval) || allowsPaymentMethodUpdate
+                            let expected: RowButton.RightAccessoryButton.AccessoryType? = canEdit ? .edit : nil
+                            let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 1,
+                                                                                               isFirstCardCoBranded: isFirstCardCoBranded,
+                                                                                               isCBCEligible: isCBCEligible,
+                                                                                               allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
+                                                                                               allowsPaymentMethodRemoval: allowsPaymentMethodRemoval,
+                                                                                               allowsPaymentMethodUpdate: allowsPaymentMethodUpdate)
+
+                            XCTAssertEqual(result, expected)
+                        }
                     }
                 }
             }
@@ -69,24 +76,28 @@ final class RightAccessoryButtonTest: XCTestCase {
             for isCBCEligible in booleans {
                 for allowsRemovalOfLastSavedPaymentMethod in booleans {
                     for allowsPaymentMethodRemoval in booleans {
-                        let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 2,
-                                                                                           isFirstCardCoBranded: isFirstCardCoBranded,
-                                                                                           isCBCEligible: isCBCEligible,
-                                                                                           allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                                                                                           allowsPaymentMethodRemoval: allowsPaymentMethodRemoval)
-                        XCTAssertEqual(result, .viewMoreChevron)
+                        for allowsPaymentMethodUpdate in booleans {
+                            let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 2,
+                                                                                               isFirstCardCoBranded: isFirstCardCoBranded,
+                                                                                               isCBCEligible: isCBCEligible,
+                                                                                               allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
+                                                                                               allowsPaymentMethodRemoval: allowsPaymentMethodRemoval,
+                                                                                               allowsPaymentMethodUpdate: allowsPaymentMethodUpdate)
+                            XCTAssertEqual(result, .viewMoreChevron)
+                        }
                     }
                 }
             }
         }
     }
-    
+
     func testViewMore_Returned_When_SavedPaymentsGreaterThanOne_FlatCheckmarkStyle() {
         let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 2,
                                                                            isFirstCardCoBranded: true,
                                                                            isCBCEligible: true,
                                                                            allowsRemovalOfLastSavedPaymentMethod: true,
                                                                            allowsPaymentMethodRemoval: true,
+                                                                           allowsPaymentMethodUpdate: true,
                                                                            isFlatCheckmarkStyle: true)
         XCTAssertEqual(result, .viewMore)
     }

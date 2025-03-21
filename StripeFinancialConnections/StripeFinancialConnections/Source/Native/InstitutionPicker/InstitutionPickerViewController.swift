@@ -20,6 +20,11 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
         didFinishSelecting institution: FinancialConnectionsInstitution,
         authSession: FinancialConnectionsAuthSession
     )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didFinishSelecting institution: FinancialConnectionsInstitution,
+        payload: FinancialConnectionsSelectInstitution
+    )
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
     )
@@ -180,6 +185,23 @@ class InstitutionPickerViewController: UIViewController {
             exceptForInstitution: institution
         )
 
+        // If consent is already acquired, create an auth session.
+        // Otherwise, select the institution and update the manifest.
+        if dataSource.manifest.consentAcquired {
+            createAuthSession(institution) {
+                showLoadingView(false)
+            }
+        } else {
+            selectInstitution(institution) {
+                showLoadingView(false)
+            }
+        }
+    }
+
+    private func createAuthSession(
+        _ institution: FinancialConnectionsInstitution,
+        completion: @escaping () -> Void
+    ) {
         dataSource.createAuthSession(institutionId: institution.id)
             .observe { [weak self] result in
                 guard let self else { return }
@@ -204,7 +226,32 @@ class InstitutionPickerViewController: UIViewController {
                         didReceiveError: error
                     )
                 }
-                showLoadingView(false)
+                completion()
+            }
+    }
+
+    private func selectInstitution(
+        _ institution: FinancialConnectionsInstitution,
+        completion: @escaping () -> Void
+    ) {
+        dataSource.selectInstitution(institutionId: institution.id)
+            .observe { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let selectInstitutionPayload):
+                    self.delegate?.institutionPickerViewController(
+                        self,
+                        didFinishSelecting: institution,
+                        payload: selectInstitutionPayload
+                    )
+                    self.hideOverlayView()
+                case .failure(let error):
+                    self.delegate?.institutionPickerViewController(
+                        self,
+                        didReceiveError: error
+                    )
+                }
+                completion()
             }
     }
 

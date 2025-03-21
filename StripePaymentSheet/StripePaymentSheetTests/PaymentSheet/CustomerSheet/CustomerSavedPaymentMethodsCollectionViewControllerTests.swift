@@ -10,290 +10,169 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
     var customerSheetConfiguration: CustomerSheet.Configuration = {
         return CustomerSheet.Configuration()
     }()
+    func testNoPM() {
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: []))
 
-    func testCanEditPaymentMethods_noPMs() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [],
-                                                     cbcEligible: true)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: []))
 
-    // MARK: - Single Card, cbcEligible
-    func testCanEditPaymentMethods_singlePM_removeLast0_remove0() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard()],
-                                                     cbcEligible: true)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singlePM_removeLast0_remove1() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard()],
-                                                     cbcEligible: true)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singlePM_removeLast1_remove0() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard()],
-                                                     cbcEligible: true)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singlePM_removeLast1_remove1() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
+        // Skip where removePM == false && removeLastPM == true
 
-    // MARK: - Single Card, !cbcEligible
-    func testCanEditPaymentMethods_singlePM_removeLast0_remove0_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: []))
+
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: []))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: []))
     }
-    func testCanEditPaymentMethods_singlePM_removeLast0_remove1_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singlePM_removeLast1_remove0_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singlePM_removeLast1_remove1_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard()],
-                                                     cbcEligible: false)
-        XCTAssertTrue(controller.canEditPaymentMethods)
+    func testSinglePM_nonCoBranded() {
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+
+        // Skip where removePM = false && removeLastPM = true
+
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard()]))
     }
 
-    // MARK: - Single Card, w/ Co-branded, cbcEligible
-    func testCanEditPaymentMethods_singleCBCPM_removeLast0_remove0() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singleCBCPM_removeLast0_remove1() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singleCBCPM_removeLast1_remove0() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singleCBCPM_removeLast1_remove1() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    // MARK: - Single Card, w/ Co-branded, !cbcEligible
-    func testCanEditPaymentMethods_singleCBCPM_removeLast0_remove0_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singleCBCPM_removeLast0_remove1_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singleCBCPM_removeLast1_remove0_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_singleCBCPM_removeLast1_remove1_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: false)
-        XCTAssertTrue(controller.canEditPaymentMethods)
+    func testSinglePM_coBranded() {
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+
+        // Skip where removePM = false && removeLastPM = true
+
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCardCoBranded()]))
     }
 
-    // MARK: - Two Cards, cbcEligible
-    func testCanEditPaymentMethods_TwoPM_removeLast0_remove0() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
-                                                     cbcEligible: true)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPM_removeLast0_remove1() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPM_removeLast1_remove0() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
-                                                     cbcEligible: true)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPM_removeLast1_remove1() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
+    func testTwoPMs_nonCoBranded() {
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+
+        // Skip where removePM = false && removeLastPM = true
+
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()]))
     }
 
-    // MARK: - Two Cards, cbcEligible, !cbcEligible
-    func testCanEditPaymentMethods_TwoPM_removeLast0_remove0_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPM_removeLast0_remove1_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
-                                                     cbcEligible: false)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPM_removeLast1_remove0_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPM_removeLast1_remove1_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
-                                                     cbcEligible: false)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
+    func testTwoPMs_coBranded() {
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
 
-    // MARK: - Two Cards, w/ Co-branded, cbcEligible
-    func testCanEditPaymentMethods_TwoPMCBC_removeLast0_remove0() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPMCBC_removeLast0_remove1() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPMCBC_removeLast1_remove0() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPMCBC_removeLast1_remove1() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: true)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
+        XCTAssertFalse(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: false, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
 
-    // MARK: - Two Cards, w/ Co-branded, !cbcEligible
-    func testCanEditPaymentMethods_TwoPMCBC_removeLast0_remove0_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPMCBC_removeLast0_remove1_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: false,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: false)
-        XCTAssertTrue(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPMCBC_removeLast1_remove0_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: false)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: false)
-        XCTAssertFalse(controller.canEditPaymentMethods)
-    }
-    func testCanEditPaymentMethods_TwoPMCBC_removeLast1_remove1_notCBCEligible() {
-        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
-                                          paymentMethodRemove: true)
-        let controller = customerSavedPaymentMethods(configuration,
-                                                     savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()],
-                                                     cbcEligible: false)
-        XCTAssertTrue(controller.canEditPaymentMethods)
+        // Skip where removePM = false && removeLastPM = true
+
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: false, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: false, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: false, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: false, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
+        XCTAssertTrue(_testCanEditPaymentMethods(removePM: true, removeLastPM: true, defaultPM: true, updatePM: true, cbcEligible: true, savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardCoBranded()]))
     }
 
     func testHideNonCardUSBank_SetAsDefault() {
         let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: true,
                                           paymentMethodRemove: true,
+                                          paymentMethodUpdate: false,
                                           paymentMethodSyncDefault: true)
         let controller = customerSavedPaymentMethods(configuration,
                                                      savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testUSBankAccount(), STPPaymentMethod._testSEPA()],
@@ -301,11 +180,24 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
         XCTAssertFalse(controller.savedPaymentMethods.contains(where: { $0.type == .SEPADebit }))
     }
 
+    func _testCanEditPaymentMethods(removePM: Bool,
+                                    removeLastPM: Bool,
+                                    defaultPM: Bool,
+                                    updatePM: Bool,
+                                    cbcEligible: Bool,
+                                    savedPaymentMethods: [STPPaymentMethod]) -> Bool {
+        let configuration = configuration(allowsRemovalOfLastSavedPaymentMethod: removeLastPM,
+                                          paymentMethodRemove: removePM,
+                                          paymentMethodUpdate: updatePM,
+                                          paymentMethodSyncDefault: defaultPM)
+        let controller = customerSavedPaymentMethods(configuration, savedPaymentMethods: savedPaymentMethods, cbcEligible: cbcEligible)
+        return controller.canEditPaymentMethods
+    }
+
     func configuration(allowsRemovalOfLastSavedPaymentMethod: Bool,
                        paymentMethodRemove: Bool,
-                       paymentMethodUpdate: Bool = false,
-                       paymentMethodSyncDefault: Bool = false,
-                       showApplePay: Bool = false
+                       paymentMethodUpdate: Bool,
+                       paymentMethodSyncDefault: Bool
     ) -> CustomerSavedPaymentMethodsCollectionViewController.Configuration {
 
         let billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration(name: .never,
@@ -313,7 +205,7 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
                                                                                                        email: .never,
                                                                                                        address: .never)
         return CustomerSavedPaymentMethodsCollectionViewController.Configuration(billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
-                                                                                 showApplePay: showApplePay,
+                                                                                 showApplePay: false,
                                                                                  allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                  paymentMethodRemove: paymentMethodRemove,
                                                                                  paymentMethodUpdate: paymentMethodUpdate,
