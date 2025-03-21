@@ -1,3 +1,7 @@
+## 24.9.0 2025-03-24
+### Connect (Private Preview)
+* [Fixed] Fixed an issue in Account Onboarding where accountOnboardingDidExit did not get called.
+
 ## 24.8.0 2025-03-17
 ### PaymentSheet, CustomerSheet
 * [Added] Support for default payment methods in private beta.
