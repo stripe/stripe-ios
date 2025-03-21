@@ -104,6 +104,10 @@ class PaymentMethodFormViewController: UIViewController {
         self.headerView = headerView
         self.formCache = formCache
         if let form = self.formCache[type] {
+            assert(
+                form.view.superview == nil,
+                "The form found in the cache is already part of another view hierarchy. This likely indicates that the formCache is being reused incorrectly."
+            )
             self.form = form
         } else {
             self.form = PaymentSheetFormFactory(
