@@ -96,9 +96,8 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .edit)
-            button.backgroundColor = UIColor.dynamic(
-                light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
-            button.iconColor = appearance.colors.icon
+            button.backgroundColor = appearance.colors.primary
+            button.iconColor = appearance.colors.primary.contrastingColor
             button.isAccessibilityElement = true
             button.accessibilityLabel = String.Localized.edit
             return button
@@ -156,6 +155,7 @@ extension SavedPaymentMethodCollectionView {
             return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
         }
 
+        private var tapGestureRecognizer: UITapGestureRecognizer?
         // MARK: - UICollectionViewCell
 
         override init(frame: CGRect) {
@@ -299,6 +299,21 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
+        private func setupTapGestureIfNecessary() {
+            // Check if the gesture has already been set
+            if tapGestureRecognizer == nil {
+                tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didSelectAccessory))
+                self.addGestureRecognizer(tapGestureRecognizer!)
+            }
+        }
+
+        private func removeTapGestureIfNecessary() {
+            if let gesture = tapGestureRecognizer {
+                self.removeGestureRecognizer(gesture)
+                tapGestureRecognizer = nil
+            }
+        }
+
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
             if case .USBankAccount = paymentMethod.type {
                 let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(.secondaryLabel)
@@ -386,7 +401,7 @@ extension SavedPaymentMethodCollectionView {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
-
+                        setupTapGestureIfNecessary()
                     } else {
                         accessoryButton.isHidden = true
 
@@ -396,21 +411,23 @@ extension SavedPaymentMethodCollectionView {
                         plus.alpha = 0.6
                         label.textColor = appearance.colors.text.disabledColor
                     }
-
-                } else if isSelected {
-                    accessoryButton.isHidden = true
-                    shadowRoundedRectangle.isEnabled = true
-                    label.textColor = appearance.colors.text
-                    paymentMethodLogo.alpha = 1
-                    plus.alpha = 1
-                    selectedIcon.isHidden = false
-                    selectedIcon.backgroundColor = appearance.colors.primary
-
-                    // Draw a border with primary color
-                    shadowRoundedRectangle.isSelected = true
                 } else {
-                    accessoryButton.isHidden = true
-                    applyDefaultStyle()
+                    if isSelected {
+                        accessoryButton.isHidden = true
+                        shadowRoundedRectangle.isEnabled = true
+                        label.textColor = appearance.colors.text
+                        paymentMethodLogo.alpha = 1
+                        plus.alpha = 1
+                        selectedIcon.isHidden = false
+                        selectedIcon.backgroundColor = appearance.colors.primary
+
+                        // Draw a border with primary color
+                        shadowRoundedRectangle.isSelected = true
+                    } else {
+                        accessoryButton.isHidden = true
+                        applyDefaultStyle()
+                    }
+                    removeTapGestureIfNecessary()
                 }
                 accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
                 label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
