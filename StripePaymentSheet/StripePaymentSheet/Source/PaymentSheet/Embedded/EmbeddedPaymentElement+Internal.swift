@@ -395,32 +395,20 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        // If the formViewController was populated with a previous payment option don't reset
-        if embeddedFormViewController.previousPaymentOption == nil {
-            let lastSelection = embeddedPaymentMethodsView.previousSelectedRowButton?.type
-            var currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
-            if let lastSelection, lastSelection != currentlySelectedType {
-                // Go back to the previous selection if there was one
-                embeddedPaymentMethodsView.resetSelectionToLastSelection()
-            } else if paymentOption != lastUpdatedPaymentOption {
-                // Clear selection, user closed form without selecting, and the form payment option no longer matches merchant's latest.
-                embeddedPaymentMethodsView.resetSelection()
-            }
+        // Go back to the previous selection if there was one
+        embeddedPaymentMethodsView.resetSelectionToLastSelection()
 
-            // The selected row may have been reset, so get it again
-            currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
-
-            // Show change button if the newly selected row needs it
-            if let currentlySelectedType {
-                let changeButtonState = getChangeButtonState(for: currentlySelectedType)
-                if changeButtonState.shouldShowChangeButton {
-                    embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
-                    embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
-                } else {
-                    embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
-                }
+        // Show change button if the newly selected row needs it
+        if let currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type{
+            let changeButtonState = getChangeButtonState(for: currentlySelectedType)
+            if changeButtonState.shouldShowChangeButton {
+                embeddedPaymentMethodsView.selectedRowButton?.addChangeButton(sublabel: changeButtonState.sublabel)
+                embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, changeButtonState.sublabel)
+            } else {
+                embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
             }
         }
+
         embeddedFormViewController.dismiss(animated: true)
     }
 
