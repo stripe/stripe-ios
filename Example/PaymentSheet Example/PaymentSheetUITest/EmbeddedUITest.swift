@@ -128,7 +128,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             klarnaAnalytics,
-            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
+            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_lpms_render", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
         // ...switching back to payment should keep Klarna selected
@@ -256,11 +256,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             presentEmbeddedLog,
             ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_lpms_render", "mc_carousel_payment_method_tapped", "mc_form_shown"]
-        )
-        XCTAssertEqual(
-            analyticsLog.filter({ ["mc_lpms_render"]
-                .contains($0[string: "event"]!) }).map({ $0[string: "hidden_lpms"] }),
-            []
         )
         // Complete payment
         app.buttons["Pay €50.99"].tap()
@@ -390,7 +385,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         XCTAssertEqual(
             events,
-            ["mc_embedded_paymentoption_savedpm_select", "mc_lpms_render",
+            ["mc_lpms_render", "mc_embedded_paymentoption_savedpm_select",
              "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
              "mc_open_edit_screen", "mc_embedded_paymentoption_removed",
             ]
