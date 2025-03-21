@@ -37,7 +37,6 @@ class AddPaymentMethodViewController: UIViewController {
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         paymentMethodTypesView.selected
     }
-
     var paymentOption: PaymentOption? {
         paymentMethodFormViewController.paymentOption
     }
@@ -96,7 +95,7 @@ class AddPaymentMethodViewController: UIViewController {
         configuration: PaymentElementConfiguration,
         previousCustomerInput: IntentConfirmParams? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-        walletHeaders: [String],
+        walletHeaders: [String] = [],
         formCache: PaymentMethodFormCache,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: AddPaymentMethodViewControllerDelegate? = nil

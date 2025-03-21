@@ -205,8 +205,6 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Our content should respect `directionalLayoutMargins`. The default margins is `.zero`.
         addAndPinSubview(stackView, directionalLayoutMargins: .zero)
-
-        logRenderLPMs()
     }
 
     required init?(coder: NSCoder) {
@@ -225,6 +223,11 @@ class EmbeddedPaymentMethodsView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        if !didLogRenderLPMs {
+            logRenderLPMs()
+            didLogRenderLPMs = true
+        }
+
         guard let previousHeight else {
             previousHeight = frame.height
             return
@@ -233,11 +236,6 @@ class EmbeddedPaymentMethodsView: UIView {
         if frame.height != previousHeight {
             self.previousHeight = frame.height
             delegate?.embeddedPaymentMethodsViewDidUpdateHeight()
-        }
-
-        if !didLogRenderLPMs {
-            logRenderLPMs()
-            didLogRenderLPMs = true
         }
     }
 
