@@ -49,13 +49,15 @@ struct LinkAccountSessionManifest: Decodable {
         hostedAuthURL: URL,
         successURL: URL,
         cancelURL: URL,
-        product: String
+        product: String,
+        manualEntryUsesMicrodeposits: Bool
     ) {
         self.id = id
         self.hostedAuthURL = hostedAuthURL
         self.successURL = successURL
         self.cancelURL = cancelURL
         self.product = product
+        self.manualEntryUsesMicrodeposits = manualEntryUsesMicrodeposits
     }
 
     enum CodingKeys: String, CodingKey {

@@ -47,9 +47,7 @@ class FCLiteContainerViewController: UIViewController {
 
         setupSpinner()
 
-        Task {
-            await fetchManifest()
-        }
+        showError()
     }
 
     private func setupSpinner() {
