@@ -205,7 +205,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodType: paymentMethodType,
             previousPaymentOption: nil,
             analyticsHelper: analyticsHelper,
-            formCache: formCache,
+            formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
         )
 
