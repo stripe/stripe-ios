@@ -105,6 +105,7 @@ class NativeFlowController {
             || navigationController.topViewController is SuccessViewController
             || navigationController.topViewController is TerminalErrorViewController
             || ((navigationController.topViewController as? ErrorViewController)?.isTerminal == true)
+            || (navigationController.topViewController is InstitutionPickerViewController && !dataManager.manifest.consentAcquired)
         )
 
         let finishClosingAuthFlow = { [weak self] in
@@ -742,6 +743,44 @@ extension NativeFlowController: ConsentViewControllerDelegate {
     }
 }
 
+// MARK: - IDConsentContentViewControllerDelegate
+
+extension NativeFlowController: IDConsentContentViewControllerDelegate {
+    func idConsentContentViewController(
+        _ viewController: IDConsentContentViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        nextPaneOrDrawerOnSecondaryCta: String?
+    ) {
+        let parameters = CreatePaneParameters(
+            nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+        )
+        if nextPane == .networkingLinkLoginWarmup {
+            presentPaneAsSheet(nextPane, parameters: parameters)
+        } else {
+            pushPane(nextPane, parameters: parameters, animated: true)
+        }
+    }
+
+    func idConsentContentViewController(
+        _ viewController: IDConsentContentViewController,
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .consentAcquired)
+        )
+
+        dataManager.manifest = manifest
+
+        let nextPane = manifest.nextPane
+        if nextPane == .networkingLinkLoginWarmup {
+            presentPaneAsSheet(nextPane)
+        } else {
+            pushPane(nextPane, animated: true)
+        }
+    }
+}
+
 // MARK: - InstitutionPickerViewControllerDelegate
 
 extension NativeFlowController: InstitutionPickerViewControllerDelegate {
@@ -780,7 +819,7 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
         didFinishSelecting institution: FinancialConnectionsInstitution,
-        manifest: FinancialConnectionsSessionManifest
+        payload: FinancialConnectionsSelectInstitution
     ) {
         delegate?.nativeFlowController(
             self,
@@ -792,9 +831,10 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
             )
         )
         dataManager.institution = institution
-        dataManager.manifest = manifest
+        dataManager.manifest = payload.manifest
+        dataManager.idConsentContent = payload.text?.idConsentContentPane
 
-        pushPane(manifest.nextPane, animated: true)
+        pushPane(payload.manifest.nextPane, animated: true, clearNavigationStack: true)
     }
 
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
@@ -1460,6 +1500,22 @@ private func CreatePaneViewController(
             let consentViewController = ConsentViewController(dataSource: consentDataSource)
             consentViewController.delegate = nativeFlowController
             viewController = consentViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
+    case .idConsentContent:
+        if let idConsentContent = dataManager.idConsentContent {
+            let idConsentContentDataSource = IDConsentContentDataSourceImplementation(
+                manifest: dataManager.manifest,
+                idConsentContent: idConsentContent,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let idConsentContentViewController = IDConsentContentViewController(dataSource: idConsentContentDataSource)
+            idConsentContentViewController.delegate = nativeFlowController
+            viewController = idConsentContentViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil

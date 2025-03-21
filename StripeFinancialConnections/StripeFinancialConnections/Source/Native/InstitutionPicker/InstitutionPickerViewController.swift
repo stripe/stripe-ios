@@ -23,7 +23,7 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
     func institutionPickerViewController(
         _ viewController: InstitutionPickerViewController,
         didFinishSelecting institution: FinancialConnectionsInstitution,
-        manifest: FinancialConnectionsSessionManifest
+        payload: FinancialConnectionsSelectInstitution
     )
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
@@ -238,11 +238,11 @@ class InstitutionPickerViewController: UIViewController {
             .observe { [weak self] result in
                 guard let self else { return }
                 switch result {
-                case .success(let synchronizePayload):
+                case .success(let selectInstitutionPayload):
                     self.delegate?.institutionPickerViewController(
                         self,
                         didFinishSelecting: institution,
-                        manifest: synchronizePayload.manifest
+                        payload: selectInstitutionPayload
                     )
                     self.hideOverlayView()
                 case .failure(let error):
