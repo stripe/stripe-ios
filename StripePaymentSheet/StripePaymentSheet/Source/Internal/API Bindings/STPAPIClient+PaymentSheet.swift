@@ -17,7 +17,7 @@ extension STPAPIClient {
                                     epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
                                     cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
                                     clientDefaultPaymentMethod: String?,
-                                    customerAccessProvider: PaymentSheet.CustomerAccessProvider?) -> [String: Any] {
+                                    customerAccessProvider: PaymentElement.CustomerAccessProvider?) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
