@@ -46,6 +46,7 @@ final class LinkCardEditElement: Element {
     }
 
     let paymentMethod: ConsumerPaymentDetails
+    let useCVCPlaceholder: Bool
 
     let configuration: PaymentElementConfiguration
 
@@ -63,6 +64,7 @@ final class LinkCardEditElement: Element {
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = nameElement?.text
         billingDetails.email = emailElement?.text
+        billingDetails.phone = phoneElement?.phoneNumber?.string(as: .e164)
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
         billingDetails.nonnil_address.line1 = billingAddressSection?.line1?.text
         billingDetails.nonnil_address.line2 = billingAddressSection?.line2?.text
@@ -81,16 +83,29 @@ final class LinkCardEditElement: Element {
     private lazy var emailElement: TextFieldElement? = {
         guard configuration.billingDetailsCollectionConfiguration.email == .always else { return nil }
 
-        return TextFieldElement.makeEmail(defaultValue: nil, theme: theme)
+        return TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email, theme: theme)
+    }()
+
+    private lazy var phoneElement: PhoneNumberElement? = {
+        guard configuration.billingDetailsCollectionConfiguration.phone == .always else { return nil }
+        return PhoneNumberElement(
+            defaultCountryCode: configuration.defaultBillingDetails.address.country,
+            defaultPhoneNumber: configuration.defaultBillingDetails.phone,
+            theme: theme
+        )
     }()
 
     private lazy var contactInformationSection: SectionElement? = {
-        guard let emailElement = emailElement else { return nil }
+        let config = configuration.billingDetailsCollectionConfiguration
+        let elements = ([emailElement, phoneElement] as [Element?]).compactMap { $0 }
+
+        guard elements.isEmpty == false else { return nil }
 
         return SectionElement(
-            title: STPLocalizedString("Contact information", "Title for the contact information section"),
-            elements: [emailElement],
-            theme: theme)
+            title: elements.count > 1 ? .Localized.contact_information : nil,
+            elements: elements,
+            theme: theme
+        )
     }()
 
     private lazy var nameElement: TextFieldElement? = {
@@ -111,14 +126,20 @@ final class LinkCardEditElement: Element {
         return panElement
     }()
 
-    private lazy var cvcElement = TextFieldElement(
-        configuration: TextFieldElement.CVCConfiguration(
-            cardBrandProvider: { [weak self] in
-                self?.paymentMethod.cardDetails?.stpBrand ?? .unknown
-            }
-        ),
-        theme: theme
-    )
+    private lazy var cvcElement: TextFieldElement = {
+        let cvcElement = TextFieldElement(
+            configuration: TextFieldElement.CVCConfiguration(
+                defaultValue: useCVCPlaceholder ? "000" : nil,
+                readOnly: useCVCPlaceholder,
+                cardBrandProvider: { [weak self] in
+                    self?.paymentMethod.cardDetails?.stpBrand ?? .unknown
+                }
+            ),
+            theme: theme
+        )
+        cvcElement.view.isUserInteractionEnabled = !useCVCPlaceholder
+        return cvcElement
+    }()
 
     private lazy var expiryDateElement = TextFieldElement(
         configuration: TextFieldElement.ExpiryDateConfiguration(),
@@ -175,9 +196,10 @@ final class LinkCardEditElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, useCVCPlaceholder: Bool) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
+        self.useCVCPlaceholder = useCVCPlaceholder
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
             self.expiryDateElement.setText(expiryDate.displayString)

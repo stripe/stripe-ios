@@ -67,6 +67,18 @@ final class LinkPaymentMethodPicker: UIView {
         return dataSource?.paymentPicker(self, paymentMethodAt: selectedIndex)
     }
 
+    var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration? {
+        didSet {
+            reloadData()
+        }
+    }
+
+    var billingDetails: PaymentSheet.BillingDetails? {
+        didSet {
+            reloadData()
+        }
+    }
+
     private var needsDataReload: Bool = true
 
     private lazy var stackView: UIStackView = {
@@ -269,6 +281,39 @@ extension LinkPaymentMethodPicker {
         headerView.selectedPaymentMethod = selectedPaymentMethod
     }
 
+}
+
+extension ConsumerPaymentDetails {
+
+    func supports(
+        _ config: PaymentSheet.BillingDetailsCollectionConfiguration,
+        with billingDetails: PaymentSheet.BillingDetails
+    ) -> Bool {
+        if config.name == .always && billingAddress?.name == nil && billingDetails.name == nil {
+            // No name provided, so that needs to be collected
+            return false
+        }
+
+        if config.address == .full && billingAddress == nil && billingDetails.address.isIncomplete {
+            // No address provided, so that needs to be collected
+            return false
+        }
+
+        // We don't need to check email, because we're guaranteed to have the account email
+
+        if config.phone == .always && billingDetails.phone == nil {
+            // No phone provided and no phone number from the account, so that needs to be collected
+            return false
+        }
+
+        return true
+    }
+}
+
+private extension PaymentSheet.Address {
+    var isIncomplete: Bool {
+        return line1 == nil || city == nil || postalCode == nil || country == nil
+    }
 }
 
 extension LinkPaymentMethodPicker {
