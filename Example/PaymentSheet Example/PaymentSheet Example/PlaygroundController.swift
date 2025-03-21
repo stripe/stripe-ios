@@ -85,6 +85,14 @@ class PlaygroundController: ObservableObject {
             return nil
         }
     }
+    var linkConfiguration: PaymentSheet.LinkConfiguration {
+        switch settings.linkDisplay {
+        case .automatic:
+            PaymentSheet.LinkConfiguration(display: .automatic)
+        case .never:
+            PaymentSheet.LinkConfiguration(display: .never)
+        }
+    }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
         guard settings.customerMode != .guest,
               let customerId = self.customerId else {
@@ -115,6 +123,7 @@ class PlaygroundController: ObservableObject {
         }
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
+        configuration.link = linkConfiguration
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
         if settings.userOverrideCountry != .off {

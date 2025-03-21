@@ -91,4 +91,28 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
 
         XCTAssertTrue(isLinkEnabled, "Link should be enabled when passthrough mode is enabled, even if 'link' is not explicitly in payment method types")
     }
+
+    func testIsLinkEnabled_linkDisplayAutomatic_linkPresent() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card"],
+            isLinkPassthroughModeEnabled: true
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .automatic)
+        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+
+        XCTAssertTrue(isLinkEnabled, "Link should be enabled when display is set to .automatic")
+    }
+
+    func testIsLinkEnabled_linkDisplayNever_linkNotPresent() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card"],
+            isLinkPassthroughModeEnabled: true
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+
+        XCTAssertFalse(isLinkEnabled, "Link should be disabled when display is set to .never")
+    }
 }

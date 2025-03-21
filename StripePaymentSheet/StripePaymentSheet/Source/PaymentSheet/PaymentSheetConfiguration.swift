@@ -92,6 +92,9 @@ extension PaymentSheet {
         /// If set, PaymentSheet displays Apple Pay as a payment option
         public var applePay: ApplePayConfiguration?
 
+        /// Configuration related to Link
+        public var link: LinkConfiguration = LinkConfiguration()
+
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
             get {
@@ -353,6 +356,34 @@ extension PaymentSheet {
             self.buttonType = buttonType
             self.paymentSummaryItems = paymentSummaryItems
             self.customHandlers = customHandlers
+        }
+    }
+
+    /// Configuration related to Link
+    public struct LinkConfiguration {
+        /// The Link display mode.
+        public var display: Display = .automatic
+
+        /// Display configuration for Link
+        public enum Display: String {
+            /// Link will be displayed when available.
+            case automatic
+            /// Link will never be displayed.
+            case never
+        }
+
+        var shouldDisplay: Bool {
+            switch display {
+            case .automatic: true
+            case .never: false
+            }
+        }
+
+        /// Initializes a LinkConfiguration
+        public init(
+            display: Display = .automatic
+        ) {
+            self.display = display
         }
     }
 

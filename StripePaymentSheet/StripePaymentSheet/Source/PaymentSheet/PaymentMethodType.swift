@@ -362,7 +362,7 @@ extension PaymentSheet {
         ) -> PaymentMethodAvailabilityStatus {
             // Primary requirement:
             // - Link is an available payment method.
-            guard elementsSession.orderedPaymentMethodTypes.contains(.link) else {
+            guard elementsSession.orderedPaymentMethodTypes.contains(.link), configuration.link.shouldDisplay else {
                 return .notSupported
             }
 
@@ -412,7 +412,7 @@ extension PaymentSheet {
         ) -> PaymentMethodAvailabilityStatus {
             // Primary:
             // - Link Mode is set to Link Card Brand.
-            guard elementsSession.isLinkCardBrand else {
+            guard elementsSession.isLinkCardBrand, configuration.link.shouldDisplay else {
                 return .notSupported
             }
 
