@@ -130,12 +130,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func embeddedPaymentMethodsViewDidUpdateSelection() {
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
-
-        let previousPaymentOption = selectedFormViewController?.previousPaymentOption
-        self.selectedFormViewController = nil
         self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
             selection: embeddedPaymentMethodsView.selectedRowButton?.type,
-            previousPaymentOption: previousPaymentOption,
+            previousPaymentOption: selectedFormViewController?.previousPaymentOption,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
