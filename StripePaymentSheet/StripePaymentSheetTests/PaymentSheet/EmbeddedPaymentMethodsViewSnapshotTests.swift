@@ -883,8 +883,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_withMandateProviderAttributedText_withInitialSelection_withAppearance() {
         var appearance = PaymentSheet.Appearance.default
+        appearance.colors.text = .blue
         appearance.colors.textSecondary = .red
-        appearance.colors.componentBackground = .gray
 
         let mandateText = NSAttributedString(string: "Lorem ipsum odor amet, consectetuer adipiscing elit. Efficitur purus auctor sit parturient nec, sit eget. Aaccumsan integer natoque nunc sodales. Dictum vehicula parturient phasellus imperdiet varius lectus magnis.")
         let mockMandateProvider = MockMandateProvider(attributedText: mandateText)
