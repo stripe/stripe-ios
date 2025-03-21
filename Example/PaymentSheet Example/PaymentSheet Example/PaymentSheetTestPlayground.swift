@@ -41,6 +41,7 @@ struct PaymentSheetTestPlayground: View {
                 SettingView(setting: linkEnabledModeBinding)
             }
             SettingView(setting: $playgroundController.settings.linkPassthroughMode)
+            SettingView(setting: $playgroundController.settings.linkDisplay)
         }
         SettingView(setting: $playgroundController.settings.userOverrideCountry)
         SettingView(setting: $playgroundController.settings.externalPaymentMethods)

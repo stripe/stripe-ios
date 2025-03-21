@@ -17,6 +17,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var allowsPaymentMethodsRequiringShippingAddress: Bool { get set }
     var apiClient: STPAPIClient { get set }
     var applePay: PaymentSheet.ApplePayConfiguration? { get set }
+    var link: PaymentSheet.LinkConfiguration { get set }
     var primaryButtonColor: UIColor? { get set }
     var primaryButtonLabel: String? { get set }
     var style: PaymentSheet.UserInterfaceStyle { get set }
