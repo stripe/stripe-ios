@@ -169,6 +169,9 @@
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
 
+/* Label shown when a network-related error has occured. */
+"Failed to connect" = "Failed to connect";
+
 /* Title for the Link signup screen */
 "Fast, secure, 1⁠-⁠click checkout" = "Fast, secure, 1⁠-⁠click checkout";
 
@@ -408,6 +411,9 @@ is not supported by the merchant */
 
 /* Error message shown when the user enters an incorrect verification code too many times. */
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
+
+/* Button label to retry the failed request. */
+"Try again" = "Try again";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Unavailable for this purchase";
