@@ -10,11 +10,12 @@ import Combine
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) @_spi(v25) import StripeFinancialConnections
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
 final class PlaygroundViewModel: ObservableObject {
+    static let returnUrl = "financial-connections-example://redirect"
 
     enum SessionOutputField {
         case message
@@ -292,6 +293,8 @@ final class PlaygroundViewModel: ObservableObject {
             setupStandalone()
         case .paymentElement:
             setupPaymentElement()
+        case .fcLite:
+            setupFcLite()
         }
     }
 
@@ -460,6 +463,125 @@ final class PlaygroundViewModel: ObservableObject {
         }
     }
 
+    private func setupFcLite() {
+        isLoading = true
+        SetupPlayground(
+            configurationDictionary: playgroundConfiguration.configurationDictionary
+        ) { [weak self] setupPlaygroundResponse in
+            guard let self else { return }
+            if let setupPlaygroundResponse {
+                if let error = setupPlaygroundResponse["error"] {
+                    UIAlertController.showAlert(
+                        title: "Setup playground failed",
+                        message: error
+                    )
+                    return
+                }
+
+                guard let clientSecret = setupPlaygroundResponse["client_secret"] else {
+                    UIAlertController.showAlert(
+                        title: "Setup playground failed",
+                        message: "No client_secret in response"
+                    )
+                    return
+                }
+                guard let publishableKey = setupPlaygroundResponse["publishable_key"] else {
+                    UIAlertController.showAlert(
+                        title: "Setup playground failed",
+                        message: "No publishable_key in response"
+                    )
+                    return
+                }
+
+                STPAPIClient.shared.publishableKey = publishableKey
+                DispatchQueue.main.async {
+                    let topMostViewController = UIViewController.topMostViewController()!
+                    let fc = FinancialConnectionsLite(
+                        clientSecret: clientSecret,
+                        returnUrl: URL(string: Self.returnUrl)!
+                    )
+                    fc.present(from: topMostViewController) { [weak self] result in
+                        switch result {
+                        case .completed(let completed):
+                            switch completed {
+                            case .financialConnections(let linkedBank):
+                                let sessionId = linkedBank.sessionId
+                                let accountId = linkedBank.accountId
+                                let bankAccount: String
+                                if let bankName = linkedBank.bankName, let last4 = linkedBank.last4 {
+                                    bankAccount = "\(bankName) ....\(last4)"
+                                } else {
+                                    bankAccount = "Bank details unavailable"
+                                }
+
+                                let sessionInfo =
+                                    """
+                                    session_id=\(sessionId)
+                                    account_id=\(accountId)
+                                    """
+
+                                let message = "\(bankAccount)\n\n\(sessionInfo)"
+                                self?.sessionOutput[.message] = message
+                                self?.sessionOutput[.sessionId] = sessionId
+                                self?.sessionOutput[.accountIds] = accountId
+
+                                UIAlertController.showAlert(
+                                    title: "Success",
+                                    message: message
+                                )
+                            case .instantDebits(let linkedBank):
+                                let sessionId = linkedBank.linkAccountSessionId ?? "N/a"
+                                let paymentMethodId = linkedBank.paymentMethod.id
+                                let bankAccount: String
+                                if let bankName = linkedBank.bankName, let last4 = linkedBank.last4 {
+                                    bankAccount = "\(bankName) ....\(last4)"
+                                } else {
+                                    bankAccount = "Bank details unavailable"
+                                }
+
+                                let sessionInfo =
+                                    """
+                                    session_id=\(sessionId)
+                                    payment_method_id=\(paymentMethodId)
+                                    """
+
+                                let message = "\(bankAccount)\n\n\(sessionInfo)"
+                                self?.sessionOutput[.message] = message
+                                self?.sessionOutput[.sessionId] = sessionId
+
+                                UIAlertController.showAlert(
+                                    title: "Success",
+                                    message: message
+                                )
+                            @unknown default:
+                                UIAlertController.showAlert(
+                                    message: "Unknown payment method flow"
+                                )
+                            }
+                        case .cancelled:
+                            UIAlertController.showAlert(
+                                title: "Cancelled"
+                            )
+                        case .failed(let error):
+                            UIAlertController.showAlert(
+                                title: "Failed",
+                                message: error.localizedDescription
+                            )
+                        }
+                    }
+                }
+            } else {
+                UIAlertController.showAlert(
+                    title: "Playground App Setup Failed",
+                    message: "Try clearing 'Custom Keys' or delete & re-install the app."
+                )
+            }
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+
     func didSelectClearCaches() {
         URLSession.shared.reset(completionHandler: {})
     }
@@ -590,7 +712,7 @@ private func PresentFinancialConnectionsSheet(
     let financialConnectionsSheet = FinancialConnectionsSheet(
         financialConnectionsSessionClientSecret: clientSecret,
         // disable app-to-app for UI tests
-        returnURL: isUITest ? nil : "financial-connections-example://redirect",
+        returnURL: isUITest ? nil : PlaygroundViewModel.returnUrl,
         configuration: configuration
     )
     financialConnectionsSheet.apiClient.stripeAccount = stripeAccount
@@ -703,7 +825,7 @@ private func PresentPaymentSheet(
 
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
     // disable app-to-app for UI tests
-    configuration.returnURL = isUITest ? nil : "financial-connections-example://redirect"
+    configuration.returnURL = isUITest ? nil : PlaygroundViewModel.returnUrl
 
     let paymentSheet = PaymentSheet(
         paymentIntentClientSecret: paymentIntent.clientSecret,
