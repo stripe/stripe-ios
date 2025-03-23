@@ -637,9 +637,9 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // Select Card (which has a form to collect input)...
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
 
-        // ...the delegate should not be called yet since the form needs to be filled
+        // ...the delegate should not be called yet since the payment option is in an indeterminate state while the form is open
         XCTAssertFalse(delegateDidUpdatePaymentOptionCalled, "Delegate should not be updated immediately for payment methods with forms")
-        XCTAssertNil(sut.paymentOption, "Payment option should be nil until card form is filled")
+        XCTAssertNil(sut.paymentOption, "Payment option should be nil until form is canceled or completed")
 
         // Fill out the card form...
         let cardForm = sut.formCache[.stripe(.card)]!
