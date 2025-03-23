@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### PaymentSheet
+* [Fixed] Embedded Payment Element (private beta) possibly showing empty forms after calling `update()`.
+
 ## 24.8.0 2025-03-17
 ### PaymentSheet, CustomerSheet
 * [Added] Support for default payment methods in private beta.

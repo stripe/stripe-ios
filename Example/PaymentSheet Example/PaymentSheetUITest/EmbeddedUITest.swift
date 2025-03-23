@@ -67,12 +67,18 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
         XCTAssertTrue(app.buttons["Card"].isSelected)
+        // ...selecting card should present a form with the fields filled out
+        app.buttons["Card"].waitForExistenceAndTap()
+        // ...sanity check that the form is created
+        XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 10))
+        // ...thus the Continue button should be enabled
+        app.buttons["Continue"].waitForExistenceAndTap()
 
         // ...selecting Alipay w/ deferred PaymentIntent...
         app.buttons["Alipay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
 
-        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
+        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(6)
         XCTAssertEqual(
             aliPayAnalytics,
             ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped"]
