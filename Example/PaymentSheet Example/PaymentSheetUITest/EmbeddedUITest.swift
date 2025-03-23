@@ -645,11 +645,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         cardNumberField.tap()
         app.typeText(XCUIKeyboardKey.delete.rawValue)
         app.buttons["Close"].waitForExistenceAndTap()
-        // ...should re-select the last payment option (card)
-        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 1))
-        XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4444")
-        XCTAssertTrue(app.buttons["New card"].isSelected)
-        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        // ...should de-select the row and clear the payment option
+        XCTAssertFalse(app.staticTexts["Payment method"].waitForExistence(timeout: 1))
+        XCTAssertFalse(app.buttons["New card"].isSelected)
+        XCTAssertFalse(app.buttons["Checkout"].isEnabled)
 
         // Tapping back into card form should preserve previous form details
         app.buttons["New card"].waitForExistenceAndTap()
