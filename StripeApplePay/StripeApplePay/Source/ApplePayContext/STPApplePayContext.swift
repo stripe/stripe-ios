@@ -441,11 +441,16 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
             let completionBlockDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:willCompleteWithResult:handler:))
             let asyncDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:willCompleteWithResult:))
-            if delegate.responds(to: completionBlockDelegateMethod) {
+            let respondsToCompletionBlockDelegateMethod = delegate.responds(to: completionBlockDelegateMethod)
+            let respondsToAsyncDelegateMethod = delegate.responds(to: asyncDelegateMethod)
+
+            assert(!(respondsToAsyncDelegateMethod && respondsToCompletionBlockDelegateMethod), "Only implement either the async or completion-block based delegate method for willCompleteWithResult, not both.")
+
+            if respondsToCompletionBlockDelegateMethod {
                 delegate.applePayContext?(self, willCompleteWithResult: result) { newResult in
                     completion(newResult)
                 }
-            } else if delegate.responds(to: asyncDelegateMethod) {
+            } else if respondsToAsyncDelegateMethod {
                 Task {
                     let newResult = await delegate.applePayContext!(self, willCompleteWithResult: result)
                     completion(newResult)
@@ -453,6 +458,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             } else {
                 completion(result)
             }
+
         }
     }
 
@@ -468,9 +474,12 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
         let completionBlockDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelect:handler:))
         let asyncDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelect:))
-        if delegate.responds(to: completionBlockDelegateMethod) {
+        let respondsToCompletionBlockDelegateMethod = delegate.responds(to: completionBlockDelegateMethod)
+        let respondsToAsyncDelegateMethod = delegate.responds(to: asyncDelegateMethod)
+        assert(!(respondsToAsyncDelegateMethod && respondsToCompletionBlockDelegateMethod), "Only implement either the async or completion-block based didSelectShippingMethod delegate method, not both.")
+        if respondsToCompletionBlockDelegateMethod {
             delegate.applePayContext?(self, didSelect: shippingMethod, handler: completion)
-        } else if delegate.responds(to: asyncDelegateMethod) {
+        } else if respondsToAsyncDelegateMethod {
             Task {
                 let update = await delegate.applePayContext!(self, didSelect: shippingMethod)
                 completion(update)
@@ -490,9 +499,12 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
         let completionBlockDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectShippingContact:handler:))
         let asyncDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didSelectShippingContact:))
-        if delegate.responds(to: completionBlockDelegateMethod) {
+        let respondsToCompletionBlockDelegateMethod = delegate.responds(to: completionBlockDelegateMethod)
+        let respondsToAsyncDelegateMethod = delegate.responds(to: asyncDelegateMethod)
+        assert(!(respondsToAsyncDelegateMethod && respondsToCompletionBlockDelegateMethod), "Only implement either the async or completion-block based didSelectShippingContact delegate method, not both.")
+        if respondsToCompletionBlockDelegateMethod {
             delegate.applePayContext?(self, didSelectShippingContact: contact, handler: completion)
-        } else if delegate.responds(to: asyncDelegateMethod) {
+        } else if respondsToAsyncDelegateMethod {
             Task {
                 let update = await delegate.applePayContext!(self, didSelectShippingContact: contact)
                 completion(update)
@@ -513,15 +525,19 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
         let completionBlockDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didChangeCouponCode:handler:))
         let asyncDelegateMethod = #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:didChangeCouponCode:))
-        if delegate.responds(to: completionBlockDelegateMethod) {
+        let respondsToCompletionBlockDelegateMethod = delegate.responds(to: completionBlockDelegateMethod)
+        let respondsToAsyncDelegateMethod = delegate.responds(to: asyncDelegateMethod)
+        assert(!(respondsToAsyncDelegateMethod && respondsToCompletionBlockDelegateMethod), "Only implement either the async or completion-block based didChangeCouponCode delegate method, not both.")
+        if respondsToCompletionBlockDelegateMethod {
             delegate.applePayContext?(self, didChangeCouponCode: couponCode, handler: completion)
-        } else if delegate.responds(to: asyncDelegateMethod) {
+        } else if respondsToAsyncDelegateMethod {
             Task {
                 let update = await delegate.applePayContext!(self, didChangeCouponCode: couponCode)
                 completion(update)
             }
         }
     }
+
 
     @objc public func paymentAuthorizationControllerDidFinish(
         _ controller: PKPaymentAuthorizationController
