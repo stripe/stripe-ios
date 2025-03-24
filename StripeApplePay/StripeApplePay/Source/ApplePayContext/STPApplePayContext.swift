@@ -458,7 +458,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             } else {
                 completion(result)
             }
-
         }
     }
 
@@ -537,7 +536,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             }
         }
     }
-
 
     @objc public func paymentAuthorizationControllerDidFinish(
         _ controller: PKPaymentAuthorizationController
