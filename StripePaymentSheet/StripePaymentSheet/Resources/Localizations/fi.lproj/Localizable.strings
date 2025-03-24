@@ -104,6 +104,8 @@
 
 "Default" = "Oletus";
 
+"Default payment method" = "Oletusmaksutapa";
+
 "EPS Bank" = "EPS-pankki";
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
