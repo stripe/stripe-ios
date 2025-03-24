@@ -17,16 +17,25 @@ class EmptySessionFetcher: FinancialConnectionsSessionFetcher {
 }
 
 class FinancialConnectionsSheetTests: XCTestCase {
-    private let mockViewController = UIViewController()
+    private var mockViewController: UIViewController!
+    private var mockAnalyticsClient: MockAnalyticsClient!
+    private var mockApiClient: FinancialConnectionsAPIClient!
     private let mockClientSecret = "las_123345"
-    private let mockAnalyticsClient = MockAnalyticsClient()
-    private let mockApiClient = FinancialConnectionsAPIClient(
-        apiClient: APIStubbedTestCase.stubbedAPIClient()
-    )
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-        mockAnalyticsClient.reset()
+    override func setUp() {
+        super.setUp()
+        mockViewController = UIViewController()
+        mockAnalyticsClient = MockAnalyticsClient()
+        mockApiClient = FinancialConnectionsAPIClient(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        mockViewController = nil
+        mockAnalyticsClient = nil
+        mockApiClient = nil
     }
 
     func testPresentCompletion() {
@@ -68,6 +77,9 @@ class FinancialConnectionsSheetTests: XCTestCase {
     }
 
     func testAsyncPresentCompletion() async {
+        // Wait for the MainActor to process any pending work
+        await MainActor.run { }
+
         let sheet = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: mockClientSecret,
             returnURL: nil,
