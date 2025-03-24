@@ -412,9 +412,6 @@ is not supported by the merchant */
 /* Error message shown when the user enters an incorrect verification code too many times. */
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 
-/* Button label to retry the failed request. */
-"Try again" = "Try again";
-
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Unavailable for this purchase";
 

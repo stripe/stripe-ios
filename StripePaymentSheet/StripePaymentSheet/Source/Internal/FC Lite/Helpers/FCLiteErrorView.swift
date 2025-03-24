@@ -5,6 +5,7 @@
 //  Created by Mat Schmid on 2025-03-19.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 class ErrorView: UIView {
@@ -33,10 +34,7 @@ class ErrorView: UIView {
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
 
         let retryButton = UIButton(type: .system)
-        let retryButtonText = STPLocalizedString(
-            "Try again",
-            "Button label to retry the failed request."
-        )
+        let retryButtonText = String.Localized.tryAgain
         retryButton.setTitle(retryButtonText, for: .normal)
         retryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         retryButton.backgroundColor = FCLiteColor.stripe
