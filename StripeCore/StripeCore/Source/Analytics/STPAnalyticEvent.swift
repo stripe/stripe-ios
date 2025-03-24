@@ -259,6 +259,7 @@ import Foundation
     case unexpectedStripeUICoreAddressSpecProvider = "unexpected_error.stripeuicore.addressspecprovider"
     case unexpectedStripeUICoreBSBNumberProvider = "unexpected_error.stripeuicore.bsbnumberprovider"
     case unexpectedApplePayError = "unexpected_error.applepay"
+    case unexpectedApplePayContextError = "unexpected_error.applepaycontext"
     case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
     case unexpectedCustomerSheetError = "unexpected_error.customersheet"
     case unexpectedPaymentSheetConfirmationError = "unexpected_error.paymentsheet.confirmation"
