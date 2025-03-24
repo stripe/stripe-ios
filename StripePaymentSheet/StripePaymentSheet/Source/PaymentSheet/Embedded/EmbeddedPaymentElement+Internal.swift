@@ -395,12 +395,13 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: EmbeddedFormViewController) {
-        // If the user initially selected a payment option but deliberately hit "close" and the payment option was changed within the form, we clear the payment option
-        // To restore to the previous payment option we need to restore the previous form VC that contained the previous payment option
-        // TODO (https://jira.corp.stripe.com/browse/MOBILESDK-3361): Consider restoring the form VC and form cache to revert to the last valid payment option.
         let lastSelection = embeddedPaymentMethodsView.previousSelectedRowButton?.type
         let currentlySelectedType = embeddedPaymentMethodsView.selectedRowButton?.type
 
+        // If the user re-selects a valid payment option w/ form, then modifies it, then hits close, we clear selection
+        // Ideally we would revert back to the valid payment option that existed when the form was presented rather than totally clear selection
+        // To restore to the previous payment option we need to restore the previous form VC that contained the previous payment option
+        // TODO (https://jira.corp.stripe.com/browse/MOBILESDK-3361): Consider restoring the form VC and form cache to revert to the last valid payment option
         if lastSelection == currentlySelectedType,
            lastUpdatedPaymentOption != paymentOption {
             embeddedPaymentMethodsView.resetSelection()
