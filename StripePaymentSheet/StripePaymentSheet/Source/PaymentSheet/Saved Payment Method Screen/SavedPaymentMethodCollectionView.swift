@@ -296,7 +296,7 @@ extension SavedPaymentMethodCollectionView {
                 delegate?.paymentOptionCellDidSelectEdit(self)
             }
         }
-        // MARK: - Private Methods
+
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
             if case .USBankAccount = paymentMethod.type {
                 let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(.secondaryLabel)
@@ -384,6 +384,7 @@ extension SavedPaymentMethodCollectionView {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
+
                     } else {
                         accessoryButton.isHidden = true
 
@@ -393,6 +394,7 @@ extension SavedPaymentMethodCollectionView {
                         plus.alpha = 0.6
                         label.textColor = appearance.colors.text.disabledColor
                     }
+
                 } else if isSelected {
                     accessoryButton.isHidden = true
                     shadowRoundedRectangle.isEnabled = true
