@@ -104,6 +104,8 @@
 
 "Default" = "По умолчанию";
 
+"Default payment method" = "Способ оплаты по умолчанию";
+
 "EPS Bank" = "Банк EPS";
 
 "Enter address manually" = "Введите адрес вручную";

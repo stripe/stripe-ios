@@ -104,6 +104,8 @@
 
 "Default" = "Implicit";
 
+"Default payment method" = "Metodă de plată implicită";
+
 "EPS Bank" = "Banca EPS";
 
 "Enter address manually" = "Introduceți adresa manual";
