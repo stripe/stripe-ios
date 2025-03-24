@@ -393,22 +393,20 @@ extension SavedPaymentMethodCollectionView {
                         plus.alpha = 0.6
                         label.textColor = appearance.colors.text.disabledColor
                     }
-                } else {
-                    if isSelected {
-                        accessoryButton.isHidden = true
-                        shadowRoundedRectangle.isEnabled = true
-                        label.textColor = appearance.colors.text
-                        paymentMethodLogo.alpha = 1
-                        plus.alpha = 1
-                        selectedIcon.isHidden = false
-                        selectedIcon.backgroundColor = appearance.colors.primary
+                } else if isSelected {
+                    accessoryButton.isHidden = true
+                    shadowRoundedRectangle.isEnabled = true
+                    label.textColor = appearance.colors.text
+                    paymentMethodLogo.alpha = 1
+                    plus.alpha = 1
+                    selectedIcon.isHidden = false
+                    selectedIcon.backgroundColor = appearance.colors.primary
 
-                        // Draw a border with primary color
-                        shadowRoundedRectangle.isSelected = true
-                    } else {
-                        accessoryButton.isHidden = true
-                        applyDefaultStyle()
-                    }
+                    // Draw a border with primary color
+                    shadowRoundedRectangle.isSelected = true
+                } else {
+                    accessoryButton.isHidden = true
+                    applyDefaultStyle()
                 }
                 accessoryButton.isAccessibilityElement = !accessoryButton.isHidden
                 label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
