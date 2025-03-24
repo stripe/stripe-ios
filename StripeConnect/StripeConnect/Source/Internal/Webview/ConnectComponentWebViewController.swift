@@ -295,7 +295,8 @@ extension ConnectComponentWebViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if isBeingDismissed {
+        let dismissedVC = self.navigationController ?? self
+        if dismissedVC.isBeingDismissed {
             onDismiss?()
         }
     }

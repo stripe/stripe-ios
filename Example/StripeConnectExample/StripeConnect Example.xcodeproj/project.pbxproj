@@ -35,6 +35,7 @@
 		41810D712C89F4CD00F10EB7 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D702C89F4CD00F10EB7 /* AppearanceSettings.swift */; };
 		41810D762C8A005D00F10EB7 /* AppearanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D752C8A005D00F10EB7 /* AppearanceInfo.swift */; };
 		41810D782C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */; };
+		41B2856F2D8CC5C500B6B34D /* ToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B2856E2D8CC5C300B6B34D /* ToastManager.swift */; };
 		41E126E32D80B97000623208 /* XCUIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E126E22D80B96900623208 /* XCUIApplication+Extension.swift */; };
 		41E126E52D80BD7100623208 /* StripeConnectExampleAppKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E126E42D80BD6D00623208 /* StripeConnectExampleAppKeys.swift */; };
 		41E126E62D80BEF700623208 /* StripeConnectExampleAppKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E126E42D80BD6D00623208 /* StripeConnectExampleAppKeys.swift */; };
@@ -105,6 +106,7 @@
 		41810D702C89F4CD00F10EB7 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		41810D752C8A005D00F10EB7 /* AppearanceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceInfo.swift; sourceTree = "<group>"; };
 		41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppSettings+AppearanceInfo.swift"; sourceTree = "<group>"; };
+		41B2856E2D8CC5C300B6B34D /* ToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastManager.swift; sourceTree = "<group>"; };
 		41E126E22D80B96900623208 /* XCUIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIApplication+Extension.swift"; sourceTree = "<group>"; };
 		41E126E42D80BD6D00623208 /* StripeConnectExampleAppKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectExampleAppKeys.swift; sourceTree = "<group>"; };
 		41E9A1BC2C7CC85100EDE131 /* SwiftUIContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIContainerViewController.swift; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 		41E9A1BB2C7CC83500EDE131 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				41B2856E2D8CC5C300B6B34D /* ToastManager.swift */,
 				41E9A1BC2C7CC85100EDE131 /* SwiftUIContainerViewController.swift */,
 				41E9A1BE2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift */,
 				4161C2862C9DD035005BD67C /* URL+Valid.swift */,
@@ -442,6 +445,7 @@
 				41810D762C8A005D00F10EB7 /* AppearanceInfo.swift in Sources */,
 				41810D712C89F4CD00F10EB7 /* AppearanceSettings.swift in Sources */,
 				41E9A1BF2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift in Sources */,
+				41B2856F2D8CC5C500B6B34D /* ToastManager.swift in Sources */,
 				416E9EE02C78C10800A0B917 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
