@@ -69,7 +69,7 @@ import UIKit
 
         let klass: FinancialConnectionsSDKInterface.Type? = shouldPreferFCLite
             ? (FCLiteClassIfEnabled ?? FinancialConnectionsSDKClass)
-            : (FinancialConnectionsSDKClass ?? FCLiteClassIfEnabled)
+            : (FinancialConnectionsSDKClass ?? FCLiteClassIfEnabled) // Default
 
         guard let klass else {
             return nil
