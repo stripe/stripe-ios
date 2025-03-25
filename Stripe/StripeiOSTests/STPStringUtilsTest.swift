@@ -139,7 +139,7 @@ class STPStringUtilsTest: XCTestCase {
         XCTAssertEqual(STPStringUtils.expirationDateString(from: " "), " ")
         XCTAssertEqual(STPStringUtils.expirationDateString(from: "12/"), "12/")
     }
-    
+
     func testSanitizedExpirationDateFromOCRString() {
         XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("12/1995"), "1295")
         XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("12/95"), "1295")

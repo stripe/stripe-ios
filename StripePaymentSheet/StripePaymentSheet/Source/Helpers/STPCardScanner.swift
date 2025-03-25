@@ -315,8 +315,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                     addDetectedNumber(possibleNumber)
                 } else if let sanitizedExpiration = STPStringUtils.sanitizedExpirationDateFromOCRString(recognizedText.string) {
                     handlePossibleExpirationDate(sanitizedExpiration)
-                }
-                else if possibleNumber.count >= 4 && possibleNumber.count <= 6
+                } else if possibleNumber.count >= 4 && possibleNumber.count <= 6
                     && STPStringUtils.stringMayContainExpirationDate(recognizedText.string)
                 {
                     // Try to parse anything that looks like an expiration date.
@@ -359,7 +358,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             }
         }
     }
-    
+
     private func handlePossibleExpirationDate(_ sanitizedExpiration: String) {
         let month = (sanitizedExpiration as NSString).substring(to: 2)
         let year = (sanitizedExpiration as NSString).substring(from: 2)
