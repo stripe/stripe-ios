@@ -10,8 +10,10 @@ import Foundation
 class AppSettings {
     enum  Constants {
         static let defaultServerBaseURL = "https://stripe-connect-mobile-example-v1.glitch.me/"
+        static let defaultWebViewURL = "https://connect-js.stripe.com/v1.0/ios_webview.html"
         static let serverBaseURLKey = "ServerBaseURL"
         static let appearanceIdKey = "AppearanceId"
+        static let webViewURLKey = "WebViewURL"
 
         static let selectedMerchantKey = "SelectedMerchant"
 
@@ -41,6 +43,16 @@ class AppSettings {
         }
         set {
             defaults.setValue(newValue, forKey: Constants.serverBaseURLKey)
+        }
+    }
+
+    var webViewURL: String? {
+        get {
+            defaults.string(forKey: Constants.webViewURLKey) ?? 
+            Constants.defaultWebViewURL
+        }
+        set {
+            defaults.setValue(newValue, forKey: Constants.webViewURLKey)
         }
     }
 

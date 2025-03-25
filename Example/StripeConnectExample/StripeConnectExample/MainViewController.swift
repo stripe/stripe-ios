@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-@_spi(PrivateBetaConnect) import StripeConnect
+@_spi(PrivateBetaConnect) @_spi(DashboardOnly) import StripeConnect
 import SwiftUI
 import UIKit
 
@@ -60,8 +60,10 @@ class MainViewController: UITableViewController {
     }
 
     lazy var embeddedComponentManager: EmbeddedComponentManager = {
+        let webViewURL = AppSettings.shared.webViewURL.flatMap { URL(string: $0) }
         return .init(appearance: AppSettings.shared.appearanceInfo.appearance,
                      fonts: customFonts(),
+                     baseURLOverride: webViewURL,
                      fetchClientSecret: { [weak self, merchant] in
             do {
                 return try await API.accountSession(merchantId: merchant.id).get().clientSecret
