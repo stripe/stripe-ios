@@ -8,12 +8,15 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-import SwiftUI
 import UIKit
 
 @_spi(STP) public struct FinancialConnectionsSDKAvailability {
     static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? =
         NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
+        as? FinancialConnectionsSDKInterface.Type
+
+    static let FinancialConnectionsLiteClass: FinancialConnectionsSDKInterface.Type? =
+        NSClassFromString("StripePaymentSheet.FCLiteImplementation")
         as? FinancialConnectionsSDKInterface.Type
 
     static let isUnitTest: Bool = {
@@ -41,7 +44,7 @@ import UIKit
             let financialConnectionsSDKAvailable = ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
             return financialConnectionsSDKAvailable
         } else {
-            return FinancialConnectionsSDKClass != nil
+            return (FinancialConnectionsSDKClass != nil || FinancialConnectionsLiteClass != nil)
         }
     }
 
@@ -51,7 +54,7 @@ import UIKit
             return StubbedConnectionsSDKInterface()
         }
 
-        guard let klass = FinancialConnectionsSDKClass else {
+        guard let klass = /*FinancialConnectionsSDKClass ??*/ FinancialConnectionsLiteClass else {
             return nil
         }
 
