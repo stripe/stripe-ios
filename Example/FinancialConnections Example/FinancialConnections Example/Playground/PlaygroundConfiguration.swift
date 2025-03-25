@@ -37,13 +37,11 @@ final class PlaygroundConfiguration {
     enum IntegrationType: String, CaseIterable, Identifiable, Hashable {
         case standalone = "standalone"
         case paymentElement = "payment_element"
-        case fcLite = "fc_lite"
 
         var displayName: String {
             switch self {
             case .standalone: "Standalone"
-            case .paymentElement: "MPE"
-            case .fcLite: "FC Lite"
+            case .paymentElement: "Payment Element"
             }
         }
 

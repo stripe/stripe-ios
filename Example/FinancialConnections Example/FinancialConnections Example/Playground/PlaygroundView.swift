@@ -51,13 +51,13 @@ struct PlaygroundView: View {
                                     Text($0.displayName)
                                         .tag($0)
                                 }
-                                .pickerStyle(.segmented)
+                            }
+                            .pickerStyle(.segmented)
 
-                                if viewModel.sdkType.wrappedValue == .automatic {
-                                    Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
-                                        .font(.caption)
-                                        .italic()
-                                }
+                            if viewModel.sdkType.wrappedValue == .automatic {
+                                Text("'Automatic' will let the server choose between 'Web' or 'Native'.")
+                                    .font(.caption)
+                                    .italic()
                             }
                         }
                     }
