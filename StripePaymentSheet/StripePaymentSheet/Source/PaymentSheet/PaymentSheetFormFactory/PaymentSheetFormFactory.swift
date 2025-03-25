@@ -379,10 +379,20 @@ extension PaymentSheetFormFactory {
     func makeDefaultCheckbox(
         didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
+        let isSelectedByDefault: Bool = {
+            if isFirstSavedPaymentMethod {
+                return true
+            }
+            if let previousCustomerInput = previousCustomerInput, let setAsDefaultPM = previousCustomerInput.setAsDefaultPM {
+                // Use the previous customer input checkbox state if it was shown
+                return setAsDefaultPM
+            }
+            return false
+        }()
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: String.Localized.set_as_default_payment_method,
-            isSelectedByDefault: isFirstSavedPaymentMethod,
+            isSelectedByDefault: isSelectedByDefault,
             didToggle: didToggle
         )
         return PaymentMethodElementWrapper(element) { checkbox, params in
