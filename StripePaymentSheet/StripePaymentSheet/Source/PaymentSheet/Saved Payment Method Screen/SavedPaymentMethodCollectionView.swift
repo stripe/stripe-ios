@@ -148,9 +148,9 @@ extension SavedPaymentMethodCollectionView {
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
-        var showEditIcon: Bool {
+        var isEditable: Bool {
             guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
-                fatalError("Payment method does not match supported saved payment methods.")
+                return false
             }
             return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
         }
@@ -291,8 +291,8 @@ extension SavedPaymentMethodCollectionView {
         }
 
         @objc
-        func didSelectAccessory() {
-            if showEditIcon {
+        private func didSelectAccessory() {
+            if isEditable {
                 delegate?.paymentOptionCellDidSelectEdit(self)
             }
         }
@@ -380,7 +380,7 @@ extension SavedPaymentMethodCollectionView {
                 }
 
                 if isRemovingPaymentMethods {
-                    if case .saved = viewModel, showEditIcon {
+                    if case .saved = viewModel, isEditable {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()
