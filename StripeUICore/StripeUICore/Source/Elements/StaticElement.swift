@@ -21,7 +21,25 @@ import UIKit
         }
     }
 
-    public init(view: UIView) {
-        self.view = view
+    public init(view: UIView, padding: UIEdgeInsets = .zero) {
+        guard padding != .zero else {
+            self.view = view
+            return
+        }
+
+        // Create a container view with padding
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(view)
+
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding.top),
+            view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding.left),
+            view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding.right),
+            view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -padding.bottom),
+        ])
+
+        self.view = containerView
     }
 }

@@ -71,7 +71,7 @@ class PaymentMethodFormViewController: UIViewController {
 
     lazy var formStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [headerView, form.view].compactMap { $0 })
-        stackView.spacing = 24
+        stackView.spacing = 4
         stackView.axis = .vertical
         return stackView
     }()
@@ -109,7 +109,7 @@ class PaymentMethodFormViewController: UIViewController {
             self.form = PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: elementsSession,
-                configuration: .paymentSheet(configuration),
+                configuration: .paymentElement(configuration),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
                 linkAccount: LinkAccountContext.shared.account,

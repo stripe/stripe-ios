@@ -806,7 +806,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: elementsSession,
-            configuration: .paymentSheet(configuration),
+            configuration: .paymentElement(configuration),
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,

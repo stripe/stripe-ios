@@ -182,7 +182,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         var mandateText = isSaving ? String(format: Self.SaveAccountMandateText, merchantName) : String.Localized.bank_continue_mandate_text
         if case .customerSheet = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy_CustomerSheet, merchantName) + "\n" + mandateText
-        } else if case .paymentSheet = configuration, !linkedBank.instantlyVerified {
+        } else if case .paymentElement = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)

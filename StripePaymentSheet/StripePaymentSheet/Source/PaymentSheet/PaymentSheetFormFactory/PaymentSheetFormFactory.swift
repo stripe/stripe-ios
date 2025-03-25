@@ -83,7 +83,7 @@ class PaymentSheetFormFactory {
 
         /// Whether or not the card form should show the link inline signup checkbox
         let showLinkInlineCardSignup: Bool = {
-            guard case .paymentSheet(let configuration) = configuration else {
+            guard case .paymentElement(let configuration) = configuration else {
                 return false
             }
 
@@ -700,7 +700,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> StaticElement? {
-        return StaticElement(view: AfterpayPriceBreakdownView(theme: theme))
+        return StaticElement(view: AfterpayPriceBreakdownView(theme: theme), padding: configuration.subtitleInsets)
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
@@ -736,11 +736,11 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
-        return StaticElement(view: label)
+        return StaticElement(view: label, padding: configuration.subtitleInsets)
     }
 
     func makeInstantDebits(countries: [String]? = nil) -> PaymentMethodElement {
-        let titleElement: StaticElement? = if case .paymentSheet = configuration {
+        let titleElement: StaticElement? = if case .paymentElement = configuration {
             makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
         } else {
             nil
@@ -783,7 +783,7 @@ extension PaymentSheetFormFactory {
                     "US Bank Account copy title for Mobile payment element form"
                 )
             )
-        case .paymentSheet:
+        case .paymentElement:
             return makeSectionTitleLabelWith(
                 text: Self.PayByBankDescriptionText
             )
@@ -796,7 +796,7 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.secondaryText
         label.numberOfLines = 0
-        return StaticElement(view: label)
+        return StaticElement(view: label, padding: configuration.subtitleInsets)
     }
 
     /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration` and your payment method's required fields.

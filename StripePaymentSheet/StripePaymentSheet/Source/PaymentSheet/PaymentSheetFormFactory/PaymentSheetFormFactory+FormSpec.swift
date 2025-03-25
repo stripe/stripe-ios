@@ -123,7 +123,7 @@ extension PaymentSheetFormFactory {
         case .country(let spec):
             return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
-            return StaticElement(view: AffirmCopyLabel(theme: theme))
+            return StaticElement(view: AffirmCopyLabel(theme: theme), padding: configuration.subtitleInsets)
         case .klarna_header:
             return makeKlarnaCopyLabel()
         case .klarna_country(let spec):
