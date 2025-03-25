@@ -99,7 +99,9 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
                         HStack {
-                            SettingPickerView(setting: $playgroundController.settings.amount)
+                            SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
+                                return amount.customDisplayName(currency: playgroundController.settings.currency)
+                            })
                             SettingPickerView(setting: $playgroundController.settings.currency)
                         }
                         SettingPickerView(setting: merchantCountryBinding)
@@ -575,6 +577,7 @@ struct SettingView<S: PickerEnum>: View {
 struct SettingPickerView<S: PickerEnum>: View {
     var setting: Binding<S>
     var disabledSettings: [S] = []
+    var customDisplayName: ((S) -> String)?
 
     var body: some View {
         HStack {
@@ -582,7 +585,11 @@ struct SettingPickerView<S: PickerEnum>: View {
             Spacer()
             Picker(S.enumName, selection: setting) {
                 ForEach(S.allCases.filter({ !disabledSettings.contains($0) }), id: \.self) { t in
-                    Text(t.displayName)
+                    if let customDisplayName {
+                        Text(customDisplayName(t))
+                    } else {
+                        Text(t.displayName)
+                    }
                 }
             }.layoutPriority(0.8)
         }
