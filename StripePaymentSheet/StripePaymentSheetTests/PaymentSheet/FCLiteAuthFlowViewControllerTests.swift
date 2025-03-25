@@ -45,7 +45,8 @@ class FCLiteAuthFlowViewControllerTests: XCTestCase {
             hostedAuthURL: hostedAuthURL,
             successURL: URL(string: "stripe://success_url")!,
             cancelURL: URL(string: "stripe://cancel_url")!,
-            product: isInstantDebits ? "instant_debits" : "something_else"
+            product: isInstantDebits ? "instant_debits" : "something_else",
+            manualEntryUsesMicrodeposits: false
         )
     }
 }
