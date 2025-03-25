@@ -607,7 +607,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         self.bottomSheetController?.pushContentViewController(editVc)
     }
 
-    private func removePaymentMethod(_ paymentMethod: STPPaymentMethod) {
+    private func removePaymentMethod(_ paymentMethod: STPPaymentMethod, completion: (() -> Void)? = nil) {
         guard let row = viewModels.firstIndex(where: { $0.savedPaymentMethod?.stripeId == paymentMethod.stripeId })
         else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
@@ -646,6 +646,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                 viewController: self,
                 paymentMethodSelection: viewModel
             )
+            completion?()
         }
     }
 }
@@ -665,8 +666,9 @@ extension SavedPaymentOptionsViewController: UpdatePaymentMethodViewControllerDe
         }
         // if it isn't the last saved pm, waiting for update pm screen dismissal results in a weird flash, so we do it like this
         else {
-            removePaymentMethod(paymentMethod)
-            _ = self.bottomSheetController?.popContentViewController()
+            removePaymentMethod(paymentMethod) {
+                _ = self.bottomSheetController?.popContentViewController()
+            }
         }
     }
 
