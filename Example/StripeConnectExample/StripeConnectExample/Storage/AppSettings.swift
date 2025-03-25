@@ -8,7 +8,7 @@
 import Foundation
 
 class AppSettings {
-    enum  Constants {
+    enum Constants {
         static let defaultServerBaseURL = "https://stripe-connect-mobile-example-v1.glitch.me/"
         static let defaultWebViewURL = "https://connect-js.stripe.com/v1.0/ios_webview.html"
         static let serverBaseURLKey = "ServerBaseURL"
@@ -48,7 +48,7 @@ class AppSettings {
 
     var webViewURL: String? {
         get {
-            defaults.string(forKey: Constants.webViewURLKey) ?? 
+            defaults.string(forKey: Constants.webViewURLKey) ??
             Constants.defaultWebViewURL
         }
         set {
