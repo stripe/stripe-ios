@@ -75,21 +75,19 @@ import Foundation
     /// This differs from the existing expiration date parser, as it only looks for dates formatted by slashes.
     /// This is only intended for OCR use, as we'll often get messy strings like "Exp 01/20 Verification Code 123"
     @_spi(STP) public class func sanitizedExpirationDateFromOCRString(_ string: String) -> String? {
-        if let regex = slashFormattedExpirationDateRegex,
-            let match = regex.firstMatch(in: string, range: NSRange(string.startIndex..., in: string)),
-           match.numberOfRanges >= 3 {
-            guard let monthRange = Range(match.range(at: 1), in: string),
-                  let yearRange = Range(match.range(at: 2), in: string) else {
-                return nil
-            }
-
-            let monthStr = String(string[monthRange])
-            let yearStr = String(string[yearRange])
-
-            // Combine month and year into MMYY format
-            let sanitizedExpiration = monthStr + yearStr.suffix(2)
-            return sanitizedExpiration
+        guard let regex = slashFormattedExpirationDateRegex,
+              let match = regex.firstMatch(in: string, range: NSRange(string.startIndex..., in: string)),
+              match.numberOfRanges >= 3,
+              let monthRange = Range(match.range(at: 1), in: string),
+              let yearRange = Range(match.range(at: 2), in: string) else {
+            return nil
         }
-        return nil
+        
+        let monthStr = String(string[monthRange])
+        let yearStr = String(string[yearRange])
+        
+        // Combine month and year into MMYY format
+        let sanitizedExpiration = monthStr + yearStr.suffix(2)
+        return sanitizedExpiration
     }
 }
