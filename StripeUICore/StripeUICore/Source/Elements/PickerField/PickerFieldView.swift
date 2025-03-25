@@ -262,6 +262,8 @@ extension PickerFieldView: UITextFieldDelegate {
 
 extension PickerFieldView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
+        self.delegate?.didFinish(self, shouldAutoAdvance: true)
+        // Stop editing if needed (but do it after, to give us a chance to get another first responder if available)
         _ = textField.resignFirstResponder()
     }
 
