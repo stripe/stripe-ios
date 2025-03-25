@@ -22,6 +22,7 @@ import PassKit
     /// If you create the PaymentIntent with confirmation_method=manual, you can collect shipping information using its `shippingContact` and `shippingMethod` properties.
     ///   - completion:                        Call this with the PaymentIntent or SetupIntent client secret, or the error that occurred creating the PaymentIntent or SetupIntent.
     @objc(applePayContext:didCreatePaymentMethod:paymentInformation:completion:)
+    @MainActor @preconcurrency
     func applePayContext(
         _ context: STPApplePayContext,
         didCreatePaymentMethod paymentMethod: STPPaymentMethod,
@@ -35,6 +36,7 @@ import PassKit
     ///   - status: The status of the payment
     ///   - error: The error that occurred, if any.
     @objc(applePayContext:didCompleteWithStatus:error:)
+    @MainActor @preconcurrency
     func applePayContext(
         _ context: STPApplePayContext,
         didCompleteWith status: STPPaymentStatus,

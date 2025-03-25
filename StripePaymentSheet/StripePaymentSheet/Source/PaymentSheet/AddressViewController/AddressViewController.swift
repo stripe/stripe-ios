@@ -12,8 +12,9 @@ import Foundation
 import UIKit
 
 /// A delegate for `AddressViewController`
+@MainActor @preconcurrency
 public protocol AddressViewControllerDelegate: AnyObject {
-    /// Called when the customer finishes entering their address or cancels. Your implemententation should dismiss the view controller.
+    /// Called when the customer finishes entering their address or cancels. Your implementation should dismiss the view controller.
     /// - Parameter address: A valid address or nil if the customer cancels the flow.
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
 }
@@ -183,10 +184,6 @@ public class AddressViewController: UIViewController {
             didLogAddressShow = true
         }
         addressSection?.beginEditing()
-    }
-
-    public override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
     }
 }
 
