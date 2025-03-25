@@ -290,6 +290,7 @@ extension SavedPaymentMethodCollectionView {
             }
         }
 
+        // MARK: - Private Methods
         @objc
         private func didSelectAccessory() {
             if isEditable {
