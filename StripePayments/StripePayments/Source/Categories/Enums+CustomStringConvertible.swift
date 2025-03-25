@@ -407,10 +407,6 @@ extension STPPaymentIntentStatus: CustomStringConvertible {
             return "requiresConfirmation"
         case .requiresPaymentMethod:
             return "requiresPaymentMethod"
-        case .requiresSource:
-            return "requiresSource"
-        case .requiresSourceAction:
-            return "requiresSourceAction"
         case .succeeded:
             return "succeeded"
         case .unknown:

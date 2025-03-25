@@ -64,30 +64,11 @@ extension StripeAPI {
             case unknown
             /// This PaymentIntent requires a PaymentMethod or Source
             case requiresPaymentMethod = "requires_payment_method"
-            /// This PaymentIntent requires a Source
-            /// Deprecated: Use STPPaymentIntentStatusRequiresPaymentMethod instead.
-            @available(
-                *,
-                deprecated,
-                message: "Use STPPaymentIntentStatus.requiresPaymentMethod instead",
-                renamed: "STPPaymentIntentStatus.requiresPaymentMethod"
-            )
-            case requiresSource = "requires_source"
             /// This PaymentIntent needs to be confirmed
             case requiresConfirmation = "requires_confirmation"
             /// The selected PaymentMethod or Source requires additional authentication steps.
             /// Additional actions found via `next_action`
             case requiresAction = "requires_action"
-            /// The selected Source requires additional authentication steps.
-            /// Additional actions found via `next_source_action`
-            /// Deprecated: Use STPPaymentIntentStatusRequiresAction instead.
-            @available(
-                *,
-                deprecated,
-                message: "Use STPPaymentIntentStatus.requiresAction instead",
-                renamed: "STPPaymentIntentStatus.requiresAction"
-            )
-            case requiresSourceAction = "requires_source_action"
             /// Stripe is processing this PaymentIntent
             case processing
             /// The payment has succeeded
