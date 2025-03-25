@@ -120,7 +120,7 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
     private lazy var containerView: UIView = {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -203,14 +203,14 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         let bottomConstraint = containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         bottomConstraint.priority = .defaultHigh
         self.clipsToBounds = true
-        
+
         self.addConstraints(
             [
                 containerView.topAnchor.constraint(equalTo: self.topAnchor),
                 containerView.leftAnchor.constraint(equalTo: self.leftAnchor),
                 containerView.rightAnchor.constraint(equalTo: self.rightAnchor),
                 bottomConstraint,
-                
+
                 cameraView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 0),
                 cameraView.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 0),
                 cameraView.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: 0),
