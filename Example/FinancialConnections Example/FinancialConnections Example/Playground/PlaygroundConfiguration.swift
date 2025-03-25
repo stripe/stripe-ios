@@ -37,13 +37,11 @@ final class PlaygroundConfiguration {
     enum IntegrationType: String, CaseIterable, Identifiable, Hashable {
         case standalone = "standalone"
         case paymentElement = "payment_element"
-        case fcLite = "fc_lite"
 
         var displayName: String {
             switch self {
             case .standalone: "Standalone"
-            case .paymentElement: "MPE"
-            case .fcLite: "FC Lite"
+            case .paymentElement: "Payment Element"
             }
         }
 
@@ -122,9 +120,17 @@ final class PlaygroundConfiguration {
         case automatic = "automatic"
         case web = "web"
         case native = "native"
+        case fcLite = "fc_lite"
 
         var id: String {
             return rawValue
+        }
+
+        var displayName: String {
+            switch self {
+            case .automatic, .web, .native: return rawValue.capitalized
+            case .fcLite: return "FC Lite"
+            }
         }
     }
     private static let sdkTypeKey = "sdk_type"
@@ -143,7 +149,7 @@ final class PlaygroundConfiguration {
             configurationStore[Self.sdkTypeKey] = newValue.rawValue
 
             switch newValue {
-            case .automatic:
+            case .automatic, .fcLite:
                 PlaygroundUserDefaults.enableNative = nil
             case .web:
                 PlaygroundUserDefaults.enableNative = false

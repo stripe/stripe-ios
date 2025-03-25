@@ -290,11 +290,13 @@ final class PlaygroundViewModel: ObservableObject {
     func didSelectShow() {
         switch playgroundConfiguration.integrationType {
         case .standalone:
-            setupStandalone()
+            if playgroundConfiguration.sdkType == .fcLite {
+                setupFcLite()
+            } else {
+                setupStandalone()
+            }
         case .paymentElement:
             setupPaymentElement()
-        case .fcLite:
-            setupFcLite()
         }
     }
 
