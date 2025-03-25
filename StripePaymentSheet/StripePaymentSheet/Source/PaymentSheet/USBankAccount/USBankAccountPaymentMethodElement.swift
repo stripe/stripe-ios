@@ -201,7 +201,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         let style = NSMutableParagraphStyle()
         style.alignment = alignment
         formattedString.addAttributes([.paragraphStyle: style,
-                                       .font: UIFont.preferredFont(forTextStyle: .footnote),
+                                       .font: theme.fonts.footnote,
                                        .foregroundColor: theme.colors.secondaryText,
                                       ],
                                       range: NSRange(location: 0, length: formattedString.length))
