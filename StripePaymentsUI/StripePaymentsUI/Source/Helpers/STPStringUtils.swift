@@ -82,10 +82,10 @@ import Foundation
               let yearRange = Range(match.range(at: 2), in: string) else {
             return nil
         }
-        
+
         let monthStr = String(string[monthRange])
         let yearStr = String(string[yearRange])
-        
+
         // Combine month and year into MMYY format
         let sanitizedExpiration = monthStr + yearStr.suffix(2)
         return sanitizedExpiration
