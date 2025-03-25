@@ -58,6 +58,7 @@ class SimpleMandateTextView: UIView {
         textView.font = theme.fonts.caption
         textView.backgroundColor = .clear
         textView.textColor = theme.colors.secondaryText
+        textView.adjustsFontForContentSizeCategory = true
         textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
         // These two lines remove insets that are on UITextViews by default
         textView.textContainerInset = .zero
