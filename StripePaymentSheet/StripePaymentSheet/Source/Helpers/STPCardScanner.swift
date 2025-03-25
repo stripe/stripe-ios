@@ -461,6 +461,9 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         if let startTime = startTime {
             duration = Date().timeIntervalSince(startTime)
         }
+        isScanning = false
+        captureDevice?.unlockForConfiguration()
+        captureSession?.stopRunning()
 
         DispatchQueue.main.async(execute: {
             if params == nil {
@@ -474,10 +477,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 self.cameraView?.captureSession = nil
             }
         })
-
-        isScanning = false
-        captureDevice?.unlockForConfiguration()
-        captureSession?.stopRunning()
     }
 
     // MARK: Orientation
