@@ -30,7 +30,6 @@ import PassKit
     /// PKPaymentRequest or the address fragment provided by the last call to paymentAuthorizationController:
     /// didSelectShippingContact:completion:.
     /// Return an updated array of PKPaymentSummaryItem objects.
-    @_spi(v25)
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         didSelect shippingMethod: PKShippingMethod
@@ -50,7 +49,6 @@ import PassKit
     /// address and return an updated array of PKPaymentSummaryItem objects.
     /// @note To maintain privacy, the shipping information is anonymized. For example, in the United States it only includes the city, state, and zip code. This provides enough information to calculate shipping costs, without revealing sensitive information until the user actually approves the purchase.
     /// Receive full shipping information in the paymentInformation passed to `applePayContext:didCreatePaymentMethod:paymentInformation:`
-    @_spi(v25)
     @objc optional func applePayContext(
         _ controller: STPApplePayContext,
         didSelectShippingContact contact: PKContact
@@ -68,7 +66,6 @@ import PassKit
     /// Called when the user has entered or updated a coupon code. You should validate the
     /// coupon and return a PKPaymentRequestCouponCodeUpdate object.
     @available(iOS 15.0, *)
-    @_spi(v25)
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         didChangeCouponCode couponCode: String
@@ -93,7 +90,6 @@ import PassKit
     /// In your implementation, you can configure the PKPaymentAuthorizationResult to add custom fields, such as `orderDetails`.
     /// See https://developer.apple.com/documentation/passkit/pkpaymentauthorizationresult for all configuration options.
     /// This method is optional. If you implement this, return an PKPaymentAuthorizationResult.
-    @_spi(v25)
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult
