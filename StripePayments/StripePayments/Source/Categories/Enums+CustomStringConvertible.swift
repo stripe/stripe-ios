@@ -374,24 +374,6 @@ extension STPPaymentIntentSetupFutureUsage: CustomStringConvertible {
 }
 
 /// :nodoc:
-@available(
-    *,
-    deprecated,
-    message: "Use STPIntentActionType instead",
-    renamed: "STPIntentActionType"
-)
-extension STPPaymentIntentSourceActionType: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .authorizeWithURL:
-            return "authorizeWithURL"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
 extension STPPaymentIntentStatus: CustomStringConvertible {
     public var description: String {
         switch self {
