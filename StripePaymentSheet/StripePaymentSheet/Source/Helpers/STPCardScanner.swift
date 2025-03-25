@@ -461,21 +461,23 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         if let startTime = startTime {
             duration = Date().timeIntervalSince(startTime)
         }
-        isScanning = false
-        captureDevice?.unlockForConfiguration()
-        captureSession?.stopRunning()
-
+        
         DispatchQueue.main.async(execute: {
             if params == nil {
                 STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration ?? 0.0)
             } else {
                 STPAnalyticsClient.sharedClient.logCardScanSucceeded(withDuration: duration ?? 0.0)
             }
-            self.feedbackGenerator = nil
-
-            self.cameraView?.captureSession = nil
             self.delegate?.cardScanner(self, didFinishWith: params, error: error)
+            self.feedbackGenerator = nil
+            DispatchQueue.main.async {
+                self.cameraView?.captureSession = nil
+            }
         })
+        
+        isScanning = false
+        captureDevice?.unlockForConfiguration()
+        captureSession?.stopRunning()
     }
 
     // MARK: Orientation
