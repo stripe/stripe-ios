@@ -23,9 +23,9 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
                                                             paymentMethodConfigurationId: "pmc_234",
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _ in return "" })
         var config = PaymentSheet.Configuration()
-        config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
+        config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _ in return .canceled })
 
         let cpm = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_123")
         let cpm2 = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_789")
@@ -57,7 +57,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                                            setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _ in return "" })
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil, cpmConfiguration: nil, clientDefaultPaymentMethod: nil, customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"))
         XCTAssertEqual(parameters["key"] as? String, "pk_test")

@@ -17,7 +17,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     @MainActor
     func testPaymentSheetAddsUsage() {
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _, _ in })
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _ in return "" })
 
         // Clear product usage prior to testing PaymentSheet
         STPAnalyticsClient.sharedClient.productUsage = Set()

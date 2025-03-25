@@ -40,17 +40,17 @@ class ExternalPaymentOptionTests: XCTestCase {
 
     // MARK: - Tests `from` functions
 
-    func testFromExternalPaymentMethod_Success() {
+    func testFromExternalPaymentMethod_Success() async {
         let mockExternalPaymentMethod = createMockExternalPaymentMethod()
         let expectation = self.expectation(description: "Confirm handler called")
 
         let mockConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { type, billingDetails, completion in
+            externalPaymentMethodConfirmHandler: { type, billingDetails in
                 XCTAssertEqual(type, "external_paypal")
                 XCTAssertEqual(billingDetails, self.mockBillingDetails)
-                completion(.completed)
                 expectation.fulfill()
+                return .completed
             }
         )
 
@@ -64,11 +64,11 @@ class ExternalPaymentOptionTests: XCTestCase {
         XCTAssertEqual(paymentOption?.darkImageUrl, mockDarkImageURL)
 
         // Test confirm handler works
-        paymentOption?.confirm(billingDetails: mockBillingDetails) { _ in }
-        waitForExpectations(timeout: 0.1)
+        _ = await paymentOption?.confirm(billingDetails: mockBillingDetails)
+        await fulfillment(of: [expectation])
     }
 
-    func testFromCustomPaymentMethod_Success() {
+    func testFromCustomPaymentMethod_Success() async {
         let mockCustomPaymentMethod = createMockCustomPaymentMethod()
         let expectation = self.expectation(description: "Custom confirm handler called")
 
@@ -98,16 +98,15 @@ class ExternalPaymentOptionTests: XCTestCase {
         XCTAssertNil(paymentOption?.darkImageUrl)
 
         // Test confirm handler works
-        paymentOption?.confirm(billingDetails: mockBillingDetails) { _ in }
-        waitForExpectations(timeout: 0.1)
+        _ = await paymentOption?.confirm(billingDetails: mockBillingDetails)
+        await fulfillment(of: [expectation])
     }
 
     // MARK: - Tests for Confirm Method
 
-    func testConfirm_CustomPaymentMethod() {
+    func testConfirm_CustomPaymentMethod() async {
         let mockCustomPaymentMethod = createMockCustomPaymentMethod()
         let confirmExpectation = self.expectation(description: "Custom confirm handler called")
-        let completionExpectation = self.expectation(description: "Completion handler called")
 
         let mockCustomType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(
             id: "cpmt_1234",
@@ -129,26 +128,22 @@ class ExternalPaymentOptionTests: XCTestCase {
             return
         }
 
-        paymentOption.confirm(billingDetails: mockBillingDetails) { result in
-            XCTAssertEqual(result, .completed)
-            completionExpectation.fulfill()
-        }
-
-        waitForExpectations(timeout: 0.1)
+        let result = await paymentOption.confirm(billingDetails: mockBillingDetails)
+        XCTAssertEqual(result, .completed)
+        await fulfillment(of: [confirmExpectation])
     }
 
-    func testConfirm_ExternalPaymentMethod() {
+    func testConfirm_ExternalPaymentMethod() async {
         let mockExternalPaymentMethod = createMockExternalPaymentMethod()
         let confirmExpectation = self.expectation(description: "External confirm handler called")
-        let completionExpectation = self.expectation(description: "Completion handler called")
 
         let mockConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { type, billingDetails, completion in
+            externalPaymentMethodConfirmHandler: { type, billingDetails in
                 XCTAssertEqual(type, "external_paypal")
                 XCTAssertEqual(billingDetails, self.mockBillingDetails)
                 confirmExpectation.fulfill()
-                completion(.completed)
+                return .completed
             }
         )
 
@@ -157,24 +152,20 @@ class ExternalPaymentOptionTests: XCTestCase {
             return
         }
 
-        paymentOption.confirm(billingDetails: mockBillingDetails) { result in
-            XCTAssertEqual(result, .completed)
-            completionExpectation.fulfill()
-        }
-
-        waitForExpectations(timeout: 0.1)
+        let result = await paymentOption.confirm(billingDetails: mockBillingDetails)
+        XCTAssertEqual(result, .completed)
+        await fulfillment(of: [confirmExpectation])
     }
 
-    func testConfirm_ExternalPaymentMethod_Cancellation() {
+    func testConfirm_ExternalPaymentMethod_Cancellation() async {
         let mockExternalPaymentMethod = createMockExternalPaymentMethod()
         let confirmExpectation = self.expectation(description: "External confirm handler called")
-        let completionExpectation = self.expectation(description: "Completion handler called")
 
         let mockConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { _, _, completion in
+            externalPaymentMethodConfirmHandler: { _, _ in
                 confirmExpectation.fulfill()
-                completion(.canceled)
+                return .canceled
             }
         )
 
@@ -183,12 +174,10 @@ class ExternalPaymentOptionTests: XCTestCase {
             return
         }
 
-        paymentOption.confirm(billingDetails: mockBillingDetails) { result in
-            XCTAssertEqual(result, .canceled)
-            completionExpectation.fulfill()
-        }
+        let result = await paymentOption.confirm(billingDetails: mockBillingDetails)
+        XCTAssertEqual(result, .canceled)
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [confirmExpectation])
     }
 
     // MARK: - Tests for Equatable and Hashable
@@ -196,7 +185,7 @@ class ExternalPaymentOptionTests: XCTestCase {
     func testEquatable_SameType_Equal() {
         let mockConfig = PaymentSheet.ExternalPaymentMethodConfiguration(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { _, _, completion in completion(.completed) }
+            externalPaymentMethodConfirmHandler: { _, _ in return .completed }
         )
 
         let mockExternalPaymentMethod1 = ExternalPaymentMethod(
@@ -222,7 +211,7 @@ class ExternalPaymentOptionTests: XCTestCase {
     func testEquatable_DifferentType_NotEqual() {
         let mockConfig = PaymentSheet.ExternalPaymentMethodConfiguration(
             externalPaymentMethods: ["external_paypal", "external_klarna"],
-            externalPaymentMethodConfirmHandler: { _, _, completion in completion(.completed) }
+            externalPaymentMethodConfirmHandler: { _, _ in return .completed }
         )
 
         let mockExternalPaymentMethod1 = ExternalPaymentMethod(
@@ -251,13 +240,7 @@ class ExternalPaymentOptionTests: XCTestCase {
                 "external_paypal",
                 "external_klarna",
             ],
-            externalPaymentMethodConfirmHandler: {
-                _,
-                _,
-                completion in completion(
-                    .completed
-                )
-            }
+            externalPaymentMethodConfirmHandler: { _, _ in return .completed }
         )
 
         let paypalMethod = ExternalPaymentMethod(
