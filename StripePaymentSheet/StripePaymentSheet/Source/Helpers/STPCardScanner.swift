@@ -461,7 +461,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         if let startTime = startTime {
             duration = Date().timeIntervalSince(startTime)
         }
-        
+
         DispatchQueue.main.async(execute: {
             if params == nil {
                 STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration ?? 0.0)
@@ -474,7 +474,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 self.cameraView?.captureSession = nil
             }
         })
-        
+
         isScanning = false
         captureDevice?.unlockForConfiguration()
         captureSession?.stopRunning()
