@@ -100,6 +100,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "100.00"
             }
         }
+        func customDisplayName(currency: Currency) -> String {
+            switch currency {
+            case .jpy:
+                return displayName.replacingOccurrences(of: ".", with: "")
+            default:
+                return displayName
+            }
+        }
     }
 
     enum Currency: String, PickerEnum {
