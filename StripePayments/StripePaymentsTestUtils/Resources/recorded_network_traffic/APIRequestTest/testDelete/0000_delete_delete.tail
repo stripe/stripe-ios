@@ -2,31 +2,56 @@ DELETE
 https:\/\/luxurious-alpine-devourer\.glitch\.me\/delete\?$
 200
 application/json
-access-control-allow-credentials: true
-Date: Wed, 31 Jul 2024 02:08:47 GMT
 Content-Type: application/json
-Content-Length: 959
-Server: gunicorn/19.2.0
 Access-Control-Allow-Origin: *
+x-cache-hits: 0, 0
+Via: 1.1 varnish
+Server: gunicorn/19.2.0
+Date: Wed, 26 Mar 2025 19:08:37 GMT
+access-control-allow-credentials: true
+x-timer: S1743016117.346684,VS0,VE39
+Content-Length: 2038
+Accept-Ranges: bytes
+x-served-by: cache-lga21978-LGA, cache-lga21978-LGA
+x-cache: MISS, MISS
 
 {
   "json" : null,
-  "origin" : "136.24.137.206,::ffff:10.10.10.154,::ffff:10.10.89.203",
+  "origin" : "139.45.175.11, 157.52.117.78,::ffff:10.10.11.134,::ffff:10.10.83.12",
   "url" : "https,http,http:\/\/luxurious-alpine-devourer.glitch.me\/delete",
   "data" : "",
   "headers" : {
+    "Accept-Encoding" : "gzip",
+    "Proxy-Type" : "?",
+    "Host" : "luxurious-alpine-devourer.glitch.me",
+    "Ohfp" : "aB:aT:rc:aX:eo:aQ:a6:ac:aR",
+    "X-Forwarded-Server" : "cache-lga21978-LGA",
+    "Cdn-Loop" : "Fastly, Fastly;wasm=\"lJ8ID0wFtUmLIDMQHIArq3Mguf_niQ_Eh3znqAcZFWZpfyZu6dyD9n9VeObXHm2YF3bDHZLA9mQcbV9jr4uOKhxZvUAoAA\"",
+    "Traceparent" : "00-517c7ff05ad6487da8fa1aa835e1d2f4-4943f7b4a35db4f3-01",
+    "X-Sigsci-Edgemodule" : "vcl 2.10.0",
     "X-Forwarded-Host" : "luxurious-alpine-devourer.glitch.me",
     "Connection" : "close",
-    "Accept-Encoding" : "gzip, deflate, br",
-    "Stripe-Version" : "2020-08-27",
-    "User-Agent" : "xctest\/22719 CFNetwork\/1406.0.4 Darwin\/23.5.0",
-    "Authorization" : "Bearer",
-    "X-Stripe-User-Agent" : "{\"vendor_identifier\":\"6B9BD889-FE40-4D9D-BD6E-CA93E8B754A3\",\"model\":\"iPhone\",\"type\":\"arm64\",\"os_version\":\"16.4\",\"bindings_version\":\"23.28.1\",\"lang\":\"objective-c\"}",
-    "Host" : "luxurious-alpine-devourer.glitch.me",
-    "Traceparent" : "00-adea1112fa374e4ebe6007f30c66ab1e-54e24023044f40d1-01",
-    "Accept-Language" : "en-US,en;q=0.9",
+    "Fastly-Client-Ip" : "139.45.175.11",
+    "Fastly-Origin-Inspector" : "true",
+    "Fastly-Ssl" : "1",
+    "Accept-Language" : "en-CA,en-US;q=0.9,en;q=0.8",
+    "Client-Ja3" : "773906b0efdefa24a7f2b8eb6985bf37",
+    "Client-Ja4" : "t13d2014h2_a09f3c656075_14788d8d241b",
+    "Client-Pfp" : "2:0;3:100;4:2097152|10485760|1:0:0:16|m,s,p,a",
+    "User-Agent" : "xctest\/23600 CFNetwork\/1568.100.1 Darwin\/24.3.0",
+    "X-Stripe-User-Agent" : "{\"type\":\"arm64\",\"bindings_version\":\"24.9.0\",\"model\":\"iPhone\",\"vendor_identifier\":\"212D8108-4B96-43D1-959F-20B6DF4C9C2E\",\"os_version\":\"18.0\",\"lang\":\"objective-c\"}",
+    "X-Sigsci-Tags" : "site.xff-120-1-ip,site.xff-120-1-ip-header,site.xff-1200-10-header,site.xff-1200-10-ip,site.xff-1200-10-ip-header,site.xff-exists",
+    "Backend-Is-Origin" : "1",
     "Accept" : "*\/*",
-    "Content-Length" : "0"
+    "Fastly-Ff" : "ufKQX04OzzIljlJqi5Zoi7eJ6xJn\/6ecgs7Gfryjp4w=!LGA!cache-lga21978-LGA",
+    "Authorization" : "Bearer",
+    "Stripe-Version" : "2020-08-27",
+    "X-Sigsci-Requestid" : "9155a75202cc451a85ea000000000001",
+    "Asn" : "5091",
+    "Fastly-Orig-Accept-Encoding" : "gzip, deflate, br",
+    "X-Timer" : "S1743016117.346684,VS0",
+    "Content-Length" : "0",
+    "Proxy-Desc" : "?"
   },
   "args" : {
 

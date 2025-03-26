@@ -3,35 +3,34 @@ POST
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fconsumers%2Faccounts%2Fsign_up; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=HOncoWhSiEfknhNQTNIXvKpjHirkaHKyppzvtFhyDX0xTdOb_nEy9L2LEEghuNGr7l7YbvSTpLzsIKyM
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: A
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 stripe-account: acct_1QPtbqFZrlYv4BIL
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_n73E02efW0evF7
+request-id: req_4zUREJ1nobAoNq
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1424
 Vary: Origin
-Date: Mon, 02 Dec 2024 19:35:01 GMT
-original-request: req_n73E02efW0evF7
+Date: Wed, 26 Mar 2025 19:08:42 GMT
+original-request: req_4zUREJ1nobAoNq
 stripe-version: 2020-08-27
-idempotency-key: 16d097c8-c094-407a-add1-21ea0f8bcdba
+idempotency-key: db025e61-68d1-4274-a97d-e5a08a7e9023
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
 X-Stripe-Mock-Request: 
 
 {
-  "publishable_key" : "pk_test_51QLBAm02WC4aZo3qOXDgbgM2VG3cUgfC6cBhCD4b7ZWq4NRaxkYwujmuzq3SJyMkxVHOk3LfwDQVuJJ6mAS0c8FC00snhXELi5",
+  "publishable_key" : "pk_test_51QzhU709qNFofhUMCgbrE5gVFJIwMHAk3Z6OoGVnRao6ykhzZuiYSNsSSslPMLGV7NyeRLAXvs1z117NOEwmutLb00gM8gibgg",
   "consumer_session" : {
     "unredacted_phone_number" : null,
     "redacted_phone_number" : "+1********34",
@@ -46,13 +45,13 @@ X-Stripe-Mock-Request:
         "verification_token" : null
       }
     ],
-    "client_secret" : "pscs_AVsCY5XRu5O-pPykNqy-glaD04-vrJ4ceQUtfq8t3Y245kS0y6tkLqUM0tiqjWK0T6X2fuZIXnEG-drlR6HaYDt8TMJ-ZE8yBt_GinkERVpxEYe8oWpdsbGHwgczyAE-8s_UxTGugytOKjeLj5TcyrWD8AD8HYmixZjEzrTTETyQVG4FHNqJb6JDvjcTZfrIGAz2t9sBmMheGnZEuZH2Cja8Zu7bH7O_9FQTn2XoKReih5wmLotgOI3KB5yMYFWGqg5t8vIpaR1o8uzxTc9v9pSYlqJTubQRqSl4S4rvGgg4i899V4GPhrVUg-56aq4tfj7I5vcWDgr5a0HzMligkl9AoCpuMi6rzQdhCLm9zTSEKVStRD0tjqcAHSYZ6dUjQmUIJ9HOhWjwGL6O8ofsJziWxgMQW8p1ovMIgWp_l0i_s6mDUqjPgyzYXAU",
+    "client_secret" : "pscs_AVsCY5Wqqjo8M08ySVoRSRFgNZb_ebkqKtJCrjZpcIOPO0tcKROMCBLvVNP7MSEISQ-tIFkdioGJbX15oq7Eo044tzPMnMe6kUEBIkCXHoFCHCrsag0uqV3uxYxaPMc14pNcNF8RLARJHM1B6PuXrlTaMIT_TzYpfGL5kxhNC7HF7F6gDwrra_1vVqdsLzXQM0JC6mDb4qU36H9gy02ObYSyBpjeMSC-P1uW-_l997mqXfZjjFuGdc0Yw6WtkHFzDCsKTagMifqKGSeh2YPUa8fsXk0xYe_XUihaE5yI6iFZ3bxh2x156oE-8X3p4mQZDS2NhflhE4gDV7rAUunAnSYQhJA2hff0Tdh9dHDnOJk8v3FKIYywqKH8TP7O6N6oLYNeP2jZGy0MD6_1bi6t02770XY6ym4A80ABTLswaVY4m1IcIHvL3t20kW4",
     "support_payment_details_types" : [
       "CARD",
       "BANK_ACCOUNT"
     ],
-    "email_address" : "mobile-payments-sdk-ci+c7597926-3b83-47b9-84cc-d853e357d65a@stripe.com"
+    "email_address" : "mobile-payments-sdk-ci+196037f2-b7b8-4ce7-bdfc-6ed4ace7cd12@stripe.com"
   },
-  "account_id" : "acct_1QLBAm02WC4aZo3q",
-  "auth_session_client_secret" : "ascs_COoBEjxjYXNhc19vVHpIWGxweEVObklmQVU4Vm5nTWQ0QSF0c2RUIU5uM01kTlR3MzRuITRJI0dnVUk2Z0VZQVEaJDA4YTVhYjNhLTI3NDktNGEyZS05MWYwLWRlMmI3ZWE4MWY2MSIIQWJCWlFia3Q"
+  "account_id" : "acct_1QzhU709qNFofhUM",
+  "auth_session_client_secret" : "ascs_COoBEjxjYXNhc195Q0QwR0k3b2x6MVpHaUVzSS02SjJ3aVU5bHgzNHhMSk5uemJuTnVaY1JZI0dnVUk2Z0VZQVEaJDkzN2JmOGIxLWNkOTktNDMyMS05YzFhLTc5YzNhNzFjM2NjOSIIQWJCWlFibmQ"
 }

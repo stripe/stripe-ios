@@ -2,10 +2,16 @@ GET
 https:\/\/luxurious-alpine-devourer\.glitch\.me\/status\/429\?$
 429
 text/html
-access-control-allow-credentials: true
-Date: Wed, 31 Jul 2024 02:08:42 GMT
 Content-Type: text/html; charset=utf-8
-Content-Length: 0
-Server: gunicorn/19.2.0
 Access-Control-Allow-Origin: *
+x-cache-hits: 0, 0
+Via: 1.1 varnish
+Server: gunicorn/19.2.0
+Date: Wed, 26 Mar 2025 19:08:32 GMT
+access-control-allow-credentials: true
+x-timer: S1743016112.287438,VS0,VE141
+Content-Length: 0
+Accept-Ranges: bytes
+x-served-by: cache-lga21979-LGA, cache-lga21979-LGA
+x-cache: MISS, MISS
 

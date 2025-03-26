@@ -2,34 +2,59 @@ POST
 https:\/\/luxurious-alpine-devourer\.glitch\.me\/post$
 200
 application/json
-access-control-allow-credentials: true
-Date: Wed, 31 Jul 2024 02:08:48 GMT
 Content-Type: application/json
-Content-Length: 1075
-Server: gunicorn/19.2.0
 Access-Control-Allow-Origin: *
+x-cache-hits: 0, 0
+Via: 1.1 varnish
+Server: gunicorn/19.2.0
+Date: Wed, 26 Mar 2025 19:08:37 GMT
+access-control-allow-credentials: true
+x-timer: S1743016118.622318,VS0,VE159
+Content-Length: 2161
+Accept-Ranges: bytes
+x-served-by: cache-lga21924-LGA, cache-lga21924-LGA
+x-cache: MISS, MISS
 X-Stripe-Mock-Request: foo=bar
 
 {
   "json" : null,
-  "origin" : "136.24.137.206,::ffff:10.10.10.154,::ffff:10.10.87.49",
+  "origin" : "139.45.175.11, 157.52.117.24,::ffff:10.10.10.26,::ffff:10.10.83.133",
   "url" : "https,http,http:\/\/luxurious-alpine-devourer.glitch.me\/post",
   "data" : "",
   "headers" : {
-    "X-Forwarded-Host" : "luxurious-alpine-devourer.glitch.me",
-    "Connection" : "close",
-    "Accept-Encoding" : "gzip, deflate, br",
-    "Content-Type" : "application\/x-www-form-urlencoded",
-    "Stripe-Version" : "2020-08-27",
-    "User-Agent" : "xctest\/22719 CFNetwork\/1406.0.4 Darwin\/23.5.0",
-    "X-Stripe-Mock-Request" : "foo=bar",
-    "Authorization" : "Bearer",
-    "X-Stripe-User-Agent" : "{\"model\":\"iPhone\",\"lang\":\"objective-c\",\"bindings_version\":\"23.28.1\",\"os_version\":\"16.4\",\"type\":\"arm64\",\"vendor_identifier\":\"6B9BD889-FE40-4D9D-BD6E-CA93E8B754A3\"}",
-    "Host" : "luxurious-alpine-devourer.glitch.me",
-    "Traceparent" : "00-f68f326d3adb4fe181deef15d8434571-e672d7d7c30203de-01",
-    "Accept-Language" : "en-US,en;q=0.9",
     "Accept" : "*\/*",
-    "Content-Length" : "7"
+    "Client-Pfp" : "2:0;3:100;4:2097152|10485760|1:0:0:16|m,s,p,a",
+    "Ohfp" : "aB:af:f9:aT:aX:aQ:aR:eo:ac:a6:rc",
+    "X-Timer" : "S1743016118.622318,VS0",
+    "Traceparent" : "00-56368615163e4683a82395f47f75ae17-c515afe5f118ff24-01",
+    "Fastly-Orig-Accept-Encoding" : "gzip, deflate, br",
+    "Accept-Encoding" : "gzip",
+    "X-Sigsci-Tags" : "site.xff-120-1-ip,site.xff-120-1-ip-header,site.xff-1200-10-header,site.xff-1200-10-ip,site.xff-1200-10-ip-header,site.xff-exists",
+    "Proxy-Desc" : "?",
+    "Fastly-Origin-Inspector" : "true",
+    "Fastly-Ssl" : "1",
+    "Content-Type" : "application\/x-www-form-urlencoded",
+    "X-Sigsci-Edgemodule" : "vcl 2.10.0",
+    "Accept-Language" : "en-CA,en-US;q=0.9,en;q=0.8",
+    "User-Agent" : "xctest\/23600 CFNetwork\/1568.100.1 Darwin\/24.3.0",
+    "X-Forwarded-Server" : "cache-lga21924-LGA",
+    "Backend-Is-Origin" : "1",
+    "Client-Ja3" : "773906b0efdefa24a7f2b8eb6985bf37",
+    "Proxy-Type" : "?",
+    "Host" : "luxurious-alpine-devourer.glitch.me",
+    "Authorization" : "Bearer",
+    "Fastly-Client-Ip" : "139.45.175.11",
+    "Cdn-Loop" : "Fastly, Fastly;wasm=\"6xPFaezqal2EqjKqtmtP_ih7exOoAonW3z6vANlImkQkQNGqqVEdwm6aVa07G5fzXZT4ecJQQgs0OSl2xqtnmUMsBCNBAA\"",
+    "X-Stripe-User-Agent" : "{\"bindings_version\":\"24.9.0\",\"lang\":\"objective-c\",\"type\":\"arm64\",\"os_version\":\"18.0\",\"vendor_identifier\":\"212D8108-4B96-43D1-959F-20B6DF4C9C2E\",\"model\":\"iPhone\"}",
+    "Fastly-Ff" : "ufKQX04OzzIljlJqi5Zoi7eJ6xJn\/6ecgs7Gfryjp4w=!LGA!cache-lga21924-LGA",
+    "Asn" : "5091",
+    "Connection" : "close",
+    "Stripe-Version" : "2020-08-27",
+    "X-Stripe-Mock-Request" : "foo=bar",
+    "X-Sigsci-Requestid" : "f54f09f6ba504bdf92a6000000000001",
+    "Content-Length" : "7",
+    "X-Forwarded-Host" : "luxurious-alpine-devourer.glitch.me",
+    "Client-Ja4" : "t13d2014h2_a09f3c656075_14788d8d241b"
   },
   "args" : {
 

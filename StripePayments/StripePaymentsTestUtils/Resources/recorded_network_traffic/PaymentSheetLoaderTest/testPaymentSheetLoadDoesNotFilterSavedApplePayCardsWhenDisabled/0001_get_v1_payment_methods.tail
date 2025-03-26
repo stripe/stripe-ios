@@ -3,27 +3,26 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_OtOGvD0ZVacBoj&typ
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=2JDkSePM7sd92A-_dM81HO1Chf2Rk_qyjrCUC7o5XjdTxtfp_vGqIx_nvt3xSLso8_hg_wLDyA%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=5Hd0Vp5ZOa6FJy_vDm7CGFl0UGuwIx9nGZCxo75FawU111MgDhpt4uJOd1Pq9FrHPauTwKg3mQKQtGhr
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_FjblSO1GYXznVS
-Content-Length: 2623
+request-id: req_Qik3QRv8nXEC32
+Content-Length: 2709
 Vary: Origin
-Date: Wed, 18 Dec 2024 02:35:52 GMT
+Date: Wed, 26 Mar 2025 19:11:27 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
 
 {
   "has_more" : false,
@@ -46,6 +45,7 @@ x-content-type-options: nosniff
         }
       },
       "card" : {
+        "regulated_status" : "unregulated",
         "fingerprint" : "H5ytsQoN2pwNyAbE",
         "last4" : "4242",
         "funding" : "credit",
@@ -100,6 +100,7 @@ x-content-type-options: nosniff
         }
       },
       "card" : {
+        "regulated_status" : "unregulated",
         "fingerprint" : "H5ytsQoN2pwNyAbE",
         "last4" : "4242",
         "funding" : "credit",

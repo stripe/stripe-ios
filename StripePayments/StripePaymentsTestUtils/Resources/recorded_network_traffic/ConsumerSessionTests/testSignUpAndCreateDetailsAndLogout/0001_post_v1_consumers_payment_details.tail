@@ -2,34 +2,56 @@ POST
 /v1/consumers/payment_details$
 200
 application/json
-access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
-content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fconsumers%2Fpayment_details; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=eD3yfa-mJe6nPjfXWhQxSPkagaIMhyMEo0CHTdPWZyYhXfdPyMHSbexftvdE3HEqCgRKdfaKtA7-0jE2
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report?s=ocs-bapi-srv"
+reporting-endpoints: coop="https://q.stripe.com/coop-report"
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=ocs-bapi-srv"}],"include_subdomains":true}
-request-id: req_kxRTyThgD34eSy
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+request-id: req_6mkoynDzZY2qZq
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 1338
+Content-Length: 1411
 Vary: Origin
-Date: Wed, 31 Jul 2024 02:08:51 GMT
-original-request: req_kxRTyThgD34eSy
+Date: Wed, 26 Mar 2025 19:08:40 GMT
+original-request: req_6mkoynDzZY2qZq
 stripe-version: 2020-08-27
-idempotency-key: 02eeb33b-bf46-419a-9784-9eebe6e2e143
+idempotency-key: efb5d6d6-19fc-4048-aa35-86f28831874d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
 X-Stripe-Mock-Request: 
 
 {
   "redacted_payment_details" : {
+    "id" : "csmrpd_test_61SGNGyuGL2ArLpdJ41Rty1K1Q348RW4",
+    "is_us_debit_prepaid_or_bank_payment" : false,
+    "balance_details" : null,
+    "type" : "CARD",
+    "billing_address" : {
+      "line_1" : null,
+      "line_2" : null,
+      "locality" : null,
+      "postal_code" : "55555",
+      "sorting_code" : null,
+      "country_code" : "US",
+      "dependent_locality" : null,
+      "administrative_area" : null,
+      "name" : "Payments SDK CI"
+    },
+    "billing_email_address" : "mobile-payments-sdk-ci+5852bb02-cca8-42eb-8f7f-3f58ccae73ad@stripe.com",
+    "klarna_details" : null,
+    "bank_account_details" : null,
+    "backup_ids" : [
+
+    ],
+    "is_default" : false,
     "card_details" : {
       "brand_enum" : "visa",
       "checks" : {
@@ -42,41 +64,21 @@ X-Stripe-Mock-Request:
       "funding" : "CREDIT",
       "preferred_network" : null,
       "program_details" : {
-        "card_art_network_id" : "",
-        "height" : 0,
-        "program_name" : "",
-        "width" : 0,
-        "background_color" : "",
-        "foreground_color" : "",
-        "card_art_url" : ""
+        "card_art_network_id" : null,
+        "height" : null,
+        "program_name" : null,
+        "width" : null,
+        "background_color" : null,
+        "foreground_color" : null,
+        "card_art_url" : null
       },
       "brand" : "VISA",
       "last4" : "4242",
       "networks" : [
         "VISA"
       ],
-      "exp_year" : 2025
+      "exp_year" : 2040
     },
-    "is_default" : false,
-    "id" : "csmrpd_test_61QrpvXKaugSBvBsB41C40Oy4de1NQS8",
-    "backup_ids" : [
-
-    ],
-    "is_us_debit_prepaid_or_bank_payment" : false,
-    "billing_address" : {
-      "line_1" : null,
-      "line_2" : null,
-      "locality" : null,
-      "postal_code" : "55555",
-      "sorting_code" : null,
-      "country_code" : "US",
-      "dependent_locality" : null,
-      "administrative_area" : null,
-      "name" : "Payments SDK CI"
-    },
-    "nickname" : "",
-    "bank_account_details" : null,
-    "type" : "CARD",
-    "billing_email_address" : "mobile-payments-sdk-ci+874e9b29-df47-4a14-be39-be257a89dccb@stripe.com"
+    "nickname" : ""
   }
 }

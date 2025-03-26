@@ -1,23 +1,23 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_secret=pi_3R01ojFY0qyl6XeW1svmELaM_secret_epuvuKMROKYuiumEZeuAJLCBE&custom_payment_methods%5B0%5D=cpmt_invalid&expand%5B0%5D=payment_method_preference\.payment_intent\.payment_method&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=payment_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_secret=pi_3R6zMOFY0qyl6XeW1R0meO01_secret_QaNHRyfT1cyDw1xUYaBYlYlUB&custom_payment_methods%5B0%5D=cpmt_invalid&expand%5B0%5D=payment_method_preference\.payment_intent\.payment_method&locale=en-CA&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=payment_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Ab9zELgxeZtxV8AcsLtrJhJum80GtgbNGF4ob7y474KWY_AHayT2CQiDebsaoXIX_qPhRy3RPL33pDzd
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=X9mBVLvdOCttP9FcWH6zk1njlbHIGiFzXtlDIWTNNRcplWoBxoq70Bf_H5BPZwHFrW6tzBYVqJ1sIJsD
 Server: nginx
 Cache-Control: no-cache, no-store
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_UCrt8EBxVPmlM4
-Content-Length: 22191
+request-id: req_g7lntVbFIZrFyk
+Content-Length: 22501
 Vary: Origin
-Date: Fri, 07 Mar 2025 14:24:01 GMT
+Date: Wed, 26 Mar 2025 19:11:32 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
   "payment_method_preference" : {
-    "country_code" : "US",
+    "country_code" : "CA",
     "object" : "payment_method_preference",
     "payment_intent" : {
       "payment_method_configuration_details" : null,
@@ -49,8 +49,8 @@ Content-Type: application/json
         "amount_tax" : 0
       },
       "payment_method" : null,
-      "client_secret" : "pi_3R01ojFY0qyl6XeW1svmELaM_secret_epuvuKMROKYuiumEZeuAJLCBE",
-      "id" : "pi_3R01ojFY0qyl6XeW1svmELaM",
+      "client_secret" : "pi_3R6zMOFY0qyl6XeW1R0meO01_secret_QaNHRyfT1cyDw1xUYaBYlYlUB",
+      "id" : "pi_3R6zMOFY0qyl6XeW1R0meO01",
       "confirmation_method" : "automatic",
       "amount_details" : {
         "tip" : {
@@ -66,7 +66,7 @@ Content-Type: application/json
         "sofort"
       ],
       "setup_future_usage" : null,
-      "created" : 1741357441,
+      "created" : 1743016292,
       "description" : null
     },
     "ordered_payment_method_types" : [
@@ -87,7 +87,7 @@ Content-Type: application/json
     "elements_enable_external_payment_method_check" : false,
     "elements_enable_external_payment_method_fawry" : false,
     "elements_enable_remove_last_validation" : false,
-    "elements_disable_custom_klarna_ece_line_item_validation" : false,
+    "elements_disable_custom_klarna_ece_line_item_validation" : true,
     "financial_connections_enable_deferred_intent_flow" : true,
     "elements_enable_external_payment_method_kriya" : false,
     "elements_enable_external_payment_method_grabpay_later" : false,
@@ -95,7 +95,7 @@ Content-Type: application/json
     "elements_enable_fraud_signal_data_transfer_to_hcaptcha" : false,
     "elements_enable_external_payment_method_au_pay" : false,
     "elements_enable_external_payment_method_bankaxept" : false,
-    "enable_us_bank_account_as_link_funding_source_data_permissions_requested" : false,
+    "enable_us_bank_account_as_link_funding_source_data_permissions_requested" : true,
     "ocs_buyer_xp_pmme_new_list_promos_view" : false,
     "elements_disable_express_checkout_button_amazon_pay" : false,
     "elements_enable_external_payment_method_dbarai" : false,
@@ -104,7 +104,7 @@ Content-Type: application/json
     "elements_disable_link_email_otp" : false,
     "elements_enable_external_payment_method_gopay" : false,
     "elements_enable_external_payment_method_vipps" : false,
-    "enable_cashapp_afterpay_logo_checkout" : false,
+    "enable_cashapp_afterpay_logo_checkout" : true,
     "paypal_express_checkout_recurring_support" : false,
     "elements_should_hide_us_bank_account_manual_entry_cta" : false,
     "elements_enable_external_payment_method_eftpos_australia" : false,
@@ -171,6 +171,7 @@ Content-Type: application/json
     "elements_enable_external_payment_method_line_pay" : false,
     "elements_enable_external_payment_method_satispay" : false,
     "cbc_in_link_popup" : true,
+    "easel_testmode_customer_location" : false,
     "elements_disable_payment_element_custom_payment_methods_byof" : false,
     "elements_enable_external_payment_method_paypay" : false,
     "elements_enable_passive_captcha" : true,
@@ -202,13 +203,14 @@ Content-Type: application/json
     "elements_enable_external_payment_method_skrill" : false,
     "link_purchase_protections_rollout" : true,
     "elements_enable_external_payment_method_divido" : false,
+    "elements_disable_fc_lite" : false,
     "elements_enable_external_payment_method_atome" : false,
-    "show_swish_factoring_notice" : true,
     "elements_enable_external_payment_method_bpay" : false,
     "elements_enable_external_payment_method_knet" : false,
     "elements_enable_external_payment_method_interac" : false,
     "elements_enable_invalid_country_for_pm_error" : true,
     "elements_enable_payment_element_custom_payment_methods_byof" : false,
+    "show_swish_factoring_notice" : true,
     "elements_enable_external_payment_method_bizum" : false,
     "elements_enable_external_payment_method_paydirekt" : false,
     "elements_enable_external_payment_method_twint" : false,
@@ -216,9 +218,10 @@ Content-Type: application/json
     "elements_enable_external_payment_method_swish" : false,
     "elements_enable_external_payment_method_bluecode" : false,
     "elements_enable_external_payment_method_pledg" : false,
-    "elements_spm_max_visible_payment_methods" : false,
+    "elements_enable_bacs_debit_spm" : false,
     "elements_enable_external_payment_method_paysafecard" : false,
     "elements_enable_mx_card_installments" : false,
+    "elements_spm_max_visible_payment_methods" : false,
     "id_bank_transfers_v1_integration" : false,
     "elements_enable_external_payment_method_iwocapay" : false,
     "elements_enable_external_payment_method_poli" : false,
@@ -245,7 +248,7 @@ Content-Type: application/json
     "elements_enable_external_payment_method_ratepay" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_0RR0KtcnQAd",
+  "session_id" : "elements_session_0dkg2SqTmZK",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
@@ -282,9 +285,9 @@ Content-Type: application/json
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "b931c63e-ec75-4b9c-836e-f68066caf3f3",
+    "arb_id" : "ed5e9d20-8ca4-458b-a653-ca2f7303ef2b",
     "experiment_metadata" : {
-      "seed" : "eec7723241005f10aaa0753ce85ef49c7272ef411017a24a375dc8510e9fa0a2",
+      "seed" : "0f1755fb78b05b65d048c1bd31f0abe597222275332fe96be35e3753120dc460",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -293,6 +296,8 @@ Content-Type: application/json
     "experiment_assignments" : {
       "elements_merchant_ui_api_srv" : "control",
       "ocs_buyer_xp_elements_expanded_tabs_layout" : "control",
+      "ocs_buyer_xp_elements_hide_optional_klarna_fields" : "control",
+      "ocs_buyer_xp_elements_redirect_form_simplification" : "control",
       "link_popup_webview_option_ios" : "control",
       "apple_pay_crossbrowser_express_checkout" : "control"
     }
@@ -344,13 +349,14 @@ Content-Type: application/json
     "link_passthrough_mode_enabled" : false,
     "link_no_code_default_values_identification" : true,
     "link_enable_email_otp_for_link_popup" : false,
-    "link_pay_button_element_enabled" : true,
+    "link_mobile_disable_signup" : false,
     "link_crypto_onramp_elements_logout_disabled" : false,
     "link_mode" : null,
     "link_no_code_default_values_usage" : true,
-    "link_popup_smart_defaults_enabled" : false,
+    "link_pay_button_element_enabled" : true,
     "link_hcaptcha_site_key" : "20000000-ffff-ffff-ffff-000000000002",
     "link_crypto_onramp_force_cvc_reverification" : false,
+    "link_popup_smart_defaults_enabled" : false,
     "link_wanderlust_in_elements_enabled" : false,
     "link_email_verification_login_enabled" : false,
     "link_only_for_payment_method_types_enabled" : false,

@@ -2,12 +2,18 @@ GET
 https:\/\/luxurious-alpine-devourer\.glitch\.me\/bearer\?foo=bar$
 200
 application/json
-access-control-allow-credentials: true
-Date: Wed, 31 Jul 2024 02:08:48 GMT
 Content-Type: application/json
-Content-Length: 50
-Server: gunicorn/19.2.0
 Access-Control-Allow-Origin: *
+x-cache-hits: 0, 0
+Via: 1.1 varnish
+Server: gunicorn/19.2.0
+Date: Wed, 26 Mar 2025 19:08:37 GMT
+access-control-allow-credentials: true
+x-timer: S1743016118.863264,VS0,VE36
+Content-Length: 50
+Accept-Ranges: bytes
+x-served-by: cache-lga21981-LGA, cache-lga21981-LGA
+x-cache: MISS, MISS
 
 {
   "token" : "pk_foo",

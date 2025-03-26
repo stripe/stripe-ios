@@ -2,35 +2,35 @@ POST
 https:\/\/api\.stripe\.com\/v1\/tokens$
 200
 application/json
-access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
-content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Ftokens; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=F0p5PeXLHPnX5GJLgW3dJ5ZLugqmDCOY7zqp07reeCVCjOhn181mzxSEIl7RooOUk1Rkuakeo7JhBQaz
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+reporting-endpoints: coop="https://q.stripe.com/coop-report"
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_W7pxFlJ9Foy8BQ
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+request-id: req_c0Q9TAYDljWvzG
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 880
+Content-Length: 918
 Vary: Origin
-Date: Wed, 31 Jul 2024 02:09:09 GMT
-original-request: req_W7pxFlJ9Foy8BQ
+Date: Wed, 26 Mar 2025 19:08:49 GMT
+original-request: req_c0Q9TAYDljWvzG
 stripe-version: 2020-08-27
-idempotency-key: a414040d-63ec-4e67-9007-cbcd39785983
+idempotency-key: 3c4f81e4-3c5a-4293-9318-39507912d250
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
 X-Stripe-Mock-Request: guid=.*&muid=.*&payment_user_agent=.*&pk_token=&pk_token_instrument_name=Simulated%20Instrument&pk_token_payment_network=PKPaymentNetwork%28_rawValue%3A%20AmEx%29&pk_token_transaction_id=.*&sid=.*
 
 {
   "object" : "token",
-  "id" : "tok_1PiRyTFY0qyl6XeWoKudMJla",
+  "id" : "tok_1R6zJlFY0qyl6XeWS3f77SAF",
   "card" : {
     "address_line1_check" : null,
     "dynamic_last4" : "4242",
@@ -51,20 +51,21 @@ X-Stripe-Mock-Request: guid=.*&muid=.*&payment_user_agent=.*&pk_token=&pk_token_
     },
     "name" : null,
     "funding" : "credit",
-    "id" : "card_1PiRyTFY0qyl6XeWR1qgeyno",
+    "id" : "card_1R6zJlFY0qyl6XeWZYuFXKX1",
     "tokenization_method" : "apple_pay",
     "address_country" : null,
+    "regulated_status" : "unregulated",
     "wallet" : {
       "type" : "apple_pay",
       "apple_pay" : {
         "type" : "apple_pay"
       }
     },
-    "exp_year" : 2025
+    "exp_year" : 2026
   },
-  "client_ip" : "136.24.137.206",
+  "client_ip" : "139.45.175.11",
   "livemode" : false,
-  "created" : 1722391749,
+  "created" : 1743016129,
   "used" : false,
   "type" : "card"
 }
