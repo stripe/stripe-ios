@@ -101,9 +101,13 @@ extension PayWithLinkViewController {
         }()
 
         private func makeConfiguration() -> PaymentElementConfiguration {
-            var configuration = context.configuration.withEffectiveBillingDetails(for: linkAccount)
+            var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
+
+            let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
+            configuration.defaultBillingDetails = effectiveBillingDetails
+
             return configuration
         }
 

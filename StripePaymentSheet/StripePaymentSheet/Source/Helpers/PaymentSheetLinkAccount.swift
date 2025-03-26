@@ -494,6 +494,8 @@ extension PaymentSheetLinkAccount {
     /// Returns `nil` if not authenticated/logged in.
     ///
     /// - Parameter paymentDetails: Payment details
+    /// - Parameter cvc: The CVC that we need to pass for some transactions
+    /// - Parameter billingPhoneNumber: The billing phone number to add to the params. Passing it separately because it's not part of the payment details.
     /// - Returns: Payment method params for paying with Link.
     func makePaymentMethodParams(
         from paymentDetails: ConsumerPaymentDetails,

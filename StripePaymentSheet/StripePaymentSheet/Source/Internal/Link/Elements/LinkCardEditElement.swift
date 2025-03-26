@@ -139,6 +139,7 @@ final class LinkCardEditElement: Element {
     private lazy var cvcElement: TextFieldElement = {
         let cvcElement = TextFieldElement(
             configuration: TextFieldElement.CVCConfiguration(
+                // If we're using a placeholder, we just fill up the view with zeros.
                 defaultValue: useCVCPlaceholder ? "000" : nil,
                 readOnly: useCVCPlaceholder,
                 cardBrandProvider: { [weak self] in
