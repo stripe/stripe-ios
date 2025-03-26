@@ -15,9 +15,19 @@ import UIKit
         NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
         as? FinancialConnectionsSDKInterface.Type
 
-    static let FinancialConnectionsLiteClass: FinancialConnectionsSDKInterface.Type? =
+    static let FinancialConnectionsLiteImplementation: FinancialConnectionsSDKInterface.Type? =
         NSClassFromString("StripePaymentSheet.FCLiteImplementation")
         as? FinancialConnectionsSDKInterface.Type
+
+    @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
+    @_spi(STP) public static var shouldPreferFCLite: Bool = false
+
+    private static var FCLiteClassIfEnabled: FinancialConnectionsSDKInterface.Type? {
+        guard !Self.fcLiteKillswitchEnabled else {
+            return nil
+        }
+        return Self.FinancialConnectionsLiteImplementation
+    }
 
     static let isUnitTest: Bool = {
         #if targetEnvironment(simulator)
@@ -37,6 +47,7 @@ import UIKit
 
     // Return true for unit tests, the value of `FinancialConnectionsSDKAvailable` for UI tests,
     // and whether or not the Financial Connections SDK is available otherwise.
+    // Falls back on FC Lite availability.
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
         if isUnitTest {
             return true
@@ -44,7 +55,7 @@ import UIKit
             let financialConnectionsSDKAvailable = ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
             return financialConnectionsSDKAvailable
         } else {
-            return (FinancialConnectionsSDKClass != nil || FinancialConnectionsLiteClass != nil)
+            return (FinancialConnectionsSDKClass != nil || FCLiteClassIfEnabled != nil)
         }
     }
 
@@ -54,7 +65,11 @@ import UIKit
             return StubbedConnectionsSDKInterface()
         }
 
-        guard let klass = /*FinancialConnectionsSDKClass ??*/ FinancialConnectionsLiteClass else {
+        let klass: FinancialConnectionsSDKInterface.Type? = shouldPreferFCLite
+            ? (FCLiteClassIfEnabled ?? FinancialConnectionsSDKClass)
+            : (FinancialConnectionsSDKClass ?? FCLiteClassIfEnabled)
+
+        guard let klass else {
             return nil
         }
 
