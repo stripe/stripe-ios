@@ -149,9 +149,6 @@
 /* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
 
-/* Two factor authentication screen heading */
-"Confirm it's you" = "Confirm it's you";
-
 /* Title of a screen where the user can update their payment method before continuing
 with the transaction. */
 "Confirm payment details" = "Confirm payment details";
@@ -201,9 +198,6 @@ to be saved and used in future checkout sessions. */
 
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
-
-/* Label shown when a network-related error has occured. */
-"Failed to connect" = "Failed to connect";
 
 /* Title for the Link signup screen */
 "Fast, secure checkout" = "Fast, secure checkout";
@@ -350,9 +344,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Title for a button that when tapped removes a linked bank account. */
 "Remove linked account" = "Remove linked account";
-
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "Resend code";
 
 /* A button used for saving a new payment method
    Label on a button that when tapped, updates a card brand. */

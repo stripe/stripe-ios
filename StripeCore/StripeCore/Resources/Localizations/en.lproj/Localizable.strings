@@ -7,8 +7,17 @@
 /* Text for close button */
 "Close" = "Close";
 
+/* Two factor authentication screen heading */
+"Confirm it's you" = "Confirm it's you";
+
 /* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "Default payment method was not updated. Please try again.";
+
+/* Label shown when a network-related error has occured. */
+"Failed to connect" = "Failed to connect";
+
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
+"Resend code" = "Resend code";
 
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";

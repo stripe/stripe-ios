@@ -118,11 +118,8 @@ final class LinkVerificationView: UIView {
         return stackView
     }()
 
-    private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkPlain(foregroundColor: appearance?.colors?.primary ?? .linkTextBrand), title: STPLocalizedString(
-            "Resend code",
-            "Label for a button that re-sends the a login code when tapped"
-        ))
+    private lazy var : Button = {
+        let button = Button(configuration: .linkPlain(foregroundColor: appearance?.colors?.primary ?? .linkTextBrand), title: String.Localized.resend_code)
         button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
         return button
@@ -293,10 +290,7 @@ extension LinkVerificationView.Mode {
     }
 
     var headingText: String {
-        return STPLocalizedString(
-            "Confirm it's you",
-            "Two factor authentication screen heading"
-        )
+        return String.Localized.confirm_its_you
     }
 
     var bodyFont: UIFont {
