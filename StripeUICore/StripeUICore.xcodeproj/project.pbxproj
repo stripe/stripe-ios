@@ -48,6 +48,7 @@
 		57C288DFD2CC2CFC216E47CC /* PickerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0355EA21D04DDC29E620CEA /* PickerTextField.swift */; };
 		5936629C4665BC698C3458B1 /* TextFieldElementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8367A676E35A663E320E1B37 /* TextFieldElementConfiguration.swift */; };
 		5A9B21FE5A6941713087B94B /* SectionElement+MultiElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */; };
+		614197FD2D944A3200529A5F /* SubtitleElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614197FC2D944A3200529A5F /* SubtitleElement.swift */; };
 		62601F856C41CFA1C7A8B18F /* UIView+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDBBC76FD31F07EC67C52075 /* UIView+StripeUICore.swift */; };
 		63632799CD2134991E0EA510 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 9B701A244243959A191FF16F /* iOSSnapshotTestCase */; };
 		64E61A5E0A705F1C4582381A /* PhoneNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263B7E56A83CFA4BA8385638 /* PhoneNumberTests.swift */; };
@@ -204,6 +205,7 @@
 		59215CEEBA0D56FF41C3E412 /* UIWindow+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+StripeUICore.swift"; sourceTree = "<group>"; };
 		5B5CCD5D11A49D48D8D21C62 /* AddressSectionElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElement.swift; sourceTree = "<group>"; };
 		5BAD4C8EE686B0F9E86DBC8D /* DropdownFieldElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownFieldElement.swift; sourceTree = "<group>"; };
+		614197FC2D944A3200529A5F /* SubtitleElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleElement.swift; sourceTree = "<group>"; };
 		62539E4F0904670C008DB18E /* SectionElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionElementTest.swift; sourceTree = "<group>"; };
 		62575FAAAAEFF31406C9B417 /* DropdownFieldElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownFieldElementSnapshotTest.swift; sourceTree = "<group>"; };
 		64EECCC1035F00C122B2B1ED /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
@@ -393,6 +395,7 @@
 				EAB02AB36074791D39F0CDC1 /* Element.swift */,
 				85AC8D5E9700C8471D225C22 /* ElementsUI.swift */,
 				583B93BE0152CDF7383A37E7 /* StaticElement.swift */,
+				614197FC2D944A3200529A5F /* SubtitleElement.swift */,
 				EDD864C601BFB09A851715FA /* TextOrDropdownElement.swift */,
 			);
 			path = Elements;
@@ -920,6 +923,7 @@
 				159D7B9A2960A1CD7E661191 /* UIStackView+StripeUICore.swift in Sources */,
 				30972A45F8A32DEEC17DA4F6 /* UITraitCollection+StripeUICore.swift in Sources */,
 				62601F856C41CFA1C7A8B18F /* UIView+StripeUICore.swift in Sources */,
+				614197FD2D944A3200529A5F /* SubtitleElement.swift in Sources */,
 				D47D77A0B82DC6AE15E0A74E /* UIViewController+StripeUICore.swift in Sources */,
 				4CD207111219BF250A400ACC /* UIWindow+StripeUICore.swift in Sources */,
 				778BACD1A29BEDEE21ED3FBE /* ActivityIndicator.swift in Sources */,

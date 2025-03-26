@@ -83,7 +83,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
-        titleElement: StaticElement,
+        subtitleElement: SubtitleElement,
         nameElement: PaymentMethodElementWrapper<TextFieldElement>?,
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
@@ -125,7 +125,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         self.savingAccount = savingAccount
         self.theme = theme
         let allElements: [Element?] = [
-            titleElement,
+            subtitleElement,
             nameElement,
             emailElement,
             phoneElement,
@@ -182,7 +182,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         var mandateText = isSaving ? String(format: Self.SaveAccountMandateText, merchantName) : String.Localized.bank_continue_mandate_text
         if case .customerSheet = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy_CustomerSheet, merchantName) + "\n" + mandateText
-        } else if case .paymentSheet = configuration, !linkedBank.instantlyVerified {
+        } else if case .paymentElement = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
