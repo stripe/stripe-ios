@@ -123,7 +123,7 @@ enum PaymentSheetFormFactoryConfig {
                 return false
             }
         case .customerSheet:
-            return false
+            return true
         }
     }
 
