@@ -606,7 +606,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
                 guard clientSecret != STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     self.confirmType = STPApplePayContext.ConfirmType.none
-                    let analytic = Analytic(event: .applePayContextCompletePaymentCancelOrTimeout)
+                    let analytic = Analytic(event: .applePayContextCompletePaymentFinished)
                     handleFinalState(.success, nil, analytic)
                     return
                 }

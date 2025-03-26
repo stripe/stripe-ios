@@ -343,7 +343,7 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 
         waitForExpectations(timeout: 20.0, handler: nil) // give this a longer timeout, it tends to take a while
         XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.cancel_or_timeout")
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
     }
 
     func testCancelAfterSetupIntentConfirmsStillSucceeds() {
@@ -377,7 +377,7 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 
         waitForExpectations(timeout: 20.0, handler: nil) // give this a longer timeout, it tends to take a while
         XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.cancel_or_timeout")
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
     }
 
     // MARK: - Helper
