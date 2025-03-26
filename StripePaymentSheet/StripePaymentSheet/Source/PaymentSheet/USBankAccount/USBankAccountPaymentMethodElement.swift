@@ -83,7 +83,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
-        titleElement: SubtitleElement,
+        subtitleElement: SubtitleElement,
         nameElement: PaymentMethodElementWrapper<TextFieldElement>?,
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
@@ -125,7 +125,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         self.savingAccount = savingAccount
         self.theme = theme
         let allElements: [Element?] = [
-            titleElement,
+            subtitleElement,
             nameElement,
             emailElement,
             phoneElement,

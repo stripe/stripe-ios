@@ -601,7 +601,7 @@ extension PaymentSheetFormFactory {
 
         return USBankAccountPaymentMethodElement(
             configuration: configuration,
-            titleElement: makeUSBankAccountCopyLabel(),
+            subtitleElement: makeUSBankAccountCopyLabel(),
             nameElement: configuration.billingDetailsCollectionConfiguration.name != .never ? makeName() : nil,
             emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
             phoneElement: phoneElement,
@@ -763,7 +763,7 @@ extension PaymentSheetFormFactory {
 
         return InstantDebitsPaymentMethodElement(
             configuration: configuration,
-            titleElement: titleElement,
+            subtitleElement: titleElement,
             nameElement: nameElement,
             emailElement: emailElement,
             phoneElement: phoneElement,

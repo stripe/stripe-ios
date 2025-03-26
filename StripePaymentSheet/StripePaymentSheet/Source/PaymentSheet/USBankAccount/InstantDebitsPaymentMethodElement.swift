@@ -185,7 +185,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
-        titleElement: SubtitleElement?,
+        subtitleElement: SubtitleElement?,
         nameElement: PaymentMethodElementWrapper<TextFieldElement>?,
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
@@ -222,7 +222,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         }
 
         let allElements: [Element?] = [
-            titleElement,
+            subtitleElement,
             nameElement,
             emailElement,
             phoneElement,

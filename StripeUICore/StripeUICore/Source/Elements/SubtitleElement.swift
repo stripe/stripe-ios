@@ -13,8 +13,7 @@ import UIKit
     weak public var delegate: ElementDelegate?
 
     public init(view: UIView, isHorizontalMode: Bool) {
-        let padding = isHorizontalMode ? .zero : UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
-        guard padding != .zero else {
+        guard !isHorizontalMode else {
             self.view = view
             return
         }
@@ -25,6 +24,7 @@ import UIKit
         view.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(view)
 
+        let padding = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
         NSLayoutConstraint.activate([
             view.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding.top),
             view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding.left),
