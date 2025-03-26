@@ -154,7 +154,7 @@ extension PaymentSheet {
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                 case .link(let option):
                     label = option.paymentSheetLabel
-                    paymentMethodType = STPPaymentMethodType.link.identifier
+                    paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                 case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.displayText
