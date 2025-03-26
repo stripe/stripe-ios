@@ -41,7 +41,14 @@ extension PayWithLinkViewController {
             callToAction: viewModel.confirmButtonCallToAction,
             compact: viewModel.shouldUseCompactConfirmButton
         ) { [weak self] in
-            self?.confirm()
+            guard let self else {
+                return
+            }
+
+            let confirmationExtras = LinkConfirmationExtras(
+                billingPhoneNumber: self.makeEffectiveBillingDetails().phone
+            )
+            self.confirm(confirmationExtras: confirmationExtras)
         }
 
         private lazy var cancelButton: Button = {
@@ -308,7 +315,11 @@ extension PayWithLinkViewController {
                     billingAddress: effectivePaymentDetails.billingAddress,
                     billingEmailAddress: effectiveBillingDetails.email
                 ) { [weak self] _ in
-                    self?.confirm()
+                    // We need to pass the billing phone number explicitly, since it's not part of the billing details.
+                    let confirmationExtras = LinkConfirmationExtras(
+                        billingPhoneNumber: effectiveBillingDetails.phone
+                    )
+                    self?.confirm(confirmationExtras: confirmationExtras)
                 }
             } else {
                 // We're still missing fields. Prompt the user to fill them in.
