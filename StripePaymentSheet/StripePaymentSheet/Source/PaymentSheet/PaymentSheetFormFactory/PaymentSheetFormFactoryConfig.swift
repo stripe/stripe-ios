@@ -118,7 +118,7 @@ enum PaymentSheetFormFactoryConfig {
         case .paymentElement(let paymentElementConfiguration):
             switch paymentElementConfiguration.paymentMethodLayout {
             case .horizontal:
-                return false
+                return true
             case .vertical, .automatic:
                 return false
             }
