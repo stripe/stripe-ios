@@ -228,7 +228,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.view.autosizeHeight(width: 320)
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in
+            // These tests don't confirm, so this is unused
+            XCTFail("Unexpectedly called confirm handler of broken config")
+        })
         async let _ = sut.update(intentConfiguration: brokenConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
         async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
