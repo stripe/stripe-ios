@@ -267,26 +267,28 @@ extension PayWithLinkViewController {
             }
         }
 
+        /// Returns whether the provided `paymentDetails` contains all the required billing details.
         private func canConfirmWith(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
-            let attachDefaults = billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
-            let hasBillingDetails = context.configuration.defaultBillingDetails != PaymentSheet.BillingDetails()
-
-            // TODO: For this, effective payment details should include all the defaults for attachDefaults
-            let attachDefaultsIsSupported = !attachDefaults || !hasBillingDetails
+//            let attachDefaults = billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+//            let hasBillingDetails = context.configuration.defaultBillingDetails != PaymentSheet.BillingDetails()
+//
+//            // TODO: For this, effective payment details should include all the defaults for attachDefaults
+//            let attachDefaultsIsSupported = !attachDefaults || !hasBillingDetails
 
             let paymentDetailsAreSupported = paymentDetails.supports(
                 billingDetailsCollectionConfiguration,
                 in: linkAccount.currentSession
             )
 
-            return paymentDetailsAreSupported && attachDefaultsIsSupported
+            return paymentDetailsAreSupported // && attachDefaultsIsSupported
         }
 
         private func handleIncompleteBillingDetails(
             for paymentDetails: ConsumerPaymentDetails,
             with confirmationExtras: LinkConfirmationExtras
         ) {
-            // Fill in missing fields with default values from the provided billing details
+            // Fill in missing fields with default values from the provided billing details and
+            // from the Link account.
             let effectiveBillingDetails = makeEffectiveBillingDetails()
 
             let effectivePaymentDetails = paymentDetails.update(
@@ -299,15 +301,17 @@ extension PayWithLinkViewController {
                 in: linkAccount.currentSession
             )
 
-            // TODO: Should we _always_ redirect to the update screen?
             if hasRequiredBillingDetailsNow {
-                // All fields are covered; update the payment details to include the delta
-                viewModel.updateBillingDetails(for: effectivePaymentDetails) { [weak self] _ in
-                    // Now confirm with the updated payment details
+                // We have filled in all the missing fields. Now, update the payment details and confirm the intent.
+                viewModel.updateBillingDetails(
+                    paymentMethodID: paymentDetails.stripeID,
+                    billingAddress: effectivePaymentDetails.billingAddress,
+                    billingEmailAddress: effectiveBillingDetails.email
+                ) { [weak self] _ in
                     self?.confirm()
                 }
             } else {
-                // Still not covering all the fields; let the user enter the rest
+                // We're still missing fields. Prompt the user to fill them in.
                 collectRemainingBillingDetailsAndConfirm(for: effectivePaymentDetails)
             }
         }
@@ -328,14 +332,6 @@ extension PayWithLinkViewController {
             #endif
             updateErrorLabel(for: nil)
             confirmButton.update(state: .processing)
-
-            // If we need to collect the phone number, pass along any default value. If there is no default value,
-            // the user wouldn't be able to proceed anyway, so we don't need to worry about that case.
-//            let billingPhoneNumber: String? = if context.configuration.billingDetailsCollectionConfiguration.phone == .always {
-//                billingPhoneNumber ?? effectiveBillingDetails.phone
-//            } else {
-//                nil
-//            }
 
             coordinator?.confirm(
                 with: linkAccount,
@@ -647,6 +643,8 @@ extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewContr
         }
 
         if let confirmationExtras {
+            // The update screen was only opened to collect missing billing details. Now that we have them,
+            // let's confirm the intent.
             confirm(confirmationExtras: confirmationExtras)
         }
     }

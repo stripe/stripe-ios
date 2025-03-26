@@ -285,24 +285,24 @@ extension LinkPaymentMethodPicker {
 
 extension ConsumerPaymentDetails {
 
-    /// Returns whether the `ConsumerPaymentDetails` contains all the billing details fields requested by the provided `config`.
-    /// We use the `consumerSession` to determine if we can populate some fields from it.
+    /// Returns whether the `ConsumerPaymentDetails` contains all the billing details fields requested by the provided `billingDetailsConfig`.
+    /// We use the `consumerSession` to populate any missing fields from the Link account.
     func supports(
-        _ config: PaymentSheet.BillingDetailsCollectionConfiguration,
+        _ billingDetailsConfig: PaymentSheet.BillingDetailsCollectionConfiguration,
         in consumerSession: ConsumerSession?
     ) -> Bool {
-        if config.name == .always && billingAddress?.name == nil {
-            // No name provided, so that needs to be collected
+        if billingDetailsConfig.name == .always && billingAddress?.name == nil {
+            // No name available, so that needs to be collected
             return false
         }
 
-        if config.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
-            // No or incomplete address provided, so that needs to be collected
+        if billingDetailsConfig.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
+            // No or incomplete address available, so that needs to be collected
             return false
         }
 
-        if config.phone == .always && consumerSession?.unredactedPhoneNumber == nil {
-            // No phone number from the account, so that needs to be collected
+        if billingDetailsConfig.phone == .always && consumerSession?.unredactedPhoneNumber == nil {
+            // No phone number available in the account, so that needs to be collected
             return false
         }
 
@@ -311,27 +311,28 @@ extension ConsumerPaymentDetails {
         return true
     }
 
+    /// Creates a new `ConsumerPaymentDetails` with any missing fields populated by the provided `billingDetails`. The required fields
+    /// are determined by the provided `billingDetailsConfig`.
     func update(
         with billingDetails: PaymentSheet.BillingDetails,
-        basedOn config: PaymentSheet.BillingDetailsCollectionConfiguration
+        basedOn billingDetailsConfig: PaymentSheet.BillingDetailsCollectionConfiguration
     ) -> ConsumerPaymentDetails {
         var billingEmailAddress = self.billingEmailAddress
         var billingAddress = self.billingAddress
 
-        if config.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
-            // No address provided, so that needs to be collected
-            // Update any existing address or create a new one
-            // TODO: Should we tho?
-            // billingAddress = billingAddress?.update(with: billingDetails) ?? BillingAddress(from: billingDetails)
+        if billingDetailsConfig.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
+            // No address available, so we add any default provided by the merchant
+            // TODO: Confirm this is the right approach
             billingAddress = BillingAddress(from: billingDetails)
         }
 
-        if config.name == .always && billingAddress?.name == nil {
-            // No name provided, so that needs to be collected
+        if billingDetailsConfig.name == .always && billingAddress?.name == nil {
+            // No name available, so we add any default provided by the merchant
             billingAddress = billingAddress?.withName(billingDetails.name) ?? BillingAddress(name: billingDetails.name)
         }
 
-        if config.email == .always && billingEmailAddress == nil {
+        if billingDetailsConfig.email == .always && billingEmailAddress == nil {
+            // No email available, so we add any default provided by the merchant
             billingEmailAddress = billingDetails.email
         }
 

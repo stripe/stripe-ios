@@ -82,7 +82,7 @@ extension PaymentSheet {
 
 private extension STPElementsSession {
     func isCompatible(with configuration: PaymentElementConfiguration) -> Bool {
-        // We can't collect billing details if we're in the web flow
+        // We can't collect billing details if we're in the web flow, so turn Link off for those cases.
         let nativeLink = deviceCanUseNativeLink(elementsSession: self, configuration: configuration)
         return nativeLink || !configuration.requiresBillingDetailCollection()
     }

@@ -197,11 +197,7 @@ extension TextFieldElement {
 // MARK: - CVC Configuration
 extension TextFieldElement {
     struct CVCConfiguration: TextFieldElementConfiguration {
-        init(
-            defaultValue: String? = nil,
-            readOnly: Bool = false,
-            cardBrandProvider: @escaping () -> (STPCardBrand)
-        ) {
+        init(defaultValue: String? = nil, readOnly: Bool = false, cardBrandProvider: @escaping () -> (STPCardBrand)) {
             self.defaultValue = defaultValue
             self.readOnly = readOnly
             self.cardBrandProvider = cardBrandProvider

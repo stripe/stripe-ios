@@ -231,17 +231,20 @@ extension PayWithLinkViewController {
             }
         }
 
+        /// Updates the billing details of the provided `paymentMethod`.
         func updateBillingDetails(
-            for paymentMethod: ConsumerPaymentDetails,
+            paymentMethodID: String,
+            billingAddress: BillingAddress?,
+            billingEmailAddress: String?,
             completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
         ) {
-            guard let index = paymentMethods.firstIndex(where: { $0.stripeID == paymentMethod.stripeID }) else {
+            guard let index = paymentMethods.firstIndex(where: { $0.stripeID == paymentMethodID }) else {
                 return
             }
 
             let billingDetails = STPPaymentMethodBillingDetails(
-                billingAddress: paymentMethod.billingAddress,
-                email: paymentMethod.billingEmailAddress
+                billingAddress: billingAddress,
+                email: billingEmailAddress
             )
 
             let updateParams = UpdatePaymentDetailsParams(
@@ -249,7 +252,7 @@ extension PayWithLinkViewController {
             )
 
             linkAccount.updatePaymentDetails(
-                id: paymentMethod.stripeID,
+                id: paymentMethodID,
                 updateParams: updateParams
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {

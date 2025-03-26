@@ -84,6 +84,8 @@ extension ConsumerSession {
         verificationSessions.isVerifiedForSignup
     }
 
+    /// Returns the unredacted phone number with the appropriate country code, if available.
+    /// Example value: `+15551236789`
     var unredactedPhoneNumberWithPrefix: String? {
         guard let unredactedPhoneNumber else {
             return nil

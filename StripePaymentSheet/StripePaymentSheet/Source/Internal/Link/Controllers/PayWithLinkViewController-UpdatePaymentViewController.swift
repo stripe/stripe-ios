@@ -27,8 +27,8 @@ extension PayWithLinkViewController {
         var configuration: PaymentElementConfiguration
         let paymentMethod: ConsumerPaymentDetails
 
-        /// Denotes whether we're launching this screen in the payment flow with the purpose
-        /// of collecting any missing billing details.
+        /// Denotes whether we're launching this screen in the confirmation flow with the purpose of collecting any missing billing details.
+        /// If that is the case, we will immediately confirm the intent after updating the payment method.
         let isBillingDetailsUpdateFlow: Bool
 
         private lazy var titleLabel: UILabel = {
@@ -39,6 +39,7 @@ extension PayWithLinkViewController {
             label.numberOfLines = 0
             label.textAlignment = .center
             label.text = if isBillingDetailsUpdateFlow {
+                // TODO: Localize me
                 "Update before continuing"
             } else {
                 String.Localized.update_card
@@ -88,7 +89,9 @@ extension PayWithLinkViewController {
                 return context.configuration
             }
 
-            return configuration.withEffectiveBillingDetails(for: linkAccount)
+            var configuration = context.configuration
+            configuration.defaultBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
+            return configuration
         }
 
         init(
