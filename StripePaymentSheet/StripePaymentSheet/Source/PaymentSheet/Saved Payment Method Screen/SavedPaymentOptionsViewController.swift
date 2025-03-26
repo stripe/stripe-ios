@@ -540,6 +540,9 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         -> Bool
     {
         guard !self.collectionView.isRemovingPaymentMethods else {
+            if let cell = collectionView.cellForItem(at: indexPath) as? SavedPaymentMethodCollectionView.PaymentOptionCell, cell.isEditable {
+                paymentOptionCellDidSelectEdit(cell)
+            }
             return false
         }
         let viewModel = viewModels[indexPath.item]
