@@ -322,7 +322,7 @@ extension ConsumerPaymentDetails {
 
         if billingDetailsConfig.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
             // No address available, so we add any default provided by the merchant
-            // TODO: Confirm this is the right approach
+            // TODO: Should we do this, or does this need to be more sophisticated?
             billingAddress = BillingAddress(from: billingDetails)
         }
 

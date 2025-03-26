@@ -276,12 +276,6 @@ extension PayWithLinkViewController {
 
         /// Returns whether the provided `paymentDetails` contains all the required billing details.
         private func canConfirmWith(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
-//            let attachDefaults = billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
-//            let hasBillingDetails = context.configuration.defaultBillingDetails != PaymentSheet.BillingDetails()
-//
-//            // TODO: For this, effective payment details should include all the defaults for attachDefaults
-//            let attachDefaultsIsSupported = !attachDefaults || !hasBillingDetails
-
             let paymentDetailsAreSupported = paymentDetails.supports(
                 billingDetailsCollectionConfiguration,
                 in: linkAccount.currentSession
