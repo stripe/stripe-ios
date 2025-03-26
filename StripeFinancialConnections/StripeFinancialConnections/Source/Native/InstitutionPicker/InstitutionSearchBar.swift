@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -43,10 +44,7 @@ final class InstitutionSearchBar: UIView {
         textField.borderStyle = .none
         // use `NSAttributedString` to be able to change the placeholder color
         textField.attributedPlaceholder = NSAttributedString(
-            string: STPLocalizedString(
-                "Search",
-                "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."
-            ),
+            string: String.Localized.search,
             attributes: [
                 .foregroundColor: FinancialConnectionsAppearance.Colors.textSubdued,
                 .font: FinancialConnectionsFont.label(.large).uiFont,
