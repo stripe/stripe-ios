@@ -71,7 +71,8 @@ class PaymentMethodFormViewController: UIViewController {
 
     lazy var formStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [headerView, form.view].compactMap { $0 })
-        stackView.spacing = 4
+        // Forms with a subtitle get special spacing after the header view
+        stackView.spacing = form.getAllUnwrappedSubElements().contains(where: { $0 is SubtitleElement }) ? 4 : 24
         stackView.axis = .vertical
         return stackView
     }()

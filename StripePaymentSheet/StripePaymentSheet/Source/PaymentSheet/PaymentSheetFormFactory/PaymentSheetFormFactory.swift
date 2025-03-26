@@ -699,8 +699,8 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeAfterpayClearpayHeader() -> StaticElement? {
-        return StaticElement(view: AfterpayPriceBreakdownView(theme: theme), padding: configuration.subtitleInsets)
+    func makeAfterpayClearpayHeader() -> SubtitleElement {
+        return SubtitleElement(view: AfterpayPriceBreakdownView(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
@@ -728,7 +728,7 @@ extension PaymentSheetFormFactory {
         return country
     }
 
-    func makeKlarnaCopyLabel() -> StaticElement {
+    func makeKlarnaCopyLabel() -> SubtitleElement {
         let text = String.Localized.buy_now_or_pay_later_with_klarna
 
         let label = UILabel()
@@ -736,11 +736,11 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
-        return StaticElement(view: label, padding: configuration.subtitleInsets)
+        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
     }
 
     func makeInstantDebits(countries: [String]? = nil) -> PaymentMethodElement {
-        let titleElement: StaticElement? = if case .paymentElement = configuration {
+        let titleElement: SubtitleElement? = if case .paymentElement = configuration {
             makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
         } else {
             nil
@@ -774,7 +774,7 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    private func makeUSBankAccountCopyLabel() -> StaticElement {
+    private func makeUSBankAccountCopyLabel() -> SubtitleElement {
         switch configuration {
         case .customerSheet:
             return makeSectionTitleLabelWith(
@@ -790,13 +790,13 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeSectionTitleLabelWith(text: String) -> StaticElement {
+    func makeSectionTitleLabelWith(text: String) -> SubtitleElement {
         let label = UILabel()
         label.text = text
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.secondaryText
         label.numberOfLines = 0
-        return StaticElement(view: label, padding: configuration.subtitleInsets)
+        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
     }
 
     /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration` and your payment method's required fields.

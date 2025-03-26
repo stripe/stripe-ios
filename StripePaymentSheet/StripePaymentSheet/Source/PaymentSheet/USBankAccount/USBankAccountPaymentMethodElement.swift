@@ -83,7 +83,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
-        titleElement: StaticElement,
+        titleElement: SubtitleElement,
         nameElement: PaymentMethodElementWrapper<TextFieldElement>?,
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,

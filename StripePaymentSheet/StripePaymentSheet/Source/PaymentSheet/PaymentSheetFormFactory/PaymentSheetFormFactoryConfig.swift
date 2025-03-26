@@ -113,17 +113,17 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-    var subtitleInsets: UIEdgeInsets {
+    var isHorizontalMode: Bool {
         switch self {
         case .paymentElement(let paymentElementConfiguration):
             switch paymentElementConfiguration.paymentMethodLayout {
             case .horizontal:
-                return .zero
+                return false
             case .vertical, .automatic:
-                return UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
+                return false
             }
         case .customerSheet:
-            return .zero
+            return false
         }
     }
 
