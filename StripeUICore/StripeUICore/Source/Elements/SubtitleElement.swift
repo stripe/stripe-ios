@@ -11,12 +11,9 @@ import UIKit
     public let view: UIView
     public let collectsUserInput: Bool = false
     weak public var delegate: ElementDelegate?
-    
-    private let padding: UIEdgeInsets
 
     public init(view: UIView, isHorizontalMode: Bool) {
-        self.padding = isHorizontalMode ? .zero : UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
-        
+        let padding = isHorizontalMode ? .zero : UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
         guard padding != .zero else {
             self.view = view
             return
