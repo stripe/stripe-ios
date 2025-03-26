@@ -81,20 +81,13 @@ final class LinkCardEditElement: Element {
     }
 
     private lazy var emailElement: TextFieldElement? = {
-        // TODO: Account for attachToDefaults
-        let collectsEmail = configuration.billingDetailsCollectionConfiguration.email == .always
-        let providesEmail = configuration.defaultBillingDetails.email != nil && configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
-
-        guard collectsEmail || providesEmail else { return nil }
+        guard configuration.billingDetailsCollectionConfiguration.email == .always else { return nil }
 
         return TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email, theme: theme)
     }()
 
     private lazy var phoneElement: PhoneNumberElement? = {
-        // TODO: Account for attachToDefaults
-        let collectsPhone = configuration.billingDetailsCollectionConfiguration.phone == .always
-        let providesPhone = configuration.defaultBillingDetails.phone != nil && configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
-        guard collectsPhone || providesPhone else { return nil }
+        guard configuration.billingDetailsCollectionConfiguration.phone == .always else { return nil }
         return PhoneNumberElement(
             defaultCountryCode: configuration.defaultBillingDetails.address.country,
             defaultPhoneNumber: configuration.defaultBillingDetails.phone,
@@ -115,11 +108,7 @@ final class LinkCardEditElement: Element {
     }()
 
     private lazy var nameElement: TextFieldElement? = {
-        // TODO: Account for attachToDefaults
-        let collectsName = configuration.billingDetailsCollectionConfiguration.name == .always
-        let providesName = configuration.defaultBillingDetails.name != nil && configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
-
-        guard collectsName || providesName else { return nil }
+        guard configuration.billingDetailsCollectionConfiguration.name == .always else { return nil }
 
         return TextFieldElement.makeName(
             label: STPLocalizedString("Name on card", "Label for name on card field"),
@@ -194,22 +183,15 @@ final class LinkCardEditElement: Element {
     }()
 
     private lazy var billingAddressSection: AddressSectionElement? = {
-        // TODO: Account for attachToDefaults
-        let collectsAddress = configuration.billingDetailsCollectionConfiguration.address != .never
-        let providesAddress = configuration.defaultBillingDetails.address != PaymentSheet.Address() && configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
-
         guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
-
-        let address = configuration.defaultBillingDetails.address
-        let moreThanCountryAndPostal = address.line1 != nil || address.line2 != nil || address.state != nil || address.city != nil
-
-        let showAllFields = configuration.billingDetailsCollectionConfiguration.address == .full || (providesAddress && moreThanCountryAndPostal)
 
         let defaultBillingAddress = AddressSectionElement.AddressDetails(billingAddress: paymentMethod.billingAddress ?? .init(), phone: nil)
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
             defaults: defaultBillingAddress,
-            collectionMode: showAllFields ? .all() : .countryAndPostal(),
+            collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
+                ? .all()
+                : .countryAndPostal(),
             theme: theme
         )
     }()

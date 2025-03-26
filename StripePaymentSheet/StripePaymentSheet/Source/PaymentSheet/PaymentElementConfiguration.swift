@@ -64,35 +64,10 @@ extension PaymentElementConfiguration {
         return reqs
     }
 
-    /// Returns a `PaymentElementConfiguration` with the effective billing details, which refers to [PaymentSheet.BillingDetails] that have been
-    /// supplemented with billing information from the `linkAccount`. For instance, billing details with a missing email address can be supplemented
-    /// with the Link account's email address.
-//    func withEffectiveBillingDetails(for linkAccount: PaymentSheetLinkAccount) -> PaymentElementConfiguration {
-//        var configuration = self
-//        var billingDetails = defaultBillingDetails
-//
-//        if billingDetailsCollectionConfiguration.email == .always {
-//            billingDetails.email = billingDetails.email ?? linkAccount.email
-//        }
-//
-//        if billingDetailsCollectionConfiguration.name == .always {
-//            // TODO: Check if we can get the name from the consumer session
-//        }
-//
-//        if billingDetailsCollectionConfiguration.phone == .always {
-//            billingDetails.phone = billingDetails.phone ?? linkAccount.currentSession?.unredactedPhoneNumberWithPrefix
-//        }
-//
-//        configuration.defaultBillingDetails = billingDetails
-//        return configuration
-//    }
-
     /// Returns the effective `PaymentSheet.BillingDetails`, which refers to billing details that have been supplemented with billing information
     /// from the `linkAccount`. For instance, billing details with a missing email address can be supplemented with the Link account's email address.
     func effectiveBillingDetails(for linkAccount: PaymentSheetLinkAccount) -> PaymentSheet.BillingDetails {
         var billingDetails = defaultBillingDetails
-
-        // TODO: Is attachToDefault relevant here?
 
         if billingDetailsCollectionConfiguration.email == .always {
             billingDetails.email = billingDetails.email ?? linkAccount.email
