@@ -133,18 +133,29 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }()
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantIdentifier` on your payment request.")
-        guard
-            canMakePayments,
-            !paymentRequest.merchantIdentifier.isEmpty,
-            // PKPaymentAuthorizationController's docs incorrectly state:
-            // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
-            // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
-            PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil
-        else {
+
+        // 1. Check if the device or user account supports Apple Pay
+        guard canMakePayments else {
+            print("STPApplePayContext init failed: Device or account is not configured for Apple Pay, or unsupported networks are used.")
             return nil
         }
-        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
 
+        // 2. Check if merchantIdentifier is non-empty
+        guard !paymentRequest.merchantIdentifier.isEmpty else {
+            print("STPApplePayContext init failed: The `merchantIdentifier` on `PKPaymentRequest` is empty.")
+            return nil
+        }
+
+        // 3. Check if creating a payment authorization view controller is possible
+        // PKPaymentAuthorizationController's docs incorrectly state:
+        // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
+        // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
+        guard let authViewControllerCheck = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else {
+            print("STPApplePayContext init failed: `PKPaymentAuthorizationViewController` returned nil. The payment request might be invalid.")
+            return nil
+        }
+
+        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         self.delegate = delegate
 
         super.init()
