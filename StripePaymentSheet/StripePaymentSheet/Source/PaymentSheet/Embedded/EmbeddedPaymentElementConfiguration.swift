@@ -27,6 +27,9 @@ extension EmbeddedPaymentElement {
         /// If set, PaymentSheet displays Apple Pay as a payment option
         public var applePay: ApplePayConfiguration?
 
+        /// Configuration related to Link
+        public var link: LinkConfiguration = LinkConfiguration()
+
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
             get {

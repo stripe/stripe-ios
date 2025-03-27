@@ -8,7 +8,7 @@
 import Foundation
 
 enum ExternalPaymentOptionConfirmHandler {
-    case custom(PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType, PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodConfirmHandler)
+    case custom(PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod, PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodConfirmHandler)
     case external(PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler)
 }
 
@@ -91,7 +91,7 @@ class ExternalPaymentOption {
             return nil
         }
 
-        guard let customPaymentMethodType = configuration?.customPaymentMethodTypes.first(where: { $0.id == customPaymentMethod.type }),
+        guard let customPaymentMethodType = configuration?.customPaymentMethods.first(where: { $0.id == customPaymentMethod.type }),
               let label = customPaymentMethod.displayName,
               let logoUrl = customPaymentMethod.logoUrl else {
             assertionFailure("Failed to render payment method type: \(customPaymentMethod.type) with error \(customPaymentMethod.error ?? "unknown")")
@@ -101,7 +101,7 @@ class ExternalPaymentOption {
         return ExternalPaymentOption(
             type: customPaymentMethod.type,
             displayText: label,
-            displaySubtext: customPaymentMethodType.subcopy,
+            displaySubtext: customPaymentMethodType.subtitle,
             lightImageUrl: logoUrl,
             darkImageUrl: nil, // CPMs don't have dark mode images
             confirmHandler: .custom(customPaymentMethodType, confirmHandler)

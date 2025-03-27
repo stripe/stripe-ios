@@ -374,7 +374,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         var configuration = self.configuration
         // ...with valid custom payment methods configured...
         configuration.customPaymentMethodConfiguration = .init(
-            customPaymentMethodTypes: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")],
+            customPaymentMethods: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")],
             customPaymentMethodConfirmHandler: { _, _ in return .canceled }
         )
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { result in
@@ -415,7 +415,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         var configuration = self.configuration
         // ...with invalid custom payment methods configured...
         configuration.customPaymentMethodConfiguration = .init(
-            customPaymentMethodTypes: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_invalid")],
+            customPaymentMethods: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_invalid")],
             customPaymentMethodConfirmHandler: { _, _ in return .canceled }
         )
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in

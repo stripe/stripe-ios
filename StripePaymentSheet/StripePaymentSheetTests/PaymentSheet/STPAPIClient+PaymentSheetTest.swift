@@ -27,9 +27,9 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         var config = PaymentSheet.Configuration()
         config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
 
-        let cpm = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_123")
-        let cpm2 = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_789")
-        config.customPaymentMethodConfiguration = .init(customPaymentMethodTypes: [cpm, cpm2], customPaymentMethodConfirmHandler: { _, _ in
+        let cpm = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_123")
+        let cpm2 = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_789")
+        config.customPaymentMethodConfiguration = .init(customPaymentMethods: [cpm, cpm2], customPaymentMethodConfirmHandler: { _, _ in
             return .completed
         })
 

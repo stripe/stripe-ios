@@ -179,6 +179,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case checkout
     }
 
+    enum LinkDisplay: String, PickerEnum {
+        static var enumName: String { "Link display" }
+
+        case automatic
+        case never
+    }
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
@@ -508,6 +515,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var customEmail: String?
     var linkPassthroughMode: LinkPassthroughMode
     var linkEnabledMode: LinkEnabledMode
+    var linkDisplay: LinkDisplay
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -559,6 +567,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             customEmail: nil,
             linkPassthroughMode: .passthrough,
             linkEnabledMode: .native,
+            linkDisplay: .automatic,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
