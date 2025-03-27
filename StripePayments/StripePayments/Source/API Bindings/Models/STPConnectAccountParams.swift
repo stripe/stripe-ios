@@ -25,7 +25,15 @@ public class STPConnectAccountParams: NSObject {
 
     /// Boolean indicating that the Terms Of Service were shown to the user &
     /// the user accepted them.
-    @objc public var tosShownAndAccepted: NSNumber?
+    @objc(tosShownAndAccepted)
+    public var tosShownAndAccepted_objc: NSNumber? {
+        get { return NSNumber(value: tosShownAndAccepted) }
+        set { tosShownAndAccepted = newValue?.boolValue ?? false }
+    }
+
+    /// Boolean indicating that the Terms Of Service were shown to the user &
+    /// the user accepted them.
+    public var tosShownAndAccepted: Bool
 
     /// The business type.
     @objc public var businessType: STPConnectAccountBusinessType
@@ -53,7 +61,7 @@ public class STPConnectAccountParams: NSObject {
         guard wasAccepted == true else {
             return nil
         }
-        self.tosShownAndAccepted = wasAccepted as NSNumber
+        self.tosShownAndAccepted = wasAccepted
         self.individual = individual
         self.company = nil
         self.businessType = .individual
@@ -75,7 +83,7 @@ public class STPConnectAccountParams: NSObject {
         guard wasAccepted == true else {
             return nil
         }
-        self.tosShownAndAccepted = wasAccepted as NSNumber
+        self.tosShownAndAccepted = wasAccepted
         self.individual = nil
         self.company = company
         self.businessType = .company
@@ -164,7 +172,7 @@ extension STPConnectAccountParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter: tosShownAndAccepted)): "tos_shown_and_accepted",
+            NSStringFromSelector(#selector(getter: tosShownAndAccepted_objc)): "tos_shown_and_accepted",
             NSStringFromSelector(#selector(getter: individual)): "individual",
             NSStringFromSelector(#selector(getter: company)): "company",
             NSStringFromSelector(#selector(getter: businessTypeString)): "business_type",
