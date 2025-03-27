@@ -443,6 +443,7 @@ extension EmbeddedPaymentElement {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias ApplePayConfiguration = PaymentSheet.ApplePayConfiguration
+    public typealias LinkConfiguration = PaymentSheet.LinkConfiguration
     public typealias CustomerConfiguration = PaymentSheet.CustomerConfiguration
     public typealias BillingDetails = PaymentSheet.BillingDetails
     public typealias Address = PaymentSheet.Address
