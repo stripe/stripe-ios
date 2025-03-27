@@ -150,7 +150,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         // PKPaymentAuthorizationController's docs incorrectly state:
         // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
         // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
-        guard let authViewControllerCheck = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else {
+        guard PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil else {
             print("STPApplePayContext init failed: `PKPaymentAuthorizationViewController` returned nil. The payment request might be invalid.")
             return nil
         }
