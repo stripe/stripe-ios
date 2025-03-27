@@ -650,7 +650,7 @@ extension PaymentSheet {
                 paymentMethodType = paymentMethodParams.type
             }
             if let shouldSetAsDefaultPM {
-                params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
+                params.setAsDefaultPM = shouldSetAsDefaultPM
             }
             let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna]
             if requiresMandateData.contains(paymentMethodType) && paymentIntent.setupFutureUsage == .offSession

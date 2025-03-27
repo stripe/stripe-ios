@@ -119,7 +119,7 @@ public class STPPaymentIntent: NSObject {
 
     /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this PaymentIntent is allowed to use.
     @objc(paymentMethodTypes)
-    public var objc_paymentMethodTypes: [NSNumber] {
+    public var paymentMethodTypes_objc: [NSNumber] {
         return paymentMethodTypes.map { NSNumber(value: $0.rawValue) }
     }
 
