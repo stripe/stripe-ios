@@ -175,7 +175,7 @@ import UIKit
     }
 
     public func select(index: Int, shouldAutoAdvance: Bool = true) {
-        selectedIndex = index
+        updateSelectedIndex(row: index)
         didFinish(pickerFieldView, shouldAutoAdvance: shouldAutoAdvance)
     }
 
@@ -274,8 +274,17 @@ extension DropdownFieldElement {
             return
         }
 
-        selectedIndex = row
+        updateSelectedIndex(row: row)
     }
+
+    private func updateSelectedIndex(row: Int) {
+        selectedIndex = row
+        if previouslySelectedIndex != selectedIndex {
+            didUpdate?(selectedIndex)
+        }
+        previouslySelectedIndex = selectedIndex
+    }
+
 }
 
 // MARK: - PickerFieldViewDelegate
@@ -285,17 +294,11 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
-        if previouslySelectedIndex != selectedIndex {
-            didUpdate?(selectedIndex)
-        }
-        previouslySelectedIndex = selectedIndex
-
         if shouldAutoAdvance {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.didUpdate(element: self)
-                self.delegate?.continueToNextField(element: self)
-            }
+            self.delegate?.didUpdate(element: self)
+            self.delegate?.continueToNextField(element: self)
+            // If the picker field view is still selected (e.g. if someone tapped "Done"), dismiss it
+            _ = pickerFieldView.resignFirstResponder()
         }
     }
 
