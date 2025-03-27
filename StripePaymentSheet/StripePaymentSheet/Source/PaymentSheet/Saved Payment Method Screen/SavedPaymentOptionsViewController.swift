@@ -621,6 +621,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                               )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
+            completion?()
             return
         }
         let indexPath = IndexPath(row: row, section: 0)
