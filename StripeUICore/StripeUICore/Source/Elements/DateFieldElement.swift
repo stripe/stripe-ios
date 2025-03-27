@@ -38,6 +38,7 @@ import UIKit
             shouldShowChevron: false,
             pickerView: datePickerView,
             delegate: self,
+            requiresConfirmation: true,
             theme: theme
         )
         return pickerFieldView

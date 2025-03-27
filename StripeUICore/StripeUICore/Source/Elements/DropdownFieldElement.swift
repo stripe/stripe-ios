@@ -74,6 +74,10 @@ import UIKit
     public var didUpdate: DidUpdateSelectedIndex?
     public let theme: ElementsAppearance
     public let hasPadding: Bool
+    
+    /// If true, this item will not update the value until a "Done" button is pressed, and a "Cancel" button will be shown.
+    /// If false, the value will update continuously as the user scrolls.
+    public let requiresConfirmation: Bool
 
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
@@ -113,6 +117,7 @@ import UIKit
             shouldShowChevron: disableDropdownWithSingleElement ? items.count != 1 : true,
             pickerView: pickerView,
             delegate: self,
+            requiresConfirmation: requiresConfirmation,
             theme: theme,
             hasPadding: hasPadding,
             isOptional: isOptional
@@ -149,7 +154,8 @@ import UIKit
         hasPadding: Bool = true,
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
-        didUpdate: DidUpdateSelectedIndex? = nil
+        didUpdate: DidUpdateSelectedIndex? = nil,
+        requiresConfirmation: Bool = false
     ) {
         stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
 
@@ -160,6 +166,7 @@ import UIKit
         self.isOptional = isOptional
         self.didUpdate = didUpdate
         self.hasPadding = hasPadding
+        self.requiresConfirmation = requiresConfirmation
 
         // Default to defaultIndex, if in bounds
         if defaultIndex < 0 || defaultIndex >= items.count {
@@ -279,10 +286,12 @@ extension DropdownFieldElement {
 
     private func updateSelectedIndex(row: Int) {
         selectedIndex = row
-        if previouslySelectedIndex != selectedIndex {
-            didUpdate?(selectedIndex)
+        if !requiresConfirmation {
+            if previouslySelectedIndex != selectedIndex {
+                didUpdate?(selectedIndex)
+            }
+            previouslySelectedIndex = selectedIndex
         }
-        previouslySelectedIndex = selectedIndex
     }
 
 }
@@ -294,6 +303,14 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
+        if requiresConfirmation {
+            // Call didUpdate if needed, as we won't do it in updateSelectedIndex
+            if previouslySelectedIndex != selectedIndex {
+                didUpdate?(selectedIndex)
+            }
+            previouslySelectedIndex = selectedIndex
+        }
+        
         if shouldAutoAdvance {
             self.delegate?.didUpdate(element: self)
             self.delegate?.continueToNextField(element: self)

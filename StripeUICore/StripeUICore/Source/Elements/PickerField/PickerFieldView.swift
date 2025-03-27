@@ -25,7 +25,7 @@ protocol PickerFieldViewDelegate: AnyObject {
 final class PickerFieldView: UIView {
 
     // MARK: - Views
-    private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
+    private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: requiresConfirmation, theme: theme)
     private lazy var textField: PickerTextField = {
         let textField = PickerTextField()
         // Input views are not supported on Catalyst (and are non-optimal on visionOS)
@@ -81,6 +81,7 @@ final class PickerFieldView: UIView {
     private let theme: ElementsAppearance
     // When a PickerFieldView is optional it's chevron is smaller and takes the color of placeholder text
     private let isOptional: Bool
+    private let requiresConfirmation: Bool
     private var _canBecomeFirstResponder = true
 
     // MARK: - Public properties
@@ -120,12 +121,14 @@ final class PickerFieldView: UIView {
      - Parameter pickerView: A `UIPicker` or `UIDatePicker` view that opens when this field becomes first responder
      - Parameter delegate: Delegate for this view
      - Parameter theme: Theme for the picker field
+     - Parameter requiresConfirmation: Whether the PickerFieldView requires tapping a "done" button before the update occurs
      */
     init(
         label: String?,
         shouldShowChevron: Bool,
         pickerView: UIView,
         delegate: PickerFieldViewDelegate,
+        requiresConfirmation: Bool,
         theme: ElementsAppearance,
         hasPadding: Bool = true,
         isOptional: Bool = false
@@ -136,6 +139,7 @@ final class PickerFieldView: UIView {
         self.delegate = delegate
         self.theme = theme
         self.isOptional = isOptional
+        self.requiresConfirmation = requiresConfirmation
         super.init(frame: .zero)
         addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? ElementsUI.contentViewInsets : .zero)
 //      On Catalyst/visionOS, add the picker view as a subview instead of an input view.

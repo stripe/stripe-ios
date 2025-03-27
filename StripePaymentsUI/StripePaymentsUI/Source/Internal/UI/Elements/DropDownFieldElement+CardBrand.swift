@@ -25,7 +25,8 @@ extension DropdownFieldElement {
             label: nil,
             theme: theme,
             hasPadding: hasPadding,
-            isOptional: true
+            isOptional: true,
+            requiresConfirmation: true
         )
         dropDown.view.accessibilityIdentifier = "Card Brand Dropdown"
         return dropDown
