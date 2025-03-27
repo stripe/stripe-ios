@@ -897,7 +897,7 @@ extension PlaygroundController {
             else {
                 if let data = data,
                    (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(data: data, encoding: .utf8)!
+                    let errorMessage = String(decoding: data, as: UTF8.self)
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
