@@ -1110,7 +1110,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
 
         if let billingDetails {
             let encodedBillingAddress = try Self.encodeAsParameters(billingDetails)
-            parameters["billing_address"] = encodedBillingAddress
+            parameters["billing_details"] = encodedBillingAddress
         }
 
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
