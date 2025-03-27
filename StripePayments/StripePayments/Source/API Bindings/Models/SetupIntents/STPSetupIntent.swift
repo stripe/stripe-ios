@@ -30,7 +30,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     /// The optionally expanded PaymentMethod used in this SetupIntent.
     @objc public let paymentMethod: STPPaymentMethod?
     /// The list of payment method types (e.g. `[STPPaymentMethodType.card]`) that this SetupIntent is allowed to set up.
-    @objc public var objc_paymentMethodTypes: [NSNumber] {
+    @objc(paymentMethodTypes)
+    public var objc_paymentMethodTypes: [NSNumber] {
         return paymentMethodTypes.map { NSNumber(value: $0.rawValue) }
     }
     /// The list of payment method types that this PaymentIntent is allowed to use.
