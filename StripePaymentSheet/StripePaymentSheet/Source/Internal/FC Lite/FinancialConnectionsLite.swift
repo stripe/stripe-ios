@@ -20,6 +20,9 @@ import UIKit
     /// The API Client instance used to make requests to Stripe.
     let apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
 
+    /// Any additional Elements context useful for the Financial Connections SDK.
+    @_spi(STP) public var elementsSessionContext: ElementsSessionContext?
+
     private var navigationController: UINavigationController?
     private var wrapperViewController: FCLiteModalPresentationWrapper?
     private var completionHandler: ((FinancialConnectionsSDKResult) -> Void)?
@@ -54,6 +57,7 @@ import UIKit
             clientSecret: clientSecret,
             returnUrl: returnUrl,
             apiClient: apiClient,
+            elementsSessionContext: elementsSessionContext,
             completion: { [weak self] result in
                 guard let self else { return }
                 self.handleFlowCompletion(result: result)
