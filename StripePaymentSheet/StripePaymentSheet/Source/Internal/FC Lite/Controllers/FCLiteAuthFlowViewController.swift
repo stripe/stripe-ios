@@ -68,6 +68,7 @@ class FCLiteAuthFlowViewController: UIViewController {
         webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
         webView.uiDelegate = self
         webView.navigationDelegate = self
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
 
         observeWebviewLoadingProgress()
 
@@ -78,10 +79,10 @@ class FCLiteAuthFlowViewController: UIViewController {
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
         NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            webView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
-            webView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            webView.topAnchor.constraint(equalTo: view.topAnchor),
+            webView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            webView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
 
