@@ -74,7 +74,7 @@ import UIKit
     public var didUpdate: DidUpdateSelectedIndex?
     public let theme: ElementsAppearance
     public let hasPadding: Bool
-    
+
     /// If true, this item will not update the value until a "Done" button is pressed, and a "Cancel" button will be shown.
     /// If false, the value will update continuously as the user scrolls.
     public let requiresConfirmation: Bool
@@ -310,7 +310,7 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
             }
             previouslySelectedIndex = selectedIndex
         }
-        
+
         if shouldAutoAdvance {
             self.delegate?.didUpdate(element: self)
             self.delegate?.continueToNextField(element: self)
