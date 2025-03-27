@@ -383,16 +383,16 @@ class PlaygroundController: ObservableObject {
         switch settings.customPaymentMethods {
         case .on:
             // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
-            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
-                                                                                                                subcopy: "Pay with BufoPay")
-            return .init(customPaymentMethodTypes: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
+            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
+                                                                                                                subtitle: "Pay with BufoPay")
+            return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
         case .off:
             return nil
         }
     }
 
     func handleCustomPaymentMethod(
-        _ customPaymentMethodType: PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType,
+        _ customPaymentMethodType: PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod,
         _ billingDetails: STPPaymentMethodBillingDetails
     ) async -> PaymentSheetResult {
         return await withCheckedContinuation { continuation in
