@@ -169,6 +169,22 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         self.stop()
     }
 
+    var snapshotView: UIView?
+
+    // The shape layers don't animate cleanly during setHidden,
+    // so let's use a snapshot view instead.
+    func prepDismissAnimation() {
+        if let snapshot = self.containerView.snapshotView(afterScreenUpdates: true) {
+            self.addSubview(snapshot)
+            self.snapshotView = snapshot
+        }
+    }
+
+    func completeDismissAnimation() {
+        snapshotView?.removeFromSuperview()
+        snapshotView = nil
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupBlurView()
