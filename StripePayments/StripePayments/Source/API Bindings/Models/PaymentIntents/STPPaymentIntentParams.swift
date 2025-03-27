@@ -88,14 +88,8 @@ public class STPPaymentIntentParams: NSObject {
     /// if the PaymentMethod/Source is not already attached.
     public var savePaymentMethod: Bool = false
 
-    /// Exists so we have a selector to give propertyNamesToFormFieldNamesMapping
-    @objc internal var setAsDefaultPM_objc: NSNumber? {
-        get { NSNumber(value: setAsDefaultPM) }
-        set { setAsDefaultPM = newValue?.boolValue ?? false }
-    }
-
     /// `true` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
-    @_spi(STP) public var setAsDefaultPM: Bool = false
+    @objc @_spi(STP) public var setAsDefaultPM: Bool = false
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
@@ -269,7 +263,7 @@ extension STPPaymentIntentParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: sourceId)): "source",
             NSStringFromSelector(#selector(getter: receiptEmail)): "receipt_email",
             NSStringFromSelector(#selector(getter: savePaymentMethod_objc)): "save_payment_method",
-            NSStringFromSelector(#selector(getter: setAsDefaultPM_objc)): "set_as_default_payment_method",
+            NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",

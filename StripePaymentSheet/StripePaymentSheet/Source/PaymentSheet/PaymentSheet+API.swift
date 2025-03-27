@@ -701,9 +701,9 @@ extension PaymentSheet {
                 params.paymentMethodParams = paymentMethodParams
             }
             if let shouldSetAsDefaultPM {
-                params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
+                params.setAsDefaultPM = shouldSetAsDefaultPM
             }
-            // Paypal & revolut requires mandate_data if setting up
+            // PayPal & revolut requires mandate_data if setting up
             if params.paymentMethodType == .payPal || params.paymentMethodType == .revolutPay {
                 params.mandateData = .makeWithInferredValues()
             }
