@@ -73,7 +73,6 @@ final class CardSectionWithScannerView: UIView {
         }
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
             self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
-            self.cardScanningView.alpha = isCardScanVisible ? 1 : 0
             self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
             self.layoutIfNeeded()
         } completion: { _ in
