@@ -158,7 +158,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
     }
 
     func makeForm(intent: Intent, configuration: PaymentSheet.Configuration) -> PaymentMethodElement {
-        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testCardValue(), configuration: .paymentSheet(configuration), paymentMethod: .external(._testPayPalValue(configuration.externalPaymentMethodConfiguration!)))
+        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testCardValue(), configuration: .paymentElement(configuration), paymentMethod: .external(._testPayPalValue(configuration.externalPaymentMethodConfiguration!)))
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view) // This gets rid of distracting autolayout warnings in the logs

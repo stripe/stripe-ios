@@ -100,7 +100,7 @@ extension PaymentSheetFormFactory {
             defaultCheckbox,
         ]
 
-        if case .paymentSheet(let configuration) = configuration, let accountService, showLinkInlineSignup {
+        if case .paymentElement(let configuration) = configuration, let accountService, showLinkInlineSignup {
             let inlineSignupElement = LinkInlineSignupElement(
                 configuration: configuration,
                 linkAccount: linkAccount,

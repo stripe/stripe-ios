@@ -40,6 +40,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
     var updatePaymentMethodEnabled: Bool { get }
+    var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
 }
 
 extension PaymentElementConfiguration {
@@ -65,4 +66,8 @@ extension PaymentElementConfiguration {
 }
 
 extension PaymentSheet.Configuration: PaymentElementConfiguration {}
-extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {}
+extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
+    var paymentMethodLayout: PaymentSheet.PaymentMethodLayout {
+        return .vertical
+    }
+}
