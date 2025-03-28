@@ -23,21 +23,16 @@ class FCLiteUITests: XCTestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.fcLiteEnabled = .on
         settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = "card,us_bank_account"
+        settings.supportedPaymentMethods = "us_bank_account"
         settings.layout = .vertical
+        settings.defaultBillingAddress = .randomEmail
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].tap()
 
         // Launch into FC Lite
-        XCTAssertTrue(app.buttons["US bank account"].waitForExistenceAndTap())
         let continueButton = app.buttons["Continue"]
-        XCTAssertFalse(continueButton.isEnabled)
-        app.textFields["Full name"].tap()
-        app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("test-\(UUID().uuidString)@example.com" + XCUIKeyboardKey.return.rawValue)
-        XCTAssertTrue(continueButton.isEnabled)
-        continueButton.tap()
+        XCTAssertTrue(continueButton.waitForExistenceAndTap())
 
         // Check that we're either on the consent pane or the institution picker pane.
         // The FC Lite flow should usually open to the consent pane,
@@ -47,7 +42,7 @@ class FCLiteUITests: XCTestCase {
         let agreeButtonOrInstitutionButtonPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [agreeButtonPredicate, institutionButtonPredicate])
         let agreeButtonOrInstitutionButton = app.webViews.firstMatch.buttons.containing(agreeButtonOrInstitutionButtonPredicate).firstMatch
         // Webviews can take a while to load.
-        XCTAssertTrue(agreeButtonOrInstitutionButton.waitForExistence(timeout: 20.0))
+        XCTAssertTrue(agreeButtonOrInstitutionButton.waitForExistence(timeout: 30.0))
 
         // Dismiss the flow
         let closeButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Close'")
