@@ -114,9 +114,16 @@ extension XCUIApplication {
     }
 }
 
+extension XCUIElement {
+    enum ScrollDirection {
+        case right
+        case left
+    }
+}
+
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
-func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) -> XCUIElement? {
-    return scroll(collectionView: collectionView) { collectionView in
+func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String, direction: XCUIElement.ScrollDirection = .right) -> XCUIElement? {
+    return scroll(collectionView: collectionView, direction: direction) { collectionView in
         let cell = collectionView.cells[identifier]
         if cell.exists {
             return cell
@@ -125,8 +132,8 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier: String) ->
     }
 }
 
-func scroll(collectionView: XCUIElement, toFindButtonWithId identifier: String) -> XCUIElement? {
-    return scroll(collectionView: collectionView) { collectionView in
+func scroll(collectionView: XCUIElement, toFindButtonWithId identifier: String, direction: XCUIElement.ScrollDirection = .right) -> XCUIElement? {
+    return scroll(collectionView: collectionView, direction: direction) { collectionView in
         let button = collectionView.buttons[identifier].firstMatch
         if button.exists {
             return button
@@ -135,7 +142,7 @@ func scroll(collectionView: XCUIElement, toFindButtonWithId identifier: String) 
     }
 }
 
-func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElementInCollectionView: (XCUIElement) -> XCUIElement?) -> XCUIElement? {
+func scroll(collectionView: XCUIElement, direction: XCUIElement.ScrollDirection, toFindElementInCollectionView getElementInCollectionView: (XCUIElement) -> XCUIElement?) -> XCUIElement? {
     guard collectionView.elementType == .collectionView else {
         fatalError("XCUIElement is not a collectionView.")
     }
@@ -157,12 +164,24 @@ func scroll(collectionView: XCUIElement, toFindElementInCollectionView getElemen
         reachedTheEnd = (allElements == allVisibleElements)
         allVisibleElements = allElements
 
-        // Then, we do a scroll right on the scrollview
-        let startCoordinate = collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
-        startCoordinate.press(forDuration: 0.1, thenDragTo: collectionView.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
+        let (fromVector, toVector) = {
+            switch direction {
+            case .right:
+                return (CGVector(dx: 0.9, dy: 0.99),
+                        CGVector(dx: 0.1, dy: 0.99))
+            case .left:
+                return (CGVector(dx: 0.1, dy: 0.99),
+                        CGVector(dx: 0.9, dy: 0.99))
+            }
+        }()
+
+        // Then, scroll on the scrollview
+        let startCoordinate = collectionView.coordinate(withNormalizedOffset: fromVector)
+        startCoordinate.press(forDuration: 0.1, thenDragTo: collectionView.coordinate(withNormalizedOffset: toVector))
     }
     return nil
 }
+
 func scrollDown(scrollView: XCUIElement, toFindElement element: XCUIElement, maxTimesToScroll: Int = 1) -> XCUIElement? {
     guard scrollView.elementType == .scrollView else {
         fatalError("XCUIElement is not a scrollview.")

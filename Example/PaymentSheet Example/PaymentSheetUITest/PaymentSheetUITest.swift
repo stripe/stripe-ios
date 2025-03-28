@@ -545,7 +545,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
             app.typeText("4")
             // ...and tapping to a different form and back...
             XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Cash App Pay")?.waitForExistenceAndTap() ?? false)
-            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Card")?.waitForExistenceAndTap() ?? false)
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Card", direction: .left)?.waitForExistenceAndTap() ?? false)
             // ...should preserve the card form
             XCTAssertEqual(numberField.value as? String, "4, Your card number is incomplete.")
             // ...tapping to the saved PM screen and back should do the same
