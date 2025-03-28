@@ -7,7 +7,7 @@
 
 import XCTest
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 
 @MainActor
@@ -182,5 +182,21 @@ extension ExternalPaymentOption {
             darkImageUrl: URL(string: "https://todo.com")!
         )
         return .from(epm, configuration: config)!
+    }
+
+    static func _testBufoPayValue() -> ExternalPaymentOption {
+        let cpm = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_test", subtitle: "Pay now with BufoPay")
+        let config = PaymentSheet.CustomPaymentMethodConfiguration(customPaymentMethods: [cpm]) { _, _ in
+            XCTFail("CPM confirm handler should not be called in these tests.")
+            return .canceled
+        }
+        let elementsSessionCPM: CustomPaymentMethod = .init(
+            displayName: "Bufo Pay",
+            type: "cpmt_test",
+            logoUrl: URL(string: "https://stripe-camo.global.ssl.fastly.net/57bf89f1261bca3624e52be020e6472d2ab0d339330c9cb09eb5e4a9e1e05616/68747470733a2f2f66696c65732e7374726970652e636f6d2f66696c65732f4d44423859574e6a6446387853485a555354644d645456764d3141784f46707766475a666447567a64463931597a4a515a484d77626d68584e3156696330564b4e5563314e48704452455530306c6b567a51496332")!,
+            isPreset: false,
+            error: nil)
+
+        return .from(elementsSessionCPM, configuration: config)!
     }
 }

@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CustomPaymentMethodsBeta) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
@@ -18,14 +18,14 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbeddedPaymentMethodsView_flatRadio() {
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
-                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .external(._testBufoPayValue())],
                                                       savedPaymentMethod: nil,
                                                       appearance: .default,
                                                       shouldShowApplePay: true,
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
-
+        // Note: BufoPay logo will not show in the screenshot, our snapshots currently cannot load remote images
         verify(embeddedView)
     }
 
