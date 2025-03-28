@@ -56,6 +56,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.autoreload)
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
         SettingView(setting: $playgroundController.settings.instantDebitsIncentives)
+        SettingView(setting: $playgroundController.settings.fcLiteEnabled)
     }
 
     var body: some View {
