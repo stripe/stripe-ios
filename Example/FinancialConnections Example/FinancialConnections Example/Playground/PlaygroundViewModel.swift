@@ -288,9 +288,13 @@ final class PlaygroundViewModel: ObservableObject {
     }
 
     func didSelectShow() {
+        let useFCLite = playgroundConfiguration.sdkType == .fcLite
+        FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = useFCLite
+        FinancialConnectionsSDKAvailability.shouldPreferFCLite = useFCLite
+
         switch playgroundConfiguration.integrationType {
         case .standalone:
-            if playgroundConfiguration.sdkType == .fcLite {
+            if useFCLite {
                 setupFcLite()
             } else {
                 setupStandalone()
