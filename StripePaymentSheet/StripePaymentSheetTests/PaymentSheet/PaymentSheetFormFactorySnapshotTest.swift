@@ -409,7 +409,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         STPSnapshotVerifyView(view)
         XCTAssertTrue(formElement.validationState.isValid)
     }
-    
+
     func testEPM_subtitle() {
         let configuration = PaymentSheet.Configuration()
         let factory = factory(for: .card, configuration: configuration)
@@ -419,7 +419,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         STPSnapshotVerifyView(view)
         XCTAssertTrue(formElement.validationState.isValid)
     }
-    
+
     func testEPM_subtitle_collectsBillingDetails() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .always
@@ -433,7 +433,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         STPSnapshotVerifyView(view)
         XCTAssertTrue(formElement.validationState.isValid)
     }
-    
+
     func testEPM_subtitle_doesNotCollectBillingDetails() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .always
