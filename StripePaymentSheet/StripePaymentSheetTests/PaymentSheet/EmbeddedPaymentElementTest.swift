@@ -23,30 +23,30 @@ class EmbeddedPaymentElementTest: XCTestCase {
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return config
     }()
-    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
+    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _ in
         // These tests don't confirm, so this is unused
         XCTFail("paymentIntentConfig confirm handler should not be called.")
+        return ""
     }
-    let paymentIntentConfigWithConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) {paymentMethod, _, intentCreationCallback in
-        STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
-                                currency: "USD",
-                                paymentMethodID: paymentMethod.stripeId,
-                                confirm: true) { result in
-            switch result {
-            case .success(let clientSecret):
-                intentCreationCallback(.success(clientSecret))
-            case .failure(let error):
-                XCTFail(error.localizedDescription)
+    let paymentIntentConfigWithConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { paymentMethod, _ in
+        try await withCheckedThrowingContinuation { continuation in
+            STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
+                                                          currency: "USD",
+                                                          paymentMethodID: paymentMethod.stripeId,
+                                                          confirm: true) { result in
+                continuation.resume(with: result)
             }
         }
     }
-    let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _, _ in
+    let paymentIntentConfig2 = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 999, currency: "USD"), paymentMethodTypes: ["card", "cashapp"]) { _, _ in
         // These tests don't confirm, so this is unused
         XCTFail("paymentIntentConfig2 confirm handler should not be called.")
+        return ""
     }
-    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp", "amazon_pay"]) { _, _, _ in
+    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "cashapp", "amazon_pay"]) { _, _ in
         // These tests don't confirm, so this is unused
         XCTFail("setupIntentConfig confirm handler should not be called.")
+        return ""
     }
     var delegateDidUpdatePaymentOptionCalled = false
     var delegateDidUpdateHeightCalled = false
@@ -228,9 +228,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.view.autosizeHeight(width: 320)
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in
-            // These tests don't confirm, so this is unused
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _ in
+            // These tests shouldn't confirm, so this is unused
             XCTFail("Unexpectedly called confirm handler of broken config")
+            return ""
         })
         async let _ = sut.update(intentConfiguration: brokenConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
@@ -252,7 +253,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.view.autosizeHeight(width: 320)
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _ in return "" })
         _ = await sut.update(intentConfiguration: brokenConfig)
         // ...and calling confirm, after the update finishes...
         async let confirmResult = sut.confirm()
@@ -575,7 +576,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
     func testChangeButtonStateRespectsCardBrandChoice() async throws {
         // Given an EmbeddedPaymentElement w/ CBC enabled...
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(cardBrandChoice: ._testValue())
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(

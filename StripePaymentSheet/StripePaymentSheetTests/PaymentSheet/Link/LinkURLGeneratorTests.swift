@@ -45,8 +45,9 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsFromConfig() async {
         let config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
             // Nothing
+            return ""
         }
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -76,8 +77,9 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsWithCBC() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _ in
             // Nothing
+            return ""
         }
         config.apiClient.publishableKey = "pk_123"
         config.defaultBillingDetails.address.country = "FR"
@@ -112,8 +114,9 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsWithCardFundingSource() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _ in
             // Nothing
+            return ""
         }
         config.apiClient.publishableKey = "pk_123"
         config.defaultBillingDetails.address.country = "FR"
@@ -146,8 +149,9 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsWithCardAndBankFundingSources() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _ in
             // Nothing
+            return ""
         }
         config.apiClient.publishableKey = "pk_123"
         config.defaultBillingDetails.address.country = "FR"
