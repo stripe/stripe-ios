@@ -173,19 +173,6 @@ public class STPPaymentIntentParams: NSObject {
             returnURL = returnUrl
         }
     }
-    /// `@YES` to save this PaymentIntent’s Source to the associated Customer,
-    /// if the Source is not already attached.
-    /// This should be a boolean NSNumber, so that it can be `nil`
-    /// This property has been renamed to `savePaymentMethod` and deprecated.
-    @available(*, deprecated, renamed: "savePaymentMethod")
-    @objc public var saveSourceToCustomer: NSNumber? {
-        get {
-            return savePaymentMethod_objc
-        }
-        set(saveSourceToCustomer) {
-            savePaymentMethod_objc = saveSourceToCustomer
-        }
-    }
 
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
