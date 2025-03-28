@@ -409,6 +409,44 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         STPSnapshotVerifyView(view)
         XCTAssertTrue(formElement.validationState.isValid)
     }
+    
+    func testEPM_subtitle() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = factory(for: .card, configuration: configuration)
+        let formElement = factory.makeExternalPaymentMethodForm(subtitle: "Pay now with BufoPay", disableBillingDetailCollection: false)
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
+    }
+    
+    func testEPM_subtitle_collectsBillingDetails() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let factory = factory(for: .card, configuration: configuration)
+        let formElement = factory.makeExternalPaymentMethodForm(subtitle: "Pay now with BufoPay", disableBillingDetailCollection: false)
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
+    }
+    
+    func testEPM_subtitle_doesNotCollectBillingDetails() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let factory = factory(for: .card, configuration: configuration)
+        let formElement = factory.makeExternalPaymentMethodForm(subtitle: "Pay now with BufoPay", disableBillingDetailCollection: true)
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
+    }
 
 }
 
