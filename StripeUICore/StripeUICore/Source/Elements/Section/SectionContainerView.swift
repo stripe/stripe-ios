@@ -110,6 +110,17 @@ class SectionContainerView: UIView {
     }
 #endif
 
+    func potentialFirstResponderIsInHierarchy(topView: UIView) -> Bool {
+        if let rememberableTopView = topView as? TextFieldView.STPTextFieldThatWistfullyReminiscesOfHowItCouldHaveBeenFirstResponder,
+           rememberableTopView.wantedToBecomeFirstResponder {
+            return true
+        }
+        for subview in topView.subviews {
+            return potentialFirstResponderIsInHierarchy(topView: subview)
+        }
+        return false
+    }
+
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {
         layer.applyShadow(shadow: theme.shadow)
@@ -139,6 +150,19 @@ class SectionContainerView: UIView {
         }
 
         let oldStackHeight = self.stackView.frame.size.height
+
+        let newFirstResponder: UIView? = {
+            for view in views {
+                if potentialFirstResponderIsInHierarchy(topView: view) {
+                    let oldFirstResponderIndex = views.firstIndex(of: view)
+                    if let oldFirstResponderIndex = oldFirstResponderIndex, oldFirstResponderIndex < newViews.count {
+                        return newViews[oldFirstResponderIndex]
+                    }
+                }
+            }
+            return nil
+        }()
+
         let newStack = buildStackView(views: newStackViews, theme: theme)
         newStack.arrangedSubviews.forEach { $0.alpha = 0 }
         bottomPinningContainerView.addPinnedSubview(newStack)
@@ -168,10 +192,17 @@ class SectionContainerView: UIView {
         }
         guard let viewController = window?.rootViewController?.presentedViewController else {
             transition()
+            if let newFirstResponderTextField = newFirstResponder as? TextFieldView {
+                _ = newFirstResponderTextField.textField.becomeFirstResponder()
+            }
             return
         }
         let shouldAnimate = Int(newStack.frame.size.height) != Int(oldStackHeight)
-        viewController.animateHeightChange(duration: shouldAnimate ? 0.5 : 0.0, transition)
+        viewController.animateHeightChange(duration: shouldAnimate ? 0.5 : 0.0, transition, completion: { _ in
+            if let newFirstResponderTextField = newFirstResponder as? TextFieldView {
+                _ = newFirstResponderTextField.textField.becomeFirstResponder()
+            }
+        })
     }
 }
 
