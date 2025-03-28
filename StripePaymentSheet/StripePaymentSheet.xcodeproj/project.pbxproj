@@ -136,7 +136,9 @@
 		47AD56A9889DF5EFBBA9CEFB /* PollingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADE49E72DD5EDA448D12D88 /* PollingViewTests.swift */; };
 		47B19F96CCEA290541E3B988 /* CardSectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03000A6807B09BFD8E6CB1 /* CardSectionElement.swift */; };
 		48DA2EFE0944E737B0F197B0 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = B2AFFAD776D5F21DF837F1BD /* OHHTTPStubs */; };
+		4954E9712D96FA0C0061585F /* FCLiteImplementationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4954E9702D96FA0C0061585F /* FCLiteImplementationTests.swift */; };
 		49803444CD948F1ED28FF021 /* PaymentSheetFormFactory+FormSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7A1EFF100C589FDFF4D516 /* PaymentSheetFormFactory+FormSpec.swift */; };
+		498BF1722D92FF6A006E866B /* FCLiteImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */; };
 		49909A162D8AF9760031EC33 /* FinancialConnectionsLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A152D8AF9760031EC33 /* FinancialConnectionsLite.swift */; };
 		49909A1C2D8AFA600031EC33 /* FCLiteApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A1B2D8AFA600031EC33 /* FCLiteApiClient.swift */; };
 		49909A1E2D8AFAB70031EC33 /* FCLiteManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A1D2D8AFAB70031EC33 /* FCLiteManifest.swift */; };
@@ -580,6 +582,8 @@
 		45B6DC9BD9183495E5649369 /* LinkAccountService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountService.swift; sourceTree = "<group>"; };
 		47C5DB8C01BA7137369C8B4D /* TextFieldElement+Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Card.swift"; sourceTree = "<group>"; };
 		492B254E43F3BB9F9CEAEA06 /* PaymentSheetLoaderStubbedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetLoaderStubbedTest.swift; sourceTree = "<group>"; };
+		4954E9702D96FA0C0061585F /* FCLiteImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementationTests.swift; sourceTree = "<group>"; };
+		498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementation.swift; sourceTree = "<group>"; };
 		49909A152D8AF9760031EC33 /* FinancialConnectionsLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLite.swift; sourceTree = "<group>"; };
 		49909A1B2D8AFA600031EC33 /* FCLiteApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteApiClient.swift; sourceTree = "<group>"; };
 		49909A1D2D8AFAB70031EC33 /* FCLiteManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteManifest.swift; sourceTree = "<group>"; };
@@ -1142,6 +1146,7 @@
 				49909A182D8AF9B50031EC33 /* Controllers */,
 				49909A172D8AF9AE0031EC33 /* API Client */,
 				49909A152D8AF9760031EC33 /* FinancialConnectionsLite.swift */,
+				498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */,
 			);
 			path = "FC Lite";
 			sourceTree = "<group>";
@@ -1838,6 +1843,7 @@
 				61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */,
 				619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */,
 				49909A2D2D8B19800031EC33 /* FCLiteAuthFlowViewControllerTests.swift */,
+				4954E9702D96FA0C0061585F /* FCLiteImplementationTests.swift */,
 			);
 			path = PaymentSheet;
 			sourceTree = "<group>";
@@ -2115,6 +2121,7 @@
 				619AF0852BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift in Sources */,
 				B6CACCA02CBD9A3300682ECE /* EmbeddedPaymentElementTest.swift in Sources */,
 				2EC9C94DD8D62E4F4EFC8AB8 /* IntentStatusPollerTest.swift in Sources */,
+				4954E9712D96FA0C0061585F /* FCLiteImplementationTests.swift in Sources */,
 				ABC3A7CF6D5B21D0C9684A09 /* LinkPopupURLParserTests.swift in Sources */,
 				F94F6A157CEB937896B682D4 /* LinkURLGeneratorTests.swift in Sources */,
 				10A336F0F2331F22F1A0AC1B /* LinkStubs.swift in Sources */,
@@ -2245,6 +2252,7 @@
 				F3A34AD1CC2CBB899738C9D7 /* LinkInlineSignupElement.swift in Sources */,
 				56BB7C81AB3A24D3AD88A904 /* LinkInlineSignupView-CheckboxElement.swift in Sources */,
 				7479F814D1BC58A6B19F054C /* LinkInlineSignupView.swift in Sources */,
+				498BF1722D92FF6A006E866B /* FCLiteImplementation.swift in Sources */,
 				3147CEC02CC080570067B5E4 /* LinkInMemoryCookieStore.swift in Sources */,
 				3147CEC12CC080570067B5E4 /* LinkCookieStore.swift in Sources */,
 				3147CEC22CC080570067B5E4 /* LinkSecureCookieStore.swift in Sources */,
