@@ -491,6 +491,10 @@ class PlaygroundController: ObservableObject {
             // Hack to enable incentives in Instant Debits
             let enableInstantDebitsIncentives = newValue.instantDebitsIncentives == .on
             UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
+
+            let enableFcLite = newValue.fcLiteEnabled == .on
+            FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = enableFcLite
+            FinancialConnectionsSDKAvailability.shouldPreferFCLite = enableFcLite
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -893,7 +897,7 @@ extension PlaygroundController {
             else {
                 if let data = data,
                    (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(data: data, encoding: .utf8)!
+                    let errorMessage = String(decoding: data, as: UTF8.self)
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
