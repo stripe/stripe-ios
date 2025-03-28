@@ -377,11 +377,10 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         }
         // if it's the last saved pm, there's some animation jank from trying to quickly dismiss the update pm screen and the manage screen, so we wait until the update pm screen is dismissed, animate the payment method fading, and return to the main screen
         if paymentMethodRows.count == 1 {
-            _ = viewController.bottomSheetController?.popContentViewController() {
+            _ = viewController.bottomSheetController?.popContentViewController {
                 self.remove(paymentMethod: paymentMethod)
             }
-        }
-        else {
+        } else {
             remove(paymentMethod: paymentMethod)
             _ = viewController.bottomSheetController?.popContentViewController()
         }
