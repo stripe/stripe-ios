@@ -12,7 +12,7 @@ import UIKit
 /// Manages Connect embedded components
 /// - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
 /// - Note: Connect embedded components are only available in private preview.
-/// - Seealso: [Step by step integration guide](  https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios)
+/// - Seealso: [Step by step integration guide](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios)
 @_spi(PrivateBetaConnect)
 @_documentation(visibility: public)
 @available(iOS 15, *)
@@ -54,6 +54,21 @@ public final class EmbeddedComponentManager {
             return nil
         })
         self.publicKeyOverride = publicKeyOverride
+        if let baseURLOverride {
+            baseURL = baseURLOverride
+        }
+    }
+
+    @_spi(DashboardOnly)
+    public convenience init(apiClient: STPAPIClient = STPAPIClient.shared,
+                            appearance: EmbeddedComponentManager.Appearance = .default,
+                            fonts: [EmbeddedComponentManager.CustomFontSource] = [],
+                            baseURLOverride: URL? = nil,
+                            fetchClientSecret: @escaping () async -> String?) {
+        self.init(apiClient: apiClient,
+                 appearance: appearance,
+                 fonts: fonts,
+                 fetchClientSecret: fetchClientSecret)
         if let baseURLOverride {
             baseURL = baseURLOverride
         }
