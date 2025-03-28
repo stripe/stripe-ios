@@ -529,6 +529,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.mode = .setup
         settings.uiStyle = .paymentSheet
         settings.layout = .horizontal
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card,cashapp,us_bank_account"
         loadPlayground(app, settings)
 
         // Add a card first so we can test saved screen
