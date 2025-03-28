@@ -214,6 +214,10 @@ final class PickerFieldView: UIView {
     func setCanBecomeFirstResponder(_ value: Bool) {
         _canBecomeFirstResponder = value
     }
+
+    override func resignFirstResponder() -> Bool {
+        return textField.resignFirstResponder()
+    }
 }
 
 // MARK: - EventHandler
