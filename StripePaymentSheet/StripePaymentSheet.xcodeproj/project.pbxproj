@@ -146,7 +146,6 @@
 		49909A282D8B05F90031EC33 /* FCLiteAuthFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A272D8B05F90031EC33 /* FCLiteAuthFlowViewController.swift */; };
 		49909A2A2D8B06CE0031EC33 /* FCLiteColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A292D8B06CE0031EC33 /* FCLiteColor.swift */; };
 		49909A2C2D8B0C860031EC33 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A2B2D8B0C860031EC33 /* URL+Extensions.swift */; };
-		49909A2E2D8B19800031EC33 /* FCLiteAuthFlowViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A2D2D8B19800031EC33 /* FCLiteAuthFlowViewControllerTests.swift */; };
 		49909A312D8B48710031EC33 /* FCLiteContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A302D8B48710031EC33 /* FCLiteContainerViewController.swift */; };
 		49909A332D8B48820031EC33 /* FCLiteErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A322D8B48820031EC33 /* FCLiteErrorView.swift */; };
 		49909A352D8B48D40031EC33 /* FCLiteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A342D8B48D40031EC33 /* FCLiteError.swift */; };
@@ -591,7 +590,6 @@
 		49909A272D8B05F90031EC33 /* FCLiteAuthFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteAuthFlowViewController.swift; sourceTree = "<group>"; };
 		49909A292D8B06CE0031EC33 /* FCLiteColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteColor.swift; sourceTree = "<group>"; };
 		49909A2B2D8B0C860031EC33 /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
-		49909A2D2D8B19800031EC33 /* FCLiteAuthFlowViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteAuthFlowViewControllerTests.swift; sourceTree = "<group>"; };
 		49909A302D8B48710031EC33 /* FCLiteContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteContainerViewController.swift; sourceTree = "<group>"; };
 		49909A322D8B48820031EC33 /* FCLiteErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteErrorView.swift; sourceTree = "<group>"; };
 		49909A342D8B48D40031EC33 /* FCLiteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteError.swift; sourceTree = "<group>"; };
@@ -2156,7 +2154,6 @@
 				041E3F2DFDFD8FA7D3353CDB /* PaymentSheetSnapshotTests.swift in Sources */,
 				1330B53140DE10F641A82099 /* PaymentSheetViewControllerSnapshotTests.swift in Sources */,
 				614A8AE72BE53C6900E8688B /* SavedPaymentMethodManagerTest.swift in Sources */,
-				49909A2E2D8B19800031EC33 /* FCLiteAuthFlowViewControllerTests.swift in Sources */,
 				619AF08A2BF56FC000D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift in Sources */,
 				47AD56A9889DF5EFBBA9CEFB /* PollingViewTests.swift in Sources */,
 				61ED657C2D41AE1A00DD5E92 /* PaymentSheet+PaymentMethodAvailabilityTest.swift in Sources */,
