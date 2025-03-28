@@ -111,7 +111,7 @@ class SectionContainerView: UIView {
 #endif
 
     func potentialFirstResponderIsInHierarchy(topView: UIView) -> Bool {
-        if let rememberableTopView = topView as? TextFieldView.STPTextFieldThatWistfullyReminiscesOfHowItCouldHaveBeenFirstResponder,
+        if let rememberableTopView = topView as? TextFieldView.STPTextFieldThatRemembersWantingToBecomeFirstResponder,
            rememberableTopView.wantedToBecomeFirstResponder {
             return true
         }
@@ -190,19 +190,18 @@ class SectionContainerView: UIView {
             self.layoutIfNeeded()
             oldStackView.removeFromSuperview()
         }
-        guard let viewController = window?.rootViewController?.presentedViewController else {
-            transition()
+        let transitionCompletion: (Bool) -> Void = { _ in
             if let newFirstResponderTextField = newFirstResponder as? TextFieldView {
                 _ = newFirstResponderTextField.textField.becomeFirstResponder()
             }
+        }
+        guard let viewController = window?.rootViewController?.presentedViewController else {
+            transition()
+            transitionCompletion(false)
             return
         }
         let shouldAnimate = Int(newStack.frame.size.height) != Int(oldStackHeight)
-        viewController.animateHeightChange(duration: shouldAnimate ? 0.5 : 0.0, transition, completion: { _ in
-            if let newFirstResponderTextField = newFirstResponder as? TextFieldView {
-                _ = newFirstResponderTextField.textField.becomeFirstResponder()
-            }
-        })
+        viewController.animateHeightChange(duration: shouldAnimate ? 0.5 : 0.0, transition, completion: transitionCompletion)
     }
 }
 

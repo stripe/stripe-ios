@@ -49,9 +49,9 @@ class TextFieldView: UIView {
     // MARK: - Views
 
     // A text field that remembers if it wanted to become the first responder, but failed to do so.
-    // We'll use this for the very niche situation where we're trying to swap out a text field for another one
+    // We'll track this for the very specific situation where we're trying to swap out a text field for a replacement
     // immediately after the user tapped this one.
-    class STPTextFieldThatWistfullyReminiscesOfHowItCouldHaveBeenFirstResponder: UITextField {
+    class STPTextFieldThatRemembersWantingToBecomeFirstResponder: UITextField {
         private(set) var wantedToBecomeFirstResponder = false
 
         override func becomeFirstResponder() -> Bool {
@@ -60,15 +60,15 @@ class TextFieldView: UIView {
             }
             let didBecomeFirstResponder = super.becomeFirstResponder()
             if didBecomeFirstResponder {
-                // achieved its dream of becoming first responder :)
+                // It succeeded, so now it can forget!
                 wantedToBecomeFirstResponder = false
             }
             return didBecomeFirstResponder
         }
     }
 
-    private(set) lazy var textField: STPTextFieldThatWistfullyReminiscesOfHowItCouldHaveBeenFirstResponder = {
-        let textField = STPTextFieldThatWistfullyReminiscesOfHowItCouldHaveBeenFirstResponder()
+    private(set) lazy var textField: STPTextFieldThatRemembersWantingToBecomeFirstResponder = {
+        let textField = STPTextFieldThatRemembersWantingToBecomeFirstResponder()
         textField.delegate = self
         textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         textField.autocorrectionType = .no
