@@ -8,7 +8,7 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-/// NOTE: If you change the name of this class, make sure to also change it `FinancialConnectionsSDKAvailability` file.
+/// NOTE: If you change the name of this class, make sure to also change it in the `FinancialConnectionsSDKAvailability` file.
 @_spi(STP) public class FCLiteImplementation: FinancialConnectionsSDKInterface {
     required public init() {}
 
