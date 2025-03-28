@@ -24,8 +24,8 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
             XCTAssertEqual(params.additionalAPIParameters.count, 0)
             XCTAssertNil(params.paymentMethodID)
             XCTAssertNil(params.returnURL)
-            XCTAssertNil(params.setAsDefaultPM)
-            XCTAssertNil(params.useStripeSDK)
+            XCTAssertFalse(params.setAsDefaultPM)
+            XCTAssertFalse(params.useStripeSDK)
             XCTAssertNil(params.mandateData)
         }
     }
