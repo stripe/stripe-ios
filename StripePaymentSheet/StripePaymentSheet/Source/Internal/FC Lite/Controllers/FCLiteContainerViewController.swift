@@ -18,6 +18,7 @@ class FCLiteContainerViewController: UIViewController {
     private var errorView: ErrorView?
 
     private var manifest: LinkAccountSessionManifest?
+    private let elementsSessionContext: ElementsSessionContext?
 
     private var isInstantDebits: Bool {
         manifest?.isInstantDebits == true
@@ -27,11 +28,13 @@ class FCLiteContainerViewController: UIViewController {
         clientSecret: String,
         returnUrl: URL?,
         apiClient: FCLiteAPIClient,
+        elementsSessionContext: ElementsSessionContext?,
         completion: @escaping ((FinancialConnectionsSDKResult) -> Void)
     ) {
         self.clientSecret = clientSecret
         self.returnUrl = returnUrl
         self.apiClient = apiClient
+        self.elementsSessionContext = elementsSessionContext
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
@@ -133,6 +136,7 @@ class FCLiteContainerViewController: UIViewController {
     private func showWebView(for manifest: LinkAccountSessionManifest) {
         let authFlowVC = FCLiteAuthFlowViewController(
             manifest: manifest,
+            elementsSessionContext: elementsSessionContext,
             returnUrl: returnUrl,
             completion: { [weak self] result in
                 guard let self else { return }
