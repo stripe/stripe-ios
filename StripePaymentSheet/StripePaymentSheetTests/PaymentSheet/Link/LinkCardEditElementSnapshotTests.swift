@@ -38,6 +38,11 @@ final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testBillingDetailsUpdate() {
+        let sut = makeSUT(isDefault: false, useCVCPlaceholder: true)
+        verify(sut)
+    }
+
     func verify(
         _ element: LinkCardEditElement,
         identifier: String? = nil,
@@ -52,7 +57,10 @@ final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
 
 extension LinkCardEditElementSnapshotTests {
 
-    func makeSUT(isDefault: Bool) -> LinkCardEditElement {
+    func makeSUT(
+        isDefault: Bool,
+        useCVCPlaceholder: Bool = false
+    ) -> LinkCardEditElement {
         let paymentMethod = ConsumerPaymentDetails(
             stripeID: "1",
             details: .card(
@@ -69,7 +77,11 @@ extension LinkCardEditElementSnapshotTests {
             isDefault: isDefault
         )
 
-        return LinkCardEditElement(paymentMethod: paymentMethod, configuration: PaymentSheet.Configuration())
+        return LinkCardEditElement(
+            paymentMethod: paymentMethod,
+            configuration: PaymentSheet.Configuration(),
+            useCVCPlaceholder: useCVCPlaceholder
+        )
     }
 
 }
