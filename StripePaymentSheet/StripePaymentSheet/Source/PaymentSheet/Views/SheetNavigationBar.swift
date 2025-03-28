@@ -28,6 +28,7 @@ class SheetNavigationBar: UIView {
         stack.alignment = .center
         return stack
     }()
+    // Used for allowing larger tap area to the left of closeButtonLeft
     fileprivate lazy var dummyView: UIView = {
         let dummyView = UIView(frame: .zero)
         return dummyView
