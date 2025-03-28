@@ -22,9 +22,16 @@ class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [closeButtonLeft, backButton, testModeView])
+        let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
         stack.spacing = PaymentSheetUI.defaultPadding
+        stack.setCustomSpacing(PaymentSheetUI.navBarPadding, after: dummyView)
+        stack.alignment = .center
         return stack
+    }()
+    // Used for allowing larger tap area to the left of closeButtonLeft
+    fileprivate lazy var dummyView: UIView = {
+        let dummyView = UIView(frame: .zero)
+        return dummyView
     }()
     fileprivate lazy var closeButtonLeft: UIButton = {
         let button = SheetNavigationButton(type: .custom)
@@ -88,11 +95,11 @@ class SheetNavigationBar: UIView {
         }
 
         NSLayoutConstraint.activate([
-            leftItemsStackView.leadingAnchor.constraint(
-                equalTo: leadingAnchor, constant: PaymentSheetUI.navBarPadding),
+            leftItemsStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
             leftItemsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             leftItemsStackView.trailingAnchor.constraint(lessThanOrEqualTo: closeButtonRight.leadingAnchor),
             leftItemsStackView.trailingAnchor.constraint(lessThanOrEqualTo: additionalButton.leadingAnchor),
+            leftItemsStackView.heightAnchor.constraint(equalTo: heightAnchor),
 
             additionalButton.trailingAnchor.constraint(
                 equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),

@@ -28,6 +28,7 @@ import UIKit
             clientSecret: clientSecret,
             returnUrl: returnUrl
         )
+        fcLite.elementsSessionContext = elementsSessionContext
         fcLite.present(from: presentingViewController, completion: completion)
     }
 }
