@@ -471,10 +471,11 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             } else {
                 STPAnalyticsClient.sharedClient.logCardScanSucceeded(withDuration: duration ?? 0.0)
             }
-            self.feedbackGenerator = nil
-
-            self.cameraView?.captureSession = nil
             self.delegate?.cardScanner(self, didFinishWith: params, error: error)
+            self.feedbackGenerator = nil
+            DispatchQueue.main.async {
+                self.cameraView?.captureSession = nil
+            }
         })
     }
 
