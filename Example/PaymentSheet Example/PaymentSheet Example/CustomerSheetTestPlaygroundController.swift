@@ -61,14 +61,8 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         load()
     }
     func didTapSetToUnsupported() {
-        Task {
-            do {
-                try await _customerAdapter?.setSelectedPaymentOption(paymentOption: .link)
-                self.load()
-            } catch {
-                // no-op
-            }
-        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: settings.customerId)
+        self.load()
     }
 
     func appearanceButtonTapped() {
@@ -288,6 +282,13 @@ extension CustomerSheetTestPlaygroundController {
                 self.isLoading = false
             }
         }
+    }
+    func customerSessionSettingsTapped() {
+        let vc = UIHostingController(rootView: CustomerSheetCustomerSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+            self.settings = updatedSettings
+            self.rootViewController.dismiss(animated: true, completion: nil)
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
     }
 }
 

@@ -211,6 +211,8 @@ protocol FinancialConnectionsAsyncAPI {
 
     func cancelAuthSession(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsAuthSession
 
+    func selectInstitution(clientSecret: String, institutionId: String) async throws -> FinancialConnectionsSelectInstitution
+
     func retrieveAuthSession(
         clientSecret: String,
         authSessionId: String
@@ -461,6 +463,14 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             "return_url": "ios",
         ]
         return try await post(endpoint: .authSessions, parameters: parameters)
+    }
+
+    func selectInstitution(clientSecret: String, institutionId: String) async throws -> FinancialConnectionsSelectInstitution {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            "currently_selected_institution": institutionId,
+        ]
+        return try await post(endpoint: .selectInstitution, parameters: parameters)
     }
 
     func repairAuthSession(clientSecret: String, coreAuthorization: String) async throws -> FinancialConnectionsRepairSession {
@@ -1100,7 +1110,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
 
         if let billingDetails {
             let encodedBillingAddress = try Self.encodeAsParameters(billingDetails)
-            parameters["billing_address"] = encodedBillingAddress
+            parameters["billing_details"] = encodedBillingAddress
         }
 
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
@@ -1132,6 +1142,7 @@ enum APIEndpoint: String {
     case consentAcquired = "link_account_sessions/consent_acquired"
     case linkMoreAccounts = "link_account_sessions/link_more_accounts"
     case complete = "link_account_sessions/complete"
+    case selectInstitution = "link_account_sessions/institution_selected"
 
     // Connections
     case synchronize = "financial_connections/sessions/synchronize"
@@ -1187,7 +1198,7 @@ enum APIEndpoint: String {
              .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
              .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
              .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup,
-             .availableIncentives:
+             .availableIncentives, .selectInstitution:
             return false
         }
     }

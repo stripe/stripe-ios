@@ -37,7 +37,7 @@ extension PaymentSheetFormFactory {
         return FormElement(autoSectioningElements: autoSectioningElements, theme: theme)
     }
 
-    private func makeUPIHeader() -> StaticElement {
+    private func makeUPIHeader() -> SubtitleElement {
         return makeSectionTitleLabelWith(text: STPLocalizedString("Buy using a UPI ID",
                                                                   "Header text shown above a UPI ID text field"))
     }

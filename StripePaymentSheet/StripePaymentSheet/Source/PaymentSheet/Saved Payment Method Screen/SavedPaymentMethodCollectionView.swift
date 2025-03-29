@@ -96,9 +96,8 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .edit)
-            button.backgroundColor = UIColor.dynamic(
-                light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
-            button.iconColor = appearance.colors.icon
+            button.backgroundColor = appearance.colors.primary
+            button.iconColor = appearance.colors.primary.contrastingColor
             button.isAccessibilityElement = true
             button.accessibilityLabel = String.Localized.edit
             return button
@@ -142,17 +141,18 @@ extension SavedPaymentMethodCollectionView {
 
         var cbcEligible: Bool = false
         var allowsPaymentMethodRemoval: Bool = true
+        var allowsPaymentMethodUpdate: Bool = false
         var allowsSetAsDefaultPM: Bool = false
         var needsVerticalPaddingForBadge: Bool = false
         var showDefaultPMBadge: Bool = false
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
-        var showEditIcon: Bool {
+        var isEditable: Bool {
             guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
-                fatalError("Payment method does not match supported saved payment methods.")
+                return false
             }
-            return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
+            return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
         }
 
         // MARK: - UICollectionViewCell
@@ -261,13 +261,14 @@ extension SavedPaymentMethodCollectionView {
         }()
 
         // MARK: - Internal Methods
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
             self.cbcEligible = cbcEligible
             self.allowsPaymentMethodRemoval = allowsPaymentMethodRemoval
+            self.allowsPaymentMethodUpdate = allowsPaymentMethodUpdate
             self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
             self.showDefaultPMBadge = showDefaultPMBadge
@@ -292,14 +293,14 @@ extension SavedPaymentMethodCollectionView {
         // MARK: - Private Methods
         @objc
         private func didSelectAccessory() {
-            if showEditIcon {
+            if isEditable {
                 delegate?.paymentOptionCellDidSelectEdit(self)
             }
         }
 
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
             if case .USBankAccount = paymentMethod.type {
-                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(.secondaryLabel)
+                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(appearance.colors.text)
                 let iconImageAttachment = NSTextAttachment()
                 // Inspiration from:
                 // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
@@ -380,7 +381,7 @@ extension SavedPaymentMethodCollectionView {
                 }
 
                 if isRemovingPaymentMethods {
-                    if case .saved = viewModel, showEditIcon {
+                    if case .saved = viewModel, isEditable {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()

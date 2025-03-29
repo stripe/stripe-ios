@@ -228,7 +228,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.view.autosizeHeight(width: 320)
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in
+            // These tests don't confirm, so this is unused
+            XCTFail("Unexpectedly called confirm handler of broken config")
+        })
         async let _ = sut.update(intentConfiguration: brokenConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
         async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
@@ -409,6 +412,56 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertFalse(delegateDidUpdateHeightCalled)
     }
 
+    func testClearPaymentOptionNoPreviousSelection() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Select the "Card" payment method
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+        // ...and filling out the form
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+
+        // Card should be populated as the payment option
+        XCTAssertNotNil(sut.paymentOption)
+
+        // Reset flags
+        delegateDidUpdatePaymentOptionCalled = false
+        delegateDidUpdateHeightCalled = false
+
+        // Reset the selection
+        sut.clearPaymentOption()
+
+        // The paymentOption should now be nil after reset
+        XCTAssertNil(sut.paymentOption)
+        XCTAssertNil(sut.selectedFormViewController)
+
+        // The delegate should have been notified again after reset
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+
+        // Open the card form
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+        // Form details should be preserved
+        XCTAssertEqual(cardForm.getTextFieldElement("Card number").text, "4242424242424242")
+        XCTAssertEqual(cardForm.getTextFieldElement("MM / YY").text, "1232")
+        XCTAssertEqual(cardForm.getTextFieldElement("CVC").text, "123")
+        XCTAssertEqual(cardForm.getTextFieldElement("ZIP").text, "65432")
+        sut.selectedFormViewController?.didTapOrSwipeToDismiss()
+
+        // Payment option should remain nil after closing the card form
+        XCTAssertNil(sut.paymentOption)
+    }
+
     func testConfirmThenUpdateFails() async throws {
         // Given an EmbeddedPaymentElement that can confirm
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
@@ -562,6 +615,48 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...the label should read "Cartes Bancaire ****1001"
         changeButtonState = sut.getChangeButtonState(for: .new(paymentMethodType: .stripe(.card)))
         XCTAssertEqual(changeButtonState.sublabel, "Cartes Bancaires •••• 1001")
+    }
+
+    func testDelegatePaymentOptionUpdate() async throws {
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Reset delegate tracking
+        delegateDidUpdatePaymentOptionCalled = false
+
+        // Select Cash App Pay (which has no form to collect input)...
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
+
+        // ...the delegate should be called immediately since there's no form
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled, "Delegate should be updated immediately for payment methods without forms")
+        XCTAssertEqual(sut.paymentOption?.label, "Cash App Pay")
+
+        // Reset delegate tracking
+        delegateDidUpdatePaymentOptionCalled = false
+
+        // Select Card (which has a form to collect input)...
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+
+        // ...the delegate should not be called yet since the payment option is in an indeterminate state while the form is open
+        XCTAssertFalse(delegateDidUpdatePaymentOptionCalled, "Delegate should not be updated immediately for payment methods with forms")
+        XCTAssertNil(sut.paymentOption, "Payment option should be nil until form is canceled or completed")
+
+        // Fill out the card form...
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+
+        // ...and submit the form
+        sut.selectedFormViewController?.didTapPrimaryButton()
+
+        // ...the delegate should be called after the form is submitted
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled, "Delegate should be updated after card form is completed")
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
     }
 }
 

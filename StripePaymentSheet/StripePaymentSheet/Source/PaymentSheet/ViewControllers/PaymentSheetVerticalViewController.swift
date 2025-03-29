@@ -381,7 +381,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
         )
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
@@ -805,7 +806,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: elementsSession,
-            configuration: .paymentSheet(configuration),
+            configuration: .paymentElement(configuration),
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,

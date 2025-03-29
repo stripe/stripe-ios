@@ -83,7 +83,7 @@ class PaymentSheetFormFactory {
 
         /// Whether or not the card form should show the link inline signup checkbox
         let showLinkInlineCardSignup: Bool = {
-            guard case .paymentSheet(let configuration) = configuration else {
+            guard case .paymentElement(let configuration) = configuration else {
                 return false
             }
 
@@ -379,10 +379,20 @@ extension PaymentSheetFormFactory {
     func makeDefaultCheckbox(
         didToggle: ((Bool) -> Void)? = nil
     ) -> PaymentMethodElementWrapper<CheckboxElement> {
+        let isSelectedByDefault: Bool = {
+            if isFirstSavedPaymentMethod {
+                return true
+            }
+            if let previousCustomerInput = previousCustomerInput, let setAsDefaultPM = previousCustomerInput.setAsDefaultPM {
+                // Use the previous customer input checkbox state if it was shown
+                return setAsDefaultPM
+            }
+            return false
+        }()
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: String.Localized.set_as_default_payment_method,
-            isSelectedByDefault: isFirstSavedPaymentMethod,
+            isSelectedByDefault: isSelectedByDefault,
             didToggle: didToggle
         )
         return PaymentMethodElementWrapper(element) { checkbox, params in
@@ -601,7 +611,7 @@ extension PaymentSheetFormFactory {
 
         return USBankAccountPaymentMethodElement(
             configuration: configuration,
-            titleElement: makeUSBankAccountCopyLabel(),
+            subtitleElement: makeUSBankAccountCopyLabel(),
             nameElement: configuration.billingDetailsCollectionConfiguration.name != .never ? makeName() : nil,
             emailElement: configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil,
             phoneElement: phoneElement,
@@ -699,8 +709,8 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeAfterpayClearpayHeader() -> StaticElement? {
-        return StaticElement(view: AfterpayPriceBreakdownView(theme: theme))
+    func makeAfterpayClearpayHeader() -> SubtitleElement {
+        return SubtitleElement(view: AfterpayPriceBreakdownView(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
@@ -728,7 +738,7 @@ extension PaymentSheetFormFactory {
         return country
     }
 
-    func makeKlarnaCopyLabel() -> StaticElement {
+    func makeKlarnaCopyLabel() -> SubtitleElement {
         let text = String.Localized.buy_now_or_pay_later_with_klarna
 
         let label = UILabel()
@@ -736,11 +746,11 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
-        return StaticElement(view: label)
+        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
     }
 
     func makeInstantDebits(countries: [String]? = nil) -> PaymentMethodElement {
-        let titleElement: StaticElement? = if case .paymentSheet = configuration {
+        let titleElement: SubtitleElement? = if case .paymentElement = configuration {
             makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
         } else {
             nil
@@ -763,7 +773,7 @@ extension PaymentSheetFormFactory {
 
         return InstantDebitsPaymentMethodElement(
             configuration: configuration,
-            titleElement: titleElement,
+            subtitleElement: titleElement,
             nameElement: nameElement,
             emailElement: emailElement,
             phoneElement: phoneElement,
@@ -774,7 +784,7 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    private func makeUSBankAccountCopyLabel() -> StaticElement {
+    private func makeUSBankAccountCopyLabel() -> SubtitleElement {
         switch configuration {
         case .customerSheet:
             return makeSectionTitleLabelWith(
@@ -783,20 +793,20 @@ extension PaymentSheetFormFactory {
                     "US Bank Account copy title for Mobile payment element form"
                 )
             )
-        case .paymentSheet:
+        case .paymentElement:
             return makeSectionTitleLabelWith(
                 text: Self.PayByBankDescriptionText
             )
         }
     }
 
-    func makeSectionTitleLabelWith(text: String) -> StaticElement {
+    func makeSectionTitleLabelWith(text: String) -> SubtitleElement {
         let label = UILabel()
         label.text = text
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.secondaryText
         label.numberOfLines = 0
-        return StaticElement(view: label)
+        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
     }
 
     /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration` and your payment method's required fields.

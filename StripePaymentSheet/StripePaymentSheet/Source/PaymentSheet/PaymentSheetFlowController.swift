@@ -23,7 +23,7 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod, confirmParams: IntentConfirmParams?)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
-        case external(paymentMethod: ExternalPaymentMethod, billingDetails: STPPaymentMethodBillingDetails)
+        case external(paymentMethod: ExternalPaymentOption, billingDetails: STPPaymentMethodBillingDetails)
 
         var paymentMethodTypeAnalyticsValue: String {
             switch self {
@@ -157,7 +157,7 @@ extension PaymentSheet {
                     paymentMethodType = STPPaymentMethodType.link.identifier
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                 case .external(let paymentMethod, let stpBillingDetails):
-                    label = paymentMethod.label
+                    label = paymentMethod.displayText
                     paymentMethodType = paymentMethod.type
                     billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
                 }

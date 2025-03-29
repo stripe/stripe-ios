@@ -120,9 +120,17 @@ final class PlaygroundConfiguration {
         case automatic = "automatic"
         case web = "web"
         case native = "native"
+        case fcLite = "fc_lite"
 
         var id: String {
             return rawValue
+        }
+
+        var displayName: String {
+            switch self {
+            case .automatic, .web, .native: return rawValue.capitalized
+            case .fcLite: return "FC Lite"
+            }
         }
     }
     private static let sdkTypeKey = "sdk_type"
@@ -141,7 +149,7 @@ final class PlaygroundConfiguration {
             configurationStore[Self.sdkTypeKey] = newValue.rawValue
 
             switch newValue {
-            case .automatic:
+            case .automatic, .fcLite:
                 PlaygroundUserDefaults.enableNative = nil
             case .web:
                 PlaygroundUserDefaults.enableNative = false
@@ -689,11 +697,8 @@ final class PlaygroundConfigurationStore {
         set {
             do {
                 let configurationData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                if let configurationString = String(data: configurationData, encoding: .utf8) {
-                    Self.configurationString = configurationString
-                } else {
-                    assertionFailure("unable to convert `configurationData` to a `configurationString`")
-                }
+                let configurationString = String(decoding: configurationData, as: UTF8.self)
+                Self.configurationString = configurationString
             } catch {
                 assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
             }

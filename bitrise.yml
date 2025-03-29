@@ -47,6 +47,7 @@ stages:
     - ui-tests-2: {}
     - ui-tests-3: {}
     - ui-tests-4: {}
+    - ui-tests-5: {}
     - integration-all: {}
     - lokalise-upload: {}
   stage-releases-run-all:
@@ -65,6 +66,7 @@ stages:
     - ui-tests-2: {}
     - ui-tests-3: {}
     - ui-tests-4: {}
+    - ui-tests-5: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - carthage-install-test: {}
@@ -604,10 +606,10 @@ workflows:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@6:
+    - git-clone@8.2:
         inputs:
         - merge_pr: "no"
-        - fetch_tags: "yes"
+        - clone_depth: -1
     - restore-cache@2.4:
         inputs:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}

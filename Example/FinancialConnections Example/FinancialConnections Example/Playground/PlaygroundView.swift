@@ -48,7 +48,7 @@ struct PlaygroundView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Picker("Select SDK Type", selection: viewModel.sdkType) {
                                 ForEach(PlaygroundConfiguration.SDKType.allCases) {
-                                    Text($0.rawValue.capitalized)
+                                    Text($0.displayName)
                                         .tag($0)
                                 }
                             }
@@ -206,6 +206,9 @@ struct PlaygroundView: View {
                         Toggle("Use async API client", isOn: viewModel.useAsyncAPIClient)
                     }
                 }
+                .simultaneousGesture(
+                    DragGesture().onEnded(hideKeyboardOnDownwardsDrag)
+                )
 
                 VStack {
                     Button(action: viewModel.didSelectShow) {
@@ -234,11 +237,11 @@ struct PlaygroundView: View {
         }
         .navigationTitle("Playground")
         .navigationBarTitleDisplayMode(.inline)
-        .gesture(DragGesture().onChanged(hideKeyboard))
         .animation(.easeIn(duration: 1), value: viewModel.experience.wrappedValue)
     }
 
-    private func hideKeyboard(_ value: DragGesture.Value) {
+    private func hideKeyboardOnDownwardsDrag(_ value: DragGesture.Value) {
+        guard value.translation.height > 20 else { return }
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

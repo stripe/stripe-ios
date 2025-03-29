@@ -188,7 +188,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
                                                    customerId: nil,
-                                                   customerKeyType: .legacy,
+                                                   customerKeyType: .customerSession,
                                                    paymentMethodMode: .setupIntent,
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,

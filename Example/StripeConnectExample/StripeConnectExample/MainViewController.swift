@@ -105,7 +105,6 @@ class MainViewController: UITableViewController {
 
     /// Called when table row is selected
     func performAction(_ row: Row, cell: UITableViewCell) {
-
         // Create a view controller for the selected component
         switch row {
         case .onboarding:
@@ -135,6 +134,7 @@ class MainViewController: UITableViewController {
         cell.detailTextLabel?.text = row.detailText
         cell.detailTextLabel?.numberOfLines = 0
         cell.accessoryType = .disclosureIndicator
+        cell.accessibilityIdentifier = StripeConnectExampleAppKeys.onboardingCellAccessibilityID
         return cell
     }
 
@@ -202,9 +202,10 @@ class MainViewController: UITableViewController {
 extension MainViewController: AccountOnboardingControllerDelegate {
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController) {
         //  Retrieve account details to check the status of details_submitted, charges_enabled, payouts_enabled, and other capabilities
+        ToastManager.shared.show("Did exit called")
     }
 
     func accountOnboarding(_ accountOnboarding: AccountOnboardingController, didFailLoadWithError error: any Error) {
-        presentAlert(title: "Error loading account onboarding", message: (error as NSError).debugDescription)
+        ToastManager.shared.show("Error loading account onboarding")
     }
 }

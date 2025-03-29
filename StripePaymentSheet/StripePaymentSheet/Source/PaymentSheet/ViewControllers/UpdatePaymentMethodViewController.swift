@@ -92,11 +92,11 @@ final class UpdatePaymentMethodViewController: UIViewController {
         stackView.spacing = 16 // custom spacing from figma
         if let footnoteLabel = footnoteLabel {
             stackView.addArrangedSubview(footnoteLabel)
-            stackView.setCustomSpacing(8, after: paymentMethodForm.view) // custom spacing from figma
+            stackView.setCustomSpacing(4, after: paymentMethodForm.view) // custom spacing from figma
         }
         if let setAsDefaultCheckbox = setAsDefaultCheckbox, let lastSubview = stackView.arrangedSubviews.last {
             stackView.addArrangedSubview(setAsDefaultCheckbox.view)
-            stackView.setCustomSpacing(20, after: lastSubview) // custom spacing from figma
+            stackView.setCustomSpacing(12, after: lastSubview) // custom spacing from figma
         }
         if let lastSubview = stackView.arrangedSubviews.last {
             stackView.setCustomSpacing(32, after: lastSubview) // custom spacing from figma
@@ -239,10 +239,13 @@ final class UpdatePaymentMethodViewController: UIViewController {
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
         switch updatePaymentMethodResult {
         case .success:
-            if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions,
-               let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+            if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions {
+                var params: [String: Any] = [:]
+                if let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                    params["selected_card_brand"] = selectedCardBrand
+                }
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
-                                                                     params: ["selected_card_brand": selectedCardBrand])
+                                                                     params: params)
             }
             if shouldSetAsDefault {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethod),
@@ -252,11 +255,14 @@ final class UpdatePaymentMethodViewController: UIViewController {
             updateButton.update(state: .enabled)
             latestError = errors.count == 1 ? errors[0] : NSError.stp_genericErrorOccurredError()
             if errors.contains(where: { ($0 as NSError) == NSError.stp_cardBrandNotUpdatedError() }) {
-                if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions,
-                   let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions {
+                    var params: [String: Any] = [:]
+                    if let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
+                        params["selected_card_brand"] = selectedCardBrand
+                    }
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
                                                                          error: latestError,
-                                                                         params: ["selected_card_brand": selectedCardBrand])
+                                                                         params: params)
                 }
             }
             if errors.contains(where: { ($0 as NSError) == NSError.stp_defaultPaymentMethodNotUpdatedError() }) {

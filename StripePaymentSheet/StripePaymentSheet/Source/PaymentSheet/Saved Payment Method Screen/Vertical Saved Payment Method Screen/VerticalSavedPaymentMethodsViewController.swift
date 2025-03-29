@@ -39,6 +39,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let paymentMethodRemove: Bool
     private let paymentMethodRemoveLast: Bool
     private let paymentMethodSetAsDefault: Bool
+    private let paymentMethodUpdate: Bool
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
@@ -92,7 +93,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     var canEditPaymentMethods: Bool {
-        return hasCoBrandedCards && isCBCEligible
+        return (hasCoBrandedCards && isCBCEligible) || paymentMethodUpdate
     }
 
     /// Indicates whether the chevron should be shown
@@ -136,9 +137,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         navBar.setStyle(navigationBarStyle())
         navBar.delegate = self
         navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
-        // TODO(porter) Read color from new secondary action color from appearance
-        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
-        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
         return navBar
     }()
@@ -182,6 +180,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
+        self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
@@ -350,7 +349,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                                            hostedSurface: .paymentSheet,
                                                                            cardBrandFilter: configuration.cardBrandFilter,
                                                                            canRemove: canRemovePaymentMethods,
-                                                                           canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+                                                                           canUpdate: paymentMethodUpdate,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
                                                                            allowsSetAsDefaultPM: paymentMethodSetAsDefault,
                                                                            isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))

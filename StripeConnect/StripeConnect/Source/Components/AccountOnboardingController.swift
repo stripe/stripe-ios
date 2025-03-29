@@ -130,7 +130,14 @@ public final class AccountOnboardingController {
         navController.navigationBar.standardAppearance = appearance
         navController.navigationBar.scrollEdgeAppearance = appearance
 
-        let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(closeButtonTapped(_:)))
+        let closeButton = UIBarButtonItem(
+            image: UIImage(systemName: "xmark"),
+            style: .done,
+            target: self,
+            action: #selector(closeButtonTapped(_:))
+        )
+        closeButton.accessibilityIdentifier = "closeButton"
+
         webVC.navigationItem.rightBarButtonItem = closeButton
         viewController.present(navController, animated: animated)
         retainedSelf = self

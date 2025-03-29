@@ -148,64 +148,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
-    // MARK: - Afterpay
-
-    /// Returns false, Afterpay in `supportedPaymentMethods` but shipping requirement not is met
-    func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingShipping() {
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: .afterpayClearpay,
-                configuration: makeConfiguration(hasReturnURL: true),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
-                elementsSession: .emptyElementsSession,
-                supportedPaymentMethods: [.afterpayClearpay]
-            ),
-            .missingRequirements([.shippingAddress])
-        )
-    }
-
-    /// Returns false, Afterpay in `supportedPaymentMethods` but URL and shipping requirement not is met
-    func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_missingURL() {
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: .afterpayClearpay,
-                configuration: makeConfiguration(hasReturnURL: false),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
-                elementsSession: .emptyElementsSession,
-                supportedPaymentMethods: [.afterpayClearpay]
-            ),
-            .missingRequirements([.shippingAddress, .returnURL])
-        )
-    }
-
-    /// Returns true, Afterpay in `supportedPaymentMethods` and both URL and shipping requirements are met
-    func testSupportsAdding_inSupportedList_urlConfiguredAndShippingRequired_bothMet() {
-        // Afterpay should be supported if PI has shipping...
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: .afterpayClearpay,
-                configuration: makeConfiguration(hasReturnURL: true),
-                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: true)),
-                elementsSession: .emptyElementsSession,
-                supportedPaymentMethods: [.afterpayClearpay]
-            ),
-            .supported
-        )
-        // ...and also if configuration.allowsPaymentMethodsThatRequireShipping is true
-        var config = makeConfiguration(hasReturnURL: true)
-        config.allowsPaymentMethodsRequiringShippingAddress = true
-        XCTAssertEqual(
-            PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: .afterpayClearpay,
-                configuration: config,
-                intent: .paymentIntent(STPFixtures.makePaymentIntent(shippingProvided: false)),
-                elementsSession: .emptyElementsSession,
-                supportedPaymentMethods: [.afterpayClearpay]
-            ),
-            .supported
-        )
-    }
-
     // MARK: - SEPA family
 
     let sepaFamily: [STPPaymentMethodType] = [.SEPADebit, .iDEAL, .bancontact, .sofort]
@@ -605,6 +547,25 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(availability, .notSupported)
     }
 
+    func testSupportsInstantBankPayments_linkDisplayNever() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let elementsSession = STPElementsSession._testValue(
+            intent: intent,
+            linkMode: .linkPaymentMethod,
+            linkFundingSources: [.card]
+        )
+
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        XCTAssertEqual(availability, .notSupported)
+    }
+
     func testSupportsInstantBankPayments_primaryRequirementPresent_debugDescription() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
         let configuration = PaymentSheet.Configuration()
@@ -801,6 +762,25 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        XCTAssertEqual(availability, .notSupported)
+    }
+
+    func testSupportsLinkCardIntegration_linkDisplayNever() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let elementsSession = STPElementsSession._testValue(
+            intent: intent,
+            linkMode: .linkCardBrand,
+            linkFundingSources: [.card, .bankAccount]
+        )
+
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession

@@ -92,6 +92,9 @@ extension PaymentSheet {
         /// If set, PaymentSheet displays Apple Pay as a payment option
         public var applePay: ApplePayConfiguration?
 
+        /// Configuration related to Link
+        public var link: LinkConfiguration = LinkConfiguration()
+
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
             get {
@@ -356,6 +359,34 @@ extension PaymentSheet {
         }
     }
 
+    /// Configuration related to Link
+    public struct LinkConfiguration {
+        /// The Link display mode.
+        public var display: Display = .automatic
+
+        /// Display configuration for Link
+        public enum Display: String {
+            /// Link will be displayed when available.
+            case automatic
+            /// Link will never be displayed.
+            case never
+        }
+
+        var shouldDisplay: Bool {
+            switch display {
+            case .automatic: true
+            case .never: false
+            }
+        }
+
+        /// Initializes a LinkConfiguration
+        public init(
+            display: Display = .automatic
+        ) {
+            self.display = display
+        }
+    }
+
     /// An address.
     public struct Address: Equatable {
         /// City, district, suburb, town, or village.
@@ -518,46 +549,46 @@ extension PaymentSheet {
     @_spi(CustomPaymentMethodsBeta) public struct CustomPaymentMethodConfiguration {
 
         /// Defines a custom payment method type that can be displayed in PaymentSheet
-        public struct CustomPaymentMethodType {
+        public struct CustomPaymentMethod {
 
             /// The unique identifier for this custom payment method type in the format of "cpmt_..."
             /// Obtained from the Stripe Dashboard at https://dashboard.stripe.com/settings/custom_payment_methods
             public let id: String
 
-            /// Optional subcopy text to be displayed below the custom payment method's display name.
-            public let subcopy: String?
+            /// Optional subtitle text to be displayed below the custom payment method's display name.
+            public let subtitle: String?
 
-            /// When true, PaymentSheet will collect billing details for this custom payment method type
+            /// When false, PaymentSheet will collect billing details for this custom payment method type
             /// in accordance with the `billingDetailsCollectionConfiguration` settings.
             /// This has no effect if `billingDetailsCollectionConfiguration` is not configured.
-            public var shouldCollectBillingDetails = false
+            public var disableBillingDetailCollection = true
 
-            /// Initializes an `CustomPaymentMethodType`
+            /// Initializes an `CustomPaymentMethod`
             /// - Parameters:
             ///   - id: The unique identifier for this custom payment method type in the format of "cpmt_..."
-            ///   - subcopy: Optional subcopy text to be displayed below the custom payment method's display name.
-            public init(id: String, subcopy: String? = nil) {
+            ///   - subtitle: Optional subtitle text to be displayed below the custom payment method's display name.
+            public init(id: String, subtitle: String? = nil) {
                 self.id = id
-                self.subcopy = subcopy
+                self.subtitle = subtitle
             }
         }
 
         /// Initializes an `CustomPaymentMethodConfiguration`
-        /// - Parameter customPaymentMethodTypes: A list of custom payment methods to display in PaymentSheet.
+        /// - Parameter customPaymentMethods: A list of custom payment methods to display in PaymentSheet.
         /// - Parameter customPaymentMethodConfirmHandler: A handler called when the customer confirms the payment using a custom payment method.
-        public init(customPaymentMethodTypes: [CustomPaymentMethodType], customPaymentMethodConfirmHandler: @escaping PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodConfirmHandler) {
-            self.customPaymentMethodTypes = customPaymentMethodTypes
+        public init(customPaymentMethods: [CustomPaymentMethod], customPaymentMethodConfirmHandler: @escaping PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodConfirmHandler) {
+            self.customPaymentMethods = customPaymentMethods
             self.customPaymentMethodConfirmHandler = customPaymentMethodConfirmHandler
         }
 
         /// A list of custom payment methods types to display in PaymentSheet.
-        public var customPaymentMethodTypes: [CustomPaymentMethodType] = []
+        public var customPaymentMethods: [CustomPaymentMethod] = []
 
-        /// - Parameter customPaymentMethodType: The custom payment method to confirm payment with
+        /// - Parameter customPaymentMethod: The custom payment method to confirm payment with
         /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
         /// - Returns: The result of the attempt to confirm payment using the given custom payment method.
         public typealias CustomPaymentMethodConfirmHandler = (
-            _ customPaymentMethodType: CustomPaymentMethodType,
+            _ customPaymentMethod: CustomPaymentMethod,
             _ billingDetails: STPPaymentMethodBillingDetails
         ) async -> PaymentSheetResult
 

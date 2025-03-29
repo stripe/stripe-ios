@@ -39,22 +39,16 @@ struct CustomerSheetTestPlayground: View {
                         }
                         SettingView(setting: $playgroundController.settings.customerMode)
                         SettingView(setting: customerKeyTypeBinding)
-                        TextField("CustomerId", text: customerIdBinding)
-                    }
-                    Group {
-                        if playgroundController.settings.customerKeyType == .customerSession {
-                            VStack {
-                                HStack {
-                                    Text("Customer Session Settings")
-                                        .font(.subheadline)
-                                        .bold()
-                                    Spacer()
-                                }
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemoveLast)
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodUpdate)
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodSyncDefault)
+                        HStack {
+                            TextField("CustomerId", text: customerIdBinding)
+                            if playgroundController.settings.customerKeyType == .customerSession {
+                                Spacer()
+                                Button {
+                                    playgroundController.customerSessionSettingsTapped()
+                                } label: {
+                                    Text("CSSettings")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
                             }
                         }
                     }
