@@ -68,7 +68,7 @@ import Foundation
     }
 
     static let slashFormattedExpirationDateRegex: NSRegularExpression? = {
-        return try? NSRegularExpression(pattern: #"\b(\d{2})[/\.](\d{2,4})\b"#)
+        return try? NSRegularExpression(pattern: #"\b(\d{2})/(\d{2,4})\b"#)
     }()
 
     /// Returns a sanitized expiration date (in "0101" format) from a string.
