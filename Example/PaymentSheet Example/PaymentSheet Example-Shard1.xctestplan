@@ -33,6 +33,8 @@
       "skippedTests" : [
         "EmbeddedUITests",
         "EmbeddedUITests\/testUpdate()",
+        "FCLiteUITests",
+        "FCLiteUITests\/testFCLiteInitialPaneAndDismiss()",
         "PaymentSheetBillingCollectionLPMUITests",
         "PaymentSheetBillingCollectionUICardTests",
         "PaymentSheetBillingCollectionUITestCase",
