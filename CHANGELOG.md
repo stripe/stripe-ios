@@ -1,3 +1,7 @@
+## X.X.X
+### PaymentSheet
+* [Fixed] Improved reliability of expiration date detection when scanning cards.
+
 ## 24.9.0 2025-03-24
 ### Connect (Private Preview)
 * [Fixed] Fixed an issue where Account Onboarding exit events were not being properly emitted.

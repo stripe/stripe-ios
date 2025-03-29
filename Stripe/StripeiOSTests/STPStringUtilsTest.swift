@@ -139,4 +139,15 @@ class STPStringUtilsTest: XCTestCase {
         XCTAssertEqual(STPStringUtils.expirationDateString(from: " "), " ")
         XCTAssertEqual(STPStringUtils.expirationDateString(from: "12/"), "12/")
     }
+
+    func testSanitizedExpirationDateFromOCRString() {
+        XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("12/1995"), "1295")
+        XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("12/95"), "1295")
+        XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("Security Code 123 Valid Thru 01/35"), "0135")
+        XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("BankCo Logo Is Copyright 1995 BankCo Call us at 888-555-5555 Expiration date 01/35 Security Code 123"), "0135")
+        XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("Made with 10% recycled plastic, 45% organic matter. Expiration date 01/35"), "0135")
+        XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("Expiration date 01/35, card produced 01/23"), "0135")
+        XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("Expiration date 01 35"), nil)
+        XCTAssertEqual(STPStringUtils.sanitizedExpirationDateFromOCRString("AA/BB"), nil)
+    }
 }
