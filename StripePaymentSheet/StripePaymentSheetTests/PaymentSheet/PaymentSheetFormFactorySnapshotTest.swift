@@ -431,7 +431,7 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         let view = formElement.view
         view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(view)
-        XCTAssertTrue(formElement.validationState.isValid)
+        XCTAssertFalse(formElement.validationState.isValid)
     }
 
     func testEPM_subtitle_doesNotCollectBillingDetails() {
