@@ -103,7 +103,7 @@ class HostController {
         analyticsClientV1: analyticsClientV1,
         clientSecret: clientSecret,
         returnURL: returnURL,
-        apiClient: apiClient,
+        apiClient: asyncApiClient,
         delegate: self
     )
     lazy var navigationController: FinancialConnectionsNavigationController = {

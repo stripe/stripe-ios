@@ -52,7 +52,7 @@ final class HostViewController: UIViewController {
 
     private let analyticsClientV1: STPAnalyticsClientProtocol
     private let clientSecret: String
-    private let apiClient: any FinancialConnectionsAPI
+    private let apiClient: any FinancialConnectionsAsyncAPI
     private let returnURL: String?
 
     private var lastError: Error?
@@ -63,7 +63,7 @@ final class HostViewController: UIViewController {
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
-        apiClient: any FinancialConnectionsAPI,
+        apiClient: any FinancialConnectionsAsyncAPI,
         delegate: HostViewControllerDelegate?
     ) {
         self.analyticsClientV1 = analyticsClientV1
@@ -87,7 +87,10 @@ final class HostViewController: UIViewController {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
-        getManifest()
+
+        Task {
+            await getManifest()
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -100,7 +103,7 @@ final class HostViewController: UIViewController {
 // MARK: - Helpers
 
 extension HostViewController {
-    private func getManifest() {
+    private func getManifest() async {
         loadingView.errorView.isHidden = true
         loadingView.showLoading(true)
 
@@ -111,46 +114,44 @@ extension HostViewController {
             apiClient: apiClient.backingAPIClient
         )
 
-        apiClient
-            .synchronize(
+        do {
+            let synchronizePayload = try await apiClient.synchronize(
                 clientSecret: clientSecret,
                 returnURL: returnURL,
                 initialSynchronize: true
             )
-            .observe { [weak self] result in
-                guard let self = self else { return }
 
-                let linkAccountSessionId: String? = {
-                    guard case .success(let synchronizePayload) = result else {
-                        return nil
-                    }
-                    return synchronizePayload.manifest.id
-                }()
-                analyticsClientV1.log(
-                    analytic: FinancialConnectionsSheetInitialSynchronizeCompleted(
-                        linkAccountSessionId: linkAccountSessionId,
-                        success: result.success,
-                        possibleError: result.error
-                    ),
-                    apiClient: apiClient.backingAPIClient
-                )
+            analyticsClientV1.log(
+                analytic: FinancialConnectionsSheetInitialSynchronizeCompleted(
+                    linkAccountSessionId: synchronizePayload.manifest.id,
+                    success: true,
+                    possibleError: nil
+                ),
+                apiClient: apiClient.backingAPIClient
+            )
 
-                switch result {
-                case .success(let synchronizePayload):
-                    self.lastError = nil
-                    self.delegate?.hostViewController(self, didFetch: synchronizePayload)
-                case .failure(let error):
-                    FinancialConnectionsEvent
-                        .events(fromError: error)
-                        .forEach { event in
-                            self.delegate?.hostViewController(self, didReceiveEvent: event)
-                        }
+            self.lastError = nil
+            self.delegate?.hostViewController(self, didFetch: synchronizePayload)
+        } catch {
+            analyticsClientV1.log(
+                analytic: FinancialConnectionsSheetInitialSynchronizeCompleted(
+                    linkAccountSessionId: nil,
+                    success: false,
+                    possibleError: error
+                ),
+                apiClient: apiClient.backingAPIClient
+            )
 
-                    self.loadingView.showLoading(false)
-                    self.loadingView.errorView.isHidden = false
-                    self.lastError = error
+            FinancialConnectionsEvent
+                .events(fromError: error)
+                .forEach { event in
+                    self.delegate?.hostViewController(self, didReceiveEvent: event)
                 }
-            }
+
+            self.loadingView.showLoading(false)
+            self.loadingView.errorView.isHidden = false
+            self.lastError = error
+        }
     }
 }
 
@@ -160,7 +161,9 @@ private extension HostViewController {
 
     @objc
     func didTapTryAgainButton() {
-        getManifest()
+        Task {
+            await getManifest()
+        }
     }
 
     @objc
