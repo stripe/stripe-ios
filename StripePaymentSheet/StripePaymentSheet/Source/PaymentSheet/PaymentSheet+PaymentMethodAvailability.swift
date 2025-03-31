@@ -57,7 +57,7 @@ extension PaymentSheet {
 
     /// Canonical source of truth for whether Link is enabled
     static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
-        guard elementsSession.supportsLink else {
+        guard elementsSession.supportsLink, configuration.link.shouldDisplay else {
             return false
         }
 

@@ -41,6 +41,7 @@ struct PaymentSheetTestPlayground: View {
                 SettingView(setting: linkEnabledModeBinding)
             }
             SettingView(setting: $playgroundController.settings.linkPassthroughMode)
+            SettingView(setting: $playgroundController.settings.linkDisplay)
         }
         SettingView(setting: $playgroundController.settings.userOverrideCountry)
         SettingView(setting: $playgroundController.settings.externalPaymentMethods)
@@ -55,6 +56,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.autoreload)
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
         SettingView(setting: $playgroundController.settings.instantDebitsIncentives)
+        SettingView(setting: $playgroundController.settings.fcLiteEnabled)
     }
 
     var body: some View {

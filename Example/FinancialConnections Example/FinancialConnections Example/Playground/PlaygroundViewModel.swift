@@ -10,6 +10,7 @@ import Combine
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) @_spi(v25) import StripeFinancialConnections
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
@@ -288,9 +289,13 @@ final class PlaygroundViewModel: ObservableObject {
     }
 
     func didSelectShow() {
+        let useFCLite = playgroundConfiguration.sdkType == .fcLite
+        FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = useFCLite
+        FinancialConnectionsSDKAvailability.shouldPreferFCLite = useFCLite
+
         switch playgroundConfiguration.integrationType {
         case .standalone:
-            if playgroundConfiguration.sdkType == .fcLite {
+            if useFCLite {
                 setupFcLite()
             } else {
                 setupStandalone()

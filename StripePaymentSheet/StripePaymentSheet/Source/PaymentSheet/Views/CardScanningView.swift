@@ -121,6 +121,12 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         return button
     }()
 
+    private lazy var containerView: UIView = {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
+    }()
+
     private func setupBlurView() {
         let vibrancyEffect = UIVibrancyEffect(blurEffect: blurEffect)
         let vibrancyEffectView = UIVisualEffectView(effect: vibrancyEffect)
@@ -163,6 +169,22 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         self.stop()
     }
 
+    var snapshotView: UIView?
+
+    // The shape layers don't animate cleanly during setHidden,
+    // so let's use a snapshot view instead.
+    func prepDismissAnimation() {
+        if let snapshot = self.containerView.snapshotView(afterScreenUpdates: true) {
+            self.addSubview(snapshot)
+            self.snapshotView = snapshot
+        }
+    }
+
+    func completeDismissAnimation() {
+        snapshotView?.removeFromSuperview()
+        snapshotView = nil
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupBlurView()
@@ -177,50 +199,63 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
         closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
 
-        self.addSubview(cameraView)
-        self.addSubview(cardOutlineView)
-        self.addSubview(cardOuterBlurView)
-        self.addSubview(errorLabel)
-        self.addSubview(closeButton)
+        self.addSubview(containerView)
+        containerView.addSubview(cameraView)
+        containerView.addSubview(cardOutlineView)
+        containerView.addSubview(cardOuterBlurView)
+        containerView.addSubview(errorLabel)
+        containerView.addSubview(closeButton)
 
-        self.layer.cornerRadius = CardScanningView.cornerRadius
+        containerView.layer.cornerRadius = CardScanningView.cornerRadius
         self.cameraView = cameraView
         cameraView.layer.cornerRadius = CardScanningView.cornerRadius
         self.cameraView?.translatesAutoresizingMaskIntoConstraints = false
         // The first few frames of the camera view will be black, so our background should be black too.
         self.cameraView?.backgroundColor = UIColor.black
+
+        // To get the right animation, we'll add a breakable bottom constraint
+        // and enable clipsToBounds. Then, when hidden, the view will shrink while
+        // the contents remain pinned to the top.
+        let bottomConstraint = containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        bottomConstraint.priority = .defaultHigh
+        self.clipsToBounds = true
+
         self.addConstraints(
             [
-                cameraView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
-                cameraView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0),
-                cameraView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
-                cameraView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
+                containerView.topAnchor.constraint(equalTo: self.topAnchor),
+                containerView.leftAnchor.constraint(equalTo: self.leftAnchor),
+                containerView.rightAnchor.constraint(equalTo: self.rightAnchor),
+                bottomConstraint,
 
-                cardOuterBlurView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
-                cardOuterBlurView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0),
-                cardOuterBlurView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
-                cardOuterBlurView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
+                cameraView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 0),
+                cameraView.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 0),
+                cameraView.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: 0),
+                cameraView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 0),
 
-                errorLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0),
+                cardOuterBlurView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 0),
+                cardOuterBlurView.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 0),
+                cardOuterBlurView.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: 0),
+                cardOuterBlurView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 0),
+
+                errorLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor, constant: 0),
                 errorLabel.leftAnchor.constraint(equalTo: cardOutlineView.leftAnchor, constant: 8),
                 errorLabel.rightAnchor.constraint(
                     equalTo: cardOutlineView.rightAnchor, constant: -8),
 
-                closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
-                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8),
+                closeButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+                closeButton.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -8),
 
                 cardOutlineView.heightAnchor.constraint(
-                    equalTo: cardOutlineView.widthAnchor, multiplier: CardScanningView.cardSizeRatio
-                ),
+                    equalTo: cardOutlineView.widthAnchor, multiplier: CardScanningView.cardSizeRatio),
 
                 cardOutlineView.topAnchor.constraint(
-                    equalTo: self.topAnchor, constant: CardScanningView.cardInset),
+                    equalTo: containerView.topAnchor, constant: CardScanningView.cardInset),
                 cardOutlineView.leftAnchor.constraint(
-                    equalTo: self.leftAnchor, constant: CardScanningView.cardInset),
+                    equalTo: containerView.leftAnchor, constant: CardScanningView.cardInset),
                 cardOutlineView.rightAnchor.constraint(
-                    equalTo: self.rightAnchor, constant: -CardScanningView.cardInset),
+                    equalTo: containerView.rightAnchor, constant: -CardScanningView.cardInset),
                 cardOutlineView.bottomAnchor.constraint(
-                    equalTo: self.bottomAnchor, constant: -CardScanningView.cardInset),
+                    equalTo: containerView.bottomAnchor, constant: -CardScanningView.cardInset),
             ])
     }
 

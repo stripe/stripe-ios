@@ -133,6 +133,7 @@ final class PaymentSheetAnalyticsHelper {
             let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
             params["link_mode"] = linkMode
         }
+        params["link_display"] = configuration.link.display.rawValue
         if elementsSession.customer?.customerSession != nil {
             let setAsDefaultEnabled = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
             params["set_as_default_enabled"] = setAsDefaultEnabled
@@ -481,7 +482,7 @@ extension PaymentElementConfiguration {
         payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
         payload["card_brand_acceptance"] = cardBrandAcceptance != .all
-        if let cpms = customPaymentMethodConfiguration?.customPaymentMethodTypes {
+        if let cpms = customPaymentMethodConfiguration?.customPaymentMethods {
             payload["custom_payment_methods"] = cpms.map { $0.id }
         }
 
