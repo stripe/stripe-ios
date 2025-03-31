@@ -33,8 +33,8 @@ extension PaymentSheet {
                 return paymentMethod.type.identifier
             case .new(confirmParams: let confirmParams):
                 return confirmParams.paymentMethodType.identifier
-            case .link:
-                return STPPaymentMethodType.link.identifier
+            case .link(let confirmationOption):
+                return confirmationOption.paymentMethodType
             case .external(let paymentMethod, _):
                 return paymentMethod.type
             }
