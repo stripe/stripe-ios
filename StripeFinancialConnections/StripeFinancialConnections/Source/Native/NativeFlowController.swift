@@ -1421,7 +1421,7 @@ private func CreatePaneViewController(
     case .accountPicker:
         if let authSession = dataManager.authSession, let institution = dataManager.institution {
             let accountPickerDataSource = AccountPickerDataSourceImplementation(
-                apiClient: dataManager.apiClient,
+                apiClient: dataManager.asyncApiClient,
                 clientSecret: dataManager.clientSecret,
                 accountPickerPane: dataManager.accountPickerPane,
                 authSession: authSession,

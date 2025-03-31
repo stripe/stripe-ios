@@ -42,6 +42,7 @@ final class AccountPickerViewController: UIViewController {
     private let selectionType: AccountPickerSelectionType
     weak var delegate: AccountPickerViewControllerDelegate?
     private weak var accountPickerSelectionView: AccountPickerSelectionView?
+    private var loadingView: RetrieveAccountsLoadingView?
     private var businessName: String? {
         return dataSource.manifest.businessName
     }
@@ -59,7 +60,10 @@ final class AccountPickerViewController: UIViewController {
                 guard let self = self else { return }
                 self.allowAccountPollingRetry = false
                 self.showErrorView(nil)
-                self.pollAuthSessionAccounts()
+
+                Task {
+                    await self.pollAuthSessionAccounts()
+                }
             } : nil
     }
     private var didSelectManualEntry: (() -> Void)? {
@@ -90,7 +94,9 @@ final class AccountPickerViewController: UIViewController {
                     self,
                     didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
                 )
-                self.didSelectLinkAccounts(isSkipAccountSelection: false)
+                Task {
+                    await self.didSelectLinkAccounts(isSkipAccountSelection: false)
+                }
             },
             didSelectMerchantDataAccessLearnMore: { [weak self] url in
                 guard let self = self else { return }
@@ -136,124 +142,148 @@ final class AccountPickerViewController: UIViewController {
         // account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
-        pollAuthSessionAccounts()
+
+        Task {
+            await pollAuthSessionAccounts()
+        }
     }
 
-    private func pollAuthSessionAccounts() {
-        let retreivingAccountsLoadingView = RetrieveAccountsLoadingView(
-            institutionIconUrl: dataSource.institution.icon?.default
-        )
-        view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
+    private func showLoadingView(_ show: Bool) {
+        if show {
+            let retrievingAccountsLoadingView = RetrieveAccountsLoadingView(
+                institutionIconUrl: dataSource.institution.icon?.default
+            )
+            view.addAndPinSubviewToSafeArea(retrievingAccountsLoadingView)
+            self.loadingView = retrievingAccountsLoadingView
+        } else {
+            self.loadingView?.removeFromSuperview()
+            self.loadingView = nil
+        }
+    }
+
+    private func pollAuthSessionAccounts() async {
+        await MainActor.run {
+            showLoadingView(true)
+        }
 
         let pollingStartDate = Date()
-        dataSource
-            .pollAuthSessionAccounts()
-            .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let accountsPayload):
-                    self.dataSource
-                        .analyticsClient
-                        .logPaneLoaded(pane: .accountPicker)
 
-                    let accounts = accountsPayload.data
-                    guard !accounts.isEmpty else {
-                        // if there were no accounts returned, API should have thrown an error
-                        // ...handle it here since API did not throw error
-                        self.showAccountLoadErrorView(
-                            error: FinancialConnectionsSheetError.unknown(
-                                debugDescription: "API returned an empty list of accounts"
+        do {
+            let accountsPayload = try await dataSource.pollAuthSessionAccounts()
+            self.dataSource
+                .analyticsClient
+                .logPaneLoaded(pane: .accountPicker)
+
+            let accounts = accountsPayload.data
+            guard !accounts.isEmpty else {
+                // if there were no accounts returned, API should have thrown an error
+                // ...handle it here since API did not throw error
+                await MainActor.run {
+                    self.showAccountLoadErrorView(
+                        error: FinancialConnectionsSheetError.unknown(
+                            debugDescription: "API returned an empty list of accounts"
+                        )
+                    )
+                    self.showLoadingView(false)
+                }
+                return
+            }
+
+            self.dataSource
+                .analyticsClient
+                .log(
+                    eventName: "polling.accounts.success",
+                    parameters: [
+                        "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
+                        "authSessionId": self.dataSource.authSession.id,
+                    ],
+                    pane: .accountPicker
+                )
+
+            // note that this uses ?? instead of ||, we do NOT want to skip account selection
+            // if EITHER of these are true, we only want to skip account selection when
+            //  `accountsPayload.skipAccountSelection` is true, OR `accountsPayload.skipAccountSelection` nil
+            // AND `authSession.skipAccountSelection` is true
+            let skipAccountSelection = (accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false)
+
+            await MainActor.run {
+                if skipAccountSelection {
+                    let selectableAccounts = accounts.filter(\.allowSelectionNonOptional)
+                    if self.dataSource.manifest.singleAccount {
+                        if let firstEnabledAccount = selectableAccounts.first {
+                            self.dataSource.updateSelectedAccounts([firstEnabledAccount])
+                        } else {
+                            self.showNoEligibleAccountsErrorView(
+                                numberOfIneligibleAccounts: accounts.count,
+                                error: FinancialConnectionsSheetError.unknown(
+                                    debugDescription: "No eligible accounts found"
+                                )
                             )
-                        )
-                        return
+                        }
+                    } else {
+                        self.dataSource.updateSelectedAccounts(selectableAccounts)
                     }
-
-                    self.dataSource
-                        .analyticsClient
-                        .log(
-                            eventName: "polling.accounts.success",
-                            parameters: [
-                                "duration": Date().timeIntervalSince(pollingStartDate).milliseconds,
-                                "authSessionId": self.dataSource.authSession.id,
-                            ],
-                            pane: .accountPicker
-                        )
-
-                    // note that this uses ?? instead of ||, we do NOT want to skip account selection
-                    // if EITHER of these are true, we only want to skip account selection when
-                    //  `accountsPayload.skipAccountSelection` is true, OR `accountsPayload.skipAccountSelection` nil
-                    // AND `authSession.skipAccountSelection` is true
-                    let skipAccountSelection = (accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false)
-                    if skipAccountSelection {
-                        let selectableAccounts = accounts.filter(\.allowSelectionNonOptional)
-                        if self.dataSource.manifest.singleAccount {
-                            if let firstEnabledAccount = selectableAccounts.first {
-                                self.dataSource.updateSelectedAccounts([firstEnabledAccount])
+                    Task {
+                        await self.didSelectLinkAccounts(isSkipAccountSelection: true)
+                    }
+                } else if
+                    self.dataSource.manifest.singleAccount,
+                    self.dataSource.authSession.institutionSkipAccountSelection ?? false,
+                    accounts.count == 1
+                {
+                    // the user saw an OAuth account selection screen and selected
+                    // just one to send back in a single-account context. treat these as if
+                    // we had done account selection, and submit.
+                    self.dataSource.updateSelectedAccounts(accounts)
+                    Task {
+                        await self.didSelectLinkAccounts(isSkipAccountSelection: true)
+                    }
+                } else {
+                    let (enabledAccounts, disabledAccounts) =
+                        accounts
+                        .reduce(
+                            ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsPartnerAccount]())
+                        ) { accountsTuple, account in
+                            if !account.allowSelectionNonOptional {
+                                return (
+                                    accountsTuple.0,
+                                    accountsTuple.1 + [account]
+                                )
                             } else {
-                                self.showNoEligibleAccountsErrorView(
-                                    numberOfIneligibleAccounts: accounts.count,
-                                    error: FinancialConnectionsSheetError.unknown(
-                                        debugDescription: "No eligible accounts found"
-                                    )
+                                return (
+                                    accountsTuple.0 + [account],
+                                    accountsTuple.1
                                 )
                             }
-                        } else {
-                            self.dataSource.updateSelectedAccounts(selectableAccounts)
                         }
-                        self.didSelectLinkAccounts(isSkipAccountSelection: true)
-                    } else if
-                        self.dataSource.manifest.singleAccount,
-                        self.dataSource.authSession.institutionSkipAccountSelection ?? false,
-                        accounts.count == 1
-                    {
-                        // the user saw an OAuth account selection screen and selected
-                        // just one to send back in a single-account context. treat these as if
-                        // we had done account selection, and submit.
-                        self.dataSource.updateSelectedAccounts(accounts)
-                        self.didSelectLinkAccounts(isSkipAccountSelection: true)
-                    } else {
-                        let (enabledAccounts, disabledAccounts) =
-                            accounts
-                            .reduce(
-                                ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsPartnerAccount]())
-                            ) { accountsTuple, account in
-                                if !account.allowSelectionNonOptional {
-                                    return (
-                                        accountsTuple.0,
-                                        accountsTuple.1 + [account]
-                                    )
-                                } else {
-                                    return (
-                                        accountsTuple.0 + [account],
-                                        accountsTuple.1
-                                    )
-                                }
-                            }
-                        self.displayAccounts(enabledAccounts, disabledAccounts)
-                    }
-                case .failure(let error):
-                    if let error = error as? StripeError,
-                        case .apiError(let apiError) = error,
-                        let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
-                        let reason = extraFields["reason"] as? String,
-                        reason == "no_supported_payment_method_type_accounts_found",
-                        let numberOfIneligibleAccounts = extraFields["total_accounts_count"] as? Int,
-                        // it should never happen, but if numberOfIneligibleAccounts is < 1, we should
-                        // show "AccountLoadErrorView."
-                        numberOfIneligibleAccounts > 0
-                    {
-                        self.showNoEligibleAccountsErrorView(
-                            numberOfIneligibleAccounts: numberOfIneligibleAccounts,
-                            error: error
-                        )
-                    } else {
-                        // if we didn't get that specific error back, we don't know what's wrong. could the be
-                        // aggregator, could be Stripe.
-                        self.showAccountLoadErrorView(error: error)
-                    }
+                    self.displayAccounts(enabledAccounts, disabledAccounts)
                 }
-                retreivingAccountsLoadingView.removeFromSuperview()
+                self.showLoadingView(false)
             }
+        } catch let error {
+            await MainActor.run {
+                if let error = error as? StripeError,
+                   case .apiError(let apiError) = error,
+                   let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
+                   let reason = extraFields["reason"] as? String,
+                   reason == "no_supported_payment_method_type_accounts_found",
+                   let numberOfIneligibleAccounts = extraFields["total_accounts_count"] as? Int,
+                   // it should never happen, but if numberOfIneligibleAccounts is < 1, we should
+                   // show "AccountLoadErrorView."
+                   numberOfIneligibleAccounts > 0
+                {
+                    self.showNoEligibleAccountsErrorView(
+                        numberOfIneligibleAccounts: numberOfIneligibleAccounts,
+                        error: error
+                    )
+                } else {
+                    // if we didn't get that specific error back, we don't know what's wrong. could the be
+                    // aggregator, could be Stripe.
+                    self.showAccountLoadErrorView(error: error)
+                }
+                self.showLoadingView(false)
+            }
+        }
     }
 
     private func showNoEligibleAccountsErrorView(numberOfIneligibleAccounts: Int, error: Error) {
@@ -376,12 +406,14 @@ final class AccountPickerViewController: UIViewController {
         self.errorView = errorView
     }
 
-    private func didSelectLinkAccounts(isSkipAccountSelection: Bool) {
-        footerView.startLoading()
-        // the `footerView` only shows loading view on the button,
-        // so we need to prevent interactions elsewhere on the
-        // screen while its loading
-        view.isUserInteractionEnabled = false
+    private func didSelectLinkAccounts(isSkipAccountSelection: Bool) async {
+        await MainActor.run {
+            footerView.startLoading()
+            // the `footerView` only shows loading view on the button,
+            // so we need to prevent interactions elsewhere on the
+            // screen while its loading
+            view.isUserInteractionEnabled = false
+        }
 
         dataSource
             .analyticsClient
@@ -394,94 +426,96 @@ final class AccountPickerViewController: UIViewController {
                 pane: .accountPicker
             )
 
-        dataSource
-            .selectAuthSessionAccounts()
-            .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let linkedAccounts):
-                    // the response from the API is the list of accounts that were selected, 
-                    // with the `linked_account_id` populated.
-                    //
-                    // in cases of skip-account-selection in multi-account flows,
-                    // the API returns no accounts since no "new" accounts were linked,
-                    // so we need to fall back to the list of selected accounts
-                    let selectedAccounts: [FinancialConnectionsPartnerAccount]
-                    if linkedAccounts.data.count >= 1 {
-                        selectedAccounts = linkedAccounts.data
-                    } else {
-                        selectedAccounts = self.dataSource.selectedAccounts
-                    }
+        do {
+            let linkedAccounts = try await dataSource.selectAuthSessionAccounts()
 
-                    // for data flows (external_api), where the user is already
-                    // determined to be a Link consumer, we need to take an
-                    // additional step of saving the accounts to Link
-                    if
-                        self.dataSource.manifest.isNetworkingUserFlow == true,
-                        // make sure the current user is a Link consumer
-                        self.dataSource.manifest.accountholderIsLinkConsumer == true,
-                        // make sure this is not a payment flow; in payment flows,
-                        // the AttachLinkedPaymentAccount handles saving to link
-                        !self.dataSource.manifest.shouldAttachLinkedPaymentMethod,
-                        selectedAccounts.count > 0,
-                        let consumerSessionClientSecret = self.dataSource.consumerSessionClientSecret
-                    {
-                        self.dataSource.saveToLink(
-                            accounts: selectedAccounts,
-                            consumerSessionClientSecret: consumerSessionClientSecret
-                        )
-                        .observe { [weak self] result in
-                            guard let self = self else { return }
+            // the response from the API is the list of accounts that were selected,
+            // with the `linked_account_id` populated.
+            //
+            // in cases of skip-account-selection in multi-account flows,
+            // the API returns no accounts since no "new" accounts were linked,
+            // so we need to fall back to the list of selected accounts
+            let selectedAccounts: [FinancialConnectionsPartnerAccount]
+            if linkedAccounts.data.count >= 1 {
+                selectedAccounts = linkedAccounts.data
+            } else {
+                selectedAccounts = self.dataSource.selectedAccounts
+            }
 
-                            let saveToLinkWithStripeSucceeded: Bool
-                            let customSuccessPaneMessage: String?
-                            switch result {
-                            case .success(let _customSuccessPaneMessage):
-                                saveToLinkWithStripeSucceeded = true
-                                customSuccessPaneMessage = _customSuccessPaneMessage
-                            case .failure(let error):
-                                saveToLinkWithStripeSucceeded = false
-                                customSuccessPaneMessage = nil
-                                self.dataSource
-                                    .analyticsClient
-                                    .logUnexpectedError(
-                                        error,
-                                        errorName: "SaveToLinkError",
-                                        pane: .accountPicker
-                                    )
-                            }
-                            self.delegate?.accountPickerViewController(
-                                self,
-                                didSelectAccounts: selectedAccounts,
-                                nextPane: .success,
-                                customSuccessPaneMessage: customSuccessPaneMessage,
-                                saveToLinkWithStripeSucceeded: saveToLinkWithStripeSucceeded
-                            )
-                        }
-                    }
-                    // for networking payment flows, and networking data flows where
-                    // user will go through Link sign-up (or Link sign-in verification),
-                    // we do not need to call `saveAccountsToLink`
-                    else {
+            // for data flows (external_api), where the user is already
+            // determined to be a Link consumer, we need to take an
+            // additional step of saving the accounts to Link
+            if
+                self.dataSource.manifest.isNetworkingUserFlow == true,
+                // make sure the current user is a Link consumer
+                self.dataSource.manifest.accountholderIsLinkConsumer == true,
+                // make sure this is not a payment flow; in payment flows,
+                // the AttachLinkedPaymentAccount handles saving to link
+                !self.dataSource.manifest.shouldAttachLinkedPaymentMethod,
+                selectedAccounts.count > 0,
+                let consumerSessionClientSecret = self.dataSource.consumerSessionClientSecret
+            {
+                do {
+                    let customSuccessPaneMessage = try await self.dataSource.saveToLink(
+                        accounts: selectedAccounts,
+                        consumerSessionClientSecret: consumerSessionClientSecret
+                    )
+
+                    await MainActor.run {
                         self.delegate?.accountPickerViewController(
                             self,
                             didSelectAccounts: selectedAccounts,
-                            nextPane: linkedAccounts.nextPane,
-                            customSuccessPaneMessage: nil,
-                            saveToLinkWithStripeSucceeded: nil
+                            nextPane: .success,
+                            customSuccessPaneMessage: customSuccessPaneMessage,
+                            saveToLinkWithStripeSucceeded: true
                         )
                     }
-                case .failure(let error):
+                } catch let error {
                     self.dataSource
                         .analyticsClient
                         .logUnexpectedError(
                             error,
-                            errorName: "SelectAuthSessionAccountsError",
+                            errorName: "SaveToLinkError",
                             pane: .accountPicker
                         )
-                    self.delegate?.accountPickerViewController(self, didReceiveTerminalError: error)
+
+                    await MainActor.run {
+                        self.delegate?.accountPickerViewController(
+                            self,
+                            didSelectAccounts: selectedAccounts,
+                            nextPane: .success,
+                            customSuccessPaneMessage: nil,
+                            saveToLinkWithStripeSucceeded: false
+                        )
+                    }
                 }
             }
+            // for networking payment flows, and networking data flows where
+            // user will go through Link sign-up (or Link sign-in verification),
+            // we do not need to call `saveAccountsToLink`
+            else {
+                await MainActor.run {
+                    self.delegate?.accountPickerViewController(
+                        self,
+                        didSelectAccounts: selectedAccounts,
+                        nextPane: linkedAccounts.nextPane,
+                        customSuccessPaneMessage: nil,
+                        saveToLinkWithStripeSucceeded: nil
+                    )
+                }
+            }
+        } catch let error {
+            self.dataSource
+                .analyticsClient
+                .logUnexpectedError(
+                    error,
+                    errorName: "SelectAuthSessionAccountsError",
+                    pane: .accountPicker
+                )
+            await MainActor.run {
+                self.delegate?.accountPickerViewController(self, didReceiveTerminalError: error)
+            }
+        }
     }
 
     private func logAccountSelectOrDeselect(selectedAccounts: [FinancialConnectionsPartnerAccount]) {

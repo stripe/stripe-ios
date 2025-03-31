@@ -28,18 +28,18 @@ protocol AccountPickerDataSource: AnyObject {
     var dataAccessNotice: FinancialConnectionsDataAccessNotice? { get }
     var consumerSessionClientSecret: String? { get }
 
-    func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts>
+    func pollAuthSessionAccounts() async throws -> FinancialConnectionsAuthSessionAccounts
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
-    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts>
+    func selectAuthSessionAccounts() async throws -> FinancialConnectionsAuthSessionAccounts
     func saveToLink(
         accounts: [FinancialConnectionsPartnerAccount],
         consumerSessionClientSecret: String
-    ) -> Future<String?>
+    ) async throws -> String?
 }
 
 final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
 
-    private let apiClient: any FinancialConnectionsAPI
+    private let apiClient: any FinancialConnectionsAsyncAPI
     private let clientSecret: String
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
     let authSession: FinancialConnectionsAuthSession
@@ -59,7 +59,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     weak var delegate: AccountPickerDataSourceDelegate?
 
     init(
-        apiClient: any FinancialConnectionsAPI,
+        apiClient: any FinancialConnectionsAsyncAPI,
         clientSecret: String,
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
         authSession: FinancialConnectionsAuthSession,
@@ -84,8 +84,8 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.isRelink = isRelink
     }
 
-    func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts> {
-        return apiClient.fetchAuthSessionAccounts(
+    func pollAuthSessionAccounts() async throws -> FinancialConnectionsAuthSessionAccounts {
+        try await apiClient.fetchAuthSessionAccounts(
             clientSecret: clientSecret,
             authSessionId: authSession.id,
             initialPollDelay: AuthSessionAccountsInitialPollDelay(forFlow: authSession.flow)
@@ -96,8 +96,8 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.selectedAccounts = selectedAccounts
     }
 
-    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthSessionAccounts> {
-        return apiClient.selectAuthSessionAccounts(
+    func selectAuthSessionAccounts() async throws -> FinancialConnectionsAuthSessionAccounts {
+        try await apiClient.selectAuthSessionAccounts(
             clientSecret: clientSecret,
             authSessionId: authSession.id,
             selectedAccountIds: selectedAccounts.map({ $0.id })
@@ -107,13 +107,13 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     func saveToLink(
         accounts: [FinancialConnectionsPartnerAccount],
         consumerSessionClientSecret: String
-    ) -> Future<String?> {
+    ) async throws -> String? {
         let shouldPollAccounts = !manifest.shouldAttachLinkedPaymentMethod
         assert(
             shouldPollAccounts,
             "expected to only save accounts to link for non-payment flows"
         )
-        return apiClient.saveAccountsToNetworkAndLink(
+        let (_, customSuccessPaneMessage) = try await apiClient.saveAccountsToNetworkAndLink(
             shouldPollAccounts: shouldPollAccounts,
             selectedAccounts: accounts,
             emailAddress: nil,
@@ -123,9 +123,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
             clientSecret: clientSecret,
             isRelink: isRelink
         )
-        .chained { (_, customSuccessPaneMessage) in
-            return Promise(value: customSuccessPaneMessage)
-        }
+        return customSuccessPaneMessage
     }
 }
 
