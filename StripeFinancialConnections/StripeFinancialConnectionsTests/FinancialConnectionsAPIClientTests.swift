@@ -1,5 +1,5 @@
 //
-//  FinancialConnectionsAPIClientTests.swift
+//  FinancialConnectionsAsyncAPIClientTests.swift
 //  StripeFinancialConnectionsTests
 //
 //  Created by Mat Schmid on 2024-08-02.
@@ -11,11 +11,11 @@ import XCTest
 @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripeFinancialConnections
 
-class FinancialConnectionsAPIClientTests: XCTestCase {
+class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
     private let mockApiClient = APIStubbedTestCase.stubbedAPIClient()
 
     func testConusmerPublishableKeyProvider() {
-        let apiClient = FinancialConnectionsAPIClient(apiClient: mockApiClient)
+        let apiClient = FinancialConnectionsAsyncAPIClient(apiClient: mockApiClient)
         XCTAssertNil(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: true))
 
         let consumerPublishableKey = "consumerPublishableKey"
@@ -53,7 +53,7 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
 
     func testEmptyBillingAddressEncodedAsParameters() throws {
         let billingAddress = BillingAddress()
-        let encodedBillingAddress = try FinancialConnectionsAPIClient.encodeAsParameters(billingAddress)
+        let encodedBillingAddress = try FinancialConnectionsAsyncAPIClient.encodeAsParameters(billingAddress)
 
         XCTAssertNil(encodedBillingAddress)
     }
@@ -68,7 +68,7 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
             postalCode: "90210",
             countryCode: "US"
         )
-        let encodedBillingAddress = try FinancialConnectionsAPIClient.encodeAsParameters(billingAddress)
+        let encodedBillingAddress = try FinancialConnectionsAsyncAPIClient.encodeAsParameters(billingAddress)
 
         XCTAssertEqual(encodedBillingAddress?["name"] as? String, "Bobby Tables")
         XCTAssertEqual(encodedBillingAddress?["line_1"] as? String, "123 Fake St")
@@ -89,7 +89,7 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
             postalCode: "90210",
             countryCode: "US"
         )
-        let encodedBillingAddress = try FinancialConnectionsAPIClient.encodeAsParameters(billingAddress)
+        let encodedBillingAddress = try FinancialConnectionsAsyncAPIClient.encodeAsParameters(billingAddress)
 
         XCTAssertEqual(encodedBillingAddress?["name"] as? String, "Bobby Tables")
         XCTAssertEqual(encodedBillingAddress?["line_1"] as? String, "123 Fake St")
@@ -100,33 +100,24 @@ class FinancialConnectionsAPIClientTests: XCTestCase {
         XCTAssertEqual(encodedBillingAddress?["country_code"] as? String, "US")
     }
 
-    func testApplyAttestationParameters() {
+    func testApplyAttestationParameters() async {
         // Mark API client as testmode to use a mock assertion
         mockApiClient.publishableKey = "pk_test"
 
-        let expectation = expectation(description: "applyAttestationParameters completed")
         let baseParameters: [String: Any] = [
             "base_parameter": true,
         ]
-        let apiClient = FinancialConnectionsAPIClient(apiClient: mockApiClient)
-        apiClient
-            .assertAndApplyAttestationParameters(
-                to: baseParameters,
-                api: .linkSignUp,
-                pane: .consent
-            ).observe { result in
-                switch result {
-                case .success(let updatedParameters):
-                    XCTAssertNotNil(updatedParameters["base_parameter"])
-                    XCTAssertNotNil(updatedParameters["app_id"])
-                    XCTAssertNotNil(updatedParameters["key_id"])
-                    XCTAssertNotNil(updatedParameters["device_id"])
-                    XCTAssertNotNil(updatedParameters["ios_assertion_object"])
-                case .failure(let error):
-                    XCTFail("Unexpected error when applying attestation parameters: \(error)")
-                }
-                expectation.fulfill()
-            }
-        wait(for: [expectation], timeout: 2.0)
+        let apiClient = FinancialConnectionsAsyncAPIClient(apiClient: mockApiClient)
+        let updatedParameters = await apiClient.assertAndApplyAttestationParameters(
+            to: baseParameters,
+            api: .linkSignUp,
+            pane: .consent
+        )
+
+        XCTAssertNotNil(updatedParameters["base_parameter"])
+        XCTAssertNotNil(updatedParameters["app_id"])
+        XCTAssertNotNil(updatedParameters["key_id"])
+        XCTAssertNotNil(updatedParameters["device_id"])
+        XCTAssertNotNil(updatedParameters["ios_assertion_object"])
     }
 }
