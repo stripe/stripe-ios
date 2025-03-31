@@ -658,6 +658,65 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled, "Delegate should be updated after card form is completed")
         XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
     }
+
+    func testCreateFails_whenImmediateActionWithConfirmAndApplePay() async throws {
+        // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and Apple Pay
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
+        config.formSheetAction = .confirm { _ in
+            XCTFail("Confirm handler should not be invoked in this test.")
+        }
+        config.applePay = EmbeddedPaymentElement.ApplePayConfiguration(
+            merchantId: "test_merchant_id",
+            merchantCountryCode: "US"
+        )
+
+        // When we create an EmbeddedPaymentElement
+        do {
+            _ = try await EmbeddedPaymentElement.create(
+                intentConfiguration: paymentIntentConfig,
+                configuration: config
+            )
+            XCTFail("Expected error to be thrown but received none.")
+        } catch {
+            // Then we expect a PaymentSheetError indicating the unsupported configuration
+            guard let paymentSheetError = error as? PaymentSheetError else {
+                XCTFail("Unexpected error type: \(error)")
+                return
+            }
+            XCTAssertTrue(paymentSheetError.debugDescription.contains("immediateAction with .confirm form sheet action is not supported"))
+        }
+    }
+
+    func testCreateFails_whenImmediateActionWithConfirmAndCustomer() async throws {
+        // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and a customer configuration
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
+        config.formSheetAction = .confirm { _ in
+            XCTFail("Confirm handler should not be invoked in this test.")
+        }
+        config.customer = .init(
+            id: "cus_1234",
+            ephemeralKeySecret: "ek_test_1234"
+        )
+
+        // When we create an EmbeddedPaymentElement
+        do {
+            _ = try await EmbeddedPaymentElement.create(
+                intentConfiguration: paymentIntentConfig,
+                configuration: config
+            )
+            XCTFail("Expected error to be thrown but received none.")
+        } catch {
+            // Then we expect a PaymentSheetError indicating the unsupported configuration
+            guard let paymentSheetError = error as? PaymentSheetError else {
+                XCTFail("Unexpected error type: \(error)")
+                return
+            }
+            XCTAssertTrue(paymentSheetError.debugDescription.contains("immediateAction with .confirm form sheet action is not supported"))
+        }
+    }
+
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {

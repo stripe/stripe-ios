@@ -571,3 +571,16 @@ extension STPAuthenticationContextWrapper: STPAuthenticationContext {
         return _presentingViewController
     }
 }
+
+extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior: Equatable {
+    static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
+        switch (lhs, rhs) {
+        case (.default, .default):
+            return true
+        case (.immediateAction, .immediateAction):
+            return true
+        default:
+            return false
+        }
+    }
+}
