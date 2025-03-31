@@ -29,7 +29,7 @@ class ExternalPaymentOption {
     /// URL of a 48x pixel, variable width tall PNG representing the payment method suitable for display against a dark background color. If `nil`, use `lightImageUrl` instead.
     let darkImageUrl: URL?
 
-    /// When false, Mobile Payment Element will collect billing details for this custom payment method type
+    /// When false, Mobile Payment Element will collect billing details for this external payment method option
     /// in accordance with the `billingDetailsCollectionConfiguration` settings.
     /// This has no effect if `billingDetailsCollectionConfiguration` is not configured.
     let disableBillingDetailCollection: Bool
