@@ -58,7 +58,10 @@ class ConsentViewController: UIViewController {
             belowCtaText: dataSource.consent.belowCta,
             appearance: dataSource.manifest.appearance,
             didSelectAgree: { [weak self] in
-                self?.didSelectAgree()
+                guard let self = self else { return }
+                Task {
+                    await self.didSelectAgree()
+                }
             },
             didSelectURL: { [weak self] url in
                 self?.didSelectURLInTextFromBackend(url)
@@ -139,41 +142,44 @@ class ConsentViewController: UIViewController {
         consentLogoView?.animateDots()
     }
 
-    private func didSelectAgree() {
+    private func didSelectAgree() async {
         dataSource.analyticsClient.log(
             eventName: "click.agree",
             pane: .consent
         )
 
         footerView.setIsLoading(true)
-        dataSource.markConsentAcquired()
-            .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let result):
-                    self.delegate?.consentViewController(self, didConsentWithResult: result)
-                case .failure(let error):
-                    let attestationError = self.dataSource.completeAssertionIfNeeded(
-                        possibleError: error,
-                        api: .consumerSessionLookup
-                    )
+        do {
+            let result = try await dataSource.markConsentAcquired()
 
-                    if attestationError != nil {
-                        let prefillDetails = WebPrefillDetails(email: dataSource.email)
-                        self.delegate?.consentViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
-                    }
-
-                    // we display no errors on failure
-                    self.dataSource
-                        .analyticsClient
-                        .logUnexpectedError(
-                            error,
-                            errorName: "ConsentAcquiredError",
-                            pane: .consent
-                        )
-                }
+            await MainActor.run {
+                self.delegate?.consentViewController(self, didConsentWithResult: result)
                 self.footerView.setIsLoading(false)
             }
+        } catch let error {
+            await MainActor.run {
+                let attestationError = self.dataSource.completeAssertionIfNeeded(
+                    possibleError: error,
+                    api: .consumerSessionLookup
+                )
+
+                if attestationError != nil {
+                    let prefillDetails = WebPrefillDetails(email: dataSource.email)
+                    self.delegate?.consentViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                }
+
+                // we display no errors on failure
+                self.dataSource
+                    .analyticsClient
+                    .logUnexpectedError(
+                        error,
+                        errorName: "ConsentAcquiredError",
+                        pane: .consent
+                    )
+
+                self.footerView.setIsLoading(false)
+            }
+        }
     }
 
     private func didSelectURLInTextFromBackend(_ url: URL) {

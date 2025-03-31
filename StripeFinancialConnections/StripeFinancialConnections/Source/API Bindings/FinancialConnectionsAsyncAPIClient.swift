@@ -188,6 +188,16 @@ final class FinancialConnectionsAsyncAPIClient {
 }
 
 protocol FinancialConnectionsAsyncAPI {
+    var isLinkWithStripe: Bool { get set }
+    var consumerPublishableKey: String? { get set }
+    var consumerSession: ConsumerSessionData? { get set }
+
+    func completeAssertion(
+        possibleError: Error?,
+        api: FinancialConnectionsAPIClientLogger.API,
+        pane: FinancialConnectionsSessionManifest.NextPane
+    ) -> Error?
+
     func synchronize(
         clientSecret: String,
         returnURL: String?,

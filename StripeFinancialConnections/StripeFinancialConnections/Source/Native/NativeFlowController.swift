@@ -1492,7 +1492,7 @@ private func CreatePaneViewController(
                 manifest: dataManager.manifest,
                 consent: consentPaneModel,
                 merchantLogo: dataManager.merchantLogo,
-                apiClient: dataManager.apiClient,
+                apiClient: dataManager.asyncApiClient,
                 clientSecret: dataManager.clientSecret,
                 analyticsClient: dataManager.analyticsClient,
                 elementsSessionContext: dataManager.elementsSessionContext
