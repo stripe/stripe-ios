@@ -165,7 +165,7 @@ extension EmbeddedPaymentElement {
         internal var linkPaymentMethodsOnly: Bool = false
 
         /// Describes how you handle row selections in EmbeddedPaymentElement
-        enum RowSelectionBehavior {
+        public enum RowSelectionBehavior {
           /// When a payment option is selected, the customer taps a button to continue or confirm payment.
           /// This is the default recommended integration.
           case `default`
@@ -177,7 +177,7 @@ extension EmbeddedPaymentElement {
         }
 
         /// Determines the behavior when a row  is selected. Defaults to `.default`.
-        var rowSelectionBehavior: RowSelectionBehavior = .default
+        public var rowSelectionBehavior: RowSelectionBehavior = .default
 
         /// Initializes a Configuration with default values
         public init() {}

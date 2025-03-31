@@ -151,6 +151,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
         guard let selectedFormViewController else {
             // If the current selection has no form VC, there's nothing to do
+            if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
+                didSelectPaymentOption()
+            }
             return
         }
         // Present the current selection's form VC
@@ -438,6 +441,9 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
         }
         embeddedFormViewController.dismiss(animated: true)
+        if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
+            didSelectPaymentOption()
+        }
         informDelegateIfPaymentOptionUpdated()
     }
 
@@ -573,7 +579,7 @@ extension STPAuthenticationContextWrapper: STPAuthenticationContext {
 }
 
 extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior: Equatable {
-    static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
+   @_spi(STP) public static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
         switch (lhs, rhs) {
         case (.default, .default):
             return true
