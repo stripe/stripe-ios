@@ -396,8 +396,10 @@ class PlaygroundController: ObservableObject {
         _ billingDetails: STPPaymentMethodBillingDetails
     ) async -> PaymentSheetResult {
         return await withCheckedContinuation { continuation in
-            handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails) { result in
-                continuation.resume(returning: result)
+            Task { @MainActor in
+                handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails) { result in
+                    continuation.resume(returning: result)
+                }
             }
         }
     }

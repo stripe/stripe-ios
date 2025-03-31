@@ -29,15 +29,21 @@ class ExternalPaymentOption {
     /// URL of a 48x pixel, variable width tall PNG representing the payment method suitable for display against a dark background color. If `nil`, use `lightImageUrl` instead.
     let darkImageUrl: URL?
 
+    /// When false, Mobile Payment Element will collect billing details for this external payment method option
+    /// in accordance with the `billingDetailsCollectionConfiguration` settings.
+    /// This has no effect if `billingDetailsCollectionConfiguration` is not configured.
+    let disableBillingDetailCollection: Bool
+
     /// A function to be called when confirming a ExternalPaymentOption
     private let confirmHandler: ExternalPaymentOptionConfirmHandler
 
-    private init(type: String, displayText: String, displaySubtext: String?, lightImageUrl: URL, darkImageUrl: URL?, confirmHandler: ExternalPaymentOptionConfirmHandler) {
+    private init(type: String, displayText: String, displaySubtext: String?, lightImageUrl: URL, darkImageUrl: URL?, disableBillingDetailCollection: Bool, confirmHandler: ExternalPaymentOptionConfirmHandler) {
         self.type = type
         self.displayText = displayText
         self.displaySubtext = displaySubtext
         self.lightImageUrl = lightImageUrl
         self.darkImageUrl = darkImageUrl
+        self.disableBillingDetailCollection = disableBillingDetailCollection
         self.confirmHandler = confirmHandler
     }
 
@@ -76,6 +82,7 @@ class ExternalPaymentOption {
             displaySubtext: nil, // EPMs do not show any subtext
             lightImageUrl: externalPaymentMethod.lightImageUrl,
             darkImageUrl: externalPaymentMethod.darkImageUrl,
+            disableBillingDetailCollection: false,
             confirmHandler: .external(confirmHandler)
         )
     }
@@ -104,6 +111,7 @@ class ExternalPaymentOption {
             displaySubtext: customPaymentMethodType.subtitle,
             lightImageUrl: logoUrl,
             darkImageUrl: nil, // CPMs don't have dark mode images
+            disableBillingDetailCollection: customPaymentMethodType.disableBillingDetailCollection,
             confirmHandler: .custom(customPaymentMethodType, confirmHandler)
         )
     }
