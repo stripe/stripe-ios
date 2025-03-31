@@ -75,24 +75,30 @@ final class LinkLoginViewController: UIViewController {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         showLoadingView(true)
-        dataSource
-            .synchronize()
-            .observe { [weak self] result in
-                guard let self else { return }
-                self.showLoadingView(false)
 
-                switch result {
-                case .success(let linkLoginPane):
-                    self.showContent(linkLoginPane: linkLoginPane)
-                case .failure(let error):
-                    self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
-                }
-            }
+        Task {
+            await synchronize()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setContinueWithLinkButtonDisabledState()
+    }
+
+    private func synchronize() async {
+        do {
+            let linkLoginPane = try await dataSource.synchronize()
+            await MainActor.run {
+                showLoadingView(false)
+                showContent(linkLoginPane: linkLoginPane)
+            }
+        } catch {
+            await MainActor.run {
+                showLoadingView(false)
+            }
+            delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
+        }
     }
 
     private func showContent(linkLoginPane: FinancialConnectionsLinkLoginPane) {
@@ -155,98 +161,110 @@ final class LinkLoginViewController: UIViewController {
 
     private func didSelectContinueWithLink() {
         if formView.phoneNumber.isEmpty {
-            lookupAccount(with: formView.email)
+            Task {
+                await lookupAccount(with: formView.email)
+            }
         } else {
-            createAccount()
+            Task {
+                await createAccount()
+            }
         }
     }
 
-    private func lookupAccount(with emailAddress: String) {
+    private func lookupAccount(with emailAddress: String) async {
         formView.emailTextField.showLoadingView(true)
         footerButton?.isLoading = true
 
         let manuallyEnteredEmail = emailAddress != prefillEmailAddress
-        dataSource
-            .lookup(
+        do {
+            let response = try await dataSource.lookup(
                 emailAddress: emailAddress,
                 manuallyEntered: manuallyEnteredEmail
             )
-            .observe { [weak self, weak formView, weak footerButton] result in
-                formView?.emailTextField.showLoadingView(false)
+
+            await MainActor.run {
+                formView.emailTextField.showLoadingView(false)
                 footerButton?.isLoading = false
+            }
 
-                guard let self else { return }
-                let attestationError = self.dataSource.completeAssertionIfNeeded(
-                    possibleError: result.error,
-                    api: .consumerSessionLookup
-                )
-                if attestationError != nil {
-                    let prefillDetails = WebPrefillDetails(email: emailAddress)
-                    self.delegate?.linkLoginViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
-                    return
+            dataSource.completeAssertionIfNeeded(possibleError: nil, api: .consumerSessionLookup)
+
+            if response.exists {
+                if response.consumerSession != nil {
+                    delegate?.linkLoginViewController(self, foundReturningUserWith: response)
+                } else {
+                    delegate?.linkLoginViewController(
+                        self,
+                        didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
+                            debugDescription: "No consumer session returned from lookupConsumerSession for emailAddress: \(emailAddress)"
+                        )
+                    )
                 }
-
-                switch result {
-                case .success(let response):
-                    if response.exists {
-                        if response.consumerSession != nil {
-                            self.delegate?.linkLoginViewController(self, foundReturningUserWith: response)
-                        } else {
-                            self.delegate?.linkLoginViewController(
-                                self,
-                                didReceiveTerminalError: FinancialConnectionsSheetError.unknown(
-                                    debugDescription: "No consumer session returned from lookupConsumerSession for emailAddress: \(emailAddress)"
-                                )
-                            )
-                        }
-                    } else {
-                        formView?.showAndEditPhoneNumberFieldIfNeeded()
-                    }
-                case .failure(let error):
-                    self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
+            } else {
+                await MainActor.run {
+                    formView.showAndEditPhoneNumberFieldIfNeeded()
                 }
             }
+        } catch {
+            await MainActor.run {
+                formView.emailTextField.showLoadingView(false)
+                footerButton?.isLoading = false
+            }
+
+            let attestationError = dataSource.completeAssertionIfNeeded(
+                possibleError: error,
+                api: .consumerSessionLookup
+            )
+
+            if attestationError != nil {
+                let prefillDetails = WebPrefillDetails(email: emailAddress)
+                delegate?.linkLoginViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+            } else {
+                delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
+            }
+        }
     }
 
-    private func createAccount() {
+    private func createAccount() async {
         footerButton?.isLoading = true
 
-        dataSource.signUp(
-            emailAddress: formView.email,
-            phoneNumber: formView.phoneNumber,
-            country: formView.countryCode
-        )
-        .chained { [weak self] signUpResponse -> Future<FinancialConnectionsSynchronize> in
-            guard let self else { return
-                Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
+        do {
+            let signUpResponse = try await dataSource.signUp(
+                emailAddress: formView.email,
+                phoneNumber: formView.phoneNumber,
+                country: formView.countryCode
+            )
+            delegate?.linkLoginViewController(self, receivedLinkSignUpResponse: signUpResponse)
+
+            let syncResponse = try await dataSource.attachToAccountAndSynchronize(with: signUpResponse)
+
+            await MainActor.run {
+                footerButton?.isLoading = false
             }
 
-            self.delegate?.linkLoginViewController(self, receivedLinkSignUpResponse: signUpResponse)
-            return self.dataSource.attachToAccountAndSynchronize(with: signUpResponse)
-        }
-        .observe { [weak self] result in
-            guard let self else { return }
-            self.footerButton?.isLoading = false
-            let attestationError = self.dataSource.completeAssertionIfNeeded(
-                possibleError: result.error,
+            dataSource.completeAssertionIfNeeded(possibleError: nil, api: .linkSignUp)
+            delegate?.linkLoginViewController(self, signedUpAttachedAndSynchronized: syncResponse)
+        } catch {
+            await MainActor.run {
+                footerButton?.isLoading = false
+            }
+
+            let attestationError = dataSource.completeAssertionIfNeeded(
+                possibleError: error,
                 api: .linkSignUp
             )
+
             if attestationError != nil {
                 let prefillDetails = WebPrefillDetails(
-                    email: self.formView.email,
-                    phone: self.formView.phoneNumber,
-                    countryCode: self.formView.countryCode
+                    email: formView.email,
+                    phone: formView.phoneNumber,
+                    countryCode: formView.countryCode
                 )
-                self.delegate?.linkLoginViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                delegate?.linkLoginViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
                 return
             }
 
-            switch result {
-            case .success(let response):
-                self.delegate?.linkLoginViewController(self, signedUpAttachedAndSynchronized: response)
-            case .failure(let error):
-                self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
-            }
+            delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
         }
     }
 
@@ -273,7 +291,9 @@ final class LinkLoginViewController: UIViewController {
 
 extension LinkLoginViewController: LinkSignupFormViewDelegate {
     func linkSignupFormView(_ view: LinkSignupFormView, didEnterValidEmailAddress emailAddress: String) {
-        lookupAccount(with: emailAddress)
+        Task {
+            await lookupAccount(with: emailAddress)
+        }
     }
 
     func linkSignupFormViewDidUpdateFields(_ view: LinkSignupFormView) {
