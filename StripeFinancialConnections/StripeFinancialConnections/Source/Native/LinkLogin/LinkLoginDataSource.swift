@@ -13,39 +13,37 @@ protocol LinkLoginDataSource: AnyObject {
     var elementsSessionContext: ElementsSessionContext? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
-    func synchronize() -> Future<FinancialConnectionsLinkLoginPane>
-    func lookup(emailAddress: String, manuallyEntered: Bool) -> Future<LookupConsumerSessionResponse>
+    func synchronize() async throws -> FinancialConnectionsLinkLoginPane
+    func lookup(emailAddress: String, manuallyEntered: Bool) async throws -> LookupConsumerSessionResponse
     func signUp(
         emailAddress: String,
         phoneNumber: String,
         country: String
-    ) -> Future<LinkSignUpResponse>
+    ) async throws -> LinkSignUpResponse
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
-    ) -> Future<FinancialConnectionsSynchronize>
+    ) async throws -> FinancialConnectionsSynchronize
+    @discardableResult
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
-    ) -> Error?
-}
+    ) -> Error?}
 
 final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
-    private static let deallocatedError = FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated")
-
     let manifest: FinancialConnectionsSessionManifest
     let elementsSessionContext: ElementsSessionContext?
     let analyticsClient: FinancialConnectionsAnalyticsClient
 
     private let clientSecret: String
     private let returnURL: String?
-    private let apiClient: any FinancialConnectionsAPI
+    private let apiClient: any FinancialConnectionsAsyncAPI
 
     init(
         manifest: FinancialConnectionsSessionManifest,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         clientSecret: String,
         returnURL: String?,
-        apiClient: any FinancialConnectionsAPI,
+        apiClient: any FinancialConnectionsAsyncAPI,
         elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
@@ -56,23 +54,22 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         self.elementsSessionContext = elementsSessionContext
     }
 
-    func synchronize() -> Future<FinancialConnectionsLinkLoginPane> {
-        apiClient.synchronize(
+    func synchronize() async throws -> FinancialConnectionsLinkLoginPane {
+        let synchronize = try await apiClient.synchronize(
             clientSecret: clientSecret,
             returnURL: returnURL,
             initialSynchronize: false
         )
-        .chained { synchronize in
-            if let linkLoginPane = synchronize.text?.linkLoginPane {
-                return Promise(value: linkLoginPane)
-            } else {
-                return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "no linkLoginPane data attached"))
-            }
+
+        if let linkLoginPane = synchronize.text?.linkLoginPane {
+            return linkLoginPane
+        } else {
+            throw FinancialConnectionsSheetError.unknown(debugDescription: "no linkLoginPane data attached")
         }
     }
 
-    func lookup(emailAddress: String, manuallyEntered: Bool) -> Future<LookupConsumerSessionResponse> {
-        return apiClient.consumerSessionLookup(
+    func lookup(emailAddress: String, manuallyEntered: Bool) async throws -> LookupConsumerSessionResponse {
+        try await apiClient.consumerSessionLookup(
             emailAddress: emailAddress,
             clientSecret: clientSecret,
             sessionId: manifest.id,
@@ -86,8 +83,8 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         emailAddress: String,
         phoneNumber: String,
         country: String
-    ) -> Future<LinkSignUpResponse> {
-        return apiClient.linkAccountSignUp(
+    ) async throws -> LinkSignUpResponse {
+        try await apiClient.linkAccountSignUp(
             emailAddress: emailAddress,
             phoneNumber: phoneNumber,
             country: country,
@@ -101,35 +98,21 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
 
     func attachToAccountAndSynchronize(
         with linkSignUpResponse: LinkSignUpResponse
-    ) -> Future<FinancialConnectionsSynchronize> {
-        attachLinkConsumerToLinkAccountSessionResponse(
+    ) async throws -> FinancialConnectionsSynchronize {
+        _ = try await apiClient.attachLinkConsumerToLinkAccountSession(
             linkAccountSession: clientSecret,
             consumerSessionClientSecret: linkSignUpResponse.consumerSession.clientSecret
         )
-        .chained { [weak self] _ in
-            guard let self else {
-                return Promise(error: Self.deallocatedError)
-            }
 
-            return apiClient.synchronize(
-                clientSecret: self.clientSecret,
-                returnURL: self.returnURL,
-                initialSynchronize: false
-            )
-        }
-    }
-
-    private func attachLinkConsumerToLinkAccountSessionResponse(
-        linkAccountSession: String,
-        consumerSessionClientSecret: String
-    ) -> Future<AttachLinkConsumerToLinkAccountSessionResponse> {
-        apiClient.attachLinkConsumerToLinkAccountSession(
-            linkAccountSession: linkAccountSession,
-            consumerSessionClientSecret: consumerSessionClientSecret
+        return try await apiClient.synchronize(
+            clientSecret: clientSecret,
+            returnURL: returnURL,
+            initialSynchronize: false
         )
     }
 
     // Marks the assertion as completed and logs possible errors during verified flows.
+    @discardableResult
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
