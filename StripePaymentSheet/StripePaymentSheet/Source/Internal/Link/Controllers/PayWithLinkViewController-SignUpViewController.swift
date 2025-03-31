@@ -46,7 +46,7 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: true, theme: LinkUI.appearance.asElementsTheme)
+        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: LinkUI.appearance.asElementsTheme)
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
