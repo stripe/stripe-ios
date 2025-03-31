@@ -48,7 +48,7 @@ struct PlaygroundView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Picker("Select SDK Type", selection: viewModel.sdkType) {
                                 ForEach(PlaygroundConfiguration.SDKType.allCases) {
-                                    Text($0.rawValue.capitalized)
+                                    Text($0.displayName)
                                         .tag($0)
                                 }
                             }

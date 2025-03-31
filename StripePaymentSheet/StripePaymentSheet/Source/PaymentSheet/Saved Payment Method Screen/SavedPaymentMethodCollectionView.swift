@@ -96,9 +96,8 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .edit)
-            button.backgroundColor = UIColor.dynamic(
-                light: .systemGray5, dark: appearance.colors.componentBackground.lighten(by: 0.075))
-            button.iconColor = appearance.colors.icon
+            button.backgroundColor = appearance.colors.primary
+            button.iconColor = appearance.colors.primary.contrastingColor
             button.isAccessibilityElement = true
             button.accessibilityLabel = String.Localized.edit
             return button
@@ -149,9 +148,9 @@ extension SavedPaymentMethodCollectionView {
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
-        var showEditIcon: Bool {
+        var isEditable: Bool {
             guard PaymentSheet.supportedSavedPaymentMethods.contains(where: { viewModel?.savedPaymentMethod?.type == $0 }) else {
-                fatalError("Payment method does not match supported saved payment methods.")
+                return false
             }
             return allowsSetAsDefaultPM || allowsPaymentMethodRemoval || allowsPaymentMethodUpdate || (viewModel?.savedPaymentMethod?.isCoBrandedCard ?? false && cbcEligible)
         }
@@ -294,7 +293,7 @@ extension SavedPaymentMethodCollectionView {
         // MARK: - Private Methods
         @objc
         private func didSelectAccessory() {
-            if showEditIcon {
+            if isEditable {
                 delegate?.paymentOptionCellDidSelectEdit(self)
             }
         }
@@ -382,7 +381,7 @@ extension SavedPaymentMethodCollectionView {
                 }
 
                 if isRemovingPaymentMethods {
-                    if case .saved = viewModel, showEditIcon {
+                    if case .saved = viewModel, isEditable {
                         accessoryButton.isHidden = false
                         contentView.bringSubviewToFront(accessoryButton)
                         applyDefaultStyle()

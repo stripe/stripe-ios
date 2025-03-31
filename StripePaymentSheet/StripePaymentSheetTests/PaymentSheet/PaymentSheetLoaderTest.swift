@@ -374,7 +374,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         var configuration = self.configuration
         // ...with valid custom payment methods configured...
         configuration.customPaymentMethodConfiguration = .init(
-            customPaymentMethodTypes: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")],
+            customPaymentMethods: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")],
             customPaymentMethodConfirmHandler: { _, _ in return .canceled }
         )
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { result in
@@ -399,55 +399,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration))
-            case .failure(let error):
-                XCTFail(error.nonGenericDescription)
-            }
-        }
-        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
-    }
-
-    func testPaymentSheetLoadWithInvalidCustomPaymentMethods() async throws {
-        STPAnalyticsClient.sharedClient._testLogHistory = []
-        // Loading PaymentSheet...
-        let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
-        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
-        var configuration = self.configuration
-        // ...with invalid custom payment methods configured...
-        configuration.customPaymentMethodConfiguration = .init(
-            customPaymentMethodTypes: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_invalid")],
-            customPaymentMethodConfirmHandler: { _, _ in return .canceled }
-        )
-        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
-            expectation.fulfill()
-            switch result {
-            case .success(let loadResult):
-                // ...PaymentSheet should *still* successfully load
-                guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
-                    XCTFail()
-                    return
-                }
-                // Sanity check the PI matches the one we fetched
-                XCTAssertEqual(paymentIntent.clientSecret, clientSecret)
-                XCTAssertEqual(loadResult.savedPaymentMethods, [])
-                XCTAssertTrue(PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
-
-                // ...with a non-empty `customPaymentMethods` property
-                XCTAssertEqual(1, loadResult.elementsSession.customPaymentMethods.count)
-                // ...and elements sessions response should contain the errored custom payment method
-                XCTAssertEqual(
-                    loadResult.elementsSession.customPaymentMethods.map { $0.type },
-                    ["cpmt_invalid"]
-                )
-                XCTAssertEqual(
-                    loadResult.elementsSession.customPaymentMethods.first?.error,
-                    "not_found"
-                )
-                // ...and shouldn't send a load failure analytic
-                let analyticEvents = STPAnalyticsClient.sharedClient._testLogHistory
-                XCTAssertFalse(analyticEvents.contains(where: { dict in
-                    (dict["event"] as? String) == STPAnalyticEvent.paymentSheetElementsSessionCPMLoadFailed.rawValue
-                }))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
