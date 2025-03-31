@@ -17,8 +17,8 @@ def validate_version_number_format(version_number)
 end
 
 def target_version_is_newer(target_version, current_version)
-  target_major, target_minor, target_patch = target_version.split('.')
-  current_major, current_minor, current_patch = current_version.split('.')
+  target_major, target_minor, target_patch = target_version.split('.').map(&:to_i)
+  current_major, current_minor, current_patch = current_version.split('.').map(&:to_i)
 
   if target_major < current_major
     false
@@ -39,13 +39,13 @@ def get_current_version()
 end
 
 def validate_target_version_is_newer(target_version)
-    current_version = get_current_version()
-    if !target_version_is_newer(target_version, current_version)
-        raise "Expected target version #{target_version} to be newer than #{current_version}."
-    end
+  current_version = get_current_version()
+  if !target_version_is_newer(target_version, current_version)
+    raise "Expected target version #{target_version} to be newer than #{current_version}."
+  end
 end
 
 def validate_version_number()
-    validate_version_number_format(@version)
-    validate_target_version_is_newer(@version)
+  validate_version_number_format(@version)
+  validate_target_version_is_newer(@version)
 end
