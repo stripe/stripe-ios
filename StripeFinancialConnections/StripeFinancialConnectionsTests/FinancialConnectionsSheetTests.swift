@@ -23,6 +23,9 @@ class FinancialConnectionsSheetTests: XCTestCase {
     private let mockApiClient = FinancialConnectionsAPIClient(
         apiClient: APIStubbedTestCase.stubbedAPIClient()
     )
+    private let mockAsyncApiClient = FinancialConnectionsAsyncAPIClient(
+        apiClient: APIStubbedTestCase.stubbedAPIClient()
+    )
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -49,6 +52,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         // Mock that financialConnections is completed
         let host = HostController(
             apiClient: mockApiClient,
+            asyncApiClient: mockAsyncApiClient,
             analyticsClientV1: mockAnalyticsClient,
             clientSecret: "test",
             returnURL: nil,
@@ -81,6 +85,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         // Mock that financialConnections is completed
         let host = HostController(
             apiClient: mockApiClient,
+            asyncApiClient: mockAsyncApiClient,
             analyticsClientV1: mockAnalyticsClient,
             clientSecret: "test",
             returnURL: nil,
@@ -129,6 +134,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         // Mock that financialConnections is completed
         let host = HostController(
             apiClient: mockApiClient,
+            asyncApiClient: mockAsyncApiClient,
             analyticsClientV1: mockAnalyticsClient,
             clientSecret: "test",
             returnURL: nil,
