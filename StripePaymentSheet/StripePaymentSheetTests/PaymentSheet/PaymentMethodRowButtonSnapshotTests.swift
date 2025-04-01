@@ -60,6 +60,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     func testPaymentMethodRowButton_newPaymentMethod_unselected() {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
+            currency: nil,
             hasSavedCard: false,
             promoText: nil,
             appearance: .default,
@@ -72,6 +73,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     func testPaymentMethodRowButton_newPaymentMethod_withPromo_unselected() {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
+            currency: nil,
             hasSavedCard: false,
             promoText: "$5",
             appearance: .default,

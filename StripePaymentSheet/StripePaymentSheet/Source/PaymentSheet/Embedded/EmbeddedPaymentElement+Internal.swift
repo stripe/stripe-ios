@@ -72,6 +72,7 @@ extension EmbeddedPaymentElement {
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
             savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
+            currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
             analyticsHelper: analyticsHelper,
             delegate: delegate

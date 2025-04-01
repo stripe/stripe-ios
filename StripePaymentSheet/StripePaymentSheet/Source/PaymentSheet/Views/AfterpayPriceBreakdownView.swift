@@ -21,13 +21,13 @@ class AfterpayPriceBreakdownView: UIView {
     private lazy var afterpayMarkImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = PaymentSheetImageLibrary.afterpayLogo(locale: locale)
+        imageView.image = PaymentSheetImageLibrary.afterpayLogo(currency: currency)
         imageView.tintColor = theme.colors.parentBackground.contrastingColor
 
         return imageView
     }()
     private lazy var afterpayMarkImage: UIImage = {
-        return PaymentSheetImageLibrary.afterpayLogo(locale: locale)
+        return PaymentSheetImageLibrary.afterpayLogo(currency: currency)
     }()
     private lazy var infoImage: UIImage = {
         return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info")
@@ -41,9 +41,11 @@ class AfterpayPriceBreakdownView: UIView {
     }()
 
     let locale: Locale
+    let currency: String?
 
-    init(locale: Locale = Locale.autoupdatingCurrent, theme: ElementsAppearance = .default) {
+    init(locale: Locale = Locale.autoupdatingCurrent, currency: String?, theme: ElementsAppearance = .default) {
         self.locale = locale
+        self.currency = currency
         self.theme = theme
         super.init(frame: .zero)
 
@@ -139,14 +141,13 @@ class AfterpayPriceBreakdownView: UIView {
     }
 #endif
 
-    static func shouldUseClearpayBrand(for locale: Locale) -> Bool {
+    static func shouldUseClearpayBrand(for currency: String?) -> Bool {
         // See https://github.com/search?q=repo%3Aafterpay%2Fsdk-ios%20clearpay&type=code for latest rules
-        switch (locale.stp_languageCode, locale.stp_regionCode) {
-        case ("en", "GB"):
-            return true
-        default:
-            return false
-        }
+        return currency?.lowercased() == "gbp"
+    }
+
+    static func shouldUseCashAppBrand(for currency: String?) -> Bool {
+        return currency?.lowercased() == "usd"
     }
 }
 

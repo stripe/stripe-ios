@@ -289,6 +289,7 @@ import Foundation
             return "multibanco"
         }
     }
+
 }
 
 extension STPPaymentMethodType: CaseIterable { }

@@ -16,9 +16,11 @@ class PaymentSheetImageLibrary {
 
     /// An icon representing Afterpay.
     @objc
-    public class func afterpayLogo(locale: Locale = Locale.current) -> UIImage {
-        if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: locale) {
+    public class func afterpayLogo(currency: String? = nil) -> UIImage {
+        if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
             return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
+        }  else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+            return self.safeImageNamed("cash_app_afterpay_mark", templateIfAvailable: true)
         } else {
             return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
         }

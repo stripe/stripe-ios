@@ -248,6 +248,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             isPaymentIntent: false,
             isSettingUp: true,
             countryCode: nil,
+            currency: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
             analyticsHelper: nil,
             paymentMethodIncentive: nil
