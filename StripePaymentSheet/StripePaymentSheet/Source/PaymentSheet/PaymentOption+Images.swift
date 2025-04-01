@@ -35,6 +35,7 @@ extension PaymentOption {
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
                 forDarkBackground: traitCollection?.isDarkMode ?? false,
+                currency: nil,
                 updateHandler: nil
             )
         }
@@ -135,7 +136,7 @@ extension STPPaymentMethod {
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
-            return PaymentSheet.PaymentMethodType.stripe(type).makeImage(updateHandler: updateHandler, currency: currency)
+            return PaymentSheet.PaymentMethodType.stripe(type).makeImage(currency: currency, updateHandler: updateHandler)
         }
     }
  }

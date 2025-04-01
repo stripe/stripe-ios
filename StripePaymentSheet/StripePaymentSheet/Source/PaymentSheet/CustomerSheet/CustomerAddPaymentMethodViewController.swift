@@ -105,6 +105,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let view = PaymentMethodTypeCollectionView(
             paymentMethodTypes: paymentMethodTypes,
             appearance: configuration.appearance,
+            currency: nil,
             incentive: nil,
             delegate: self
         )

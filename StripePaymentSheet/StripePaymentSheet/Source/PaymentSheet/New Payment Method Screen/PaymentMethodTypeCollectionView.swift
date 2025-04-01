@@ -38,6 +38,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
+    let currency: String?
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
     
     private var incentive: PaymentMethodIncentive?
@@ -46,6 +47,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
+        currency: String?,
         incentive: PaymentMethodIncentive?,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
@@ -63,6 +65,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         }()
         self.selected = paymentMethodTypes[selectedItemIndex]
         self.appearance = appearance
+        self.currency = currency
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -131,6 +134,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         }
         let paymentMethodType = paymentMethodTypes[indexPath.item]
         cell.paymentMethodType = paymentMethodType
+        cell.currency = currency
         cell.promoBadgeText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText
         cell.appearance = appearance
         return cell
@@ -173,21 +177,22 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 extension PaymentMethodTypeCollectionView {
     class PaymentTypeCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentTypeCell"
+        var currency: String?
         var paymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.card) {
             didSet {
-                update()
+                update(currency: currency)
             }
         }
         
         var promoBadgeText: String? = nil {
             didSet {
-                update()
+                update(currency: currency)
             }
         }
 
         var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default {
             didSet {
-                update()
+                update(currency: currency)
             }
         }
 
@@ -269,7 +274,7 @@ extension PaymentMethodTypeCollectionView {
             clipsToBounds = false
             layer.masksToBounds = false
 
-            update()
+            update(currency: currency)
         }
 
         override func layoutSubviews() {
@@ -286,13 +291,13 @@ extension PaymentMethodTypeCollectionView {
         #if !canImport(CompositorServices)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
-            update()
+            update(currency: currency)
         }
         #endif
 
         override var isSelected: Bool {
             didSet {
-                update()
+                update(currency: currency)
             }
         }
 
@@ -314,14 +319,14 @@ extension PaymentMethodTypeCollectionView {
 
         // MARK: - Private Methods
         var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
-        private func update() {
+        private func update(currency: String?) {
             contentView.layer.cornerRadius = appearance.cornerRadius
             shadowRoundedRectangle.appearance = appearance
             label.text = paymentMethodType.displayName
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let currPaymentMethodType = self.paymentMethodType
-            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white) { [weak self] image in
+            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white, currency: currency) { [weak self] image in
                 DispatchQueue.main.async {
                     guard let self, currPaymentMethodType == self.paymentMethodType else {
                         return
