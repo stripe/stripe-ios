@@ -16,7 +16,8 @@ extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
     func makeIcon(
         for traitCollection: UITraitCollection? = nil,
-        updateImageHandler: DownloadManager.UpdateImageHandler?
+        updateImageHandler: DownloadManager.UpdateImageHandler?,
+        currency: String?
     ) -> UIImage {
         switch self {
         case .applePay:
@@ -25,7 +26,7 @@ extension PaymentOption {
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName))
             } else {
-                return paymentMethod.makeIcon()
+                return paymentMethod.makeIcon(currency: currency)
             }
         case .new(let confirmParams):
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
@@ -40,12 +41,12 @@ extension PaymentOption {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle, currency: String?) -> UIImage {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .saved(let paymentMethod, _):
-            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, currency: currency)
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
@@ -69,7 +70,7 @@ extension STPPaymentMethod {
         } ?? .unknown
     }
 
-    func makeIcon() -> UIImage {
+    func makeIcon(currency: String?) -> UIImage {
         switch type {
         case .card:
             return STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
@@ -80,7 +81,7 @@ extension STPPaymentMethod {
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             // TODO: This only looks at client-side assets! 
-            let image = type.makeImage()
+            let image = type.makeImage(currency: currency)
             if image == nil {
                 assertionFailure()
             }
@@ -89,7 +90,7 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, currency: String?) -> UIImage {
         switch type {
         case .card:
             return calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
@@ -103,12 +104,12 @@ extension STPPaymentMethod {
             return Image.link_logo.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
-            return makeIcon()
+            return makeIcon(currency: currency)
         }
     }
 
     /// Returns an image to display inside a row representing the given payment option in the saved PM row view
-    func makeSavedPaymentMethodRowImage() -> UIImage {
+    func makeSavedPaymentMethodRowImage(currency: String?) -> UIImage {
         switch type {
         case .card:
             return STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
@@ -120,7 +121,7 @@ extension STPPaymentMethod {
             return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
-            return makeIcon()
+            return makeIcon(currency: currency)
         }
     }
 }
@@ -152,7 +153,7 @@ extension STPPaymentMethodType {
         }
     }
 
-    func makeImage(forDarkBackground: Bool = false) -> UIImage? {
+    func makeImage(forDarkBackground: Bool = false, currency: String?) -> UIImage? {
         let image: Image? = {
             switch self {
             case .card:
@@ -170,7 +171,7 @@ extension STPPaymentMethodType {
             case .przelewy24:
                 return .pm_type_p24
             case .afterpayClearpay:
-                return .pm_type_afterpay
+                return AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) ? .pm_type_cashapp : .pm_type_afterpay
             case .sofort, .klarna:
                 return .pm_type_klarna
             case .affirm:

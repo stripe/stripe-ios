@@ -19,7 +19,7 @@ class PaymentSheetImageLibrary {
     public class func afterpayLogo(currency: String? = nil) -> UIImage {
         if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
             return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
-        }  else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+        } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
             return self.safeImageNamed("cash_app_afterpay_mark", templateIfAvailable: true)
         } else {
             return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
