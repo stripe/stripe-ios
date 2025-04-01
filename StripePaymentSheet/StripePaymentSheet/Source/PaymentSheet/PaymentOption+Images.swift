@@ -33,7 +33,7 @@ extension PaymentOption {
         case .link(let linkConfirmOption):
             switch linkConfirmOption {
             case .signUp(_, _, _, _, let confirmParams):
-                return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
+                return confirmParams.makeIcon(updateImageHandler: updateImageHandler, currency: currency)
             case .wallet, .withPaymentMethod, .withPaymentDetails:
                 return Image.link_logo.makeImage()
             }
