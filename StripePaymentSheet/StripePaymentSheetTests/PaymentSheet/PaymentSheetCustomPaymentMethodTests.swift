@@ -13,7 +13,7 @@ import XCTest
 
 @MainActor
 final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
-    
+
     override func setUp() async throws {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
     }
@@ -23,7 +23,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
         let e2 = expectation(description: "Custom PM confirm handler called")
 
         let testCPM = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")
-        
+
         var configuration = PaymentSheet.Configuration()
         configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [testCPM], customPaymentMethodConfirmHandler: { customPaymentMethodType, _ in
             XCTAssertEqual(customPaymentMethodType.id, "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")
@@ -61,13 +61,13 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
         }
         await fulfillment(of: [e, e2], timeout: 5)
     }
-    
+
     func testCustomFormBillingDetails() async throws {
         let customConfirmHandlerCalled = expectation(description: "Custom PM confirm handler called")
-        
+
         var testCPM = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")
         testCPM.disableBillingDetailCollection = false
-        
+
         var configuration = PaymentSheet.Configuration()
         configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [testCPM], customPaymentMethodConfirmHandler: { customPaymentMethodType, billingDetails in
             XCTAssertEqual(customPaymentMethodType.id, "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")
@@ -83,7 +83,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
             customConfirmHandlerCalled.fulfill()
             return .completed
         })
-        
+
         // Configuring PaymentSheet to collect full billing details...
         configuration.billingDetailsCollectionConfiguration.name = .always
         configuration.billingDetailsCollectionConfiguration.email = .always
@@ -121,12 +121,12 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
         ) { _, _ in }
         await fulfillment(of: [customConfirmHandlerCalled], timeout: 5)
     }
-    
+
     func testConfirmUsesMerchantConfirmHandlerResults() {
         struct MockError: Error, Equatable { }
         func _confirm(with merchantReturnedResult: PaymentSheetResult) {
             let e = expectation(description: "Custom PM confirm handler called")
-            
+
             let testCPM = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1Qzj4rFY0qyl6XeWoHB842bf")
             var configuration = PaymentSheet.Configuration()
             configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [testCPM], customPaymentMethodConfirmHandler: { _, _ in
@@ -167,7 +167,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
         _confirm(with: .completed)
         _confirm(with: .failed(error: MockError()))
     }
-    
+
     func makeForm(intent: Intent, configuration: PaymentSheet.Configuration) -> PaymentMethodElement {
         let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testCardValue(), configuration: .paymentElement(configuration), paymentMethod: .external(._testBufoPayValue(configuration.customPaymentMethodConfiguration!)))
         let paymentMethodForm = formFactory.make()
@@ -184,7 +184,6 @@ extension PaymentSheetCustomPaymentMethodTests: STPAuthenticationContext {
     }
 }
 
-
 extension ExternalPaymentOption {
     static func _testBufoPayValue(_ config: PaymentSheet.CustomPaymentMethodConfiguration? = nil) -> ExternalPaymentOption {
         let cpm = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1Qzj4rFY0qyl6XeWoHB842bf", subtitle: "Pay now with BufoPay")
@@ -192,13 +191,13 @@ extension ExternalPaymentOption {
             if let config {
                 return config
             }
-            
+
             return PaymentSheet.CustomPaymentMethodConfiguration(customPaymentMethods: [cpm]) { _, _ in
                 XCTFail("CPM confirm handler should not be called in these tests.")
                 return .canceled
             }
         }()
-        
+
         let elementsSessionCPM: CustomPaymentMethod = .init(
             displayName: "Bufo Pay",
             type: cpm.id,
