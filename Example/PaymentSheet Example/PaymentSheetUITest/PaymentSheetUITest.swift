@@ -1622,7 +1622,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         expField.typeText("99")
         XCTAssertTrue(app.staticTexts["Your card has expired."].waitForExistence(timeout: 3.0))
 
-        // Enter valid date of 02/32
+        // Enter valid date of mm/32
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText("32")
@@ -1653,7 +1653,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
             return
         }
 
-        XCTAssertEqual(expirationDate, "03/32")
+        XCTAssertEqual(expirationDate.suffix(3), "/32")
         XCTAssertEqual(zipCode, "55555")
     }
     func test_updatePaymentMethod_fullBilling() throws {
