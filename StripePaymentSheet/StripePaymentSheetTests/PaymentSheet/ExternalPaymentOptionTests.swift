@@ -62,6 +62,7 @@ class ExternalPaymentOptionTests: XCTestCase {
         XCTAssertNil(paymentOption?.displaySubtext)
         XCTAssertEqual(paymentOption?.lightImageUrl, mockLightImageURL)
         XCTAssertEqual(paymentOption?.darkImageUrl, mockDarkImageURL)
+        XCTAssertFalse(paymentOption?.disableBillingDetailCollection ?? true)
 
         // Test confirm handler works
         paymentOption?.confirm(billingDetails: mockBillingDetails) { _ in }
@@ -96,6 +97,7 @@ class ExternalPaymentOptionTests: XCTestCase {
         XCTAssertEqual(paymentOption?.displaySubtext, "Fast and secure checkout")
         XCTAssertEqual(paymentOption?.lightImageUrl, mockLightImageURL)
         XCTAssertNil(paymentOption?.darkImageUrl)
+        XCTAssertTrue(paymentOption?.disableBillingDetailCollection ?? false)
 
         // Test confirm handler works
         paymentOption?.confirm(billingDetails: mockBillingDetails) { _ in }

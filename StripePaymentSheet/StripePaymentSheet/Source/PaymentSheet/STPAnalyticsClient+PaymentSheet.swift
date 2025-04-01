@@ -86,7 +86,7 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement {
 
     var analyticPayload: [String: Any] {
         var payload = [String: Any]()
-        payload["row_style"] = row.style != PaymentSheet.Appearance.EmbeddedPaymentElement.default.row.style
+        payload["row_style"] = row.style.analyticsValue
         payload["row"] = row != PaymentSheet.Appearance.EmbeddedPaymentElement.default.row
         return payload
     }
@@ -142,6 +142,19 @@ extension Intent {
             case .setup:
                 return "deferred_setup_intent"
             }
+        }
+    }
+}
+
+extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
+    var analyticsValue: String {
+        switch self {
+        case .flatWithRadio:
+            return "flat_with_radio"
+        case .floatingButton:
+            return "floating_button"
+        case .flatWithCheckmark:
+            return "flat_with_checkmark"
         }
     }
 }

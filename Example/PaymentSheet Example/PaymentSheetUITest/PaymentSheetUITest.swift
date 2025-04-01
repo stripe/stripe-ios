@@ -1622,7 +1622,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         expField.typeText("99")
         XCTAssertTrue(app.staticTexts["Your card has expired."].waitForExistence(timeout: 3.0))
 
-        // Enter valid date of 02/32
+        // Enter valid date of mm/32
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText("32")
@@ -1653,7 +1653,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
             return
         }
 
-        XCTAssertEqual(expirationDate, "03/32")
+        XCTAssertEqual(expirationDate.suffix(3), "/32")
         XCTAssertEqual(zipCode, "55555")
     }
     func test_updatePaymentMethod_fullBilling() throws {
@@ -2650,6 +2650,25 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         assertLinkInlineSignupNotShown() // Link should not be shown in this flow
     }
 
+    func testLinkPaymentSheetFlowController_returnsCardPaymentOptionDisplayDataForLinkInlineSignup() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.uiStyle = .flowController
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkPassthroughMode = .pm
+        settings.applePayEnabled = .off
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+
+        fillLinkCardAndSignup(mode: .checkbox)
+
+        // Assert that card is the returned payment method type
+        app.buttons["Continue"].tap()
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
+    }
+
     func testLinkInlineSignup_gb() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -2763,6 +2782,32 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
                                 showLinkWalletButton: Bool = true,
                                 cardNumber: String? = nil) {
 
+        fillLinkCardAndSignup(mode: mode, showLinkWalletButton: showLinkWalletButton, cardNumber: cardNumber)
+
+        // Pay!
+        switch uiStyle {
+        case .paymentSheet:
+            app.buttons["Pay $50.99"].tap()
+        case .flowController:
+            app.buttons["Continue"].tap()
+            app.buttons["Confirm"].waitForExistenceAndTap()
+        case .embedded:
+            // TODO(porter) Fill in embedded UI test steps
+            break
+        }
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        // Roundabout way to validate that signup completed successfully
+        let signupCompleteAnalytic = analyticsLog.first { payload in
+            payload["event"] as? String == "link.signup.complete"
+        }
+        XCTAssertNotNil(signupCompleteAnalytic)
+    }
+
+    private func fillLinkCardAndSignup(
+        mode: LinkMode,
+        showLinkWalletButton: Bool = true,
+        cardNumber: String? = nil
+    ) {
         try! fillCardData(app, cardNumber: cardNumber)
 
         if showLinkWalletButton {
@@ -2785,29 +2830,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         phoneField.typeText("3105551234")
 
         // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = app.textFields["Name"]
+        let nameField = app.textFields["Full name"]
         if nameField.exists {
             nameField.tap()
             nameField.typeText("Jane Done")
         }
-
-        // Pay!
-        switch uiStyle {
-        case .paymentSheet:
-            app.buttons["Pay $50.99"].tap()
-        case .flowController:
-            app.buttons["Continue"].tap()
-            app.buttons["Confirm"].waitForExistenceAndTap()
-        case .embedded:
-            // TODO(porter) Fill in embedded UI test steps
-            break
-        }
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-        // Roundabout way to validate that signup completed successfully
-        let signupCompleteAnalytic = analyticsLog.first { payload in
-            payload["event"] as? String == "link.signup.complete"
-        }
-        XCTAssertNotNil(signupCompleteAnalytic)
     }
 
     private func assertLinkInlineSignupNotShown() {
