@@ -13,7 +13,7 @@ final class FinancialConnectionsAsyncAPIClient {
         case cannotCastToDictionary
     }
 
-    private enum PollingError: Error {
+    enum PollingError: Error {
         case maxRetriesReached
     }
 
@@ -147,10 +147,14 @@ final class FinancialConnectionsAsyncAPIClient {
         initialPollDelay: TimeInterval = 1.75,
         maxNumberOfRetries: Int = 180,
         retryInterval: TimeInterval = 0.25,
+        // Inject the sleep action to avoid sleeping in unit tests.
+        sleepAction: @escaping (UInt64) async throws -> Void = {
+            try await Task.sleep(nanoseconds: $0)
+        },
         apiCall: @escaping () async throws -> T
     ) async throws -> T {
         // Wait for the initial poll delay
-        try await Task.sleep(nanoseconds: UInt64(initialPollDelay * 1_000_000_000))
+        try await sleepAction(UInt64(initialPollDelay * 1_000_000_000))
 
         for attempt in 0..<maxNumberOfRetries {
             do {
@@ -160,7 +164,7 @@ final class FinancialConnectionsAsyncAPIClient {
                     throw PollingError.maxRetriesReached
                 }
                 // Wait for the retry interval before the next attempt
-                try await Task.sleep(nanoseconds: UInt64(retryInterval * 1_000_000_000))
+                try await sleepAction(UInt64(retryInterval * 1_000_000_000))
             }
         }
 

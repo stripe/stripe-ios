@@ -12,10 +12,32 @@ import XCTest
 @testable @_spi(STP) import StripeFinancialConnections
 
 class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
+    private enum TestError: Error {
+        case sampleError
+    }
+
+    private class CallTracker {
+        var sleepCallCount = 0
+        var apiCallCount = 0
+    }
+
     private let mockApiClient = APIStubbedTestCase.stubbedAPIClient()
+    private var apiClient: FinancialConnectionsAsyncAPIClient!
+    private var tracker: CallTracker!
+
+    override func setUp() {
+        super.setUp()
+        apiClient = FinancialConnectionsAsyncAPIClient(apiClient: mockApiClient)
+        tracker = CallTracker()
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        apiClient = nil
+        tracker = nil
+    }
 
     func testConusmerPublishableKeyProvider() {
-        let apiClient = FinancialConnectionsAsyncAPIClient(apiClient: mockApiClient)
         XCTAssertNil(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: true))
 
         let consumerPublishableKey = "consumerPublishableKey"
@@ -119,5 +141,93 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         XCTAssertNotNil(updatedParameters["key_id"])
         XCTAssertNotNil(updatedParameters["device_id"])
         XCTAssertNotNil(updatedParameters["ios_assertion_object"])
+    }
+
+    // MARK: Polling
+
+    func testSuccessfulFirstAttempt() async throws {
+        let expectedResult = "Success"
+
+        let result = try await apiClient.poll(
+            initialPollDelay: 0.1,
+            maxNumberOfRetries: 3,
+            retryInterval: 0.1,
+            sleepAction: { _ in
+                self.tracker.sleepCallCount += 1
+            },
+            apiCall: {
+                self.tracker.apiCallCount += 1
+                return expectedResult
+            }
+        )
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(tracker.apiCallCount, 1)
+        XCTAssertEqual(tracker.sleepCallCount, 1)
+    }
+
+    func testRetrySuccessOnSecondAttempt() async throws {
+        let expectedResult = "Success after retry"
+
+        let result = try await apiClient.poll(
+            initialPollDelay: 0.1,
+            maxNumberOfRetries: 3,
+            retryInterval: 0.1,
+            sleepAction: { _ in
+                self.tracker.sleepCallCount += 1
+            },
+            apiCall: {
+                self.tracker.apiCallCount += 1
+                if self.tracker.apiCallCount == 1 {
+                    throw TestError.sampleError
+                }
+                return expectedResult
+            }
+        )
+
+        XCTAssertEqual(result, expectedResult)
+        XCTAssertEqual(self.tracker.apiCallCount, 2)
+        XCTAssertEqual(self.tracker.sleepCallCount, 2)
+    }
+
+    func testMaxRetriesReached() async {
+        let maxRetries = 3
+
+        do {
+            _ = try await apiClient.poll(
+                initialPollDelay: 0.01,
+                maxNumberOfRetries: maxRetries,
+                retryInterval: 0.01,
+                sleepAction: { _ in
+                    self.tracker.sleepCallCount += 1
+                },
+                apiCall: {
+                    self.tracker.apiCallCount += 1
+                    throw TestError.sampleError
+                }
+            )
+            XCTFail("Should throw an error")
+        } catch let error as FinancialConnectionsAsyncAPIClient.PollingError {
+            XCTAssertEqual(error, FinancialConnectionsAsyncAPIClient.PollingError.maxRetriesReached)
+            XCTAssertEqual(self.tracker.apiCallCount, maxRetries)
+            XCTAssertEqual(self.tracker.sleepCallCount, maxRetries)
+        } catch {
+            XCTFail("Wrong error type: \(error)")
+        }
+    }
+
+    func testDefaultParameters() async throws {
+        var callCount = 0
+
+        let result = try await apiClient.poll(
+            sleepAction: { _ in },
+            apiCall: {
+                callCount += 1
+                return "Default Success"
+            }
+        )
+
+        XCTAssertEqual(result, "Default Success")
+        XCTAssertEqual(callCount, 1)
     }
 }
