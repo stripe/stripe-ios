@@ -150,7 +150,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
         guard let selectedFormViewController else {
-            // If the current selection has no form VC, there's nothing to do
+            // If the current selection has no form VC, simply alert the merchant of the selection if they are using immediateAction
             if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
                 didSelectPaymentOption()
             }
@@ -548,6 +548,17 @@ extension EmbeddedPaymentElement {
                                          didCancelNative3DS2: {
             stpAssertionFailure("3DS2 was triggered unexpectedly")
         })
+    }
+
+    static func validateRowSelectionConfiguration(configuration: Configuration) throws {
+        // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
+        if case .immediateAction = configuration.rowSelectionBehavior,
+           case .confirm = configuration.formSheetAction,
+            configuration.applePay != nil || configuration.customer != nil {
+            // Merchants cannot use immediateAction + confirm formSheetAction and Apple Pay or saved card
+            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
+            throw error
+        }
     }
 }
 

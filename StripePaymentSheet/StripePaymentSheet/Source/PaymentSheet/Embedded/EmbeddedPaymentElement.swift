@@ -67,13 +67,7 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        if case .immediateAction = configuration.rowSelectionBehavior,
-           case .confirm = configuration.formSheetAction,
-            configuration.applePay != nil || configuration.customer != nil {
-            // Merchants cannot use immediateAction + confirm formSheetAction and Apple Pay or saved card
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
-            throw error
-        }
+        try validateRowSelectionConfiguration(configuration: configuration)
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
