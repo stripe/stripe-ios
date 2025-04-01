@@ -40,7 +40,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     let appearance: PaymentSheet.Appearance
     let currency: String?
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
-    
+
     private var incentive: PaymentMethodIncentive?
 
     init(
@@ -93,14 +93,14 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: PaymentMethodTypeCollectionView.cellHeight)
     }
-    
+
     func setIncentive(_ incentive: PaymentMethodIncentive?) {
         guard self.incentive != incentive, let index = self.indexPathsForSelectedItems?.first else {
             return
         }
-        
+
         self.incentive = incentive
-        
+
         // Prevent the selected cell from being unselected following the reload
         reloadItems(at: [index])
         selectItem(at: index, animated: false, scrollPosition: [])
@@ -183,8 +183,8 @@ extension PaymentMethodTypeCollectionView {
                 update(currency: currency)
             }
         }
-        
-        var promoBadgeText: String? = nil {
+
+        var promoBadgeText: String? {
             didSet {
                 update(currency: currency)
             }
@@ -265,7 +265,7 @@ extension PaymentMethodTypeCollectionView {
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
                 label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
-                
+
                 promoBadge.centerYAnchor.constraint(equalTo: paymentMethodLogo.centerYAnchor),
                 promoBadge.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12),
             ])
@@ -342,7 +342,7 @@ extension PaymentMethodTypeCollectionView {
             if paymentMethodTypeOfCurrentImage != self.paymentMethodType || image.size != CGSize(width: 1, height: 1) {
                 updateImage(image)
             }
-            
+
             promoBadge.isHidden = promoBadgeText == nil
             if let promoBadgeText {
                 promoBadge.setAppearance(appearance)
