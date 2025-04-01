@@ -30,8 +30,13 @@ extension PaymentOption {
             }
         case .new(let confirmParams):
             return confirmParams.makeIcon(updateImageHandler: updateImageHandler, currency: currency)
-        case .link:
-            return Image.link_logo.makeImage()
+        case .link(let linkConfirmOption):
+            switch linkConfirmOption {
+            case .signUp(_, _, _, _, let confirmParams):
+                return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
+            case .wallet, .withPaymentMethod, .withPaymentDetails:
+                return Image.link_logo.makeImage()
+            }
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
                 forDarkBackground: traitCollection?.isDarkMode ?? false,

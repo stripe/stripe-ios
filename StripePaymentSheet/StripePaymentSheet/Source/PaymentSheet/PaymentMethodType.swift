@@ -179,10 +179,15 @@ extension PaymentSheet {
                 // Stripe PaymentMethod types
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
-            + elementsSession.externalPaymentMethods.compactMap {
-                guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.externalPaymentMethodConfiguration) else { return nil }
-                return PaymentMethodType.external(externalPaymentOption)
-            }
+                + elementsSession.externalPaymentMethods.compactMap {
+                    guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.externalPaymentMethodConfiguration) else { return nil }
+                    return PaymentMethodType.external(externalPaymentOption)
+                }
+                // Custom Payment Methods
+                + elementsSession.customPaymentMethods.compactMap {
+                    guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.customPaymentMethodConfiguration) else { return nil }
+                    return PaymentMethodType.external(externalPaymentOption)
+                }
 
             // We support Instant Bank Payments as a payment method when:
             // - (Primary condition) Link is an available payment method.

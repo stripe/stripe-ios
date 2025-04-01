@@ -458,6 +458,8 @@ extension RowButton {
                 }
             case .stripe(.affirm):
                 return String.Localized.pay_over_time_with_affirm
+            case .external(let externalPaymentOption):
+                return externalPaymentOption.displaySubtext
             default:
                 return nil
             }

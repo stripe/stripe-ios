@@ -168,8 +168,9 @@ class PaymentSheetFormFactory {
         switch paymentMethod {
         case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
-        case .external:
-            return makeExternalPaymentMethodForm()
+        case .external(let externalPaymentOption):
+            return makeExternalPaymentMethodForm(subtitle: externalPaymentOption.displaySubtext,
+                                                 disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection)
         case .stripe(let paymentMethod):
             var additionalElements = [Element]()
 
@@ -642,10 +643,24 @@ extension PaymentSheetFormFactory {
     }
 
     /// All external payment methods use the same form that collects no user input except for any details the merchant configured PaymentSheet to collect (name, email, phone, billing address).
-    func makeExternalPaymentMethodForm() -> PaymentMethodElement {
-        let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    func makeExternalPaymentMethodForm(subtitle: String?, disableBillingDetailCollection: Bool) -> PaymentMethodElement {
+        let subtitleElement: SubtitleElement? = {
+            guard let subtitle, !subtitle.isEmpty else { return nil }
+            return makeCopyLabel(text: subtitle)
+        }()
+
+        let contactInfoSection: Element? = {
+            guard !disableBillingDetailCollection else { return nil }
+            return makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
+        }()
+
+        let billingDetails: Element? = {
+            guard !disableBillingDetailCollection else { return nil }
+            return makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        }()
+
+        let elements = [subtitleElement, contactInfoSection, billingDetails].compactMap { $0 }
+        return FormElement(elements: elements, theme: theme)
     }
 
     func makeSwish() -> PaymentMethodElement {
@@ -742,9 +757,7 @@ extension PaymentSheetFormFactory {
         return country
     }
 
-    func makeKlarnaCopyLabel() -> SubtitleElement {
-        let text = String.Localized.buy_now_or_pay_later_with_klarna
-
+    func makeCopyLabel(text: String) -> SubtitleElement {
         let label = UILabel()
         label.text = text
         label.font = theme.fonts.subheadline
