@@ -137,8 +137,8 @@ extension PaymentSheet {
             /// - If this is Apple Pay, the value is "apple_pay"
             public let paymentMethodType: String
 
-            init(paymentOption: PaymentOption) {
-                image = paymentOption.makeIcon(updateImageHandler: nil)
+            init(paymentOption: PaymentOption, currency: String?) {
+                image = paymentOption.makeIcon(updateImageHandler: nil, currency: currency)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
@@ -171,7 +171,7 @@ extension PaymentSheet {
         /// You can use this to e.g. display the payment option in your UI.
         public var paymentOption: PaymentOptionDisplayData? {
             if let selectedPaymentOption = _paymentOption {
-                return PaymentOptionDisplayData(paymentOption: selectedPaymentOption)
+                return PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency)
             }
             return nil
         }

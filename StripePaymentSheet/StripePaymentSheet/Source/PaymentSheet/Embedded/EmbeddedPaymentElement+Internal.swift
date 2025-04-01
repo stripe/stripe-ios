@@ -349,9 +349,9 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
-    init(paymentOption: PaymentOption, mandateText: NSAttributedString?) {
+    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?) {
         self.mandateText = mandateText
-        self.image = paymentOption.makeIcon(updateImageHandler: nil) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
+        self.image = paymentOption.makeIcon(updateImageHandler: nil, currency: currency) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:
             label = String.Localized.apple_pay

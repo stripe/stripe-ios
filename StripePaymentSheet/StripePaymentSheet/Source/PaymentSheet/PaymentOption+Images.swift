@@ -26,10 +26,10 @@ extension PaymentOption {
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName))
             } else {
-                return paymentMethod.makeIcon(currency: currency)
+                return paymentMethod.makeIcon()
             }
         case .new(let confirmParams):
-            return confirmParams.makeIcon(updateImageHandler: updateImageHandler)
+            return confirmParams.makeIcon(updateImageHandler: updateImageHandler, currency: currency)
         case .link:
             return Image.link_logo.makeImage()
         case .external(let paymentMethod, _):
@@ -41,12 +41,12 @@ extension PaymentOption {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle, currency: String?) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .saved(let paymentMethod, _):
-            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, currency: currency)
+            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
@@ -70,7 +70,7 @@ extension STPPaymentMethod {
         } ?? .unknown
     }
 
-    func makeIcon(currency: String?) -> UIImage {
+    func makeIcon() -> UIImage {
         switch type {
         case .card:
             return STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
@@ -81,7 +81,7 @@ extension STPPaymentMethod {
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             // TODO: This only looks at client-side assets! 
-            let image = type.makeImage(currency: currency)
+            let image = type.makeImage()
             if image == nil {
                 assertionFailure()
             }
@@ -90,7 +90,7 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, currency: String?) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?) -> UIImage {
         switch type {
         case .card:
             return calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
@@ -104,12 +104,12 @@ extension STPPaymentMethod {
             return Image.link_logo.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
-            return makeIcon(currency: currency)
+            return makeIcon()
         }
     }
 
     /// Returns an image to display inside a row representing the given payment option in the saved PM row view
-    func makeSavedPaymentMethodRowImage(currency: String?) -> UIImage {
+    func makeSavedPaymentMethodRowImage() -> UIImage {
         switch type {
         case .card:
             return STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
@@ -121,13 +121,13 @@ extension STPPaymentMethod {
             return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         default:
             assertionFailure("\(type) not supported for saved PMs")
-            return makeIcon(currency: currency)
+            return makeIcon()
         }
     }
 }
 
  extension STPPaymentMethodParams {
-    func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+     func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?, currency: String?) -> UIImage {
         switch type {
         case .card:
             let brand = STPCardValidator.brand(for: card)
@@ -135,7 +135,7 @@ extension STPPaymentMethod {
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
-            return PaymentSheet.PaymentMethodType.stripe(type).makeImage(updateHandler: updateHandler)
+            return PaymentSheet.PaymentMethodType.stripe(type).makeImage(updateHandler: updateHandler, currency: currency)
         }
     }
  }
@@ -153,7 +153,7 @@ extension STPPaymentMethodType {
         }
     }
 
-    func makeImage(forDarkBackground: Bool = false, currency: String?) -> UIImage? {
+    func makeImage(forDarkBackground: Bool = false, currency: String? = nil) -> UIImage? {
         let image: Image? = {
             switch self {
             case .card:
