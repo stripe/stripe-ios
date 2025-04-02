@@ -16,8 +16,8 @@ extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
     func makeIcon(
         for traitCollection: UITraitCollection? = nil,
-        updateImageHandler: DownloadManager.UpdateImageHandler?,
-        currency: String?
+        currency: String?,
+        updateImageHandler: DownloadManager.UpdateImageHandler?
     ) -> UIImage {
         switch self {
         case .applePay:
@@ -29,11 +29,11 @@ extension PaymentOption {
                 return paymentMethod.makeIcon()
             }
         case .new(let confirmParams):
-            return confirmParams.makeIcon(updateImageHandler: updateImageHandler, currency: currency)
+            return confirmParams.makeIcon(currency: currency, updateImageHandler: updateImageHandler)
         case .link(let linkConfirmOption):
             switch linkConfirmOption {
             case .signUp(_, _, _, _, let confirmParams):
-                return confirmParams.makeIcon(updateImageHandler: updateImageHandler, currency: currency)
+                return confirmParams.makeIcon(currency: currency, updateImageHandler: updateImageHandler)
             case .wallet, .withPaymentMethod, .withPaymentDetails:
                 return Image.link_logo.makeImage()
             }
@@ -133,7 +133,7 @@ extension STPPaymentMethod {
 }
 
  extension STPPaymentMethodParams {
-     func makeIcon(updateHandler: DownloadManager.UpdateImageHandler?, currency: String?) -> UIImage {
+     func makeIcon(currency: String?, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
             let brand = STPCardValidator.brand(for: card)

@@ -25,7 +25,7 @@ class PaymentMethodTypeImageView: UIImageView {
         self.currency = currency
         super.init(image: nil)
         self.contentMode = .scaleAspectFit
-        updateImage(currency: currency)
+        updateImage()
     }
 
     required init?(coder: NSCoder) {
@@ -35,11 +35,11 @@ class PaymentMethodTypeImageView: UIImageView {
 #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        updateImage(currency: currency)
+        updateImage()
     }
 #endif
 
-    func updateImage(currency: String?) {
+    func updateImage() {
         // Unfortunately the DownloadManager API returns either a placeholder image _or_ the actual image
         // Set the image now...
         let image = paymentMethodType.makeImage(forDarkBackground: contrastMatchingColor.roundToBlackOrWhite == .white, currency: currency) { [weak self] image in
