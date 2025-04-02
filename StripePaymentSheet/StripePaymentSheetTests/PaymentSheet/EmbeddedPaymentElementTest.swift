@@ -56,7 +56,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         super.tearDown()
         STPAnalyticsClient.sharedClient._testLogHistory = []
     }
-    
+
     // MARK: - `update` tests
 
     func testUpdate() async throws {
