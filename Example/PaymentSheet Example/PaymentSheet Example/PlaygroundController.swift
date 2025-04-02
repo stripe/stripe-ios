@@ -222,9 +222,6 @@ class PlaygroundController: ObservableObject {
 
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.formSheetAction = formSheetAction
-        configuration.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
-            // no-op
-        })
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         configuration.customPaymentMethodConfiguration = customPaymentMethodConfiguration
