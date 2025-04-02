@@ -345,6 +345,7 @@ extension CustomerSheet_ConfirmFlowTests {
                                                   isPaymentIntent: false,
                                                   isSettingUp: true,
                                                   countryCode: nil,
+                                                  currency: nil,
                                                   savePaymentMethodConsentBehavior: .legacy,
                                                   analyticsHelper: ._testValue(),
                                                   paymentMethodIncentive: nil)
