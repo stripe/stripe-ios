@@ -609,13 +609,13 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheet_LPM_AfterpayClearpay_only() {
         stubSessions(
-            fileMock: .elementsSessionsPaymentMethod_200,
+            fileMock: .elementsSessionsPaymentMethod_GB_200,
             responseCallback: { data in
                 return self.updatePaymentMethodDetail(
                     data: data,
                     variables: [
                         "<paymentMethods>": "\"afterpay_clearpay\"",
-                        "<currency>": "\"usd\"",
+                        "<currency>": "\"gbp\"",
                     ]
                 )
             }
@@ -632,15 +632,15 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentSheet_LPM_Clearpay_only() {
+    func testPaymentSheet_LPM_CashAppAfterpay_only() {
         stubSessions(
-            fileMock: .elementsSessionsPaymentMethod_GB_200,
+            fileMock: .elementsSessionsPaymentMethod_200,
             responseCallback: { data in
                 return self.updatePaymentMethodDetail(
                     data: data,
                     variables: [
                         "<paymentMethods>": "\"afterpay_clearpay\"",
-                        "<currency>": "\"gbp\"",
+                        "<currency>": "\"usd\"",
                     ]
                 )
             }
