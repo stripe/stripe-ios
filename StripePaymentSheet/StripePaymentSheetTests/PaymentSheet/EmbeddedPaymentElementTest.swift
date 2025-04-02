@@ -52,6 +52,11 @@ class EmbeddedPaymentElementTest: XCTestCase {
     var delegateDidUpdateHeightCalled = false
     var delegateWillPresentCalled = false
 
+    func tearDown() {
+        super.tearDown()
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+    }
+    
     // MARK: - `update` tests
 
     func testUpdate() async throws {
@@ -274,8 +279,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
 
     func testConfirmCard() async throws {
-        STPAnalyticsClient.sharedClient._testLogHistory = []
-        
         // Given an EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
         sut.delegate = self
