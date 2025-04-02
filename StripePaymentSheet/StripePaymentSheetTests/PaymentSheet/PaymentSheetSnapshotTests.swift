@@ -632,6 +632,56 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheet_LPM_Clearpay_only() {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_GB_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"afterpay_clearpay\"",
+                        "<currency>": "\"gbp\"",
+                    ]
+                )
+            }
+        )
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(
+            override_payment_methods_types: ["afterpay_clearpay"],
+            automaticPaymentMethods: false,
+            useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_Afterpay_only() {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_IT_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"afterpay_clearpay\"",
+                        "<currency>": "\"eur\"",
+                    ]
+                )
+            }
+        )
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(
+            override_payment_methods_types: ["afterpay_clearpay"],
+            automaticPaymentMethods: false,
+            useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheet_LPM_klarna_only() {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
