@@ -34,7 +34,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset and a form spec image URL...
         let loadExpectation = expectation(description: "Load form spec image")
         let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage(currency: nil) { image in
             // ...should update to the form spec image
             XCTAssertNotEqual(image, clientImage)
             XCTAssertTrue(image.size.width > 1) // Sanity check
