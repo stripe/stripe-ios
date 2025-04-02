@@ -24,10 +24,13 @@ protocol LinkAccountServiceProtocol {
     ///
     /// - Parameters:
     ///   - email: Email address associated with the account.
+    ///   - emailSource: Details on the source of the email used.
+    ///   - doNotLogConsumerFunnelEvent: Whether or not this lookup call should be logged backend side.
     ///   - completion: Completion block.
     func lookupAccount(
         withEmail email: String?,
         emailSource: EmailSource,
+        doNotLogConsumerFunnelEvent: Bool,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
 }
@@ -65,6 +68,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     func lookupAccount(
         withEmail email: String?,
         emailSource: EmailSource,
+        doNotLogConsumerFunnelEvent: Bool,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
         ConsumerSession.lookupSession(
@@ -72,7 +76,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             emailSource: emailSource,
             sessionID: sessionID,
             with: apiClient,
-            useMobileEndpoints: useMobileEndpoints
+            useMobileEndpoints: useMobileEndpoints,
+            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
         ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):

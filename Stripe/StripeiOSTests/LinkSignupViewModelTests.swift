@@ -12,7 +12,6 @@ import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 import StripePaymentsTestUtils
@@ -172,6 +171,7 @@ extension LinkInlineSignupViewModelTests {
         func lookupAccount(
             withEmail email: String?,
             emailSource: StripePaymentSheet.EmailSource,
+            doNotLogConsumerFunnelEvent: Bool,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             if shouldFailLookup {
