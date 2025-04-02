@@ -274,6 +274,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
 
     func testConfirmCard() async throws {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        
         // Given an EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfigWithConfirmHandler, configuration: configuration)
         sut.delegate = self
