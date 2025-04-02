@@ -137,11 +137,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     private typealias WalletHeaderView = PaymentSheetViewController.WalletHeaderView
     private lazy var walletHeader: WalletHeaderView = {
-        var walletOptions: WalletHeaderView.WalletOptions = []
-
-        if linkOnlyMode {
-            walletOptions.insert(.link)
-        }
+        var walletOptions: WalletHeaderView.WalletOptions = isLinkEnabled ? [.link] : []
 
         let header = WalletHeaderView(
             options: walletOptions,
@@ -555,8 +551,13 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             // just update the nav bar which is all we need to do anyway
             configureNavBar()
         }
-        updateButton()
-        updateBottomNotice()
+
+        // If there are no more options in the saved screen, switch to the "add" screen
+        if !savedPaymentOptionsViewController.hasPaymentOptions {
+            error = nil  // Clear any errors
+            mode = .addingNew // Switch to the "Add" screen
+        }
+        updateUI()
     }
 
     func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController) {
