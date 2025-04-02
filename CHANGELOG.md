@@ -1,3 +1,7 @@
+## XX.XX.X XXXX-XX-XX
+### PaymentSheet
+* [Changed] Updated Afterpay branding in the US to be Cash App Afterpay.
+
 ## 24.10.0 2025-03-31
 ### PaymentSheet
 * [Added] Added `LinkConfiguration` to allow control over Link in PaymentSheet.
