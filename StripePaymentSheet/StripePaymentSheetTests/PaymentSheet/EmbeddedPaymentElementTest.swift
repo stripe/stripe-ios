@@ -738,6 +738,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
     }
 
+    // MARK: Immediate action tests
+
     func testCreateFails_whenImmediateActionWithConfirmAndCustomer() async throws {
         // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and a customer configuration
         var config = configuration
@@ -817,6 +819,88 @@ class EmbeddedPaymentElementTest: XCTestCase {
         await fulfillment(of: [immediateActionExpectation])
     }
 
+    func testClearPaymentOptionIfNeededOnUpdateSuccess() async throws {
+        // Given a configuration that:
+        // - rowSelectionBehavior = .immediateAction
+        // - formSheetAction = .confirm
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
+        config.formSheetAction = .confirm { _ in
+            XCTFail("Confirm handler should not be invoked in this test.")
+        }
+        config.applePay = nil
+        config.customer = nil
+
+        // Create our EmbeddedPaymentElement
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: config)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        // Select Cash App Pay so that a payment option is temporarily set
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay")
+        )
+        XCTAssertNotNil(sut.paymentOption, "Payment option should be set after tapping Cash App Pay.")
+
+        // When we call update() in a way that returns .succeeded...
+        let updateResult = await sut.update(intentConfiguration: paymentIntentConfig2)
+        XCTAssertEqual(updateResult, .succeeded, "Expected update() to succeed.")
+
+        // Then payment option should be cleared
+        XCTAssertNil(
+            sut.paymentOption,
+            "Payment option should have been cleared after a successful update due to clearPaymentOptionIfNeeded()."
+        )
+    }
+
+    func testClearPaymentOptionIfNeededAfterFailedConfirm() async throws {
+        // Given a configuration that:
+        // - rowSelectionBehavior = .immediateAction
+        // - formSheetAction = .confirm
+        var config = configuration
+        let failureConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) {_, _, intentCreationCallback in
+            intentCreationCallback(.failure(TestError.testFailure))
+        }
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
+        config.formSheetAction = .confirm { _ in
+            // no-op
+        }
+        config.applePay = nil
+        config.customer = nil
+
+        // Create our EmbeddedPaymentElement
+        let sut = try await EmbeddedPaymentElement.create(
+            intentConfiguration: failureConfirmHandler,
+            configuration: config
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        // Fill out a card
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4000000000000002") // A card number that will fail
+        cardForm.getTextFieldElement("MM / YY").setText("1240")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("12345")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+        XCTAssertNotNil(sut.paymentOption, "Payment option should be set after filling out the card form.")
+
+        // When we call confirm() knowing it will fail...
+        let confirmResult = await sut.confirm()
+
+        // The result should be .failed and that triggers clearPaymentOptionIfNeeded()
+        XCTAssertTrue(confirmResult.isCanceledOrFailed)
+        XCTAssertNil(sut.paymentOption,
+            "Payment option should have been cleared after a canceled/failed confirmation.")
+    }
+
+}
+
+enum TestError: Error {
+    case testFailure
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
