@@ -1,5 +1,6 @@
-## X.X.X
+## 24.10.0 2025-03-31
 ### PaymentSheet
+* [Added] Added `LinkConfiguration` to allow control over Link in PaymentSheet.
 * [Fixed] Improved reliability of expiration date detection when scanning cards.
 
 ## 24.9.0 2025-03-24

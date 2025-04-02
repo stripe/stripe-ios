@@ -151,7 +151,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
         guard let selectedFormViewController else {
-            // If the current selection has no form VC, there's nothing to do
+            // If the current selection has no form VC, simply alert the merchant of the selection if they are using immediateAction
+            if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
+                didSelectPaymentOption()
+            }
             return
         }
         // Present the current selection's form VC
@@ -439,6 +442,9 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
         }
         embeddedFormViewController.dismiss(animated: true)
+        if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
+            didSelectPaymentOption()
+        }
         informDelegateIfPaymentOptionUpdated()
     }
 
@@ -544,6 +550,16 @@ extension EmbeddedPaymentElement {
             stpAssertionFailure("3DS2 was triggered unexpectedly")
         })
     }
+
+    static func validateRowSelectionConfiguration(configuration: Configuration) throws {
+        if case .immediateAction = configuration.rowSelectionBehavior,
+           case .confirm = configuration.formSheetAction {
+            // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
+            guard configuration.applePay == nil && configuration.customer == nil else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
+            }
+        }
+    }
 }
 
 // TODO(porter) When we use Xcode 16 on CI do this instead of `STPAuthenticationContextWrapper`
@@ -570,5 +586,18 @@ final class STPAuthenticationContextWrapper: UIViewController {
 extension STPAuthenticationContextWrapper: STPAuthenticationContext {
     public func authenticationPresentingViewController() -> UIViewController {
         return _presentingViewController
+    }
+}
+
+extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior: Equatable {
+   @_spi(STP) public static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
+        switch (lhs, rhs) {
+        case (.default, .default):
+            return true
+        case (.immediateAction, .immediateAction):
+            return true
+        default:
+            return false
+        }
     }
 }
