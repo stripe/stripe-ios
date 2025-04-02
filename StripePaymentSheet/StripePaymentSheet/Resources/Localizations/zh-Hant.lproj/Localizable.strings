@@ -62,8 +62,6 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>條款</terms>和<privacy>隱私政策</privacy>。";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "提供您的銀行帳戶詳情並確認這筆付款即表示您同意該「直接借記請求」以及<terms>「直接借記請求」服務協議</terms>，並授權 Payments Australia Pty Ltd ACN 160 180 343，直接借記使用者 ID 507156 (「Stripe」)透過「批量電子清算系統」(BECS) 代 %@（「商家」）向您收取「商家」單獨與您議定的金額。您確認您是上述所列帳戶的開戶人或授權簽字者。";
-
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "提供您的金融卡資訊，即表示您允許 %@ 按照他們的條款從您的金融卡扣取未來款項。";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電郵地址，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱政策</privacy>建立 Link 帳戶並將您的支付資訊保存到 Link。";
@@ -104,6 +102,8 @@
 
 "Default" = "預設";
 
+"Default payment method" = "預設支付方式";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "手動輸入地址";
@@ -111,6 +111,8 @@
 "Enter the code sent to %@ to use your saved information." = "輸入發送到 %@ 的驗證碼來使用您保存的資訊。";
 
 "FPX Bank" = "FPX Bank";
+
+"Failed to connect" = "連接失敗";
 
 "Fast, secure, 1⁠-⁠click checkout" = "快速安全地一鍵結帳";
 
@@ -240,8 +242,6 @@
 
 "Simple, secure one-click payments" = "簡單、安全地一鍵支付";
 
-"Something went wrong when linking your account.\nPlease try again later." = "關聯您的帳戶時發生了錯誤。\n請稍後重試。";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封包含說明的電子郵件，指導您用 %@ 保存您的銀行帳戶。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封郵件，指導您完成向 %@ 的付款。";
@@ -251,8 +251,6 @@
 "Tap to expand" = "點擊以展開";
 
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您輸入的 IBAN 無效，「%@」是不支援的國家代碼。";
 
 "The provided verification code has expired." = "提供的驗證碼已過期。";
 

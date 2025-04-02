@@ -58,8 +58,16 @@ class EmbeddedPaymentElementTest: XCTestCase {
         STPAnalyticsClient.sharedClient._testLogHistory = []
         CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
 
+        let rowSelectionBehaviorExpectation = XCTestExpectation(description: "immediateAction handler only called once.")
+        rowSelectionBehaviorExpectation.expectedFulfillmentCount = 1
+        rowSelectionBehaviorExpectation.assertForOverFulfill = true
+
         // Given a EmbeddedPaymentElement instance...
-        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
+            rowSelectionBehaviorExpectation.fulfill()
+        })
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: config)
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
@@ -112,7 +120,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
             secondUpdateExpectation.fulfill()
         }
-        await fulfillment(of: [secondUpdateExpectation])
+        await fulfillment(of: [secondUpdateExpectation, rowSelectionBehaviorExpectation])
     }
 
     func testUpdateFails() async throws {
@@ -228,7 +236,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.view.autosizeHeight(width: 320)
         sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
         // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in })
+        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in
+            // These tests don't confirm, so this is unused
+            XCTFail("Unexpectedly called confirm handler of broken config")
+        })
         async let _ = sut.update(intentConfiguration: brokenConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
         async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
@@ -331,8 +342,16 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
 
     func testPaymentOptionDisplayData() async throws {
+        let rowSelectionBehaviorExpectation = XCTestExpectation(description: "immediateAction handler is called twice.")
+        rowSelectionBehaviorExpectation.expectedFulfillmentCount = 2
+        rowSelectionBehaviorExpectation.assertForOverFulfill = true
+
         // Given a EmbeddedPaymentElement instance...
-        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: setupIntentConfig, configuration: configuration)
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
+            rowSelectionBehaviorExpectation.fulfill()
+        })
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: setupIntentConfig, configuration: config)
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
@@ -353,11 +372,22 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(delegatePaymentOption?.label, "Amazon Pay")
         XCTAssertEqual(delegatePaymentOption?.paymentMethodType, "amazon_pay")
         XCTAssertTrue(delegatePaymentOption?.mandateText?.string.contains("Amazon Pay") ?? false)
+
+        await fulfillment(of: [rowSelectionBehaviorExpectation])
     }
 
     func testClearPaymentOptionAfterSelection() async throws {
+        let rowSelectionBehaviorExpectation = XCTestExpectation(description: "immediateAction handler is only called once.")
+        rowSelectionBehaviorExpectation.expectedFulfillmentCount = 1
+        rowSelectionBehaviorExpectation.assertForOverFulfill = true
+
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
+            rowSelectionBehaviorExpectation.fulfill()
+        })
+
         // Given a EmbeddedPaymentElement instance...
-        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: config)
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
@@ -384,6 +414,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // The delegate should have been notified again after reset
         XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+
+        await fulfillment(of: [rowSelectionBehaviorExpectation])
     }
 
     func testClearPaymentOptionWhenNoSelection() async throws {
@@ -407,6 +439,67 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertNil(sut.paymentOption)
         XCTAssertFalse(delegateDidUpdatePaymentOptionCalled)
         XCTAssertFalse(delegateDidUpdateHeightCalled)
+    }
+
+    func testClearPaymentOptionNoPreviousSelection() async throws {
+        let rowSelectionBehaviorExpectation = XCTestExpectation(description: "immediateAction handler is only called once.")
+        rowSelectionBehaviorExpectation.expectedFulfillmentCount = 1
+        rowSelectionBehaviorExpectation.assertForOverFulfill = true
+
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
+            rowSelectionBehaviorExpectation.fulfill()
+        })
+
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: config)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Initially, no paymentOption should be selected
+        XCTAssertNil(sut.paymentOption)
+
+        // Select the "Card" payment method
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+        // ...and filling out the form
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+
+        // Card should be populated as the payment option
+        XCTAssertNotNil(sut.paymentOption)
+
+        // Reset flags
+        delegateDidUpdatePaymentOptionCalled = false
+        delegateDidUpdateHeightCalled = false
+
+        // Reset the selection
+        sut.clearPaymentOption()
+
+        // The paymentOption should now be nil after reset
+        XCTAssertNil(sut.paymentOption)
+        XCTAssertNil(sut.selectedFormViewController)
+
+        // The delegate should have been notified again after reset
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+
+        // Open the card form
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+        // Form details should be preserved
+        XCTAssertEqual(cardForm.getTextFieldElement("Card number").text, "4242424242424242")
+        XCTAssertEqual(cardForm.getTextFieldElement("MM / YY").text, "1232")
+        XCTAssertEqual(cardForm.getTextFieldElement("CVC").text, "123")
+        XCTAssertEqual(cardForm.getTextFieldElement("ZIP").text, "65432")
+        sut.selectedFormViewController?.didTapOrSwipeToDismiss()
+
+        // Payment option should remain nil after closing the card form
+        XCTAssertNil(sut.paymentOption)
+
+        await fulfillment(of: [rowSelectionBehaviorExpectation])
     }
 
     func testConfirmThenUpdateFails() async throws {
@@ -563,6 +656,167 @@ class EmbeddedPaymentElementTest: XCTestCase {
         changeButtonState = sut.getChangeButtonState(for: .new(paymentMethodType: .stripe(.card)))
         XCTAssertEqual(changeButtonState.sublabel, "Cartes Bancaires •••• 1001")
     }
+
+    func testDelegatePaymentOptionUpdate() async throws {
+        let rowSelectionBehaviorExpectation = XCTestExpectation(description: "immediateAction handler is only twice.")
+        rowSelectionBehaviorExpectation.expectedFulfillmentCount = 2
+        rowSelectionBehaviorExpectation.assertForOverFulfill = true
+
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
+            rowSelectionBehaviorExpectation.fulfill()
+        })
+        // Given a EmbeddedPaymentElement instance...
+        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: config)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // Reset delegate tracking
+        delegateDidUpdatePaymentOptionCalled = false
+
+        // Select Cash App Pay (which has no form to collect input)...
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
+
+        // ...the delegate should be called immediately since there's no form
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled, "Delegate should be updated immediately for payment methods without forms")
+        XCTAssertEqual(sut.paymentOption?.label, "Cash App Pay")
+
+        // Reset delegate tracking
+        delegateDidUpdatePaymentOptionCalled = false
+
+        // Select Card (which has a form to collect input)...
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+
+        // ...the delegate should not be called yet since the payment option is in an indeterminate state while the form is open
+        XCTAssertFalse(delegateDidUpdatePaymentOptionCalled, "Delegate should not be updated immediately for payment methods with forms")
+        XCTAssertNil(sut.paymentOption, "Payment option should be nil until form is canceled or completed")
+
+        // Fill out the card form...
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+
+        // ...and submit the form
+        sut.selectedFormViewController?.didTapPrimaryButton()
+
+        // ...the delegate should be called after the form is submitted
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled, "Delegate should be updated after card form is completed")
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
+
+        await fulfillment(of: [rowSelectionBehaviorExpectation])
+    }
+
+    func testCreateFails_whenImmediateActionWithConfirmAndApplePay() async throws {
+        // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and Apple Pay
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
+        config.formSheetAction = .confirm { _ in
+            XCTFail("Confirm handler should not be invoked in this test.")
+        }
+        config.applePay = EmbeddedPaymentElement.ApplePayConfiguration(
+            merchantId: "test_merchant_id",
+            merchantCountryCode: "US"
+        )
+
+        // When we create an EmbeddedPaymentElement
+        do {
+            _ = try await EmbeddedPaymentElement.create(
+                intentConfiguration: paymentIntentConfig,
+                configuration: config
+            )
+            XCTFail("Expected error to be thrown but received none.")
+        } catch {
+            // Then we expect a PaymentSheetError indicating the unsupported configuration
+            guard let paymentSheetError = error as? PaymentSheetError else {
+                XCTFail("Unexpected error type: \(error)")
+                return
+            }
+            XCTAssertTrue(paymentSheetError.debugDescription.contains("immediateAction with .confirm form sheet action is not supported"))
+        }
+    }
+
+    func testCreateFails_whenImmediateActionWithConfirmAndCustomer() async throws {
+        // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and a customer configuration
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
+        config.formSheetAction = .confirm { _ in
+            XCTFail("Confirm handler should not be invoked in this test.")
+        }
+        config.customer = .init(
+            id: "cus_1234",
+            ephemeralKeySecret: "ek_test_1234"
+        )
+
+        // When we create an EmbeddedPaymentElement
+        do {
+            _ = try await EmbeddedPaymentElement.create(
+                intentConfiguration: paymentIntentConfig,
+                configuration: config
+            )
+            XCTFail("Expected error to be thrown but received none.")
+        } catch {
+            // Then we expect a PaymentSheetError indicating the unsupported configuration
+            guard let paymentSheetError = error as? PaymentSheetError else {
+                XCTFail("Unexpected error type: \(error)")
+                return
+            }
+            XCTAssertTrue(paymentSheetError.debugDescription.contains("immediateAction with .confirm form sheet action is not supported"))
+        }
+    }
+
+    func testImmediateActionIsCalledWhenSelectingSamePaymentMethodMultipleTimes() async throws {
+        // We'll expect the immediateAction closure to be called 4 times:
+        // - Twice for repeated taps on the "Cash App Pay" row (no form)
+        // - Twice for repeated taps on the "Card" row (with form)
+        let immediateActionExpectation = XCTestExpectation(description: "immediateAction invoked multiple times")
+        immediateActionExpectation.expectedFulfillmentCount = 4
+        immediateActionExpectation.assertForOverFulfill = true
+
+        // Given a configuration with immediateAction
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
+            immediateActionExpectation.fulfill()
+        })
+
+        // Create the EmbeddedPaymentElement
+        let sut = try await EmbeddedPaymentElement.create(
+            intentConfiguration: paymentIntentConfig,
+            configuration: config
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+
+        // 1) Tap "Cash App Pay" multiple times (no form)
+        let cashAppButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay")
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cashAppButton)
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cashAppButton)
+
+        // 2) Tap "Card" multiple times (with form)
+        let cardButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardButton)
+
+        // Fill out the card form so it can be selected.
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+
+        // Submit the card form (this dismisses it and calls immediateAction).
+        sut.selectedFormViewController?.didTapPrimaryButton()
+
+        // After dismiss, tap "Card" again to test repeated selection with a form
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardButton)
+        sut.selectedFormViewController?.didTapPrimaryButton()
+
+        // Wait for all expected callbacks
+        await fulfillment(of: [immediateActionExpectation])
+    }
+
 }
 
 extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {

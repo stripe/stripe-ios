@@ -169,14 +169,14 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
         return nameValid && emailValid && phoneValid && addressValid
     }
-    
+
     var displayableIncentive: PaymentMethodIncentive? {
         // We can show the incentive if we haven't linked a bank yet, meaning
         // that we have no indication that the session is ineligible.
         let canShowIncentive = linkedBank?.incentiveEligible ?? true
         return canShowIncentive ? incentive : nil
     }
-    
+
     var showIncentiveInHeader: Bool {
         // Only show the incentive if the user hasn't linked a bank account yet. If they have,
         // the incentive will be shown in the bank form instead.
@@ -185,7 +185,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
-        titleElement: StaticElement?,
+        subtitleElement: SubtitleElement?,
         nameElement: PaymentMethodElementWrapper<TextFieldElement>?,
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
@@ -195,7 +195,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         appearance: PaymentSheet.Appearance = .default
     ) {
         let theme = appearance.asElementsTheme
-        
+
         self.configuration = configuration
         self.linkedBankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance, incentive: incentive)
         self.linkedBankInfoSectionElement = SectionElement(
@@ -222,7 +222,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         }
 
         let allElements: [Element?] = [
-            titleElement,
+            subtitleElement,
             nameElement,
             emailElement,
             phoneElement,
@@ -243,20 +243,20 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.linkedBank = linkedBank
         self.delegate?.didUpdate(element: self)
     }
-    
+
     fileprivate func renderLinkedBank(_ linkedBank: InstantDebitsLinkedBank?) {
         if let linkedBank, let last4ofBankAccount = linkedBank.last4, let bankName = linkedBank.bankName {
             linkedBankInfoView.setBankName(text: bankName)
             linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
             linkedBankInfoView.setIncentiveEligible(linkedBank.incentiveEligible)
         }
-        
+
         formElement.toggleElements(
             linkedBankElements,
             hidden: linkedBank == nil,
             animated: true
         )
-        
+
         if let promoDisclaimerElement {
             let hideDisclaimer = incentive == nil || linkedBank?.incentiveEligible == false
             formElement.toggleElements(

@@ -27,6 +27,9 @@ extension EmbeddedPaymentElement {
         /// If set, PaymentSheet displays Apple Pay as a payment option
         public var applePay: ApplePayConfiguration?
 
+        /// Configuration related to Link
+        public var link: LinkConfiguration = LinkConfiguration()
+
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
             get {
@@ -160,6 +163,21 @@ extension EmbeddedPaymentElement {
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 
         internal var linkPaymentMethodsOnly: Bool = false
+
+        /// Describes how you handle row selections in EmbeddedPaymentElement
+        public enum RowSelectionBehavior {
+          /// When a payment option is selected, the customer taps a button to continue or confirm payment.
+          /// This is the default recommended integration.
+          case `default`
+
+          /// When a payment option is selected, `didSelectPaymentOption` is triggered.
+          /// You can implement this method to immediately perform an action e.g. go back to the checkout screen or confirm the payment.
+          /// Note that certain payment options like Apple Pay and saved payment methods are disabled in this mode if you set `formSheetAction` to `.confirm`.
+          case immediateAction(didSelectPaymentOption: () -> Void)
+        }
+
+        /// Determines the behavior when a row  is selected. Defaults to `.default`.
+        public var rowSelectionBehavior: RowSelectionBehavior = .default
 
         /// Initializes a Configuration with default values
         public init() {}

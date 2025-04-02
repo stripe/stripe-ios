@@ -67,6 +67,8 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
+        try validateRowSelectionConfiguration(configuration: configuration)
+
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
@@ -443,6 +445,7 @@ extension EmbeddedPaymentElement {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias ApplePayConfiguration = PaymentSheet.ApplePayConfiguration
+    public typealias LinkConfiguration = PaymentSheet.LinkConfiguration
     public typealias CustomerConfiguration = PaymentSheet.CustomerConfiguration
     public typealias BillingDetails = PaymentSheet.BillingDetails
     public typealias Address = PaymentSheet.Address

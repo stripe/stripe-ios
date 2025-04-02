@@ -333,8 +333,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
         ]
 
-        let cpms: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType] = [.init(id: "cpmt_123"), .init(id: "cpmt_789")]
-        let cpmConfig = PaymentSheet.CustomPaymentMethodConfiguration(customPaymentMethodTypes: cpms) { _, _ in
+        let cpms: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod] = [.init(id: "cpmt_123"), .init(id: "cpmt_789")]
+        let cpmConfig = PaymentSheet.CustomPaymentMethodConfiguration(customPaymentMethods: cpms) { _, _ in
             return .canceled
         }
 

@@ -100,6 +100,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "100.00"
             }
         }
+        func customDisplayName(currency: Currency) -> String {
+            switch currency {
+            case .jpy:
+                return displayName.replacingOccurrences(of: ".", with: "")
+            default:
+                return displayName
+            }
+        }
     }
 
     enum Currency: String, PickerEnum {
@@ -169,6 +177,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case buy
         case setup
         case checkout
+    }
+
+    enum LinkDisplay: String, PickerEnum {
+        static var enumName: String { "Link display" }
+
+        case automatic
+        case never
     }
 
     enum AllowsDelayedPMs: String, PickerEnum {
@@ -329,6 +344,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
     enum InstantDebitsIncentives: String, PickerEnum {
         static var enumName: String { "Instant Debits Incentives" }
+
+        case on
+        case off
+    }
+    enum FCLiteEnabled: String, PickerEnum {
+        static var enumName: String { "FCLite enabled" }
 
         case on
         case off
@@ -500,6 +521,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var customEmail: String?
     var linkPassthroughMode: LinkPassthroughMode
     var linkEnabledMode: LinkEnabledMode
+    var linkDisplay: LinkDisplay
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -507,6 +529,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var autoreload: Autoreload
     var shakeAmbiguousViews: ShakeAmbiguousViews
     var instantDebitsIncentives: InstantDebitsIncentives
+    var fcLiteEnabled: FCLiteEnabled
     var externalPaymentMethods: ExternalPaymentMethods
     var customPaymentMethods: CustomPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
@@ -551,6 +574,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             customEmail: nil,
             linkPassthroughMode: .passthrough,
             linkEnabledMode: .native,
+            linkDisplay: .automatic,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
@@ -558,6 +582,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             autoreload: .on,
             shakeAmbiguousViews: .off,
             instantDebitsIncentives: .off,
+            fcLiteEnabled: .off,
             externalPaymentMethods: .off,
             customPaymentMethods: .off,
             preferredNetworksEnabled: .off,
