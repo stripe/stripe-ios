@@ -52,7 +52,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     var delegateDidUpdateHeightCalled = false
     var delegateWillPresentCalled = false
 
-    func tearDown() {
+    override func tearDown() {
         super.tearDown()
         STPAnalyticsClient.sharedClient._testLogHistory = []
     }
