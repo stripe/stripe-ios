@@ -1,5 +1,6 @@
-## XX.XX.X XXXX-XX-XX
+## x.x.x x-x-x
 ### PaymentSheet
+* [Added] Added `rowSelectionBehavior` API to Embedded Payment Element (private preview).
 * [Changed] Updated Afterpay branding in the US to be Cash App Afterpay.
 
 ## 24.10.0 2025-03-31

@@ -551,6 +551,15 @@ extension EmbeddedPaymentElement {
         })
     }
 
+    func clearPaymentOptionIfNeeded() {
+        guard case .immediateAction = configuration.rowSelectionBehavior,
+           case .confirm = configuration.formSheetAction else {
+            return
+        }
+
+        clearPaymentOption()
+    }
+
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
         if case .immediateAction = configuration.rowSelectionBehavior,
            case .confirm = configuration.formSheetAction {
@@ -597,6 +606,17 @@ extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior: Equatable {
         case (.immediateAction, .immediateAction):
             return true
         default:
+            return false
+        }
+    }
+}
+
+extension PaymentSheetResult {
+    var isCanceledOrFailed: Bool {
+        switch self {
+        case .canceled, .failed:
+            return true
+        case .completed:
             return false
         }
     }
