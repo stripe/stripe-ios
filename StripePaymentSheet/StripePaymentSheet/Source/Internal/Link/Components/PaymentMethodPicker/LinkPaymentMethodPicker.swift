@@ -79,6 +79,12 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    var cardBrandFilter: CardBrandFilter = CardBrandFilter.default {
+        didSet {
+            reloadData()
+        }
+    }
+
     private var needsDataReload: Bool = true
 
     private lazy var stackView: UIStackView = {
@@ -232,7 +238,10 @@ extension LinkPaymentMethodPicker {
 
         cell.paymentMethod = paymentMethod
         cell.isSelected = selectedIndex == index
-        cell.isSupported = supportedPaymentMethodTypes.contains(paymentMethod.type)
+        cell.isSupported = paymentMethod.isSupported(
+            supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+            cardBrandFilter: cardBrandFilter
+        )
     }
 
     func showLoader(at index: Int) {
@@ -344,6 +353,23 @@ extension ConsumerPaymentDetails {
             billingEmailAddress: billingEmailAddress,
             isDefault: isDefault
         )
+    }
+
+    /// Returns whether the `ConsumerPaymentDetails`is supported given the provided `supportedPaymentMethodTypes` and `cardBrandFilter`.
+    func isSupported(
+        supportedPaymentMethodTypes: Set<ConsumerPaymentDetails.DetailsType>,
+        cardBrandFilter: CardBrandFilter
+    ) -> Bool {
+        let supportsPaymentMethodType = supportedPaymentMethodTypes.contains(type)
+        let acceptsPaymentMethod = switch details {
+        case .card(let card):
+            cardBrandFilter.isAccepted(cardBrand: card.stpBrand)
+        case .bankAccount:
+            true
+        case .unparsable:
+            false
+        }
+        return supportsPaymentMethodType && acceptsPaymentMethod
     }
 }
 

@@ -61,11 +61,6 @@ extension PaymentSheet {
             return false
         }
 
-        // Disable Link if the merchant is using card brand filtering
-        guard configuration.cardBrandAcceptance == .all else {
-           return false
-        }
-
         guard elementsSession.isCompatible(with: configuration) else {
             return false
         }

@@ -179,7 +179,10 @@ extension PayWithLinkViewController {
                 return false
             }
 
-            return supportedPaymentMethodTypes.contains(selectedPaymentMethod.type)
+            return selectedPaymentMethod.isSupported(
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                cardBrandFilter: context.configuration.cardBrandFilter
+            )
         }
 
         init(
