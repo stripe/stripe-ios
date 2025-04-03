@@ -2812,7 +2812,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     private func testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: Bool) {
         let email = "billing_details_test+\(UUID().uuidString)@link.com"
         let cvc = "1234"
-//        let paymentMethodLabel = "American Express ending in 0, 0, 0, 5"
 
         let settings = createLinkPlaygroundSettings(
             passthroughMode: passthroughMode,
@@ -2841,6 +2840,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         // Enter CVC if requested
         let cvcField = app.textFields["CVC"]
         if cvcField.waitForExistence(timeout: 5) {
+            cvcField.tap()
             cvcField.typeText(cvc)
         }
 
