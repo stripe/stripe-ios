@@ -77,7 +77,7 @@ class AfterpayPriceBreakdownView: UIView {
             .foregroundColor: theme.colors.bodyText,
         ]
         let template = STPLocalizedString(
-            "Buy now or pay later with <img/>",
+            "Buy now or pay later with  <img/>",
             "Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay"
         )
 

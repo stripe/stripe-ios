@@ -424,7 +424,7 @@ extension RowButton {
 
     static func makeForPaymentMethodType(
         paymentMethodType: PaymentSheet.PaymentMethodType,
-        currency: String?,
+        currency: String? = nil,
         hasSavedCard: Bool,
         accessoryView: UIView? = nil,
         promoText: String? = nil,

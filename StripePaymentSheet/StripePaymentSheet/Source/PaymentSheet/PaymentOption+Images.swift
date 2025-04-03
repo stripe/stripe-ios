@@ -40,7 +40,7 @@ extension PaymentOption {
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
                 forDarkBackground: traitCollection?.isDarkMode ?? false,
-                currency: nil,
+                currency: currency,
                 updateHandler: nil
             )
         }

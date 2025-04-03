@@ -180,19 +180,19 @@ extension PaymentMethodTypeCollectionView {
         var currency: String?
         var paymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.card) {
             didSet {
-                update(currency: currency)
+                update()
             }
         }
 
         var promoBadgeText: String? {
             didSet {
-                update(currency: currency)
+                update()
             }
         }
 
         var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default {
             didSet {
-                update(currency: currency)
+                update()
             }
         }
 
@@ -274,7 +274,7 @@ extension PaymentMethodTypeCollectionView {
             clipsToBounds = false
             layer.masksToBounds = false
 
-            update(currency: currency)
+            update()
         }
 
         override func layoutSubviews() {
@@ -291,13 +291,13 @@ extension PaymentMethodTypeCollectionView {
         #if !canImport(CompositorServices)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
-            update(currency: currency)
+            update()
         }
         #endif
 
         override var isSelected: Bool {
             didSet {
-                update(currency: currency)
+                update()
             }
         }
 
@@ -319,7 +319,7 @@ extension PaymentMethodTypeCollectionView {
 
         // MARK: - Private Methods
         var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
-        private func update(currency: String?) {
+        private func update() {
             contentView.layer.cornerRadius = appearance.cornerRadius
             shadowRoundedRectangle.appearance = appearance
             label.text = paymentMethodType.displayName
