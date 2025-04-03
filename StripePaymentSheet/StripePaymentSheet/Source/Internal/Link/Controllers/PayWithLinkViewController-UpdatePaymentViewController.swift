@@ -39,8 +39,7 @@ extension PayWithLinkViewController {
             label.numberOfLines = 0
             label.textAlignment = .center
             label.text = if isBillingDetailsUpdateFlow {
-                // TODO: Localize me
-                "Update before continuing"
+                String.Localized.update_before_continuing
             } else {
                 String.Localized.update_card
             }

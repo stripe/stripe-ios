@@ -222,15 +222,23 @@ extension PayWithLinkViewController {
             signUpButton.isLoading = true
 
             viewModel.signUp { [weak self] result in
+                guard let self else {
+                    return
+                }
+
                 switch result {
                 case .success(let account):
-                    self?.coordinator?.accountUpdated(account)
+                    let phoneNumber = self.viewModel.phoneNumber?.string(as: .e164)
+                    // We can't access the phone number used for signup via the consumer session,
+                    // so we keep track of it on the client.
+                    account.phoneNumberUsedInSignup = phoneNumber
+                    self.coordinator?.accountUpdated(account)
                     STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                 case .failure(let error):
                     STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                 }
 
-                self?.signUpButton.isLoading = false
+                self.signUpButton.isLoading = false
             }
         }
 

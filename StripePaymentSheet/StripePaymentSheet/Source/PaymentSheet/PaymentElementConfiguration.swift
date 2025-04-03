@@ -74,7 +74,7 @@ extension PaymentElementConfiguration {
         }
 
         if billingDetailsCollectionConfiguration.phone == .always {
-            billingDetails.phone = billingDetails.phone ?? linkAccount.currentSession?.unredactedPhoneNumberWithPrefix
+            billingDetails.phone = billingDetails.phone ?? linkAccount.currentSession?.unredactedPhoneNumberWithPrefix ?? linkAccount.phoneNumberUsedInSignup
         }
 
         // We can't get the name from the consumer session, so we'll leave it as-is.

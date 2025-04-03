@@ -281,7 +281,7 @@ extension PayWithLinkViewController {
                 in: linkAccount.currentSession
             )
 
-            return paymentDetailsAreSupported // && attachDefaultsIsSupported
+            return paymentDetailsAreSupported
         }
 
         private func handleIncompleteBillingDetails(
