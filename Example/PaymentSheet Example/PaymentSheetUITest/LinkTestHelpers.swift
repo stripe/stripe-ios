@@ -104,40 +104,6 @@ extension XCTestCase {
         otcField.typeText("000000")
     }
 
-    func removeLinkPaymentMethod(_ app: XCUIApplication, label: String) {
-        app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
-        let row = app.otherElements[label]
-        XCTAssertTrue(row.waitForExistence(timeout: 5))
-        row.press(forDuration: 1)
-        app.buttons["Remove card"].waitForExistenceAndTap()
-        app.buttons["Remove"].waitForExistenceAndTap()
-
-        // Make sure it's gone
-        app.otherElements[label].waitForNonExistence(timeout: 10)
-    }
-
-    func selectLinkPaymentMethod(_ app: XCUIApplication, label: String) {
-        app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
-        let row = app.otherElements[label]
-        XCTAssertTrue(row.waitForExistenceAndTap(timeout: 5))
-    }
-
-    func addLinkPaymentMethod(
-        _ app: XCUIApplication,
-        cardNumber: String = "378282246310005",
-        cvc: String = "1234",
-        billingDetails: Bool = false
-    ) {
-        app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
-        app.buttons["Add a payment method"].waitForExistenceAndTap()
-
-        try! fillCardData(app, cardNumber: cardNumber, cvc: cvc)
-
-        if billingDetails {
-            // TODO: Fill in billing details
-        }
-    }
-
     func payLink(_ app: XCUIApplication) {
         app.buttons
             .matching(identifier: "Pay $50.99")
