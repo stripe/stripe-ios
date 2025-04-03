@@ -73,6 +73,7 @@
 		4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */; };
 		41A2A5642C5ABD6C0077FC74 /* StripeConnectTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */; };
 		41A2A5682C5AC5120077FC74 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A2A5672C5AC5120077FC74 /* StripeCore.framework */; };
+		41B28EEF2D91E60900B6B34D /* ConnectActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B28EEE2D91E60000B6B34D /* ConnectActivityIndicator.swift */; };
 		41B64AA82D5B8CF70026DD7A /* ComponentAccountSessionClaimed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B64AA72D5B8CEE0026DD7A /* ComponentAccountSessionClaimed.swift */; };
 		41B64AC72D5D48E60026DD7A /* MobileInputReceivedSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B64AC62D5D48E00026DD7A /* MobileInputReceivedSender.swift */; };
 		41B64AC92D5D506D0026DD7A /* CloseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B64AC82D5D50690026DD7A /* CloseWebView.swift */; };
@@ -276,6 +277,7 @@
 		4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandler.swift; sourceTree = "<group>"; };
 		41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectTests.xctestplan; sourceTree = "<group>"; };
 		41A2A5672C5AC5120077FC74 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		41B28EEE2D91E60000B6B34D /* ConnectActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectActivityIndicator.swift; sourceTree = "<group>"; };
 		41B64AA72D5B8CEE0026DD7A /* ComponentAccountSessionClaimed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentAccountSessionClaimed.swift; sourceTree = "<group>"; };
 		41B64AC62D5D48E00026DD7A /* MobileInputReceivedSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileInputReceivedSender.swift; sourceTree = "<group>"; };
 		41B64AC82D5D50690026DD7A /* CloseWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseWebView.swift; sourceTree = "<group>"; };
@@ -482,6 +484,7 @@
 		413987C62C63F34B001D375E /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				41B28EEE2D91E60000B6B34D /* ConnectActivityIndicator.swift */,
 				E6660D8A2CDC414E002A7631 /* Analytics */,
 				E640C9CD2CBF26C9009D0C6E /* AuthenticatedWebView */,
 				E6660CFC2CC2F99C002A7631 /* FinancialConnectionsPresenter.swift */,
@@ -1078,6 +1081,7 @@
 				E611A7182CE8372800B3F580 /* ActivityViewControllerWithoutPopover.swift in Sources */,
 				E6660D9F2CDC4194002A7631 /* UnrecognizedSetterEvent.swift in Sources */,
 				E6660DA02CDC4194002A7631 /* ComponentLoadedEvent.swift in Sources */,
+				41B28EEF2D91E60900B6B34D /* ConnectActivityIndicator.swift in Sources */,
 				E6660DA12CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift in Sources */,
 				E6660DA72CDC42F4002A7631 /* Encodable+Connect.swift in Sources */,
 				416E9E762C751B0500A0B917 /* EmbeddedComponentManager.swift in Sources */,
