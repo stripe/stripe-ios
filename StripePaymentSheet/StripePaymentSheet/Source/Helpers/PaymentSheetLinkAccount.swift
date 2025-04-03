@@ -63,6 +63,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     var paymentSheetLinkAccountDelegate: PaymentSheetLinkAccountDelegate?
 
     var phoneNumberUsedInSignup: String?
+    var nameUsedInSignup: String?
 
     let email: String
 

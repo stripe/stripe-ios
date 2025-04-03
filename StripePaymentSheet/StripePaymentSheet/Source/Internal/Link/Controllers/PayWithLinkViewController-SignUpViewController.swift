@@ -228,10 +228,10 @@ extension PayWithLinkViewController {
 
                 switch result {
                 case .success(let account):
-                    let phoneNumber = self.viewModel.phoneNumber?.string(as: .e164)
-                    // We can't access the phone number used for signup via the consumer session,
+                    // We can't access the following fields used for signup via the consumer session,
                     // so we keep track of it on the client.
-                    account.phoneNumberUsedInSignup = phoneNumber
+                    account.phoneNumberUsedInSignup = self.viewModel.phoneNumber?.string(as: .e164)
+                    account.nameUsedInSignup = self.viewModel.legalName
                     self.coordinator?.accountUpdated(account)
                     STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                 case .failure(let error):
