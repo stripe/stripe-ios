@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### PaymentSheet
+* [Added] Added `rowSelectionBehavior` API to Embedded Payment Element (private preview).
+
 ## 24.10.0 2025-03-31
 ### PaymentSheet
 * [Added] Added `LinkConfiguration` to allow control over Link in PaymentSheet.
