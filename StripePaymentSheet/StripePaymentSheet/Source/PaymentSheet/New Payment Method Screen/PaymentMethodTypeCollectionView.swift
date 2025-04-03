@@ -184,7 +184,7 @@ extension PaymentMethodTypeCollectionView {
             }
         }
 
-        var promoBadgeText: String? {
+        var promoBadgeText: String? = nil {
             didSet {
                 update()
             }
