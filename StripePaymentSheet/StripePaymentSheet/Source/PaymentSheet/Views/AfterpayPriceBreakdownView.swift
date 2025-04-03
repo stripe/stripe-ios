@@ -30,7 +30,7 @@ class AfterpayPriceBreakdownView: UIView {
         return PaymentSheetImageLibrary.afterpayLogo(currency: currency)
     }()
     private lazy var infoImage: UIImage = {
-        return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info")
+        return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info", templateIfAvailable: true)
     }()
 
     private lazy var infoURL: URL? = {
