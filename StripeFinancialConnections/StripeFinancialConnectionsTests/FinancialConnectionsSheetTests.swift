@@ -67,8 +67,9 @@ class FinancialConnectionsSheetTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-    // TODO(mats): Fix dedalock caused by this test.
-    func disabled_testAsyncPresentCompletion() async {
+    func testAsyncPresentCompletion() async {
+        let expectation = XCTestExpectation(description: "Sheet completion")
+
         let sheet = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: mockClientSecret,
             returnURL: nil,
@@ -76,7 +77,16 @@ class FinancialConnectionsSheetTests: XCTestCase {
             analyticsClient: mockAnalyticsClient
         )
 
-        async let result = sheet.present(from: mockViewController)
+        Task {
+            let result = await sheet.present(from: mockViewController)
+
+            guard case .canceled = result else {
+                XCTFail("Unexpected result: \(result)")
+                return
+            }
+
+            expectation.fulfill()
+        }
 
         // Mock that financialConnections is completed
         let host = HostController(
@@ -100,10 +110,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
             )
         }
 
-        guard case .canceled = await result else {
-            XCTFail("Unexpected result: \(await result)")
-            return
-        }
+        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
     func testAnalytics() {
