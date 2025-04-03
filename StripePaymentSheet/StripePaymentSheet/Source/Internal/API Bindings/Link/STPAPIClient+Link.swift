@@ -399,7 +399,8 @@ extension STPAPIClient {
             }
 
             if let billingEmailAddress = billingDetails?.email {
-                parameters["billing_email_address"] = billingEmailAddress
+                // This email address needs to be lowercase or the API will reject it
+                parameters["billing_email_address"] = billingEmailAddress.lowercased()
             }
         }
 

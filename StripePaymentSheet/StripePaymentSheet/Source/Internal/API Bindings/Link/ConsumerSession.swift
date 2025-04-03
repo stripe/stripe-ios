@@ -151,10 +151,13 @@ extension ConsumerSession {
             paymentMethodParams.nonnil_billingDetails.nonnil_address.country = Locale.current.stp_regionCode
         }
 
+        // This email address needs to be lowercase or the API will reject it
+        let billingEmailAddress = (paymentMethodParams.nonnil_billingDetails.email ?? emailAddress).lowercased()
+
         apiClient.createPaymentDetails(
             for: clientSecret,
             cardParams: cardParams,
-            billingEmailAddress: paymentMethodParams.nonnil_billingDetails.email ?? emailAddress,
+            billingEmailAddress: billingEmailAddress,
             billingDetails: paymentMethodParams.nonnil_billingDetails,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
