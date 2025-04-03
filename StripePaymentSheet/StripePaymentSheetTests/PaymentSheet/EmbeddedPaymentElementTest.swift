@@ -743,6 +743,28 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
     }
 
+    func testCancelingFormResetsPaymentOption() async throws {
+        // Create our EmbeddedPaymentElement
+        let sut = try await EmbeddedPaymentElement.create(
+            intentConfiguration: paymentIntentConfig,
+            configuration: configuration
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        // Fill out a card
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+        let cardForm = sut.formCache[.stripe(.card)]!
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1240")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("12345")
+        sut.selectedFormViewController?.didTapOrSwipeToDismiss() // Tap cancel to close
+        XCTAssertNil(sut.paymentOption, "Payment option should be nil after filling out the card form, but hitting cancel.")
+    }
+
     // MARK: Immediate action tests
 
     func testCreateFails_whenImmediateActionWithConfirmAndCustomer() async throws {
