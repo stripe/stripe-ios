@@ -1106,6 +1106,25 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
         app.buttons["Done"].waitForExistenceAndTap()
     }
+
+    func testCustomPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.customerMode = .new
+        settings.merchantCountryCode = .US
+        settings.currency = .usd
+        settings.customPaymentMethods = .on
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        tapPaymentMethod("BufoPay (test)")
+
+        app.buttons["Pay $50.99"].tap()
+        app.alerts.buttons["Confirm"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
 }
 
 // MARK: - Helpers
