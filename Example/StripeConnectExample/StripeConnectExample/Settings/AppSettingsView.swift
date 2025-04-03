@@ -17,10 +17,15 @@ struct AppSettingsView: View {
 
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
+    @State var webViewURLString: String = AppSettings.shared.webViewURL ?? ""
     @State var onboardingSettings = AppSettings.shared.onboardingSettings
 
     var isCustomEndpointValid: Bool {
         URL(string: serverURLString)?.isValid == true
+    }
+
+    var isWebViewURLValid: Bool {
+        URL(string: webViewURLString)?.isValid == true
     }
 
     var isUsingCustomMerchant: Bool {
@@ -48,9 +53,11 @@ struct AppSettingsView: View {
 
     var saveEnabled: Bool {
         isCustomEndpointValid &&
+        isWebViewURLValid &&
         isMerchantIdValid &&
         (AppSettings.shared.selectedMerchant(appInfo: appInfo)?.id != selectedMerchant?.id ||
-         AppSettings.shared.selectedServerBaseURL != serverURLString)
+         AppSettings.shared.selectedServerBaseURL != serverURLString ||
+         AppSettings.shared.webViewURL != webViewURLString)
     }
 
     init(appInfo: AppInfo?) {
@@ -118,6 +125,19 @@ struct AppSettingsView: View {
                 } header: {
                     Text("API Server Settings")
                 }
+
+                Section {
+                    TextInput(label: "", placeholder: "https://connect.stripe.com/connect.js", text: $webViewURLString, isValid: isWebViewURLValid)
+                    Button {
+                        webViewURLString = AppSettings.Constants.defaultWebViewURL
+                    } label: {
+                        Text("Reset to default")
+                            .disabled(AppSettings.Constants.defaultWebViewURL == webViewURLString)
+                            .keyboardType(.URL)
+                    }
+                } header: {
+                    Text("Connect.js URL Settings")
+                }
             }
             .listStyle(.insetGrouped)
             .animation(.easeOut(duration: 0.2), value: selectedMerchant)
@@ -137,6 +157,7 @@ struct AppSettingsView: View {
                     Button {
                         AppSettings.shared.setSelectedMerchant(merchant: selectedMerchant)
                         AppSettings.shared.selectedServerBaseURL = serverURLString
+                        AppSettings.shared.webViewURL = webViewURLString.isEmpty ? nil : webViewURLString
                         viewControllerPresenter?.setRootViewController(AppLoadingView().containerViewController)
                     } label: {
                         Text("Save")
