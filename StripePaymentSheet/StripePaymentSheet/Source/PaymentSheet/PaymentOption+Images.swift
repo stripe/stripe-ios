@@ -133,7 +133,7 @@ extension STPPaymentMethod {
 }
 
  extension STPPaymentMethodParams {
-     func makeIcon(currency: String?, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    func makeIcon(currency: String?, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
             let brand = STPCardValidator.brand(for: card)
