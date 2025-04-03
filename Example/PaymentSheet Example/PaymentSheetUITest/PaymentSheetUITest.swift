@@ -2778,8 +2778,16 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: true)
     }
 
+    func testBillingDetailsCollectionInNativeLinkInPaymentMethodModeForNewUser() {
+        testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: false)
+    }
+
     func testBillingDetailsCollectionInNativeLinkInPassthroughModeForExistingUser() {
         testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: true)
+    }
+
+    func testBillingDetailsCollectionInNativeLinkInPaymentMethodModeForExistingUser() {
+        testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: false)
     }
 
     private func testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: Bool) {
