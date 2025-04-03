@@ -101,7 +101,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     billingEmailAddress: exampleBillingEmail,
                     isDefault: true
                 ),
-                billingPhoneNumber: nil
+                confirmationExtras: nil
             )
             )
         }
@@ -195,7 +195,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         billingEmailAddress: nil,
                         isDefault: true
                     ),
-                    billingPhoneNumber: nil
+                    confirmationExtras: nil
                 )
             ),
             paymentHandler: paymentHandler,
