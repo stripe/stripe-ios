@@ -546,9 +546,9 @@ public class STPPaymentHandler: NSObject {
             }
         }
         var params = setupIntentConfirmParams
-        if !(params.useStripeSDK?.boolValue ?? false) {
+        if !params.useStripeSDK {
             params = setupIntentConfirmParams.copy() as! STPSetupIntentConfirmParams
-            params.useStripeSDK = NSNumber(value: true)
+            params.useStripeSDK = true
         }
         apiClient.confirmSetupIntent(with: params, expand: ["payment_method"], completion: confirmCompletionBlock)
     }

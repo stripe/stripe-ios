@@ -71,7 +71,7 @@ class STPSetupIntentTest: XCTestCase {
         XCTAssertEqual(setupIntent.status, STPSetupIntentStatus.requiresAction)
         XCTAssertEqual(setupIntent.usage, STPSetupIntentUsage.offSession)
 
-        XCTAssertEqual(setupIntent.paymentMethodTypes, [NSNumber(value: STPPaymentMethodType.card.rawValue)])
+        XCTAssertEqual(setupIntent.paymentMethodTypes, [STPPaymentMethodType.card])
 
         // lastSetupError
 
