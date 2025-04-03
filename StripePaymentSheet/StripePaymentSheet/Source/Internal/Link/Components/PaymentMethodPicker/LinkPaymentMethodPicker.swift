@@ -321,9 +321,10 @@ extension ConsumerPaymentDetails {
         var billingAddress = self.billingAddress
 
         if billingDetailsConfig.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
-            // No address available, so we add any default provided by the merchant
-            // TODO: Should we do this, or does this need to be more sophisticated?
-            billingAddress = BillingAddress(from: billingDetails)
+            // No address available, so we add any default provided by the merchant if it's compatible
+            if billingAddress?.canBeOverridden(with: billingDetails.address) == true {
+                billingAddress = BillingAddress(from: billingDetails)
+            }
         }
 
         if billingDetailsConfig.name == .always && billingAddress?.name == nil {
@@ -360,6 +361,10 @@ private extension BillingAddress {
             postalCode: billingDetails.address.postalCode,
             countryCode: billingDetails.address.country
         )
+    }
+
+    func canBeOverridden(with address: PaymentSheet.Address) -> Bool {
+        return postalCode == address.postalCode && countryCode == address.country
     }
 
     func update(with billingDetails: PaymentSheet.BillingDetails) -> BillingAddress {

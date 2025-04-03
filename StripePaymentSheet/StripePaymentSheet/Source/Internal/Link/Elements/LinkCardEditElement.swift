@@ -30,7 +30,7 @@ final class LinkCardEditElement: Element {
 
     struct Params {
         let expiryDate: CardExpiryDate
-        let cvc: String
+        let cvc: String?
         let billingDetails: STPPaymentMethodBillingDetails
         let setAsDefault: Bool
     }
@@ -74,7 +74,7 @@ final class LinkCardEditElement: Element {
 
         return Params(
             expiryDate: expiryDate,
-            cvc: cvcElement.text,
+            cvc: useCVCPlaceholder ? nil : cvcElement.text,
             billingDetails: billingDetails,
             setAsDefault: checkboxElement.checkboxButton.isSelected
         )
@@ -126,19 +126,19 @@ final class LinkCardEditElement: Element {
     }()
 
     private lazy var cvcElement: TextFieldElement = {
-        let cvcElement = TextFieldElement(
-            configuration: TextFieldElement.CVCConfiguration(
-                // If we're using a placeholder, we just fill up the view with zeros.
-                defaultValue: useCVCPlaceholder ? "000" : nil,
-                readOnly: useCVCPlaceholder,
+        let configuration: TextFieldElementConfiguration = if useCVCPlaceholder {
+            TextFieldElement.CensoredCVCConfiguration(
+                brand: paymentMethod.cardDetails?.stpBrand ?? .unknown
+            )
+        } else {
+            TextFieldElement.CVCConfiguration(
                 cardBrandProvider: { [weak self] in
                     self?.paymentMethod.cardDetails?.stpBrand ?? .unknown
                 }
-            ),
-            theme: theme
-        )
-        cvcElement.view.isUserInteractionEnabled = !useCVCPlaceholder
-        return cvcElement
+            )
+        }
+
+        return TextFieldElement(configuration: configuration, theme: theme)
     }()
 
     private lazy var expiryDateElement = TextFieldElement(
