@@ -105,7 +105,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let view = PaymentMethodTypeCollectionView(
             paymentMethodTypes: paymentMethodTypes,
             appearance: configuration.appearance,
-            currency: nil,
             incentive: nil,
             delegate: self
         )
@@ -249,7 +248,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             isPaymentIntent: false,
             isSettingUp: true,
             countryCode: nil,
-            currency: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
             analyticsHelper: nil,
             paymentMethodIncentive: nil

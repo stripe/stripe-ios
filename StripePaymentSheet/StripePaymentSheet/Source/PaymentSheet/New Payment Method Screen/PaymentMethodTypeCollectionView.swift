@@ -47,7 +47,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
-        currency: String?,
+        currency: String? = nil,
         incentive: PaymentMethodIncentive?,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {

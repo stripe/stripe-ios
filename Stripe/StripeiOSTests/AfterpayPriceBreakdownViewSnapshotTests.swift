@@ -44,7 +44,7 @@ class AfterpayPriceBreakdownViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testAfterpayInSingleRow() {
-        let priceBreakdownView = AfterpayPriceBreakdownView(currency: nil)
+        let priceBreakdownView = AfterpayPriceBreakdownView(currency: "eur")
         let containingView = embedInRenderableView(priceBreakdownView, width: 500, height: 30)
 
         STPSnapshotVerifyView(containingView)

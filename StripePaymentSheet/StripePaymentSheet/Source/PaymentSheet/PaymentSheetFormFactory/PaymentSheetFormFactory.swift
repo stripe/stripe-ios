@@ -133,7 +133,7 @@ class PaymentSheetFormFactory {
         isPaymentIntent: Bool,
         isSettingUp: Bool,
         countryCode: String?,
-        currency: String?,
+        currency: String? = nil,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         allowsSetAsDefaultPM: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
