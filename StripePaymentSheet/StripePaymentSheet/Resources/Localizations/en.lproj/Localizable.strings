@@ -139,6 +139,10 @@
 /* Two factor authentication screen heading */
 "Confirm it's you" = "Confirm it's you";
 
+/* Title of a screen where the user can update their payment method before continuing
+with the transaction. */
+"Confirm payment details" = "Confirm payment details";
+
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
 
