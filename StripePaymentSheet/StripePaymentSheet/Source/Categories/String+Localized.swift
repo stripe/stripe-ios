@@ -159,9 +159,9 @@ extension String.Localized {
         )
     }
 
-    static var update_before_continuing: String {
+    static var confirm_payment_details: String {
         STPLocalizedString(
-            "Update before continuing",
+            "Confirm payment details",
             """
             Title of a screen where the user can update their payment method before continuing
             with the transaction.

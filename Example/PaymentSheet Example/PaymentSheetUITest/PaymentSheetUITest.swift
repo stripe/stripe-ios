@@ -2785,7 +2785,6 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     private func testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: Bool) {
         let email = "billing_details_test+\(UUID().uuidString)@link.com"
         let cvc = "1234"
-//        let paymentMethodLabel = "American Express ending in 0, 0, 0, 5"
 
         let settings = createLinkPlaygroundSettings(
             passthroughMode: passthroughMode,
@@ -2840,7 +2839,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         payLink(app)
 
         // Fill out missing details
-        XCTAssertTrue(app.staticTexts["Update before continuing"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Confirm payment details"].waitForExistence(timeout: 5))
         fillOutBillingDetails(app)
 
         payLink(app)
