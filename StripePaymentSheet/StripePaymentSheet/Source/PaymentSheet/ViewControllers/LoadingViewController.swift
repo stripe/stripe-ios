@@ -68,6 +68,14 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         ])
         activityIndicator.startAnimating()
     }
+
+#if !canImport(CompositorServices)
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        activityIndicator.color = appearance.colors.background.contrastingColor
+    }
+#endif
+
 }
 
 extension LoadingViewController: SheetNavigationBarDelegate {
