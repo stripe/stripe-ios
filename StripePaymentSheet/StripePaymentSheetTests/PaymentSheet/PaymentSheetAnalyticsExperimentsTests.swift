@@ -81,13 +81,14 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkMode: .passthrough,
             linkFlags: nil,
             linkConsumerIncentive: nil,
-            linkGlobalHoldbackOn: false,
             linkDefaultOptIn: .full,
             allResponseFields: [:]
         )
         let experimentsData = ExperimentsData(
             arbId: "arb_id_123",
-            experimentAssignments: [:],
+            experimentAssignments: [
+                "link_global_holdback": .treatment
+            ],
             allResponseFields: [:]
         )
         let session = STPElementsSession._testValue(
@@ -117,7 +118,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
 
         XCTAssertEqual(payload["arb_id"] as? String, "arb_id_123")
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "link_global_holdback")
-        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.control.rawValue)
+        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
 
         XCTAssertEqual(payload["dimension-recognition_type"] as? String, "email")
         XCTAssertEqual(payload["dimension-link_native"] as? Bool, true)

@@ -15,15 +15,6 @@ protocol LoggableExperiment {
     var dimensions: [String: Any] { get }
 }
 
-enum ExperimentGroup: String {
-    case control
-    case treatment
-
-    init(isInTreatment: Bool) {
-        self = isInTreatment ? .treatment : .control
-    }
-}
-
 extension PaymentSheetAnalyticsHelper {
     static let eventName = "elements.experiment_exposure"
 

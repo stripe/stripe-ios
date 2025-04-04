@@ -37,10 +37,12 @@ struct LinkGlobalHoldback: LoggableExperiment {
         guard let arbId = elementsSession.experimentsData?.arbId else {
             return nil
         }
-        let isLinkGlobalHoldbackOn = elementsSession.linkSettings?.linkGlobalHoldbackOn == true
-
         self.arbId = arbId
-        self.group = ExperimentGroup(isInTreatment: isLinkGlobalHoldbackOn)
+
+        // In some scenarios (i.e. testmode) there will be no group assignment.
+        // Treat these scenarios as though we're in the control group.
+        let assignment = elementsSession.experimentsData?.experimentAssignments[name]
+        self.group = assignment ?? .control
 
         // A non-nil consumer session represents an existing Link user.
         self.isReturningLinkUser = linkAccount?.currentSession != nil
