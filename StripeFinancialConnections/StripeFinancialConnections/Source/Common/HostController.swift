@@ -89,6 +89,7 @@ class HostController {
     // MARK: - Properties
 
     private let apiClient: any FinancialConnectionsAPI
+    private let asyncApiClient: any FinancialConnectionsAsyncAPI
     private let clientSecret: String
     private let returnURL: String?
     private let configuration: FinancialConnectionsSheet.Configuration
@@ -117,6 +118,7 @@ class HostController {
 
     init(
         apiClient: any FinancialConnectionsAPI,
+        asyncApiClient: any FinancialConnectionsAsyncAPI,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
@@ -126,6 +128,7 @@ class HostController {
         stripeAccount: String?
     ) {
         self.apiClient = apiClient
+        self.asyncApiClient = asyncApiClient
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
@@ -243,6 +246,7 @@ private extension HostController {
             consentPaneModel: synchronizePayload.text?.consentPane,
             accountPickerPane: synchronizePayload.text?.accountPickerPane,
             apiClient: apiClient,
+            asyncApiClient: asyncApiClient,
             clientSecret: clientSecret,
             analyticsClient: analyticsClient,
             elementsSessionContext: elementsSessionContext

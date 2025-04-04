@@ -298,14 +298,16 @@ final public class FinancialConnectionsSheet {
             }
         }
 
+        let asyncApiClient = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
         let financialConnectionsApiClient: any FinancialConnectionsAPI
         if ExperimentStore.shared.useAsyncAPIClient {
-            financialConnectionsApiClient = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+            financialConnectionsApiClient = asyncApiClient
         } else {
             financialConnectionsApiClient = FinancialConnectionsAPIClient(apiClient: apiClient)
         }
         hostController = HostController(
             apiClient: financialConnectionsApiClient,
+            asyncApiClient: asyncApiClient,
             analyticsClientV1: analyticsClient,
             clientSecret: financialConnectionsSessionClientSecret,
             returnURL: returnURL,

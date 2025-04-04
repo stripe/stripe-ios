@@ -15,7 +15,7 @@ protocol ConsentDataSource: AnyObject {
     var merchantLogo: [String]? { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
-    func markConsentAcquired() -> Future<ConsentAcquiredResult>
+    func markConsentAcquired() async throws -> ConsentAcquiredResult
     func completeAssertionIfNeeded(
         possibleError: Error?,
         api: FinancialConnectionsAPIClientLogger.API
@@ -38,7 +38,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
     let manifest: FinancialConnectionsSessionManifest
     let consent: FinancialConnectionsConsent
     let merchantLogo: [String]?
-    private let apiClient: any FinancialConnectionsAPI
+    private let apiClient: any FinancialConnectionsAsyncAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let elementsSessionContext: ElementsSessionContext?
@@ -51,7 +51,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         manifest: FinancialConnectionsSessionManifest,
         consent: FinancialConnectionsConsent,
         merchantLogo: [String]?,
-        apiClient: any FinancialConnectionsAPI,
+        apiClient: any FinancialConnectionsAsyncAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         elementsSessionContext: ElementsSessionContext?
@@ -65,38 +65,30 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
         self.elementsSessionContext = elementsSessionContext
     }
 
-    func markConsentAcquired() -> Future<ConsentAcquiredResult> {
-        return apiClient.markConsentAcquired(clientSecret: clientSecret).chained { [weak self] manifest in
-            guard let self, manifest.shouldLookupConsumerSession, let email else {
-                let result = ConsentAcquiredResult(manifest: manifest)
-                return Promise(value: result)
-            }
+    func markConsentAcquired() async throws -> ConsentAcquiredResult {
+        let manifest = try await apiClient.markConsentAcquired(clientSecret: clientSecret)
+        guard manifest.shouldLookupConsumerSession, let email else {
+            return ConsentAcquiredResult(manifest: manifest)
+        }
 
-            let promise = Promise<ConsentAcquiredResult>()
-
-            apiClient.consumerSessionLookup(
+        do {
+            let lookupResult = try await apiClient.consumerSessionLookup(
                 emailAddress: email,
                 clientSecret: clientSecret,
                 sessionId: manifest.id,
                 emailSource: .customerObject,
                 useMobileEndpoints: manifest.verified,
                 pane: .consent
-            ).observe { lookupResult in
-                switch lookupResult {
-                case .success(let response):
-                    let result = ConsentAcquiredResult(
-                        manifest: manifest,
-                        consumerSession: response.consumerSession,
-                        consumerPublishableKey: response.publishableKey
-                    )
-                    promise.resolve(with: result)
-                case .failure:
-                    let result = ConsentAcquiredResult(manifest: manifest)
-                    promise.resolve(with: result)
-                }
-            }
+            )
 
-            return promise
+            let result = ConsentAcquiredResult(
+                manifest: manifest,
+                consumerSession: lookupResult.consumerSession,
+                consumerPublishableKey: lookupResult.publishableKey
+            )
+            return result
+        } catch {
+            return ConsentAcquiredResult(manifest: manifest)
         }
     }
 

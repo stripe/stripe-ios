@@ -17,6 +17,7 @@ protocol NativeFlowDataManager: AnyObject {
     var consentPaneModel: FinancialConnectionsConsent? { get }
     var accountPickerPane: FinancialConnectionsAccountPickerPane? { get }
     var apiClient: any FinancialConnectionsAPI { get }
+    var asyncApiClient: any FinancialConnectionsAsyncAPI { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var elementsSessionContext: ElementsSessionContext? { get }
@@ -85,6 +86,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var idConsentContent: FinancialConnectionsIDConsentContent?
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
     var apiClient: any FinancialConnectionsAPI
+    var asyncApiClient: any FinancialConnectionsAsyncAPI
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let elementsSessionContext: ElementsSessionContext?
@@ -106,12 +108,14 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var consumerSession: ConsumerSessionData? {
         didSet {
             apiClient.consumerSession = consumerSession
+            asyncApiClient.consumerSession = consumerSession
         }
     }
 
     var consumerPublishableKey: String? {
         didSet {
             apiClient.consumerPublishableKey = consumerPublishableKey
+            asyncApiClient.consumerPublishableKey = consumerPublishableKey
         }
     }
 
@@ -123,6 +127,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         consentPaneModel: FinancialConnectionsConsent?,
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
         apiClient: any FinancialConnectionsAPI,
+        asyncApiClient: any FinancialConnectionsAsyncAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         elementsSessionContext: ElementsSessionContext?
@@ -134,6 +139,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.consentPaneModel = consentPaneModel
         self.accountPickerPane = accountPickerPane
         self.apiClient = apiClient
+        self.asyncApiClient = asyncApiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
         self.elementsSessionContext = elementsSessionContext
@@ -175,7 +181,9 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     }
 
     private func didUpdateManifest() {
-        apiClient.isLinkWithStripe = manifest.isLinkWithStripe == true
+        let isLinkWithStripe = manifest.isLinkWithStripe == true
+        apiClient.isLinkWithStripe = isLinkWithStripe
+        asyncApiClient.isLinkWithStripe = isLinkWithStripe
         analyticsClient.setAdditionalParameters(fromManifest: manifest)
     }
 }
