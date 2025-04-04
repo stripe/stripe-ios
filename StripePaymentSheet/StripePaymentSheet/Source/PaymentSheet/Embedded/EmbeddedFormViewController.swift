@@ -133,6 +133,7 @@ class EmbeddedFormViewController: UIViewController {
             // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
             shouldUseNewCardHeader: shouldUseNewCardNewCardHeader,
             appearance: configuration.appearance,
+            currency: intent.currency,
             incentive: elementsSession.incentive?.takeIfAppliesTo(paymentMethodType)
         )
 

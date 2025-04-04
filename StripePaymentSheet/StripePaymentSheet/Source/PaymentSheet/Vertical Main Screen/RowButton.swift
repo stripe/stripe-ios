@@ -424,6 +424,7 @@ extension RowButton {
 
     static func makeForPaymentMethodType(
         paymentMethodType: PaymentSheet.PaymentMethodType,
+        currency: String? = nil,
         hasSavedCard: Bool,
         accessoryView: UIView? = nil,
         promoText: String? = nil,
@@ -433,7 +434,7 @@ extension RowButton {
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
     ) -> RowButton {
-        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, contrastMatchingColor: appearance.colors.componentText)
+        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, contrastMatchingColor: appearance.colors.componentText, currency: currency)
         imageView.contentMode = .scaleAspectFit
 
         // Special case "New card" vs "Card" title
@@ -448,8 +449,10 @@ extension RowButton {
             case .stripe(.klarna):
                 return String.Localized.buy_now_or_pay_later_with_klarna
             case .stripe(.afterpayClearpay):
-                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: Locale.current) {
+                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
                     return String.Localized.buy_now_or_pay_later_with_clearpay
+                } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                    return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
                 } else {
                     return String.Localized.buy_now_or_pay_later_with_afterpay
                 }

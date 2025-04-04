@@ -23,6 +23,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private(set) var currentSelection: RowButtonType?
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
+    let currency: String?
     private(set) var incentive: PaymentMethodIncentive?
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
 
@@ -54,6 +55,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.appearance = appearance
+        self.currency = currency
         self.incentive = incentive
         self.delegate = delegate
         self.overrideHeaderView = overrideHeaderView
@@ -143,6 +145,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let selection = RowButtonType.new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
+                currency: currency,
                 hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708)
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,

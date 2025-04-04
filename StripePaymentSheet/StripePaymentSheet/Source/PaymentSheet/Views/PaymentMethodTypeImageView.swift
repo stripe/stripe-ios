@@ -12,15 +12,17 @@ import UIKit
 class PaymentMethodTypeImageView: UIImageView {
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let contrastMatchingColor: UIColor
+    let currency: String?
 
     /// Initializes a PaymentMethodTypeImageView with the specified payment method type and a color to match contrast.
     ///
     /// - Parameters:
     ///   - paymentMethodType: The type of payment method whose icon is displayed.
     ///   - contrastMatchingColor: The color used to determine the icon's tint, internally rounded to black or white to ensure optimal visibility. For example, you might pass in the color of the text label adjacent to the icon so they share the same contrast characteristics.
-    init(paymentMethodType: PaymentSheet.PaymentMethodType, contrastMatchingColor: UIColor) {
+    init(paymentMethodType: PaymentSheet.PaymentMethodType, contrastMatchingColor: UIColor, currency: String?) {
         self.paymentMethodType = paymentMethodType
         self.contrastMatchingColor = contrastMatchingColor
+        self.currency = currency
         super.init(image: nil)
         self.contentMode = .scaleAspectFit
         updateImage()
@@ -40,7 +42,7 @@ class PaymentMethodTypeImageView: UIImageView {
     func updateImage() {
         // Unfortunately the DownloadManager API returns either a placeholder image _or_ the actual image
         // Set the image now...
-        let image = paymentMethodType.makeImage(forDarkBackground: contrastMatchingColor.roundToBlackOrWhite == .white) { [weak self] image in
+        let image = paymentMethodType.makeImage(forDarkBackground: contrastMatchingColor.roundToBlackOrWhite == .white, currency: currency) { [weak self] image in
             DispatchQueue.main.async {
                 // ...and set it again if the callback is called with a downloaded image
                 self?.setImage(image)

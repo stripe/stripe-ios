@@ -609,6 +609,31 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheet_LPM_AfterpayClearpay_only() {
         stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_GB_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"afterpay_clearpay\"",
+                        "<currency>": "\"gbp\"",
+                    ]
+                )
+            }
+        )
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(
+            override_payment_methods_types: ["afterpay_clearpay"],
+            automaticPaymentMethods: false,
+            useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_CashAppAfterpay_only() {
+        stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
             responseCallback: { data in
                 return self.updatePaymentMethodDetail(
@@ -616,6 +641,31 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                     variables: [
                         "<paymentMethods>": "\"afterpay_clearpay\"",
                         "<currency>": "\"usd\"",
+                    ]
+                )
+            }
+        )
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(
+            override_payment_methods_types: ["afterpay_clearpay"],
+            automaticPaymentMethods: false,
+            useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_Afterpay_only() {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_IT_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"afterpay_clearpay\"",
+                        "<currency>": "\"eur\"",
                     ]
                 )
             }
