@@ -89,8 +89,8 @@ class AfterpayPriceBreakdownView: UIView {
                 }
                 imgAppended = true
                 let titleFont = stringAttributes[NSAttributedString.Key.font] as! UIFont
-                let clearPay = attributedStringOfImageWithoutLink(uiImage: afterpayMarkImage, font: titleFont, tintColor: theme.colors.parentBackground.contrastingColor)
-                let infoButton = attributedStringOfImageWithoutLink(uiImage: infoImage, font: titleFont, tintColor: theme.colors.parentBackground.contrastingColor)
+                let clearPay = attributedStringOfImageWithoutLink(uiImage: afterpayMarkImage, font: titleFont)
+                let infoButton = attributedStringOfImageWithoutLink(uiImage: infoImage, font: titleFont)
                 resultingString.append(clearPay)
                 resultingString.append(NSAttributedString(string: "\u{00A0}\u{00A0}", attributes: stringAttributes))
                 resultingString.append(infoButton)
@@ -102,7 +102,7 @@ class AfterpayPriceBreakdownView: UIView {
         return resultingString
     }
 
-    private func attributedStringOfImageWithoutLink(uiImage: UIImage, font: UIFont, tintColor: UIColor?) -> NSAttributedString {
+    private func attributedStringOfImageWithoutLink(uiImage: UIImage, font: UIFont, tintColor: UIColor? = nil) -> NSAttributedString {
         let imageAttachment = NSTextAttachment()
         imageAttachment.bounds = boundsOfImage(font: font, uiImage: uiImage)
         if let tintColor {
