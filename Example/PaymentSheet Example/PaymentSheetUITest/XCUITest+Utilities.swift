@@ -190,6 +190,7 @@ extension XCTestCase {
     func fillCardData(_ app: XCUIApplication,
                       container: XCUIElement? = nil,
                       cardNumber: String? = nil,
+                      cvc: String = "123",
                       postalEnabled: Bool = true,
                       tapCheckboxWithText checkboxText: String? = nil) throws {
         let context = container ?? app
@@ -198,7 +199,7 @@ extension XCTestCase {
         numberField.forceTapWhenHittableInTestCase(self)
         app.typeText(cardNumber ?? "4242424242424242")
         app.typeText("1228") // Expiry
-        app.typeText("123") // CVC
+        app.typeText(cvc) // CVC
         if postalEnabled {
             app.typeText("12345") // Postal
         }
