@@ -35,6 +35,7 @@ extension LinkStubs {
                     expiryYear: 30,
                     expiryMonth: 10,
                     brand: "visa",
+                    networks: ["visa"],
                     last4: "1234",
                     checks: nil)
                 ),
@@ -48,6 +49,7 @@ extension LinkStubs {
                     expiryYear: 30,
                     expiryMonth: 10,
                     brand: "mastercard",
+                    networks: ["mastercard"],
                     last4: "4321",
                     checks: .init(cvcCheck: .fail))
                 ),
@@ -68,6 +70,7 @@ extension LinkStubs {
                     expiryYear: 20,
                     expiryMonth: 10,
                     brand: "discover",
+                    networks: ["discover"],
                     last4: "1111",
                     checks: nil)
                 ),

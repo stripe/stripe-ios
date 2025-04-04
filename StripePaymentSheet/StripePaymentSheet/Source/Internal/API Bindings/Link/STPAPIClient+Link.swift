@@ -388,7 +388,7 @@ extension STPAPIClient {
             "request_surface": "ios_payment_element",
         ]
 
-        if let details = updateParams.details, case .card(let expiryDate, let billingDetails) = details {
+        if let details = updateParams.details, case .card(let expiryDate, let billingDetails, let preferredNetwork) = details {
             if let expiryDate {
                 parameters["exp_month"] = expiryDate.month
                 parameters["exp_year"] = expiryDate.year
@@ -401,6 +401,10 @@ extension STPAPIClient {
             if let billingEmailAddress = billingDetails?.email {
                 // This email address needs to be lowercase or the API will reject it
                 parameters["billing_email_address"] = billingEmailAddress.lowercased()
+            }
+
+            if let preferredNetwork {
+                parameters["preferred_network"] = preferredNetwork
             }
         }
 
