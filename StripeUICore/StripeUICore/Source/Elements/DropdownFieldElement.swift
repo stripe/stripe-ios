@@ -291,10 +291,11 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
         previouslySelectedIndex = selectedIndex
 
         if shouldAutoAdvance {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.didUpdate(element: self)
-                self.delegate?.continueToNextField(element: self)
+            delegate?.didUpdate(element: self)
+            delegate?.continueToNextField(element: self)
+            // If the picker field view is still selected (e.g. if someone tapped "Done"), dismiss it on the next runloop
+            DispatchQueue.main.async {
+                _ = pickerFieldView.resignFirstResponder()
             }
         }
     }
