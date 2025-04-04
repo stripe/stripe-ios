@@ -46,7 +46,7 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: true, theme: LinkUI.appearance.asElementsTheme)
+        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: LinkUI.appearance.asElementsTheme)
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
@@ -222,15 +222,23 @@ extension PayWithLinkViewController {
             signUpButton.isLoading = true
 
             viewModel.signUp { [weak self] result in
+                guard let self else {
+                    return
+                }
+
                 switch result {
                 case .success(let account):
-                    self?.coordinator?.accountUpdated(account)
+                    // We can't access the following fields used for signup via the consumer session,
+                    // so we keep track of it on the client.
+                    account.phoneNumberUsedInSignup = self.viewModel.phoneNumber?.string(as: .e164)
+                    account.nameUsedInSignup = self.viewModel.legalName
+                    self.coordinator?.accountUpdated(account)
                     STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                 case .failure(let error):
                     STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                 }
 
-                self?.signUpButton.isLoading = false
+                self.signUpButton.isLoading = false
             }
         }
 
