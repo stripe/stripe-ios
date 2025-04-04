@@ -96,6 +96,14 @@ final class PaymentSheetLoader {
                 let linkAccount = try? await lookupLinkAccount(elementsSession: elementsSession, configuration: configuration)
                 LinkAccountContext.shared.account = linkAccount
 
+                if let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+                    session: elementsSession,
+                    configuration: configuration,
+                    linkAccount: linkAccount
+                ) {
+                    analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
+                }
+
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                 let filteredSavedPaymentMethods = try await savedPaymentMethods
                     .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }

@@ -26,6 +26,9 @@ import Foundation
     /// Link-specific settings for this ElementsSession.
     let linkSettings: LinkSettings?
 
+    /// Experiment assignments and `arb_id` to allow logging exposure events.
+    let experimentsData: ExperimentsData?
+
     /// Flags for this ElementsSession.
     let flags: [String: Bool]
 
@@ -64,6 +67,7 @@ import Foundation
         countryCode: String?,
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
+        experimentsData: ExperimentsData?,
         flags: [String: Bool],
         paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
@@ -80,6 +84,7 @@ import Foundation
         self.countryCode = countryCode
         self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
+        self.experimentsData = experimentsData
         self.flags = flags
         self.paymentMethodSpecs = paymentMethodSpecs
         self.cardBrandChoice = cardBrandChoice
@@ -116,6 +121,7 @@ import Foundation
             countryCode: nil,
             merchantCountryCode: nil,
             linkSettings: nil,
+            experimentsData: nil,
             flags: [:],
             paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
@@ -201,6 +207,9 @@ extension STPElementsSession: STPAPIResponseDecodable {
             merchantCountryCode: response["merchant_country"] as? String,
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
+            ),
+            experimentsData: ExperimentsData.decodedObject(
+                fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
             ),
             flags: response["flags"] as? [String: Bool] ?? [:],
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
