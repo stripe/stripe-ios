@@ -2719,6 +2719,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         fillLinkAndPay(mode: .checkbox)
     }
 
+    // MARK: Link bank payments
+
     func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
@@ -2768,6 +2770,88 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
             .waitForExistenceAndTap()
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    // MARK: Native Link payments with billing details collection
+
+    func testBillingDetailsCollectionInNativeLinkInPassthroughModeForNewUser() {
+        testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: true)
+    }
+
+    func testBillingDetailsCollectionInNativeLinkInPaymentMethodModeForNewUser() {
+        testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: false)
+    }
+
+    func testBillingDetailsCollectionInNativeLinkInPassthroughModeForExistingUser() {
+        testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: true)
+    }
+
+    func testBillingDetailsCollectionInNativeLinkInPaymentMethodModeForExistingUser() {
+        testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: false)
+    }
+
+    private func testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: Bool) {
+        let email = "billing_details_test+\(UUID().uuidString)@link.com"
+        let cvc = "1234"
+
+        let settings = createLinkPlaygroundSettings(
+            passthroughMode: passthroughMode,
+            collectBillingDetails: true
+        )
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Sign up and add a payment method with billing details
+        signUpFor(app, email: email)
+        fillOutLinkCardData(app, cardNumber: "378282246310005", cvc: cvc, includingBillingDetails: true)
+
+        payLink(app)
+        assertLinkPaymentSuccess(app)
+    }
+
+    private func testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: Bool) {
+        let email = "billing_details_test+\(UUID().uuidString)@link.com"
+        let cvc = "1234"
+
+        let settings = createLinkPlaygroundSettings(
+            passthroughMode: passthroughMode,
+            collectBillingDetails: false
+        )
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Sign up and add a payment method without billing details
+        signUpFor(app, email: email)
+        fillOutLinkCardData(app, cardNumber: "378282246310005", cvc: cvc, includingBillingDetails: false)
+        payLink(app)
+        assertLinkPaymentSuccess(app)
+
+        // Now request billing details
+        let settingsWithBillingDetails = createLinkPlaygroundSettings(
+            passthroughMode: passthroughMode,
+            collectBillingDetails: true
+        )
+        loadPlayground(app, settingsWithBillingDetails)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Pay again
+        logInToLink(app, email: email)
+
+        // Enter CVC if requested
+        let cvcField = app.textFields["CVC"]
+        if cvcField.waitForExistence(timeout: 5) {
+            cvcField.tap()
+            cvcField.typeText(cvc)
+        }
+
+        payLink(app)
+
+        // Fill out missing details
+        XCTAssertTrue(app.staticTexts["Confirm payment details"].waitForExistence(timeout: 5))
+        fillOutBillingDetails(app)
+
+        payLink(app)
+        assertLinkPaymentSuccess(app)
     }
 
     // MARK: Link test helpers

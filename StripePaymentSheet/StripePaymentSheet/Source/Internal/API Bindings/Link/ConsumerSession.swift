@@ -10,12 +10,15 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 /// For internal SDK use only
 final class ConsumerSession: Decodable {
     let clientSecret: String
     let emailAddress: String
     let redactedFormattedPhoneNumber: String
+    let unredactedPhoneNumber: String?
+    let phoneNumberCountry: String?
     let verificationSessions: [VerificationSession]
     let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
 
@@ -23,12 +26,16 @@ final class ConsumerSession: Decodable {
         clientSecret: String,
         emailAddress: String,
         redactedFormattedPhoneNumber: String,
+        unredactedPhoneNumber: String?,
+        phoneNumberCountry: String?,
         verificationSessions: [VerificationSession],
         supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
         self.redactedFormattedPhoneNumber = redactedFormattedPhoneNumber
+        self.unredactedPhoneNumber = unredactedPhoneNumber
+        self.phoneNumberCountry = phoneNumberCountry
         self.verificationSessions = verificationSessions
         self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
     }
@@ -37,6 +44,8 @@ final class ConsumerSession: Decodable {
         case clientSecret
         case emailAddress
         case redactedFormattedPhoneNumber
+        case unredactedPhoneNumber
+        case phoneNumberCountry
         case verificationSessions
         case supportedPaymentDetailsTypes = "supportPaymentDetailsTypes"
     }
@@ -46,6 +55,8 @@ final class ConsumerSession: Decodable {
         self.clientSecret = try container.decode(String.self, forKey: .clientSecret)
         self.emailAddress = try container.decode(String.self, forKey: .emailAddress)
         self.redactedFormattedPhoneNumber = try container.decode(String.self, forKey: .redactedFormattedPhoneNumber)
+        self.unredactedPhoneNumber = try container.decodeIfPresent(String.self, forKey: .unredactedPhoneNumber)
+        self.phoneNumberCountry = try container.decodeIfPresent(String.self, forKey: .phoneNumberCountry)
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
         self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
     }
@@ -71,6 +82,15 @@ extension ConsumerSession {
 
     var isVerifiedForSignup: Bool {
         verificationSessions.isVerifiedForSignup
+    }
+
+    /// Returns the unredacted phone number with the appropriate country code, if available.
+    /// Example value: `+15551236789`
+    var unredactedPhoneNumberWithPrefix: String? {
+        guard let unredactedPhoneNumber else {
+            return nil
+        }
+        return PhoneNumber(number: unredactedPhoneNumber, countryCode: phoneNumberCountry)?.string(as: .e164)
     }
 }
 
@@ -131,10 +151,13 @@ extension ConsumerSession {
             paymentMethodParams.nonnil_billingDetails.nonnil_address.country = Locale.current.stp_regionCode
         }
 
+        // This email address needs to be lowercase or the API will reject it
+        let billingEmailAddress = (paymentMethodParams.nonnil_billingDetails.email ?? emailAddress).lowercased()
+
         apiClient.createPaymentDetails(
             for: clientSecret,
             cardParams: cardParams,
-            billingEmailAddress: paymentMethodParams.nonnil_billingDetails.email ?? emailAddress,
+            billingEmailAddress: billingEmailAddress,
             billingDetails: paymentMethodParams.nonnil_billingDetails,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
@@ -242,6 +265,7 @@ extension ConsumerSession {
         cvc: String?,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         expectedPaymentMethodType: String?,
+        billingPhoneNumber: String?,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -252,6 +276,7 @@ extension ConsumerSession {
             allowRedisplay: allowRedisplay,
             cvc: cvc,
             expectedPaymentMethodType: expectedPaymentMethodType,
+            billingPhoneNumber: billingPhoneNumber,
             completion: completion)
     }
 
