@@ -317,12 +317,18 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(setterMessageHandler)
         addMessageHandler(OnLoaderStartMessageHandler { [analyticsClient, activityIndicator] _ in
             analyticsClient.logComponentLoaded(loadEnd: .now)
-            UIView.animate(withDuration: 1.0, animations: {
-                activityIndicator.alpha = 0.0
-            }, completion: { _ in
-                activityIndicator.stopAnimating()
-                activityIndicator.alpha = 1.0
-            })
+            if self.componentManager.appearance.spacingUnit != nil {
+                    // When spacingUnit is set, immediately hide without animation as the spinners will not be aligned
+                    activityIndicator.stopAnimating()
+                } else {
+                    // When using default spacing, use the nice fade out animation
+                    UIView.animate(withDuration: 1.0, animations: {
+                        activityIndicator.alpha = 0.0
+                    }, completion: { _ in
+                        activityIndicator.stopAnimating()
+                        activityIndicator.alpha = 1.0
+                    })
+                }
 
         })
         addMessageHandler(FetchInitParamsMessageHandler.init(didReceiveMessage: {[weak self] _ in
