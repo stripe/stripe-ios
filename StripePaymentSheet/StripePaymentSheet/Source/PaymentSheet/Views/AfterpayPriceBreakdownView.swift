@@ -18,14 +18,6 @@ import UIKit
 class AfterpayPriceBreakdownView: UIView {
     private let afterPayClearPayLabel = UILabel()
     private let theme: ElementsAppearance
-    private lazy var afterpayMarkImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = PaymentSheetImageLibrary.afterpayLogo(currency: currency)
-        imageView.tintColor = theme.colors.parentBackground.contrastingColor
-
-        return imageView
-    }()
     private lazy var afterpayMarkImage: UIImage = {
         return PaymentSheetImageLibrary.afterpayLogo(currency: currency)
     }()
@@ -97,8 +89,8 @@ class AfterpayPriceBreakdownView: UIView {
                 }
                 imgAppended = true
                 let titleFont = stringAttributes[NSAttributedString.Key.font] as! UIFont
-                let clearPay = attributedStringOfImageWithoutLink(uiImage: afterpayMarkImage, font: titleFont)
-                let infoButton = attributedStringOfImageWithoutLink(uiImage: infoImage, font: titleFont)
+                let clearPay = attributedStringOfImageWithoutLink(uiImage: afterpayMarkImage, font: titleFont, tintColor: theme.colors.parentBackground.contrastingColor)
+                let infoButton = attributedStringOfImageWithoutLink(uiImage: infoImage, font: titleFont, tintColor: theme.colors.parentBackground.contrastingColor)
                 resultingString.append(clearPay)
                 resultingString.append(NSAttributedString(string: "\u{00A0}\u{00A0}", attributes: stringAttributes))
                 resultingString.append(infoButton)
@@ -110,10 +102,14 @@ class AfterpayPriceBreakdownView: UIView {
         return resultingString
     }
 
-    private func attributedStringOfImageWithoutLink(uiImage: UIImage, font: UIFont) -> NSAttributedString {
+    private func attributedStringOfImageWithoutLink(uiImage: UIImage, font: UIFont, tintColor: UIColor?) -> NSAttributedString {
         let imageAttachment = NSTextAttachment()
         imageAttachment.bounds = boundsOfImage(font: font, uiImage: uiImage)
-        imageAttachment.image = uiImage
+        if let tintColor {
+            imageAttachment.image = uiImage.withTintColor(tintColor, renderingMode: .alwaysTemplate)
+        } else {
+            imageAttachment.image = uiImage
+        }
         return NSAttributedString(attachment: imageAttachment)
     }
 
@@ -137,7 +133,7 @@ class AfterpayPriceBreakdownView: UIView {
 #if !canImport(CompositorServices)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        afterpayMarkImageView.tintColor = theme.colors.parentBackground.contrastingColor
+        afterPayClearPayLabel.attributedText = makeAfterPayClearPayString()
     }
 #endif
 
