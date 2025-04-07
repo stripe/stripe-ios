@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.11.0 2025-04-07
 ### PaymentSheet
 * [Added] Added `rowSelectionBehavior` API to Embedded Payment Element (private preview).
 * [Changed] The native Link experience (private preview) is now available as a payment method even if you collect billing details via `billingDetailsCollectionConfiguration`.
