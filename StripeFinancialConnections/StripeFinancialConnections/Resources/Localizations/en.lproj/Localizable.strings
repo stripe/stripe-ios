@@ -25,6 +25,9 @@
 /* Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us' */
 "Click “Resend code” and try again, or %@." = "Click “Resend code” and try again, or %@.";
 
+/* The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it. */
+"Confirm account number" = "Confirm account number";
+
 /* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Confirm account number' field blank. */
 "Confirm the account number." = "Confirm the account number.";
 
@@ -136,6 +139,9 @@
 
 /* The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
 "Retrieving accounts..." = "Retrieving accounts...";
+
+/* The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number. */
+"Routing number" = "Routing number";
 
 /* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Routing number' field blank. */
 "Routing number is required." = "Routing number is required.";

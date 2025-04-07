@@ -39,7 +39,10 @@ final class ManualEntryFormView: UIView {
     private var errorView: UIView?
     private lazy var routingNumberTextField: RoundedTextField = {
         let routingNumberTextField = RoundedTextField(
-            placeholder: String.Localized.routing_number,
+            placeholder: STPLocalizedString(
+                "Routing number",
+                "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."
+            ),
             showDoneToolbar: true,
             appearance: appearance
         )
@@ -61,13 +64,17 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberConfirmationTextField: RoundedTextField = {
         let accountNumberConfirmationTextField = RoundedTextField(
-            placeholder: String.Localized.confirm_account_number,
+            placeholder: STPLocalizedString(
+                "Confirm account number",
+                "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."
+            ),
             showDoneToolbar: true,
             appearance: appearance
         )
         accountNumberConfirmationTextField.textField.keyboardType = .numberPad
         accountNumberConfirmationTextField.delegate = self
-        accountNumberConfirmationTextField.textField.accessibilityIdentifier = "manual_entry_account_number_confirmation_text_field"
+        accountNumberConfirmationTextField.textField.accessibilityIdentifier =
+            "manual_entry_account_number_confirmation_text_field"
         return accountNumberConfirmationTextField
     }()
 
