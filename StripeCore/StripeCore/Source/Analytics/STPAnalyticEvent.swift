@@ -288,4 +288,7 @@ import Foundation
     case assertionSucceeded = "stripeios.attest.assertion.succeeded"
     case resetKeyForAssertionError = "stripeios.attest.reset_key_for_assertion_error"
     case resetKeyForAttestationError = "stripeios.attest.reset_key_for_attestation_error"
+
+    // MARK: - Custom Payment Methods
+    case paymentSheetInvalidCPM = "mc_invalid_cpm"
 }

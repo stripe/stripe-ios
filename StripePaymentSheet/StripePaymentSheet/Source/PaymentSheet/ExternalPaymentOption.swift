@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 enum ExternalPaymentOptionConfirmHandler {
     case custom(PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod, PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodConfirmHandler)
@@ -101,6 +102,7 @@ class ExternalPaymentOption {
         guard let customPaymentMethodType = configuration?.customPaymentMethods.first(where: { $0.id == customPaymentMethod.type }),
               let label = customPaymentMethod.displayName,
               let logoUrl = customPaymentMethod.logoUrl else {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetInvalidCPM)
             assertionFailure("Failed to render payment method type: \(customPaymentMethod.type) with error \(customPaymentMethod.error ?? "unknown")")
             return nil
         }
