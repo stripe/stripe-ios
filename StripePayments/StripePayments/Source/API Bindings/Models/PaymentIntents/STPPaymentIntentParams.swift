@@ -78,11 +78,18 @@ public class STPPaymentIntentParams: NSObject {
     /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
     /// if the PaymentMethod/Source is not already attached.
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc public var savePaymentMethod: NSNumber?
+    @objc(savePaymentMethod)
+    public var savePaymentMethod_objc: NSNumber? {
+        get { return NSNumber(value: savePaymentMethod) }
+        set { savePaymentMethod = newValue?.boolValue ?? false }
+    }
 
-    /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
-    /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
+    /// `true` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
+    /// if the PaymentMethod/Source is not already attached.
+    public var savePaymentMethod: Bool = false
+
+    /// `true` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
+    @objc @_spi(STP) public var setAsDefaultPM: Bool = false
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
@@ -166,19 +173,6 @@ public class STPPaymentIntentParams: NSObject {
             returnURL = returnUrl
         }
     }
-    /// `@YES` to save this PaymentIntent’s Source to the associated Customer,
-    /// if the Source is not already attached.
-    /// This should be a boolean NSNumber, so that it can be `nil`
-    /// This property has been renamed to `savePaymentMethod` and deprecated.
-    @available(*, deprecated, renamed: "savePaymentMethod")
-    @objc public var saveSourceToCustomer: NSNumber? {
-        get {
-            return savePaymentMethod
-        }
-        set(saveSourceToCustomer) {
-            savePaymentMethod = saveSourceToCustomer
-        }
-    }
 
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
@@ -194,7 +188,7 @@ public class STPPaymentIntentParams: NSObject {
             "clientSecret = \(!clientSecret.isEmpty ? "<redacted>" : "")",
             "receiptEmail = \(String(describing: receiptEmail))",
             "returnURL = \(String(describing: returnURL))",
-            "savePaymentMethod = \(String(describing: savePaymentMethod?.boolValue))",
+            "savePaymentMethod = \(String(describing: savePaymentMethod))",
             "setupFutureUsage = \(String(describing: setupFutureUsage))",
             "shipping = \(String(describing: shipping))",
             "useStripeSDK = \(String(describing: useStripeSDK?.boolValue))",
@@ -205,7 +199,7 @@ public class STPPaymentIntentParams: NSObject {
             "paymentMethodId = \(String(describing: paymentMethodId))",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
             // Set as default payment method
-            "setAsDefaultPM = \(String(describing: setAsDefaultPM?.boolValue))",
+            "setAsDefaultPM = \(String(describing: setAsDefaultPM))",
             // Mandate
             "mandateData = \(String(describing: mandateData))",
             // PaymentMethodOptions
@@ -255,7 +249,7 @@ extension STPPaymentIntentParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: sourceParams)): "source_data",
             NSStringFromSelector(#selector(getter: sourceId)): "source",
             NSStringFromSelector(#selector(getter: receiptEmail)): "receipt_email",
-            NSStringFromSelector(#selector(getter: savePaymentMethod)): "save_payment_method",
+            NSStringFromSelector(#selector(getter: savePaymentMethod_objc)): "save_payment_method",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
