@@ -27,7 +27,7 @@ public final class EmbeddedPaymentElement {
     /// This contains the `configuration` you passed in to `create`.
     public let configuration: Configuration
 
-    /// The current intent configuration,  updated after loading or updating succeeds.
+    /// The current intent configuration, updated after loading or updating succeeds.
     public private(set) var intentConfiguration: IntentConfiguration
 
     /// See `EmbeddedPaymentElementDelegate`.
