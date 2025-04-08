@@ -14,6 +14,7 @@ import UIKit
 
 /// STPAUBECSDebitFormViewDelegate provides methods for STPAUBECSDebitFormView to inform its delegate
 /// of when the form has been completed.
+@MainActor @preconcurrency
 @objc public protocol STPAUBECSDebitFormViewDelegate: NSObjectProtocol {
     /// Called when the form transitions from complete to incomplete or vice-versa.
     /// - Parameters:
