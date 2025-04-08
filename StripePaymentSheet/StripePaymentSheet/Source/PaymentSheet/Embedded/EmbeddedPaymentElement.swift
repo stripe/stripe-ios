@@ -27,6 +27,9 @@ public final class EmbeddedPaymentElement {
     /// This contains the `configuration` you passed in to `create`.
     public let configuration: Configuration
 
+    /// The current intent configuration,  updated after loading or updating succeeds.
+    public private(set) var intentConfiguration: IntentConfiguration
+
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
 
@@ -81,6 +84,7 @@ public final class EmbeddedPaymentElement {
         )
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: configuration,
+            intentConfiguration: intentConfiguration,
             loadResult: loadResult,
             analyticsHelper: analyticsHelper
         )
@@ -224,6 +228,7 @@ public final class EmbeddedPaymentElement {
         }
         embeddedPaymentMethodsView.isUserInteractionEnabled = true
         analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
+        self.intentConfiguration = intentConfiguration
         return updateResult
     }
 
@@ -358,10 +363,12 @@ public final class EmbeddedPaymentElement {
 
     internal init(
         configuration: Configuration,
+        intentConfiguration: IntentConfiguration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
+        self.intentConfiguration = intentConfiguration
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
