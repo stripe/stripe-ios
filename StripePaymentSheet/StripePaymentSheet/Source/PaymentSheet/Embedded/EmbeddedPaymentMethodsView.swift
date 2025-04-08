@@ -40,6 +40,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
+    private let currency: String?
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -115,6 +116,7 @@ class EmbeddedPaymentMethodsView: UIView {
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
         customer: PaymentSheet.CustomerConfiguration? = nil,
+        currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
@@ -123,6 +125,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
         self.customer = customer
+        self.currency = currency
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.delegate = delegate
@@ -429,6 +432,7 @@ class EmbeddedPaymentMethodsView: UIView {
         accessoryButton.isHidden = true
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
+            currency: currency,
             hasSavedCard: savedPaymentMethods.hasSavedCard,
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,

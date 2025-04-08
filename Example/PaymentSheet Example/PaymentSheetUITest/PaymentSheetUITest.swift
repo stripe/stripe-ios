@@ -1600,6 +1600,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.linkEnabledMode = .off
+        settings.linkDisplay = .never
 
         settings.customerKeyType = .customerSession
         settings.paymentMethodUpdate = .enabled
