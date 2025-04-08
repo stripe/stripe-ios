@@ -20,7 +20,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockClientSecret = "las_123345"
     private let mockAnalyticsClient = MockAnalyticsClient()
-    private let mockApiClient = FinancialConnectionsAPIClient(
+    private let mockApiClient = FinancialConnectionsAsyncAPIClient(
         apiClient: APIStubbedTestCase.stubbedAPIClient()
     )
 
