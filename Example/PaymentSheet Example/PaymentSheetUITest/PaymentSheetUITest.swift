@@ -529,6 +529,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.mode = .setup
         settings.uiStyle = .paymentSheet
         settings.layout = .horizontal
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card,cashapp,us_bank_account"
         loadPlayground(app, settings)
 
         // Add a card first so we can test saved screen
@@ -1598,6 +1600,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.linkEnabledMode = .off
+        settings.linkDisplay = .never
 
         settings.customerKeyType = .customerSession
         settings.paymentMethodUpdate = .enabled
@@ -1620,7 +1623,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         expField.typeText("99")
         XCTAssertTrue(app.staticTexts["Your card has expired."].waitForExistence(timeout: 3.0))
 
-        // Enter valid date of 02/32
+        // Enter valid date of mm/32
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText("32")
@@ -1651,7 +1654,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
             return
         }
 
-        XCTAssertEqual(expirationDate, "03/32")
+        XCTAssertEqual(expirationDate.suffix(3), "/32")
         XCTAssertEqual(zipCode, "55555")
     }
     func test_updatePaymentMethod_fullBilling() throws {
@@ -2648,6 +2651,25 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         assertLinkInlineSignupNotShown() // Link should not be shown in this flow
     }
 
+    func testLinkPaymentSheetFlowController_returnsCardPaymentOptionDisplayDataForLinkInlineSignup() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.uiStyle = .flowController
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkPassthroughMode = .pm
+        settings.applePayEnabled = .off
+
+        loadPlayground(app, settings)
+        app.buttons["Payment method"].waitForExistenceAndTap()
+
+        fillLinkCardAndSignup(mode: .checkbox)
+
+        // Assert that card is the returned payment method type
+        app.buttons["Continue"].tap()
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
+    }
+
     func testLinkInlineSignup_gb() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -2697,6 +2719,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         fillLinkAndPay(mode: .checkbox)
     }
+
+    // MARK: Link bank payments
 
     func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
@@ -2749,6 +2773,88 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
+    // MARK: Native Link payments with billing details collection
+
+    func testBillingDetailsCollectionInNativeLinkInPassthroughModeForNewUser() {
+        testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: true)
+    }
+
+    func testBillingDetailsCollectionInNativeLinkInPaymentMethodModeForNewUser() {
+        testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: false)
+    }
+
+    func testBillingDetailsCollectionInNativeLinkInPassthroughModeForExistingUser() {
+        testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: true)
+    }
+
+    func testBillingDetailsCollectionInNativeLinkInPaymentMethodModeForExistingUser() {
+        testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: false)
+    }
+
+    private func testBillingDetailsCollectionInNativeLinkForNewUser(passthroughMode: Bool) {
+        let email = "billing_details_test+\(UUID().uuidString)@link.com"
+        let cvc = "1234"
+
+        let settings = createLinkPlaygroundSettings(
+            passthroughMode: passthroughMode,
+            collectBillingDetails: true
+        )
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Sign up and add a payment method with billing details
+        signUpFor(app, email: email)
+        fillOutLinkCardData(app, cardNumber: "378282246310005", cvc: cvc, includingBillingDetails: true)
+
+        payLink(app)
+        assertLinkPaymentSuccess(app)
+    }
+
+    private func testBillingDetailsCollectionInNativeLinkForExistingUser(passthroughMode: Bool) {
+        let email = "billing_details_test+\(UUID().uuidString)@link.com"
+        let cvc = "1234"
+
+        let settings = createLinkPlaygroundSettings(
+            passthroughMode: passthroughMode,
+            collectBillingDetails: false
+        )
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Sign up and add a payment method without billing details
+        signUpFor(app, email: email)
+        fillOutLinkCardData(app, cardNumber: "378282246310005", cvc: cvc, includingBillingDetails: false)
+        payLink(app)
+        assertLinkPaymentSuccess(app)
+
+        // Now request billing details
+        let settingsWithBillingDetails = createLinkPlaygroundSettings(
+            passthroughMode: passthroughMode,
+            collectBillingDetails: true
+        )
+        loadPlayground(app, settingsWithBillingDetails)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Pay again
+        logInToLink(app, email: email)
+
+        // Enter CVC if requested
+        let cvcField = app.textFields["CVC"]
+        if cvcField.waitForExistence(timeout: 5) {
+            cvcField.tap()
+            cvcField.typeText(cvc)
+        }
+
+        payLink(app)
+
+        // Fill out missing details
+        XCTAssertTrue(app.staticTexts["Confirm payment details"].waitForExistence(timeout: 5))
+        fillOutBillingDetails(app)
+
+        payLink(app)
+        assertLinkPaymentSuccess(app)
+    }
+
     // MARK: Link test helpers
 
     private enum LinkMode {
@@ -2761,6 +2867,32 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
                                 showLinkWalletButton: Bool = true,
                                 cardNumber: String? = nil) {
 
+        fillLinkCardAndSignup(mode: mode, showLinkWalletButton: showLinkWalletButton, cardNumber: cardNumber)
+
+        // Pay!
+        switch uiStyle {
+        case .paymentSheet:
+            app.buttons["Pay $50.99"].tap()
+        case .flowController:
+            app.buttons["Continue"].tap()
+            app.buttons["Confirm"].waitForExistenceAndTap()
+        case .embedded:
+            // TODO(porter) Fill in embedded UI test steps
+            break
+        }
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        // Roundabout way to validate that signup completed successfully
+        let signupCompleteAnalytic = analyticsLog.first { payload in
+            payload["event"] as? String == "link.signup.complete"
+        }
+        XCTAssertNotNil(signupCompleteAnalytic)
+    }
+
+    private func fillLinkCardAndSignup(
+        mode: LinkMode,
+        showLinkWalletButton: Bool = true,
+        cardNumber: String? = nil
+    ) {
         try! fillCardData(app, cardNumber: cardNumber)
 
         if showLinkWalletButton {
@@ -2783,29 +2915,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         phoneField.typeText("3105551234")
 
         // The name field is only required for non-US countries. Only fill it out if it exists.
-        let nameField = app.textFields["Name"]
+        let nameField = app.textFields["Full name"]
         if nameField.exists {
             nameField.tap()
             nameField.typeText("Jane Done")
         }
-
-        // Pay!
-        switch uiStyle {
-        case .paymentSheet:
-            app.buttons["Pay $50.99"].tap()
-        case .flowController:
-            app.buttons["Continue"].tap()
-            app.buttons["Confirm"].waitForExistenceAndTap()
-        case .embedded:
-            // TODO(porter) Fill in embedded UI test steps
-            break
-        }
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-        // Roundabout way to validate that signup completed successfully
-        let signupCompleteAnalytic = analyticsLog.first { payload in
-            payload["event"] as? String == "link.signup.complete"
-        }
-        XCTAssertNotNil(signupCompleteAnalytic)
     }
 
     private func assertLinkInlineSignupNotShown() {

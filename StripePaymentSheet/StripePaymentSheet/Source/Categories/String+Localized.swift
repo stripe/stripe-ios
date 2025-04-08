@@ -159,6 +159,16 @@ extension String.Localized {
         )
     }
 
+    static var confirm_payment_details: String {
+        STPLocalizedString(
+            "Confirm payment details",
+            """
+            Title of a screen where the user can update their payment method before continuing
+            with the transaction.
+            """
+        )
+    }
+
     static var update_payment_method: String {
         STPLocalizedString(
             "Update payment method",
@@ -397,6 +407,13 @@ extension String.Localized {
         STPLocalizedString(
             "Add US bank account",
             "Title shown above a view allowing the customer to add a US bank account."
+        )
+    }
+
+    static var buy_now_or_pay_later_with_cash_app_afterpay: String {
+        STPLocalizedString(
+            "Buy now or pay later with Cash App Afterpay",
+            "Subtitle shown on a button allowing a user to select to pay with Afterpay."
         )
     }
 

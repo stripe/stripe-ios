@@ -30,7 +30,6 @@ final class CardSectionWithScannerView: UIView {
     }()
     lazy var cardScanningView: CardScanningView = {
         let scanningView = CardScanningView()
-        scanningView.alpha = 0
         scanningView.isHidden = true
         scanningView.delegate = self
         return scanningView
@@ -69,10 +68,17 @@ final class CardSectionWithScannerView: UIView {
     }
 
     private func setCardScanVisible(_ isCardScanVisible: Bool) {
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+        if !isCardScanVisible {
+            self.cardScanningView.prepDismissAnimation()
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
             self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
             self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
-            self.cardScanningView.alpha = isCardScanVisible ? 1 : 0
+            self.layoutIfNeeded()
+        } completion: { _ in
+            if !isCardScanVisible {
+                self.cardScanningView.completeDismissAnimation()
+            }
         }
     }
 

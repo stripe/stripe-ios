@@ -1,5 +1,5 @@
 //
-//  FinancialConnectionsAsyncAPIClient+Legacy.swift
+//  FinancialConnectionsAsyncAPIClient+Wrappers.swift
 //  StripeFinancialConnections
 //
 //  Created by Mat Schmid on 2025-01-08.
@@ -338,7 +338,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         emailAddress: String,
         clientSecret: String,
         sessionId: String,
-        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        emailSource: FinancialConnectionsAsyncAPIClient.EmailSource,
         useMobileEndpoints: Bool,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LookupConsumerSessionResponse> {

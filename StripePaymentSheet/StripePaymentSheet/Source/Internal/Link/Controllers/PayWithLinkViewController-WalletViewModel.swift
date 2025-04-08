@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
@@ -224,6 +225,38 @@ extension PayWithLinkViewController {
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {
                     paymentMethods.forEach({ $0.isDefault = false })
+                    paymentMethods[index] = updatedPaymentDetails
+                }
+
+                completion(result)
+            }
+        }
+
+        /// Updates the billing details of the provided `paymentMethod`.
+        func updateBillingDetails(
+            paymentMethodID: String,
+            billingAddress: BillingAddress?,
+            billingEmailAddress: String?,
+            completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+        ) {
+            guard let index = paymentMethods.firstIndex(where: { $0.stripeID == paymentMethodID }) else {
+                return
+            }
+
+            let billingDetails = STPPaymentMethodBillingDetails(
+                billingAddress: billingAddress,
+                email: billingEmailAddress
+            )
+
+            let updateParams = UpdatePaymentDetailsParams(
+                details: .card(billingDetails: billingDetails)
+            )
+
+            linkAccount.updatePaymentDetails(
+                id: paymentMethodID,
+                updateParams: updateParams
+            ) { [self] result in
+                if case let .success(updatedPaymentDetails) = result {
                     paymentMethods[index] = updatedPaymentDetails
                 }
 

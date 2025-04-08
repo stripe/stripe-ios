@@ -218,7 +218,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_scrollDown() // see all institutions
 
-        app.fc_nativeFeaturedInstitution(name: "Data cannot be shared through Link").tap()
+        app.fc_nativeFeaturedInstitution(name: "Data Cannot Be Shared Through Link").tap()
 
         app.fc_nativeBankAccount(name: bankAccountName).tap()
 
@@ -492,7 +492,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
             app.fc_scrollDown() // see all institutions
 
-            app.fc_nativeFeaturedInstitution(name: "Data cannot be shared through Link").tap()
+            app.fc_nativeFeaturedInstitution(name: "Data Cannot Be Shared Through Link").tap()
 
             // select "High Balance" instead of the default "Success" account because
             // selecting the "Success" will override the previously-linked manual entry account

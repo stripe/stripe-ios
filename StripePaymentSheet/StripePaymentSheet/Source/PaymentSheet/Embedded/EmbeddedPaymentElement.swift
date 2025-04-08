@@ -54,7 +54,7 @@ public final class EmbeddedPaymentElement {
         guard let _paymentOption else {
             return nil
         }
-        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText)
+        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency)
     }
 
     /// An asynchronous failable initializer
@@ -67,6 +67,8 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
+        try validateRowSelectionConfiguration(configuration: configuration)
+
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
@@ -82,6 +84,7 @@ public final class EmbeddedPaymentElement {
             loadResult: loadResult,
             analyticsHelper: analyticsHelper
         )
+        embeddedPaymentElement.clearPaymentOptionIfNeeded()
         return embeddedPaymentElement
     }
 
@@ -216,6 +219,9 @@ public final class EmbeddedPaymentElement {
                 self.latestUpdateContext?.status = .canceled
             }
         }
+        if case .succeeded = updateResult {
+            clearPaymentOptionIfNeeded()
+        }
         embeddedPaymentMethodsView.isUserInteractionEnabled = true
         analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
@@ -237,7 +243,11 @@ public final class EmbeddedPaymentElement {
             return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
         let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
-        return await _confirm(paymentOption: paymentOption, authContext: authContext).result
+        let confirmResult = await _confirm(paymentOption: paymentOption, authContext: authContext).result
+        if confirmResult.isCanceledOrFailed {
+            clearPaymentOptionIfNeeded()
+        }
+        return confirmResult
     }
 
     /// Sets the currently selected payment option to `nil`.

@@ -33,8 +33,8 @@ extension PaymentSheet {
                 return paymentMethod.type.identifier
             case .new(confirmParams: let confirmParams):
                 return confirmParams.paymentMethodType.identifier
-            case .link:
-                return STPPaymentMethodType.link.identifier
+            case .link(let confirmationOption):
+                return confirmationOption.paymentMethodType
             case .external(let paymentMethod, _):
                 return paymentMethod.type
             }
@@ -86,7 +86,7 @@ extension PaymentSheet {
         var linkUIAnalyticsValue: String? {
             if case .link(let option) = self {
                 switch option {
-                case .withPaymentDetails(account: let account, _):
+                case .withPaymentDetails(let account, _, _):
                     if account.hasCompletedSMSVerification {
                         // This was a returning user who logged in
                         return "native-returning"
@@ -137,8 +137,8 @@ extension PaymentSheet {
             /// - If this is Apple Pay, the value is "apple_pay"
             public let paymentMethodType: String
 
-            init(paymentOption: PaymentOption) {
-                image = paymentOption.makeIcon(updateImageHandler: nil)
+            init(paymentOption: PaymentOption, currency: String?) {
+                image = paymentOption.makeIcon(currency: currency, updateImageHandler: nil)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
@@ -154,7 +154,7 @@ extension PaymentSheet {
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                 case .link(let option):
                     label = option.paymentSheetLabel
-                    paymentMethodType = STPPaymentMethodType.link.identifier
+                    paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                 case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.displayText
@@ -171,7 +171,7 @@ extension PaymentSheet {
         /// You can use this to e.g. display the payment option in your UI.
         public var paymentOption: PaymentOptionDisplayData? {
             if let selectedPaymentOption = _paymentOption {
-                return PaymentOptionDisplayData(paymentOption: selectedPaymentOption)
+                return PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency)
             }
             return nil
         }

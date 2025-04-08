@@ -1,2 +1,2 @@
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "Неуспешно свързване";
+/* label for iDEAL-bank selection picker */
+"Select bank" = "Избиране на банка";
