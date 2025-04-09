@@ -155,12 +155,28 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     struct PaymentMethodOptionsSetupFutureUsage: Codable, Equatable {
-        var card: SetupFutureUsage = .unset
-        var usBankAccount: SetupFutureUsage = .unset
-        var link: SetupFutureUsage = .unset
-        var amazonPay: SetupFutureUsage = .unset
-        var affirm: SetupFutureUsage = .unset
+        // Supports all SFU values
+        var card: SetupFutureUsageAll
+        var usBankAccount: SetupFutureUsageAll
+        var sepaDebit: SetupFutureUsageAll
+        // Only supports off_session
+        var link: SetupFutureUsageOffSessionOnly
+        var klarna: SetupFutureUsageOffSessionOnly
+        // Does not support SFU
+        var affirm: SetupFutureUsageNone
+        var afterpayClearpay: SetupFutureUsageNone
 
+        static func defaultValues() -> PaymentMethodOptionsSetupFutureUsage {
+            return PaymentMethodOptionsSetupFutureUsage(
+                card: .unset,
+                usBankAccount: .unset,
+                sepaDebit: .unset,
+                link: .unset,
+                klarna: .unset,
+                affirm: .unset,
+                afterpayClearpay: .unset
+            )
+        }
         func toDictionary() -> [String: String] {
             var result: [String: String] = [:]
             if card != .unset {
@@ -169,24 +185,43 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             if usBankAccount != .unset {
                 result["us_bank_account"] = usBankAccount.rawValue
             }
+            if sepaDebit != .unset {
+                result["sepa_debit"] = sepaDebit.rawValue
+            }
             if link != .unset {
                 result["link"] = link.rawValue
             }
-            if amazonPay != .unset {
-                result["amazon_pay"] = amazonPay.rawValue
+            if klarna != .unset {
+                result["klarna"] = klarna.rawValue
             }
             if affirm != .unset {
                 result["affirm"] = affirm.rawValue
+            }
+            if afterpayClearpay != .unset {
+                result["afterpay_clearpay"] = afterpayClearpay.rawValue
             }
             return result
         }
     }
 
-    enum SetupFutureUsage: String, PickerEnum {
+    enum SetupFutureUsageAll: String, PickerEnum {
         static var enumName: String { "SetupFutureUsage" }
         case unset
         case off_session
         case on_session
+        case none
+    }
+
+    enum SetupFutureUsageOffSessionOnly: String, PickerEnum {
+        static var enumName: String { "SetupFutureUsage" }
+        case unset
+        case off_session
+        case none
+    }
+
+    enum SetupFutureUsageNone: String, PickerEnum {
+        static var enumName: String { "SetupFutureUsage" }
+        case unset
         case none
     }
 
@@ -541,6 +576,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
     var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage
+    var customPaymentMethodOptionsSetupFutureUsage: String?
 
     var shippingInfo: ShippingInfo
     var applePayEnabled: ApplePayEnabled
@@ -595,7 +631,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             amount: ._5099,
             merchantCountryCode: .US,
             apmsEnabled: .on,
-            paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage(),
+            paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,
             applePayEnabled: .on,
             applePayButtonType: .buy,

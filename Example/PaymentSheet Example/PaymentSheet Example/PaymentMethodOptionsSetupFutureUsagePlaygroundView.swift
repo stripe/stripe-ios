@@ -28,12 +28,24 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
                 VStack {
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.card, customDisplayLabel: "Card")
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.usBankAccount, customDisplayLabel: "US Bank Account")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.link, disabledSettings: [.on_session], customDisplayLabel: "Link")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.amazonPay, disabledSettings: [.on_session], customDisplayLabel: "Amazon Pay")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.affirm, disabledSettings: [.off_session, .on_session], customDisplayLabel: "Affirm")
+                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.sepaDebit, customDisplayLabel: "SEPA Debit")
+                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.link, customDisplayLabel: "Link")
+                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.klarna, customDisplayLabel: "Klarna")
+                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.affirm, customDisplayLabel: "Affirm")
+                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.afterpayClearpay, customDisplayLabel: "Afterpay/Clearpay")
+                    TextField("pm_type=sfu_value (comma separated)", text: customPaymentMethodOptionsSetupFutureUsageBinding)
+                        .autocapitalization(.none)
                 }
             }.padding()
 
+        }
+    }
+
+    var customPaymentMethodOptionsSetupFutureUsageBinding: Binding<String> {
+        Binding<String> {
+            return viewModel.customPaymentMethodOptionsSetupFutureUsage ?? ""
+        } set: { newString in
+            viewModel.customPaymentMethodOptionsSetupFutureUsage = newString
         }
     }
 }

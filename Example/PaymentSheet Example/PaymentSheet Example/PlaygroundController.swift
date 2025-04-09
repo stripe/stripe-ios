@@ -700,6 +700,26 @@ extension PlaygroundController {
                 .split(separator: ",")
                 .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
         }
+        if let customPaymentMethodOptionsSetupFutureUsage = settingsToLoad.customPaymentMethodOptionsSetupFutureUsage, !customPaymentMethodOptionsSetupFutureUsage.isEmpty {
+            let paymentMethodOptionsSetupFutureUsage = customPaymentMethodOptionsSetupFutureUsage
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .split(separator: ",")
+                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+            var result: [String?: String?] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
+            paymentMethodOptionsSetupFutureUsage.forEach {
+                let components = $0
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .split(separator: "=")
+                    .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+                // if already set by the pickers, we give that precedence
+                if let paymentMethodType = components.first, !paymentMethodType.isEmpty,
+                   result[paymentMethodType] == nil,
+                   let setupFutureUsageValue = components.last, !setupFutureUsageValue.isEmpty {
+                    result[paymentMethodType] = setupFutureUsageValue
+                }
+            }
+            body["payment_method_options_setup_future_usage"] = result
+        }
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
             body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
         }
