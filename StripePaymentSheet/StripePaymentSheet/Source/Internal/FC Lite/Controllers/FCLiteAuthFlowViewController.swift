@@ -21,6 +21,8 @@ class FCLiteAuthFlowViewController: UIViewController {
     private let manifest: LinkAccountSessionManifest
     private let elementsSessionContext: ElementsSessionContext?
     private let returnUrl: URL?
+    private let onLoad: () -> Void
+
     private let completion: ((WebFlowResult) -> Void)
 
     private var webAuthenticationSession: ASWebAuthenticationSession?
@@ -31,7 +33,7 @@ class FCLiteAuthFlowViewController: UIViewController {
 
     private var hostedAuthUrl: URL {
         HostedAuthUrlBuilder.build(
-            baseHostedAuthUrl: manifest.hostedAuthURL,
+            baseHostedAuthUrl: manifest.localHostedAuthURL,
             isInstantDebits: manifest.isInstantDebits,
             elementsSessionContext: elementsSessionContext
         )
@@ -41,8 +43,10 @@ class FCLiteAuthFlowViewController: UIViewController {
         manifest: LinkAccountSessionManifest,
         elementsSessionContext: ElementsSessionContext?,
         returnUrl: URL?,
+        onLoad: @escaping () -> Void,
         completion: @escaping ((WebFlowResult) -> Void)
     ) {
+        self.onLoad = onLoad
         self.manifest = manifest
         self.elementsSessionContext = elementsSessionContext
         self.returnUrl = returnUrl
@@ -57,20 +61,28 @@ class FCLiteAuthFlowViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupProgressBar()
         setupWebView()
     }
 
     private func setupWebView() {
         webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
         webView.uiDelegate = self
+        webView.isHidden = true
         webView.navigationDelegate = self
 
-        observeWebviewLoadingProgress()
+#if DEBUG
+if #available(iOS 16.4, *) {
+    webView.isInspectable = true
+}
+#endif
+
 
         let request = URLRequest(url: hostedAuthUrl)
         webView.load(request)
-
+        webView.configuration.userContentController.add(ScriptMessageHandler(name: "authFlowLoaded", didReceiveMessage: { [weak self] in
+            self?.onLoad()
+            self?.webView.isHidden = false
+        }), name: "authFlowLoaded")
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
         NSLayoutConstraint.activate([
@@ -79,15 +91,6 @@ class FCLiteAuthFlowViewController: UIViewController {
             webView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
-    }
-
-    // MARK: Progress bar
-    private func setupProgressBar() {
-        let color = manifest.isInstantDebits ? FCLiteColor.link : FCLiteColor.stripe
-        progressBar.translatesAutoresizingMaskIntoConstraints = false
-        progressBar.trackTintColor = .lightGray
-        progressBar.progressTintColor = color
-        progressBar.progress = 0.0
     }
 
     private func showProgressBar() {
@@ -107,21 +110,6 @@ class FCLiteAuthFlowViewController: UIViewController {
         }, completion: { _ in
             self.progressBar.removeFromSuperview()
         })
-    }
-
-    private func observeWebviewLoadingProgress() {
-        progressObservation = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, _ in
-            guard let self else { return }
-
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                let progress = Float(self.webView.estimatedProgress)
-                self.progressBar.progress = progress
-                if progress >= 1.0 {
-                    self.hideProgressBar()
-                }
-            }
-        }
     }
 }
 
@@ -226,5 +214,26 @@ extension FCLiteAuthFlowViewController: WKUIDelegate {
 extension FCLiteAuthFlowViewController: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return self.view.window ?? ASPresentationAnchor()
+    }
+}
+
+class ScriptMessageHandler: NSObject, WKScriptMessageHandler {
+
+
+    let name: String
+    let didReceiveMessage: () -> Void
+
+    init(name: String,
+         didReceiveMessage: @escaping () -> Void) {
+        self.name = name
+        self.didReceiveMessage = didReceiveMessage
+    }
+
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        guard message.name == name else {
+          return
+        }
+            didReceiveMessage()
     }
 }

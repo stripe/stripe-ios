@@ -57,10 +57,11 @@ class FCLiteContainerViewController: UIViewController {
 
     private func setupSpinner() {
         spinner.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(spinner)
+        guard let navigation = self.navigationController else { return }
+        navigation.view.addSubview(spinner)
         NSLayoutConstraint.activate([
-            spinner.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            spinner.centerXAnchor.constraint(equalTo: navigation.view.safeAreaLayoutGuide.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: navigation.view.safeAreaLayoutGuide.centerYAnchor),
         ])
     }
 
@@ -80,9 +81,7 @@ class FCLiteContainerViewController: UIViewController {
             showError()
         }
 
-        DispatchQueue.main.async {
-            self.spinner.stopAnimating()
-        }
+       
     }
 
     private func completeFlow(result: FCLiteAuthFlowViewController.WebFlowResult) async {
@@ -127,10 +126,6 @@ class FCLiteContainerViewController: UIViewController {
         } catch {
             completion(.failed(error: error))
         }
-
-        DispatchQueue.main.async {
-            self.spinner.stopAnimating()
-        }
     }
 
     private func showWebView(for manifest: LinkAccountSessionManifest) {
@@ -138,6 +133,11 @@ class FCLiteContainerViewController: UIViewController {
             manifest: manifest,
             elementsSessionContext: elementsSessionContext,
             returnUrl: returnUrl,
+            onLoad: {
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                }
+            },
             completion: { [weak self] result in
                 guard let self else { return }
                 Task {

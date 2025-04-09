@@ -15,6 +15,17 @@ struct LinkAccountSessionManifest: Decodable {
     let id: String
 
     let hostedAuthURL: URL
+    var localHostedAuthURL: URL {
+        guard var components = URLComponents(url: hostedAuthURL, resolvingAgainstBaseURL: false) else {
+            return hostedAuthURL
+        }
+
+        components.host = "localhost"
+        components.port = 3001
+        components.scheme = "http"
+
+        return components.url ?? hostedAuthURL
+    }
     let successURL: URL
     let cancelURL: URL
 
