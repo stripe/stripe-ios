@@ -33,8 +33,7 @@ extension STPAPIClient {
                 "session_id": sessionID,
             ]
             if doNotLogConsumerFunnelEvent {
-                // TODO(mats): Set this parameter in a standalone PR:
-                // parameters["do_not_log_consumer_funnel_event"] = true
+                parameters["do_not_log_consumer_funnel_event"] = true
             }
             if let email, let emailSource {
                 parameters["email_address"] = email.lowercased()
