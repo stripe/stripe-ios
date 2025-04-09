@@ -623,16 +623,13 @@ extension STPAuthenticationContextWrapper: PaymentSheetAuthenticationContext {
         shouldPresentPollingVC = true
     }
 
-    func authenticationContextWillDismiss(_ viewController: UIViewController) {
+    func authenticationContextDidDismiss(_ viewController: UIViewController) {
         // The following code should only be executed if we are dismissing a SFSafariViewController
         guard viewController is SFSafariViewController else { return }
 
         if let pollingViewController = self.pollingVC {
-            // Delay presentation to allow the SFSafariViewController to dismiss completely
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self._presentingViewController.present(pollingViewController, animated: true)
-                self.shouldPresentPollingVC = false
-            }
+            self._presentingViewController.present(pollingViewController, animated: true)
+            self.shouldPresentPollingVC = false
         }
     }
 
