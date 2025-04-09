@@ -184,7 +184,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
-        settings.linkEnabledMode = .web
+        settings.linkEnabledMode = .native
         settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
@@ -241,7 +241,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
-        settings.linkEnabledMode = .web
+        settings.linkEnabledMode = .native
         settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
