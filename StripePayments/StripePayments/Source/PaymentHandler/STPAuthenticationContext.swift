@@ -37,6 +37,7 @@ import UIKit
     /// Implement this method to have your UI respond to the authentication view controller to being dismissed. For example,
     /// if you requested authentication while displaying an STPBankSelectionViewController, you may want to hide
     /// it to return the user to your desired view controller.
+    @_spi(STP)
     @objc(authenticationContextDidDismissViewController:)
     optional func authenticationContextDidDismiss(_ viewController: UIViewController)
 }
