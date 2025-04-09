@@ -450,7 +450,11 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                         completion(.failure(PaymentSheetError.unknown(debugDescription: "No account found")))
                         return
                     }
-                    let verificationController = LinkVerificationController(mode: .modal, linkAccount: account)
+                    let verificationController = LinkVerificationController(
+                        mode: .modal,
+                        linkAccount: account,
+                        configuration: self.context.configuration
+                    )
                     verificationController.present(from: self) { result in
                         switch result {
                         case .completed:
