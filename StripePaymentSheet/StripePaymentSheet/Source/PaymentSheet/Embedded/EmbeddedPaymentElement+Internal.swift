@@ -624,7 +624,7 @@ extension STPAuthenticationContextWrapper: PaymentSheetAuthenticationContext {
     }
 
     func authenticationContextDidDismiss(_ viewController: UIViewController) {
-        // The following code should only be executed if we are dismissing a SFSafariViewController
+        // The following code should only be executed if we have dismissed a SFSafariViewController
         guard viewController is SFSafariViewController else { return }
 
         if let pollingViewController = self.pollingVC, shouldPresentPollingVC {
