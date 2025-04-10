@@ -710,7 +710,7 @@ extension PlaygroundController {
                 paymentMethodOptionsSetupFutureUsage.forEach {
                     let components = $0
                         .trimmingCharacters(in: .whitespacesAndNewlines)
-                        .split(separator: "=")
+                        .split(separator: ":")
                         .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
                     // if already set by the pickers, we give that precedence
                     if let paymentMethodType = components.first, !paymentMethodType.isEmpty,
