@@ -1720,7 +1720,7 @@ public class STPPaymentHandler: NSObject {
                                 context.authenticationContextWillDismiss?(UIViewController())
                             }
                             // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
-                            self.callContextWillDismissIfNeeded(context, UIViewController())
+                            self.callContextDidDismissIfNeeded(context, UIViewController())
                             STPURLCallbackHandler.shared().unregisterListener(self)
                             self.analyticsClient.logURLRedirectNextActionCompleted(
                                 with: currentAction.apiClient._stored_configuration,
@@ -2180,7 +2180,7 @@ public class STPPaymentHandler: NSObject {
         return STPPaymentHandlerError(code: errorCode, loggingSafeUserInfo: userInfo) as NSError
     }
 
-    func callContextWillDismissIfNeeded(_ context: (any STPAuthenticationContext)?, _ viewController: UIViewController?) {
+    func callContextDidDismissIfNeeded(_ context: (any STPAuthenticationContext)?, _ viewController: UIViewController?) {
         guard let context, let viewController else { return }
 
         if context.responds(
@@ -2227,7 +2227,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
             context?.authenticationContextWillDismiss?(controller)
         }
 
-        callContextWillDismissIfNeeded(context, controller)
+        callContextDidDismissIfNeeded(context, controller)
 
         safariViewController = nil
         STPURLCallbackHandler.shared().unregisterListener(self)
@@ -2269,7 +2269,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
         safariViewController?.dismiss(animated: true) {
-            self.callContextWillDismissIfNeeded(context, self.safariViewController)
+            self.callContextDidDismissIfNeeded(context, self.safariViewController)
             self.safariViewController = nil
         }
         _retrieveAndCheckIntentForCurrentAction()
