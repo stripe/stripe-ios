@@ -32,7 +32,7 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.link, customDisplayLabel: "Link")
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.klarna, customDisplayLabel: "Klarna")
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.affirm, customDisplayLabel: "Affirm")
-                    TextField("pm_type=sfu_value (comma separated)", text: customPaymentMethodOptionsSetupFutureUsageBinding)
+                    TextField("pm_type=sfu_value (comma separated)", text: additionalPaymentMethodOptionsSetupFutureUsagesBinding)
                         .autocapitalization(.none)
                 }
             }.padding()
@@ -40,11 +40,11 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
         }
     }
 
-    var customPaymentMethodOptionsSetupFutureUsageBinding: Binding<String> {
+    var additionalPaymentMethodOptionsSetupFutureUsagesBinding: Binding<String> {
         Binding<String> {
-            return viewModel.customPaymentMethodOptionsSetupFutureUsage ?? ""
+            return viewModel.additionalPaymentMethodOptionsSetupFutureUsages ?? ""
         } set: { newString in
-            viewModel.customPaymentMethodOptionsSetupFutureUsage = newString
+            viewModel.additionalPaymentMethodOptionsSetupFutureUsages = newString
         }
     }
 }

@@ -571,7 +571,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
     var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage
-    var customPaymentMethodOptionsSetupFutureUsage: String?
+    var additionalPaymentMethodOptionsSetupFutureUsages: String?
 
     var shippingInfo: ShippingInfo
     var applePayEnabled: ApplePayEnabled

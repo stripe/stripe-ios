@@ -700,7 +700,7 @@ extension PlaygroundController {
                 .split(separator: ",")
                 .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
         }
-        if let customPaymentMethodOptionsSetupFutureUsage = settingsToLoad.customPaymentMethodOptionsSetupFutureUsage, !customPaymentMethodOptionsSetupFutureUsage.isEmpty {
+        if let customPaymentMethodOptionsSetupFutureUsage = settingsToLoad.additionalPaymentMethodOptionsSetupFutureUsages, !customPaymentMethodOptionsSetupFutureUsage.isEmpty {
             let paymentMethodOptionsSetupFutureUsage = customPaymentMethodOptionsSetupFutureUsage
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
