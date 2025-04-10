@@ -1719,6 +1719,8 @@ public class STPPaymentHandler: NSObject {
                                 // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
                                 context.authenticationContextWillDismiss?(UIViewController())
                             }
+                            // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
+                            self.callContextDidDismissIfNeeded(context, UIViewController())
                             STPURLCallbackHandler.shared().unregisterListener(self)
                             self.analyticsClient.logURLRedirectNextActionCompleted(
                                 with: currentAction.apiClient._stored_configuration,
@@ -2177,6 +2179,17 @@ public class STPPaymentHandler: NSObject {
         }
         return STPPaymentHandlerError(code: errorCode, loggingSafeUserInfo: userInfo) as NSError
     }
+
+    func callContextDidDismissIfNeeded(_ context: (any STPAuthenticationContext)?, _ viewController: UIViewController?) {
+        guard let context, let viewController else { return }
+
+        if context.responds(
+            to: #selector(STPAuthenticationContext.authenticationContextDidDismiss(_:))
+        )
+        {
+            context.authenticationContextDidDismiss?(viewController)
+        }
+    }
 }
 
 /// STPPaymentHandler errors (i.e. errors that are created by the STPPaymentHandler class and have a corresponding STPPaymentHandlerErrorCode) used to be NSErrors.
@@ -2213,6 +2226,9 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         ) ?? false {
             context?.authenticationContextWillDismiss?(controller)
         }
+
+        callContextDidDismissIfNeeded(context, controller)
+
         safariViewController = nil
         STPURLCallbackHandler.shared().unregisterListener(self)
         _retrieveAndCheckIntentForCurrentAction()
@@ -2253,6 +2269,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
         safariViewController?.dismiss(animated: true) {
+            self.callContextDidDismissIfNeeded(context, self.safariViewController)
             self.safariViewController = nil
         }
         _retrieveAndCheckIntentForCurrentAction()
