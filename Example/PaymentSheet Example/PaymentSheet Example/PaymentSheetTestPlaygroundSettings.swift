@@ -164,7 +164,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         var klarna: SetupFutureUsageOffSessionOnly
         // Does not support SFU
         var affirm: SetupFutureUsageNone
-        var afterpayClearpay: SetupFutureUsageNone
 
         static func defaultValues() -> PaymentMethodOptionsSetupFutureUsage {
             return PaymentMethodOptionsSetupFutureUsage(
@@ -173,8 +172,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 sepaDebit: .unset,
                 link: .unset,
                 klarna: .unset,
-                affirm: .unset,
-                afterpayClearpay: .unset
+                affirm: .unset
             )
         }
         func toDictionary() -> [String: String] {
@@ -196,9 +194,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             }
             if affirm != .unset {
                 result["affirm"] = affirm.rawValue
-            }
-            if afterpayClearpay != .unset {
-                result["afterpay_clearpay"] = afterpayClearpay.rawValue
             }
             return result
         }

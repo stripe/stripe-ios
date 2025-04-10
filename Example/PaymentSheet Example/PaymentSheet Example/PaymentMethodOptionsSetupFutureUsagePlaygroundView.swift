@@ -32,7 +32,6 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.link, customDisplayLabel: "Link")
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.klarna, customDisplayLabel: "Klarna")
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.affirm, customDisplayLabel: "Affirm")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.afterpayClearpay, customDisplayLabel: "Afterpay/Clearpay")
                     TextField("pm_type=sfu_value (comma separated)", text: customPaymentMethodOptionsSetupFutureUsageBinding)
                         .autocapitalization(.none)
                 }
