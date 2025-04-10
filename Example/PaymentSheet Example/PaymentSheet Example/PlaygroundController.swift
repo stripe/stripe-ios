@@ -562,6 +562,14 @@ class PlaygroundController: ObservableObject {
             rootViewController.present(alert, animated: true, completion: nil)
         }
     }
+    func paymentMethodOptionsSetupFutureUsageSettingsTapped() {
+        let vc = UIHostingController(rootView: PaymentMethodOptionsSetupFutureUsagePlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+            self.settings = updatedSettings
+            self.rootViewController.dismiss(animated: true, completion: nil)
+            self.load(reinitializeControllers: true)
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
+    }
     func customerSessionSettingsTapped() {
         let vc = UIHostingController(rootView: CustomerSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
             self.settings = updatedSettings
@@ -690,6 +698,29 @@ extension PlaygroundController {
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
                 .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+        }
+        let paymentMethodOptionsSetupFutureUsageDictionary = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
+        if !paymentMethodOptionsSetupFutureUsageDictionary.isEmpty {
+            var result: [String?: String?] = paymentMethodOptionsSetupFutureUsageDictionary
+            if let additionalPaymentMethodOptionsSetupFutureUsage = settingsToLoad.additionalPaymentMethodOptionsSetupFutureUsage, !additionalPaymentMethodOptionsSetupFutureUsage.isEmpty {
+                let paymentMethodOptionsSetupFutureUsage = additionalPaymentMethodOptionsSetupFutureUsage
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .split(separator: ",")
+                    .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+                paymentMethodOptionsSetupFutureUsage.forEach {
+                    let components = $0
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .split(separator: ":")
+                        .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+                    // if already set by the pickers, we give that precedence
+                    if let paymentMethodType = components.first, !paymentMethodType.isEmpty,
+                       result[paymentMethodType] == nil,
+                       let setupFutureUsageValue = components.last, !setupFutureUsageValue.isEmpty {
+                        result[paymentMethodType] = setupFutureUsageValue
+                    }
+                }
+            }
+            body["payment_method_options_setup_future_usage"] = result
         }
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
             body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
