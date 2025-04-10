@@ -80,8 +80,10 @@ final class LinkVerificationView: UIView {
     }()
 
     private(set) lazy var codeField: OneTimeCodeTextField = {
-        let codeField = OneTimeCodeTextField(configuration: .init(numberOfDigits: 6),
-                                             theme: LinkUI.appearance.asElementsTheme)
+        let codeField = OneTimeCodeTextField(
+            configuration: .init(numberOfDigits: 6),
+            theme: LinkUI.appearance.asElementsTheme
+        )
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField
     }()
@@ -104,10 +106,10 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkBordered(), title: STPLocalizedString(
-            "Resend code",
-            "Label for a button that re-sends the a login code when tapped"
-        ))
+        let button = Button(
+            configuration: .linkBordered(),
+            title: String.Localized.resend_code
+        )
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
         return button
     }()
@@ -238,10 +240,7 @@ extension LinkVerificationView.Mode {
                 "Two factor authentication screen heading"
             )
         case .inlineLogin, .embedded:
-            return STPLocalizedString(
-                "Confirm it's you",
-                "Two factor authentication screen heading"
-            )
+            return String.Localized.confirm_its_you
         }
     }
 

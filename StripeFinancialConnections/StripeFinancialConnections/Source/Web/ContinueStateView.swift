@@ -44,13 +44,13 @@ final class ContinueStateViews {
         )
         let footerViewTuple = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                title: "Continue", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`,
+                title: String.Localized.continue,
                 action: didSelectContinue
             ),
             secondaryButtonConfiguration: {
                 if let didSelectCancel {
                     return PaneLayoutView.ButtonConfiguration(
-                        title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
+                        title: String.Localized.cancel,
                         action: didSelectCancel
                     )
                 } else {

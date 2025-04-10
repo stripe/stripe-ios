@@ -83,7 +83,7 @@ final class PrepaneViews {
                                    "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
                                )
                             case .sheet:
-                                return "Cancel" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
+                                return String.Localized.cancel
                             }
                         }(),
                         accessibilityIdentifier: "prepane_cancel_button",

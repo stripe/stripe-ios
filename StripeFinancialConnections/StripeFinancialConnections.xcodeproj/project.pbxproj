@@ -1221,7 +1221,6 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				Base,
 				"bg-BG",
 				"ca-ES",
 				"cs-CZ",
@@ -1263,6 +1262,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				Base,
 			);
 			mainGroup = 7879CBA341D7E807714A831B;
 			packageReferences = (
