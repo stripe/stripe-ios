@@ -11,6 +11,7 @@ import SwiftUI
 
 struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
     @State var viewModel: PaymentSheetTestPlaygroundSettings
+    var paymentMethodTypes: [String]?
     var doneAction: ((PaymentSheetTestPlaygroundSettings) -> Void) = { _ in }
 
     var body: some View {
@@ -27,8 +28,12 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
             Group {
                 VStack {
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.card, customDisplayLabel: "Card")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.usBankAccount, customDisplayLabel: "US Bank Account")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.sepaDebit, customDisplayLabel: "SEPA Debit")
+                    if viewModel.merchantCountryCode == .US, viewModel.currency == .usd {
+                        SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.usBankAccount, customDisplayLabel: "US Bank Account")
+                    }
+                    if viewModel.allowsDelayedPMs == .on {
+                        SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.sepaDebit, customDisplayLabel: "SEPA Debit")
+                    }
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.link, customDisplayLabel: "Link")
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.klarna, customDisplayLabel: "Klarna")
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.affirm, customDisplayLabel: "Affirm")
