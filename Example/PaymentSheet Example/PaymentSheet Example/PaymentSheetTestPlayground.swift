@@ -105,7 +105,6 @@ struct PaymentSheetTestPlayground: View {
                                 return amount.customDisplayName(currency: playgroundController.settings.currency)
                             })
                             SettingPickerView(setting: $playgroundController.settings.currency)
-
                         }
                         SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
