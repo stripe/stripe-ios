@@ -883,6 +883,8 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.preferredNetworksEnabled = .off
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
         loadPlayground(app, settings)
 
         _testCardBrandChoice(settings: settings)
@@ -897,6 +899,8 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.preferredNetworksEnabled = .off
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
         loadPlayground(app, settings)
 
         _testCardBrandChoice(isSetup: true, settings: settings)
@@ -911,6 +915,8 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         settings.currency = .eur
         settings.preferredNetworksEnabled = .off
         settings.integrationType = .deferred_csc
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
         loadPlayground(app, settings)
 
         _testCardBrandChoice(settings: settings)
@@ -924,6 +930,9 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.preferredNetworksEnabled = .on
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
+
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
@@ -979,6 +988,8 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
@@ -1078,6 +1089,8 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         settings.currency = .eur
         settings.customerMode = .returning
         settings.layout = .horizontal
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
 
         loadPlayground(app, settings)
 
@@ -1105,6 +1118,25 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
         XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
         app.buttons["Done"].waitForExistenceAndTap()
+    }
+
+    func testCustomPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.customerMode = .new
+        settings.merchantCountryCode = .US
+        settings.currency = .usd
+        settings.customPaymentMethods = .on
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+
+        tapPaymentMethod("BufoPay (test)")
+
+        app.buttons["Pay $50.99"].tap()
+        app.alerts.buttons["Confirm"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 }
 

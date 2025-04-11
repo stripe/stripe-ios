@@ -28,22 +28,6 @@ struct LinkAccountSessionManifest: Decodable {
         !manualEntryUsesMicrodeposits
     }
 
-    init(
-        id: String,
-        hostedAuthURL: URL,
-        successURL: URL,
-        cancelURL: URL,
-        product: String,
-        manualEntryUsesMicrodeposits: Bool
-    ) {
-        self.id = id
-        self.hostedAuthURL = hostedAuthURL
-        self.successURL = successURL
-        self.cancelURL = cancelURL
-        self.product = product
-        self.manualEntryUsesMicrodeposits = manualEntryUsesMicrodeposits
-    }
-
     enum CodingKeys: String, CodingKey {
         case id
         case hostedAuthURL = "hosted_auth_url"

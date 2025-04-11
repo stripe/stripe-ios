@@ -197,7 +197,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         emailAddress: String,
         clientSecret: String,
         sessionId: String,
-        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        emailSource: FinancialConnectionsAsyncAPIClient.EmailSource,
         useMobileEndpoints: Bool,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<StripeFinancialConnections.LookupConsumerSessionResponse> {

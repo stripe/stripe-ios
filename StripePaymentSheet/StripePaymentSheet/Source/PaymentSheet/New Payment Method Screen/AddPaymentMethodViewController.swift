@@ -72,6 +72,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
+            currency: intent.currency,
             incentive: elementsSession.incentive,
             delegate: self
         )
@@ -194,7 +195,7 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 extension AddPaymentMethodViewController: PaymentMethodFormViewControllerDelegate {
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         delegate?.didUpdate(self)
-        
+
         if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
             let incentive = instantDebitsFormElement.displayableIncentive
             paymentMethodTypesView.setIncentive(incentive)

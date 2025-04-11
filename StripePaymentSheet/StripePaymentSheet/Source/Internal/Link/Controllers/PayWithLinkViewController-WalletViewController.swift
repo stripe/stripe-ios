@@ -30,6 +30,8 @@ extension PayWithLinkViewController {
             paymentPicker.dataSource = self
             paymentPicker.supportedPaymentMethodTypes = viewModel.supportedPaymentMethodTypes
             paymentPicker.selectedIndex = viewModel.selectedPaymentMethodIndex
+            paymentPicker.billingDetails = context.configuration.defaultBillingDetails
+            paymentPicker.billingDetailsCollectionConfiguration = context.configuration.billingDetailsCollectionConfiguration
             return paymentPicker
         }()
 
@@ -39,7 +41,14 @@ extension PayWithLinkViewController {
             callToAction: viewModel.confirmButtonCallToAction,
             compact: viewModel.shouldUseCompactConfirmButton
         ) { [weak self] in
-            self?.confirm()
+            guard let self else {
+                return
+            }
+
+            let confirmationExtras = LinkConfirmationExtras(
+                billingPhoneNumber: self.makeEffectiveBillingDetails().phone
+            )
+            self.confirm(confirmationExtras: confirmationExtras)
         }
 
         private lazy var cancelButton: Button = {
@@ -129,6 +138,10 @@ extension PayWithLinkViewController {
             return stackView
         }()
 
+        private var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
+            context.configuration.billingDetailsCollectionConfiguration
+        }
+
         #if !os(visionOS)
         private let feedbackGenerator = UINotificationFeedbackGenerator()
         #endif
@@ -217,9 +230,14 @@ extension PayWithLinkViewController {
             containerView.toggleArrangedSubview(errorLabel, shouldShow: error != nil, animated: true)
         }
 
-        func confirm() {
+        func confirm(confirmationExtras: LinkConfirmationExtras = LinkConfirmationExtras()) {
             guard let paymentDetails = viewModel.selectedPaymentMethod else {
                 stpAssertionFailure("`confirm()` called without a selected payment method")
+                return
+            }
+
+            guard canConfirmWith(paymentDetails) else {
+                handleIncompleteBillingDetails(for: paymentDetails, with: confirmationExtras)
                 return
             }
 
@@ -230,7 +248,7 @@ extension PayWithLinkViewController {
                     }
                 }
 
-                confirm(for: context.intent, with: paymentDetails)
+                confirm(for: context.intent, with: paymentDetails, confirmationExtras: confirmationExtras)
             }
 
             if viewModel.shouldRecollectCardExpiryDate {
@@ -256,7 +274,62 @@ extension PayWithLinkViewController {
             }
         }
 
-        func confirm(for intent: Intent, with paymentDetails: ConsumerPaymentDetails) {
+        /// Returns whether the provided `paymentDetails` contains all the required billing details.
+        private func canConfirmWith(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+            let paymentDetailsAreSupported = paymentDetails.supports(
+                billingDetailsCollectionConfiguration,
+                in: linkAccount.currentSession
+            )
+
+            return paymentDetailsAreSupported
+        }
+
+        private func handleIncompleteBillingDetails(
+            for paymentDetails: ConsumerPaymentDetails,
+            with confirmationExtras: LinkConfirmationExtras
+        ) {
+            // Fill in missing fields with default values from the provided billing details and
+            // from the Link account.
+            let effectiveBillingDetails = makeEffectiveBillingDetails()
+
+            let effectivePaymentDetails = paymentDetails.update(
+                with: effectiveBillingDetails,
+                basedOn: billingDetailsCollectionConfiguration
+            )
+
+            let hasRequiredBillingDetailsNow = effectivePaymentDetails.supports(
+                billingDetailsCollectionConfiguration,
+                in: linkAccount.currentSession
+            )
+
+            if hasRequiredBillingDetailsNow {
+                // We have filled in all the missing fields. Now, update the payment details and confirm the intent.
+                viewModel.updateBillingDetails(
+                    paymentMethodID: paymentDetails.stripeID,
+                    billingAddress: effectivePaymentDetails.billingAddress,
+                    billingEmailAddress: effectiveBillingDetails.email
+                ) { [weak self] _ in
+                    // We need to pass the billing phone number explicitly, since it's not part of the billing details.
+                    let confirmationExtras = LinkConfirmationExtras(
+                        billingPhoneNumber: effectiveBillingDetails.phone
+                    )
+                    self?.confirm(confirmationExtras: confirmationExtras)
+                }
+            } else {
+                // We're still missing fields. Prompt the user to fill them in.
+                collectRemainingBillingDetailsAndConfirm(for: effectivePaymentDetails)
+            }
+        }
+
+        private func makeEffectiveBillingDetails() -> PaymentSheet.BillingDetails {
+            return context.configuration.effectiveBillingDetails(for: linkAccount)
+        }
+
+        func confirm(
+            for intent: Intent,
+            with paymentDetails: ConsumerPaymentDetails,
+            confirmationExtras: LinkConfirmationExtras?
+        ) {
             view.endEditing(true)
 
             #if !os(visionOS)
@@ -265,7 +338,11 @@ extension PayWithLinkViewController {
             updateErrorLabel(for: nil)
             confirmButton.update(state: .processing)
 
-            coordinator?.confirm(with: linkAccount, paymentDetails: paymentDetails) { [weak self] result, deferredIntentConfirmationType in
+            coordinator?.confirm(
+                with: linkAccount,
+                paymentDetails: paymentDetails,
+                confirmationExtras: confirmationExtras
+            ) { [weak self] result, deferredIntentConfirmationType in
                 switch result {
                 case .completed:
                     #if !os(visionOS)
@@ -360,13 +437,25 @@ private extension PayWithLinkViewController.WalletViewController {
         let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
             linkAccount: linkAccount,
             context: context,
-            paymentMethod: paymentMethod
+            paymentMethod: paymentMethod,
+            isBillingDetailsUpdateFlow: false
         )
         updatePaymentMethodVC.delegate = self
 
         navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
     }
 
+    func collectRemainingBillingDetailsAndConfirm(for paymentMethod: ConsumerPaymentDetails) {
+        let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
+            linkAccount: linkAccount,
+            context: context,
+            paymentMethod: paymentMethod,
+            isBillingDetailsUpdateFlow: true
+        )
+        updatePaymentMethodVC.delegate = self
+
+        navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
+    }
 }
 
 // MARK: - ElementDelegate
@@ -505,7 +594,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
                 guard let self = self else { return }
                 switch result {
                 case .success(let paymentDetails):
-                    self.didUpdate(paymentMethod: paymentDetails)
+                    self.didUpdate(paymentMethod: paymentDetails, confirmationExtras: nil)
                 case .failure(let error):
                     switch error {
                     case InstantDebitsOnlyAuthenticationSessionManager.Error.canceled:
@@ -549,11 +638,19 @@ extension PayWithLinkViewController.WalletViewController: LinkInstantDebitMandat
 
 extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewControllerDelegate {
 
-    func didUpdate(paymentMethod: ConsumerPaymentDetails) {
+    func didUpdate(
+        paymentMethod: ConsumerPaymentDetails,
+        confirmationExtras: LinkConfirmationExtras?
+    ) {
         if let index = viewModel.updatePaymentMethod(paymentMethod) {
             self.paymentPicker.selectedIndex = index
             self.paymentPicker.reloadData()
         }
-    }
 
+        if let confirmationExtras {
+            // The update screen was only opened to collect missing billing details. Now that we have them,
+            // let's confirm the intent.
+            confirm(confirmationExtras: confirmationExtras)
+        }
+    }
 }

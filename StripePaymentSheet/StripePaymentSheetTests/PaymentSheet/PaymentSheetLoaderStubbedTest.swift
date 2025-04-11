@@ -28,6 +28,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
 
         let loaded = expectation(description: "Loaded")
         let analyticsClient = STPTestingAnalyticsClient()
@@ -37,7 +39,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .flowController, configuration: configuration, analyticsClient: analyticsClient),
+            analyticsHelper: ._testValue(
+                integrationShape: .flowController,
+                configuration: configuration,
+                analyticsClient: analyticsClient
+            ),
             integrationShape: .flowController
         ) { result in
             switch result {
@@ -66,6 +72,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
 
         let loaded = expectation(description: "Loaded")
         let analyticsClient = STPTestingAnalyticsClient()
@@ -74,7 +82,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .flowController, configuration: configuration, analyticsClient: analyticsClient),
+            analyticsHelper: ._testValue(
+                integrationShape: .flowController,
+                configuration: configuration,
+                analyticsClient: analyticsClient
+            ),
             integrationShape: .flowController
         ) { result in
             switch result {
@@ -103,13 +115,15 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\"")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
 
         let configuration = self.configuration(apiClient: stubbedAPIClient())
         let loaded = expectation(description: "Loaded")
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
+            analyticsHelper: ._testValue(integrationShape: .flowController),
             integrationShape: .flowController
         ) { result in
             switch result {
@@ -135,13 +149,15 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
         let configuration = self.configuration(apiClient: stubbedAPIClient())
 
         let loaded = expectation(description: "Loaded")
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
+            analyticsHelper: ._testValue(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
         ) { result in
             switch result {
@@ -180,6 +196,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
 
         // ...loading PaymentSheet with a customer...
         let loaded = expectation(description: "Loaded")
@@ -188,7 +206,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration, analyticsClient: analyticsClient),
+            analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
             integrationShape: .complete
         ) { result in
             loaded.fulfill()
@@ -242,6 +260,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
 
         // ...loading PaymentSheet with a customer...
         let loaded = expectation(description: "Loaded")
@@ -250,7 +270,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret("seti_1234_secret_1234"),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration, analyticsClient: analyticsClient),
+            analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
             integrationShape: .complete
         ) { result in
             loaded.fulfill()
@@ -302,6 +322,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
 
         // ...loading PaymentSheet with a customer...
         let loaded = expectation(description: "LoadedWithoutTypes")
@@ -310,7 +332,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration, analyticsClient: analyticsClient),
+            analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
             integrationShape: .complete
         ) { result in
             loaded.fulfill()
@@ -353,7 +375,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration, analyticsClient: analyticsClient),
+            analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
             integrationShape: .complete
         ) { result in
             loaded2.fulfill()
@@ -408,7 +430,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
-            analyticsHelper: .init(integrationShape: .complete, configuration: PaymentSheet.Configuration._testValue_MostPermissive(), analyticsClient: analyticsClient),
+            analyticsHelper: ._testValue(configuration: PaymentSheet.Configuration._testValue_MostPermissive(), analyticsClient: analyticsClient),
             integrationShape: .complete
         ) { result in
             loadExpectation.fulfill()

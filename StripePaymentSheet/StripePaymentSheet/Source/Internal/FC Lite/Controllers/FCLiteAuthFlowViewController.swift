@@ -8,6 +8,7 @@
 import AuthenticationServices
 import UIKit
 // `@preconcurrency` suppresses Sendable-related warnings from WebKit.
+@_spi(STP) import StripeCore
 @preconcurrency import WebKit
 
 class FCLiteAuthFlowViewController: UIViewController {
@@ -18,6 +19,7 @@ class FCLiteAuthFlowViewController: UIViewController {
     }
 
     private let manifest: LinkAccountSessionManifest
+    private let elementsSessionContext: ElementsSessionContext?
     private let returnUrl: URL?
     private let completion: ((WebFlowResult) -> Void)
 
@@ -27,27 +29,22 @@ class FCLiteAuthFlowViewController: UIViewController {
     private var progressObservation: NSKeyValueObservation?
     private let progressBar = UIProgressView(progressViewStyle: .bar)
 
-    static func hostedAuthUrl(from manifest: LinkAccountSessionManifest) -> URL {
-        guard manifest.isInstantDebits else {
-            return manifest.hostedAuthURL
-        }
-
-        let additionalParameters: [String] = [
-            "return_payment_method=true",
-            "expand_payment_method=true",
-        ]
-        let urlString = manifest.hostedAuthURL.absoluteString
-        let joinedParameters = additionalParameters.joined(separator: "&")
-        let updatedUrlString = urlString + (urlString.hasSuffix("&") ? "" : "&") + joinedParameters
-        return URL(string: updatedUrlString) ?? manifest.hostedAuthURL
+    private var hostedAuthUrl: URL {
+        HostedAuthUrlBuilder.build(
+            baseHostedAuthUrl: manifest.hostedAuthURL,
+            isInstantDebits: manifest.isInstantDebits,
+            elementsSessionContext: elementsSessionContext
+        )
     }
 
     init(
         manifest: LinkAccountSessionManifest,
+        elementsSessionContext: ElementsSessionContext?,
         returnUrl: URL?,
         completion: @escaping ((WebFlowResult) -> Void)
     ) {
         self.manifest = manifest
+        self.elementsSessionContext = elementsSessionContext
         self.returnUrl = returnUrl
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
@@ -71,7 +68,6 @@ class FCLiteAuthFlowViewController: UIViewController {
 
         observeWebviewLoadingProgress()
 
-        let hostedAuthUrl = Self.hostedAuthUrl(from: manifest)
         let request = URLRequest(url: hostedAuthUrl)
         webView.load(request)
 

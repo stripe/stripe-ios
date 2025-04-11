@@ -73,7 +73,7 @@ extension PaymentSheet {
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
-        func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+        func makeImage(forDarkBackground: Bool = false, currency: String? = nil, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
@@ -86,7 +86,7 @@ extension PaymentSheet {
                 )
             case .stripe(let paymentMethodType):
                 // Get the client-side asset first
-                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground)
+                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency)
                 // Next, try to download the image from the spec if possible
                 if
                     FormSpecProvider.shared.isLoaded,
@@ -179,10 +179,15 @@ extension PaymentSheet {
                 // Stripe PaymentMethod types
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
-            + elementsSession.externalPaymentMethods.compactMap {
-                guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.externalPaymentMethodConfiguration) else { return nil }
-                return PaymentMethodType.external(externalPaymentOption)
-            }
+                + elementsSession.externalPaymentMethods.compactMap {
+                    guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.externalPaymentMethodConfiguration) else { return nil }
+                    return PaymentMethodType.external(externalPaymentOption)
+                }
+                // Custom Payment Methods
+                + elementsSession.customPaymentMethods.compactMap {
+                    guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.customPaymentMethodConfiguration) else { return nil }
+                    return PaymentMethodType.external(externalPaymentOption)
+                }
 
             // We support Instant Bank Payments as a payment method when:
             // - (Primary condition) Link is an available payment method.

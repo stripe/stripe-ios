@@ -184,6 +184,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
+        settings.linkEnabledMode = .native
         settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
@@ -206,6 +207,8 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         saveAddressButton.tap()
 
         checkoutButton.tap()
+
+        app.buttons["LinkVerificationCloseButton"].waitForExistenceAndTap()
 
         let cell = try XCTUnwrap(scroll(
             collectionView: app.collectionViews.firstMatch,
@@ -240,6 +243,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
+        settings.linkEnabledMode = .native
         settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
