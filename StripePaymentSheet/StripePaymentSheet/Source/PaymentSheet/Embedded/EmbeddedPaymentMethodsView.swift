@@ -226,6 +226,7 @@ class EmbeddedPaymentMethodsView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        // to make sure that it doesn't log on height change
         if !didLogRenderLPMs {
             logRenderLPMs()
             didLogRenderLPMs = true
