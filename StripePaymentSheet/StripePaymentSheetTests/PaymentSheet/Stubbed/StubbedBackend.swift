@@ -58,6 +58,23 @@ class StubbedBackend {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
     }
+    static func stubCustomers(fileMock: FileMock = .customers_200) {
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("/v1/customers") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
+    static func stubLookup(fileMock: FileMock = .consumers_lookup_200) {
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("/v1/consumers/sessions/lookup") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
 }
 
 public class ClassForBundle {}
