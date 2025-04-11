@@ -799,9 +799,10 @@ private extension OneTimeCodeTextField {
         }
 
         private func updateColors() {
-            borderLayer.backgroundColor = isEnabled ? theme.colors.componentBackground.cgColor : theme.colors.disabledBackground.cgColor
-            borderLayer.borderColor = theme.colors.border.cgColor
-            caret.backgroundColor = label.textColor.cgColor
+            let backgroundColor = isEnabled ? theme.colors.componentBackground : theme.colors.disabledBackground
+            borderLayer.backgroundColor = backgroundColor.resolvedColor(with: traitCollection).cgColor
+            borderLayer.borderColor = theme.colors.border.resolvedColor(with: traitCollection).cgColor
+            caret.backgroundColor = label.textColor.resolvedColor(with: traitCollection).cgColor
             focusRing.borderColor = tintColor.cgColor
         }
 

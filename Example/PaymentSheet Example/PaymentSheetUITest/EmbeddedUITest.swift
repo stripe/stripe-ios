@@ -1045,6 +1045,26 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         alert.buttons[buttonToTap].tap()
     }
 
+    func testPayNow() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .continue
+        settings.currency = .sgd
+        settings.merchantCountryCode = .SG
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.buttons["PayNow"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Checkout"].waitForExistenceAndTap())
+
+        app.webViews.webViews.webViews.buttons["Simulate scan"].waitForExistenceAndTap(timeout: 15)
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25.0))
+    }
+
     // Returning customers have two payment methods in a non-deterministic order.
     // Ensure state of payment method of label1 is selected prior to starting tests.
     func ensureSPMSelection(_ label1: String, insteadOf label2: String) {

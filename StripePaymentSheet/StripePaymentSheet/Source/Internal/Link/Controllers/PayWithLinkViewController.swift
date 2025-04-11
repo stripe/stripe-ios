@@ -442,7 +442,11 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, any Error>) -> Void) {
         // Tell the LinkAccountService to lookup again
         let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
-        accountService.lookupAccount(withEmail: linkAccount?.email, emailSource: .prefilledEmail) { result in
+        accountService.lookupAccount(
+            withEmail: linkAccount?.email,
+            emailSource: .prefilledEmail,
+            doNotLogConsumerFunnelEvent: false
+        ) { result in
             switch result {
             case .success(let account):
                 DispatchQueue.main.async {
@@ -450,7 +454,11 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                         completion(.failure(PaymentSheetError.unknown(debugDescription: "No account found")))
                         return
                     }
-                    let verificationController = LinkVerificationController(mode: .modal, linkAccount: account)
+                    let verificationController = LinkVerificationController(
+                        mode: .modal,
+                        linkAccount: account,
+                        configuration: self.context.configuration
+                    )
                     verificationController.present(from: self) { result in
                         switch result {
                         case .completed:
