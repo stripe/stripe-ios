@@ -36,17 +36,13 @@ import UIKit
         /// The height of each digit item.
         let itemHeight: CGFloat
 
-        /// The user interface style of the container.
-        let userInterfaceStyle: UIUserInterfaceStyle
-
         public init(
             numberOfDigits: Int = 6,
             itemSpacing: CGFloat = 6,
             enableDigitGrouping: Bool = true,
             font: UIFont = .systemFont(ofSize: 20),
             itemCornerRadius: CGFloat = 8,
-            itemHeight: CGFloat = 60,
-            userInterfaceStyle: UIUserInterfaceStyle = .unspecified
+            itemHeight: CGFloat = 60
         ) {
             self.numberOfDigits = numberOfDigits
             self.itemSpacing = itemSpacing
@@ -54,7 +50,6 @@ import UIKit
             self.font = font
             self.itemCornerRadius = itemCornerRadius
             self.itemHeight = itemHeight
-            self.userInterfaceStyle = userInterfaceStyle
         }
     }
 
@@ -98,8 +93,7 @@ import UIKit
             configuration: DigitView.Configuration(
                 cornerRadius: configuration.itemCornerRadius,
                 font: configuration.font,
-                itemHeight: configuration.itemHeight,
-                userInterfaceStyle: configuration.userInterfaceStyle
+                itemHeight: configuration.itemHeight
             ),
             theme: theme
         )
@@ -677,18 +671,15 @@ private extension OneTimeCodeTextField {
             let focusRingThickness: CGFloat = 2
             let font: UIFont
             let itemHeight: CGFloat
-            let userInterfaceStyle: UIUserInterfaceStyle
 
             init(
                 cornerRadius: CGFloat,
                 font: UIFont,
-                itemHeight: CGFloat,
-                userInterfaceStyle: UIUserInterfaceStyle
+                itemHeight: CGFloat
             ) {
                 self.cornerRadius = cornerRadius
                 self.font = font
                 self.itemHeight = itemHeight
-                self.userInterfaceStyle = userInterfaceStyle
             }
         }
 
@@ -808,9 +799,7 @@ private extension OneTimeCodeTextField {
         }
 
         private func updateColors() {
-            let traitCollection = UITraitCollection(userInterfaceStyle: configuration.userInterfaceStyle)
             let backgroundColor = isEnabled ? theme.colors.componentBackground : theme.colors.disabledBackground
-
             borderLayer.backgroundColor = backgroundColor.resolvedColor(with: traitCollection).cgColor
             borderLayer.borderColor = theme.colors.border.resolvedColor(with: traitCollection).cgColor
             caret.backgroundColor = label.textColor.resolvedColor(with: traitCollection).cgColor
