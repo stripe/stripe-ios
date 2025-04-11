@@ -175,7 +175,33 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 affirm: .unset
             )
         }
-        func toDictionary() -> [String: String] {
+
+        func makeRequestBody(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> [String: String] {
+            var result: [String: String] = self.toDictionary()
+            if let additionalPaymentMethodOptionsSetupFutureUsage {
+                // get the "key:value" strings by splitting on the comma
+                let paymentMethodOptionsSetupFutureUsage = additionalPaymentMethodOptionsSetupFutureUsage
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .split(separator: ",")
+                    .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+                paymentMethodOptionsSetupFutureUsage.forEach {
+                    // get the "key" and the "value"
+                    let components = $0
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .split(separator: ":")
+                        .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+                    if let paymentMethodType = components.first, !paymentMethodType.isEmpty,
+                       let setupFutureUsageValue = components.last, !setupFutureUsageValue.isEmpty,
+                       // picker value takes precedence over text input value if picker value is not unset
+                       result[paymentMethodType] == nil {
+                        result[paymentMethodType] = setupFutureUsageValue
+                    }
+                }
+            }
+            return result
+        }
+
+        private func toDictionary() -> [String: String] {
             var result: [String: String] = [:]
             if card != .unset {
                 result["card"] = card.rawValue
@@ -197,6 +223,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             }
             return result
         }
+
     }
 
     enum SetupFutureUsageAll: String, PickerEnum {

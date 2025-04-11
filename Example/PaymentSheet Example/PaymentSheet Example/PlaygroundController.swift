@@ -681,6 +681,7 @@ extension PlaygroundController {
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
+            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.makeRequestBody(with: settings.additionalPaymentMethodOptionsSetupFutureUsage),
             "use_link": settings.linkPassthroughMode == .pm,
             "link_mode": settings.linkEnabledMode.rawValue,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
@@ -698,29 +699,6 @@ extension PlaygroundController {
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
                 .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
-        }
-        let paymentMethodOptionsSetupFutureUsageDictionary = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
-        if !paymentMethodOptionsSetupFutureUsageDictionary.isEmpty {
-            var result: [String?: String?] = paymentMethodOptionsSetupFutureUsageDictionary
-            if let additionalPaymentMethodOptionsSetupFutureUsage = settingsToLoad.additionalPaymentMethodOptionsSetupFutureUsage, !additionalPaymentMethodOptionsSetupFutureUsage.isEmpty {
-                let paymentMethodOptionsSetupFutureUsage = additionalPaymentMethodOptionsSetupFutureUsage
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                    .split(separator: ",")
-                    .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
-                paymentMethodOptionsSetupFutureUsage.forEach {
-                    let components = $0
-                        .trimmingCharacters(in: .whitespacesAndNewlines)
-                        .split(separator: ":")
-                        .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
-                    // if already set by the pickers, we give that precedence
-                    if let paymentMethodType = components.first, !paymentMethodType.isEmpty,
-                       result[paymentMethodType] == nil,
-                       let setupFutureUsageValue = components.last, !setupFutureUsageValue.isEmpty {
-                        result[paymentMethodType] = setupFutureUsageValue
-                    }
-                }
-            }
-            body["payment_method_options_setup_future_usage"] = result
         }
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
             body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
