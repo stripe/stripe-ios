@@ -21,6 +21,7 @@ extension STPAPIClient {
         sessionID: String,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
+        doNotLogConsumerFunnelEvent: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         Task {
@@ -31,6 +32,9 @@ extension STPAPIClient {
                 "request_surface": "ios_payment_element",
                 "session_id": sessionID,
             ]
+            if doNotLogConsumerFunnelEvent {
+                parameters["do_not_log_consumer_funnel_event"] = true
+            }
             if let email, let emailSource {
                 parameters["email_address"] = email.lowercased()
                 parameters["email_source"] = emailSource.rawValue
