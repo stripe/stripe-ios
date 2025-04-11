@@ -214,6 +214,10 @@ final class PickerFieldView: UIView {
     func setCanBecomeFirstResponder(_ value: Bool) {
         _canBecomeFirstResponder = value
     }
+
+    override func resignFirstResponder() -> Bool {
+        return textField.resignFirstResponder()
+    }
 }
 
 // MARK: - EventHandler
@@ -250,7 +254,7 @@ extension PickerFieldView: UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         floatingPlaceholderTextFieldView?.updatePlaceholder()
-        delegate?.didFinish(self, shouldAutoAdvance: true)
+        delegate?.didFinish(self, shouldAutoAdvance: false)
     }
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -262,7 +266,8 @@ extension PickerFieldView: UITextFieldDelegate {
 
 extension PickerFieldView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
-        _ = textField.resignFirstResponder()
+        // Switch to the next field. Our delegate will tell us to resign if needed in didFinish.
+        delegate?.didFinish(self, shouldAutoAdvance: true)
     }
 
     func didTapCancel(_ toolbar: DoneButtonToolbar) {
