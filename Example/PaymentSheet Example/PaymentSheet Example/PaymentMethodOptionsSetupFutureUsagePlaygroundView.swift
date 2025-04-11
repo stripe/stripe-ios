@@ -11,7 +11,6 @@ import SwiftUI
 
 struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
     @State var viewModel: PaymentSheetTestPlaygroundSettings
-    var paymentMethodTypes: [String]?
     var doneAction: ((PaymentSheetTestPlaygroundSettings) -> Void) = { _ in }
 
     var body: some View {
