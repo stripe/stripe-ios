@@ -35,7 +35,6 @@ final class LinkVerificationView: UIView {
     weak var delegate: LinkVerificationViewDelegate?
 
     private let mode: Mode
-    private let userInterfaceStyle: UIUserInterfaceStyle
 
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
@@ -81,13 +80,8 @@ final class LinkVerificationView: UIView {
     }()
 
     private(set) lazy var codeField: OneTimeCodeTextField = {
-        let codeField = OneTimeCodeTextField(
-            configuration: .init(
-                numberOfDigits: 6,
-                userInterfaceStyle: userInterfaceStyle
-            ),
-            theme: LinkUI.appearance.asElementsTheme
-        )
+        let codeField = OneTimeCodeTextField(configuration: .init(numberOfDigits: 6),
+                                             theme: LinkUI.appearance.asElementsTheme)
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField
     }()
@@ -124,14 +118,9 @@ final class LinkVerificationView: UIView {
         return logoutView
     }()
 
-    required init(
-        mode: Mode,
-        linkAccount: PaymentSheetLinkAccountInfoProtocol,
-        userInterfaceStyle: UIUserInterfaceStyle
-    ) {
+    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
         self.mode = mode
         self.linkAccount = linkAccount
-        self.userInterfaceStyle = userInterfaceStyle
         super.init(frame: .zero)
         setupUI()
     }
