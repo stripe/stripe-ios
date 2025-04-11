@@ -118,4 +118,20 @@ enum Intent {
             }
         }
     }
+
+    func isSetupFutureUsageSet(paymentMethodType: String) -> Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.isSetupFutureUsageSet(paymentMethodType: paymentMethodType)
+        case .setupIntent:
+            return true
+        case .deferredIntent(intentConfig: let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, _, let setupFutureUsage, _):
+                return setupFutureUsage != nil
+            case .setup:
+                return true
+            }
+        }
+    }
 }

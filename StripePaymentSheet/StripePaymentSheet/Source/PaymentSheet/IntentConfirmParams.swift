@@ -114,7 +114,7 @@ final class IntentConfirmParams {
         }
     }
     func setAllowRedisplay(mobilePaymentElementFeatures: MobilePaymentElementComponentFeature?,
-                           isSettingUp: Bool) {
+                           isSetupFutureUsageSet: Bool) {
         guard let mobilePaymentElementFeatures else {
             // Legacy Ephemeral Key
             paymentMethodParams.allowRedisplay = .unspecified
@@ -125,7 +125,7 @@ final class IntentConfirmParams {
 
         // Customer Session is enabled
         if paymentMethodSave {
-            if isSettingUp {
+            if isSetupFutureUsageSet {
                 if saveForFutureUseCheckboxState == .selected {
                     paymentMethodParams.allowRedisplay = .always
                 } else if saveForFutureUseCheckboxState == .deselected {
@@ -140,7 +140,7 @@ final class IntentConfirmParams {
             }
         } else {
             stpAssert(saveForFutureUseCheckboxState == .hidden, "Checkbox should be hidden")
-            if isSettingUp {
+            if isSetupFutureUsageSet {
                 paymentMethodParams.allowRedisplay = allowRedisplayOverride ?? .limited
             } else {
                 // PaymentMethod won't be attached to customer

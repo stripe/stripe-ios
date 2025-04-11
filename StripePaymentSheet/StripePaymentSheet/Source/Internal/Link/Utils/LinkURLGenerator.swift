@@ -113,7 +113,7 @@ class LinkURLGenerator {
                              loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag(),
                              intentMode: intentMode,
-                             setupFutureUsage: intent.isSettingUp,
+                             setupFutureUsage: intent.isSetupFutureUsageSet(paymentMethodType: elementsSession.linkPassthroughModeEnabled ? "card" : "link"),
                              cardBrandChoice: cardBrandChoiceInfo,
                              linkFundingSources: linkFundingSources)
     }

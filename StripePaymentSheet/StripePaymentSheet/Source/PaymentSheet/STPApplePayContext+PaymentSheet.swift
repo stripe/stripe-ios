@@ -184,7 +184,7 @@ extension STPApplePayContext {
             }
         }
 
-        if intent.isSettingUp {
+        if intent.isSetupFutureUsageSet(paymentMethodType: "card") {
             // Disable Apple Pay Later if the merchant is setting up the payment method for future usage
 #if compiler(>=5.9)
             if #available(macOS 14.0, iOS 17.0, *) {

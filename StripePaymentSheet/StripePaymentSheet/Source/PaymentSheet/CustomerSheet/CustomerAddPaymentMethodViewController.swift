@@ -246,7 +246,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             accountService: nil,
             cardBrandChoiceEligible: cbcEligible,
             isPaymentIntent: false,
-            isSettingUp: true,
+            isSetupFutureUsageSet: true,
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
             analyticsHelper: nil,
