@@ -94,7 +94,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 PaymentSheetLoader.load(
                     mode: .paymentIntentClientSecret(clientSecret),
                     configuration: self.configuration,
-                    analyticsHelper: .init(integrationShape: .complete, configuration: self.configuration),
+                    analyticsHelper: ._testValue(configuration: self.configuration),
                     integrationShape: .complete
                 ) { result in
                     switch result {
@@ -179,7 +179,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            analyticsHelper: ._testValue(configuration: configuration),
             integrationShape: .complete
         ) { result in
             switch result {
@@ -247,7 +247,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: self.configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            analyticsHelper: ._testValue(configuration: configuration),
             integrationShape: .complete
         ) { result in
             switch result {
@@ -306,7 +306,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             PaymentSheetLoader.load(
                 mode: .paymentIntentClientSecret(clientSecret),
                 configuration: self.configuration,
-                analyticsHelper: .init(integrationShape: .complete, configuration: self.configuration),
+                analyticsHelper: ._testValue(configuration: self.configuration),
                 integrationShape: .complete
             ) { result in
                 guard case .success(let loadResult) = result else {
@@ -374,7 +374,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 PaymentSheetLoader.load(
                     mode: .paymentIntentClientSecret(clientSecret),
                     configuration: configuration,
-                    analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                    analyticsHelper: ._testValue(configuration: configuration),
                     integrationShape: .complete
                 ) { result in
                     switch result {
@@ -405,7 +405,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                                             PaymentSheetLoader.load(
                                                 mode: .paymentIntentClientSecret(clientSecret2),
                                                 configuration: configuration,
-                                                analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                                                analyticsHelper: ._testValue(configuration: configuration),
                                                 integrationShape: .complete
                                             ) { result in
                                                 switch result {
@@ -453,7 +453,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret(clientSecret),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            analyticsHelper: ._testValue(configuration: configuration),
             integrationShape: .complete
         ) { result in
             switch result {
@@ -483,7 +483,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                                 PaymentSheetLoader.load(
                                     mode: .setupIntentClientSecret(clientSecret2),
                                     configuration: configuration,
-                                    analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                                    analyticsHelper: ._testValue(configuration: configuration),
                                     integrationShape: .complete
                                 ) { result in
                                     switch result {
@@ -532,7 +532,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            analyticsHelper: ._testValue(configuration: configuration),
             integrationShape: .complete
         ) { result in
             switch result {
@@ -554,7 +554,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                         PaymentSheetLoader.load(
                             mode: .deferredIntent(intentConfig),
                             configuration: configuration,
-                            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                            analyticsHelper: ._testValue(configuration: configuration),
                             integrationShape: .complete
                         ) { result in
                             switch result {
@@ -601,7 +601,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            analyticsHelper: ._testValue(configuration: configuration),
             integrationShape: .complete
         ) { result in
             switch result {
@@ -623,7 +623,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                         PaymentSheetLoader.load(
                             mode: .deferredIntent(intentConfig),
                             configuration: configuration,
-                            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                            analyticsHelper: ._testValue(configuration: configuration),
                             integrationShape: .complete
                         ) { result in
                             switch result {
@@ -1500,7 +1500,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 PaymentSheetLoader.load(
                     mode: .paymentIntentClientSecret(clientSecret),
                     configuration: configuration,
-                    analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                    analyticsHelper: ._testValue(configuration: configuration),
                     integrationShape: .complete
                 ) { result in
                     switch result {

@@ -779,6 +779,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                             paymentMethodType: paymentMethodType,
                             shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                             appearance: configuration.appearance,
+                            currency: intent.currency,
                             incentive: displayedIncentive
                         ),
                     ])
@@ -794,6 +795,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
                     shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                     appearance: configuration.appearance,
+                    currency: intent.currency,
                     incentive: displayedIncentive
                 )
             }

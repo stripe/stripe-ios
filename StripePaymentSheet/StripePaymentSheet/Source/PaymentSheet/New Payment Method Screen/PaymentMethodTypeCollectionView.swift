@@ -38,14 +38,16 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
+    let currency: String?
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
-    
+
     private var incentive: PaymentMethodIncentive?
 
     init(
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
+        currency: String? = nil,
         incentive: PaymentMethodIncentive?,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
@@ -63,6 +65,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         }()
         self.selected = paymentMethodTypes[selectedItemIndex]
         self.appearance = appearance
+        self.currency = currency
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -90,14 +93,14 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: PaymentMethodTypeCollectionView.cellHeight)
     }
-    
+
     func setIncentive(_ incentive: PaymentMethodIncentive?) {
         guard self.incentive != incentive, let index = self.indexPathsForSelectedItems?.first else {
             return
         }
-        
+
         self.incentive = incentive
-        
+
         // Prevent the selected cell from being unselected following the reload
         reloadItems(at: [index])
         selectItem(at: index, animated: false, scrollPosition: [])
@@ -131,6 +134,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         }
         let paymentMethodType = paymentMethodTypes[indexPath.item]
         cell.paymentMethodType = paymentMethodType
+        cell.currency = currency
         cell.promoBadgeText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText
         cell.appearance = appearance
         return cell
@@ -173,13 +177,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 extension PaymentMethodTypeCollectionView {
     class PaymentTypeCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentTypeCell"
+        var currency: String?
         var paymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.card) {
             didSet {
                 update()
             }
         }
-        
-        var promoBadgeText: String? = nil {
+
+        var promoBadgeText: String? {
             didSet {
                 update()
             }
@@ -260,7 +265,7 @@ extension PaymentMethodTypeCollectionView {
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
                 label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
-                
+
                 promoBadge.centerYAnchor.constraint(equalTo: paymentMethodLogo.centerYAnchor),
                 promoBadge.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12),
             ])
@@ -321,7 +326,7 @@ extension PaymentMethodTypeCollectionView {
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let currPaymentMethodType = self.paymentMethodType
-            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white) { [weak self] image in
+            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white, currency: currency) { [weak self] image in
                 DispatchQueue.main.async {
                     guard let self, currPaymentMethodType == self.paymentMethodType else {
                         return
@@ -337,7 +342,7 @@ extension PaymentMethodTypeCollectionView {
             if paymentMethodTypeOfCurrentImage != self.paymentMethodType || image.size != CGSize(width: 1, height: 1) {
                 updateImage(image)
             }
-            
+
             promoBadge.isHidden = promoBadgeText == nil
             if let promoBadgeText {
                 promoBadge.setAppearance(appearance)

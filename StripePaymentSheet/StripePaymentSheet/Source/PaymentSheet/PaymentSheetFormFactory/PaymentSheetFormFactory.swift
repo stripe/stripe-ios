@@ -34,6 +34,7 @@ class PaymentSheetFormFactory {
     let isPaymentIntent: Bool
     let isSettingUp: Bool
     let countryCode: String?
+    let currency: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let allowsSetAsDefaultPM: Bool
@@ -112,6 +113,7 @@ class PaymentSheetFormFactory {
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSettingUp,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
+                  currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
@@ -131,6 +133,7 @@ class PaymentSheetFormFactory {
         isPaymentIntent: Bool,
         isSettingUp: Bool,
         countryCode: String?,
+        currency: String? = nil,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         allowsSetAsDefaultPM: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
@@ -152,6 +155,7 @@ class PaymentSheetFormFactory {
         self.isPaymentIntent = isPaymentIntent
         self.isSettingUp = isSettingUp
         self.countryCode = countryCode
+        self.currency = currency
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
@@ -725,7 +729,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {
-        return SubtitleElement(view: AfterpayPriceBreakdownView(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(view: AfterpayPriceBreakdownView(currency: currency, theme: theme), isHorizontalMode: configuration.isHorizontalMode)
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {

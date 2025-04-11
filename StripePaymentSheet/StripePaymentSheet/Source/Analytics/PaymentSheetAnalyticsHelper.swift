@@ -14,6 +14,9 @@ final class PaymentSheetAnalyticsHelper {
     let integrationShape: IntegrationShape
     let configuration: PaymentElementConfiguration
 
+    /// Logs analytics to `r.stripe.com`.
+    let analyticsClientV2: AnalyticsClientV2Protocol
+
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
     var elementsSession: STPElementsSession?
@@ -40,11 +43,16 @@ final class PaymentSheetAnalyticsHelper {
     init(
         integrationShape: IntegrationShape,
         configuration: PaymentElementConfiguration,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsClient: STPAnalyticsClient = .sharedClient,
+        analyticsClientV2: AnalyticsClientV2Protocol = AnalyticsClientV2(
+            clientId: "stripe-mobile-sdk",
+            origin: "stripe-mobile-sdk-ios"
+        )
     ) {
         self.integrationShape = integrationShape
         self.configuration = configuration
         self.analyticsClient = analyticsClient
+        self.analyticsClientV2 = analyticsClientV2
     }
 
     func logInitialized() {

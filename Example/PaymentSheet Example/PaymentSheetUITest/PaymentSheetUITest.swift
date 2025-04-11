@@ -1205,8 +1205,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         XCTAssertTrue(confirmRemoval.waitForExistence(timeout: 60.0))
         confirmRemoval.tap()
 
-        // Should still show "+ Add". Should show Link for a split second, but then it fades out because there is no wallet or other saved pm
-        XCTAssertTrue(app.staticTexts["+ Add"].waitForExistence(timeout: 3))
+        // Should recognize no more pms available and switch to add screen
+        XCTAssertTrue(app.buttons["Continue"].waitForExistence(timeout: 3))
     }
 }
 
@@ -1600,6 +1600,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.linkEnabledMode = .off
+        settings.linkDisplay = .never
 
         settings.customerKeyType = .customerSession
         settings.paymentMethodUpdate = .enabled

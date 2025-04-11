@@ -4,6 +4,7 @@
 //
 //  Created by Yuki Tokuhiro on 10/10/24.
 //
+import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
@@ -72,6 +73,7 @@ extension EmbeddedPaymentElement {
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
             savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
+            currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
             analyticsHelper: analyticsHelper,
             delegate: delegate
@@ -351,9 +353,9 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
-    init(paymentOption: PaymentOption, mandateText: NSAttributedString?) {
+    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?) {
         self.mandateText = mandateText
-        self.image = paymentOption.makeIcon(updateImageHandler: nil) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
+        self.image = paymentOption.makeIcon(currency: currency, updateImageHandler: nil) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:
             label = String.Localized.apple_pay
@@ -580,9 +582,14 @@ extension EmbeddedPaymentElement {
 
 final class STPAuthenticationContextWrapper: UIViewController {
     let _presentingViewController: UIViewController
+    let appearance: PaymentSheet.Appearance
 
-    init(presentingViewController: UIViewController) {
+    private var pollingVC: PollingViewController?
+    private var shouldPresentPollingVC = false
+
+    init(presentingViewController: UIViewController, appearance: PaymentSheet.Appearance) {
         self._presentingViewController = presentingViewController
+        self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -591,7 +598,41 @@ final class STPAuthenticationContextWrapper: UIViewController {
     }
 }
 
-extension STPAuthenticationContextWrapper: STPAuthenticationContext {
+extension STPAuthenticationContextWrapper: PaymentSheetAuthenticationContext {
+
+    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
+        DispatchQueue.main.async {
+            self._presentingViewController.present(authenticationViewController, animated: true) {
+                completion()
+            }
+        }
+    }
+
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
+        DispatchQueue.main.async {
+            authenticationViewController.dismiss(animated: true) {
+                completion?()
+            }
+        }
+    }
+
+    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        // Initialize the polling view controller and flag it for presentation
+        self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                                      appearance: self.appearance, safariViewController: safariViewController)
+        shouldPresentPollingVC = true
+    }
+
+    func authenticationContextDidDismiss(_ viewController: UIViewController) {
+        // The following code should only be executed if we have dismissed a SFSafariViewController
+        guard viewController is SFSafariViewController else { return }
+
+        if let pollingViewController = self.pollingVC, shouldPresentPollingVC {
+            self._presentingViewController.present(pollingViewController, animated: true)
+            self.shouldPresentPollingVC = false
+        }
+    }
+
     public func authenticationPresentingViewController() -> UIViewController {
         return _presentingViewController
     }

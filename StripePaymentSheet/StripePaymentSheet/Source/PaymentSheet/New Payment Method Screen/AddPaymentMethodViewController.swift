@@ -73,6 +73,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
+            currency: intent.currency,
             incentive: elementsSession.incentive,
             delegate: self
         )

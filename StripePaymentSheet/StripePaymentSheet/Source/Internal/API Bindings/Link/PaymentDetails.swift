@@ -131,6 +131,7 @@ extension ConsumerPaymentDetails.Details {
         let expiryYear: Int
         let expiryMonth: Int
         let brand: String
+        let networks: [String]
         let last4: String
         let checks: CardChecks?
 
@@ -138,6 +139,7 @@ extension ConsumerPaymentDetails.Details {
             case expiryYear = "expYear"
             case expiryMonth = "expMonth"
             case brand
+            case networks
             case last4
             case checks
         }
@@ -149,11 +151,13 @@ extension ConsumerPaymentDetails.Details {
         init(expiryYear: Int,
              expiryMonth: Int,
              brand: String,
+             networks: [String],
              last4: String,
              checks: CardChecks?) {
             self.expiryYear = expiryYear
             self.expiryMonth = expiryMonth
             self.brand = brand
+            self.networks = networks
             self.last4 = last4
             self.checks = checks
         }
