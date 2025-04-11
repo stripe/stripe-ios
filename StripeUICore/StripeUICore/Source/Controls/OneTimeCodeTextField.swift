@@ -808,7 +808,14 @@ private extension OneTimeCodeTextField {
         }
 
         private func updateColors() {
-            let traitCollection = UITraitCollection(userInterfaceStyle: configuration.userInterfaceStyle)
+            let traitCollection = switch configuration.userInterfaceStyle {
+            case .light, .dark:
+                UITraitCollection(userInterfaceStyle: configuration.userInterfaceStyle)
+            case .unspecified:
+                UIScreen.main.traitCollection
+            @unknown default:
+                UIScreen.main.traitCollection
+            }
             let backgroundColor = isEnabled ? theme.colors.componentBackground : theme.colors.disabledBackground
 
             borderLayer.backgroundColor = backgroundColor.resolvedColor(with: traitCollection).cgColor

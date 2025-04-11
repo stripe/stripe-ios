@@ -40,7 +40,11 @@ final class LinkVerificationViewController: UIViewController {
             preconditionFailure("Verification(2FA) presented without a phone number on file")
         }
 
-        let verificationView = LinkVerificationView(mode: mode, linkAccount: linkAccount)
+        let verificationView = LinkVerificationView(
+            mode: mode,
+            linkAccount: linkAccount,
+            userInterfaceStyle: self.overrideUserInterfaceStyle
+        )
         verificationView.delegate = self
         verificationView.backgroundColor = .clear
         verificationView.translatesAutoresizingMaskIntoConstraints = false
