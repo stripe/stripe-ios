@@ -103,9 +103,18 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
+        doNotLogConsumerFunnelEvent: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
-        apiClient.lookupConsumerSession(for: email, emailSource: emailSource, sessionID: sessionID, cookieStore: cookieStore, useMobileEndpoints: useMobileEndpoints, completion: completion)
+        apiClient.lookupConsumerSession(
+            for: email,
+            emailSource: emailSource,
+            sessionID: sessionID,
+            cookieStore: cookieStore,
+            useMobileEndpoints: useMobileEndpoints,
+            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
+            completion: completion
+        )
     }
 
     class func signUp(

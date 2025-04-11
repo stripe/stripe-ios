@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) @testable import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
 @_spi(STP) @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
@@ -47,6 +48,7 @@ extension STPElementsSession {
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
         linkSettings: LinkSettings? = nil,
+        experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
         paymentMethodSpecs: [[AnyHashable: Any]]? = nil,
         cardBrandChoice: STPCardBrandChoice? = nil,
@@ -64,6 +66,7 @@ extension STPElementsSession {
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
             linkSettings: linkSettings,
+            experimentsData: experimentsData,
             flags: flags,
             paymentMethodSpecs: paymentMethodSpecs,
             cardBrandChoice: cardBrandChoice,
@@ -433,8 +436,18 @@ extension PaymentSheetLoader.LoadResult {
 }
 
 extension PaymentSheetAnalyticsHelper {
-    static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
-        return .init(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+    static func _testValue(
+        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape = .complete,
+        configuration: PaymentSheet.Configuration = .init(),
+        analyticsClient: STPAnalyticsClient = STPTestingAnalyticsClient(),
+        analyticsClientV2: AnalyticsClientV2Protocol = MockAnalyticsClientV2()
+    ) -> Self {
+        return .init(
+            integrationShape: integrationShape,
+            configuration: configuration,
+            analyticsClient: analyticsClient,
+            analyticsClientV2: analyticsClientV2
+        )
     }
 }
 

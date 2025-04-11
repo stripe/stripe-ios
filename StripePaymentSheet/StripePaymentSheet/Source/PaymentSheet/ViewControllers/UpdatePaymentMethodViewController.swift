@@ -218,6 +218,12 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     @objc private func removePaymentMethod() {
+        for element in self.paymentMethodForm.getAllUnwrappedSubElements() {
+            if let textElement = element as? TextFieldElement {
+                textElement.endEditing(true, continueToNextField: false)
+            }
+        }
+
         let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: configuration.paymentMethod,
                                                                           removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage) { [weak self] in
             guard let self = self else { return }

@@ -21,6 +21,7 @@ extension STPAPIClient {
         sessionID: String,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
+        doNotLogConsumerFunnelEvent: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         Task {
@@ -31,6 +32,9 @@ extension STPAPIClient {
                 "request_surface": "ios_payment_element",
                 "session_id": sessionID,
             ]
+            if doNotLogConsumerFunnelEvent {
+                parameters["do_not_log_consumer_funnel_event"] = true
+            }
             if let email, let emailSource {
                 parameters["email_address"] = email.lowercased()
                 parameters["email_source"] = emailSource.rawValue
@@ -388,7 +392,7 @@ extension STPAPIClient {
             "request_surface": "ios_payment_element",
         ]
 
-        if let details = updateParams.details, case .card(let expiryDate, let billingDetails) = details {
+        if let details = updateParams.details, case .card(let expiryDate, let billingDetails, let preferredNetwork) = details {
             if let expiryDate {
                 parameters["exp_month"] = expiryDate.month
                 parameters["exp_year"] = expiryDate.year
@@ -401,6 +405,10 @@ extension STPAPIClient {
             if let billingEmailAddress = billingDetails?.email {
                 // This email address needs to be lowercase or the API will reject it
                 parameters["billing_email_address"] = billingEmailAddress.lowercased()
+            }
+
+            if let preferredNetwork {
+                parameters["preferred_network"] = preferredNetwork
             }
         }
 

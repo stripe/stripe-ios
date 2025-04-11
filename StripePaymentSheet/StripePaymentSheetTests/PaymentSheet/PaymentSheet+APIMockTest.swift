@@ -94,6 +94,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                             .init(expiryYear: 2055,
                                   expiryMonth: 12,
                                   brand: "visa",
+                                  networks: ["visa"],
                                   last4: "1234",
                                   checks: nil)
                     ),
@@ -190,7 +191,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         useMobileEndpoints: false),
                     paymentDetails: .init(
                         stripeID: "pd1",
-                        details: .card(card: .init(expiryYear: 2055, expiryMonth: 12, brand: "visa", last4: "1234", checks: nil)),
+                        details: .card(card: .init(expiryYear: 2055, expiryMonth: 12, brand: "visa", networks: ["visa"], last4: "1234", checks: nil)),
                         billingAddress: nil,
                         billingEmailAddress: nil,
                         isDefault: true

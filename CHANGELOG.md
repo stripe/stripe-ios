@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### PaymentSheet
+* [Added] Added support for PayNow and PromptPay to Embedded Payment Element (private preview).
+
 ## 24.11.0 2025-04-07
 ### PaymentSheet
 * [Added] Added `rowSelectionBehavior` API to Embedded Payment Element (private preview).
