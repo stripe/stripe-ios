@@ -96,7 +96,6 @@ class AddPaymentMethodViewController: UIViewController {
         configuration: PaymentElementConfiguration,
         previousCustomerInput: IntentConfirmParams? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-        walletHeaders: [String] = [],
         formCache: PaymentMethodFormCache,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: AddPaymentMethodViewControllerDelegate? = nil

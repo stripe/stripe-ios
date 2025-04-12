@@ -643,7 +643,7 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
         }
         return walletHeaders
     }
-    
+
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()

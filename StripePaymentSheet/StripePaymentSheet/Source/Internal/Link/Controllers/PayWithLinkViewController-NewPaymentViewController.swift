@@ -327,7 +327,6 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
     func getWalletHeaders() -> [String] {
         return []
     }
-    
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         if viewController.selectedPaymentMethodType == .instantDebits {
