@@ -1,2 +1,177 @@
+/* Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"%@ is currently unavailable" = "%@ är för närvarande inte tillgänglig";
+/* Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"%@ is undergoing maintenance" = "%@ genomgår underhåll";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Account number' field blank. */
+"Account number is required." = "Kontonummer är obligatoriskt.";
+/* The title of the success screen that appears when a user manually entered their bank account information. */
+"Almost there" = "Nästan klar";
+/* The title of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number). */
+"Can't find your bank?" = "Kan du inte hitta din bank?";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Checking and savings accounts are supported." = "Check- och sparkonton stöds.";
+/* Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one. */
+"Choose a different bank" = "Välj en annan bank";
+/* Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us' */
+"Click “Resend code” and try again, or %@." = "Klicka på \"Skicka koden igen\" och försök på nytt eller %@.";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Confirm account number' field blank. */
+"Confirm the account number." = "Bekräfta kontonumret.";
+/* A button that allows users to confirm the process of saving their bank account for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Connect account" = "Anslut konto";
+/* A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Connect accounts" = "Anslut konton";
+/* The title of a button. The button presents the user an option to select another bank account. For example, we may show this button after user failed to link their primary bank account, but maybe the user can try to link their secondary bank account! */
+"Connect another account" = "Anslut ett annat konto";
+/* Title for a label of a screen telling users to tap below to continue linking process. */
+"Continue linking your account" = "Fortsätt länka ditt konto";
+/* A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+   The title of a screen where users are informed that they can sign-in-to Link. */
+"Continue with Link" = "Fortsätt med Link";
+/* The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address. */
+"Email address" = "E-postadress";
+/* The title of a screen that allows a user to manually enter their bank account information. */
+"Enter bank details" = "Ange bankuppgifter";
+/* The title of a button. The button presents the user an option to enter their bank details (account number, routing number) manually. For example, we may show this button after user failed to link their bank 'automatically' with Stripe, so we offer them the option manually link it. */
+"Enter bank details manually" = "Ange bankuppgifter manuellt";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+"Enter the code sent to %@" = "Ange koden som skickades till %@";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+"Enter the code sent to %@." = "Ange koden som skickades till %@.";
+/* The subtitle/description of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. '%@' is replaced with an email, for example, 'test@test.com'. */
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Ange koden som skickades till %@. Vi begär regelbundet att du genomför detta extrasteg för att skydda ditt konto.";
+/* The title of a sheet that appears when the user attempts to exit the bank linking screen. */
+"Exit without connecting?" = "Stäng utan att ansluta?";
+/* Error message when one-time-passcode (OTP) is invalid. */
+"Hmm, that code didn’t work. Double check it and try again." = "Den koden fungerade inte. Kontrollera den och försök igen.";
+/* An error message that appears when a user is manually entering their bank account information. %d is replaced with the account number length (usually 17). */
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Ogiltigt bankkontonummer: får vara högst %li tecken långt och får bara innehålla siffror.";
+/* An error message that appears when a user is manually entering their bank account information. */
+"Invalid routing number." = "Ogiltigt clearingnummer.";
+/* The leading text in an error message that explains that the one-type-passcode (OTP) the user provided is invalid. This is leading text embedded inside of larger text: 'It looks like the verification code you provided is not valid anymore. Try again, or contact us.' */
+"It looks like the verification code you provided is not valid anymore." = "Det verkar som att den angivna verifieringskoden inte längre är giltig.";
+/* Represents the text of a button that can be clicked to learn more about some topic. Once clicked, a web-browser will be opened to give users more info. */
+"Learn more" = "Läs mer";
+/* The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Maintenance is scheduled to end at %@." = "Underhållet är planerat att vara avslutat den %@.";
+/* The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Maintenance is scheduled to end on %@ at %@." = "Underhållet är planerat att vara avslutat den %1$@ kl %2$@.";
+/* The subtitle of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number). */
+"Manually enter details" = "Ange uppgifter manuellt";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards. */
+"No payment accounts available" = "Inga betalningskonton tillgängliga";
+/* The title of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. */
+"No results" = "Inga resultat";
+/* A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider).
+   Title of a button that allows users to skip the current screen. */
+"Not now" = "Inte nu";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Only checking accounts are supported." = "Endast checkkonton stöds.";
+/* An error message that appears when a user is manually entering their bank account information. %d is replaced with the routing number length (usually 9). */
+"Please enter %d digits for your routing number." = "Ange %li siffror för ditt clearingnummer.";
+/* The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to access users bank account. Here we instruct the user to enter their bank details manually or to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to enter their bank details manually or to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Please enter your bank details manually or select another bank." = "Ange dina bankuppgifter manuellt eller välj en annan bank.";
+/* The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance.
+   The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Please select another bank or try again later." = "Välj en annan bank eller försök igen senare.";
+/* The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to select another bank or to try loading their bank accounts again. */
+"Please select another bank or try again." = "Välj en annan bank eller försök igen.";
+/* The subtitle/description of a screen that shows an error. The error appears after we failed to access users bank account. Here we instruct the user to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to try selecting another bank. */
+"Please select another bank." = "Välj en annan bank.";
+/* The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at the same bank. */
+"Please try selecting another bank account." = "Försök välja ett annat bankkonto.";
+/* The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at a different bank. */
+"Please try selecting another bank." = "Försök välja en annan bank.";
+/* The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
+"Retrieving accounts..." = "Hämtar konton ...";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Routing number' field blank. */
+"Routing number is required." = "Clearingnummer måste anges.";
+/* The title of a button that appears at the bottom of a list of banks. The purpose of the button is to give users the option to search for more banks than we feature in the initial list of banks (where only the most popular ones will appear). */
+"Search for more banks" = "Sök efter fler banker";
+/* The title of a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Select account" = "Välj konto";
+/* The title of a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Select accounts" = "Välj konton";
+/* The title of a button. The button presents the user an option to select another bank. For example, we may show this button after user failed to link their primary bank, but maybe the user can try to link their secondary bank! */
+"Select another bank" = "Välj en annan bank";
 /* label for iDEAL-bank selection picker */
 "Select bank" = "Välj bank";
+/* Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what. */
+"Something went wrong" = "Det inträffade ett fel";
+/* The submit button for a screen that allows a user to manually enter their bank account information. */
+"Submit" = "Skicka";
+/* The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Success" = "Klart!";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible. */
+"The account you selected isn't available for payments" = "Det konto du valde är inte tillgängligt för betalningar";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards. */
+"The accounts you selected aren't available for payments" = "De konton du valde är inte tillgängliga för betalningar";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that we had issues with the bank. '%@' gets replaced by the name of the bank. */
+"There was a problem accessing your %@ account" = "Det uppstod ett problem med att få tillgång till ditt %@-konto";
+/* Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us' */
+"Try again, or %@." = "Försök igen eller %@.";
+/* The subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. */
+"Try searching another bank" = "Försök söka efter en annan bank";
+/* Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. The '%@' will be replaced by a tappable text that says: 'manually enter details'. */
+"Try searching another bank or %@" = "Försök söka efter en annan bank eller %@";
+/* A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't US checking accounts.' */
+"US checking" = "amerikanska check";
+/* The subtitle/description of a screen where users are informed that they can sign-in-to Link. */
+"Use information you previously saved with your Link account." = "Använd information som du tidigare sparat på ditt Link-konto.";
+/* Label for a button shown to a user who is in test mode, which will give them the option to autofill mock account credentials. */
+"Use test account" = "Använd testkonto";
+/* Label for a button shown to a user who is in test mode, which will give them the option to autofill a mock one time passcode. */
+"Use test code" = "Använd testkod";
+/* The title of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. */
+"Verify your email" = "Verifiera din e-postadress";
+/* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.' */
+"We found %d %@ accounts but you can only link %@ accounts to %@." = "Vi hittade %1$li %2$@-konton, men du kan bara länka %3$@-konton till %4$@.";
+/* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.' */
+"We found %d %@ accounts but you can only link %@ accounts." = "Vi hittade %1$li %2$@-konton, men du kan bara länka %3$@-konton.";
+/* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.' */
+"We found 1 %@ account but you can only link %@ accounts to %@." = "Vi hittade ett %1$@-konto, men du kan bara länka %2$@-konton till %3$@.";
+/* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.' */
+"We found 1 %@ account but you can only link %@ accounts." = "Vi hittade ett %1$@-konto men du kan bara länka %2$@-konton.";
+/* A button title. The user encounters it as part of a confirmation sheet when trying to exit a screen. Pressing it will exit the screen, and cancel the process of connecting the users bank account. */
+"Yes, exit" = "Ja, avsluta";
+/* The subtitle/description of the success screen that appears when a user manually entered their bank account information. It informs the user that their bank account information will have to be verified. */
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Du kan förvänta dig mikroinsättningar på konto ••••%@ om 1–2 dagar och ett e-postmeddelande med ytterligare instruktioner.";
+/* Title for a label explaining that the linking process hasn't finished yet. */
+"You haven't finished linking your account. Press continue to finish the process." = "Du har inte avslutat länkningen av ditt konto. Klicka på fortsätt för att avsluta processen.";
+/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. */
+"You haven't finished linking your bank account and all progress will be lost." = "Du är inte klar med länkningen av ditt bankkonto och ändringarna kommer inte att sparas.";
+/* Message shown to a user who is in test mode, which will give them the option to autofill mock credentials. */
+"You're in test mode." = "Du är i testläge.";
+/* The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what. */
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Det gick inte att ansluta ditt konto just nu. Ange dina bankuppgifter manuellt eller försök igen senare.";
+/* The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what. */
+"Your account can’t be connected at this time. Please try again later." = "Det gick inte att ansluta ditt konto just nu. Försök igen senare.";
+/* The title of a screen that shows an error. The error appears after we failed to access users bank account. */
+"Your account number couldn’t be accessed at this time" = "Ditt kontonummer är inte tillgängligt just nu";
+/* An error message that appears when a user is manually entering their bank account information. This error message tells the user that the account number they typed doesn't match a previously typed account number. */
+"Your account numbers don't match." = "Dina kontonummer matchar inte.";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. */
+"Your account was connected, but couldn't be saved to Link." = "Ditt konto har anslutits, men kunde inte sparas på Link.";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Your account was connected." = "Ditt konto har anslutits.";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. */
+"Your accounts were connected, but couldn't be saved to Link." = "Dina konton har anslutits, men kunde inte sparas på Link.";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+"Your accounts were connected." = "Dina konton har anslutits.";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Dina bankuppgifter kommer att verifieras via mikroinsättningar på ditt konto, normalt inom 1–2 arbetsdagar. Endast checkkonton stöds.";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Dina bankuppgifter kommer att verifieras med mikroinsättningar på ditt konto. Detta tar normalt 1–2 arbetsdagar.";
+/* An error message that instructs the user to keep typing their email address in a user-input field. */
+"Your email address is invalid." = "Din e-postadress är ogiltig.";
+/* An error message that instructs the user to keep typing their phone number in a user-input field. */
+"Your mobile phone number is incomplete." = "Ditt mobilnummer är ofullständigt.";
+/* A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't checking or savings accounts.' */
+"checking or savings" = "check- eller spar";
+/* A link/button inside of text that can be tapped to visit a support website. This link will be embedded inside of larger text: 'It looks like the verification code you provided is not valid anymore. Try again, or contact us.' */
+"contact us" = "kontakta oss";
+/* Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. This part of the notice will be tappable. Tapping this will allow a user to manually enter their bank details (account and routing numbers). */
+"manually enter details" = "ange uppgifter manuellt";

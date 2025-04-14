@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Detail rekening bank tidak dapat diubah.";
 
-"Buy now or pay later with <img/>" = "Beli sekarang atau bayar nanti dengan <img/>";
+"Buy now or pay later with  <img/>" = "Beli sekarang atau bayar nanti dengan  <img/>";
 
 "Buy now or pay later with Afterpay" = "Beli sekarang atau bayar nanti dengan Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Beli sekarang atau bayar nanti dengan Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Beli sekarang atau bayar nanti dengan Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Konfirmasikan";
 
 "Confirm it's you" = "Konfirmasikan diri Anda";
+
+"Confirm payment details" = "Konfirmasikan detail pembayaran";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi pembayaran atau bank Anda dalam %@ untuk menyelesaikan pembelian.";
 
