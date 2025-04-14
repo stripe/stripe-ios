@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Bank account details cannot be changed.";
 
-"Buy now or pay later with <img/>" = "Buy now or pay later with <img/>";
+"Buy now or pay later with  <img/>" = "Buy now or pay later with  <img/>";
 
 "Buy now or pay later with Afterpay" = "Buy now or pay later with Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Buy now or pay later with Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Buy now or pay later with Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Confirm";
 
 "Confirm it's you" = "Confirm it's you";
+
+"Confirm payment details" = "Confirm payment details";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
 

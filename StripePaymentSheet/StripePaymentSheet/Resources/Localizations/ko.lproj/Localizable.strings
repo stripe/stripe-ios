@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "은행 계좌 세부사항은 설정되면 변경할 수 없습니다.";
 
-"Buy now or pay later with <img/>" = "<img/>(으)로 지금 구매하거나 나중에 결제하십시오.";
+"Buy now or pay later with  <img/>" = "<img/>(으)로 지금 구매하거나 나중에 결제";
 
 "Buy now or pay later with Afterpay" = "지금 구매하거나 Afterpay로 나중에 결제";
+
+"Buy now or pay later with Cash App Afterpay" = "지금 구매하거나 Cash App Afterpay로 나중에 결제";
 
 "Buy now or pay later with Clearpay" = "지금 구매하거나 Clearpay로 나중에 결제";
 
@@ -91,6 +93,8 @@
 "Confirm" = "확인";
 
 "Confirm it's you" = "본인 확인";
+
+"Confirm payment details" = "결제 세부사항 확인";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 이내에 은행 또는 결제 앱에서 결제를 확인하여 구매를 완료하십시오.";
 

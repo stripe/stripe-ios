@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Pankkitilin tietoja ei voi muuttaa.";
 
-"Buy now or pay later with <img/>" = "Osta nyt tai maksa myöhemmin kohteella.<img/>";
+"Buy now or pay later with  <img/>" = "Osta nyt tai maksa myöhemmin Afterpaylla/Clearpaylla <img/>";
 
 "Buy now or pay later with Afterpay" = "Osta nyt tai maksa myöhemmin Afterpaylla";
+
+"Buy now or pay later with Cash App Afterpay" = "Osta nyt tai maksa myöhemmin Cash App Afterpaylla";
 
 "Buy now or pay later with Clearpay" = "Osta nyt tai maksa myöhemmin Clearpaylla";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Vahvista";
 
 "Confirm it's you" = "Vahvista, että se olet sinä";
+
+"Confirm payment details" = "Vahvista maksutiedot";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
 

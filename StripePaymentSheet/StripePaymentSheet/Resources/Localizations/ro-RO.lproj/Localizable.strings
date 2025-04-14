@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Detaliile contului bancar nu pot fi modificate.";
 
-"Buy now or pay later with <img/>" = "Cumpărați acum sau plătiți mai târziu folosind <img/>";
+"Buy now or pay later with  <img/>" = "Cumpărați acum sau plătiți mai târziu folosind <img/>";
 
 "Buy now or pay later with Afterpay" = "Cumpărați acum sau plătiți mai târziu folosind Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Cumpărați acum sau plătiți mai târziu folosind Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Cumpărați acum sau plătiți mai târziu folosind Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Confirmare";
 
 "Confirm it's you" = "Confirmați că sunteți dvs.";
+
+"Confirm payment details" = "Confirmare detalii de plată";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. sau în aplicația de plăți în termen de %@ pentru a finaliza achiziția.";
 
