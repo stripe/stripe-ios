@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Banko sąskaitos duomenų keisti negalima.";
 
-"Buy now or pay later with <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami \"<img/>\"";
+"Buy now or pay later with  <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami \"<img/>\"";
 
 "Buy now or pay later with Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Afterpay\"";
+
+"Buy now or pay later with Cash App Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Cash App Afterpay\"";
 
 "Buy now or pay later with Clearpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Clearpay\"";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Patvirtinti";
 
 "Confirm it's you" = "Patvirtinkite, kad tai jūs";
+
+"Confirm payment details" = "Patvirtinti mokėjimo duomenis";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
 

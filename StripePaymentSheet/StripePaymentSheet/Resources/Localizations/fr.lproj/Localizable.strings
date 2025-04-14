@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Les coordonnées bancaires ne peuvent pas être modifiées.";
 
-"Buy now or pay later with <img/>" = "Paiement différé avec <img/>";
+"Buy now or pay later with  <img/>" = "Paiement différé avec <img/>";
 
 "Buy now or pay later with Afterpay" = "Paiement différé avec Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Paiement différé avec Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Paiement différé avec Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Confirmer";
 
 "Confirm it's you" = "Confirmez votre identité";
+
+"Confirm payment details" = "Confirmer les informations de paiement";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Veuillez confirmer le paiement dans votre application bancaire ou de paiement sous %@ pour finaliser l'achat.";
 

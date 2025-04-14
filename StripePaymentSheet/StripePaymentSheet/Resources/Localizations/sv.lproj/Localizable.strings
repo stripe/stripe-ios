@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Bankkontouppgifter kan inte ändras.";
 
-"Buy now or pay later with <img/>" = "Köp nu eller betala senare med <img/>";
+"Buy now or pay later with  <img/>" = "Köp nu eller betala senare med <img/>";
 
 "Buy now or pay later with Afterpay" = "Köp nu eller betala senare med Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Köp nu eller betala senare med Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Köp nu eller betala senare med Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Bekräfta";
 
 "Confirm it's you" = "Bekräfta att det är du";
+
+"Confirm payment details" = "Bekräfta betalningsuppgifter";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekräfta betalningen i din bankapp eller betalningsapp inom %@ för att slutföra köpet.";
 
