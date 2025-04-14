@@ -27,13 +27,13 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     var selectedPaymentOption: PaymentOption? {
         switch mode {
         case .addingNew:
-            if let paymentOption = addPaymentMethodViewController.paymentOption {
+            if isHackyLinkButtonSelected {
+                return .link(option: .wallet)
+            } else if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
                 // If no valid payment option from adding, fallback on any saved payment method
                 return paymentOption
-            } else if isHackyLinkButtonSelected {
-                return .link(option: .wallet)
             } else if isApplePayEnabled {
                 return .applePay
             }
@@ -430,6 +430,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     @objc
     private func didTapContinueButton() {
+        // The user is continuing with an LPM, so we un-select Link
+        isHackyLinkButtonSelected = false
+
         if let selectedPaymentOption {
             analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
         } else {
@@ -448,8 +451,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     func didDismiss(didCancel: Bool) {
-        // When we close the window, unset the hacky Link button. This will reset the PaymentOption to nil, if needed.
-        isHackyLinkButtonSelected = false
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
         flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: didCancel)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
