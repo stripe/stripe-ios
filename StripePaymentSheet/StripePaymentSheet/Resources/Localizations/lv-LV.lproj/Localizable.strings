@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Bankas konta informāciju nevar mainīt.";
 
-"Buy now or pay later with <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
+"Buy now or pay later with  <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
 
 "Buy now or pay later with Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Pērciet tagad vai maksājiet vēlāk ar Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Apstiprināt";
 
 "Confirm it's you" = "Apstipriniet, ka tas esat jūs";
+
+"Confirm payment details" = "Apstiprināt maksājuma informāciju";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas vai maksājumu lietotnē %@, lai pabeigtu maksājumu.";
 

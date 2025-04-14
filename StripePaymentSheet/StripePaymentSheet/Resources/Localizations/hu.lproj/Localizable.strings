@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "A bankszámlaadatok nem módosíthatók.";
 
-"Buy now or pay later with <img/>" = "Vegye meg most vagy fizessen később a következővel: <img/>";
+"Buy now or pay later with  <img/>" = "Vegye meg most vagy fizessen később a következővel: <img/>";
 
 "Buy now or pay later with Afterpay" = "Vegye meg most, vagy fizessen később Afterpayjel";
+
+"Buy now or pay later with Cash App Afterpay" = "Vegye meg most, vagy fizessen később Cash App Afterpayjel";
 
 "Buy now or pay later with Clearpay" = "Vegye meg most, vagy fizessen később Clearpayjel";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Megerősítés";
 
 "Confirm it's you" = "Igazolja, hogy Ön az";
+
+"Confirm payment details" = "Fizetési adatok megerősítése";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést a bankjánál vagy a fizetést biztosító alkalmazásban.";
 

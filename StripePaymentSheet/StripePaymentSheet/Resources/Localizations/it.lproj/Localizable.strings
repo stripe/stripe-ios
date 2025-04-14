@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Non puoi modificare i dati del conto bancario.";
 
-"Buy now or pay later with <img/>" = "Acquista ora, paga dopo con <img/>";
+"Buy now or pay later with  <img/>" = "Paga a rate con <img/>";
 
 "Buy now or pay later with Afterpay" = "Acquista ora, paga dopo con Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Acquista ora, paga dopo con Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Acquista ora, paga dopo con Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Conferma";
 
 "Confirm it's you" = "Verifica la tua identità";
+
+"Confirm payment details" = "Conferma i dati di pagamento";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Per completare l'acquisto, conferma il pagamento nell'app della tua banca o nell'app per i pagamenti entro %@";
 

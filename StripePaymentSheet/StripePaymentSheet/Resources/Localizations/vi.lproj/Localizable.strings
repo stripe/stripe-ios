@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Không thể thay đổi thông tin tài khoản ngân hàng.";
 
-"Buy now or pay later with <img/>" = "Mua ngay hoặc thanh toán sau bằng <img/>";
+"Buy now or pay later with  <img/>" = "Mua ngay hoặc thanh toán sau bằng <img/>";
 
 "Buy now or pay later with Afterpay" = "Mua ngay hoặc thanh toán sau bằng Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Mua ngay hoặc thanh toán sau bằng Ứng dụng Thanh toán Afterpay";
 
 "Buy now or pay later with Clearpay" = "Mua ngay hoặc thanh toán sau bằng Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Xác nhận";
 
 "Confirm it's you" = "Xác nhận đó là bạn";
+
+"Confirm payment details" = "Xác nhận thông tin thanh toán";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
 

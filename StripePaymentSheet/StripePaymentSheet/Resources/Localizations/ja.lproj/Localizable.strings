@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "銀行口座の詳細は変更できません。";
 
-"Buy now or pay later with <img/>" = "<img/> で後払い";
+"Buy now or pay later with  <img/>" = "<img/> で後払い";
 
 "Buy now or pay later with Afterpay" = "Afterpay で後払い";
+
+"Buy now or pay later with Cash App Afterpay" = "Cash App Afterpay で後払い";
 
 "Buy now or pay later with Clearpay" = "Clearpay で後払い";
 
@@ -91,6 +93,8 @@
 "Confirm" = "確定する";
 
 "Confirm it's you" = "本人であると確定";
+
+"Confirm payment details" = "支払い情報を確定する";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 内で銀行または決済アプリで支払いを確定して、購入を完了します。";
 
