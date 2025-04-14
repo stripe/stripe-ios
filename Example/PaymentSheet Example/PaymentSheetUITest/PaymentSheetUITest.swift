@@ -354,6 +354,43 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         )
     }
 
+    func testPaymentSheetFlowControllerLinkWalletSelection() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .flowController
+        settings.layout = .horizontal
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "link,card"
+        loadPlayground(app, settings)
+
+        let paymentMethodButton = app.buttons["Payment method"]
+        paymentMethodButton.waitForExistenceAndTap(timeout: 10)
+
+        // Fill out card form first
+        try! fillCardData(app)
+        app.buttons["Continue"].tap()
+        sleep(2)
+        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
+
+        // Now select Link
+        paymentMethodButton.tap()
+        app.buttons["Pay with Link"].waitForExistenceAndTap()
+        sleep(2)
+        XCTAssertEqual(paymentMethodButton.label, "Link, link")
+
+        // Open and close PaymentSheet without making changes
+        paymentMethodButton.tap()
+        app.tapCoordinate(at: CGPoint(x: 100, y: 100))
+        sleep(2)
+        XCTAssertEqual(paymentMethodButton.label, "Link, link")
+
+        // Open again and choose to continue with card
+        paymentMethodButton.tap()
+        app.buttons["Continue"].tap()
+        sleep(2)
+        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
+    }
+
     func testPaymentSheetSwiftUI() throws {
         app.launch()
 
