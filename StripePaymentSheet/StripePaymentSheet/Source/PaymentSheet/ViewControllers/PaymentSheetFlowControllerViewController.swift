@@ -215,7 +215,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             cbcEligible: elementsSession.isCardBrandChoiceEligible,
             analyticsHelper: analyticsHelper
         )
-
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
             elementsSession: elementsSession,
