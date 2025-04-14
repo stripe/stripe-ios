@@ -226,7 +226,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             configuration: configuration,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             paymentMethodTypes: loadResult.paymentMethodTypes,
-            walletHeaders: walletHeaders,
             formCache: formCache,
             analyticsHelper: analyticsHelper
         )
