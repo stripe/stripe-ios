@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "無法更改銀行賬戶詳情。";
 
-"Buy now or pay later with <img/>" = "用 <img/> 先買後付";
+"Buy now or pay later with  <img/>" = "用 <img/> 先買後付";
 
 "Buy now or pay later with Afterpay" = "用 Afterpay 先買後付";
+
+"Buy now or pay later with Cash App Afterpay" = "用 Cash App Afterpay 先買後付";
 
 "Buy now or pay later with Clearpay" = "用 Clearpay 先買後付";
 
@@ -91,6 +93,8 @@
 "Confirm" = "確定";
 
 "Confirm it's you" = "確認是您本人";
+
+"Confirm payment details" = "確認支付詳情";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的銀行或支付應用程式中確認向 %@ 的付款，以完成購物。";
 

@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng account sa bangko.";
 
-"Buy now or pay later with <img/>" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang <img/>";
+"Buy now or pay later with  <img/>" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang <img/>";
 
 "Buy now or pay later with Afterpay" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Kumpirmahin";
 
 "Confirm it's you" = "Kumpirmahin na ikaw ito";
+
+"Confirm payment details" = "Kumpirmahin ang mga detalye ng pagbabayad";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong bangko o app ng pagbabayad sa loob ng %@ para kumpletuhin ang pagbili.";
 
