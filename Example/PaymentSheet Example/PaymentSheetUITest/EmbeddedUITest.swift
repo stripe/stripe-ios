@@ -78,7 +78,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
 
-        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(6)
+        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(7)
         XCTAssertEqual(
             aliPayAnalytics,
             ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_lpms_render", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped"]
