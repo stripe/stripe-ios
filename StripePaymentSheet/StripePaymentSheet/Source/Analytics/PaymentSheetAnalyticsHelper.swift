@@ -181,6 +181,10 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
+    func logRenderLPMs(visibleLPMs: [String], hiddenLPMs: [String]) {
+        log(event: .mcRenderLPMs, params: ["visible_lpms": visibleLPMs, "hidden_lpms": hiddenLPMs])
+    }
+
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
         let (event, selectedLPM): (STPAnalyticEvent?, String?) = {
             switch integrationShape {
