@@ -34,11 +34,10 @@ final class RowButtonFlatWithRadioView: RowButton {
         let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
-                                                                 promoBadge,
-                                                                 accessoryView, ].compactMap { $0 })
+                                                                 promoBadge, ].compactMap { $0 })
         horizontalStackView.spacing = 8
 
-        [radioButton, imageView, horizontalStackView].compactMap { $0 }
+        [radioButton, imageView, horizontalStackView, accessoryView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
@@ -73,10 +72,25 @@ final class RowButtonFlatWithRadioView: RowButton {
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
         ])
+        if let accessoryView, !accessoryView.isHidden {
+            // Optional accessoryView
+            NSLayoutConstraint.activate([
+                accessoryView.leadingAnchor.constraint(equalTo: horizontalStackView.trailingAnchor, constant: 8),
+                accessoryView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                accessoryView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                // Extend to the top and bottom edges to increase tap targeting
+                accessoryView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+                accessoryView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+            ])
+        } else {
+            // If no accessoryView, then constrain the stackView's trailing anchor
+            NSLayoutConstraint.activate([
+                horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            ])
+        }
     }
 }

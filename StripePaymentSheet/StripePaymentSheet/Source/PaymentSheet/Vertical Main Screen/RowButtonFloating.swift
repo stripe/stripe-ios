@@ -43,10 +43,9 @@ final class RowButtonFloating: RowButton {
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 accessoryView, ].compactMap { $0 })
+                                                                ].compactMap { $0 })
         horizontalStackView.spacing = 8
-
-        [imageView, horizontalStackView].compactMap { $0 }
+        [imageView, horizontalStackView, accessoryView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
@@ -74,11 +73,26 @@ final class RowButtonFloating: RowButton {
 
             // Label constraints
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
         ])
+        if let accessoryView, !accessoryView.isHidden {
+            // Optional accessoryView
+            NSLayoutConstraint.activate([
+                accessoryView.leadingAnchor.constraint(equalTo: horizontalStackView.trailingAnchor, constant: 8),
+                accessoryView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+                accessoryView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                // Extend to the top and bottom edges to increase tap targeting
+                accessoryView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+                accessoryView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+            ])
+        } else {
+            // If no accessoryView, then constrain the stackView's trailing anchor
+            NSLayoutConstraint.activate([
+                horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12)
+            ])
+        }
     }
 
     override func handleEvent(_ event: STPEvent) {
