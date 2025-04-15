@@ -14,6 +14,11 @@ import XCTest
 
 final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     let analyticsClient = STPTestingAnalyticsClient()
+    
+    override func tearDown() {
+        super.tearDown()
+        FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = false
+    }
 
     @MainActor
     func testPaymentSheetAddsUsage() {
@@ -143,6 +148,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (.flowController, "flowcontroller"),
         ]
 
+        FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = true
+
         for (shape, shapeString) in integrationShapes {
             let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
 
@@ -204,6 +211,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
             XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
+            XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "LITE")
         }
     }
 
@@ -406,6 +414,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertLessThan(analyticsClient._testLogHistory.last!["duration"] as! Double, 1.0)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "link")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "wallet")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["fc_sdk_availability"] as? String, "NONE")
     }
 
     func testLogPaymentLinkContextWithLinkedBank() {
