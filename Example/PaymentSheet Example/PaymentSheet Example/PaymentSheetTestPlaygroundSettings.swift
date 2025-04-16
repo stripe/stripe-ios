@@ -178,7 +178,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             )
         }
 
-        func makeDictionary(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> [String: String] {
+        func makeRequestBody(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> [String: String] {
             var result: [String: String] = self.toDictionary()
             if let additionalPaymentMethodOptionsSetupFutureUsage {
                 // get the "key:value" strings by splitting on the comma
@@ -204,7 +204,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
 
         func makePaymentMethodOptions(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions {
-            let paymentMethodOptionsSetupFutureUsageDictionary: [String: String] = makeDictionary(with: additionalPaymentMethodOptionsSetupFutureUsage)
+            let paymentMethodOptionsSetupFutureUsageDictionary: [String: String] = makeRequestBody(with: additionalPaymentMethodOptionsSetupFutureUsage)
             let setupFutureUsageValues: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = paymentMethodOptionsSetupFutureUsageDictionary.reduce(into: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]()) { result, pair in
                 let paymentMethodType = STPPaymentMethodType.fromIdentifier(pair.key)
                 let setupFutureUsage = PaymentSheet.IntentConfiguration.SetupFutureUsage(rawValue: pair.value)
