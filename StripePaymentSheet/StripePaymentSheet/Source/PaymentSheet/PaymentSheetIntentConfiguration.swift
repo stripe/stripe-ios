@@ -114,9 +114,9 @@ public extension PaymentSheet {
         public enum Mode {
             /// Payment method options
             public struct PaymentMethodOptions {
-                var setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil
+                var setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]?
 
-                public init(setupFutureUsageValues: [STPPaymentMethodType : SetupFutureUsage]? = nil) {
+                public init(setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil) {
                     self.setupFutureUsageValues = setupFutureUsageValues
                 }
             }

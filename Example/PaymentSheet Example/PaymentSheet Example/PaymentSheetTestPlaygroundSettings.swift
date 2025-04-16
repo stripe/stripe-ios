@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentSheet
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
