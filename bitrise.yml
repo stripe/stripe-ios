@@ -208,7 +208,7 @@ workflows:
         inputs:
         - webhook_url: $WEBHOOK_SLACK_CUX_BOTS
         - webhook_url_on_error: $WEBHOOK_SLACK_CUX_BOTS
-        - text_on_error: "iOS build failed (c.c. @connections-consumer-bank-network-oncall @mats)"
+        - text_on_error: "iOS build failed (c.c. @link-mobile-run @mats)"
     - slack@3:
         is_always_run: true
         inputs:
