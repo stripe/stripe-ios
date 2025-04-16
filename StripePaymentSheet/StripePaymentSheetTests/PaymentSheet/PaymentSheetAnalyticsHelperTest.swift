@@ -14,11 +14,6 @@ import XCTest
 
 final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     let analyticsClient = STPTestingAnalyticsClient()
-    
-    override func tearDown() {
-        super.tearDown()
-        FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = false
-    }
 
     @MainActor
     func testPaymentSheetAddsUsage() {
@@ -148,8 +143,6 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (.flowController, "flowcontroller"),
         ]
 
-        FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = true
-
         for (shape, shapeString) in integrationShapes {
             let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
 
@@ -211,7 +204,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
             XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
-            XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "LITE")
+            XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "NONE")
         }
     }
 
