@@ -36,6 +36,12 @@ final class RowButtonFlatWithCheckmark: RowButton {
         stackView.alignment = .leading
         stackView.setCustomSpacing(8, after: labelsStackView)
 
+        // Accessory view is too small to tap, so extend the tap targeting to include the entire stack view
+        if let accessoryView,
+           accessoryView.responds(to: #selector(handleTap)) {
+            stackView.addGestureRecognizer(UITapGestureRecognizer(target: accessoryView, action: #selector(handleTap)))
+        }
+
         let horizontalStackView = UIStackView(arrangedSubviews: [stackView,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),

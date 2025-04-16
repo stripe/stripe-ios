@@ -25,13 +25,44 @@ final class RowButtonFlatWithRadioView: RowButton {
         radioButton.isOn = isSelected
     }
 
-    override func setupUI() {
-        // Add common subviews
+    private lazy var arrangedLabelAndSubLabel: UIView = {
+        let containingView = UIView()
+        let spacerTop = UIView()
+        let spacerBottom = UIView()
+
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
-        let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView,
+        // Create a vertical stack view to manage the distribution of space
+        let verticalStackView = UIStackView(arrangedSubviews: [spacerTop, labelsStackView, spacerBottom])
+        verticalStackView.axis = .vertical
+        verticalStackView.alignment = .fill
+        verticalStackView.distribution = .fill
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        containingView.addSubview(verticalStackView)
+
+        // Allow spacers to expand w/ low content hugging priority
+        spacerTop.setContentHuggingPriority(.defaultLow, for: .vertical)
+        spacerBottom.setContentHuggingPriority(.defaultLow, for: .vertical)
+
+        // Make labels not expand by giving them high content hugging priority
+        labelsStackView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
+        NSLayoutConstraint.activate([
+            verticalStackView.topAnchor.constraint(equalTo: containingView.topAnchor),
+            verticalStackView.bottomAnchor.constraint(equalTo: containingView.bottomAnchor),
+            verticalStackView.leadingAnchor.constraint(equalTo: containingView.leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: containingView.trailingAnchor),
+
+            // Make spacers grow equally if needed
+            spacerTop.heightAnchor.constraint(equalTo: spacerBottom.heightAnchor),
+        ])
+        return containingView
+    }()
+
+    override func setupUI() {
+        let horizontalStackView = UIStackView(arrangedSubviews: [arrangedLabelAndSubLabel,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
@@ -75,8 +106,8 @@ final class RowButtonFlatWithRadioView: RowButton {
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
-            horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
+            horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: insets),
+            horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets),
         ])
     }
 }
