@@ -768,7 +768,6 @@ class CustomerSheetUITest: XCTestCase {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.customerKeyType = .customerSession
-        settings.paymentMethodUpdate = .enabled
         settings.merchantCountryCode = .FR
         loadPlayground(
             app,
@@ -838,7 +837,6 @@ class CustomerSheetUITest: XCTestCase {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.customerKeyType = .customerSession
-        settings.paymentMethodUpdate = .enabled
         settings.merchantCountryCode = .FR
         settings.collectAddress = .full
         loadPlayground(

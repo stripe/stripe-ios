@@ -256,11 +256,11 @@ extension STPElementsSession {
     }
 
     func paymentMethodUpdateForPaymentSheet(_ configuration: PaymentElementConfiguration) -> Bool {
-        return configuration.updatePaymentMethodEnabled && customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
+        return customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
     }
 
     func paymentMethodUpdateForCustomerSheet(_ configuration: CustomerSheet.Configuration) -> Bool {
-        return configuration.updatePaymentMethodEnabled && customer?.customerSession.customerSheetComponent.enabled ?? false
+        return customer?.customerSession.customerSheetComponent.enabled ?? false
     }
 
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
