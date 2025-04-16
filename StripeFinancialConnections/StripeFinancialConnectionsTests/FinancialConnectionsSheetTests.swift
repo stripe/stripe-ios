@@ -67,6 +67,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
+    @MainActor
     func testAsyncPresentCompletion() async {
         let expectation = XCTestExpectation(description: "Sheet completion")
 
