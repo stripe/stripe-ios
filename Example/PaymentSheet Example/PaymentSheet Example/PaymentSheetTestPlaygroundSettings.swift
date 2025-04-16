@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripePayments
+import StripePaymentSheet
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
@@ -205,11 +205,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         func makePaymentMethodOptions(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions {
             let paymentMethodOptionsSetupFutureUsageDictionary: [String: String] = makeRequestBody(with: additionalPaymentMethodOptionsSetupFutureUsage)
-            let setupFutureUsageValues: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = paymentMethodOptionsSetupFutureUsageDictionary.reduce(into: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]()) { result, pair in
-                let paymentMethodType = STPPaymentMethodType.fromIdentifier(pair.key)
-                let setupFutureUsage = PaymentSheet.IntentConfiguration.SetupFutureUsage(rawValue: pair.value)
-                result[paymentMethodType] = setupFutureUsage
-            }
+            let setupFutureUsageValues: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = {
+                var result: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = [:]
+                paymentMethodOptionsSetupFutureUsageDictionary.forEach { paymentMethodTypeIdentifier, setupFutureUsageString in
+                    let paymentMethodType = STPPaymentMethodType.fromIdentifier(paymentMethodTypeIdentifier)
+                    let setupFutureUsage = PaymentSheet.IntentConfiguration.SetupFutureUsage(rawValue: setupFutureUsageString)
+                    result[paymentMethodType] = setupFutureUsage
+                }
+                return result
+            }()
             return PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: setupFutureUsageValues)
         }
 
