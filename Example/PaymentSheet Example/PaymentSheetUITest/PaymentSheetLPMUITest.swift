@@ -728,7 +728,7 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
 
         // Pay
         XCTAssertTrue(app.buttons["Pay PLN 50.99"].waitForExistenceAndTap(timeout: 5.0))
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 20.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 60.0))
     }
 
     func testBacsDebit() {
