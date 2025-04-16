@@ -255,11 +255,11 @@ extension STPElementsSession {
         return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodSetAsDefault ?? false
     }
 
-    func paymentMethodUpdateForPaymentSheet(_ configuration: PaymentElementConfiguration) -> Bool {
+    var paymentMethodUpdateForPaymentSheet: Bool {
         return customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
     }
 
-    func paymentMethodUpdateForCustomerSheet(_ configuration: CustomerSheet.Configuration) -> Bool {
+    var paymentMethodUpdateForCustomerSheet: Bool {
         return customer?.customerSession.customerSheetComponent.enabled ?? false
     }
 

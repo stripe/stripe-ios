@@ -1549,13 +1549,13 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkPassthroughMode = .pm
+        settings.linkDisplay = .never
 
         settings.customerKeyType = .legacy
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
         loadPlayground(app, settings)
 
-        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings)
+        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings, hasEditPMFunction: false)
     }
     func test_RemoveLastSavedPaymentMethodFlowController_customerSession() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -1566,7 +1566,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.linkPassthroughMode = .pm
+        settings.linkDisplay = .never
 
         settings.customerKeyType = .customerSession
         settings.paymentMethodRemoveLast = .disabled
@@ -1574,10 +1574,12 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
         loadPlayground(app, settings)
 
-        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+        try _testRemoveLastSavedPaymentMethodFlowController(settings: settings,
+                                                            tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases",
+                                                            hasEditPMFunction: true)
     }
 
-    func _testRemoveLastSavedPaymentMethodFlowController(settings: PaymentSheetTestPlaygroundSettings, tapCheckboxWithText: String? = nil) throws {
+    func _testRemoveLastSavedPaymentMethodFlowController(settings: PaymentSheetTestPlaygroundSettings, tapCheckboxWithText: String? = nil, hasEditPMFunction: Bool) throws {
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         app.buttons["+ Add"].waitForExistenceAndTap()
 
@@ -1592,9 +1594,20 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         app.staticTexts["•••• 4242"].waitForExistenceAndTap()  // The card should be saved now and selected as default instead of Apple Pay
 
-        // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+        if hasEditPMFunction {
+            // Go to the edit screen
+            XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+            XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+            XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 3))
 
+            // Shouldn't be able to remove non-CBC eligible card when removeLast is disabled
+            XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 1))
+            XCTAssertTrue(app.buttons["Back"].waitForExistenceAndTap(timeout: 3))
+            XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap(timeout: 3))
+        } else {
+            // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
+            XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+        }
         // Ensure we can tap another payment method, which will dismiss Flow Controller
         app.buttons["Apple Pay"].waitForExistenceAndTap()
 
@@ -1620,11 +1633,17 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
-        // Should be kicked out of edit mode now that we have one saved PM
-        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
-        XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
+        if hasEditPMFunction {
+            XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 3))
+            XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 3))
+        } else {
+            // Should be kicked out of edit mode now that we have one saved PM
+            XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
+            XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+            XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 1))
+        }
     }
+
     func test_updatePaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -1809,7 +1828,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
 
         // Detect there are no remove buttons on each tile and the update screen
         XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove")?.tap())
-        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap(timeout: 5))
         XCTAssertFalse(app.buttons["Remove"].exists)
 
         app.buttons["Back"].waitForExistenceAndTap(timeout: 5)

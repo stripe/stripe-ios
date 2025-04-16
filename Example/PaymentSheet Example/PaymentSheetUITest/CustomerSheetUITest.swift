@@ -607,8 +607,15 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Save"].tap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
 
-        // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+        // Go to the edit screen
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+
+        // Shouldn't be able to remove non-CBC eligible card when allowsRemovalOfLastSavedPaymentMethod = .off
+        XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 1))
+        XCTAssertTrue(app.buttons["Back"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap(timeout: timeout))
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -629,8 +636,7 @@ class CustomerSheetUITest: XCTestCase {
         sleep(1)
 
         // Should be kicked out of edit mode now that we have one saved PM
-        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap(timeout: timeout))
 
         // Add a CBC enabled PM
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -681,8 +687,15 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Save"].tap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
 
-        // Shouldn't be able to edit non-CBC eligible card when paymentMethodRemove = .disabled
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+        // Go to the edit screen
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+
+        // Shouldn't be able to remove non-CBC eligible card when paymentMethodRemove = .disabled
+        XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 1))
+        XCTAssertTrue(app.buttons["Back"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap(timeout: timeout))
 
         // Add a CBC enabled PM
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -696,7 +709,8 @@ class CustomerSheetUITest: XCTestCase {
 
         // Assert there are no remove buttons on each tile and the update screen
         XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
-        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap(timeout: timeout))
+        XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 1))
 
         // Dismiss Sheet
         app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
