@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripeCore
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
@@ -176,7 +178,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             )
         }
 
-        func makeRequestBody(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> [String: String] {
+        func makeDictionary(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> [String: String] {
             var result: [String: String] = self.toDictionary()
             if let additionalPaymentMethodOptionsSetupFutureUsage {
                 // get the "key:value" strings by splitting on the comma
@@ -199,6 +201,16 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 }
             }
             return result
+        }
+
+        func makePaymentMethodOptions(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions {
+            let paymentMethodOptionsSetupFutureUsageDictionary: [String: String] = makeDictionary(with: additionalPaymentMethodOptionsSetupFutureUsage)
+            let setupFutureUsageValues: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = paymentMethodOptionsSetupFutureUsageDictionary.reduce(into: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]()) { result, pair in
+                let paymentMethodType = STPPaymentMethodType.fromIdentifier(pair.key)
+                let setupFutureUsage = PaymentSheet.IntentConfiguration.SetupFutureUsage(rawValue: pair.value)
+                result[paymentMethodType] = setupFutureUsage
+            }
+            return PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: setupFutureUsageValues)
         }
 
         private func toDictionary() -> [String: String] {
