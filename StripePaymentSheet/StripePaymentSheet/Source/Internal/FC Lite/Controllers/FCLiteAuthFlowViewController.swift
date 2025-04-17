@@ -14,11 +14,10 @@ import UIKit
 class FCLiteAuthFlowViewController: UIViewController {
     enum WebFlowResult {
         enum CancellationType {
-            case none
             case cancelledWithinWebview
             case cancelledOutsideWebView
         }
-        
+
         case success(returnUrl: URL)
         case cancelled(CancellationType)
         case failure(Error)

@@ -106,7 +106,7 @@ class FCLiteContainerViewController: UIViewController {
     }
 
     private func fetchSessionAndComplete(
-        cancellationType: FCLiteAuthFlowViewController.WebFlowResult.CancellationType = .none
+        cancellationType: FCLiteAuthFlowViewController.WebFlowResult.CancellationType? = nil
     ) async {
         DispatchQueue.main.async {
             // Pop back to root to show a loading spinner.
@@ -125,7 +125,7 @@ class FCLiteContainerViewController: UIViewController {
                 session = try await apiClient.sessionReceipt(clientSecret: clientSecret)
             }
 
-            if session.paymentAccount == nil, cancellationType != .none {
+            if session.paymentAccount == nil, cancellationType != nil {
                 completion(.cancelled)
                 return
             }

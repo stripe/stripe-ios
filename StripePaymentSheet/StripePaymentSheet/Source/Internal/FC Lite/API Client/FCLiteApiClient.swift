@@ -96,7 +96,7 @@ extension FCLiteAPIClient {
         ]
         return try await get(endpoint: .sessionReceipt, parameters: parameters)
     }
-    
+
     func complete(
         clientSecret: String
     ) async throws -> FinancialConnectionsSession {
