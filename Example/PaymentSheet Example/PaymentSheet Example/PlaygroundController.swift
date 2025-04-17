@@ -496,7 +496,6 @@ class PlaygroundController: ObservableObject {
             UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
 
             let enableFcLite = newValue.fcLiteEnabled == .on
-            FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = enableFcLite
             FinancialConnectionsSDKAvailability.shouldPreferFCLite = enableFcLite
         }.store(in: &subscribers)
 
