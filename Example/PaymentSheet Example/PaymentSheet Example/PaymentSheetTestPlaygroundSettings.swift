@@ -527,8 +527,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     enum CustomPaymentMethods: String, PickerEnum {
-        static let enumName: String = "Custom Payment Methods"
+        static let enumName: String = "CPMs"
         case on
+        case onWithBDCC = "on w/ BDCC"
         case off
     }
 

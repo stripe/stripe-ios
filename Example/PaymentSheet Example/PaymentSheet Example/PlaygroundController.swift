@@ -380,11 +380,14 @@ class PlaygroundController: ObservableObject {
     }
 
     var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration? {
+        // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
+        var customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
+                                                                                                            subtitle: "Pay with BufoPay")
         switch settings.customPaymentMethods {
         case .on:
-            // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
-            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
-                                                                                                                subtitle: "Pay with BufoPay")
+            return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
+        case .onWithBDCC:
+            customPaymentMethodType.disableBillingDetailCollection = false
             return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
         case .off:
             return nil
@@ -418,8 +421,18 @@ class PlaygroundController: ObservableObject {
             let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
             completion(.failed(error: exampleError))
         })
-        if self.settings.uiStyle == .paymentSheet || self.settings.uiStyle == .embedded {
-            self.rootViewController.presentedViewController?.present(alert, animated: true)
+        
+        if self.settings.uiStyle == .embedded {
+            switch embeddedConfiguration.formSheetAction {
+            case .confirm:
+                self.rootViewController.presentedViewController?.presentedViewController?.present(alert, animated: true)
+            case .continue:
+                self.rootViewController.presentedViewController?.present(alert, animated: true)
+            @unknown default:
+                fatalError()
+            }
+        } else if self.settings.uiStyle == .paymentSheet {
+            self.rootViewController.presentedViewController?.presentedViewController?.present(alert, animated: true)
         } else {
             self.rootViewController.present(alert, animated: true)
         }

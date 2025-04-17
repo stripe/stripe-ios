@@ -103,7 +103,16 @@ class ExternalPaymentOption {
               let label = customPaymentMethod.displayName,
               let logoUrl = customPaymentMethod.logoUrl else {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetInvalidCPM)
-            assertionFailure("Failed to render payment method type: \(customPaymentMethod.type) with error \(customPaymentMethod.error ?? "unknown")")
+            let errorMessage: String = {
+                var message = customPaymentMethod.error
+                // mode_mismatch from the server isn't helpful, let's try to be better.
+                if message == "mode_mismatch" {
+                    message = "mode_mismatch. Ensure this customer payment method was created for either test or live mode depending on your current environment."
+                }
+                
+                return message ?? "unknown"
+            }()
+            assertionFailure("Failed to render payment method type: \(customPaymentMethod.type) with error \(errorMessage)")
             return nil
         }
 
