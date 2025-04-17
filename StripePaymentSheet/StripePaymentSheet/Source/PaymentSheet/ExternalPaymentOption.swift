@@ -109,7 +109,7 @@ class ExternalPaymentOption {
                 if message == "mode_mismatch" {
                     message = "mode_mismatch. Ensure this custom payment method was created for either test or live mode depending on your current environment."
                 }
-                
+
                 return message ?? "unknown"
             }()
             assertionFailure("Failed to render payment method type: \(customPaymentMethod.type) with error \(errorMessage)")

@@ -421,7 +421,7 @@ class PlaygroundController: ObservableObject {
             let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
             completion(.failed(error: exampleError))
         })
-        
+
         if self.settings.uiStyle == .embedded {
             switch embeddedConfiguration.formSheetAction {
             case .confirm:
