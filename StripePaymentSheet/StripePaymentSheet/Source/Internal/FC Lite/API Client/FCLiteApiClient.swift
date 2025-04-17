@@ -12,11 +12,13 @@ struct FCLiteAPIClient {
     private enum Endpoint {
         case synchronize
         case sessionReceipt
+        case complete
 
         var path: String {
             switch self {
             case .synchronize: "financial_connections/sessions/synchronize"
             case .sessionReceipt: "link_account_sessions/session_receipt"
+            case .complete: "link_account_sessions/complete"
             }
         }
     }
@@ -93,5 +95,14 @@ extension FCLiteAPIClient {
             "client_secret": clientSecret,
         ]
         return try await get(endpoint: .sessionReceipt, parameters: parameters)
+    }
+    
+    func complete(
+        clientSecret: String
+    ) async throws -> FinancialConnectionsSession {
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+        ]
+        return try await post(endpoint: .complete, parameters: parameters)
     }
 }

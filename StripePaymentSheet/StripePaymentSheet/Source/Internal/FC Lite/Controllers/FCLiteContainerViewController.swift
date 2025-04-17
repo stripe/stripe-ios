@@ -93,19 +93,21 @@ class FCLiteContainerViewController: UIViewController {
             } else {
                 await fetchSessionAndComplete()
             }
-        case .cancelled:
+        case .cancelled(let cancellationType):
             if isInstantDebits {
                 completion(.cancelled)
             } else {
                 // Even if a user cancelled, we check if they've connected an account.
-                await fetchSessionAndComplete(userCancelled: true)
+                await fetchSessionAndComplete(cancellationType: cancellationType)
             }
         case .failure(let error):
             completion(.failed(error: error))
         }
     }
 
-    private func fetchSessionAndComplete(userCancelled: Bool = false) async {
+    private func fetchSessionAndComplete(
+        cancellationType: FCLiteAuthFlowViewController.WebFlowResult.CancellationType = .none
+    ) async {
         DispatchQueue.main.async {
             // Pop back to root to show a loading spinner.
             self.navigationController?.popToRootViewController(animated: false)
@@ -113,8 +115,17 @@ class FCLiteContainerViewController: UIViewController {
         }
 
         do {
-            let session = try await apiClient.sessionReceipt(clientSecret: clientSecret)
-            if session.paymentAccount == nil, userCancelled {
+            let session: FinancialConnectionsSession
+            if cancellationType == .cancelledOutsideWebView {
+                // If the user cancelled outside the webview (i.e. swipe to dismiss),
+                // we should complete the session ourselves.
+                session = try await apiClient.complete(clientSecret: clientSecret)
+            } else {
+                // Otherwise, the session has been completed on the web side.
+                session = try await apiClient.sessionReceipt(clientSecret: clientSecret)
+            }
+
+            if session.paymentAccount == nil, cancellationType != .none {
                 completion(.cancelled)
                 return
             }
@@ -230,7 +241,7 @@ class FCLiteContainerViewController: UIViewController {
 
     @objc private func closeButtonTapped() {
         Task {
-            await self.completeFlow(result: .cancelled)
+            await self.completeFlow(result: .cancelled(.cancelledOutsideWebView))
         }
     }
 }
@@ -263,7 +274,7 @@ extension FCLiteContainerViewController: UIAdaptivePresentationControllerDelegat
             handler: { [weak self] _ in
                 guard let self = self else { return }
                 Task {
-                    await self.completeFlow(result: .cancelled)
+                    await self.completeFlow(result: .cancelled(.cancelledOutsideWebView))
                 }
             }
         ))

@@ -13,8 +13,14 @@ import UIKit
 
 class FCLiteAuthFlowViewController: UIViewController {
     enum WebFlowResult {
+        enum CancellationType {
+            case none
+            case cancelledWithinWebview
+            case cancelledOutsideWebView
+        }
+        
         case success(returnUrl: URL)
-        case cancelled
+        case cancelled(CancellationType)
         case failure(Error)
     }
 
@@ -143,7 +149,7 @@ extension FCLiteAuthFlowViewController: WKNavigationDelegate {
             completion(.success(returnUrl: url))
         } else if url.matchesSchemeHostAndPath(of: manifest.cancelURL) {
             decisionHandler(.cancel)
-            completion(.cancelled)
+            completion(.cancelled(.cancelledWithinWebview))
         } else {
             decisionHandler(.allow)
         }
