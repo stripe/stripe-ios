@@ -422,20 +422,12 @@ class PlaygroundController: ObservableObject {
             completion(.failed(error: exampleError))
         })
 
-        if self.settings.uiStyle == .embedded {
-            switch embeddedConfiguration.formSheetAction {
-            case .confirm:
-                self.rootViewController.presentedViewController?.presentedViewController?.present(alert, animated: true)
-            case .continue:
-                self.rootViewController.presentedViewController?.present(alert, animated: true)
-            @unknown default:
-                fatalError()
-            }
-        } else if self.settings.uiStyle == .paymentSheet {
-            self.rootViewController.presentedViewController?.present(alert, animated: true)
-        } else {
-            self.rootViewController.present(alert, animated: true)
+        guard let topMostVC = UIViewController.topMostViewController() else {
+            print("Unable to find top most view controller")
+            return
         }
+
+        topMostVC.present(alert, animated: true)
     }
 
     var clientSecret: String?
