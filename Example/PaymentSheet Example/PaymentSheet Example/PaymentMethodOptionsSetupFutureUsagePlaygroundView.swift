@@ -46,9 +46,9 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
 
     var additionalPaymentMethodOptionsSetupFutureUsageBinding: Binding<String> {
         Binding<String> {
-            return viewModel.additionalPaymentMethodOptionsSetupFutureUsage ?? ""
+            return viewModel.paymentMethodOptionsSetupFutureUsage.additionalPaymentMethodOptionsSetupFutureUsage ?? ""
         } set: { newString in
-            viewModel.additionalPaymentMethodOptionsSetupFutureUsage = newString
+            viewModel.paymentMethodOptionsSetupFutureUsage.additionalPaymentMethodOptionsSetupFutureUsage = newString
         }
     }
 }

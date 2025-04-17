@@ -470,7 +470,21 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        logRenderLPMs()
         isLinkWalletButtonSelected = false
+    }
+
+    private func logRenderLPMs() {
+        // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
+        var visibleLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }
+        // Add wallet LPMs
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
+            visibleLPMs.append(RowButtonType.applePay.analyticsIdentifier)
+        }
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+            visibleLPMs.append(RowButtonType.link.analyticsIdentifier)
+        }
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: [])
     }
 
     // MARK: - PaymentSheetViewControllerProtocol

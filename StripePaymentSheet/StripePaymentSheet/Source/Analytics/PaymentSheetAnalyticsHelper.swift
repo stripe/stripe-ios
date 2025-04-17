@@ -181,6 +181,10 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
+    func logRenderLPMs(visibleLPMs: [String], hiddenLPMs: [String]) {
+        log(event: .mcRenderLPMs, params: ["visible_lpms": visibleLPMs, "hidden_lpms": hiddenLPMs])
+    }
+
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
         let (event, selectedLPM): (STPAnalyticEvent?, String?) = {
             switch integrationShape {
@@ -414,6 +418,10 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_context"] = linkContext
         additionalParams["link_ui"] = linkUI
 
+        if event.shouldLogFcSdkAvailability {
+            additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
+        }
+
         if let error {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
         }
@@ -508,5 +516,18 @@ extension EmbeddedPaymentElement.UpdateResult {
         case .failed:
             return "failed"
         }
+    }
+}
+
+extension STPAnalyticEvent {
+    var shouldLogFcSdkAvailability: Bool {
+        let allowlist: Set<STPAnalyticEvent> = [
+            .paymentSheetLoadSucceeded,
+            .paymentSheetCarouselPaymentMethodTapped,
+            .bankAccountCollectorStarted,
+            .bankAccountCollectorFinished,
+            .paymentSheetConfirmButtonTapped,
+        ]
+        return allowlist.contains(self)
     }
 }

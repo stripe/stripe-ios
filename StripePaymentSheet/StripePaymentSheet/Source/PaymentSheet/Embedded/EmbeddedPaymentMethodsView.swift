@@ -214,9 +214,23 @@ class EmbeddedPaymentMethodsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func logRenderLPMs() {
+        // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
+        let visibleLPMs: [String] = rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }
+        let hiddenLPMs: [String] = []
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
+    }
+
     private var previousHeight: CGFloat?
+    private var didLogRenderLPMs: Bool = false
     override func layoutSubviews() {
         super.layoutSubviews()
+
+        // to make sure that it doesn't log on height change
+        if !didLogRenderLPMs {
+            logRenderLPMs()
+            didLogRenderLPMs = true
+        }
 
         guard let previousHeight else {
             previousHeight = frame.height

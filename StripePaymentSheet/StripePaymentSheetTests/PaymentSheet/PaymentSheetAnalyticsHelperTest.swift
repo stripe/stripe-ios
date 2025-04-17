@@ -204,6 +204,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
             XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
+            XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "NONE")
         }
     }
 
@@ -219,6 +220,14 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_sheet_savedpm_show")
         flowControllerSUT.logShow(showingSavedPMList: false)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_sheet_newpm_show")
+    }
+
+    func testLogRenderLPMs() {
+        let paymentSheetHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        paymentSheetHelper.logRenderLPMs(visibleLPMs: ["card", "paypal", "alma", "p24"], hiddenLPMs: ["eps"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_lpms_render")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["visible_lpms"] as? [String], ["card", "paypal", "alma", "p24"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["hidden_lpms"] as? [String], ["eps"])
     }
 
     func testLogSavedPMScreenOptionSelected() {
@@ -398,6 +407,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertLessThan(analyticsClient._testLogHistory.last!["duration"] as! Double, 1.0)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "link")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "wallet")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["fc_sdk_availability"] as? String, "NONE")
     }
 
     func testLogPaymentLinkContextWithLinkedBank() {

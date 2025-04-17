@@ -31,21 +31,51 @@ final class RowButtonFloating: RowButton {
         shadowRoundedRect.isSelected = isSelected
     }
 
-    override func setupUI() {
-        addAndPinSubview(shadowRoundedRect)
+    private lazy var arrangedLabelAndSubLabel: UIView = {
+        let containingView = UIView()
+        let spacerTop = UIView()
+        let spacerBottom = UIView()
 
-        // Add common subviews
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
-        let horizontalStackView = UIStackView(arrangedSubviews: [labelsStackView,
+        // Create a vertical stack view to manage the distribution of space
+        let verticalStackView = UIStackView(arrangedSubviews: [spacerTop, labelsStackView, spacerBottom])
+        verticalStackView.axis = .vertical
+        verticalStackView.alignment = .fill
+        verticalStackView.distribution = .fill
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        containingView.addSubview(verticalStackView)
+
+        // Allow spacers to expand w/ low content hugging priority
+        spacerTop.setContentHuggingPriority(.defaultLow, for: .vertical)
+        spacerBottom.setContentHuggingPriority(.defaultLow, for: .vertical)
+
+        // Make labels not expand by giving them high content hugging priority
+        labelsStackView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
+        NSLayoutConstraint.activate([
+            verticalStackView.topAnchor.constraint(equalTo: containingView.topAnchor),
+            verticalStackView.bottomAnchor.constraint(equalTo: containingView.bottomAnchor),
+            verticalStackView.leadingAnchor.constraint(equalTo: containingView.leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: containingView.trailingAnchor),
+
+            // Make spacers grow equally if needed
+            spacerTop.heightAnchor.constraint(equalTo: spacerBottom.heightAnchor),
+        ])
+        return containingView
+    }()
+
+    override func setupUI() {
+        addAndPinSubview(shadowRoundedRect)
+
+        let horizontalStackView = UIStackView(arrangedSubviews: [arrangedLabelAndSubLabel,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
                                                                  accessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
-
         [imageView, horizontalStackView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
@@ -76,8 +106,8 @@ final class RowButtonFloating: RowButton {
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
-            horizontalStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets),
+            horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: insets),
+            horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets),
         ])
     }
 

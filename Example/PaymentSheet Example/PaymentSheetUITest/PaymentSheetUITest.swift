@@ -618,7 +618,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
             analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" }),
-            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "mc_complete_sheet_newpm_show", "mc_form_shown"]
+            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown"]
         )
         XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
 

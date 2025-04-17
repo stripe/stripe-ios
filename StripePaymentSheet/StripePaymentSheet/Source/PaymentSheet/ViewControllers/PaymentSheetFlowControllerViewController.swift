@@ -583,6 +583,10 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 // MARK: - AddPaymentMethodViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControllerDelegate {
+    func getWalletHeaders() -> [String] {
+        return linkOnlyMode ? ["link"] : []
+    }
+
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()

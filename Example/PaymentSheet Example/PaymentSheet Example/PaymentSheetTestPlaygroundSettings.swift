@@ -167,6 +167,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         // Does not support SFU
         var affirm: SetupFutureUsageNone
 
+        var additionalPaymentMethodOptionsSetupFutureUsage: String?
+
         static func defaultValues() -> PaymentMethodOptionsSetupFutureUsage {
             return PaymentMethodOptionsSetupFutureUsage(
                 card: .unset,
@@ -178,8 +180,26 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             )
         }
 
-        func makeRequestBody(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> [String: String] {
-            var result: [String: String] = self.toDictionary()
+        func toDictionary() -> [String: String] {
+            var result: [String: String] = [:]
+            if card != .unset {
+                result["card"] = card.rawValue
+            }
+            if usBankAccount != .unset {
+                result["us_bank_account"] = usBankAccount.rawValue
+            }
+            if sepaDebit != .unset {
+                result["sepa_debit"] = sepaDebit.rawValue
+            }
+            if link != .unset {
+                result["link"] = link.rawValue
+            }
+            if klarna != .unset {
+                result["klarna"] = klarna.rawValue
+            }
+            if affirm != .unset {
+                result["affirm"] = affirm.rawValue
+            }
             if let additionalPaymentMethodOptionsSetupFutureUsage {
                 // get the "key:value" strings by splitting on the comma
                 let paymentMethodOptionsSetupFutureUsage = additionalPaymentMethodOptionsSetupFutureUsage
@@ -203,8 +223,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             return result
         }
 
-        func makePaymentMethodOptions(with additionalPaymentMethodOptionsSetupFutureUsage: String?) -> PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions {
-            let paymentMethodOptionsSetupFutureUsageDictionary: [String: String] = makeRequestBody(with: additionalPaymentMethodOptionsSetupFutureUsage)
+        func makePaymentMethodOptions() -> PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions {
+            let paymentMethodOptionsSetupFutureUsageDictionary: [String: String] = toDictionary()
             let setupFutureUsageValues: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = {
                 var result: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = [:]
                 paymentMethodOptionsSetupFutureUsageDictionary.forEach { paymentMethodTypeIdentifier, setupFutureUsageString in
@@ -215,29 +235,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return result
             }()
             return PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: setupFutureUsageValues)
-        }
-
-        private func toDictionary() -> [String: String] {
-            var result: [String: String] = [:]
-            if card != .unset {
-                result["card"] = card.rawValue
-            }
-            if usBankAccount != .unset {
-                result["us_bank_account"] = usBankAccount.rawValue
-            }
-            if sepaDebit != .unset {
-                result["sepa_debit"] = sepaDebit.rawValue
-            }
-            if link != .unset {
-                result["link"] = link.rawValue
-            }
-            if klarna != .unset {
-                result["klarna"] = klarna.rawValue
-            }
-            if affirm != .unset {
-                result["affirm"] = affirm.rawValue
-            }
-            return result
         }
 
     }
@@ -614,7 +611,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
     var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage
-    var additionalPaymentMethodOptionsSetupFutureUsage: String?
 
     var shippingInfo: ShippingInfo
     var applePayEnabled: ApplePayEnabled

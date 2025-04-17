@@ -31,6 +31,16 @@ import UIKit
         return Self.FinancialConnectionsLiteImplementation
     }
 
+    @_spi(STP) public static let analyticsValue: String = {
+        if FinancialConnectionsSDKClass != nil {
+            return "FULL"
+        } else if FCLiteClassIfEnabled != nil {
+            return "LITE"
+        } else {
+            return "NONE"
+        }
+    }()
+
     static let isUnitTest: Bool = {
         #if targetEnvironment(simulator)
         return NSClassFromString("XCTest") != nil
