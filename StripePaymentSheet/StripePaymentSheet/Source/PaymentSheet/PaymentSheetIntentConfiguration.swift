@@ -116,7 +116,7 @@ public extension PaymentSheet {
             public struct PaymentMethodOptions {
                 var setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]?
 
-                public init(setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil) {
+                @_spi(PaymentMethodOptionsSetupFutureUsageBeta) public init(setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil) {
                     self.setupFutureUsageValues = setupFutureUsageValues
                 }
             }
