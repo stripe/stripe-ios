@@ -29,7 +29,7 @@ struct PaymentSheetDeferredValidator {
         guard isPaymentIntentSFUSet == isIntentConfigurationSFUSet else {
            throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent setupFutureUsage (\(paymentIntent.setupFutureUsage)) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (\(String(describing: setupFutureUsage))).")
         }
-        try validatePaymentMethodOptions(paymentIntentPaymentMethodOptions: paymentIntent.paymentMethodOptions?.allResponseFields, paymentMethodOptions: paymentMethodOptions)
+        try validatePaymentMethodOptions(paymentIntentPaymentMethodOptions: paymentIntent.paymentMethodOptions?.allResponseFields as? [String: Any], paymentMethodOptions: paymentMethodOptions)
         try validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
         /*
          Manual confirmation is only available using FlowController because merchants own the final step of confirmation.
@@ -95,16 +95,21 @@ struct PaymentSheetDeferredValidator {
         }
     }
 
-    static func validatePaymentMethodOptions(paymentIntentPaymentMethodOptions: [AnyHashable: Any]?, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions?) throws {
-        guard let paymentIntentPaymentMethodOptions, let paymentMethodOptions else { return }
+    static func validatePaymentMethodOptions(paymentIntentPaymentMethodOptions: [String: Any]?, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions?) throws {
+        guard let paymentIntentPaymentMethodOptions, let paymentMethodOptions else {
+            if paymentIntentPaymentMethodOptions == nil && paymentMethodOptions == nil {
+                return
+            }
+            throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent paymentMethodOptions (\(String(describing: paymentIntentPaymentMethodOptions))) does not match the PaymentSheet.IntentConfiguration paymentMethodOptions (\(String(describing: paymentMethodOptions))).")
+        }
         // Parse the response into a dictionary [paymentMethodType: setupFutureUsage]
         let paymentIntentPMOSFU: [String: String] = {
             var result: [String: String] = [:]
             paymentIntentPaymentMethodOptions.forEach { paymentMethodType, value in
-                let dictionary = value as? [AnyHashable: Any] ?? [:]
+                let dictionary = value as? [String: Any] ?? [:]
                 let setupFutureUsage: String? = dictionary["setup_future_usage"] as? String
                 if let setupFutureUsage {
-                    result[paymentMethodType.description] = setupFutureUsage
+                    result[paymentMethodType] = setupFutureUsage
                 }
             }
             return result
@@ -113,12 +118,12 @@ struct PaymentSheetDeferredValidator {
         let intentConfigurationPMOSFU: [String: String] = {
             var result: [String: String] = [:]
             paymentMethodOptions.setupFutureUsageValues?.forEach { paymentMethodType, setupFutureUsage in
-                result[paymentMethodType.description] = setupFutureUsage.rawValue
+                result[paymentMethodType.identifier] = setupFutureUsage.rawValue
             }
             return result
         }()
         // Validate that the PaymentIntent and IntentConfiguration PMO SFU values match. Don't validate the particular values are the same (off_session vs on_session) but if none, check that both are none.
-        let doesPMOSFUMatch = paymentIntentPMOSFU.keys == intentConfigurationPMOSFU.keys && paymentIntentPMOSFU.allSatisfy { paymentMethodType, setupFutureUsage in
+        let doesPMOSFUMatch = Set(paymentIntentPMOSFU.keys) == Set(intentConfigurationPMOSFU.keys) && paymentIntentPMOSFU.allSatisfy { paymentMethodType, setupFutureUsage in
                 if setupFutureUsage == "none" {
                     return intentConfigurationPMOSFU[paymentMethodType] == "none"
                 }

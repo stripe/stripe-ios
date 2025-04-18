@@ -1,6 +1,6 @@
 ## X.X.X X-X-X
 ### PaymentSheet
-* [Added] Added deferred API for payment method options setup future usage.
+* [Added] Added payment method options setup future usage to deferred API.
 
 ## 24.11.1 2025-04-14
 ### PaymentSheet

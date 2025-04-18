@@ -89,6 +89,36 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                                                                         intentConfiguration: intentConfig,
                                                                         paymentMethod: STPPaymentMethod._testCard(),
                                                                         isFlowController: false))
+        // one nil pmo and one non-nil
+        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD")
+        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none])), confirmHandler: confirmHandler)
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
+                                                                        intentConfiguration: intentConfig,
+                                                                        paymentMethod: STPPaymentMethod._testCard(),
+                                                                        isFlowController: false))
+        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"]]))
+        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
+                                                                        intentConfiguration: intentConfig,
+                                                                        paymentMethod: STPPaymentMethod._testCard(),
+                                                                        isFlowController: false))
+    }
+
+    func testPaymentIntentConfigurationPaymentMethodOptionsSetupFutureUsage() throws {
+        // different order
+        var pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"], "us_bank_account": ["setup_future_usage": "off_session"]]))
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.USBankAccount: .offSession, .card: .offSession])), confirmHandler: confirmHandler)
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
+                                                                        intentConfiguration: intentConfig,
+                                                                        paymentMethod: STPPaymentMethod._testCard(),
+                                                                        isFlowController: false))
+        // both nil
+        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD")
+        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
+                                                                        intentConfiguration: intentConfig,
+                                                                        paymentMethod: STPPaymentMethod._testCard(),
+                                                                        isFlowController: false))
     }
 
     func testPaymentIntentNotFlowControllerManualConfirmationMethod() throws {
