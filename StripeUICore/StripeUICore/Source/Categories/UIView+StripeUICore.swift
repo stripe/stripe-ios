@@ -60,7 +60,8 @@ import UIKit
         guard let userInfo = notification.userInfo,
               let animationCurveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int,
               let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
-              let animationCurve = UIView.AnimationCurve(rawValue: animationCurveValue) else {
+              let animationCurve = UIView.AnimationCurve(rawValue: animationCurveValue),
+              animationDuration > 0 else {
             // Just run the animation block as a fallback
             animations()
             return
