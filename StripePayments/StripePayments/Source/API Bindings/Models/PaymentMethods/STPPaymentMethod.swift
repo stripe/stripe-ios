@@ -104,18 +104,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
-    // MARK: - Deprecated
-
-    /// Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
-    /// @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
-    /// - seealso: https://stripe.com/docs/api#metadata
-    @available(
-        *,
-        deprecated,
-        message:
-            "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
-    )
-    @objc private(set) public var metadata: [String: String]?
 
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
