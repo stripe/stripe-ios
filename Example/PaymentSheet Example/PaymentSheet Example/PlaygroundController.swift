@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(UpdatePaymentMethodBeta) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -194,8 +194,6 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
-
         switch settings.style {
         case .automatic:
             configuration.style = .automatic
@@ -293,8 +291,6 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
 
         return configuration
     }
