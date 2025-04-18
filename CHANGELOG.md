@@ -1,3 +1,7 @@
+## x.x.x yyyy-yy-yy
+### PaymentSheet
+* [Added] Ability to update saved cards when using CustomerSessions (private preview)
+
 ## 24.11.1 2025-04-14
 ### PaymentSheet
 * [Added] Added support for PayNow and PromptPay to Embedded Payment Element (private preview).
