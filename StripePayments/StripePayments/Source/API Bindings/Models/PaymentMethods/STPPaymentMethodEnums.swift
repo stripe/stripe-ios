@@ -289,6 +289,11 @@ import Foundation
             return "multibanco"
         }
     }
+
+    @_spi(STP) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
+        return allCases.first(where: { $0.identifier == identifier }) ?? .unknown
+    }
+
 }
 
 extension STPPaymentMethodType: CaseIterable { }
