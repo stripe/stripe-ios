@@ -323,6 +323,32 @@ extension SavedPaymentMethodCollectionView {
                 result.append(NSAttributedString(string: paymentMethod.paymentSheetLabel))
                 return result
             }
+
+            if paymentMethod.isLinkPaymentMethod {
+                let iconImage = Image.link_icon.makeImage(template: false)
+                let iconImageAttachment = NSTextAttachment()
+                // Inspiration from:
+                // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
+                let ratio = 0.85
+                let iconHeight = iconImage.size.height * ratio
+                let iconWidth = iconImage.size.width * ratio
+
+                iconImageAttachment.bounds = CGRect(x: 0,
+                                                    y: (label.font.capHeight - iconHeight).rounded() / 2,
+                                                    width: iconWidth,
+                                                    height: iconHeight)
+                iconImageAttachment.image = iconImage
+                let result = NSMutableAttributedString(string: "")
+
+                let padding = NSTextAttachment()
+                padding.bounds = CGRect(x: 0, y: 0, width: 5, height: 0)
+
+                result.append(NSAttributedString(attachment: iconImageAttachment))
+                result.append(NSAttributedString(attachment: padding))
+                result.append(NSAttributedString(string: paymentMethod.paymentSheetLabel))
+                return result
+            }
+
             return nil
         }
 

@@ -559,17 +559,20 @@ extension STPPaymentMethod {
                 return []
             case .USBankAccount, .SEPADebit:
                 return [.userSupportsDelayedPaymentMethods]
+            case .link:
+                return isLinkPaymentMethod ? [] : [.unsupportedForReuse]
             default:
                 return [.unsupportedForReuse]
             }
         }()
+
         return PaymentSheet.PaymentMethodType.configurationSupports(
             paymentMethod: type,
             requirements: requirements,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
+            supportedPaymentMethods: PaymentSheet.supportedPaymentMethods + [.link]
         ) == .supported
     }
 }

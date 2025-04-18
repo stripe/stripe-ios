@@ -37,7 +37,15 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            chevronButton.isHidden = !isEditing
+
+            // We don't allow editing payment methods of type Link, so hide the
+            // chevron.
+            chevronButton.isHidden = !isEditing || paymentMethod.isLinkPaymentMethod
+
+            // And also disable the row if we're in editing mode.
+            let enableContent = !isEditing || !paymentMethod.isLinkPaymentMethod
+            rowButton.isEnabled = enableContent
+            rowButton.setKeyContent(alpha: enableContent ? 1.0 : 0.5)
         }
     }
 
@@ -74,7 +82,7 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private(set) lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: badgeText, accessoryView: chevronButton, didTap: handleRowButtonTapped)
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: badgeText, accessoryView: chevronButton, showIconForLinkPaymentMethods: true, didTap: handleRowButtonTapped)
 
         return button
     }()
