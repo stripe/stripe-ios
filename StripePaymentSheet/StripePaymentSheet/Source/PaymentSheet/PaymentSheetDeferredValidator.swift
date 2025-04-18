@@ -96,7 +96,12 @@ struct PaymentSheetDeferredValidator {
     }
 
     static func validatePaymentMethodOptions(paymentIntentPaymentMethodOptions: [String: Any]?, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions?) throws {
-        guard let paymentIntentPaymentMethodOptions, let paymentMethodOptions else { return }
+        guard let paymentIntentPaymentMethodOptions, let paymentMethodOptions else {
+            if paymentIntentPaymentMethodOptions == nil && paymentMethodOptions != nil {
+                throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent paymentMethodOptions (\(String(describing: paymentIntentPaymentMethodOptions))) cannot be nil if PaymentSheet.IntentConfiguration paymentMethodOptions (\(String(describing: paymentMethodOptions))) is not nil.")
+            }
+            return
+        }
         // Parse the response into a dictionary [paymentMethodType: setupFutureUsage]
         let paymentIntentPMOSFU: [String: String] = {
             var result: [String: String] = [:]
