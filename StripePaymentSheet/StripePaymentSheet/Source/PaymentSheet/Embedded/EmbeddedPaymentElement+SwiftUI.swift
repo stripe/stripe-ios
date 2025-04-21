@@ -5,9 +5,9 @@
 //  Created by Nick Porter on 1/29/25.
 //
 
-import SwiftUI
 import Combine
 @_spi(STP) import StripeCore
+import SwiftUI
 
 /// A view model that manages an `EmbeddedPaymentElement`.
 @MainActor
@@ -41,7 +41,7 @@ import Combine
     // MARK: - Internal properties
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
-    
+
     @Published var height: CGFloat = 0.0
 
     // MARK: - Private properties
@@ -109,7 +109,7 @@ import Combine
                 return .failed(error: ViewModelError.notLoaded)
             }
         }
-        
+
         // Check if update was called before load, if so throw an error
         guard let embeddedPaymentElement else {
             return .failed(error: ViewModelError.notLoaded)
@@ -130,7 +130,7 @@ import Combine
         if embeddedPaymentElement.presentingViewController == nil {
             embeddedPaymentElement.presentingViewController = UIWindow.visibleViewController
         }
-        
+
         let result = await embeddedPaymentElement.confirm()
         return result
     }
@@ -145,7 +145,7 @@ import Combine
         embeddedPaymentElement?.testHeightChange()
     }
 #endif
-    
+
     private func calculateAndPublishHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
         let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
 
