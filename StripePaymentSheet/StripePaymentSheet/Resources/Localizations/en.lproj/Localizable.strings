@@ -53,10 +53,13 @@
 "Bank account details cannot be changed." = "Bank account details cannot be changed.";
 
 /* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with <img/>" = "Buy now or pay later with <img/>";
+"Buy now or pay later with  <img/>" = "Buy now or pay later with  <img/>";
 
 /* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
 "Buy now or pay later with Afterpay" = "Buy now or pay later with Afterpay";
+
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+"Buy now or pay later with Cash App Afterpay" = "Buy now or pay later with Cash App Afterpay";
 
 /* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
 "Buy now or pay later with Clearpay" = "Buy now or pay later with Clearpay";
@@ -138,6 +141,10 @@
 
 /* Two factor authentication screen heading */
 "Confirm it's you" = "Confirm it's you";
+
+/* Title of a screen where the user can update their payment method before continuing
+with the transaction. */
+"Confirm payment details" = "Confirm payment details";
 
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";

@@ -93,6 +93,9 @@ import Foundation
     case mcShowCompleteNewPM = "mc_complete_sheet_newpm_show"
     case mcShowCompleteSavedPM = "mc_complete_sheet_savedpm_show"
 
+    // MARK: - PaymentSheet Render
+    case mcRenderLPMs = "mc_lpms_render"
+
     // MARK: - PaymentSheet Payment
     case mcPaymentCustomNewPMSuccess = "mc_custom_payment_newpm_success"
     case mcPaymentCustomSavedPMSuccess = "mc_custom_payment_savedpm_success"
@@ -288,4 +291,7 @@ import Foundation
     case assertionSucceeded = "stripeios.attest.assertion.succeeded"
     case resetKeyForAssertionError = "stripeios.attest.reset_key_for_assertion_error"
     case resetKeyForAttestationError = "stripeios.attest.reset_key_for_attestation_error"
+
+    // MARK: - Custom Payment Methods
+    case paymentSheetInvalidCPM = "mc_invalid_cpm"
 }

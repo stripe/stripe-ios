@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 import UIKit
 
 /// Represents shared configuration properties between integration surfaces in mobile payment element.
@@ -40,7 +41,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
-    var updatePaymentMethodEnabled: Bool { get }
     var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
 }
 
@@ -63,6 +63,27 @@ extension PaymentElementConfiguration {
             reqs.append(.financialConnectionsSDK)
         }
         return reqs
+    }
+
+    /// Returns the effective `PaymentSheet.BillingDetails`, which refers to billing details that have been supplemented with billing information
+    /// from the `linkAccount`. For instance, billing details with a missing email address can be supplemented with the Link account's email address.
+    func effectiveBillingDetails(for linkAccount: PaymentSheetLinkAccount) -> PaymentSheet.BillingDetails {
+        var billingDetails = defaultBillingDetails
+
+        if billingDetailsCollectionConfiguration.email == .always {
+            billingDetails.email = billingDetails.email ?? linkAccount.email
+        }
+
+        if billingDetailsCollectionConfiguration.phone == .always {
+            billingDetails.phone = billingDetails.phone ?? linkAccount.currentSession?.unredactedPhoneNumberWithPrefix ?? linkAccount.phoneNumberUsedInSignup
+        }
+
+        if billingDetailsCollectionConfiguration.name == .always {
+            // We can't get the name from the consumer session
+            billingDetails.name = billingDetails.name ?? linkAccount.nameUsedInSignup
+        }
+
+        return billingDetails
     }
 }
 

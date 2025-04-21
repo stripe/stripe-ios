@@ -1,2 +1,2 @@
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "Neizdevās izveidot savienojumu";
+/* label for iDEAL-bank selection picker */
+"Select bank" = "Atlasīt banku";

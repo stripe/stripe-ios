@@ -7,7 +7,6 @@
 
 @_spi(STP) import StripeCore
 import StripeFinancialConnections
-@_spi(STP) import StripeUICore
 import UIKit
 import WebKit
 
@@ -40,8 +39,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     private var pageLoaded: Bool = false
 
-    let activityIndicator: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator()
+    let activityIndicator: ConnectActivityIndicator = {
+        let activityIndicator = ConnectActivityIndicator()
         activityIndicator.hidesWhenStopped = true
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
@@ -50,6 +49,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     var errorScreen: WebViewErrorScreen?
 
     let componentType: ComponentType
+
+    let bundleIdProvider: () -> String?
 
     init<InitProps: Encodable>(
         componentManager: EmbeddedComponentManager,
@@ -62,7 +63,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
         authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
-        financialConnectionsPresenter: FinancialConnectionsPresenter = .init()
+        financialConnectionsPresenter: FinancialConnectionsPresenter = .init(),
+        bundleIdProvider: @escaping () -> String? = Bundle.stp_applicationBundleId
     ) {
         self.componentManager = componentManager
         self.notificationCenter = notificationCenter
@@ -71,6 +73,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         self.didFailLoadWithError = didFailLoadWithError
         self.financialConnectionsPresenter = financialConnectionsPresenter
         self.componentType = componentType
+        self.bundleIdProvider = bundleIdProvider
 
         let config = WKWebViewConfiguration()
 
@@ -94,7 +97,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         webView.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: webView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: webView.centerYAnchor),
+            activityIndicator.topAnchor.constraint(equalTo: webView.safeAreaLayoutGuide.topAnchor, constant: 50),
         ])
 
         // Colors
@@ -131,7 +134,9 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                      notificationCenter: NotificationCenter = NotificationCenter.default,
                      webLocale: Locale = Locale.autoupdatingCurrent,
                      authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
-                     financialConnectionsPresenter: FinancialConnectionsPresenter = .init()) {
+                     financialConnectionsPresenter: FinancialConnectionsPresenter = .init(),
+                     bundleIdProvider: @escaping () -> String? = Bundle.stp_applicationBundleId
+    ) {
         self.init(componentManager: componentManager,
                   componentType: componentType,
                   loadContent: loadContent,
@@ -141,7 +146,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                   notificationCenter: notificationCenter,
                   webLocale: webLocale,
                   authenticatedWebViewManager: authenticatedWebViewManager,
-                  financialConnectionsPresenter: financialConnectionsPresenter)
+                  financialConnectionsPresenter: financialConnectionsPresenter,
+                  bundleIdProvider: bundleIdProvider)
     }
 
     required init?(coder: NSCoder) {
@@ -318,7 +324,13 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(setterMessageHandler)
         addMessageHandler(OnLoaderStartMessageHandler { [analyticsClient, activityIndicator] _ in
             analyticsClient.logComponentLoaded(loadEnd: .now)
-            activityIndicator.stopAnimating()
+            UIView.animate(withDuration: 1.0, animations: {
+                activityIndicator.alpha = 0.0
+            }, completion: { _ in
+                activityIndicator.stopAnimating()
+                activityIndicator.alpha = 1.0
+            })
+
         })
         addMessageHandler(FetchInitParamsMessageHandler.init(didReceiveMessage: {[weak self] _ in
             guard let self else {
@@ -329,6 +341,9 @@ private extension ConnectComponentWebViewController {
             return .init(locale: webLocale.toLanguageTag(),
                          appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection),
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
+        }))
+        addMessageHandler(FetchAppInfoMessageHandler.init(didReceiveMessage: { [weak self] _ in
+            return .init(applicationId: self?.bundleIdProvider() ?? "")
         }))
         addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps))
         addMessageHandler(OnLoadErrorMessageHandler { [weak self, analyticsClient] value in

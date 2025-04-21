@@ -29,7 +29,14 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
 
-        ConsumerSession.lookupSession(for: nil, emailSource: .customerEmail, sessionID: "abc123", with: apiClient, useMobileEndpoints: false) {
+        ConsumerSession.lookupSession(
+            for: nil,
+            emailSource: .customerEmail,
+            sessionID: "abc123",
+            with: apiClient,
+            useMobileEndpoints: false,
+            doNotLogConsumerFunnelEvent: false
+        ) {
             result in
             switch result {
             case .success(let lookupResponse):
@@ -60,7 +67,8 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             emailSource: .customerEmail,
             sessionID: "abc123",
             with: apiClient,
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            doNotLogConsumerFunnelEvent: false
         ) { result in
             switch result {
             case .success(let lookupResponse):
@@ -91,7 +99,8 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             emailSource: .customerEmail,
             sessionID: "abc123",
             with: apiClient,
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            doNotLogConsumerFunnelEvent: false
         ) { result in
             switch result {
             case .success(let lookupResponse):

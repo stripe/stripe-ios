@@ -89,19 +89,27 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var addPaymentMethodVC: AddPaymentMethodViewController = {
-            var configuration = context.configuration
-            configuration.linkPaymentMethodsOnly = true
-            configuration.appearance = LinkUI.appearance
             return AddPaymentMethodViewController(
                 intent: context.intent,
                 elementsSession: context.elementsSession,
-                configuration: configuration,
+                configuration: makeConfiguration(),
                 paymentMethodTypes: [.stripe(.card)],
                 formCache: .init(), // We don't want to share a form cache with the containing PaymentSheet
                 analyticsHelper: context.analyticsHelper,
                 delegate: self
             )
         }()
+
+        private func makeConfiguration() -> PaymentElementConfiguration {
+            var configuration = context.configuration
+            configuration.linkPaymentMethodsOnly = true
+            configuration.appearance = LinkUI.appearance
+
+            let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
+            configuration.defaultBillingDetails = effectiveBillingDetails
+
+            return configuration
+        }
 
         #if !os(visionOS)
         private let feedbackGenerator = UINotificationFeedbackGenerator()
@@ -227,9 +235,17 @@ extension PayWithLinkViewController {
                         card.cvc = confirmParams.paymentMethodParams.card?.cvc
                     }
 
-                    self.coordinator?.confirm(with: self.linkAccount,
-                                              paymentDetails: paymentDetails,
-                                              completion: { [weak self] result, deferredIntentConfirmationType in
+                    let confirmationExtras = LinkConfirmationExtras(
+                        // We need to explicitly pass the phone number to the confirm call, since it's not
+                        // part of the payment details' billing information.
+                        billingPhoneNumber: confirmParams.paymentMethodParams.billingDetails?.phone
+                    )
+
+                    self.coordinator?.confirm(
+                        with: self.linkAccount,
+                        paymentDetails: paymentDetails,
+                        confirmationExtras: confirmationExtras
+                    ) { [weak self] result, deferredIntentConfirmationType in
                         let state: ConfirmButton.Status
 
                         switch result {
@@ -250,7 +266,7 @@ extension PayWithLinkViewController {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                             }
                         }
-                    })
+                    }
                 case .failure(let error):
                     #if !os(visionOS)
                     self.feedbackGenerator.notificationOccurred(.error)
@@ -308,6 +324,9 @@ extension PayWithLinkViewController {
 }
 
 extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodViewControllerDelegate {
+    func getWalletHeaders() -> [String] {
+        return []
+    }
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         if viewController.selectedPaymentMethodType == .instantDebits {

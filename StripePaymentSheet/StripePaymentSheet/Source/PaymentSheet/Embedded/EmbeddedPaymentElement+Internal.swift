@@ -4,6 +4,7 @@
 //
 //  Created by Yuki Tokuhiro on 10/10/24.
 //
+import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
@@ -33,7 +34,7 @@ extension EmbeddedPaymentElement {
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet,
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
         let initialSelection: RowButtonType? = {
@@ -72,6 +73,7 @@ extension EmbeddedPaymentElement {
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
             savedPaymentMethods: loadResult.savedPaymentMethods,
             customer: configuration.customer,
+            currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
             analyticsHelper: analyticsHelper,
             delegate: delegate
@@ -150,7 +152,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
         guard let selectedFormViewController else {
-            // If the current selection has no form VC, there's nothing to do
+            // If the current selection has no form VC, simply alert the merchant of the selection if they are using immediateAction
+            if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
+                didSelectPaymentOption()
+            }
             return
         }
         // Present the current selection's form VC
@@ -171,7 +176,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -312,7 +317,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-            allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+            allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
             isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
         )
     }
@@ -348,9 +353,9 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
-    init(paymentOption: PaymentOption, mandateText: NSAttributedString?) {
+    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?) {
         self.mandateText = mandateText
-        self.image = paymentOption.makeIcon(updateImageHandler: nil) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
+        self.image = paymentOption.makeIcon(currency: currency, updateImageHandler: nil) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:
             label = String.Localized.apple_pay
@@ -438,6 +443,9 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
         }
         embeddedFormViewController.dismiss(animated: true)
+        if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
+            didSelectPaymentOption()
+        }
         informDelegateIfPaymentOptionUpdated()
     }
 
@@ -543,6 +551,25 @@ extension EmbeddedPaymentElement {
             stpAssertionFailure("3DS2 was triggered unexpectedly")
         })
     }
+
+    func clearPaymentOptionIfNeeded() {
+        guard case .immediateAction = configuration.rowSelectionBehavior,
+           case .confirm = configuration.formSheetAction else {
+            return
+        }
+
+        clearPaymentOption()
+    }
+
+    static func validateRowSelectionConfiguration(configuration: Configuration) throws {
+        if case .immediateAction = configuration.rowSelectionBehavior,
+           case .confirm = configuration.formSheetAction {
+            // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
+            guard configuration.applePay == nil && configuration.customer == nil else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
+            }
+        }
+    }
 }
 
 // TODO(porter) When we use Xcode 16 on CI do this instead of `STPAuthenticationContextWrapper`
@@ -555,9 +582,14 @@ extension EmbeddedPaymentElement {
 
 final class STPAuthenticationContextWrapper: UIViewController {
     let _presentingViewController: UIViewController
+    let appearance: PaymentSheet.Appearance
 
-    init(presentingViewController: UIViewController) {
+    private var pollingVC: PollingViewController?
+    private var shouldPresentPollingVC = false
+
+    init(presentingViewController: UIViewController, appearance: PaymentSheet.Appearance) {
         self._presentingViewController = presentingViewController
+        self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -566,8 +598,66 @@ final class STPAuthenticationContextWrapper: UIViewController {
     }
 }
 
-extension STPAuthenticationContextWrapper: STPAuthenticationContext {
+extension STPAuthenticationContextWrapper: PaymentSheetAuthenticationContext {
+
+    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
+        DispatchQueue.main.async {
+            self._presentingViewController.present(authenticationViewController, animated: true) {
+                completion()
+            }
+        }
+    }
+
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
+        DispatchQueue.main.async {
+            authenticationViewController.dismiss(animated: true) {
+                completion?()
+            }
+        }
+    }
+
+    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        // Initialize the polling view controller and flag it for presentation
+        self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                                      appearance: self.appearance, safariViewController: safariViewController)
+        shouldPresentPollingVC = true
+    }
+
+    func authenticationContextDidDismiss(_ viewController: UIViewController) {
+        // The following code should only be executed if we have dismissed a SFSafariViewController
+        guard viewController is SFSafariViewController else { return }
+
+        if let pollingViewController = self.pollingVC, shouldPresentPollingVC {
+            self._presentingViewController.present(pollingViewController, animated: true)
+            self.shouldPresentPollingVC = false
+        }
+    }
+
     public func authenticationPresentingViewController() -> UIViewController {
         return _presentingViewController
+    }
+}
+
+extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior: Equatable {
+   @_spi(STP) public static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
+        switch (lhs, rhs) {
+        case (.default, .default):
+            return true
+        case (.immediateAction, .immediateAction):
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+extension PaymentSheetResult {
+    var isCanceledOrFailed: Bool {
+        switch self {
+        case .canceled, .failed:
+            return true
+        case .completed:
+            return false
+        }
     }
 }

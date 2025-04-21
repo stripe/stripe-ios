@@ -382,7 +382,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
+            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet
         )
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
@@ -470,7 +470,21 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        logRenderLPMs()
         isLinkWalletButtonSelected = false
+    }
+
+    private func logRenderLPMs() {
+        // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
+        var visibleLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }
+        // Add wallet LPMs
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
+            visibleLPMs.append(RowButtonType.applePay.analyticsIdentifier)
+        }
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+            visibleLPMs.append(RowButtonType.link.analyticsIdentifier)
+        }
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: [])
     }
 
     // MARK: - PaymentSheetViewControllerProtocol
@@ -614,7 +628,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -765,6 +779,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                             paymentMethodType: paymentMethodType,
                             shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                             appearance: configuration.appearance,
+                            currency: intent.currency,
                             incentive: displayedIncentive
                         ),
                     ])
@@ -780,6 +795,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
                     shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                     appearance: configuration.appearance,
+                    currency: intent.currency,
                     incentive: displayedIncentive
                 )
             }

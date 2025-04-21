@@ -7,10 +7,9 @@
 
 import Foundation
 import SafariServices
-@_spi(DashboardOnly) @_spi(PrivateBetaConnect) @testable import StripeConnect
+@_spi(DashboardOnly) @_spi(PrivateBetaConnect) @_spi(STP) @testable import StripeConnect
 @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeFinancialConnections
-@_spi(STP) import StripeUICore
 import WebKit
 import XCTest
 
@@ -46,6 +45,40 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       webLocale: Locale(identifier: "fr_FR"))
 
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitParams",
+                                                         json: "{}",
+                                                         expectedResponse: message)
+    }
+
+    @MainActor
+    func testFetchAppInfo() async throws {
+        let message = FetchAppInfoMessageHandler.Reply(applicationId: "com.test.app")
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"),
+                                                      bundleIdProvider: { "com.test.app" })
+
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchAppInfo",
+                                                         json: "{}",
+                                                         expectedResponse: message)
+    }
+
+    @MainActor
+    func testFetchAppInfoWithNilAppId() async throws {
+        let message = FetchAppInfoMessageHandler.Reply(applicationId: "")
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"),
+                                                      bundleIdProvider: { nil })
+
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchAppInfo",
                                                          json: "{}",
                                                          expectedResponse: message)
     }

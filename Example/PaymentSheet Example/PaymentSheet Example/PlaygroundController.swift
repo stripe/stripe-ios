@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(UpdatePaymentMethodBeta) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -194,8 +194,6 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
-
         switch settings.style {
         case .automatic:
             configuration.style = .automatic
@@ -294,8 +292,6 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
-
         return configuration
     }
 
@@ -380,11 +376,14 @@ class PlaygroundController: ObservableObject {
     }
 
     var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration? {
+        // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
+        var customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
+                                                                                                            subtitle: "Pay with BufoPay")
         switch settings.customPaymentMethods {
         case .on:
-            // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
-            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
-                                                                                                                subtitle: "Pay with BufoPay")
+            return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
+        case .onWithBDCC:
+            customPaymentMethodType.disableBillingDetailCollection = false
             return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
         case .off:
             return nil
@@ -396,8 +395,10 @@ class PlaygroundController: ObservableObject {
         _ billingDetails: STPPaymentMethodBillingDetails
     ) async -> PaymentSheetResult {
         return await withCheckedContinuation { continuation in
-            handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails) { result in
-                continuation.resume(returning: result)
+            Task { @MainActor in
+                handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails) { result in
+                    continuation.resume(returning: result)
+                }
             }
         }
     }
@@ -416,11 +417,13 @@ class PlaygroundController: ObservableObject {
             let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
             completion(.failed(error: exampleError))
         })
-        if self.settings.uiStyle == .paymentSheet || self.settings.uiStyle == .embedded {
-            self.rootViewController.presentedViewController?.present(alert, animated: true)
-        } else {
-            self.rootViewController.present(alert, animated: true)
+
+        guard let topMostVC = UIViewController.topMostViewController() else {
+            print("Unable to find top most view controller")
+            return
         }
+
+        topMostVC.present(alert, animated: true)
     }
 
     var clientSecret: String?
@@ -491,6 +494,9 @@ class PlaygroundController: ObservableObject {
             // Hack to enable incentives in Instant Debits
             let enableInstantDebitsIncentives = newValue.instantDebitsIncentives == .on
             UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
+
+            let enableFcLite = newValue.fcLiteEnabled == .on
+            FinancialConnectionsSDKAvailability.shouldPreferFCLite = enableFcLite
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -555,6 +561,14 @@ class PlaygroundController: ObservableObject {
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
             rootViewController.present(alert, animated: true, completion: nil)
         }
+    }
+    func paymentMethodOptionsSetupFutureUsageSettingsTapped() {
+        let vc = UIHostingController(rootView: PaymentMethodOptionsSetupFutureUsagePlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+            self.settings = updatedSettings
+            self.rootViewController.dismiss(animated: true, completion: nil)
+            self.load(reinitializeControllers: true)
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
     }
     func customerSessionSettingsTapped() {
         let vc = UIHostingController(rootView: CustomerSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
@@ -667,6 +681,7 @@ extension PlaygroundController {
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
+            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
             "use_link": settings.linkPassthroughMode == .pm,
             "link_mode": settings.linkEnabledMode.rawValue,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
@@ -893,7 +908,7 @@ extension PlaygroundController {
             else {
                 if let data = data,
                    (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(data: data, encoding: .utf8)!
+                    let errorMessage = String(decoding: data, as: UTF8.self)
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {

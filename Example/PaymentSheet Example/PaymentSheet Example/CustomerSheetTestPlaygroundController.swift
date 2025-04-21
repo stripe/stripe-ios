@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(UpdatePaymentMethodBeta) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -141,7 +141,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
+
         return configuration
     }
 

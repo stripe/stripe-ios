@@ -26,6 +26,9 @@ import Foundation
     /// Link-specific settings for this ElementsSession.
     let linkSettings: LinkSettings?
 
+    /// Experiment assignments and `arb_id` to allow logging exposure events.
+    let experimentsData: ExperimentsData?
+
     /// Flags for this ElementsSession.
     let flags: [String: Bool]
 
@@ -64,6 +67,7 @@ import Foundation
         countryCode: String?,
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
+        experimentsData: ExperimentsData?,
         flags: [String: Bool],
         paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
@@ -80,6 +84,7 @@ import Foundation
         self.countryCode = countryCode
         self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
+        self.experimentsData = experimentsData
         self.flags = flags
         self.paymentMethodSpecs = paymentMethodSpecs
         self.cardBrandChoice = cardBrandChoice
@@ -116,6 +121,7 @@ import Foundation
             countryCode: nil,
             merchantCountryCode: nil,
             linkSettings: nil,
+            experimentsData: nil,
             flags: [:],
             paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
@@ -202,6 +208,9 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
             ),
+            experimentsData: ExperimentsData.decodedObject(
+                fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
+            ),
             flags: response["flags"] as? [String: Bool] ?? [:],
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
@@ -246,12 +255,12 @@ extension STPElementsSession {
         return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodSetAsDefault ?? false
     }
 
-    func paymentMethodUpdateForPaymentSheet(_ configuration: PaymentElementConfiguration) -> Bool {
-        return configuration.updatePaymentMethodEnabled && customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
+    var paymentMethodUpdateForPaymentSheet: Bool {
+        return customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
     }
 
-    func paymentMethodUpdateForCustomerSheet(_ configuration: CustomerSheet.Configuration) -> Bool {
-        return configuration.updatePaymentMethodEnabled && customer?.customerSession.customerSheetComponent.enabled ?? false
+    var paymentMethodUpdateForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.enabled ?? false
     }
 
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {

@@ -30,9 +30,10 @@ final class LinkCardEditElement: Element {
 
     struct Params {
         let expiryDate: CardExpiryDate
-        let cvc: String
+        let cvc: String?
         let billingDetails: STPPaymentMethodBillingDetails
         let setAsDefault: Bool
+        let preferredNetwork: String?
     }
 
     var view: UIView {
@@ -46,6 +47,7 @@ final class LinkCardEditElement: Element {
     }
 
     let paymentMethod: ConsumerPaymentDetails
+    let useCVCPlaceholder: Bool
 
     let configuration: PaymentElementConfiguration
 
@@ -63,6 +65,7 @@ final class LinkCardEditElement: Element {
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = nameElement?.text
         billingDetails.email = emailElement?.text
+        billingDetails.phone = phoneElement?.phoneNumber?.string(as: .e164)
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
         billingDetails.nonnil_address.line1 = billingAddressSection?.line1?.text
         billingDetails.nonnil_address.line2 = billingAddressSection?.line2?.text
@@ -70,27 +73,42 @@ final class LinkCardEditElement: Element {
         billingDetails.nonnil_address.state = billingAddressSection?.state?.rawData
         billingDetails.nonnil_address.postalCode = billingAddressSection?.postalCode?.text
 
+        let preferredNetwork = cardBrandDropdownElement?.element.selectedItem.rawData
+
         return Params(
             expiryDate: expiryDate,
-            cvc: cvcElement.text,
+            cvc: useCVCPlaceholder ? nil : cvcElement.text,
             billingDetails: billingDetails,
-            setAsDefault: checkboxElement.checkboxButton.isSelected
+            setAsDefault: checkboxElement.checkboxButton.isSelected,
+            preferredNetwork: preferredNetwork
         )
     }
 
     private lazy var emailElement: TextFieldElement? = {
         guard configuration.billingDetailsCollectionConfiguration.email == .always else { return nil }
 
-        return TextFieldElement.makeEmail(defaultValue: nil, theme: theme)
+        return TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email, theme: theme)
+    }()
+
+    private lazy var phoneElement: PhoneNumberElement? = {
+        guard configuration.billingDetailsCollectionConfiguration.phone == .always else { return nil }
+        return PhoneNumberElement(
+            defaultCountryCode: configuration.defaultBillingDetails.address.country,
+            defaultPhoneNumber: configuration.defaultBillingDetails.phone,
+            theme: theme
+        )
     }()
 
     private lazy var contactInformationSection: SectionElement? = {
-        guard let emailElement = emailElement else { return nil }
+        let elements = ([emailElement, phoneElement] as [Element?]).compactMap { $0 }
+
+        guard elements.isEmpty == false else { return nil }
 
         return SectionElement(
-            title: STPLocalizedString("Contact information", "Title for the contact information section"),
-            elements: [emailElement],
-            theme: theme)
+            title: elements.count > 1 ? .Localized.contact_information : nil,
+            elements: elements,
+            theme: theme
+        )
     }()
 
     private lazy var nameElement: TextFieldElement? = {
@@ -98,27 +116,70 @@ final class LinkCardEditElement: Element {
 
         return TextFieldElement.makeName(
             label: STPLocalizedString("Name on card", "Label for name on card field"),
-            defaultValue: nil,
+            defaultValue: paymentMethod.billingAddress?.name,
             theme: theme)
     }()
 
-    private lazy var panElement: TextFieldElement = {
-        let panElement = TextFieldElement(
-            configuration: PANConfiguration(paymentMethod: paymentMethod),
-            theme: theme
+    private lazy var cardBrandDropdownElement: PaymentMethodElementWrapper<DropdownFieldElement>? = {
+        guard let cardBrands = paymentMethod.cardDetails?.availableNetworks, cardBrands.count > 1 else {
+            return nil
+        }
+
+        let cardBrandDropdown = DropdownFieldElement.makeCardBrandDropdown(
+            cardBrands: Set(cardBrands),
+            disallowedCardBrands: [
+                // We will add brands from card brand filtering here
+            ],
+            theme: theme,
+            includePlaceholder: false
         )
-        panElement.view.isUserInteractionEnabled = false
-        return panElement
+
+        if let selectedBrand = paymentMethod.cardDetails?.cardBrand {
+            let index = cardBrandDropdown.items.firstIndex { item in
+                item.rawData == STPCardBrandUtilities.apiValue(from: selectedBrand)
+            }
+
+            if let index {
+                cardBrandDropdown.selectedIndex = Int(index)
+            }
+        }
+
+        return PaymentMethodElementWrapper<DropdownFieldElement>(cardBrandDropdown) { field, params in
+            let cardBrand = cardBrands[field.selectedIndex]
+            let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+            params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+            return params
+        }
     }()
 
-    private lazy var cvcElement = TextFieldElement(
-        configuration: TextFieldElement.CVCConfiguration(
-            cardBrandProvider: { [weak self] in
-                self?.paymentMethod.cardDetails?.stpBrand ?? .unknown
-            }
-        ),
-        theme: theme
-    )
+    private lazy var panElement: TextFieldElement = {
+        let isCoBranded = cardBrandDropdownElement != nil
+
+        let panElementConfig = TextFieldElement.LastFourConfiguration(
+            lastFour: paymentMethod.cardDetails?.last4 ?? "",
+            editConfiguration: isCoBranded ? .readOnlyWithoutDisabledAppearance : .readOnly,
+            cardBrand: paymentMethod.cardDetails?.cardBrand,
+            cardBrandDropDown: cardBrandDropdownElement?.element
+        )
+
+        return panElementConfig.makeElement(theme: configuration.appearance.asElementsTheme)
+    }()
+
+    private lazy var cvcElement: TextFieldElement = {
+        let configuration: TextFieldElementConfiguration = if useCVCPlaceholder {
+            TextFieldElement.CensoredCVCConfiguration(
+                brand: paymentMethod.cardDetails?.stpBrand ?? .unknown
+            )
+        } else {
+            TextFieldElement.CVCConfiguration(
+                cardBrandProvider: { [weak self] in
+                    self?.paymentMethod.cardDetails?.stpBrand ?? .unknown
+                }
+            )
+        }
+
+        return TextFieldElement(configuration: configuration, theme: theme)
+    }()
 
     private lazy var expiryDateElement = TextFieldElement(
         configuration: TextFieldElement.ExpiryDateConfiguration(),
@@ -149,7 +210,7 @@ final class LinkCardEditElement: Element {
     private lazy var cardSection: SectionElement = {
         let allElements: [Element?] = [
             nameElement,
-            panElement,
+            panElement, SectionElement.HiddenElement(cardBrandDropdownElement),
             SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
         ]
         let elements = allElements.compactMap { $0 }
@@ -175,9 +236,10 @@ final class LinkCardEditElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, useCVCPlaceholder: Bool) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
+        self.useCVCPlaceholder = useCVCPlaceholder
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
             self.expiryDateElement.setText(expiryDate.displayString)
@@ -202,25 +264,13 @@ extension LinkCardEditElement: ElementDelegate {
 
 }
 
-private extension LinkCardEditElement {
+private extension ConsumerPaymentDetails.Details.Card {
 
-    struct PANConfiguration: TextFieldElementConfiguration {
-        let paymentMethod: ConsumerPaymentDetails
-
-        var label: String {
-            String.Localized.card_number
-        }
-
-        var defaultValue: String? {
-            paymentMethod.cardDetails.map { "•••• \($0.last4)" }
-        }
-
-        func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
-            paymentMethod.cardDetails.map { cardDetails in
-                let image = STPImageLibrary.cardBrandImage(for: cardDetails.stpBrand)
-                return UIImageView(image: image)
-            }
-        }
+    var cardBrand: STPCardBrand {
+        STPCard.brand(from: brand)
     }
 
+    var availableNetworks: [STPCardBrand] {
+        networks.map { STPCard.brand(from: $0) }.filter { $0 != .unknown }
+    }
 }

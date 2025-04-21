@@ -71,8 +71,11 @@
 		4186664A2C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */; };
 		4186664C2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */; };
 		4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */; };
+		4199F94F2DA85E1F00D06805 /* FetchAppInfoMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4199F94E2DA85E1800D06805 /* FetchAppInfoMessageHandler.swift */; };
+		4199F9512DA85FB300D06805 /* FetchAppInfoMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4199F9502DA85FAB00D06805 /* FetchAppInfoMessageHandlerTests.swift */; };
 		41A2A5642C5ABD6C0077FC74 /* StripeConnectTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */; };
 		41A2A5682C5AC5120077FC74 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A2A5672C5AC5120077FC74 /* StripeCore.framework */; };
+		41B28EEF2D91E60900B6B34D /* ConnectActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B28EEE2D91E60000B6B34D /* ConnectActivityIndicator.swift */; };
 		41B64AA82D5B8CF70026DD7A /* ComponentAccountSessionClaimed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B64AA72D5B8CEE0026DD7A /* ComponentAccountSessionClaimed.swift */; };
 		41B64AC72D5D48E60026DD7A /* MobileInputReceivedSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B64AC62D5D48E00026DD7A /* MobileInputReceivedSender.swift */; };
 		41B64AC92D5D506D0026DD7A /* CloseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B64AC82D5D50690026DD7A /* CloseWebView.swift */; };
@@ -274,8 +277,11 @@
 		418666492C66AC66003DB62E /* OnSetterFunctionCalledMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSetterFunctionCalledMessageHandler.swift; sourceTree = "<group>"; };
 		4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoaderStartMessageHandler.swift; sourceTree = "<group>"; };
 		4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandler.swift; sourceTree = "<group>"; };
+		4199F94E2DA85E1800D06805 /* FetchAppInfoMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAppInfoMessageHandler.swift; sourceTree = "<group>"; };
+		4199F9502DA85FAB00D06805 /* FetchAppInfoMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAppInfoMessageHandlerTests.swift; sourceTree = "<group>"; };
 		41A2A5632C5ABD6C0077FC74 /* StripeConnectTests.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectTests.xctestplan; sourceTree = "<group>"; };
 		41A2A5672C5AC5120077FC74 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		41B28EEE2D91E60000B6B34D /* ConnectActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectActivityIndicator.swift; sourceTree = "<group>"; };
 		41B64AA72D5B8CEE0026DD7A /* ComponentAccountSessionClaimed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentAccountSessionClaimed.swift; sourceTree = "<group>"; };
 		41B64AC62D5D48E00026DD7A /* MobileInputReceivedSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileInputReceivedSender.swift; sourceTree = "<group>"; };
 		41B64AC82D5D50690026DD7A /* CloseWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseWebView.swift; sourceTree = "<group>"; };
@@ -437,6 +443,7 @@
 				413987B82C63F34B001D375E /* DebugMessageHandler.swift */,
 				413987B92C63F34B001D375E /* FetchClientSecretMessageHandler.swift */,
 				413987DC2C640A29001D375E /* FetchInitParamsMessageHandler.swift */,
+				4199F94E2DA85E1800D06805 /* FetchAppInfoMessageHandler.swift */,
 				E6165CBE2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift */,
 				4186664B2C66AC8C003DB62E /* OnLoaderStartMessageHandler.swift */,
 				4186664D2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift */,
@@ -482,6 +489,7 @@
 		413987C62C63F34B001D375E /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				41B28EEE2D91E60000B6B34D /* ConnectActivityIndicator.swift */,
 				E6660D8A2CDC414E002A7631 /* Analytics */,
 				E640C9CD2CBF26C9009D0C6E /* AuthenticatedWebView */,
 				E6660CFC2CC2F99C002A7631 /* FinancialConnectionsPresenter.swift */,
@@ -602,6 +610,7 @@
 				4161C2692C9CD0B1005BD67C /* Onboarding */,
 				41814EEA2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift */,
 				41814EEC2C6BED8C0014EB5E /* FetchClientSecretMessageHandlerTests.swift */,
+				4199F9502DA85FAB00D06805 /* FetchAppInfoMessageHandlerTests.swift */,
 				41814EEE2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift */,
 				E6165CC02CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift */,
 				41814EF22C6BFA4B0014EB5E /* OnLoaderStartMessageHandlerTests.swift */,
@@ -1021,6 +1030,7 @@
 				E6660CFD2CC2F9A7002A7631 /* FinancialConnectionsPresenter.swift in Sources */,
 				416E9E842C76AE0A00A0B917 /* ComponentType.swift in Sources */,
 				410D0FCE2C6D000B009B0E26 /* OpenAuthenticatedWebViewMessageHandler.swift in Sources */,
+				4199F94F2DA85E1F00D06805 /* FetchAppInfoMessageHandler.swift in Sources */,
 				E6165CBF2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift in Sources */,
 				413D18482C7FBAA70051AA42 /* CSSHelpers.swift in Sources */,
 				413987CD2C63F34B001D375E /* MessageSender.swift in Sources */,
@@ -1078,6 +1088,7 @@
 				E611A7182CE8372800B3F580 /* ActivityViewControllerWithoutPopover.swift in Sources */,
 				E6660D9F2CDC4194002A7631 /* UnrecognizedSetterEvent.swift in Sources */,
 				E6660DA02CDC4194002A7631 /* ComponentLoadedEvent.swift in Sources */,
+				41B28EEF2D91E60900B6B34D /* ConnectActivityIndicator.swift in Sources */,
 				E6660DA12CDC4194002A7631 /* ComponentWebPageLoadedEvent.swift in Sources */,
 				E6660DA72CDC42F4002A7631 /* Encodable+Connect.swift in Sources */,
 				416E9E762C751B0500A0B917 /* EmbeddedComponentManager.swift in Sources */,
@@ -1105,6 +1116,7 @@
 				41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */,
 				41810D692C88C4B100F10EB7 /* AppearanceTests.swift in Sources */,
 				410D0FD22C6D047A009B0E26 /* AccountSessionClaimedMessageHandlerTests.swift in Sources */,
+				4199F9512DA85FB300D06805 /* FetchAppInfoMessageHandlerTests.swift in Sources */,
 				41814EF12C6BF94B0014EB5E /* OnExitMessageHandlerTests.swift in Sources */,
 				4161C2732C9D0A8A005BD67C /* AccountOnboardingControllerTests.swift in Sources */,
 				E6F485FE2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift in Sources */,

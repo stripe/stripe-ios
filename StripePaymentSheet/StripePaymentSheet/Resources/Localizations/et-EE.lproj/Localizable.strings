@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Pangakonto andmeid ei saa muuta.";
 
-"Buy now or pay later with <img/>" = "Osta praegu või maksa <img/> abil hiljem";
+"Buy now or pay later with  <img/>" = "Osta kohe või maksa hiljem makseviisiga <img/>";
 
 "Buy now or pay later with Afterpay" = "Osta praegu või maksa Afterpay abil hiljem";
+
+"Buy now or pay later with Cash App Afterpay" = "Osta praegu või maksa Cash App Afterpay abil hiljem";
 
 "Buy now or pay later with Clearpay" = "Osta praegu või maksa Clearpay abil hiljem";
 
@@ -61,8 +63,6 @@
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jätkamisel volitate %1$@ debiteerima teie Cash Appi kontot selle makse ja tulevaste maksete eest vastavalt ettevõtte %2$@ tingimustele, kuni see volitus tühistatakse. Saate seda igal ajal oma Cash rakenduse seadetes muuta.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Esitades oma pangakonto andmed ja kinnitades selle makse, nõustute käesoleva otsekorralduse taotluse ja <terms>otsekorralduse taotluse teenuselepinguga</terms> ning volitate ettevõtet Stripe Payments Australia Pty Ltd ACN 160 180 343, otsekorralduse kasutaja ID number 507156 (\"Stripe\"), debiteerima teenuse Bulk Electronic Clearing System (BECS) kaudu %@ (\"kaupleja\") nimel teie kontot mis tahes kaupleja poolt teile eraldi teada antud summade ulatuses. Te kinnitate, et olete ülalnimetatud konto omanik või volitatud allkirjaõiguslik isik.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Kaarditeavet esitades, lubate ettevõttel %@ oma kaarti tulevasteks makseteks nende kehtestatud tingimustel debiteerida.";
 
@@ -94,6 +94,8 @@
 
 "Confirm it's you" = "Kinnitage, et see olete teie";
 
+"Confirm payment details" = "Kinnitage makseandmed";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma panga- või makserakenduses %@ jooksul.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma pangarakenduses %@ jooksul.";
@@ -113,6 +115,8 @@
 "Enter the code sent to %@ to use your saved information." = "Oma salvestatud teabe kasutamiseks sisestage telefoninumbrile %@ saadetud kood.";
 
 "FPX Bank" = "FPX Bank";
+
+"Failed to connect" = "Ühendamine ebaõnnestus";
 
 "Fast, secure, 1⁠-⁠click checkout" = "Kiire, turvaline ühe klõpsuga makse lõpuleviimine";
 
@@ -242,8 +246,6 @@
 
 "Simple, secure one-click payments" = "Lihtsad turvalised maksed ühe hiireklõpsuga";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Midagi läks teie konto linkimisel valesti.\nProovige hiljem uuesti.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega oma pangakonto %@ salvestamiseks.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega makse sooritamiseks ettevõttele %@.";
@@ -253,8 +255,6 @@
 "Tap to expand" = "Puudutage laiendamiseks";
 
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, \"%@\" ei ole toetatud riigikood.";
 
 "The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
 
