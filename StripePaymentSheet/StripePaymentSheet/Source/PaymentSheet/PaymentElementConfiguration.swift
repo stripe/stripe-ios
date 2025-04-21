@@ -41,7 +41,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
-    var updatePaymentMethodEnabled: Bool { get }
     var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
 }
 

@@ -537,7 +537,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Present embedded payment element"].waitForExistenceAndTap(timeout: 10))
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
-        XCTAssertFalse(app.buttons["Edit"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap(timeout: 3))
+        XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 3))
     }
 
     func testConfirmationWithUserButton_savedPaymentMethod() {
