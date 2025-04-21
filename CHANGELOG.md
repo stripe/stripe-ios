@@ -1,4 +1,4 @@
-## x.x.x yyyy-yy-yy
+## 24.12.0 2025-04-21
 ### PaymentSheet
 * [Added] Bank payments are now available in the PaymentSheet without requiring a dependency on `StripeFinancialConnections`.
 * [Added] Ability to update saved cards when using CustomerSessions (private preview)
