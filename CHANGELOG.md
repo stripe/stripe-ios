@@ -1,5 +1,6 @@
 ## x.x.x yyyy-yy-yy
 ### PaymentSheet
+* [Added] Bank payments are now available in the PaymentSheet without requiring a dependency on `StripeFinancialConnections`.
 * [Added] Ability to update saved cards when using CustomerSessions (private preview)
 * [Added] Added payment method options setup future usage to deferred API.
 
