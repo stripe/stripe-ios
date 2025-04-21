@@ -257,7 +257,7 @@ extension FCLiteContainerViewController: UIAdaptivePresentationControllerDelegat
     private func showDismissConfirmation(presentedBy viewController: UIViewController) {
         let alertController = UIAlertController(
             title: "Are you sure you want to exit?",
-            message: "You haven't finished linking you bank account and all progress will be lost.",
+            message: "You haven't finished linking your bank account and all progress will be lost.",
             preferredStyle: .alert
         )
 
