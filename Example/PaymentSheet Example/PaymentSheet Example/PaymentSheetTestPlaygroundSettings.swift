@@ -658,7 +658,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             amount: ._5099,
             merchantCountryCode: .US,
             apmsEnabled: .on,
-            paymentMethodOptionsSetupFutureUsageEnabled: .on,
+            paymentMethodOptionsSetupFutureUsageEnabled: .off,
             paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,
             applePayEnabled: .on,
