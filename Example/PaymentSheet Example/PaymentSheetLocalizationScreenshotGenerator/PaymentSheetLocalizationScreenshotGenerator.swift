@@ -47,8 +47,8 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
         var scrollsLeft = 0
         var scrollsRight = 0
         while !targetCell.isHittable,
-              scrollsLeft < maxScrollPerDirection ||
-              scrollsRight < maxScrollPerDirection {
+              (scrollsLeft < maxScrollPerDirection ||
+              scrollsRight < maxScrollPerDirection) {
             if scrollsLeft < maxScrollPerDirection {
                 paymentMethodTypeCollectionView.swipeLeft()
                 scrollsLeft += 1

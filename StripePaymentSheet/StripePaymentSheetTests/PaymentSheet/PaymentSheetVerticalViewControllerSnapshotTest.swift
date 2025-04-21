@@ -320,7 +320,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "New card"), selection: .new(paymentMethodType: .stripe(.card)))
         verify(sut)
     }
-
+    
     func testPromoBadgeInFormTitle() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],

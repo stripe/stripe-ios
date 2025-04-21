@@ -131,7 +131,7 @@ class ComponentAnalyticsClient {
         // This can happen if the app is backgrounded for a long period then foregrounded.
         loggedComponentLoaded = true
     }
-
+    
     /// The component successfully claimed the session within the web view.
     /// Triggered from `accountSessionClaimed` message handler from the web view.
     func logAccountSessionClaimed() {

@@ -25,7 +25,7 @@ extension PaymentMethodIncentive {
         guard let displayText = incentive.incentiveDisplayText else {
             return nil
         }
-
+        
         self.identifier = incentive.incentiveParams.paymentMethod
         self.displayText = displayText
     }

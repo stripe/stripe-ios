@@ -129,7 +129,7 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
 
         // The update should fail due to invalid config
         let result = await viewModel.update(intentConfiguration: brokenPaymentIntentConfig)
-        guard case .failed = result else {
+        guard case .failed(_) = result else {
             return XCTFail("Expected .failed with broken config.")
         }
     }

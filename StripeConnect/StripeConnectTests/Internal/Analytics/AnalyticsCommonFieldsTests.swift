@@ -30,7 +30,7 @@ class AnalyticsCommonFieldsTests: XCTestCase {
         XCTAssertEqual(fields.component, .payouts)
         XCTAssertEqual(fields.componentInstance, mockUUID)
     }
-
+    
     func testPublicKeyOverride() {
         let client = STPAPIClient()
         client.publishableKey = "uk_123"

@@ -17,7 +17,7 @@ enum StripeConnectConstants {
     static let allowedHosts: Set<String> = [
         "connect.stripe.com",
     ]
-
+    
     static let connectJSBaseURL: URL = URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!
 
     /// The authenticated web view will redirect back to the SDK when redirecting

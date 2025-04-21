@@ -12,7 +12,7 @@ import XCTest
 class STPCardBrandChoiceTest: XCTestCase {
 
     func testDecodingHappy() throws {
-        let responseDict: [String: Any] = ["eligible": true, "preferred_networks": ["cartes_bancaires"], "supported_cobranded_networks": ["cartes_bancaires": true]]
+        let responseDict: [String : Any] = ["eligible": true, "preferred_networks": ["cartes_bancaires"], "supported_cobranded_networks" : ["cartes_bancaires": true]]
 
         let cardBranceChoice = try XCTUnwrap(STPCardBrandChoice.decodedObject(fromAPIResponse: responseDict))
         XCTAssertEqual(true, cardBranceChoice.eligible)

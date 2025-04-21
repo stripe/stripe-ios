@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 import UIKit
 
 extension STPCardBrand {
@@ -35,7 +35,7 @@ extension STPCardBrand {
         if isDisallowed {
             displayText.append(NSAttributedString(string: " \(String.Localized.brand_not_accepted)"))
         }
-
+        
         return DropdownFieldElement.DropdownItem(
             pickerDisplayName: displayText,
             labelDisplayName: brandIconAttributedString(theme: theme, maxWidth: maxWidth),

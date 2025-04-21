@@ -107,7 +107,7 @@ class SetCollectMobileFinancialConnectionsResultTests: ScriptWebTestBase {
             "setter": "setCollectMobileFinancialConnectionsResult",
             "value": [
                 "id": "1234",
-                "error": apiErrorJsonDict,
+                "error": apiErrorJsonDict
             ],
         ])
     }

@@ -93,7 +93,7 @@ final class DropdownFieldElementTest: XCTestCase {
         element.didFinish(element.pickerFieldView, shouldAutoAdvance: true)
         XCTAssertEqual(index, 0)
     }
-
+    
     func testCantSelectDisabledItem() {
         let disabledItem = DropdownFieldElement.DropdownItem(pickerDisplayName: "Disabled",
                                                              labelDisplayName: "Disabled",
@@ -102,20 +102,20 @@ final class DropdownFieldElementTest: XCTestCase {
                                                              isDisabled: true)
         let itemsWithDisabled = items + [disabledItem]
         XCTAssertEqual(4, items.count)
-
+        
         var index: Int?
         let element = DropdownFieldElement(items: itemsWithDisabled, defaultIndex: 0, label: "", didUpdate: { index = $0 })
         XCTAssertNil(index)
-
+        
         // Emulate a user changing the picker and hitting the done button
         element.pickerView(element.pickerView, didSelectRow: 2, inComponent: 0)
         element.didFinish(element.pickerFieldView, shouldAutoAdvance: true)
         XCTAssertEqual(index, 2)
-
+        
         element.pickerView(element.pickerView, didSelectRow: 4, inComponent: 0)
         element.didFinish(element.pickerFieldView, shouldAutoAdvance: true)
         // Should stay selected on previous selection
         XCTAssertEqual(index, 2)
     }
-
+            
 }

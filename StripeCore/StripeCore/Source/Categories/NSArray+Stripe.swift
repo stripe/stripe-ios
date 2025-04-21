@@ -28,7 +28,7 @@ import Foundation
         guard let index = firstIndex(of: element) else { return nil }
         return remove(at: index)
     }
-
+    
     @discardableResult mutating func replace(_ element: Element, with newElement: Element) -> Element? {
         guard let index = firstIndex(of: element) else { return nil }
         let removedElement = remove(at: index)
