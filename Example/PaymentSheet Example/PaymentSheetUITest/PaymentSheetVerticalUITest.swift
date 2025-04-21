@@ -329,7 +329,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
 
         // Verify that edit control does not render
-        XCTAssertFalse(app.buttons["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        XCTAssertFalse(app.buttons["Remove"].exists)
     }
 
     func testCVCRecollection_verticalMode() {
